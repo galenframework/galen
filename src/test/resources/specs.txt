@@ -1,0 +1,28 @@
+# This is an example of constraints specifications for different dimensions
+
+# Here goes object definition with locators
+====================================================
+submit              xpath   //input[@name='submit']
+search-field        css     #search
+menu                id      menu
+big-box             id      container
+====================================================
+
+# This is a tag definition
+# and it can be used when you need to run some specific set of constraints
+
+@ mobile, tag
+submit
+    inside: big-box 10~30px top right
+    near: menu 20px left
+@
+
+@ desktop
+submit
+    absent
+    
+    
+# In order to run specific set of tests this is how you should do it:
+# galen run -t mobile -r 320x480 specs.txt http://exmaple.com/page
+#
+
