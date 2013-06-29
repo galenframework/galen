@@ -1,5 +1,23 @@
 package net.mindengine.galen.tests.specs;
 
+
+import net.mindengine.galen.specs.Alignment;
+import net.mindengine.galen.specs.Location;
+import net.mindengine.galen.specs.Range;
+import net.mindengine.galen.specs.Spec;
+import net.mindengine.galen.specs.SpecAbsent;
+import net.mindengine.galen.specs.SpecContains;
+import net.mindengine.galen.specs.SpecHeight;
+import net.mindengine.galen.specs.SpecHorizontally;
+import net.mindengine.galen.specs.SpecInside;
+import net.mindengine.galen.specs.SpecNear;
+import net.mindengine.galen.specs.SpecVertically;
+import net.mindengine.galen.specs.SpecWidth;
+
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.contains;
+import static org.hamcrest.Matchers.is;
+
 import org.hamcrest.Matchers;
 import org.testng.annotations.Test;
 
@@ -14,7 +32,7 @@ public class SpecsReaderTest {
         SpecInside specInside = (SpecInside) spec;
         assertThat(specInside.getObject(), is("object"));
         assertThat(specInside.getRange(), is(Range.exact(10)));
-        assertThat(specInside.getLocations(), contains(Constraints.Location.RIGHT));
+        assertThat(specInside.getLocations(), contains(Location.RIGHT));
     }
     
     @Test
@@ -24,105 +42,103 @@ public class SpecsReaderTest {
         SpecInside specInside = (SpecInside) spec;
         assertThat(specInside.getObject(), is("object"));
         assertThat(specInside.getRange(), is(Range.between(10, 30)));
-        assertThat(specInside.getLocations(), contains(Constraints.Location.LEFT));
+        assertThat(specInside.getLocations(), contains(Location.LEFT));
     }
     
     @Test
     public void shouldReadSpec_inside_object_25px_top_left() {
         SpecInside spec = (SpecInside)readSpec("inside: object 25px top left");
-        assertThat(spec.getLocations(), contains(Constraints.Location.TOP, Constraints.Location.LEFT));
+        assertThat(spec.getLocations(), contains(Location.TOP, Location.LEFT));
     }
     
     @Test
     public void shouldReadSpec_inside_object_25px_bottom_right() {
         SpecInside spec = (SpecInside)readSpec("inside: object 25px bottom right");
-        assertThat(spec.getLocations(), contains(Constraints.Location.BOTTOM, Constraints.Location.RIGHT));
+        assertThat(spec.getLocations(), contains(Location.BOTTOM, Location.RIGHT));
     }
     
     @Test
     public void shouldReadSpec_inside_object_25px_top_left_right_bottom() {
         SpecInside spec = (SpecInside)readSpec("inside: object 25px top left");
-        assertThat(spec.getLocations(), contains(Constraints.Location.TOP, Constraints.Location.LEFT, Constraints.Location.RIGHT, Constraints.Location.BOTTOM));
+        assertThat(spec.getLocations(), contains(Location.TOP, Location.LEFT, Location.RIGHT, Location.BOTTOM));
     }
     
     @Test
     public void shouldReadSpec_contains() {
         Spec spec = readSpec("contains: object, menu, button");
-        
         SpecContains specContains = (SpecContains) spec;
         assertThat(specContains.getChildObjects(), contains("object", "menu", "button"));
     }
     
-    
     @Test 
     public void shouldReadSpec_near_button_10_to_20px_left() {
-        SpecNear spec = (SpecNeer) readSpec("near: button 10~20px left");
+        SpecNear spec = (SpecNear) readSpec("near: button 10~20px left");
         
         assertThat(spec.getObject(), is("button"));
-        assertThat(specInside.getRange(), is(Range.between(10, 20)));
-        assertThat(specInside.getLocations(), contains(Constraints.Location.LEFT));
+        assertThat(spec.getRange(), is(Range.between(10, 20)));
+        assertThat(spec.getLocations(), contains(Location.LEFT));
     }
     
     @Test 
-    public void shouldReadSpec_near_button_10_to_20px_left() {
+    public void shouldReadSpec_near_button_10_to_20px_top_right() {
         SpecNear spec = (SpecNear) readSpec("near: button 10~20px top right");
         assertThat(spec.getObject(), is("button"));
-        assertThat(specInside.getRange(), is(Range.between(10, 20)));
-        assertThat(specInside.getLocations(), contains(Constraints.Location.TOP, Constraints.Location.RIGHT));
+        assertThat(spec.getRange(), is(Range.between(10, 20)));
+        assertThat(spec.getLocations(), contains(Location.TOP, Location.RIGHT));
     }
     
     @Test
     public void shouldReadSpec_horizontally_centered() {
         SpecHorizontally spec = (SpecHorizontally) readSpec("horizontally centered: object, menu, button");
-        assertThat(spec.getAlignment(), is(Constraints.Alignment.CENTERED));
-        assertThat(specContains.getChildObjects(), contains("object", "menu", "button"));
+        assertThat(spec.getAlignment(), is(Alignment.CENTERED));
+        assertThat(spec.getChildObjects(), contains("object", "menu", "button"));
     }
     
     @Test
     public void shouldReadSpec_horizontally_top() {
         SpecHorizontally spec = (SpecHorizontally) readSpec("horizontally top: object, menu, button");
-        assertThat(spec.getAlignment(), is(Constraints.Alignment.TOP));
-        assertThat(specContains.getChildObjects(), contains("object", "menu", "button"));
+        assertThat(spec.getAlignment(), is(Alignment.TOP));
+        assertThat(spec.getChildObjects(), contains("object", "menu", "button"));
     }
     
     @Test
     public void shouldReadSpec_horizontally_bottom() {
         SpecHorizontally spec = (SpecHorizontally) readSpec("horizontally bottom: object, menu, button");
-        assertThat(spec.getAlignment(), is(Constraints.Alignment.BOTTOM));
-        assertThat(specContains.getChildObjects(), contains("object", "menu", "button"));
+        assertThat(spec.getAlignment(), is(Alignment.BOTTOM));
+        assertThat(spec.getChildObjects(), contains("object", "menu", "button"));
     }
     
     @Test
     public void shouldReadSpec_vertically_centered() {
         SpecVertically spec = (SpecVertically) readSpec("vertically centered: object, menu, button");
-        assertThat(spec.getAlignment(), is(Constraints.Alignment.CENTERED));
-        assertThat(specContains.getChildObjects(), contains("object", "menu", "button"));
+        assertThat(spec.getAlignment(), is(Alignment.CENTERED));
+        assertThat(spec.getChildObjects(), contains("object", "menu", "button"));
     }
     
     @Test
     public void shouldReadSpec_vertically_left() {
         SpecVertically spec = (SpecVertically) readSpec("vertically left: object, menu, button");
-        assertThat(spec.getAlignment(), is(Constraints.Alignment.LEFT));
-        assertThat(specContains.getChildObjects(), contains("object", "menu", "button"));
+        assertThat(spec.getAlignment(), is(Alignment.LEFT));
+        assertThat(spec.getChildObjects(), contains("object", "menu", "button"));
     }
     
     @Test
     public void shouldReadSpec_vertically_right() {
         SpecVertically spec = (SpecVertically) readSpec("vertically right: object, menu, button");
-        assertThat(spec.getAlignment(), is(Constraints.Alignment.RIGHT));
-        assertThat(specContains.getChildObjects(), contains("object", "menu", "button"));
+        assertThat(spec.getAlignment(), is(Alignment.RIGHT));
+        assertThat(spec.getChildObjects(), contains("object", "menu", "button"));
     }
     
     @Test
     public void shouldReadSpec_absent() {
         Spec spec = readSpec("absent");
-        assetThat(spec, instanceOf(SpecAbsent.class));
+        assertThat(spec, Matchers.instanceOf(SpecAbsent.class));
     }
     
     @Test
     public void shouldReadSpec_width_10px() {
         SpecWidth spec = (SpecWidth) readSpec("width: 10px");
-        assertThat(spec.getWidthRange(), is(Range.exact(10)));
+        assertThat(spec.getRange(), is(Range.exact(10)));
     }
     
     @Test
@@ -142,7 +158,6 @@ public class SpecsReaderTest {
         SpecHeight spec = (SpecHeight) readSpec("height: 5~8px");
         assertThat(spec.getRange(), is(Range.between(5, 8)));
     }
-    
     
     
     private Spec readSpec(String specText) {
