@@ -13,12 +13,15 @@ import net.mindengine.galen.specs.SpecInside;
 import net.mindengine.galen.specs.SpecNear;
 import net.mindengine.galen.specs.SpecVertically;
 import net.mindengine.galen.specs.SpecWidth;
+import net.mindengine.galen.specs.reader.IncorrectSpecException;
+import net.mindengine.galen.specs.reader.SpecReader;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.is;
 
 import org.hamcrest.Matchers;
+import org.testng.annotations.ExpectedExceptions;
 import org.testng.annotations.Test;
 
 @Test
@@ -159,6 +162,20 @@ public class SpecsReaderTest {
         assertThat(spec.getRange(), is(Range.between(5, 8)));
     }
     
+    @Test(expectedExceptions={NullPointerException.class}, expectedExceptionsMessageRegExp="Spec text should not be null") 
+    public void givesError_whenTextIsNull() {
+        readSpec(null);
+    }
+    
+    @Test(expectedExceptions={IncorrectSpecException.class}, expectedExceptionsMessageRegExp="Spec text should not be empty") 
+    public void givesError_whenTextIsEmpty() {
+        readSpec(" ");
+    }
+    
+    @Test(expectedExceptions={IncorrectSpecException.class}, expectedExceptionsMessageRegExp="Incorrect format") 
+    public void givesError_whenUsingMoreThanOneColon() {
+        readSpec(" asfasf:asf :asf");
+    }
     
     private Spec readSpec(String specText) {
         return new SpecReader().read(specText);
