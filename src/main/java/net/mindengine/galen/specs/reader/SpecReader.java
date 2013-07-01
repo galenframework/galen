@@ -4,9 +4,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import net.mindengine.galen.specs.Range;
 import net.mindengine.galen.specs.Spec;
 import net.mindengine.galen.specs.SpecAbsent;
 import net.mindengine.galen.specs.SpecContains;
+import net.mindengine.galen.specs.SpecHeight;
+import net.mindengine.galen.specs.SpecWidth;
 
 public class SpecReader {
     
@@ -21,6 +24,18 @@ public class SpecReader {
         put("contains", new SpecListProccessor(new SpecListInit() {
             public Spec init(List<String> list) {
                 return new SpecContains(list);
+            }
+        }));
+        
+        put("width", new SpecRangeProcessor(new SpecRangeInit() {
+            public Spec init(Range range) {
+                return new SpecWidth(range);
+            }
+        }));
+        
+        put("height", new SpecRangeProcessor(new SpecRangeInit() {
+            public Spec init(Range range) {
+                return new SpecHeight(range);
             }
         }));
     }};

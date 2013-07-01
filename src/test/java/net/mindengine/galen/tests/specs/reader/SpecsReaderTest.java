@@ -1,4 +1,4 @@
-package net.mindengine.galen.tests.specs;
+package net.mindengine.galen.tests.specs.reader;
 
 
 import net.mindengine.galen.specs.Alignment;
@@ -145,8 +145,14 @@ public class SpecsReaderTest {
     }
     
     @Test
+    public void shouldReadSpec_width_5_plus_minus_3px() {
+        SpecWidth spec = (SpecWidth) readSpec("width: 5 ± 3px");
+        assertThat(spec.getRange(), is(Range.between(2, 8)));
+    }
+    
+    @Test
     public void shouldReadSpec_width_5_to_8px() {
-        SpecWidth spec = (SpecWidth) readSpec("width: 5~8px");
+        SpecWidth spec = (SpecWidth) readSpec("width: 5 to 8px");
         assertThat(spec.getRange(), is(Range.between(5, 8)));
     }
     

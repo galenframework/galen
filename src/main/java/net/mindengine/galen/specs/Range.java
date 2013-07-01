@@ -18,6 +18,6 @@ public class Range {
         return new Range(number, null);
     }
     public static Range between(int from, int to) {
-        return new Range(from, to);
+        return new Range(Math.min(from, to), Math.max(from, to));
     }
 }
