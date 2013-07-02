@@ -6,6 +6,7 @@ import net.mindengine.galen.specs.Range;
 import net.mindengine.galen.specs.reader.RangeProcessor;
 import net.mindengine.galen.specs.reader.StringCharReader;
 
+import org.apache.commons.lang3.StringEscapeUtils;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
@@ -29,6 +30,9 @@ public class SpecsRangeProcessorTest {
            row("10to15 px", new Range(10, 15)),
            row("9 px", new Range(9, null)),
            row("9px", new Range(9, null)),
+           row("   9px", new Range(9, null)),
+           row("\t9px", new Range(9, null)),
+           row("\t9\t\tpx", new Range(9, null)),
            row("-49px", new Range(-49, null)),
            row("15 ± 5 px", new Range(10, 20)),
            row("15±5px", new Range(10, 20)),
@@ -53,7 +57,7 @@ public class SpecsRangeProcessorTest {
         
         @Override
         public String toString() {
-            return textForParsing;
+            return StringEscapeUtils.escapeJava(textForParsing);
         }
     }
 }

@@ -29,14 +29,14 @@ public class RangeProcessor {
         StringBuffer buffer = new StringBuffer();
         while(reader.hasMore()) {
             symbol = reader.next();
-            if (started && symbol == ' ') {
+            if (started && isDelimeter(symbol)) {
                 break;
             }
             else if (numeric(symbol)) {
                 reader.back();
                 break;
             }
-            else {
+            else if (!isDelimeter(symbol)) {
                 buffer.append(symbol);
                 started = true;
             }
@@ -50,19 +50,23 @@ public class RangeProcessor {
         StringBuffer buffer = new StringBuffer();
         while(reader.hasMore()) {
             symbol = reader.next();
-            if (started && symbol == ' ') {
+            if (started && isDelimeter(symbol)) {
                 break;
             }
             else if (numeric(symbol)) {
                 buffer.append(symbol);
                 started = true;
             }
-            else {
+            else if (started) {
                 reader.back();
                 break;
             }
         }
         return Integer.parseInt(buffer.toString());
+    }
+
+    private boolean isDelimeter(char symbol) {
+        return symbol == ' ' || symbol == '\t';
     }
 
     private boolean numeric(char symbol) {
