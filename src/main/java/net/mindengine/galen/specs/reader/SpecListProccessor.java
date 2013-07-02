@@ -14,7 +14,7 @@ public class SpecListProccessor implements SpecProcessor {
     }
 
     @Override
-    public Spec processSpec(String paramsText) {
+    public Spec processSpec(String specName, String paramsText) {
         if (paramsText == null || paramsText.isEmpty()) {
             throw new IncorrectSpecException("Missing parameters for spec");
         }
@@ -29,7 +29,7 @@ public class SpecListProccessor implements SpecProcessor {
                 }
             }
             
-            return specInit.init(childObjectList);
+            return specInit.init(specName, childObjectList);
         }
     }
 

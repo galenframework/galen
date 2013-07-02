@@ -11,7 +11,7 @@ public class SimpleSpecProcessor implements SpecProcessor {
     }
 
     @Override
-    public Spec processSpec(String paramsText) {
+    public Spec processSpec(String specName, String paramsText) {
         if (paramsText != null && !paramsText.isEmpty()) {
             throw new IncorrectSpecException("This spec doesn't take any parameters");
         }

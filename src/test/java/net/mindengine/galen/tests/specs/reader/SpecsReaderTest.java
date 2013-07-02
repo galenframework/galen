@@ -113,7 +113,7 @@ public class SpecsReaderTest {
     
     @Test
     public void shouldReadSpec_vertically_centered() {
-        SpecVertically spec = (SpecVertically) readSpec("vertically centered: object, menu, button");
+        SpecVertically spec = (SpecVertically) readSpec("vertically  centered: object, menu, button");
         assertThat(spec.getAlignment(), is(Alignment.CENTERED));
         assertThat(spec.getChildObjects(), contains("object", "menu", "button"));
     }
@@ -164,7 +164,7 @@ public class SpecsReaderTest {
     
     @Test
     public void shouldReadSpec_height_5_to_8px() {
-        SpecHeight spec = (SpecHeight) readSpec("height: 5~8px");
+        SpecHeight spec = (SpecHeight) readSpec("height: 5 to 8px");
         assertThat(spec.getRange(), is(Range.between(5, 8)));
     }
     

@@ -11,7 +11,7 @@ public class SpecRangeProcessor implements SpecProcessor {
     }
 
     @Override
-    public Spec processSpec(String paramsText) {
+    public Spec processSpec(String specName, String paramsText) {
         return specInit.init(new RangeProcessor().process(new StringCharReader(paramsText)));
     }
 

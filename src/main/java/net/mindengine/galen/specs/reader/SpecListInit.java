@@ -6,6 +6,6 @@ import net.mindengine.galen.specs.Spec;
 
 public interface SpecListInit {
 
-    Spec init(List<String> list);
+    Spec init(String specName, List<String> list);
 
 }
