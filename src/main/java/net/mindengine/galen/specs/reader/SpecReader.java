@@ -10,7 +10,6 @@ import static net.mindengine.galen.specs.reader.Expectations.locations;
 import static net.mindengine.galen.specs.reader.Expectations.objectName;
 import static net.mindengine.galen.specs.reader.Expectations.range;
 
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -51,15 +50,15 @@ public class SpecReader {
             }
         }));
         
-        putSpec("width", new SpecRangeProcessor(new SpecRangeInit() {
-            public Spec init(Range range) {
-                return new SpecWidth(range);
+        putSpec("width", new SpecComplexProcessor(expectThese(range()), new SpecComplexInit() {
+            public Spec init(String specName, Object[] args) {
+                return new SpecWidth((Range) args[0]);
             }
         }));
         
-        putSpec("height", new SpecRangeProcessor(new SpecRangeInit() {
-            public Spec init(Range range) {
-                return new SpecHeight(range);
+        putSpec("height", new SpecComplexProcessor(expectThese(range()), new SpecComplexInit() {
+            public Spec init(String specName, Object[] args) {
+                return new SpecHeight((Range) args[0]);
             }
         }));
         
