@@ -12,7 +12,7 @@ public class SpecRangeProcessor implements SpecProcessor {
 
     @Override
     public Spec processSpec(String specName, String paramsText) {
-        return specInit.init(new RangeProcessor().process(new StringCharReader(paramsText)));
+        return specInit.init(new ExpectRange().read(new StringCharReader(paramsText)));
     }
 
 }

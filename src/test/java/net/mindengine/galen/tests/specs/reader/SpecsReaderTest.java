@@ -40,7 +40,7 @@ public class SpecsReaderTest {
     
     @Test
     public void shouldReadSpec_inside_object_10_to_30px_left() {
-        Spec spec = readSpec("inside: object 10~30px left");
+        Spec spec = readSpec("inside: object 10 to 30px left");
 
         SpecInside specInside = (SpecInside) spec;
         assertThat(specInside.getObject(), is("object"));
@@ -62,7 +62,7 @@ public class SpecsReaderTest {
     
     @Test
     public void shouldReadSpec_inside_object_25px_top_left_right_bottom() {
-        SpecInside spec = (SpecInside)readSpec("inside: object 25px top left");
+        SpecInside spec = (SpecInside)readSpec("inside: object 25px top left right bottom ");
         assertThat(spec.getLocations(), contains(Location.TOP, Location.LEFT, Location.RIGHT, Location.BOTTOM));
     }
     
@@ -75,7 +75,7 @@ public class SpecsReaderTest {
     
     @Test 
     public void shouldReadSpec_near_button_10_to_20px_left() {
-        SpecNear spec = (SpecNear) readSpec("near: button 10~20px left");
+        SpecNear spec = (SpecNear) readSpec("near: button 10 to 20px left");
         
         assertThat(spec.getObject(), is("button"));
         assertThat(spec.getRange(), is(Range.between(10, 20)));
@@ -84,7 +84,7 @@ public class SpecsReaderTest {
     
     @Test 
     public void shouldReadSpec_near_button_10_to_20px_top_right() {
-        SpecNear spec = (SpecNear) readSpec("near: button 10~20px top right");
+        SpecNear spec = (SpecNear) readSpec("near: button 10 to 20px top right");
         assertThat(spec.getObject(), is("button"));
         assertThat(spec.getRange(), is(Range.between(10, 20)));
         assertThat(spec.getLocations(), contains(Location.TOP, Location.RIGHT));

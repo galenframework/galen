@@ -1,7 +1,16 @@
 package net.mindengine.galen.specs.reader;
 
-import static net.mindengine.galen.specs.Alignment.*;
+import static net.mindengine.galen.specs.Alignment.BOTTOM;
+import static net.mindengine.galen.specs.Alignment.CENTERED;
+import static net.mindengine.galen.specs.Alignment.LEFT;
+import static net.mindengine.galen.specs.Alignment.RIGHT;
+import static net.mindengine.galen.specs.Alignment.TOP;
+import static net.mindengine.galen.specs.reader.Expectations.expectThese;
+import static net.mindengine.galen.specs.reader.Expectations.locations;
+import static net.mindengine.galen.specs.reader.Expectations.objectName;
+import static net.mindengine.galen.specs.reader.Expectations.range;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -9,12 +18,15 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import net.mindengine.galen.specs.Alignment;
+import net.mindengine.galen.specs.Location;
 import net.mindengine.galen.specs.Range;
 import net.mindengine.galen.specs.Spec;
 import net.mindengine.galen.specs.SpecAbsent;
 import net.mindengine.galen.specs.SpecContains;
 import net.mindengine.galen.specs.SpecHeight;
 import net.mindengine.galen.specs.SpecHorizontally;
+import net.mindengine.galen.specs.SpecInside;
+import net.mindengine.galen.specs.SpecNear;
 import net.mindengine.galen.specs.SpecVertically;
 import net.mindengine.galen.specs.SpecWidth;
 
@@ -79,11 +91,32 @@ public class SpecReader {
             }
         }));
         
+        putSpec("inside", new SpecComplexProcessor(expectThese(objectName(), range(), locations()), new SpecComplexInit() {
+            @SuppressWarnings("unchecked")
+            @Override
+            public Spec init(String specName, Object[] args) {
+                String objectName = (String) args[0];
+                Range range = (Range) args[1];
+                List<Location> locations = (List<Location>) args[2];
+                
+                return new SpecInside(objectName, range, locations);
+            }
+        }));
+        
+        putSpec("near", new SpecComplexProcessor(expectThese(objectName(), range(), locations()), new SpecComplexInit() {
+            @SuppressWarnings("unchecked")
+            @Override
+            public Spec init(String specName, Object[] args) {
+                String objectName = (String) args[0];
+                Range range = (Range) args[1];
+                List<Location> locations = (List<Location>) args[2];
+                
+                return new SpecNear(objectName, range, locations);
+            }
+        }));
+        
     }
 
-
-    
-    
     public Spec read(String specText) {
         if (specText == null) {
             throw new NullPointerException("Spec text should not be null");

@@ -7,6 +7,12 @@ public abstract class SpecComplex extends Spec {
     private String object;
     private Range range;
     private List<Location> locations;
+    
+    public SpecComplex(String objectName, Range range, List<Location> locations) {
+        setObject(objectName);
+        setRange(range);
+        setLocations(locations);
+    }
     public String getObject() {
         return object;
     }

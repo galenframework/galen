@@ -1,10 +1,13 @@
 package net.mindengine.galen.specs.reader;
 
+import static net.mindengine.galen.specs.reader.Expectations.isDelimeter;
+import static net.mindengine.galen.specs.reader.Expectations.isNumeric;
 import net.mindengine.galen.specs.Range;
 
-public class RangeProcessor {
+public class ExpectRange implements Expectation<Range>{
 
-    public Range process(StringCharReader reader) {
+    @Override
+    public Range read(StringCharReader reader) {
         Integer firstValue = expectInt(reader);
         
         String text = expectNonNumeric(reader);
@@ -32,7 +35,7 @@ public class RangeProcessor {
             if (started && isDelimeter(symbol)) {
                 break;
             }
-            else if (numeric(symbol)) {
+            else if (isNumeric(symbol)) {
                 reader.back();
                 break;
             }
@@ -53,7 +56,7 @@ public class RangeProcessor {
             if (started && isDelimeter(symbol)) {
                 break;
             }
-            else if (numeric(symbol)) {
+            else if (isNumeric(symbol)) {
                 buffer.append(symbol);
                 started = true;
             }
@@ -65,13 +68,7 @@ public class RangeProcessor {
         return Integer.parseInt(buffer.toString());
     }
 
-    private boolean isDelimeter(char symbol) {
-        return symbol == ' ' || symbol == '\t';
-    }
-
-    private boolean numeric(char symbol) {
-        return symbol == '-' || (symbol >= '0' && symbol <= '9');
-    }
+    
 
     private Integer readSecondValue(StringCharReader reader) {
         Integer secondValue = expectInt(reader);
@@ -82,5 +79,5 @@ public class RangeProcessor {
         else throw new IncorrectSpecException("Cannot parse range");
     }
 
-     
+         
 }
