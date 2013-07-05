@@ -32,4 +32,11 @@ public class StringCharReader {
         return symbol;
     }
 
+    public char currentSymbol() {
+        if (cursor < length) {
+            return text.charAt(cursor);
+        }
+        else return text.charAt(length - 1);
+    }
+
 }

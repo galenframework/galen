@@ -90,27 +90,25 @@ public class SpecReader {
             }
         }));
         
-        putSpec("inside", new SpecComplexProcessor(expectThese(objectName(), range(), locations()), new SpecComplexInit() {
+        putSpec("inside", new SpecComplexProcessor(expectThese(objectName(), locations()), new SpecComplexInit() {
             @SuppressWarnings("unchecked")
             @Override
             public Spec init(String specName, Object[] args) {
                 String objectName = (String) args[0];
-                Range range = (Range) args[1];
-                List<Location> locations = (List<Location>) args[2];
+                List<Location> locations = (List<Location>) args[1];
                 
-                return new SpecInside(objectName, range, locations);
+                return new SpecInside(objectName, locations);
             }
         }));
         
-        putSpec("near", new SpecComplexProcessor(expectThese(objectName(), range(), locations()), new SpecComplexInit() {
+        putSpec("near", new SpecComplexProcessor(expectThese(objectName(), locations()), new SpecComplexInit() {
             @SuppressWarnings("unchecked")
             @Override
             public Spec init(String specName, Object[] args) {
                 String objectName = (String) args[0];
-                Range range = (Range) args[1];
-                List<Location> locations = (List<Location>) args[2];
+                List<Location> locations = (List<Location>) args[1];
                 
-                return new SpecNear(objectName, range, locations);
+                return new SpecNear(objectName, locations);
             }
         }));
         

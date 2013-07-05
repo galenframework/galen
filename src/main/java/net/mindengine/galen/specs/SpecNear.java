@@ -4,8 +4,8 @@ import java.util.List;
 
 public class SpecNear extends SpecComplex {
 
-    public SpecNear(String objectName, Range range, List<Location> locations) {
-        super(objectName, range, locations);
+    public SpecNear(String objectName, List<Location> locations) {
+        super(objectName, locations);
     }
 
 }

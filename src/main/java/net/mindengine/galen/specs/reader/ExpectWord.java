@@ -1,8 +1,11 @@
 package net.mindengine.galen.specs.reader;
 
-import static net.mindengine.galen.specs.reader.Expectations.isDelimeter;
+import static net.mindengine.galen.specs.reader.Expectations.isWordDelimeter;
+
 
 public class ExpectWord implements Expectation<String> {
+
+    private char breakSymbol = 0;
 
     @Override
     public String read(StringCharReader reader) {
@@ -10,8 +13,16 @@ public class ExpectWord implements Expectation<String> {
         StringBuffer buffer = new StringBuffer();
         while(reader.hasMore()) {
             char symbol = reader.next();
-            if(isDelimeter(symbol)) {
+            
+            
+            if (breakSymbol != 0 && !started && symbol == breakSymbol) {
+                reader.back();
+                return "";
+            }
+            
+            if(isWordDelimeter(symbol)) {
                 if (started) {
+                    reader.back();
                     break;
                 }
             }
@@ -23,5 +34,9 @@ public class ExpectWord implements Expectation<String> {
         return buffer.toString();
     }
 
+    public ExpectWord stopOnThisSymbol(char breakSymbol) {
+        this.breakSymbol = breakSymbol;
+        return this;
+    }
     
 }

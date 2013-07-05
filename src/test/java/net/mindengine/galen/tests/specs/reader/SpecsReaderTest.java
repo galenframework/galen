@@ -1,9 +1,21 @@
 package net.mindengine.galen.tests.specs.reader;
 
 
+import static net.mindengine.galen.specs.Side.BOTTOM;
+import static net.mindengine.galen.specs.Side.LEFT;
+import static net.mindengine.galen.specs.Side.RIGHT;
+import static net.mindengine.galen.specs.Side.TOP;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.contains;
+import static org.hamcrest.Matchers.is;
+
+import java.util.Arrays;
+import java.util.List;
+
 import net.mindengine.galen.specs.Alignment;
 import net.mindengine.galen.specs.Location;
 import net.mindengine.galen.specs.Range;
+import net.mindengine.galen.specs.Side;
 import net.mindengine.galen.specs.Spec;
 import net.mindengine.galen.specs.SpecAbsent;
 import net.mindengine.galen.specs.SpecContains;
@@ -16,12 +28,7 @@ import net.mindengine.galen.specs.SpecWidth;
 import net.mindengine.galen.specs.reader.IncorrectSpecException;
 import net.mindengine.galen.specs.reader.SpecReader;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.contains;
-import static org.hamcrest.Matchers.is;
-
 import org.hamcrest.Matchers;
-import org.testng.annotations.ExpectedExceptions;
 import org.testng.annotations.Test;
 
 @Test
@@ -31,39 +38,63 @@ public class SpecsReaderTest {
     @Test
     public void shouldReadSpec_inside_object_10px_right() {
         Spec spec = readSpec("inside: object 10px right");
-        
         SpecInside specInside = (SpecInside) spec;
+
         assertThat(specInside.getObject(), is("object"));
-        assertThat(specInside.getRange(), is(Range.exact(10)));
-        assertThat(specInside.getLocations(), contains(Location.RIGHT));
+        
+        List<Location> locations = specInside.getLocations();
+        assertThat(locations.size(), is(1));
+        assertThat(specInside.getLocations(), contains(new Location(Range.exact(10), sides(RIGHT))));
     }
     
+
     @Test
     public void shouldReadSpec_inside_object_10_to_30px_left() {
         Spec spec = readSpec("inside: object 10 to 30px left");
-
         SpecInside specInside = (SpecInside) spec;
+
         assertThat(specInside.getObject(), is("object"));
-        assertThat(specInside.getRange(), is(Range.between(10, 30)));
-        assertThat(specInside.getLocations(), contains(Location.LEFT));
+        
+        List<Location> locations = specInside.getLocations();
+        assertThat(locations.size(), is(1));
+        assertThat(specInside.getLocations(), contains(new Location(Range.between(10, 30), sides(LEFT))));
     }
     
     @Test
     public void shouldReadSpec_inside_object_25px_top_left() {
         SpecInside spec = (SpecInside)readSpec("inside: object 25px top left");
-        assertThat(spec.getLocations(), contains(Location.TOP, Location.LEFT));
+        
+        List<Location> locations = spec.getLocations();
+        assertThat(locations.size(), is(1));
+        assertThat(spec.getLocations(), contains(new Location(Range.exact(25),sides(TOP, LEFT))));
+    }
+    
+    @Test
+    public void shouldReadSpec_inside_object_25px_top_left_comma_10_to_20px_bottom() {
+        SpecInside spec = (SpecInside)readSpec("inside: object 25px top left, 10 to 20px bottom");
+        
+        List<Location> locations = spec.getLocations();
+        assertThat(locations.size(), is(2));
+        assertThat(spec.getLocations(), contains(new Location(Range.exact(25),sides(TOP, LEFT)),
+                new Location(Range.between(10, 20), sides(BOTTOM))));
     }
     
     @Test
     public void shouldReadSpec_inside_object_25px_bottom_right() {
         SpecInside spec = (SpecInside)readSpec("inside: object 25px bottom right");
-        assertThat(spec.getLocations(), contains(Location.BOTTOM, Location.RIGHT));
+        
+        List<Location> locations = spec.getLocations();
+        assertThat(locations.size(), is(1));
+        assertThat(spec.getLocations(), contains(new Location(Range.exact(25),sides(BOTTOM, RIGHT))));
     }
     
     @Test
     public void shouldReadSpec_inside_object_25px_top_left_right_bottom() {
         SpecInside spec = (SpecInside)readSpec("inside: object 25px top left right bottom ");
-        assertThat(spec.getLocations(), contains(Location.TOP, Location.LEFT, Location.RIGHT, Location.BOTTOM));
+        
+        List<Location> locations = spec.getLocations();
+        assertThat(locations.size(), is(1));
+        assertThat(spec.getLocations(), contains(new Location(Range.exact(25), sides(TOP, LEFT, RIGHT, BOTTOM))));
     }
     
     @Test
@@ -78,16 +109,20 @@ public class SpecsReaderTest {
         SpecNear spec = (SpecNear) readSpec("near: button 10 to 20px left");
         
         assertThat(spec.getObject(), is("button"));
-        assertThat(spec.getRange(), is(Range.between(10, 20)));
-        assertThat(spec.getLocations(), contains(Location.LEFT));
+        
+        List<Location> locations = spec.getLocations();
+        assertThat(locations.size(), is(1));
+        assertThat(spec.getLocations(), contains(new Location(Range.between(10, 20), sides(LEFT))));
     }
     
     @Test 
     public void shouldReadSpec_near_button_10_to_20px_top_right() {
         SpecNear spec = (SpecNear) readSpec("near: button 10 to 20px top right");
         assertThat(spec.getObject(), is("button"));
-        assertThat(spec.getRange(), is(Range.between(10, 20)));
-        assertThat(spec.getLocations(), contains(Location.TOP, Location.RIGHT));
+        
+        List<Location> locations = spec.getLocations();
+        assertThat(locations.size(), is(1));
+        assertThat(spec.getLocations(), contains(new Location(Range.between(10, 20), sides(TOP, RIGHT))));
     }
     
     @Test
@@ -186,4 +221,9 @@ public class SpecsReaderTest {
     private Spec readSpec(String specText) {
         return new SpecReader().read(specText);
     }
+    
+    private List<Side> sides(Side...sides) {
+        return Arrays.asList(sides);
+    }
+
 }
