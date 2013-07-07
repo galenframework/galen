@@ -1,5 +1,6 @@
 package net.mindengine.galen.specs;
 
+import java.util.Arrays;
 import java.util.List;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
@@ -54,4 +55,9 @@ public class Location {
             .append("sides", sides)
             .toString();
     }
+    
+    public static List<Location> locations(Location...locations) {
+        return Arrays.asList(locations);
+    }
+    
 }

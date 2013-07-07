@@ -1,5 +1,8 @@
 package net.mindengine.galen.specs;
 
+import java.util.Arrays;
+import java.util.List;
+
 import net.mindengine.galen.specs.reader.IncorrectSpecException;
 
 public enum Side {
@@ -22,5 +25,9 @@ public enum Side {
         throw new IncorrectSpecException(String.format("Unknown side: \"%s\"", side));
     }
 
+    
+    public static List<Side> sides(Side...sides) {
+        return Arrays.asList(sides);
+    }
     
 }
