@@ -24,6 +24,8 @@ submit:
 
 search-field:
     inside: big-box 30px right
+
+@
 ---------------------------
 
 big-box:
@@ -31,6 +33,7 @@ big-box:
 
 
 @ mobile
+
 ---------------------------
 submit:
     absent

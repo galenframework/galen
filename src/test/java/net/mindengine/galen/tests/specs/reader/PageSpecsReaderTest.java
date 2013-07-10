@@ -14,6 +14,7 @@ import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
@@ -39,23 +40,23 @@ public class PageSpecsReaderTest {
     PageSpec pageSpec;
     
     @Test
-    public void shouldBePossible_toReadSpec_fromInputStream() {
+    public void shouldBePossible_toReadSpec_fromInputStream() throws IOException {
         PageSpec pageSpec = new PageSpecReader().read(getClass().getResourceAsStream("/specs.txt"));
         assertThat(pageSpec, is(notNullValue()));
     }
     
     @Test
-    public void shouldBePossible_toReadSpec_fromFile() {
+    public void shouldBePossible_toReadSpec_fromFile() throws IOException {
         PageSpec pageSpec = new PageSpecReader().read(new File(getClass().getResource("/specs.txt").getFile()));
         assertThat(pageSpec, is(notNullValue()));
     }
     
     @Test
-    public void shouldLoadSpecSuccessfully() {
+    public void shouldLoadSpecSuccessfully() throws IOException {
         pageSpec = pageSpecReader.read(new File(getClass().getResource("/specs.txt").getFile()));
+        assertThat(pageSpec, is(notNullValue()));
     }
     
-    @SuppressWarnings("unchecked")
     @Test(dependsOnMethods = BASE_TEST)
     public void shouldRead_objectDefinitions() {
         Map<String, Locator> objects = pageSpec.getObjects();
@@ -90,7 +91,7 @@ public class PageSpecsReaderTest {
         List<Spec> specs = objectSpecs.getSpecs();
         assertThat(specs.size(), is(2));
         
-        assertThat((SpecInside) specs.get(0), is(new SpecInside("button", locations(new Location(Range.exact(10), sides(LEFT))))));
+        assertThat((SpecNear) specs.get(0), is(new SpecNear("button", locations(new Location(Range.exact(10), sides(LEFT))))));
         assertThat((SpecWidth) specs.get(1), is(new SpecWidth(Range.exact(70))));
     }
 
@@ -117,7 +118,7 @@ public class PageSpecsReaderTest {
     
     @Test(dependsOnMethods = BASE_TEST)
     public void shouldRead_allSpecs_withinThirdSection() {
-        List<ObjectSpecs> objects = pageSpec.getSections().get(1).getObjects();
+        List<ObjectSpecs> objects = pageSpec.getSections().get(2).getObjects();
         assertThat(objects.size(), is(1));
         
         ObjectSpecs objectSpecs = objects.get(0);
@@ -131,7 +132,7 @@ public class PageSpecsReaderTest {
     
     @Test(dependsOnMethods = BASE_TEST)
     public void shouldRead_allSpecs_withinFourthSection() {
-        List<ObjectSpecs> objects = pageSpec.getSections().get(1).getObjects();
+        List<ObjectSpecs> objects = pageSpec.getSections().get(3).getObjects();
         assertThat(objects.size(), is(1));
         
         ObjectSpecs objectSpecs = objects.get(0);
@@ -142,4 +143,7 @@ public class PageSpecsReaderTest {
         
         assertThat((SpecAbsent) specs.get(0), is(new SpecAbsent()));
     }
+    
+    
+    //TODO write some negative tests for testing errors in page specs
 }

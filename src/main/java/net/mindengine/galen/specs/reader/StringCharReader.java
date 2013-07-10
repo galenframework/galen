@@ -39,4 +39,11 @@ public class StringCharReader {
         else return text.charAt(length - 1);
     }
 
+    public String getTheRest() {
+        if (cursor < length) {
+            return text.substring(cursor);
+        }
+        else return ""; 
+    }
+
 }
