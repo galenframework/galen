@@ -19,10 +19,15 @@ public class StateDoingSection extends State {
     public void process(String line) {
         if (startsWithIndentation(line)) {
             if (currentObjectSpecs == null) {
-                throw new IncorrectSpecException("Object was not yet defined");
+                throw new IncorrectSpecException("There is no object defined in section");
             }
             else {
-                currentObjectSpecs.getSpecs().add(specReader.read(line.trim()));
+                try {
+                    currentObjectSpecs.getSpecs().add(specReader.read(line.trim()));
+                }
+                catch (IncorrectSpecException exception) {
+                    throw new IncorrectSpecException("Incorrect spec for object \"" + currentObjectSpecs.getObjectName() + "\"", exception);
+                }
             }
         }
         else {

@@ -21,6 +21,9 @@ public class ExpectLocations implements Expectation<List<Location>> {
             
             locations.add(new Location(range, sides));
         }
+        if (locations.size() == 0) {
+            throw new IncorrectSpecException("There is no location defined");
+        }
         return locations;
     }
 

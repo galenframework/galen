@@ -22,6 +22,9 @@ public class ExpectSides implements Expectation<List<Side>>{
                 break;
             }
         }
+        if (sides.size() == 0) {
+            throw new IncorrectSpecException("There are no sides defined for location");
+        }
         return sides;
     }
     

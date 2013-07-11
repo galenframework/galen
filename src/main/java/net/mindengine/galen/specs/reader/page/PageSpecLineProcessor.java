@@ -53,7 +53,8 @@ public class PageSpecLineProcessor {
     }
 
     private boolean isSectionSeparator(String line) {
-        return containsOnly(line.trim(), '-');
+        line = line.trim();
+        return !containsAnyLetters(line);
     }
 
     private boolean isObjectSeparator(String line) {
@@ -94,6 +95,18 @@ public class PageSpecLineProcessor {
                 }
             }
             return true;
+        }
+        return false;
+    }
+    
+    private boolean containsAnyLetters(String line) {
+        if (line.length() > 0) {
+            for (int i=0; i<line.length(); i++) {
+                char symbol = line.charAt(i);
+                if ((symbol >= 'A' && symbol <= 'Z') || (symbol >= 'a' && symbol <= 'z')) {
+                    return true;
+                }
+            }
         }
         return false;
     }

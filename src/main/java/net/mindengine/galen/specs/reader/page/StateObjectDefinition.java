@@ -18,12 +18,19 @@ public class StateObjectDefinition extends State {
         StringCharReader reader = new StringCharReader(line);
         
         String objectName = expectWord(reader, "Object name");
-        String locatorType = expectWord(reader, "Locator type");
-        String value = reader.getTheRest().trim();
-        if (value.isEmpty()) {
-            throw new IncorrectSpecException(String.format("The locator for object '%s' is not defined correctly", objectName));
+        
+        try {
+            String locatorType = expectWord(reader, "Locator type");
+            
+            String value = reader.getTheRest().trim();
+            if (value.isEmpty()) {
+                throw new IncorrectSpecException(String.format("The locator for object '%s' is not defined correctly", objectName));
+            }
+            pageSpec.addObject(objectName, new Locator(locatorType, value));
         }
-        pageSpec.addObject(objectName, new Locator(locatorType, value));
+        catch (Exception e) {
+            throw new IncorrectSpecException("Object \"" + objectName + "\" has incorrect locator", e);
+        }
     }
 
     private String expectWord(StringCharReader reader, String what) {

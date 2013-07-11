@@ -8,6 +8,7 @@ import static net.mindengine.galen.specs.Side.sides;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.contains;
+import static org.hamcrest.Matchers.endsWith;
 import static org.hamcrest.Matchers.hasEntry;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
@@ -30,6 +31,7 @@ import net.mindengine.galen.specs.page.ObjectSpecs;
 import net.mindengine.galen.specs.page.PageSection;
 import net.mindengine.galen.specs.reader.page.PageSpec;
 import net.mindengine.galen.specs.reader.page.PageSpecReader;
+import net.mindengine.galen.specs.reader.page.PageSpecReaderException;
 
 import org.testng.annotations.Test;
 
@@ -145,5 +147,43 @@ public class PageSpecsReaderTest {
     }
     
     
-    //TODO write some negative tests for testing errors in page specs
+    @Test
+    public void givesError_ifThereAreSpecs_withNoObjectSpecified_inSection() throws IOException {
+        PageSpecReaderException exception = expectExceptionFromReading("/negative-specs/no-object-in-section.spec");
+        
+        assertThat(exception.getMessage(), is("There is no object defined in section"));
+        assertThat(exception.getSpecFile(), endsWith("/no-object-in-section.spec"));
+        assertThat(exception.getSpecLine(), is(8));
+    }
+    
+    @Test
+    public void givesError_ifThereAre_invalidSpecs() throws IOException {
+        PageSpecReaderException exception = expectExceptionFromReading("/negative-specs/invalid-spec.spec");
+        
+        assertThat(exception.getMessage(), is("Incorrect spec for object \"menu\""));
+        assertThat(exception.getCause().getCause().getMessage(), is("There is no location defined"));
+        assertThat(exception.getSpecFile(), endsWith("/invalid-spec.spec"));
+        assertThat(exception.getSpecLine(), is(10));
+    }
+    
+    @Test 
+    public void givesError_ifThereAre_invalidObjectLocators() throws Exception {
+        PageSpecReaderException exception = expectExceptionFromReading("/negative-specs/invalid-object-locator.spec");
+        
+        assertThat(exception.getMessage(), is("Object \"bad-object\" has incorrect locator"));
+        assertThat(exception.getSpecFile(), endsWith("/invalid-object-locator.spec"));
+        assertThat(exception.getSpecLine(), is(7));
+    }
+    
+  //TODO write some negative tests for testing errors in page specs
+
+    private PageSpecReaderException expectExceptionFromReading(String file) throws IOException {
+        try {
+            pageSpecReader.read(new File(getClass().getResource(file).getFile()));
+        }
+        catch(PageSpecReaderException exception) {
+            return exception;
+        }
+        throw new RuntimeException("Expected exception was not caught when reading page spec: " + file);
+    }  
 }
