@@ -21,7 +21,6 @@ import static net.mindengine.galen.specs.Side.RIGHT;
 import static net.mindengine.galen.specs.Side.TOP;
 import static net.mindengine.galen.specs.Side.sides;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.endsWith;
 import static org.hamcrest.Matchers.hasEntry;
@@ -78,11 +77,11 @@ public class PageSpecsReaderTest {
     public void shouldRead_objectDefinitions() {
         Map<String, Locator> objects = pageSpec.getObjects();
         assertThat("Amount of objects should be", objects.size(), is(5));
-        assertThat(objects, allOf(hasEntry("submit", new Locator("xpath", "//input[@name = 'submit']")), 
-                hasEntry("search-field", new Locator("css", "#search")),
-                hasEntry("menu", new Locator("id", "menu")),
-                hasEntry("big-box", new Locator("tag", "container")),
-                hasEntry("anotherObject", new Locator("xpath", "//div"))));
+        assertThat(objects, hasEntry("submit", new Locator("xpath", "//input[@name = 'submit']"))); 
+        assertThat(objects, hasEntry("search-field", new Locator("css", "#search")));
+        assertThat(objects, hasEntry("menu", new Locator("id", "menu")));
+        assertThat(objects, hasEntry("big-box", new Locator("tag", "container")));
+        assertThat(objects, hasEntry("anotherObject", new Locator("xpath", "//div")));
     }
     
     
@@ -92,10 +91,16 @@ public class PageSpecsReaderTest {
 
         assertThat("Amount of sections should be", sections.size(), is(4));
         assertThat(sections.get(0).getTags(), hasSize(0));
-        assertThat(sections.get(1).getTags(), allOf(hasSize(2), contains("tablet", "desktop")));
+        
+        assertThat(sections.get(1).getTags(), hasSize(2));
+        assertThat(sections.get(1).getTags(), contains("tablet", "desktop"));
+        
         assertThat(sections.get(2).getTags(), hasSize(0));
-        assertThat(sections.get(3).getTags(), allOf(hasSize(1), contains("mobile")));
+        
+        assertThat(sections.get(3).getTags(), hasSize(1));
+        assertThat(sections.get(3).getTags(), contains("mobile"));
     }
+    
     
     @Test(dependsOnMethods = BASE_TEST)
     public void shouldRead_allSpecs_withinFirstSection() {
