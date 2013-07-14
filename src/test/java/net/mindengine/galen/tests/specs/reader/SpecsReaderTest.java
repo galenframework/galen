@@ -96,11 +96,19 @@ public class SpecsReaderTest {
         assertThat(locations.size(), is(1));
         assertThat(spec.getLocations(), contains(new Location(Range.exact(25), sides(TOP, LEFT, RIGHT, BOTTOM))));
     }
-    
+        
     @Test
     public void shouldReadSpec_contains() {
         Spec spec = readSpec("contains: object, menu, button");
         SpecContains specContains = (SpecContains) spec;
+        assertThat(specContains.getChildObjects(), contains("object", "menu", "button"));
+    }
+    
+    @Test
+    public void shouldReadSpec_contains_partly() {
+        Spec spec = readSpec("contains partly: object, menu, button");
+        SpecContains specContains = (SpecContains) spec;
+        assertThat(specContains.isPartly(), is(true));
         assertThat(specContains.getChildObjects(), contains("object", "menu", "button"));
     }
     

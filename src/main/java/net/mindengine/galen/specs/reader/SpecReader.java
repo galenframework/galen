@@ -44,9 +44,12 @@ public class SpecReader {
             }
         }));
         
-        putSpec("contains", new SpecListProccessor(new SpecListInit() {
+        putSpec("contains.*", new SpecListProccessor(new SpecListInit() {
             public Spec init(String specName, List<String> list) {
-                return new SpecContains(list);
+                String arguments = specName.substring("contains".length()).trim();
+                
+                boolean isPartly = (!arguments.isEmpty() && arguments.equals("partly"));
+                return new SpecContains(list, isPartly);
             }
         }));
         
