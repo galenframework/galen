@@ -53,4 +53,8 @@ public class PageSpec {
         objects.put(objectName, locator);
     }
 
+    public Locator getObjectLocator(String objectName) {
+        return objects.get(objectName);
+    }
+
 }

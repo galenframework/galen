@@ -15,6 +15,9 @@
 ******************************************************************************/
 package net.mindengine.galen.validation;
 
+import java.util.Arrays;
+import java.util.List;
+
 import net.mindengine.galen.page.Rect;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
@@ -24,19 +27,20 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 public class ValidationError {
 
     private Rect area;
-    private String errorMessage;
+    private List<String> messages;
 
-    public ValidationError(Rect area, String errorMessage) {
+    public ValidationError(Rect area, String...errorMessages) {
         this.area = area;
-        this.errorMessage = errorMessage;
+        this.messages = Arrays.asList(errorMessages);
     }
 
-    public ValidationError(String errorMessage) {
-        this.errorMessage = errorMessage;
+    public ValidationError(String...errorMessages) {
+        this.messages = Arrays.asList(errorMessages);
     }
 
-    public String getErrorMessage() {
-        return this.errorMessage;
+    public ValidationError(Rect area, List<String> messages) {
+        this.area = area;
+        this.messages = messages;
     }
 
     public Rect getArea() {
@@ -45,7 +49,7 @@ public class ValidationError {
     
     @Override
     public int hashCode() {
-        return new HashCodeBuilder(17, 31).append(area).append(errorMessage).toHashCode();
+        return new HashCodeBuilder(17, 31).append(area).append(messages).toHashCode();
     }
     
     @Override
@@ -58,20 +62,28 @@ public class ValidationError {
             return false;
         
         ValidationError rhs = (ValidationError)obj;
-        return new EqualsBuilder().append(area, rhs.area).append(errorMessage, rhs.errorMessage).isEquals();
+        return new EqualsBuilder().append(area, rhs.area).append(messages, rhs.messages).isEquals();
     }
     
     @Override
     public String toString() {
         return new ToStringBuilder(this)
             .append("area", area)
-            .append("errorMessage", errorMessage)
+            .append("messages", messages)
             .toString();
     }
 
     public ValidationError withArea(Rect objectArea) {
         this.area = objectArea;
         return this;
+    }
+
+    public List<String> getMessages() {
+        return messages;
+    }
+
+    public void setMessages(List<String> messages) {
+        this.messages = messages;
     }
 
 }

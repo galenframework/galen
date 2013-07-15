@@ -15,8 +15,10 @@
 ******************************************************************************/
 package net.mindengine.galen.page;
 
+import net.mindengine.galen.specs.page.Locator;
+
 public interface Page {
 
-    PageElement getObject(String objectName);
+    PageElement getObject(String objectName, Locator objectLocator);
 
 }

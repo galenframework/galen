@@ -31,4 +31,14 @@ public class MockedPageElement implements PageElement {
         return rect;
     }
 
+    @Override
+    public boolean isPresent() {
+        return true;
+    }
+
+    @Override
+    public boolean isVisible() {
+        return true;
+    }
+
 }

@@ -20,6 +20,7 @@ import static java.lang.String.format;
 import java.util.LinkedList;
 import java.util.List;
 
+import net.mindengine.galen.page.PageElement;
 import net.mindengine.galen.page.Point;
 import net.mindengine.galen.page.Rect;
 import net.mindengine.galen.specs.SpecContains;
@@ -37,53 +38,45 @@ public class SpecValidationContains extends SpecValidation<SpecContains> {
 
     @Override
     public ValidationError check(String objectName, SpecContains spec) {
-        Rect objectArea = getObjectArea(objectName);
+        PageElement mainObject = getPageElement(objectName);
+        if (mainObject == null) {
+            return errorObjectMissingInSpec(objectName);
+        }
+        if (!mainObject.isPresent()) {
+            return error(format(OBJECT_S_IS_ABSENT_ON_PAGE, objectName));
+        }
+        else if (!mainObject.isVisible()) {
+            return error(format(OBJECT_WITH_NAME_S_IS_NOT_DEFINED_IN_PAGE_SPEC, objectName));
+        }
         
-        if (objectArea != null) {
-            List<String> erroredObjects = new LinkedList<String>();
-            for (String childObjectName : spec.getChildObjects()) {
-               Rect childObjectArea = getObjectArea(childObjectName);
-               if (childObjectArea != null) {
-                   if (!childObjectMatches(spec, objectArea, childObjectArea)) {
-                       erroredObjects.add(childObjectName);
-                   }
-               }
-               else {
-                   return errorObjectMissingInSpec(childObjectName);
-               }
-            }
-            
-            if (erroredObjects.size() > 0) {
-                return errorForObjects(erroredObjects).withArea(objectArea);
-            }
-            else return NO_ERROR;
-        }        
-        else return errorObjectMissingInSpec(objectName);
-    }
+        Rect objectArea = mainObject.getArea();
+        List<String> messages = new LinkedList<String>();
 
-    private ValidationError errorForObjects(List<String> erroredObjects) {
-        if (erroredObjects.size() == 1) {
-            return error(format("Object \"%s\" is outside the specified element", erroredObjects.get(0)));
+        for (String childObjectName : spec.getChildObjects()) {
+            PageElement childObject = getPageElement(childObjectName);
+            if (childObject != null) {
+                if (!childObject.isPresent()) {
+                    messages.add(format(OBJECT_S_IS_ABSENT_ON_PAGE, childObjectName));
+                }
+                else if (!childObject.isVisible()) {
+                    messages.add(format(OBJECT_S_IS_NOT_VISIBLE_ON_PAGE, childObjectName));
+                } 
+                else {
+                    Rect childObjectArea = childObject.getArea();
+                    if (!childObjectMatches(spec, objectArea, childObjectArea)) {
+                        messages.add(format("Object \"%s\" is outside the specified object \"%s\"", childObjectName, objectName));
+                    }
+                }
+            }
+            else {
+                messages.add(format(OBJECT_WITH_NAME_S_IS_NOT_DEFINED_IN_PAGE_SPEC, childObjectName));
+            }
         }
-        else {
-            return error(format("Objects %s are outside the specified element", commaSeparatedObjects(erroredObjects)));
-        }
-    }
-
-    private Object commaSeparatedObjects(List<String> erroredObjects) {
-        StringBuffer buffer = new StringBuffer();
-        boolean comma = false;
         
-        for (String objectName : erroredObjects) {
-            if (comma) {
-                buffer.append(", ");
-            }
-            buffer.append("\"");
-            buffer.append(objectName);
-            buffer.append("\"");
-            comma = true;
+        if (messages.size() > 0) {
+            return new ValidationError(mainObject.getArea(), messages);
         }
-        return buffer.toString();
+        else return NO_ERROR;
     }
 
     private boolean childObjectMatches(SpecContains spec, Rect objectArea, Rect childObjectArea) {

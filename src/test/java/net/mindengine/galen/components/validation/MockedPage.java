@@ -19,18 +19,27 @@ import java.util.HashMap;
 
 import net.mindengine.galen.page.Page;
 import net.mindengine.galen.page.PageElement;
+import net.mindengine.galen.specs.page.Locator;
 
 public class MockedPage implements Page {
 
     private HashMap<String, PageElement> elements;
 
     public MockedPage(HashMap<String, PageElement> elements) {
-        this.elements = elements;
+        this.setElements(elements);
     }
 
     @Override
-    public PageElement getObject(String objectName) {
-        return elements.get(objectName);
+    public PageElement getObject(String objectName, Locator locator) {
+        return getElements().get(objectName);
+    }
+
+    public HashMap<String, PageElement> getElements() {
+        return elements;
+    }
+
+    public void setElements(HashMap<String, PageElement> elements) {
+        this.elements = elements;
     }
 
     

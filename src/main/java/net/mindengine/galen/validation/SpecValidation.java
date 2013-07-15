@@ -15,11 +15,15 @@
 ******************************************************************************/
 package net.mindengine.galen.validation;
 
-import net.mindengine.galen.page.Rect;
+import net.mindengine.galen.page.PageElement;
 import net.mindengine.galen.specs.Spec;
+import net.mindengine.galen.specs.page.Locator;
 
 public abstract class SpecValidation<T extends Spec> {
     
+    protected static final String OBJECT_WITH_NAME_S_IS_NOT_DEFINED_IN_PAGE_SPEC = "Cannot find locator for \"%s\" in page spec";
+    protected static final String OBJECT_S_IS_ABSENT_ON_PAGE = "Object \"%s\" is absent on page";
+    protected static final String OBJECT_S_IS_NOT_VISIBLE_ON_PAGE = "Object \"%s\" is not visible on page";
     private PageValidation pageValidation;
 
     public SpecValidation(PageValidation pageValidation) {
@@ -47,11 +51,15 @@ public abstract class SpecValidation<T extends Spec> {
     }
     
     protected ValidationError errorObjectMissingInSpec(String objectName) {
-        return error("Object with name \"" + objectName + "\" is not defined in page spec");
+        return error(String.format(OBJECT_WITH_NAME_S_IS_NOT_DEFINED_IN_PAGE_SPEC, objectName));
     }
     
-    protected Rect getObjectArea(String objectName) {
-        return getPageValidation().getObjectArea(objectName);
+    protected PageElement getPageElement(String objectName) {
+        Locator objectLocator = getPageValidation().getPageSpec().getObjectLocator(objectName);
+        if (objectLocator != null) {
+            return getPageValidation().getPage().getObject(objectName, objectLocator);
+        }
+        else return null;
     }
-
+    
 }
