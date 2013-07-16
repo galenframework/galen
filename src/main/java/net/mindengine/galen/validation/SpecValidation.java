@@ -15,6 +15,7 @@
 ******************************************************************************/
 package net.mindengine.galen.validation;
 
+import static java.lang.String.format;
 import net.mindengine.galen.page.PageElement;
 import net.mindengine.galen.specs.Spec;
 import net.mindengine.galen.specs.page.Locator;
@@ -58,6 +59,19 @@ public abstract class SpecValidation<T extends Spec> {
         Locator objectLocator = getPageValidation().getPageSpec().getObjectLocator(objectName);
         if (objectLocator != null) {
             return getPageValidation().getPage().getObject(objectName, objectLocator);
+        }
+        else return null;
+    }
+    
+    protected ValidationError checkAvailability(PageElement object, String objectName) {
+        if (object == null) {
+            return errorObjectMissingInSpec(objectName);
+        }
+        if (!object.isPresent()) {
+            return error(format(OBJECT_S_IS_ABSENT_ON_PAGE, objectName));
+        }
+        else if (!object.isVisible()) {
+            return error(format(OBJECT_S_IS_ABSENT_ON_PAGE, objectName));
         }
         else return null;
     }

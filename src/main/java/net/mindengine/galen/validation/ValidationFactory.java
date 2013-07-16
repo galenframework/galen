@@ -21,8 +21,10 @@ import java.util.Map;
 import net.mindengine.galen.specs.Spec;
 import net.mindengine.galen.specs.SpecAbsent;
 import net.mindengine.galen.specs.SpecContains;
+import net.mindengine.galen.specs.SpecInside;
 import net.mindengine.galen.validation.specs.SpecValidationAbsent;
 import net.mindengine.galen.validation.specs.SpecValidationContains;
+import net.mindengine.galen.validation.specs.SpecValidationInside;
 
 public class ValidationFactory {
     
@@ -45,6 +47,7 @@ public class ValidationFactory {
     private void initValidations() {
         validations.put(SpecContains.class, SpecValidationContains.class);
         validations.put(SpecAbsent.class, SpecValidationAbsent.class);
+        validations.put(SpecInside.class, SpecValidationInside.class);
     }
 
     @SuppressWarnings({ "unchecked", "rawtypes" })

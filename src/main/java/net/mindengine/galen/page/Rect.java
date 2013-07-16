@@ -47,6 +47,18 @@ public class Rect {
                 && point.getTop() >= top && point.getTop() <= (top + height));
     }
     
+    public int getLeft() {
+        return left;
+    }
+    public int getWidth() {
+        return width;
+    }
+    public int getTop() {
+        return top;
+    }
+    public int getHeight() {
+        return height;
+    }
     
     @Override
     public int hashCode() {
@@ -68,7 +80,7 @@ public class Rect {
     
     @Override
     public String toString() {
-        return format("Rect(left: %d, top: %d, w: %d, h: %d)", left, top, width, height);
+        return format("Rect{left: %d, top: %d, w: %d, h: %d}", left, top, width, height);
     }
 
 }

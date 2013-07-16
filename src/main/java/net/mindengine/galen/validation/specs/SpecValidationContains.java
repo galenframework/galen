@@ -39,14 +39,10 @@ public class SpecValidationContains extends SpecValidation<SpecContains> {
     @Override
     public ValidationError check(String objectName, SpecContains spec) {
         PageElement mainObject = getPageElement(objectName);
-        if (mainObject == null) {
-            return errorObjectMissingInSpec(objectName);
-        }
-        if (!mainObject.isPresent()) {
-            return error(format(OBJECT_S_IS_ABSENT_ON_PAGE, objectName));
-        }
-        else if (!mainObject.isVisible()) {
-            return error(format(OBJECT_WITH_NAME_S_IS_NOT_DEFINED_IN_PAGE_SPEC, objectName));
+        
+        ValidationError error = checkAvailability(mainObject, objectName);
+        if (error != null) {
+            return error;
         }
         
         Rect objectArea = mainObject.getArea();

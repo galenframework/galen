@@ -40,6 +40,20 @@ public enum Side {
         throw new IncorrectSpecException(String.format("Unknown side: \"%s\"", side));
     }
 
+    @Override
+    public String toString() {
+        switch(this) {
+        case LEFT:
+            return "left";
+        case RIGHT:
+            return "right";
+        case TOP:
+            return "top";
+        case BOTTOM:
+            return "bottom";
+        }
+        return "unknown side";
+    }
     
     public static List<Side> sides(Side...sides) {
         return Arrays.asList(sides);

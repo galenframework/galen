@@ -20,20 +20,20 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 public class Range {
 
-    public Range(Integer from, Integer to) {
+    public Range(int from, int to) {
         this.from = from;
         this.to = to;
     }
-    private Integer from;
-    private Integer to;
-    public Integer getFrom() {
+    private int from;
+    private int to;
+    public int getFrom() {
         return from;
     }
-    public Integer getTo() {
+    public int getTo() {
         return to;
     }
     public static Range exact(int number) {
-        return new Range(number, null);
+        return new Range(number, number);
     }
     public static Range between(int from, int to) {
         return new Range(Math.min(from, to), Math.max(from, to));
@@ -61,6 +61,12 @@ public class Range {
     
     @Override
     public String toString() {
-        return "Range(" + from + ", " + to + ")";
+        return "Range{" + from + ", " + to + "}";
+    }
+    public boolean isExact() {
+        return from == to;
+    }
+    public boolean holds(int offset) {
+        return offset >= from && offset <= to;
     }
 }

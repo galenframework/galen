@@ -15,6 +15,8 @@
 ******************************************************************************/
 package net.mindengine.galen.validation;
 
+import static java.lang.String.format;
+
 import java.util.Arrays;
 import java.util.List;
 
@@ -22,7 +24,6 @@ import net.mindengine.galen.page.Rect;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.apache.commons.lang3.builder.ToStringBuilder;
 
 public class ValidationError {
 
@@ -67,10 +68,7 @@ public class ValidationError {
     
     @Override
     public String toString() {
-        return new ToStringBuilder(this)
-            .append("area", area)
-            .append("messages", messages)
-            .toString();
+        return format("Error{%s, area=%s}", messages, area);
     }
 
     public ValidationError withArea(Rect objectArea) {
