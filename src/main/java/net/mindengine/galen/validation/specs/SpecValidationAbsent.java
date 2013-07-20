@@ -35,7 +35,7 @@ public class SpecValidationAbsent extends SpecValidation<SpecAbsent>{
             return errorObjectMissingInSpec(objectName);
         }
         else if (mainObject.isPresent() && mainObject.isVisible()) {
-            return new ValidationError(mainObject.getArea(), format("Object \"%s\" is not absent on page", objectName));
+            return new ValidationError(mainObject.getArea(), format("\"%s\" is not absent on page", objectName));
         }
         else return null;
     }

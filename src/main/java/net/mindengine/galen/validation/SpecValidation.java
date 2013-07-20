@@ -23,8 +23,8 @@ import net.mindengine.galen.specs.page.Locator;
 public abstract class SpecValidation<T extends Spec> {
     
     protected static final String OBJECT_WITH_NAME_S_IS_NOT_DEFINED_IN_PAGE_SPEC = "Cannot find locator for \"%s\" in page spec";
-    protected static final String OBJECT_S_IS_ABSENT_ON_PAGE = "Object \"%s\" is absent on page";
-    protected static final String OBJECT_S_IS_NOT_VISIBLE_ON_PAGE = "Object \"%s\" is not visible on page";
+    protected static final String OBJECT_S_IS_ABSENT_ON_PAGE = "\"%s\" is absent on page";
+    protected static final String OBJECT_S_IS_NOT_VISIBLE_ON_PAGE = "\"%s\" is not visible on page";
     private PageValidation pageValidation;
 
     public SpecValidation(PageValidation pageValidation) {

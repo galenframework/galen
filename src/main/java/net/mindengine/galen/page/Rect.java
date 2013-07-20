@@ -16,6 +16,8 @@
 package net.mindengine.galen.page;
 
 
+import static java.lang.Math.max;
+import static java.lang.Math.min;
 import static java.lang.String.format;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
@@ -81,6 +83,29 @@ public class Rect {
     @Override
     public String toString() {
         return format("Rect{left: %d, top: %d, w: %d, h: %d}", left, top, width, height);
+    }
+
+    public static Rect boundaryOf(Rect...rects) {
+        if (rects.length > 0) {
+            Point[] points = rects[0].getBoundaryPoints();
+            
+            for (int i=1; i< rects.length; i++) {
+               Point[] pointsNext = rects[i].getBoundaryPoints();
+               points[0].setLeft(min(points[0].getLeft(), pointsNext[0].getLeft()));
+               points[0].setTop(min(points[0].getTop(), pointsNext[0].getTop()));
+               
+               points[1].setLeft(max(points[1].getLeft(), pointsNext[1].getLeft()));
+               points[1].setTop(max(points[1].getTop(), pointsNext[1].getTop()));
+            }
+            return new Rect(points[0].getLeft(), points[0].getTop(), points[1].getLeft() - points[0].getLeft(), points[1].getTop() - points[0].getTop());
+        }
+        else return null;
+    }
+
+    private Point[] getBoundaryPoints() {
+        return new Point[]{new Point(getLeft(), getTop()),
+                new Point(getLeft() + getWidth(), getTop() + getHeight())
+        };
     }
 
 }
