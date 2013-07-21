@@ -618,27 +618,10 @@ public class ValidationTest {
           
           //TODO verify if area of object is returned incorrectly (width < 1 and height < 1)
           
-          //TODO
-          
-          /*
-           * errors:
-           * 2. is 30px left instead of 10px
-           * 3. is 30px left which is not in range of 10px to 20px
-           * 4. "container" is not specified in page spec
-           * 5. is 30px left instead of 10px and is 5px top instead of 10px
-           * 6. "object" is absent
-           * 7. "object" is not visible
-           * 8. "container" is absent
-           * 9. "container" is not visible
-           */
-          
-          /*
-           * General errors:
-           * There is no validation for spec ...
-           */
-          //TODO other specs
+          //TODO refactor areas. Should be list of areas with tooltips instead of just one rect area.
           
           //TODO refactor validations. Should be objects instead of classes
+          
         };
     }
     

@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <link type="text/css" href="page-nice.css" rel="stylesheet">
+        <script src="jquery-1.7.1.min.js"></script>
+    </head>
+    <body class="desktop">
+        <script>
+            function changeBodyClass(className) {
+                $("body").removeClass();
+                $("body").addClass(className);
+            }
+            function windowResize() {
+                var width = $(window).width();
+                if (width < 410) {
+                    changeBodyClass("mobile");
+                }
+                else if (width < 700) {
+                    changeBodyClass("tablet");
+                }
+                else  {
+                    changeBodyClass("desktop");
+                }
+            }
+            $(function () {
+                windowResize();
+                $(window).resize(function () {
+                    windowResize();
+                });
+            });
+        </script>
+        <div id="container">
+            <div id="header">
+                <h1>Responsive design test page</h1>
+                <h2>This page should look nice when stretching your browser</h2>
+            </div>
+            <div id="menu">
+                <ul>
+                    <li><a href="">Home</a></li>
+                    <li><a href="">Categories</a></li>
+                    <li><a href="">Blog</a></li>
+                    <li><a href="">Rss</a></li>
+                    <li><a href="">About</a></li>
+                    <li class="hide-tablet"><a href="">Contacts</a></li>
+                    <li class="hide-tablet hide-mobile"><a href="">Help</a></li>
+                </ul>
+            </div>
+            <div id="main-wrapper">
+                <div id="main">
+                    <div class="Article">
+                        <h2>Test title</h2>
+                        Lorem ipsum dolor sit amet, cu pri iuvaret volutpat, nam et eligendi conclusionemque. No gubergren scribentur vis, his id appareat tacimates, case augue saepe an est. Summo congue ad pri, ei est sumo persius, vel ad graece iisque insolens. At solet persius forensibus est, fabulas eligendi est ut.
+
+                        Tritani ponderum te pro. Mutat aliquam ei eum, ea dolor consul cum. Est viris saepe postulant ex, vel te illud sadipscing. Iusto graeco per an, id eros reque justo eam, ut duo alterum officiis. Ei ullum erant tritani eos, choro primis definiebas eu sea.
+
+                        Mei no movet nusquam necessitatibus, no purto liber appareat cum. Eleifend reformidans qui an. Saperet propriae indoctum vim ei, est delicata evertitur te. Oratio mucius meliore duo eu, eum ei probo saepe reprimique. In vel viris tollit adolescens. Has ut consul suscipit, verear periculis vix et.
+
+                        Vix tollit graeci cu. Libris scaevola eos te. Pri te admodum tibique probatus. Et debitis sapientem usu, sint etiam aliquam in qui, audire delicata sed at. Eum at mundi efficiendi.
+
+                        Impedit alienum ex est, pro cu cetero feugait maiestatis. Nullam timeam eu sed, ei mei quis eruditi. Ut omittam eloquentiam sea. No nonumes definiebas sea. Ad ius scripta omittam, eos an falli dicant. Te torquatos vulputate mediocritatem mei, sit diceret expetendis ne, sumo suscipit cotidieque ea pro.
+
+                        Debet vitae legimus pro ad, populo aliquid elaboraret eu sit, te mea quaeque ocurreret elaboraret. Ex sea meis falli diceret. In quodsi euismod sit, quo diam ubique ea. Duo te tantas vivendum. At per vidit mazim, iuvaret tractatos eum te.
+
+                        Alterum corpora inciderint an sit. Est no veniam homero. Est eros option ei, ex eos dico nemore antiopam. Quaeque persecuti ad ius. Everti indoctum recteque ei eum, pri ex probatus intellegebat.
+
+                        At nec albucius tacimates, te eam vidisse expetenda, ex ornatus similique temporibus vis. Noster recteque nam in. Aeterno persequeris nec ut, illum decore nam ne. Elitr accumsan in pro, populo saperet adipiscing his ei, sed eu augue liber vituperata. In quidam reformidans nec, mea no offendit nominati.
+
+                        Atqui nusquam gloriatur nec te, ne ullum luptatum ius, nibh nonumy explicari est cu. Ut per menandri expetenda neglegentur, no quidam docendi nominavi eum. Nobis dignissim reprimique ex nam, te petentium intellegam scriptorem vix. Propriae mandamus dissentiunt ea sea, cu magna lucilius usu. Civibus consulatu te eam, oporteat explicari cu vix, nam in integre persecuti.
+
+                        Facer inermis et mea, melius equidem invidunt ad mea. Ullum inermis ne cum. Per mundi maiorum constituam no, vix ea meis probo sonet. Eu natum tollit euripidis has, populo bonorum expetendis ne vim. Vis an erant convenire, ne vis tale saepe epicuri.
+                    </div>
+                </div>
+                <div id="sections">
+                    <h2>Categories</h2>
+                    <ul>
+                        <li><a href="">Test category 1</a></li>
+                        <li><a href="">Test category 2</a></li>
+                        <li><a href="">Test category 3</a></li>
+                        <li><a href="">Test category 4</a></li>
+                        <li><a href="">Test category 5</a></li>
+                        <li><a href="">Test category 6</a></li>
+                        <li><a href="">Test category 7</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div id="footer">
+                <a class="hide-mobile" href="">Contact</a>
+                <a href="">About us</a>
+                <a href="">Help</a>
+                <a href="">Privacy</a>
+                <a href="">Policies</a>
+            </div>
+        </div>
+    </body>
+</html>
