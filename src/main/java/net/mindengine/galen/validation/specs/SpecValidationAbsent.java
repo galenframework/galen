@@ -24,13 +24,9 @@ import net.mindengine.galen.validation.ValidationError;
 
 public class SpecValidationAbsent extends SpecValidation<SpecAbsent>{
 
-    public SpecValidationAbsent(PageValidation pageValidation) {
-        super(pageValidation);
-    }
-
     @Override
-    public ValidationError check(String objectName, SpecAbsent spec) {
-        PageElement mainObject = getPageElement(objectName);
+    public ValidationError check(PageValidation pageValidation, String objectName, SpecAbsent spec) {
+        PageElement mainObject = getPageElement(pageValidation, objectName);
         if (mainObject == null) {
             return errorObjectMissingInSpec(objectName);
         }

@@ -25,11 +25,6 @@ public abstract class SpecValidation<T extends Spec> {
     protected static final String OBJECT_WITH_NAME_S_IS_NOT_DEFINED_IN_PAGE_SPEC = "Cannot find locator for \"%s\" in page spec";
     protected static final String OBJECT_S_IS_ABSENT_ON_PAGE = "\"%s\" is absent on page";
     protected static final String OBJECT_S_IS_NOT_VISIBLE_ON_PAGE = "\"%s\" is not visible on page";
-    private PageValidation pageValidation;
-
-    public SpecValidation(PageValidation pageValidation) {
-        this.setPageValidation(pageValidation);
-    }
 
     /**
      * Checks if object satisfies the specified spec
@@ -37,15 +32,7 @@ public abstract class SpecValidation<T extends Spec> {
      * @param spec
      * @return error with a message. If object satisfies the provided spec then a null is returned
      */
-    public abstract ValidationError check(String objectName, T spec);
-
-    public PageValidation getPageValidation() {
-        return pageValidation;
-    }
-
-    public void setPageValidation(PageValidation pageValidation) {
-        this.pageValidation = pageValidation;
-    }
+    public abstract ValidationError check(PageValidation pageValidation, String objectName, T spec);
     
     protected ValidationError error(String errorMessage) {
         return new ValidationError(errorMessage);
@@ -55,10 +42,10 @@ public abstract class SpecValidation<T extends Spec> {
         return error(String.format(OBJECT_WITH_NAME_S_IS_NOT_DEFINED_IN_PAGE_SPEC, objectName));
     }
     
-    protected PageElement getPageElement(String objectName) {
-        Locator objectLocator = getPageValidation().getPageSpec().getObjectLocator(objectName);
+    protected PageElement getPageElement(PageValidation pageValidation, String objectName) {
+        Locator objectLocator = pageValidation.getPageSpec().getObjectLocator(objectName);
         if (objectLocator != null) {
-            return getPageValidation().getPage().getObject(objectName, objectLocator);
+            return pageValidation.getPage().getObject(objectName, objectLocator);
         }
         else return null;
     }

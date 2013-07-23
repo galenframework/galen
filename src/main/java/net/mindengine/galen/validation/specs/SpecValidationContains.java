@@ -32,13 +32,9 @@ public class SpecValidationContains extends SpecValidation<SpecContains> {
 
     private static final ValidationError NO_ERROR = null;
 
-    public SpecValidationContains(PageValidation pageValidation) {
-        super(pageValidation);
-    }
-
     @Override
-    public ValidationError check(String objectName, SpecContains spec) {
-        PageElement mainObject = getPageElement(objectName);
+    public ValidationError check(PageValidation pageValidation, String objectName, SpecContains spec) {
+        PageElement mainObject = getPageElement(pageValidation, objectName);
         
         ValidationError error = checkAvailability(mainObject, objectName);
         if (error != null) {
@@ -49,7 +45,7 @@ public class SpecValidationContains extends SpecValidation<SpecContains> {
         List<String> messages = new LinkedList<String>();
 
         for (String childObjectName : spec.getChildObjects()) {
-            PageElement childObject = getPageElement(childObjectName);
+            PageElement childObject = getPageElement(pageValidation, childObjectName);
             if (childObject != null) {
                 if (!childObject.isPresent()) {
                     messages.add(format(OBJECT_S_IS_ABSENT_ON_PAGE, childObjectName));

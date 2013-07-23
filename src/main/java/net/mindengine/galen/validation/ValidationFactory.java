@@ -39,7 +39,7 @@ import net.mindengine.galen.validation.specs.SpecValidationWidth;
 public class ValidationFactory {
     
     @SuppressWarnings("rawtypes")
-    private Map<Class<? extends Spec>, Class<? extends SpecValidation>> validations = new HashMap<Class<? extends Spec>, Class<? extends SpecValidation>>();
+    private Map<Class<? extends Spec>, SpecValidation> validations = new HashMap<Class<? extends Spec>, SpecValidation>();
     
     private static ValidationFactory _instance = null;
     
@@ -55,28 +55,24 @@ public class ValidationFactory {
     }
     
     private void initValidations() {
-        validations.put(SpecContains.class, SpecValidationContains.class);
-        validations.put(SpecAbsent.class, SpecValidationAbsent.class);
-        validations.put(SpecInside.class, SpecValidationInside.class);
-        validations.put(SpecNear.class, SpecValidationNear.class);
-        validations.put(SpecWidth.class, SpecValidationWidth.class);
-        validations.put(SpecHeight.class, SpecValidationHeight.class);
-        validations.put(SpecHorizontally.class, SpecValidationHorizontally.class);
-        validations.put(SpecVertically.class, SpecValidationVertically.class);
+        validations.put(SpecContains.class, new SpecValidationContains());
+        validations.put(SpecAbsent.class, new SpecValidationAbsent());
+        validations.put(SpecInside.class, new SpecValidationInside());
+        validations.put(SpecNear.class, new SpecValidationNear());
+        validations.put(SpecWidth.class, new SpecValidationWidth());
+        validations.put(SpecHeight.class, new SpecValidationHeight());
+        validations.put(SpecHorizontally.class, new SpecValidationHorizontally());
+        validations.put(SpecVertically.class, new SpecValidationVertically());
     }
 
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public static SpecValidation<? extends Spec> getValidation(Spec spec, PageValidation pageValidation) {
-        Class<? extends SpecValidation> validationClass = ValidationFactory.get().validations.get(spec.getClass());
-        if (validationClass == null) {
+        SpecValidation specValidation = ValidationFactory.get().validations.get(spec.getClass());
+        if (specValidation == null) {
             throw new RuntimeException("There is no known validation for spec " + spec.getClass());
         }
         else {
-            try {
-                return validationClass.getConstructor(PageValidation.class).newInstance(pageValidation);
-            } catch (Exception e) {
-                throw new RuntimeException("Could not instantiate validation " + validationClass + " for spec " + spec.getClass());
-            }
+            return specValidation;
         }
     }
 

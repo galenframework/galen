@@ -18,13 +18,8 @@ package net.mindengine.galen.validation.specs;
 import net.mindengine.galen.page.PageElement;
 import net.mindengine.galen.page.Rect;
 import net.mindengine.galen.specs.SpecVertically;
-import net.mindengine.galen.validation.PageValidation;
 
 public class SpecValidationVertically extends SpecValidationOneLine<SpecVertically> {
-
-    public SpecValidationVertically(PageValidation pageValidation) {
-        super(pageValidation);
-    }
 
     @Override
     protected String getAligmentText(SpecVertically spec) {

@@ -40,7 +40,7 @@ public class PageValidation {
     @SuppressWarnings({ "rawtypes", "unchecked" })
     public ValidationError check(String objectName, Spec spec) {
         SpecValidation specValidation = ValidationFactory.getValidation(spec, this);
-        return specValidation.check(objectName, spec);
+        return specValidation.check(this, objectName, spec);
     }
 
     public PageSpec getPageSpec() {

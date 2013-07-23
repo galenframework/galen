@@ -38,20 +38,16 @@ import net.mindengine.galen.validation.ValidationError;
  */
 public abstract class SpecValidationGeneral<T extends SpecComplex> extends SpecValidation<T>{
 
-    public SpecValidationGeneral(PageValidation pageValidation) {
-        super(pageValidation);
-    }
-
     @Override
-    public ValidationError check(String objectName, T spec) {
-        PageElement mainObject = getPageElement(objectName);
+    public ValidationError check(PageValidation pageValidation, String objectName, T spec) {
+        PageElement mainObject = getPageElement(pageValidation, objectName);
         
         ValidationError error = checkAvailability(mainObject, objectName);
         if (error != null) {
             return error;
         }
         
-        PageElement secondObject = getPageElement(spec.getObject());
+        PageElement secondObject = getPageElement(pageValidation, spec.getObject());
         error = checkAvailability(secondObject, spec.getObject());
         if (error != null) {
             return error;

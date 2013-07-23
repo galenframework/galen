@@ -27,13 +27,9 @@ import net.mindengine.galen.validation.ValidationError;
 
 public abstract class SpecValidationOneLine<T extends SpecObjectsOnOneLine> extends SpecValidation<T> {
 
-    public SpecValidationOneLine(PageValidation pageValidation) {
-        super(pageValidation);
-    }
-
     @Override
-    public ValidationError check(String objectName, T spec) {
-        PageElement mainObject = getPageElement(objectName);
+    public ValidationError check(PageValidation pageValidation, String objectName, T spec) {
+        PageElement mainObject = getPageElement(pageValidation, objectName);
         
         ValidationError error = checkAvailability(mainObject, objectName);
         if (error != null) {
@@ -44,7 +40,7 @@ public abstract class SpecValidationOneLine<T extends SpecObjectsOnOneLine> exte
         Rect area = null;
         
         for (String childObjectName : spec.getChildObjects()) {
-            PageElement childObject = getPageElement(childObjectName);
+            PageElement childObject = getPageElement(pageValidation, childObjectName);
             error = checkAvailability(childObject, childObjectName);
             if (error != null) {
                 return error;

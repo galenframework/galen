@@ -620,8 +620,6 @@ public class ValidationTest {
           
           //TODO refactor areas. Should be list of areas with tooltips instead of just one rect area.
           
-          //TODO refactor validations. Should be objects instead of classes
-          
         };
     }
     

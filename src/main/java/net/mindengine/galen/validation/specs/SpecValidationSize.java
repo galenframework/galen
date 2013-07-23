@@ -25,13 +25,9 @@ import net.mindengine.galen.validation.ValidationError;
 
 public abstract class SpecValidationSize<T extends SpecRange> extends SpecValidation<T> {
 
-    public SpecValidationSize(PageValidation pageValidation) {
-        super(pageValidation);
-    }
-
     @Override
-    public ValidationError check(String objectName, T spec) {
-        PageElement mainObject = getPageElement(objectName);
+    public ValidationError check(PageValidation pageValidation, String objectName, T spec) {
+        PageElement mainObject = getPageElement(pageValidation, objectName);
         
         ValidationError error = checkAvailability(mainObject, objectName);
         if (error != null) {

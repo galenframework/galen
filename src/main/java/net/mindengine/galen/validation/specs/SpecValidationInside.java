@@ -18,13 +18,8 @@ package net.mindengine.galen.validation.specs;
 import net.mindengine.galen.page.Rect;
 import net.mindengine.galen.specs.Side;
 import net.mindengine.galen.specs.SpecInside;
-import net.mindengine.galen.validation.PageValidation;
 
 public class SpecValidationInside extends SpecValidationGeneral<SpecInside> {
-
-    public SpecValidationInside(PageValidation pageValidation) {
-        super(pageValidation);
-    }
 
     @Override
     protected int getOffsetForSide(Rect mainArea, Rect parentArea, Side side) {
