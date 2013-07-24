@@ -17,40 +17,30 @@ package net.mindengine.galen.validation;
 
 import static java.lang.String.format;
 
-import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.List;
-
-import net.mindengine.galen.page.Rect;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 public class ValidationError {
 
-    private Rect area;
+    private List<ErrorArea> errorAreas;
     private List<String> messages;
 
-    public ValidationError(Rect area, String...errorMessages) {
-        this.area = area;
-        this.messages = Arrays.asList(errorMessages);
-    }
-
-    public ValidationError(String...errorMessages) {
-        this.messages = Arrays.asList(errorMessages);
-    }
-
-    public ValidationError(Rect area, List<String> messages) {
-        this.area = area;
+    public ValidationError(List<ErrorArea> errorAreas, List<String> messages) {
+        this.errorAreas = errorAreas;
         this.messages = messages;
     }
 
-    public Rect getArea() {
-        return this.area;
+    public ValidationError() {
+        
     }
-    
+        
+
     @Override
     public int hashCode() {
-        return new HashCodeBuilder(17, 31).append(area).append(messages).toHashCode();
+        return new HashCodeBuilder(17, 31).append(errorAreas).append(messages).toHashCode();
     }
     
     @Override
@@ -63,16 +53,19 @@ public class ValidationError {
             return false;
         
         ValidationError rhs = (ValidationError)obj;
-        return new EqualsBuilder().append(area, rhs.area).append(messages, rhs.messages).isEquals();
+        return new EqualsBuilder().append(errorAreas, rhs.errorAreas).append(messages, rhs.messages).isEquals();
     }
     
     @Override
     public String toString() {
-        return format("Error{%s, area=%s}", messages, area);
+        return format("Error{%s, areas=%s}", messages, errorAreas);
     }
 
-    public ValidationError withArea(Rect objectArea) {
-        this.area = objectArea;
+    public ValidationError withArea(ErrorArea errorArea) {
+        if (errorAreas == null) {
+            errorAreas = new LinkedList<ErrorArea>();
+        }
+        errorAreas.add(errorArea);
         return this;
     }
 
@@ -82,6 +75,19 @@ public class ValidationError {
 
     public void setMessages(List<String> messages) {
         this.messages = messages;
+    }
+
+    public ValidationError withMessage(String message) {
+        if (messages == null) {
+            messages = new LinkedList<String>();
+        }
+        messages.add(message);
+        return this;
+    }
+
+    public ValidationError withErrorAreas(List<ErrorArea> errorAreas) {
+        this.errorAreas = errorAreas;
+        return this;
     }
 
 }

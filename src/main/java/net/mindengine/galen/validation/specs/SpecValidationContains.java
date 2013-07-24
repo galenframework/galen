@@ -24,6 +24,7 @@ import net.mindengine.galen.page.PageElement;
 import net.mindengine.galen.page.Point;
 import net.mindengine.galen.page.Rect;
 import net.mindengine.galen.specs.SpecContains;
+import net.mindengine.galen.validation.ErrorArea;
 import net.mindengine.galen.validation.PageValidation;
 import net.mindengine.galen.validation.SpecValidation;
 import net.mindengine.galen.validation.ValidationError;
@@ -42,6 +43,7 @@ public class SpecValidationContains extends SpecValidation<SpecContains> {
         }
         
         Rect objectArea = mainObject.getArea();
+        List<ErrorArea> errorAreas = new LinkedList<ErrorArea>();
         List<String> messages = new LinkedList<String>();
 
         for (String childObjectName : spec.getChildObjects()) {
@@ -57,6 +59,7 @@ public class SpecValidationContains extends SpecValidation<SpecContains> {
                     Rect childObjectArea = childObject.getArea();
                     if (!childObjectMatches(spec, objectArea, childObjectArea)) {
                         messages.add(format("\"%s\" is outside \"%s\"", childObjectName, objectName));
+                        errorAreas.add(new ErrorArea(childObjectArea, childObjectName));
                     }
                 }
             }
@@ -66,7 +69,7 @@ public class SpecValidationContains extends SpecValidation<SpecContains> {
         }
         
         if (messages.size() > 0) {
-            return new ValidationError(mainObject.getArea(), messages);
+            return new ValidationError(errorAreas, messages);
         }
         else return NO_ERROR;
     }

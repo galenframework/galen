@@ -26,6 +26,7 @@ import net.mindengine.galen.specs.Location;
 import net.mindengine.galen.specs.Range;
 import net.mindengine.galen.specs.Side;
 import net.mindengine.galen.specs.SpecComplex;
+import net.mindengine.galen.validation.ErrorArea;
 import net.mindengine.galen.validation.PageValidation;
 import net.mindengine.galen.validation.SpecValidation;
 import net.mindengine.galen.validation.ValidationError;
@@ -66,7 +67,9 @@ public abstract class SpecValidationGeneral<T extends SpecComplex> extends SpecV
         }
         
         if (messages.size() > 0) {
-            return new ValidationError(mainObject.getArea(), createMessage(messages, objectName)); 
+            return new ValidationError()
+                .withArea(new ErrorArea(mainObject.getArea(), objectName))
+                .withMessage(createMessage(messages, objectName)); 
         }
         else return null;
     }

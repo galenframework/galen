@@ -18,6 +18,7 @@ package net.mindengine.galen.validation.specs;
 import static java.lang.String.format;
 import net.mindengine.galen.page.PageElement;
 import net.mindengine.galen.specs.SpecAbsent;
+import net.mindengine.galen.validation.ErrorArea;
 import net.mindengine.galen.validation.PageValidation;
 import net.mindengine.galen.validation.SpecValidation;
 import net.mindengine.galen.validation.ValidationError;
@@ -31,7 +32,9 @@ public class SpecValidationAbsent extends SpecValidation<SpecAbsent>{
             return errorObjectMissingInSpec(objectName);
         }
         else if (mainObject.isPresent() && mainObject.isVisible()) {
-            return new ValidationError(mainObject.getArea(), format("\"%s\" is not absent on page", objectName));
+            return new ValidationError()
+                .withArea(new ErrorArea(mainObject.getArea(), objectName))
+                .withMessage(format("\"%s\" is not absent on page", objectName));
         }
         else return null;
     }

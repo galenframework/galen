@@ -35,7 +35,7 @@ public abstract class SpecValidation<T extends Spec> {
     public abstract ValidationError check(PageValidation pageValidation, String objectName, T spec);
     
     protected ValidationError error(String errorMessage) {
-        return new ValidationError(errorMessage);
+        return new ValidationError().withMessage(errorMessage);
     }
     
     protected ValidationError errorObjectMissingInSpec(String objectName) {
