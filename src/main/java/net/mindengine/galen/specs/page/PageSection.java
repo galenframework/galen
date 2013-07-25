@@ -39,4 +39,11 @@ public class PageSection {
         this.objects = objects;
     }
 
+    public boolean hasTag(String tag) {
+        if (tags != null) {
+            return tags.contains(tag);
+        }
+        return false;
+    }
+
 }

@@ -622,7 +622,7 @@ public class ValidationTest {
           
           //TODO verify if area of object is returned incorrectly (width < 1 and height < 1)
           
-          
+          //TODO spec vertically and horizontally should check alignemnt all (left and right, top and bottom)
         };
     }
     

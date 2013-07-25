@@ -16,5 +16,14 @@
 package net.mindengine.galen.specs;
 
 public abstract class Spec {
+    private String originalText;
+
+    public String getOriginalText() {
+        return originalText;
+    }
+
+    public void setOriginalText(String originalText) {
+        this.originalText = originalText;
+    }
 
 }

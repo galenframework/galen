@@ -49,6 +49,9 @@ public class ExpectationsTest {
         assertThat(range.getTo(), is(testData.expected.getTo()));
     }
     
+    //TODO Change range from integer to float
+    //TODO Introduce "percentage of other value". e.g. "width: 1 to 5% of menu/width", or "width: 90% of screen/width" 
+    
     @DataProvider
     public Object[][] rangeTestData() {
         return new Object[][]{

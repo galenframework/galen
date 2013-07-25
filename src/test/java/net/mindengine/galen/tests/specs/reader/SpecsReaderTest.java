@@ -60,6 +60,7 @@ public class SpecsReaderTest {
         List<Location> locations = specInside.getLocations();
         assertThat(locations.size(), is(1));
         assertThat(specInside.getLocations(), contains(new Location(Range.exact(10), sides(RIGHT))));
+        assertThat(spec.getOriginalText(), is("inside: object 10px right"));
     }
     
 
@@ -73,6 +74,7 @@ public class SpecsReaderTest {
         List<Location> locations = specInside.getLocations();
         assertThat(locations.size(), is(1));
         assertThat(specInside.getLocations(), contains(new Location(Range.between(10, 30), sides(LEFT))));
+        assertThat(spec.getOriginalText(), is("inside: object 10 to 30px left"));
     }
     
     @Test
@@ -82,6 +84,7 @@ public class SpecsReaderTest {
         List<Location> locations = spec.getLocations();
         assertThat(locations.size(), is(1));
         assertThat(spec.getLocations(), contains(new Location(Range.exact(25),sides(TOP, LEFT))));
+        assertThat(spec.getOriginalText(), is("inside: object 25px top left"));
     }
     
     @Test
@@ -92,6 +95,7 @@ public class SpecsReaderTest {
         assertThat(locations.size(), is(2));
         assertThat(spec.getLocations(), contains(new Location(Range.exact(25),sides(TOP, LEFT)),
                 new Location(Range.between(10, 20), sides(BOTTOM))));
+        assertThat(spec.getOriginalText(), is("inside: object 25px top left, 10 to 20px bottom"));
     }
     
     @Test
@@ -101,6 +105,7 @@ public class SpecsReaderTest {
         List<Location> locations = spec.getLocations();
         assertThat(locations.size(), is(1));
         assertThat(spec.getLocations(), contains(new Location(Range.exact(25),sides(BOTTOM, RIGHT))));
+        assertThat(spec.getOriginalText(), is("inside: object 25px bottom right"));
     }
     
     @Test
@@ -110,6 +115,7 @@ public class SpecsReaderTest {
         List<Location> locations = spec.getLocations();
         assertThat(locations.size(), is(1));
         assertThat(spec.getLocations(), contains(new Location(Range.exact(25), sides(TOP, LEFT, RIGHT, BOTTOM))));
+        assertThat(spec.getOriginalText(), is("inside: object 25px top left right bottom"));
     }
         
     @Test
@@ -117,6 +123,7 @@ public class SpecsReaderTest {
         Spec spec = readSpec("contains: object, menu, button");
         SpecContains specContains = (SpecContains) spec;
         assertThat(specContains.getChildObjects(), contains("object", "menu", "button"));
+        assertThat(spec.getOriginalText(), is("contains: object, menu, button"));
     }
     
     @Test
@@ -125,6 +132,7 @@ public class SpecsReaderTest {
         SpecContains specContains = (SpecContains) spec;
         assertThat(specContains.isPartly(), is(true));
         assertThat(specContains.getChildObjects(), contains("object", "menu", "button"));
+        assertThat(spec.getOriginalText(), is("contains partly: object, menu, button"));
     }
     
     @Test 
@@ -136,6 +144,7 @@ public class SpecsReaderTest {
         List<Location> locations = spec.getLocations();
         assertThat(locations.size(), is(1));
         assertThat(spec.getLocations(), contains(new Location(Range.between(10, 20), sides(LEFT))));
+        assertThat(spec.getOriginalText(), is("near: button 10 to 20px left"));
     }
     
     @Test 
@@ -146,6 +155,7 @@ public class SpecsReaderTest {
         List<Location> locations = spec.getLocations();
         assertThat(locations.size(), is(1));
         assertThat(spec.getLocations(), contains(new Location(Range.between(10, 20), sides(TOP, RIGHT))));
+        assertThat(spec.getOriginalText(), is("near: button 10 to 20px top right"));
     }
     
     @Test
@@ -153,6 +163,7 @@ public class SpecsReaderTest {
         SpecHorizontally spec = (SpecHorizontally) readSpec("horizontally centered: object, menu, button");
         assertThat(spec.getAlignment(), is(Alignment.CENTERED));
         assertThat(spec.getChildObjects(), contains("object", "menu", "button"));
+        assertThat(spec.getOriginalText(), is("horizontally centered: object, menu, button"));
     }
     
     @Test
@@ -160,6 +171,7 @@ public class SpecsReaderTest {
         SpecHorizontally spec = (SpecHorizontally) readSpec("horizontally top: object, menu, button");
         assertThat(spec.getAlignment(), is(Alignment.TOP));
         assertThat(spec.getChildObjects(), contains("object", "menu", "button"));
+        assertThat(spec.getOriginalText(), is("horizontally top: object, menu, button"));
     }
     
     @Test
@@ -167,6 +179,7 @@ public class SpecsReaderTest {
         SpecHorizontally spec = (SpecHorizontally) readSpec("horizontally bottom: object, menu, button");
         assertThat(spec.getAlignment(), is(Alignment.BOTTOM));
         assertThat(spec.getChildObjects(), contains("object", "menu", "button"));
+        assertThat(spec.getOriginalText(), is("horizontally bottom: object, menu, button"));
     }
     
     @Test
@@ -174,6 +187,7 @@ public class SpecsReaderTest {
         SpecVertically spec = (SpecVertically) readSpec("vertically  centered: object, menu, button");
         assertThat(spec.getAlignment(), is(Alignment.CENTERED));
         assertThat(spec.getChildObjects(), contains("object", "menu", "button"));
+        assertThat(spec.getOriginalText(), is("vertically  centered: object, menu, button"));
     }
     
     @Test
@@ -181,6 +195,7 @@ public class SpecsReaderTest {
         SpecVertically spec = (SpecVertically) readSpec("vertically left: object, menu, button");
         assertThat(spec.getAlignment(), is(Alignment.LEFT));
         assertThat(spec.getChildObjects(), contains("object", "menu", "button"));
+        assertThat(spec.getOriginalText(), is("vertically left: object, menu, button"));
     }
     
     @Test
@@ -188,42 +203,49 @@ public class SpecsReaderTest {
         SpecVertically spec = (SpecVertically) readSpec("vertically right: object, menu, button");
         assertThat(spec.getAlignment(), is(Alignment.RIGHT));
         assertThat(spec.getChildObjects(), contains("object", "menu", "button"));
+        assertThat(spec.getOriginalText(), is("vertically right: object, menu, button"));
     }
     
     @Test
     public void shouldReadSpec_absent() {
         Spec spec = readSpec("absent");
         assertThat(spec, Matchers.instanceOf(SpecAbsent.class));
+        assertThat(spec.getOriginalText(), is("absent"));
     }
     
     @Test
     public void shouldReadSpec_width_10px() {
         SpecWidth spec = (SpecWidth) readSpec("width: 10px");
         assertThat(spec.getRange(), is(Range.exact(10)));
+        assertThat(spec.getOriginalText(), is("width: 10px"));
     }
     
     @Test
     public void shouldReadSpec_width_5_plus_minus_3px() {
         SpecWidth spec = (SpecWidth) readSpec("width: 5 ± 3px");
         assertThat(spec.getRange(), is(Range.between(2, 8)));
+        assertThat(spec.getOriginalText(), is("width: 5 ± 3px"));
     }
     
     @Test
     public void shouldReadSpec_width_5_to_8px() {
         SpecWidth spec = (SpecWidth) readSpec("width: 5 to 8px");
         assertThat(spec.getRange(), is(Range.between(5, 8)));
+        assertThat(spec.getOriginalText(), is("width: 5 to 8px"));
     }
     
     @Test
     public void shouldReadSpec_height_10px() {
         SpecHeight spec = (SpecHeight) readSpec("height: 10px");
         assertThat(spec.getRange(), is(Range.exact(10)));
+        assertThat(spec.getOriginalText(), is("height: 10px"));
     }
     
     @Test
     public void shouldReadSpec_height_5_to_8px() {
         SpecHeight spec = (SpecHeight) readSpec("height: 5 to 8px");
         assertThat(spec.getRange(), is(Range.between(5, 8)));
+        assertThat(spec.getOriginalText(), is("height: 5 to 8px"));
     }
     
     @Test(expectedExceptions={NullPointerException.class}, expectedExceptionsMessageRegExp="Spec text should not be null") 

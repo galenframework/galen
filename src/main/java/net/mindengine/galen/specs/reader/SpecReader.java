@@ -153,7 +153,11 @@ public class SpecReader {
             paramsText = args[1].trim();
         }
         
-        return readSpecWithParams(args[0].trim(), paramsText);
+        Spec spec = readSpecWithParams(args[0].trim(), paramsText);
+        if (spec != null) {
+            spec.setOriginalText(specText);
+        }
+        return spec;
     }
 
     private Spec readSpecWithParams(String specName, String paramsText) {
