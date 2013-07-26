@@ -23,22 +23,44 @@ public class ExpectRange implements Expectation<Range>{
 
     @Override
     public Range read(StringCharReader reader) {
-        Integer firstValue = expectInt(reader);
+        Double firstValue = expectDouble(reader);
         
         String text = expectNonNumeric(reader);
+        if (text.equals("%")) {
+            return Range.exact(firstValue).withPercentOf(readPercentageOf(reader));
+        }
         if (text.equals("px")) {
             return Range.exact(firstValue);
         }
-        else if (text.equals("to")) {
-            return Range.between(firstValue, readSecondValue(reader));
-        }
-        else if (text.equals("±")) {
-            Integer precision = readSecondValue(reader);
-            return Range.between(firstValue - precision, firstValue + precision);
-        }
         else {
-            throw new IncorrectSpecException("Cannot parse range: \"" + text + "\"");
+            Double secondValue = expectDouble(reader);
+            
+            Range range = null;
+            if (text.equals("to")) {
+                range = Range.between(firstValue, secondValue);
+            }
+            else if (text.equals("±")) {
+                return Range.between(firstValue - secondValue, firstValue + secondValue);
+            }
+            else throw new IncorrectSpecException(msgFor(text));
+            
+            String end = expectNonNumeric(reader);
+            if (end.equals("px")) {
+                return range;
+            }
+            else if (end.equals("%")) {
+                return range.withPercentOf(readPercentageOf(reader));
+            }
+            else throw new IncorrectSpecException(msgFor(text));
         }
+    }
+
+    private String readPercentageOf(StringCharReader reader) {
+        String firstWord = expectNonNumeric(reader);
+        if (firstWord.equals("of")) {
+            return expectNonNumeric(reader);
+        }
+        else throw new IncorrectSpecException(msgFor(firstWord));
     }
 
     private String expectNonNumeric(StringCharReader reader) {
@@ -62,14 +84,22 @@ public class ExpectRange implements Expectation<Range>{
         return buffer.toString();
     }
 
-    private Integer expectInt(StringCharReader reader) {
+    private Double expectDouble(StringCharReader reader) {
         boolean started = false;
         char symbol;
+        boolean hadPointAlready = false;
         StringBuffer buffer = new StringBuffer();
         while(reader.hasMore()) {
             symbol = reader.next();
             if (started && isDelimeter(symbol)) {
                 break;
+            }
+            else if (symbol == '.') {
+                if (hadPointAlready) {
+                    throw new IncorrectSpecException(msgFor("" + symbol)); 
+                }
+                hadPointAlready = true;
+                buffer.append(symbol);
             }
             else if (isNumeric(symbol)) {
                 buffer.append(symbol);
@@ -80,19 +110,11 @@ public class ExpectRange implements Expectation<Range>{
                 break;
             }
         }
-        return Integer.parseInt(buffer.toString());
+        return Double.parseDouble(buffer.toString());
     }
 
-    
-
-    private Integer readSecondValue(StringCharReader reader) {
-        Integer secondValue = expectInt(reader);
-        String end = expectNonNumeric(reader);
-        if (end.equals("px")) {
-            return secondValue;
-        }
-        else throw new IncorrectSpecException("Cannot parse range");
+    private String msgFor(String text) {
+        return String.format("Cannot parse range: \"%s\"", text);
     }
-
          
 }

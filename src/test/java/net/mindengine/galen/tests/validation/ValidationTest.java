@@ -344,7 +344,7 @@ public class ValidationTest {
                   put("container", element(0, 0, 130, 120));
           }})),
           
-          row(new ValidationError(singleArea(new Rect(30, 10, 50, 50), "object"), messages("\"object\" is 30px left which is not in range of 10px to 20px")),
+          row(new ValidationError(singleArea(new Rect(30, 10, 50, 50), "object"), messages("\"object\" is 30px left which is not in range of 10 to 20px")),
               specInside("container", location(between(10, 20), LEFT)), page(new HashMap<String, PageElement>(){{
                   put("object", element(30, 10, 50, 50));
                   put("container", element(0, 0, 130, 120));
@@ -393,7 +393,7 @@ public class ValidationTest {
                       put("button", element(200, 200, 100, 50));
           }})),
           
-          row(new ValidationError(singleArea(new Rect(90, 5, 100, 50), "object"), messages("\"object\" is 10px left which is not in range of 20px to 30px")),
+          row(new ValidationError(singleArea(new Rect(90, 5, 100, 50), "object"), messages("\"object\" is 10px left which is not in range of 20 to 30px")),
                   specNear("button", location(between(20, 30), LEFT)), page(new HashMap<String, PageElement>(){{
                       put("object", element(90, 5, 100, 50));
                       put("button", element(200, 200, 100, 50));
@@ -405,7 +405,7 @@ public class ValidationTest {
                       put("button", element(200, 200, 100, 50));
           }})),
           
-          row(new ValidationError(singleArea(new Rect(310, 250, 100, 50), "object"), messages("\"object\" is 10px right instead of 30px, is 0px bottom which is not in range of 10px to 20px")),
+          row(new ValidationError(singleArea(new Rect(310, 250, 100, 50), "object"), messages("\"object\" is 10px right instead of 30px, is 0px bottom which is not in range of 10 to 20px")),
                   specNear("button", location(exact(30), RIGHT), location(between(10, 20), BOTTOM)), page(new HashMap<String, PageElement>(){{
                       put("object", element(310, 250, 100, 50));
                       put("button", element(200, 200, 100, 50));
@@ -466,7 +466,7 @@ public class ValidationTest {
                       put("object", element(100, 100, 100, 50));
           }})),
           
-          row(new ValidationError(singleArea(new Rect(100, 100, 100, 50), "object"), messages("\"object\" width is 100px which is not in range of 10px to 40px")),
+          row(new ValidationError(singleArea(new Rect(100, 100, 100, 50), "object"), messages("\"object\" width is 100px which is not in range of 10 to 40px")),
                   specWidth(Range.between(10, 40)), page(new HashMap<String, PageElement>(){{
                       put("object", element(100, 100, 100, 50));
           }})),
@@ -492,7 +492,7 @@ public class ValidationTest {
                       put("object", element(100, 100, 100, 50));
           }})),
           
-          row(new ValidationError(singleArea(new Rect(100, 100, 100, 50), "object"), messages("\"object\" height is 50px which is not in range of 10px to 40px")),
+          row(new ValidationError(singleArea(new Rect(100, 100, 100, 50), "object"), messages("\"object\" height is 50px which is not in range of 10 to 40px")),
                   specHeight(Range.between(10, 40)), page(new HashMap<String, PageElement>(){{
                       put("object", element(100, 100, 100, 50));
           }})),
@@ -619,6 +619,8 @@ public class ValidationTest {
                       put("item2", element(10, 30, 10, 10));
           }})),
           
+          
+          //TODO verify the range with percentage of other value
           
           //TODO verify if area of object is returned incorrectly (width < 1 and height < 1)
           

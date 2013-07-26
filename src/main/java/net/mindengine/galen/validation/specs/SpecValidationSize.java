@@ -45,11 +45,11 @@ public abstract class SpecValidationSize<T extends SpecRange> extends SpecValida
             if (range.isExact()) {
                 return new ValidationError()
                     .withArea(new ErrorArea(mainObject.getArea(), objectName))
-                    .withMessage(format("\"%s\" %s is %dpx instead of %dpx", objectName, getUnitName(), realValue, range.getFrom()));
+                    .withMessage(format("\"%s\" %s is %dpx instead of %s", objectName, getUnitName(), realValue, range.prettyString()));
             }
             else return new ValidationError()
                 .withArea(new ErrorArea(mainObject.getArea(), objectName))
-                .withMessage(format("\"%s\" %s is %dpx which is not in range of %dpx to %dpx", objectName, getUnitName(), realValue, range.getFrom(), range.getTo()));
+                .withMessage(format("\"%s\" %s is %dpx which is not in range of %s", objectName, getUnitName(), realValue, range.prettyString()));
         }
         
         return null;

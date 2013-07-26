@@ -49,26 +49,32 @@ public class ExpectationsTest {
         assertThat(range.getTo(), is(testData.expected.getTo()));
     }
     
-    //TODO Change range from integer to float
-    //TODO Introduce "percentage of other value". e.g. "width: 1 to 5% of menu/width", or "width: 90% of screen/width" 
+    
+    //TODO Write negative tests for all expectations  
     
     @DataProvider
     public Object[][] rangeTestData() {
         return new Object[][]{
            row("10 to 15 px", new Range(10, 15)),
+           row("10.0 to 15.4 px", new Range(10, 15.4)),
            row("10 to 15px", new Range(10, 15)),
            row("10to15px", new Range(10, 15)),
            row("-10to-15px", new Range(-15, -10)),
+           row("-10to-15.04px", new Range(-15.04, -10)),
            row("10to15 px", new Range(10, 15)),
            row("9 px", new Range(9, 9)),
            row("9px", new Range(9, 9)),
+           row("9.01px", new Range(9.01, 9.01)),
            row("   9px", new Range(9, 9)),
            row("\t9px", new Range(9, 9)),
            row("\t9\t\tpx", new Range(9, 9)),
            row("-49px", new Range(-49, -49)),
            row("15 ± 5 px", new Range(10, 20)),
            row("15±5px", new Range(10, 20)),
-           row("15±5px", new Range(10, 20))
+           row("15% of screen/width", new Range(15, 15).withPercentOf("screen/width")),
+           row("15.05% of screen/width", new Range(15.05, 15.05).withPercentOf("screen/width")),
+           row("15 to 40% of   screen/height", new Range(15, 40).withPercentOf("screen/height")),
+           row("15 to 40% of item-1/some-other-stuff/a/b/c2", new Range(15, 40).withPercentOf("item-1/some-other-stuff/a/b/c2"))
         };
     }
     

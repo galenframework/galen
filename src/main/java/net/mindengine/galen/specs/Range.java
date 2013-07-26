@@ -15,33 +15,38 @@
 ******************************************************************************/
 package net.mindengine.galen.specs;
 
+import static java.lang.String.format;
+
+import java.text.DecimalFormat;
+
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 public class Range {
 
-    public Range(int from, int to) {
+    public Range(double from, double to) {
         this.from = from;
         this.to = to;
     }
-    private int from;
-    private int to;
-    public int getFrom() {
+    private double from;
+    private double to;
+    private String percentageOfValue;
+    public double getFrom() {
         return from;
     }
-    public int getTo() {
+    public double getTo() {
         return to;
     }
-    public static Range exact(int number) {
+    public static Range exact(double number) {
         return new Range(number, number);
     }
-    public static Range between(int from, int to) {
+    public static Range between(double from, double to) {
         return new Range(Math.min(from, to), Math.max(from, to));
     }
     
     @Override
     public int hashCode() {
-        return new HashCodeBuilder(13, 19).append(from).append(to).toHashCode();
+        return new HashCodeBuilder(13, 19).append(from).append(to).append(percentageOfValue).toHashCode();
     }
     
     @Override
@@ -56,17 +61,40 @@ public class Range {
             return false;
         }
         Range rhs = (Range)obj;
-        return new EqualsBuilder().append(from, rhs.from).append(to, rhs.to).isEquals();
+        return new EqualsBuilder().append(from, rhs.from).append(to, rhs.to).append(percentageOfValue, rhs.percentageOfValue).isEquals();
     }
     
     @Override
     public String toString() {
-        return "Range{" + from + ", " + to + "}";
+        String withPercentage = "";
+        if (percentageOfValue != null) {
+            withPercentage = " % of " + percentageOfValue;
+        }
+        return format("Range{%s%s}", prettyString(), withPercentage);
     }
     public boolean isExact() {
         return from == to;
     }
-    public boolean holds(int offset) {
+    public boolean holds(double offset) {
         return offset >= from && offset <= to;
+    }
+    public static String doubleToString(double value) {
+        return new DecimalFormat("#.##").format(value);
+    }
+    public Object prettyString() {
+        if (isExact()) {
+            return String.format("%spx", doubleToString(from));
+        }
+        else return String.format("%s to %spx", doubleToString(from), doubleToString(to));
+    }
+    public Range withPercentOf(String percentageOfValue) {
+        this.setPercentageOfValue(percentageOfValue);
+        return this;
+    }
+    public String getPercentageOfValue() {
+        return percentageOfValue;
+    }
+    public void setPercentageOfValue(String percentageOfValue) {
+        this.percentageOfValue = percentageOfValue;
     }
 }
