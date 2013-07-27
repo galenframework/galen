@@ -37,6 +37,7 @@ public class GalenSeleniumTest {
 
                 @Override
                 public void onSpecError(PageValidation pageValidation, String objectName, Spec spec, ValidationError error) {
+                    //TODO assert listener
                 }
 
                 @Override

@@ -148,6 +148,15 @@ public class ValidationTest {
               put("container", element(5, 5, 120, 120));
           }})),
           
+          row(specInside("container", location(exact(20).withPercentOf("container/height"), TOP)), page(new HashMap<String, PageElement>(){{
+              put("object", element(10, 15, 100, 20));
+              put("container", element(5, 5, 120, 50));
+          }})),
+          row(specInside("container", location(between(15, 22).withPercentOf("container/height"), TOP)), page(new HashMap<String, PageElement>(){{
+              put("object", element(10, 15, 100, 20));
+              put("container", element(5, 5, 120, 50));
+          }})),
+          
           
           /* Near */
           
@@ -170,6 +179,14 @@ public class ValidationTest {
               put("object", element(305, 140, 100, 50));
               put("button", element(200, 200, 100, 50));
           }})),
+          row(specNear("button", location(exact(100).withPercentOf("button/width"), RIGHT)), page(new HashMap<String, PageElement>(){{
+              put("object", element(200, 140, 100, 50));
+              put("button", element(100, 100, 50, 50));
+          }})),
+          row(specNear("button", location(between(95, 105).withPercentOf("button/width"), RIGHT)), page(new HashMap<String, PageElement>(){{
+              put("object", element(200, 140, 100, 50));
+              put("button", element(100, 100, 50, 50));
+          }})),
           
           
           /* Width */
@@ -186,6 +203,15 @@ public class ValidationTest {
           row(specWidth(Range.between(20, 30)), page(new HashMap<String, PageElement>(){{
               put("object", element(305, 140, 25, 50));
           }})),
+          row(specWidth(Range.exact(50).withPercentOf("container/width")), page(new HashMap<String, PageElement>(){{
+              put("object", element(305, 140, 15, 50));
+              put("container", element(305, 400, 30, 50));
+          }})),
+          row(specWidth(Range.between(45, 55).withPercentOf("container/width")), page(new HashMap<String, PageElement>(){{
+              put("object", element(305, 140, 15, 50));
+              put("container", element(305, 400, 30, 50));
+          }})),
+          
 
           
           /* Height */
@@ -202,7 +228,10 @@ public class ValidationTest {
           row(specHeight(Range.between(20, 30)), page(new HashMap<String, PageElement>(){{
               put("object", element(305, 140, 65, 25));
           }})),
-          
+          row(specHeight(Range.exact(50).withPercentOf("container/height")), page(new HashMap<String, PageElement>(){{
+              put("object", element(100, 140, 65, 20));
+              put("container", element(305, 140, 65, 40));
+          }})),
           
           
           /* Horizontally */
