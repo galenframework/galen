@@ -31,9 +31,21 @@ public class SectionValidation {
     private List<ValidationError> checkSection(PageSection section) {
         List<ValidationError> errors = new LinkedList<ValidationError>();
         for (ObjectSpecs object : section.getObjects()) {
+            tellOnObject(object.getObjectName());
             errors.addAll(checkObject(object));
         }
         return errors;
+    }
+
+    private void tellOnObject(String objectName) {
+        if (validationListener != null) {
+            try {
+                validationListener.onObject(pageValidation, objectName);
+            }
+            catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     private List<ValidationError> checkObject(ObjectSpecs object) {

@@ -28,6 +28,7 @@ public class GalenSeleniumTest {
         driver.manage().window().maximize();
         
         SeleniumPage page = new SeleniumPage(driver);
+        final StringBuffer invokations = new StringBuffer();
         try {
             List<PageSection> pageSections = pageSpec.findSections("all");
             
@@ -37,17 +38,43 @@ public class GalenSeleniumTest {
 
                 @Override
                 public void onSpecError(PageValidation pageValidation, String objectName, Spec spec, ValidationError error) {
-                    //TODO assert listener
+                    invokations.append("<e>");
                 }
 
                 @Override
                 public void onOnObjectCheck(PageValidation pageValidation, String objectName, Spec spec) {
+                    invokations.append("<" + spec.getClass().getSimpleName() + " " + objectName + ">");
+                }
+
+                @Override
+                public void onObject(PageValidation pageValidation, String objectName) {
+                    invokations.append("<o " + objectName + ">");
                 }
                 
             });
             List<ValidationError> errors = sectionValidation.check();
             
+            
             assertThat("Errors should be empty", errors.size(), is(0));
+            assertThat("Invokations should", invokations.toString(), is("<o header>" +
+            		"<SpecContains header>" +
+            		"<SpecNear header>" +
+            		"<o header-text-1>" +
+            		"<SpecNear header-text-1>" +
+            		"<SpecInside header-text-1>" +
+            		"<o header-text-2>" +
+            		"<SpecNear header-text-2>" +
+            		"<SpecInside header-text-2>" +
+            		"<o menu>" +
+            		"<SpecNear menu>" +
+            		"<SpecNear menu>" +
+            		"<o menu-item-home>" +
+            		"<SpecHorizontally menu-item-home>" +
+            		"<SpecNear menu-item-home>" +
+            		"<SpecInside menu-item-home>" +
+            		"<o menu-item-categories>" +
+            		"<SpecInside menu-item-categories>" +
+            		"<SpecNear menu-item-categories>"));
         }
         catch (Exception ex) {
             throw ex;
