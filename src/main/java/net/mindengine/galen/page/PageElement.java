@@ -22,4 +22,9 @@ public interface PageElement {
     boolean isPresent();
 
     boolean isVisible();
+    
+    int getWidth();
+    int getHeight();
+    int getLeft();
+    int getTop();
 }

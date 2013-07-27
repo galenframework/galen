@@ -60,7 +60,7 @@ public abstract class SpecValidationGeneral<T extends SpecComplex> extends SpecV
         List<String> messages = new LinkedList<String>();
         
         for (Location location : spec.getLocations()) {
-            String message = verifyLocation(mainArea, secondArea, location);
+            String message = verifyLocation(mainArea, secondArea, location, pageValidation);
             if (message != null) {
                 messages.add(message);
             }
@@ -90,9 +90,16 @@ public abstract class SpecValidationGeneral<T extends SpecComplex> extends SpecV
         return buffer.toString();
     }
 
-    private String verifyLocation(Rect mainArea, Rect secondArea, Location location) {
+    private String verifyLocation(Rect mainArea, Rect secondArea, Location location, PageValidation pageValidation) {
         List<String> messages = new LinkedList<String>();
-        Range range = location.getRange();
+        Range range;
+        
+        try {
+            range = pageValidation.convertRange(location.getRange());
+        }
+        catch (Exception ex) {
+            return format("Cannot convert range: " + ex.getMessage());
+        }
         
         for (Side side : location.getSides()) {
             int offset = getOffsetForSide(mainArea, secondArea, side);

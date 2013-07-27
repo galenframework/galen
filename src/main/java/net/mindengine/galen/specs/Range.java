@@ -19,6 +19,8 @@ import static java.lang.String.format;
 
 import java.text.DecimalFormat;
 
+import net.mindengine.galen.validation.PageValidation;
+
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
@@ -96,5 +98,8 @@ public class Range {
     }
     public void setPercentageOfValue(String percentageOfValue) {
         this.percentageOfValue = percentageOfValue;
+    }
+    public boolean isPercentage() {
+        return percentageOfValue != null && !percentageOfValue.isEmpty();
     }
 }

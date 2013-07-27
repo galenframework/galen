@@ -41,4 +41,24 @@ public class MockedPageElement implements PageElement {
         return true;
     }
 
+    @Override
+    public int getWidth() {
+        return getArea().getWidth();
+    }
+
+    @Override
+    public int getHeight() {
+        return getArea().getHeight();
+    }
+
+    @Override
+    public int getLeft() {
+        return getArea().getLeft();
+    }
+
+    @Override
+    public int getTop() {
+        return getArea().getTop();
+    }
+
 }

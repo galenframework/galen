@@ -37,10 +37,14 @@ public abstract class SpecValidationSize<T extends SpecRange> extends SpecValida
         
         int realValue = getSizeValue(mainObject);
         
-        Range range = spec.getRange();
-        if (range == null) {
-            return error("The spec is incorrect: missing range");
+        Range range;
+        try {
+            range = pageValidation.convertRange(spec.getRange());
         }
+        catch (Exception ex) {
+            return error(format("Cannot convert range: " + ex.getMessage()));
+        }
+        
         if (!range.holds(realValue)) {
             if (range.isExact()) {
                 return new ValidationError()

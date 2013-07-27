@@ -17,4 +17,24 @@ public class AbsentPageElement implements PageElement {
         return false;
     }
 
+    @Override
+    public int getWidth() {
+        return 0;
+    }
+
+    @Override
+    public int getHeight() {
+        return 0;
+    }
+
+    @Override
+    public int getLeft() {
+        return 0;
+    }
+
+    @Override
+    public int getTop() {
+        return 0;
+    }
+
 }
