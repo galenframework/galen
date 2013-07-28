@@ -20,7 +20,7 @@ import net.mindengine.galen.specs.reader.IncorrectSpecException;
 
 public enum Alignment {
 
-    CENTERED, TOP, BOTTOM, LEFT, RIGHT;
+    CENTERED, TOP, BOTTOM, LEFT, RIGHT, ALL;
 
     public static Alignment parse(String alignmentText) {
         if (alignmentText.equals("centered")) {
@@ -38,6 +38,9 @@ public enum Alignment {
         else if (alignmentText.equals("right")) {
             return RIGHT;
         }
+        else if (alignmentText.equals("all")) {
+            return ALL;
+        }
         else throw new IncorrectSpecException(format("Unknown alignment \"%s\"", alignmentText));
     }
     
@@ -54,6 +57,8 @@ public enum Alignment {
             return "left";
         case RIGHT:
             return "right";
+        case ALL:
+            return "all";
         }
         return "";
     }

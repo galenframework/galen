@@ -183,6 +183,22 @@ public class SpecsReaderTest {
     }
     
     @Test
+    public void shouldReadSpec_horizontally() {
+        SpecHorizontally spec = (SpecHorizontally) readSpec("horizontally: object, menu, button");
+        assertThat(spec.getAlignment(), is(Alignment.ALL));
+        assertThat(spec.getChildObjects(), contains("object", "menu", "button"));
+        assertThat(spec.getOriginalText(), is("horizontally: object, menu, button"));
+    }
+    
+    @Test
+    public void shouldReadSpec_horizontally_all() {
+        SpecHorizontally spec = (SpecHorizontally) readSpec("horizontally all: object, menu, button");
+        assertThat(spec.getAlignment(), is(Alignment.ALL));
+        assertThat(spec.getChildObjects(), contains("object", "menu", "button"));
+        assertThat(spec.getOriginalText(), is("horizontally all: object, menu, button"));
+    }
+    
+    @Test
     public void shouldReadSpec_vertically_centered() {
         SpecVertically spec = (SpecVertically) readSpec("vertically  centered: object, menu, button");
         assertThat(spec.getAlignment(), is(Alignment.CENTERED));
@@ -204,6 +220,22 @@ public class SpecsReaderTest {
         assertThat(spec.getAlignment(), is(Alignment.RIGHT));
         assertThat(spec.getChildObjects(), contains("object", "menu", "button"));
         assertThat(spec.getOriginalText(), is("vertically right: object, menu, button"));
+    }
+    
+    @Test
+    public void shouldReadSpec_vertically() {
+        SpecVertically spec = (SpecVertically) readSpec("vertically: object, menu, button");
+        assertThat(spec.getAlignment(), is(Alignment.ALL));
+        assertThat(spec.getChildObjects(), contains("object", "menu", "button"));
+        assertThat(spec.getOriginalText(), is("vertically: object, menu, button"));
+    }
+    
+    @Test
+    public void shouldReadSpec_vertically_all() {
+        SpecVertically spec = (SpecVertically) readSpec("vertically all: object, menu, button");
+        assertThat(spec.getAlignment(), is(Alignment.ALL));
+        assertThat(spec.getChildObjects(), contains("object", "menu", "button"));
+        assertThat(spec.getOriginalText(), is("vertically all: object, menu, button"));
     }
     
     @Test

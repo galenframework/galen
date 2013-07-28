@@ -15,6 +15,7 @@
 ******************************************************************************/
 package net.mindengine.galen.specs.reader;
 
+import static net.mindengine.galen.specs.Alignment.ALL;
 import static net.mindengine.galen.specs.Alignment.BOTTOM;
 import static net.mindengine.galen.specs.Alignment.CENTERED;
 import static net.mindengine.galen.specs.Alignment.LEFT;
@@ -84,8 +85,16 @@ public class SpecReader {
             @Override
             public Spec init(String specName, List<String> list) {
                 String arguments = specName.substring("horizontally".length()).trim();
-                Alignment alignment = Alignment.parse(arguments);
-                if (alignment.isOneOf(CENTERED, TOP, BOTTOM)) {
+                
+                Alignment alignment = null;
+                if (arguments.isEmpty()){
+                    alignment = Alignment.ALL;
+                }
+                else {
+                    alignment = Alignment.parse(arguments);
+                }
+                
+                if (alignment.isOneOf(CENTERED, TOP, BOTTOM, ALL)) {
                     return new SpecHorizontally(alignment, list);
                 }
                 else {
@@ -98,8 +107,16 @@ public class SpecReader {
             @Override
             public Spec init(String specName, List<String> list) {
                 String arguments = specName.substring("Vertically".length()).trim();
-                Alignment alignment = Alignment.parse(arguments);
-                if (alignment.isOneOf(CENTERED, LEFT, RIGHT)) {
+                
+                Alignment alignment = null;
+                if (arguments.isEmpty()){
+                    alignment = Alignment.ALL;
+                }
+                else {
+                    alignment = Alignment.parse(arguments);
+                }
+                
+                if (alignment.isOneOf(CENTERED, LEFT, RIGHT, ALL)) {
                     return new SpecVertically(alignment, list);
                 }
                 else {
