@@ -196,7 +196,7 @@ public class PageSpecsReaderTest {
     }
     
   //TODO write some negative tests for testing errors in page specs
-    //TODO show line number in which the spec failed to parse
+    
 
     private PageSpecReaderException expectExceptionFromReading(String file) throws IOException {
         try {

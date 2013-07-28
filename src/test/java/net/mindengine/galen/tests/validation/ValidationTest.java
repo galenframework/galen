@@ -328,6 +328,32 @@ public class ValidationTest {
                   put("button", element(60, 50, 40, 40));
           }})),
           
+          row(new ValidationError(EMPTY_AREA, messages("\"button\" has zero size")),
+                  specContains(CONTAINS_FULLY, "menu", "button"), page(new HashMap<String, PageElement>(){{
+                      put("object", element(10, 10, 100, 100));
+                      put("menu", element(11, 11, 10, 10));
+                      put("button", element(60, 50, 0, 40));
+          }})),
+          
+          row(new ValidationError(EMPTY_AREA, messages("\"button\" has zero size")),
+                  specContains(CONTAINS_FULLY, "menu", "button"), page(new HashMap<String, PageElement>(){{
+                      put("object", element(10, 10, 100, 100));
+                      put("menu", element(11, 11, 10, 10));
+                      put("button", element(60, 50, 10, 0));
+          }})),
+          row(new ValidationError(NO_AREA, messages("\"object\" has zero size")),
+                  specContains(CONTAINS_FULLY, "menu", "button"), page(new HashMap<String, PageElement>(){{
+                      put("object", element(10, 10, 0, 100));
+                      put("menu", element(11, 11, 10, 10));
+                      put("button", element(60, 50, 10, 10));
+          }})),
+          row(new ValidationError(NO_AREA, messages("\"object\" has zero size")),
+                  specContains(CONTAINS_FULLY, "menu", "button"), page(new HashMap<String, PageElement>(){{
+                      put("object", element(10, 10, 10, 0));
+                      put("menu", element(11, 11, 10, 10));
+                      put("button", element(60, 50, 10, 10));
+          }})),
+          
           
           /* Absent */
           
@@ -341,7 +367,8 @@ public class ValidationTest {
                   put("blabla", absentElement(10, 10, 100, 100));
           }})),
           
-          /* Inside with one location*/
+          
+          /* Inside */
           
           row(new ValidationError(singleArea(new Rect(30, 10, 50, 50), "object"), messages("\"object\" is 30px left instead of 10px")),
               specInside("container", location(exact(10), LEFT)), page(new HashMap<String, PageElement>(){{
@@ -425,6 +452,27 @@ public class ValidationTest {
                   put("container", invisibleElement(0, 0, 130, 120));
           }})),
           
+          row(new ValidationError(NO_AREA, messages("\"container\" has zero size")),
+                  specInside("container", location(exact(10), LEFT), location(exact(20), TOP)), page(new HashMap<String, PageElement>(){{
+                      put("object", element(30, 5, 50, 50));
+                      put("container", element(0, 0, 0, 120));
+          }})),
+          row(new ValidationError(NO_AREA, messages("\"container\" has zero size")),
+                  specInside("container", location(exact(10), LEFT), location(exact(20), TOP)), page(new HashMap<String, PageElement>(){{
+                      put("object", element(30, 5, 50, 50));
+                      put("container", element(0, 0, 10, 0));
+          }})),
+          row(new ValidationError(NO_AREA, messages("\"object\" has zero size")),
+                  specInside("container", location(exact(10), LEFT), location(exact(20), TOP)), page(new HashMap<String, PageElement>(){{
+                      put("object", element(30, 5, 0, 50));
+                      put("container", element(0, 0, 10, 100));
+          }})),
+          row(new ValidationError(NO_AREA, messages("\"object\" has zero size")),
+                  specInside("container", location(exact(10), LEFT), location(exact(20), TOP)), page(new HashMap<String, PageElement>(){{
+                      put("object", element(30, 5, 10, 0));
+                      put("container", element(0, 0, 10, 100));
+          }})),
+          
           
           /* Near */
           row(new ValidationError(singleArea(new Rect(90, 5, 100, 50), "object"), messages("\"object\" is 10px left instead of 30px")),
@@ -497,6 +545,28 @@ public class ValidationTest {
                   specNear("button", location(exact(30), RIGHT), location(between(10, 20), BOTTOM)), page(new HashMap<String, PageElement>(){{
                       put("button", absentElement(200, 200, 100, 50));
           }})),
+          
+          row(new ValidationError(NO_AREA, messages("\"button\" has zero size")),
+                  specNear("button", location(exact(30), RIGHT), location(between(10, 20), BOTTOM)), page(new HashMap<String, PageElement>(){{
+                      put("object", element(310, 250, 100, 50));
+                      put("button", element(200, 200, 0, 50));
+          }})),
+          row(new ValidationError(NO_AREA, messages("\"button\" has zero size")),
+                  specNear("button", location(exact(30), RIGHT), location(between(10, 20), BOTTOM)), page(new HashMap<String, PageElement>(){{
+                      put("object", element(310, 250, 100, 50));
+                      put("button", element(200, 200, 10, 0));
+          }})),
+          row(new ValidationError(NO_AREA, messages("\"object\" has zero size")),
+                  specNear("button", location(exact(30), RIGHT), location(between(10, 20), BOTTOM)), page(new HashMap<String, PageElement>(){{
+                      put("object", element(310, 250, 0, 50));
+                      put("button", element(200, 200, 10, 10));
+          }})),
+          row(new ValidationError(NO_AREA, messages("\"object\" has zero size")),
+                  specNear("button", location(exact(30), RIGHT), location(between(10, 20), BOTTOM)), page(new HashMap<String, PageElement>(){{
+                      put("object", element(310, 250, 10, 0));
+                      put("button", element(200, 200, 10, 10));
+          }})),
+          
           
           
           /* Width */
@@ -610,6 +680,30 @@ public class ValidationTest {
                       put("item1", element(10, 10, 10, 20));
                       put("item2", element(10, 10, 10, 15));
           }})),
+          row(new ValidationError(NO_AREA, messages("\"item1\" has zero size")),
+                  specHorizontally(Alignment.CENTERED, "item1", "item2"), page(new HashMap<String, PageElement>(){{
+                      put("object", element(10, 10, 50, 10));
+                      put("item1", element(10, 10, 0, 20));
+                      put("item2", element(10, 10, 10, 15));
+          }})),
+          row(new ValidationError(NO_AREA, messages("\"item1\" has zero size")),
+                  specHorizontally(Alignment.CENTERED, "item1", "item2"), page(new HashMap<String, PageElement>(){{
+                      put("object", element(10, 10, 50, 10));
+                      put("item1", element(10, 10, 10, 0));
+                      put("item2", element(10, 10, 10, 15));
+          }})),
+          row(new ValidationError(NO_AREA, messages("\"object\" has zero size")),
+                  specHorizontally(Alignment.CENTERED, "item1", "item2"), page(new HashMap<String, PageElement>(){{
+                      put("object", element(10, 10, 0, 10));
+                      put("item1", element(10, 10, 10, 10));
+                      put("item2", element(10, 10, 10, 15));
+          }})),
+          row(new ValidationError(NO_AREA, messages("\"object\" has zero size")),
+                  specHorizontally(Alignment.CENTERED, "item1", "item2"), page(new HashMap<String, PageElement>(){{
+                      put("object", element(10, 10, 10, 0));
+                      put("item1", element(10, 10, 10, 10));
+                      put("item2", element(10, 10, 10, 15));
+          }})),
           row(new ValidationError(singleArea(new Rect(10, 10, 10, 15), "item2"), messages("\"item2\" is not aligned horizontally centered with \"object\"")),
                   specHorizontally(Alignment.CENTERED, "item1", "item2"), page(new HashMap<String, PageElement>(){{
                       put("object", element(10, 10, 50, 10));
@@ -670,6 +764,30 @@ public class ValidationTest {
                       put("item1", element(10, 10, 10, 20));
                       put("item2", element(10, 10, 10, 15));
           }})),
+          row(new ValidationError(NO_AREA, messages("\"item1\" has zero size")),
+                  specVertically(Alignment.CENTERED, "item1", "item2"), page(new HashMap<String, PageElement>(){{
+                      put("object", element(10, 10, 50, 10));
+                      put("item1", element(10, 10, 0, 20));
+                      put("item2", element(10, 10, 10, 15));
+          }})),
+          row(new ValidationError(NO_AREA, messages("\"item1\" has zero size")),
+                  specVertically(Alignment.CENTERED, "item1", "item2"), page(new HashMap<String, PageElement>(){{
+                      put("object", element(10, 10, 50, 10));
+                      put("item1", element(10, 10, 20, 0));
+                      put("item2", element(10, 10, 10, 15));
+          }})),
+          row(new ValidationError(NO_AREA, messages("\"object\" has zero size")),
+                  specVertically(Alignment.CENTERED, "item1", "item2"), page(new HashMap<String, PageElement>(){{
+                      put("object", element(10, 10, 0, 10));
+                      put("item1", element(10, 10, 20, 20));
+                      put("item2", element(10, 10, 10, 15));
+          }})),
+          row(new ValidationError(NO_AREA, messages("\"object\" has zero size")),
+                  specVertically(Alignment.CENTERED, "item1", "item2"), page(new HashMap<String, PageElement>(){{
+                      put("object", element(10, 10, 10, 0));
+                      put("item1", element(10, 10, 20, 20));
+                      put("item2", element(10, 10, 10, 15));
+          }})),
           row(new ValidationError(singleArea(new Rect(10, 20, 10, 10), "item1"), messages("\"item1\" is not aligned vertically centered with \"object\"")),
                   specVertically(Alignment.CENTERED, "item1", "item2"), page(new HashMap<String, PageElement>(){{
                       put("object", element(10, 10, 20, 10));
@@ -696,7 +814,6 @@ public class ValidationTest {
           }})),
           
           
-          //TODO verify if area of object is returned incorrectly (width < 1 and height < 1)
           
           //TODO spec vertically and horizontally should check alignemnt all (left and right, top and bottom)
         };

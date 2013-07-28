@@ -20,7 +20,7 @@ public class ErrorArea {
         this.rect = rect;
         this.message = message;
     }
-
+    
     public Rect getRect() {
         return rect;
     }

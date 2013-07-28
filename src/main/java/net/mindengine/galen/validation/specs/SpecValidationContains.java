@@ -57,9 +57,14 @@ public class SpecValidationContains extends SpecValidation<SpecContains> {
                 } 
                 else {
                     Rect childObjectArea = childObject.getArea();
-                    if (!childObjectMatches(spec, objectArea, childObjectArea)) {
-                        messages.add(format("\"%s\" is outside \"%s\"", childObjectName, objectName));
-                        errorAreas.add(new ErrorArea(childObjectArea, childObjectName));
+                    if (childObjectArea.getWidth() > 0 && childObjectArea.getHeight() > 0) {
+                        if (!childObjectMatches(spec, objectArea, childObjectArea)) {
+                            messages.add(format("\"%s\" is outside \"%s\"", childObjectName, objectName));
+                            errorAreas.add(new ErrorArea(childObjectArea, childObjectName));
+                        }
+                    }
+                    else{
+                        messages.add(format(format(OBJECT_HAS_ZERO_SIZE, childObjectName)));
                     }
                 }
             }

@@ -57,6 +57,10 @@ public abstract class SpecValidationGeneral<T extends SpecComplex> extends SpecV
         Rect mainArea = mainObject.getArea();
         Rect secondArea = secondObject.getArea();
         
+        if (secondArea.getWidth() < 1 || secondArea.getHeight() < 1) {
+            return error(format(OBJECT_HAS_ZERO_SIZE, spec.getObject()));
+        }
+        
         List<String> messages = new LinkedList<String>();
         
         for (Location location : spec.getLocations()) {

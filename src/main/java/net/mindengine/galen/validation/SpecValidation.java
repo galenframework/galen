@@ -17,11 +17,13 @@ package net.mindengine.galen.validation;
 
 import static java.lang.String.format;
 import net.mindengine.galen.page.PageElement;
+import net.mindengine.galen.page.Rect;
 import net.mindengine.galen.specs.Spec;
 import net.mindengine.galen.specs.page.Locator;
 
 public abstract class SpecValidation<T extends Spec> {
     
+    protected static final String OBJECT_HAS_ZERO_SIZE = "\"%s\" has zero size";
     protected static final String OBJECT_WITH_NAME_S_IS_NOT_DEFINED_IN_PAGE_SPEC = "Cannot find locator for \"%s\" in page spec";
     protected static final String OBJECT_S_IS_ABSENT_ON_PAGE = "\"%s\" is absent on page";
     protected static final String OBJECT_S_IS_NOT_VISIBLE_ON_PAGE = "\"%s\" is not visible on page";
@@ -60,6 +62,12 @@ public abstract class SpecValidation<T extends Spec> {
         else if (!object.isVisible()) {
             return error(format(OBJECT_S_IS_ABSENT_ON_PAGE, objectName));
         }
+
+        Rect area = object.getArea();
+        if (area.getWidth() < 1 || area.getHeight() < 1) {
+            return error(format(OBJECT_HAS_ZERO_SIZE, objectName));
+        }
+        
         else return null;
     }
     
