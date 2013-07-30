@@ -20,6 +20,9 @@ public class ExpectRect implements Expectation<Rect> {
                 return processCorrection(numbersText.toString());
             }
             else if (!isDelimeter(symbol)) {
+                if (!started) {
+                    throw new IncorrectSpecException("Error parsing corrections. Missing starting '(' symbol");
+                }
                 numbersText.append(symbol);
             }
         }

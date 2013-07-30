@@ -190,7 +190,7 @@ public class PageSpecsReaderTest {
     public void givesError_ifThereAre_invalidObjectLocators() throws Exception {
         PageSpecReaderException exception = expectExceptionFromReading("/negative-specs/invalid-object-locator.spec");
         
-        assertThat(exception.getMessage(), is("Object \"bad-object\" has incorrect locator"));
+        assertThat(exception.getMessage(), is("Missing locator for object \"bad-object\""));
         assertThat(exception.getSpecFile(), endsWith("/invalid-object-locator.spec"));
         assertThat(exception.getSpecLine(), is(7));
     }
