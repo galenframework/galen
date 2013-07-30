@@ -38,6 +38,8 @@ public class SpecValidationVertically extends SpecValidationOneLine<SpecVertical
             return childArea.getLeft() - mainArea.getLeft();
         case RIGHT:
             return childArea.getLeft() + childArea.getWidth() - (mainArea.getLeft() + mainArea.getWidth());
+        case ALL:
+            return Math.abs(childArea.getLeft() - mainArea.getLeft()) + Math.abs(childArea.getWidth() - mainArea.getWidth());
         }
         return 0;
     }

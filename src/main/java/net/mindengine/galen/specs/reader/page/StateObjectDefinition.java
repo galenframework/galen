@@ -15,8 +15,10 @@
 ******************************************************************************/
 package net.mindengine.galen.specs.reader.page;
 
+import net.mindengine.galen.page.Rect;
 import net.mindengine.galen.specs.page.Locator;
 import net.mindengine.galen.specs.reader.ExpectWord;
+import net.mindengine.galen.specs.reader.Expectations;
 import net.mindengine.galen.specs.reader.IncorrectSpecException;
 import net.mindengine.galen.specs.reader.StringCharReader;
 
@@ -35,17 +37,34 @@ public class StateObjectDefinition extends State {
         String objectName = expectWord(reader, "Object name");
         
         try {
-            String locatorType = expectWord(reader, "Locator type");
+            String word = expectCorrectionsOrId(reader);
+            String locatorType;
+            Rect corrections = null;
+            if (word.equals("corrections")) {
+                corrections = Expectations.corrections().read(reader);
+                
+                locatorType = expectWord(reader, "Locator type");
+            }
+            else locatorType = word;
+            
             
             String value = reader.getTheRest().trim();
             if (value.isEmpty()) {
                 throw new IncorrectSpecException(String.format("The locator for object '%s' is not defined correctly", objectName));
             }
-            pageSpec.addObject(objectName, new Locator(locatorType, value));
+            pageSpec.addObject(objectName, new Locator(locatorType, value).withCorrections(corrections));
         }
         catch (Exception e) {
             throw new IncorrectSpecException("Object \"" + objectName + "\" has incorrect locator", e);
         }
+    }
+
+    private String expectCorrectionsOrId(StringCharReader reader) {
+        String word = new ExpectWord().stopOnThisSymbol('(').read(reader).trim();
+        if (word.isEmpty()) {
+            throw new IncorrectSpecException("Locator type is not defined correctly");
+        }
+        return word;
     }
 
     private String expectWord(StringCharReader reader, String what) {

@@ -18,6 +18,7 @@ package net.mindengine.galen.specs.reader;
 import java.util.Arrays;
 import java.util.List;
 
+import net.mindengine.galen.page.Rect;
 import net.mindengine.galen.specs.Location;
 import net.mindengine.galen.specs.Side;
 import net.mindengine.galen.specs.Range;
@@ -55,6 +56,10 @@ public class Expectations {
 
     public static Expectation<List<Location>> locations() {
         return new ExpectLocations();
+    }
+
+    public static Expectation<Rect> corrections() {
+        return new ExpectRect();
     }
 
     

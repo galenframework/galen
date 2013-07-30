@@ -261,6 +261,11 @@ public class ValidationTest {
               put("item1",  element(20, 30, 10, 20));
               put("item2",  element(30, 10, 10, 40));
           }})),
+          row(specHorizontally(Alignment.ALL, "item1", "item2"), page(new HashMap<String, PageElement>(){{
+              put("object", element(10, 10, 10, 20));
+              put("item1",  element(20, 10, 10, 20));
+              put("item2",  element(30, 10, 10, 20));
+          }})),
           
           /* Vertically */
           row(specVertically(Alignment.CENTERED, "item1", "item2"), page(new HashMap<String, PageElement>(){{
@@ -287,6 +292,11 @@ public class ValidationTest {
               put("object", element(30, 10, 10, 10));
               put("item1",  element(20, 20, 20, 10));
               put("item2",  element(10, 30, 30, 10));
+          }})),
+          row(specVertically(Alignment.ALL, "item1", "item2"), page(new HashMap<String, PageElement>(){{
+              put("object", element(10, 10, 10, 10));
+              put("item1",  element(10, 20, 10, 10));
+              put("item2",  element(10, 30, 10, 10));
           }})),
           
           
@@ -728,6 +738,19 @@ public class ValidationTest {
                       put("item1", element(10, 5, 10, 15));
                       put("item2", element(10, 10, 10, 5));
           }})),
+          row(new ValidationError(singleArea(new Rect(30, 10, 10, 5), "item2"), messages("\"item2\" is not aligned horizontally all with \"object\"")),
+                  specHorizontally(Alignment.ALL, "item1", "item2"), page(new HashMap<String, PageElement>(){{
+                      put("object", element(10, 10, 10, 10));
+                      put("item1", element(20, 10, 10, 10));
+                      put("item2", element(30, 10, 10, 5));
+          }})),
+          row(new ValidationError(singleArea(new Rect(30, 10, 15, 5), "item2"), messages("\"item2\" is not aligned horizontally all with \"object\"")),
+                  specHorizontally(Alignment.ALL, "item1", "item2"), page(new HashMap<String, PageElement>(){{
+                      put("object", element(10, 10, 10, 10));
+                      put("item1", element(20, 10, 10, 10));
+                      put("item2", element(30, 10, 15, 5));
+          }})),
+          
           
           /* Vertically */
           row(new ValidationError(NO_AREA, messages("Cannot find locator for \"item1\" in page spec")),
@@ -812,10 +835,19 @@ public class ValidationTest {
                       put("item1", element(20, 20, 10, 10));
                       put("item2", element(10, 30, 10, 10));
           }})),
+          row(new ValidationError(singleArea(new Rect(10, 30, 5, 10), "item2"), messages("\"item2\" is not aligned vertically all with \"object\"")),
+                  specVertically(Alignment.ALL, "item1", "item2"), page(new HashMap<String, PageElement>(){{
+                      put("object", element(10, 10, 10, 10));
+                      put("item1", element(10, 20, 10, 10));
+                      put("item2", element(10, 30, 5, 10));
+          }})),
+          row(new ValidationError(singleArea(new Rect(15, 30, 5, 10), "item2"), messages("\"item2\" is not aligned vertically all with \"object\"")),
+                  specVertically(Alignment.ALL, "item1", "item2"), page(new HashMap<String, PageElement>(){{
+                      put("object", element(10, 10, 10, 10));
+                      put("item1", element(10, 20, 10, 10));
+                      put("item2", element(15, 30,   5, 10));
+          }})),
           
-          
-          
-          //TODO spec vertically and horizontally should check alignemnt all (left and right, top and bottom)
         };
     }
     

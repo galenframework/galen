@@ -59,6 +59,11 @@ public class GalenSeleniumTest {
             assertThat("Invokations should", invokations.toString(), is("<o header>" +
             		"<SpecContains header>" +
             		"<SpecNear header>" +
+            		"<SpecWidth header>" +
+            		"<SpecHeight header>" +
+            		"<o header-with-corrections>" +
+            		"<SpecWidth header-with-corrections>" +
+                    "<SpecHeight header-with-corrections>" +
             		"<o header-text-1>" +
             		"<SpecNear header-text-1>" +
             		"<SpecInside header-text-1>" +

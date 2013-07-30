@@ -38,6 +38,8 @@ public class SpecValidationHorizontally extends SpecValidationOneLine<SpecHorizo
             return childArea.getTop() - mainArea.getTop();
         case BOTTOM:
             return childArea.getTop() + childArea.getHeight() - (mainArea.getTop() + mainArea.getHeight());
+        case ALL:
+            return Math.abs(childArea.getTop() - mainArea.getTop()) + Math.abs(childArea.getHeight() - mainArea.getHeight());
         }
         return 0;
     }

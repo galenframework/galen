@@ -16,17 +16,28 @@ public class WebPageElement implements PageElement {
     
 
     public WebPageElement(String objectName, WebElement webElement, Locator objectLocator) {
-        this.objectName = objectName;
-        this.webElement = webElement;
-        this.locator = objectLocator;
+        this.setObjectName(objectName);
+        this.setWebElement(webElement);
+        this.setLocator(objectLocator);
     }
 
     @Override
     public Rect getArea() {
-        Point location = webElement.getLocation();
-        Dimension size = webElement.getSize();
+        Point location = getWebElement().getLocation();
+        Dimension size = getWebElement().getSize();
         Rect rect = new Rect(location.getX(), location.getY(), size.getWidth(), size.getHeight());
-        return rect;
+        
+        if (getLocator() != null && getLocator().getCorrections() != null) {
+            return correctedRect(rect, getLocator().getCorrections());
+        }
+        else return rect;
+    }
+
+    private Rect correctedRect(Rect rect, Rect corrections) {
+        return new Rect(rect.getLeft() + corrections.getLeft(),
+                rect.getTop() + corrections.getTop(),
+                rect.getWidth() + corrections.getWidth(),
+                rect.getHeight() + corrections.getHeight());
     }
 
     @Override
@@ -36,7 +47,7 @@ public class WebPageElement implements PageElement {
 
     @Override
     public boolean isVisible() {
-        return webElement.isDisplayed();
+        return getWebElement().isDisplayed();
     }
 
     @Override
@@ -57,6 +68,30 @@ public class WebPageElement implements PageElement {
     @Override
     public int getTop() {
         return getArea().getTop();
+    }
+
+    public String getObjectName() {
+        return objectName;
+    }
+
+    public void setObjectName(String objectName) {
+        this.objectName = objectName;
+    }
+
+    public Locator getLocator() {
+        return locator;
+    }
+
+    public void setLocator(Locator locator) {
+        this.locator = locator;
+    }
+
+    public WebElement getWebElement() {
+        return webElement;
+    }
+
+    public void setWebElement(WebElement webElement) {
+        this.webElement = webElement;
     }
 
 }

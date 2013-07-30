@@ -29,13 +29,11 @@ public class ExpectWord implements Expectation<String> {
         while(reader.hasMore()) {
             char symbol = reader.next();
             
-            
-            if (breakSymbol != 0 && !started && symbol == breakSymbol) {
+            if (symbol == breakSymbol) {
                 reader.back();
-                return "";
+                break;
             }
-            
-            if(isWordDelimeter(symbol)) {
+            else if(isWordDelimeter(symbol)) {
                 if (started) {
                     reader.back();
                     break;

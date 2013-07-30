@@ -15,6 +15,8 @@
 ******************************************************************************/
 package net.mindengine.galen.specs.page;
 
+import net.mindengine.galen.page.Rect;
+
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -23,6 +25,7 @@ public class Locator {
 
     private String locatorType;
     private String locatorValue;
+    private Rect corrections;
 
     public Locator(String locatorType, String locatorValue) {
         this.setLocatorType(locatorType);
@@ -47,7 +50,7 @@ public class Locator {
 
     @Override
     public int hashCode() {
-        return new HashCodeBuilder(13, 19).append(locatorType).append(locatorValue).toHashCode();
+        return new HashCodeBuilder(13, 19).append(locatorType).append(locatorValue).append(corrections).toHashCode();
     }
     
     @Override
@@ -62,13 +65,33 @@ public class Locator {
             return false;
         }
         Locator rhs = (Locator)obj;
-        return new EqualsBuilder().append(locatorType, rhs.locatorType).append(locatorValue, rhs.locatorValue).isEquals();
+        return new EqualsBuilder().append(locatorType, rhs.locatorType).append(locatorValue, rhs.locatorValue).append(corrections, rhs.corrections).isEquals();
     }
     @Override
     public String toString() {
         return new ToStringBuilder(this)
             .append("locatorType", locatorType)
             .append("locatorValue", locatorValue)
+            .append("corrections", corrections)
             .toString();
     }
+
+    public Locator withCorrections(int left, int top, int width, int height) {
+        this.setCorrections(new Rect(left, top, width, height));
+        return this;
+    }
+
+    public Rect getCorrections() {
+        return corrections;
+    }
+
+    public void setCorrections(Rect corrections) {
+        this.corrections = corrections;
+    }
+
+    public Locator withCorrections(Rect corrections) {
+        setCorrections(corrections);
+        return this;
+    }
+
 }

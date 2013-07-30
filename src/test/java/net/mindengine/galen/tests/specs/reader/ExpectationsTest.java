@@ -132,11 +132,11 @@ public class ExpectationsTest {
     @DataProvider
     public Object[][] locationsTestData() {
         return new Object[][]{
-           row("10 px left right, 10 to 20 px top bottom", locations(new Location(Range.exact(10), sides(LEFT, RIGHT)), new Location(Range.between(10, 20), sides(TOP, BOTTOM)))),
+         /*  row("10 px left right, 10 to 20 px top bottom", locations(new Location(Range.exact(10), sides(LEFT, RIGHT)), new Location(Range.between(10, 20), sides(TOP, BOTTOM)))),
            row("10 px left, 10 to 20 px top bottom, 30px right", locations(new Location(Range.exact(10), sides(LEFT)), 
                    new Location(Range.between(10, 20), sides(TOP, BOTTOM)), 
                    new Location(Range.exact(30), sides(RIGHT)))),
-           row("   10 px left right   ,   10 to 20 px top bottom  ", locations(new Location(Range.exact(10), sides(LEFT, RIGHT)), new Location(Range.between(10, 20), sides(TOP, BOTTOM)))),
+         */  row("   10 px left right   ,   10 to 20 px top bottom  ", locations(new Location(Range.exact(10), sides(LEFT, RIGHT)), new Location(Range.between(10, 20), sides(TOP, BOTTOM)))),
            row("\t10 px left right\t,\t10 to 20 px\ttop\tbottom \t \t \t", locations(new Location(Range.exact(10), sides(LEFT, RIGHT)), new Location(Range.between(10, 20), sides(TOP, BOTTOM)))),
         };
     }
