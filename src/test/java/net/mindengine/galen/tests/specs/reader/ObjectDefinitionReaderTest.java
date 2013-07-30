@@ -95,8 +95,6 @@ public class ObjectDefinitionReaderTest {
     }
     
     
-    //TODO implement negative tests for object definitions
-    
     public Object[] row(Object...args) {
         return args;
     }
