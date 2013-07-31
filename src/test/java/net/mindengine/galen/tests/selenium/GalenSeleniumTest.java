@@ -5,6 +5,7 @@ import static org.hamcrest.Matchers.is;
 
 import java.util.List;
 
+import net.mindengine.galen.components.validation.TestValidationListener;
 import net.mindengine.galen.page.selenium.SeleniumPage;
 import net.mindengine.galen.specs.Spec;
 import net.mindengine.galen.specs.page.PageSection;
@@ -21,6 +22,10 @@ import org.testng.annotations.Test;
 
 public class GalenSeleniumTest {
     
+    // TODO success tests for mobile layout
+    
+    // TODO negative tests for desktop, tablet and mobile layouts
+    
     @Test
     public void performsValidation_inSeleniumBrowser() throws Exception {
         PageSpec pageSpec = new PageSpecReader().read(getClass().getResourceAsStream("/html/page.spec"));
@@ -28,35 +33,18 @@ public class GalenSeleniumTest {
         driver.manage().window().maximize();
         
         SeleniumPage page = new SeleniumPage(driver);
-        final StringBuffer invokations = new StringBuffer();
+        
+        TestValidationListener validationListener = new TestValidationListener();
         try {
             List<PageSection> pageSections = pageSpec.findSections("all");
             
             assertThat("Filtered sections size should be", pageSections.size(), is(1));
             
-            SectionValidation sectionValidation = new SectionValidation(pageSections, new PageValidation(page, pageSpec), new ValidationListener() {
-
-                @Override
-                public void onSpecError(PageValidation pageValidation, String objectName, Spec spec, ValidationError error) {
-                    invokations.append("<e>");
-                }
-
-                @Override
-                public void onOnObjectCheck(PageValidation pageValidation, String objectName, Spec spec) {
-                    invokations.append("<" + spec.getClass().getSimpleName() + " " + objectName + ">");
-                }
-
-                @Override
-                public void onObject(PageValidation pageValidation, String objectName) {
-                    invokations.append("<o " + objectName + ">");
-                }
-                
-            });
+            SectionValidation sectionValidation = new SectionValidation(pageSections, new PageValidation(page, pageSpec), validationListener);
             List<ValidationError> errors = sectionValidation.check();
             
             
-            assertThat("Errors should be empty", errors.size(), is(0));
-            assertThat("Invokations should", invokations.toString(), is("<o header>" +
+            assertThat("Invokations should", validationListener.getInvokations(), is("<o header>" +
             		"<SpecContains header>" +
             		"<SpecNear header>" +
             		"<SpecWidth header>" +
@@ -80,6 +68,7 @@ public class GalenSeleniumTest {
             		"<o menu-item-categories>" +
             		"<SpecInside menu-item-categories>" +
             		"<SpecNear menu-item-categories>"));
+            assertThat("Errors should be empty", errors.size(), is(0));
         }
         catch (Exception ex) {
             throw ex;

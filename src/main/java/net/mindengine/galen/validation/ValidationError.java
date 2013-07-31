@@ -29,7 +29,7 @@ public class ValidationError {
     private List<String> messages;
 
     public ValidationError(List<ErrorArea> errorAreas, List<String> messages) {
-        this.errorAreas = errorAreas;
+        this.setErrorAreas(errorAreas);
         this.messages = messages;
     }
 
@@ -40,7 +40,7 @@ public class ValidationError {
 
     @Override
     public int hashCode() {
-        return new HashCodeBuilder(17, 31).append(errorAreas).append(messages).toHashCode();
+        return new HashCodeBuilder(17, 31).append(getErrorAreas()).append(messages).toHashCode();
     }
     
     @Override
@@ -53,19 +53,19 @@ public class ValidationError {
             return false;
         
         ValidationError rhs = (ValidationError)obj;
-        return new EqualsBuilder().append(errorAreas, rhs.errorAreas).append(messages, rhs.messages).isEquals();
+        return new EqualsBuilder().append(getErrorAreas(), rhs.getErrorAreas()).append(messages, rhs.messages).isEquals();
     }
     
     @Override
     public String toString() {
-        return format("Error{%s, areas=%s}", messages, errorAreas);
+        return format("Error{%s, areas=%s}", messages, getErrorAreas());
     }
 
     public ValidationError withArea(ErrorArea errorArea) {
-        if (errorAreas == null) {
-            errorAreas = new LinkedList<ErrorArea>();
+        if (getErrorAreas() == null) {
+            setErrorAreas(new LinkedList<ErrorArea>());
         }
-        errorAreas.add(errorArea);
+        getErrorAreas().add(errorArea);
         return this;
     }
 
@@ -86,8 +86,16 @@ public class ValidationError {
     }
 
     public ValidationError withErrorAreas(List<ErrorArea> errorAreas) {
-        this.errorAreas = errorAreas;
+        this.setErrorAreas(errorAreas);
         return this;
+    }
+
+    public List<ErrorArea> getErrorAreas() {
+        return errorAreas;
+    }
+
+    public void setErrorAreas(List<ErrorArea> errorAreas) {
+        this.errorAreas = errorAreas;
     }
 
 }
