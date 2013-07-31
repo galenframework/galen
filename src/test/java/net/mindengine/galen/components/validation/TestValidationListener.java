@@ -32,6 +32,7 @@ public class TestValidationListener implements ValidationListener {
 
     private void append(String text) {
         invokations.append(text);
+        invokations.append('\n');
     }
     
     public String getInvokations() {

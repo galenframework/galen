@@ -68,12 +68,17 @@ header
 @ tablet, mobile
 -----------------------------
 header
-    width: 200 to 300px
-    
+    height: 150 to 170px    
 
 @ mobile
 ------------------------------
-header
-    height: 50 to 70px
+menu-item-home:
+    horizontally: menu-item-categories, menu-item-blog
+
+menu-item-rss:
+    horizontally: menu-item-about, menu-item-contacts
+    near: menu-item-home 0px bottom
+    
+    
 
 
