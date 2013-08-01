@@ -22,6 +22,7 @@ import static net.mindengine.galen.specs.Side.TOP;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.notNullValue;
 
 import java.util.Arrays;
 import java.util.List;
@@ -33,6 +34,7 @@ import net.mindengine.galen.specs.reader.ExpectLocations;
 import net.mindengine.galen.specs.reader.ExpectRange;
 import net.mindengine.galen.specs.reader.ExpectSides;
 import net.mindengine.galen.specs.reader.ExpectWord;
+import net.mindengine.galen.specs.reader.IncorrectSpecException;
 import net.mindengine.galen.specs.reader.StringCharReader;
 
 import org.apache.commons.lang3.StringEscapeUtils;
@@ -74,7 +76,42 @@ public class ExpectationsTest {
            row("15% of screen/width", new Range(15, 15).withPercentOf("screen/width")),
            row("15.05% of screen/width", new Range(15.05, 15.05).withPercentOf("screen/width")),
            row("15 to 40% of   screen/height", new Range(15, 40).withPercentOf("screen/height")),
+           row("15 ± 5 % of   screen/height", new Range(10, 20).withPercentOf("screen/height")),
            row("15 to 40% of item-1/some-other-stuff/a/b/c2", new Range(15, 40).withPercentOf("item-1/some-other-stuff/a/b/c2"))
+        };
+    }
+    
+    @Test(dataProvider = "provideBadRangeSamples")
+    public void shouldGiveError_forIncorrectRanges(TestData<String> testData) {
+        StringCharReader stringCharReader = new StringCharReader(testData.textForParsing);
+        
+        IncorrectSpecException exception = null;
+        try {
+            Range range = new ExpectRange().read(stringCharReader);
+        }
+        catch (IncorrectSpecException e) {
+            exception = e;
+        }
+        
+        assertThat("Exception should be", exception, is(notNullValue()));
+        assertThat("Exception message should be", exception.getMessage(), is(testData.expected));
+    }
+    
+    @DataProvider
+    public Object[][] provideBadRangeSamples() {
+        return new Object[][] {
+            row("0", "Cannot parse range value: \"\""),
+            row("0p", "Cannot parse range value: \"\""),
+            row("0 p", "Cannot parse range value: \"\""),
+            row("0PX", "Cannot parse range value: \"\""),
+            row("10 to 20", "Missing ending: \"px\" or \"%\""),
+            row("10 to 20p", "Missing ending: \"px\" or \"%\""),
+            row("10 to 20%", "Missing value path for relative range"),
+            row("10 to 20% of ", "Missing value path for relative range"),
+            row("10% to 20% of ", "Missing value path for relative range"),
+            row("15 ± 5", "Missing ending: \"px\" or \"%\""),
+            row("15 ± 5 %", "Missing value path for relative range"),
+            row("15 ± 5 % of ", "Missing value path for relative range"),
         };
     }
     

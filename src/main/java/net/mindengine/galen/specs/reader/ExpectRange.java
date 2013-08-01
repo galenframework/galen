@@ -15,6 +15,7 @@
 ******************************************************************************/
 package net.mindengine.galen.specs.reader;
 
+import static java.lang.String.format;
 import static net.mindengine.galen.specs.reader.Expectations.isDelimeter;
 import static net.mindengine.galen.specs.reader.Expectations.isNumeric;
 import net.mindengine.galen.specs.Range;
@@ -40,7 +41,7 @@ public class ExpectRange implements Expectation<Range>{
                 range = Range.between(firstValue, secondValue);
             }
             else if (text.equals("±")) {
-                return Range.between(firstValue - secondValue, firstValue + secondValue);
+                range = Range.between(firstValue - secondValue, firstValue + secondValue);
             }
             else throw new IncorrectSpecException(msgFor(text));
             
@@ -51,16 +52,20 @@ public class ExpectRange implements Expectation<Range>{
             else if (end.equals("%")) {
                 return range.withPercentOf(readPercentageOf(reader));
             }
-            else throw new IncorrectSpecException(msgFor(text));
+            else throw new IncorrectSpecException("Missing ending: \"px\" or \"%\"");
         }
     }
 
     private String readPercentageOf(StringCharReader reader) {
         String firstWord = expectNonNumeric(reader);
         if (firstWord.equals("of")) {
-            return expectNonNumeric(reader);
+            String valuePath = expectNonNumeric(reader).trim();
+            if (valuePath.isEmpty()) {
+                throw new IncorrectSpecException("Missing value path for relative range");
+            }
+            else return valuePath;
         }
-        else throw new IncorrectSpecException(msgFor(firstWord));
+        else throw new IncorrectSpecException("Missing value path for relative range");
     }
 
     private String expectNonNumeric(StringCharReader reader) {
@@ -110,7 +115,14 @@ public class ExpectRange implements Expectation<Range>{
                 break;
             }
         }
-        return Double.parseDouble(buffer.toString());
+        String doubleText = buffer.toString();
+        
+        try {
+            return Double.parseDouble(doubleText);
+        }
+        catch (Exception e) {
+            throw new IncorrectSpecException(format("Cannot parse range value: \"%s\"", doubleText), e);
+        }
     }
 
     private String msgFor(String text) {
