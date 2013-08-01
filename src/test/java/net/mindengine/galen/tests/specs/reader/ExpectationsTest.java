@@ -52,8 +52,6 @@ public class ExpectationsTest {
     }
     
     
-    //TODO Write negative tests for all expectations  
-    
     @DataProvider
     public Object[][] rangeTestData() {
         return new Object[][]{
@@ -131,7 +129,25 @@ public class ExpectationsTest {
            row("\tobject ", "object"),
            row("\t\tobject\tanother", "object"),
            row("o ject", "o"),
+           row("o123-123124-_124/124|12qw!@#$%^^&*().<>?:\"[]{} ject", "o123-123124-_124/124|12qw!@#$%^^&*().<>?:\"[]{}"),
            row("   je ct", "je")
+        };
+    }
+    
+    @Test(dataProvider="wordWithBreakingSymbolTestData")
+    public void expectWordWithBreakingSymbol(String text, char breakingSymbol, String expectedWord) {
+        StringCharReader stringCharReader = new StringCharReader(text);
+        String word = new ExpectWord().stopOnThisSymbol(breakingSymbol).read(stringCharReader);
+        assertThat(word, is(expectedWord));
+    }
+    
+    @DataProvider
+    public Object[][] wordWithBreakingSymbolTestData() {
+        return new Object[][]{
+            new Object[]{"Hi, John!", ',', "Hi"},
+            new Object[]{" Hi, John!", ',', "Hi"},
+            new Object[]{" HiJohn", 'o', "HiJ"},
+            new Object[]{"HiJohn", '!', "HiJohn"}
         };
     }
     
@@ -175,6 +191,36 @@ public class ExpectationsTest {
                    new Location(Range.exact(30), sides(RIGHT)))),
            row("   10 px left right   ,   10 to 20 px top bottom  ", locations(new Location(Range.exact(10), sides(LEFT, RIGHT)), new Location(Range.between(10, 20), sides(TOP, BOTTOM)))),
            row("\t10 px left right\t,\t10 to 20 px\ttop\tbottom \t \t \t", locations(new Location(Range.exact(10), sides(LEFT, RIGHT)), new Location(Range.between(10, 20), sides(TOP, BOTTOM)))),
+        };
+    }
+    
+    @Test(dataProvider = "provideBadLocations")
+    public void shouldGiveError_forIncorrectLocations(String text, String expectedErrorMessage) {
+        StringCharReader stringCharReader = new StringCharReader(text);
+        
+        IncorrectSpecException exception = null;
+        try {
+            new ExpectLocations().read(stringCharReader);
+        }
+        catch (IncorrectSpecException e) {
+            exception = e;
+        }
+        
+        assertThat("Exception should be", exception, is(notNullValue()));
+        assertThat("Exception message should be", exception.getMessage(), is(expectedErrorMessage));
+    }
+    
+    @DataProvider
+    public Object[][] provideBadLocations() {
+        return new Object[][]{
+            new Object[]{"left", "Cannot parse range value: \"\""},
+            new Object[]{"10px qwe", "Unknown side: \"qwe\""},
+            new Object[]{"10 to 30px qwe", "Unknown side: \"qwe\""},
+            new Object[]{"10 to 30% of screen/width qwe", "Unknown side: \"qwe\""},
+            new Object[]{"10px left qwe", "Unknown side: \"qwe\""},
+            new Object[]{"10px left, 20px qwe", "Unknown side: \"qwe\""},
+            new Object[]{"10px left, 20px left qwe", "Unknown side: \"qwe\""},
+            new Object[]{"10px left, right, top", "Cannot parse range value: \"\""},
         };
     }
     
