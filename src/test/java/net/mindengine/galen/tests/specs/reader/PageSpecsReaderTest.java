@@ -195,8 +195,6 @@ public class PageSpecsReaderTest {
         assertThat(exception.getSpecLine(), is(7));
     }
     
-  //TODO write some negative tests for testing errors in page specs
-    
 
     private PageSpecReaderException expectExceptionFromReading(String file) throws IOException {
         try {

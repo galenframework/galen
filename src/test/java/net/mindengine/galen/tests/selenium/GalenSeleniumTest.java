@@ -114,9 +114,42 @@ public class GalenSeleniumTest {
         assertThat("Errors should be empty", errors.size(), is(0));
     }
     
+    @Test
+    public void givesErrors_whenValidating_incorrectWebSite() throws Exception {
+        openDriverForBadPage();
+        
+        PageSpec pageSpec = new PageSpecReader().read(getClass().getResourceAsStream("/html/page.spec"));
+        
+        driver.manage().window().setSize(new Dimension(400, 1000));
+        
+        SeleniumPage page = new SeleniumPage(driver);
+        
+        TestValidationListener validationListener = new TestValidationListener();
+        List<PageSection> pageSections = pageSpec.findSections("mobile");
+        
+        assertThat("Filtered sections size should be", pageSections.size(), is(2));
+        
+        SectionValidation sectionValidation = new SectionValidation(pageSections, new PageValidation(page, pageSpec), validationListener);
+        List<ValidationError> errors = sectionValidation.check();
+        
+        assertThat("Invokations should", validationListener.getInvokations(), is("<o header>\n" +
+                "<SpecHeight header>\n" +
+                "<e><msg>\"header\" height is 140px which is not in range of 150 to 170px</msg></e>\n" +
+                "<o menu-item-home>\n" +
+                "<SpecHorizontally menu-item-home>\n" +
+                "<o menu-item-rss>\n" +
+                "<SpecHorizontally menu-item-rss>\n" +
+                "<SpecNear menu-item-rss>\n"
+                ));
+        assertThat("Errors should be empty", errors.size(), is(1));
+    }
+    
+    private void openDriverForBadPage() {
+        driver.get("file://" + getClass().getResource("/html/page1.html").getPath());
+    }
+
     private void openDriverForNicePage() {
-        String path = "file://" + getClass().getResource("/html/page-nice.html").getPath();
-        driver.get(path);
+        driver.get("file://" + getClass().getResource("/html/page-nice.html").getPath());
     }
 
 }
