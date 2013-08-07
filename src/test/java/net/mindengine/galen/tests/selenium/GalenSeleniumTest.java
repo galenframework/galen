@@ -1,5 +1,6 @@
 package net.mindengine.galen.tests.selenium;
 
+import static java.util.Arrays.asList;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 
@@ -46,7 +47,7 @@ public class GalenSeleniumTest {
         SeleniumPage page = new SeleniumPage(driver);
         
         TestValidationListener validationListener = new TestValidationListener();
-        List<PageSection> pageSections = pageSpec.findSections("all");
+        List<PageSection> pageSections = pageSpec.findSections(asList("all"));
         
         assertThat("Filtered sections size should be", pageSections.size(), is(1));
         
@@ -92,7 +93,7 @@ public class GalenSeleniumTest {
         SeleniumPage page = new SeleniumPage(driver);
         
         TestValidationListener validationListener = new TestValidationListener();
-        List<PageSection> pageSections = pageSpec.findSections("mobile");
+        List<PageSection> pageSections = pageSpec.findSections(asList("mobile"));
         
         assertThat("Filtered sections size should be", pageSections.size(), is(2));
         
@@ -121,7 +122,7 @@ public class GalenSeleniumTest {
         SeleniumPage page = new SeleniumPage(driver);
         
         TestValidationListener validationListener = new TestValidationListener();
-        List<PageSection> pageSections = pageSpec.findSections("mobile");
+        List<PageSection> pageSections = pageSpec.findSections(asList("mobile"));
         
         assertThat("Filtered sections size should be", pageSections.size(), is(2));
         
@@ -137,7 +138,7 @@ public class GalenSeleniumTest {
                 "<SpecHorizontally menu-item-rss>\n" +
                 "<SpecNear menu-item-rss>\n"
                 ));
-        assertThat("Errors should be empty", errors.size(), is(1));
+        assertThat("Errors amount should be", errors.size(), is(1));
     }
     
     private void openDriverForBadPage() {

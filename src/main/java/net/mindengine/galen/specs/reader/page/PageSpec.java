@@ -57,11 +57,12 @@ public class PageSpec {
         return objects.get(objectName);
     }
 
-    public List<PageSection> findSections(String tag) {
+    public List<PageSection> findSections(List<String> includedTags) {
         List<PageSection> filteredSections = new LinkedList<PageSection>();
         
         for (PageSection section : sections) {
-            if (section.hasTag(tag)) {
+            
+            if (section.hasAnyTag(includedTags)) {
                 filteredSections.add(section);
             }
         }

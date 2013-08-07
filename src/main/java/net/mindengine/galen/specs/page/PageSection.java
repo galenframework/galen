@@ -39,9 +39,14 @@ public class PageSection {
         this.objects = objects;
     }
 
-    public boolean hasTag(String tag) {
+    public boolean hasAnyTag(List<String> includedTags) {
         if (tags != null) {
-            return tags.contains(tag);
+            
+            for (String tag : includedTags) {
+                if (tags.contains(tag)) {
+                    return true;
+                }
+            }
         }
         return false;
     }
