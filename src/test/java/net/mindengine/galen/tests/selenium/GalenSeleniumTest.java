@@ -23,10 +23,6 @@ import org.testng.annotations.Test;
 
 public class GalenSeleniumTest {
     
-    
-    // TODO negative tests for desktop, tablet and mobile layouts
-    
-    
     WebDriver driver;
     
     @BeforeMethod
