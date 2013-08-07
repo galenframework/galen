@@ -6,20 +6,20 @@ import java.util.List;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 
-import net.mindengine.galen.components.validation.TestValidationListener;
 import net.mindengine.galen.page.selenium.SeleniumPage;
 import net.mindengine.galen.specs.page.PageSection;
 import net.mindengine.galen.specs.reader.page.PageSpec;
 import net.mindengine.galen.validation.PageValidation;
 import net.mindengine.galen.validation.SectionValidation;
 import net.mindengine.galen.validation.ValidationError;
+import net.mindengine.galen.validation.ValidationListener;
 
 public class GalenTestRunner {
 
     private String url;
     private Dimension screenSize;
     private PageSpec spec;
-    private TestValidationListener validationListener;
+    private ValidationListener validationListener;
     private List<String> includedTags;
 
     public GalenTestRunner withUrl(String url) {
@@ -61,16 +61,16 @@ public class GalenTestRunner {
         this.spec = spec;
     }
 
-    public GalenTestRunner withValidationListener(TestValidationListener validationListener) {
+    public GalenTestRunner withValidationListener(ValidationListener validationListener) {
         this.setValidationListener(validationListener);
         return this;
     }
 
-    public TestValidationListener getValidationListener() {
+    public ValidationListener getValidationListener() {
         return validationListener;
     }
 
-    public void setValidationListener(TestValidationListener validationListener) {
+    public void setValidationListener(ValidationListener validationListener) {
         this.validationListener = validationListener;
     }
 
