@@ -23,6 +23,7 @@ public class GalenTestRunner {
     private ValidationListener validationListener;
     private List<String> includedTags;
     private String javascript;
+    private List<String> excludedTags;
 
     public GalenTestRunner withUrl(String url) {
         this.setUrl(url);
@@ -97,7 +98,7 @@ public class GalenTestRunner {
         
         SeleniumPage page = new SeleniumPage(driver);
         
-        List<PageSection> pageSections = spec.findSections(includedTags);
+        List<PageSection> pageSections = spec.findSections(includedTags, excludedTags);
         
         SectionValidation sectionValidation = new SectionValidation(pageSections, new PageValidation(page, spec), validationListener);
         return sectionValidation.check();
@@ -127,6 +128,19 @@ public class GalenTestRunner {
 
     public void setJavascript(String javascript) {
         this.javascript = javascript;
+    }
+
+    public GalenTestRunner withExcludedTags(List<String> excludedTags) {
+        this.setExcludedTags(excludedTags);
+        return this;
+    }
+
+    public List<String> getExcludedTags() {
+        return excludedTags;
+    }
+
+    public void setExcludedTags(List<String> excludedTags) {
+        this.excludedTags = excludedTags;
     }
 
 }

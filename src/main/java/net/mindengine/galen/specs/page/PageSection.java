@@ -40,7 +40,7 @@ public class PageSection {
     }
 
     public boolean hasAnyTag(List<String> includedTags) {
-        if (tags != null) {
+        if (tags != null && includedTags != null) {
             
             for (String tag : includedTags) {
                 if (tags.contains(tag)) {

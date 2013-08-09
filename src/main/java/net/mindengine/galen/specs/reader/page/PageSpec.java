@@ -26,6 +26,7 @@ import net.mindengine.galen.specs.page.PageSection;
 
 public class PageSpec {
 
+    private static final List<String> EMPTY_TAGS = new LinkedList<String>();
     private Map<String, Locator> objects = new HashMap<String, Locator>();
     private List<PageSection> sections = new LinkedList<PageSection>();
 
@@ -58,11 +59,15 @@ public class PageSpec {
     }
 
     public List<PageSection> findSections(List<String> includedTags) {
+        return findSections(includedTags, EMPTY_TAGS);
+    }
+
+    public List<PageSection> findSections(List<String> includedTags, List<String> excludedTags) {
         List<PageSection> filteredSections = new LinkedList<PageSection>();
         
         for (PageSection section : sections) {
             
-            if (section.hasAnyTag(includedTags)) {
+            if (section.hasAnyTag(includedTags) && !section.hasAnyTag(excludedTags)) {
                 filteredSections.add(section);
             }
         }

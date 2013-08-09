@@ -111,6 +111,30 @@ public class GalenRunnerTest {
         assertThat("Javascript should be run", pageSource, containsString("<div>injected by javascript</div>"));
     }
     
+    @Test public void runsTestSuccessfully_andExlcudesSpecifiedTags() throws IOException {
+        TestValidationListener validationListener = new TestValidationListener();
+        
+        GalenTestRunner runner = new GalenTestRunner()
+            .withUrl(TEST_URL)
+            .withScreenSize(new Dimension(400, 800))
+            .withIncludedTags(asList("mobile"))
+            .withExcludedTags(asList("debug"))
+            .withSpec(new PageSpecReader().read(GalenRunnerTest.class.getResourceAsStream("/html/page-exclusion.spec")))
+            .withValidationListener(validationListener);
+    
+        List<ValidationError> errors = runner.run();
+        assertThat("Invokations should be", validationListener.getInvokations(), is("<o header>\n" +
+                "<SpecHeight header>\n" +
+                "<e><msg>\"header\" height is 140px which is not in range of 150 to 170px</msg></e>\n" +
+                "<o menu-item-home>\n" +
+                "<SpecHorizontally menu-item-home>\n" +
+                "<o menu-item-rss>\n" +
+                "<SpecHorizontally menu-item-rss>\n" +
+                "<SpecNear menu-item-rss>\n"
+                ));
+        assertThat("Errors should be empty", errors.size(), is(1));
+    }
+    
     /*
     @Test
     public void runsTestSuccessfully_andGenerates_htmlReport() {
@@ -129,8 +153,6 @@ public class GalenRunnerTest {
     }
     */
     
-    
-    //TODO javascript injection tests
     
     //TODO tags exclusion
     
