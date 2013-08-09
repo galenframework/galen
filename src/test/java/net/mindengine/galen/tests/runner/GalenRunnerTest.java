@@ -2,6 +2,7 @@ package net.mindengine.galen.tests.runner;
 
 import static java.util.Arrays.asList;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.is;
 
 import java.awt.Dimension;
@@ -34,7 +35,7 @@ public class GalenRunnerTest {
             .withValidationListener(validationListener);
     
         List<ValidationError> errors = runner.run();
-        assertThat("Invokations should", validationListener.getInvokations(), is("<o header>\n" +
+        assertThat("Invokations should be", validationListener.getInvokations(), is("<o header>\n" +
                 "<SpecHeight header>\n" +
                 "<e><msg>\"header\" height is 140px which is not in range of 150 to 170px</msg></e>\n" +
                 "<o menu-item-home>\n" +
@@ -65,7 +66,7 @@ public class GalenRunnerTest {
         String currentUrl = driver.getCurrentUrl();
         driver.quit();
         
-        assertThat("Invokations should", validationListener.getInvokations(), is("<o header>\n" +
+        assertThat("Invokations should be", validationListener.getInvokations(), is("<o header>\n" +
                 "<SpecHeight header>\n" +
                 "<e><msg>\"header\" height is 140px which is not in range of 150 to 170px</msg></e>\n" +
                 "<o menu-item-home>\n" +
@@ -77,7 +78,37 @@ public class GalenRunnerTest {
         assertThat("Errors should be empty", errors.size(), is(1));
         
         assertThat("Driver should have test page open", currentUrl, is(url));
+    }
+    
+    @Test public void runsTestSuccessfully_withInjectedJavascript() throws IOException {
+        TestValidationListener validationListener = new TestValidationListener();
+        String javascript = "$('body').append('<div>injected by javascript</div>');";
+        GalenTestRunner runner = new GalenTestRunner()
+            .withUrl(TEST_URL)
+            .withScreenSize(new Dimension(400, 800))
+            .withIncludedTags(asList("mobile"))
+            .withJavascript(javascript)
+            .withSpec(new PageSpecReader().read(GalenRunnerTest.class.getResourceAsStream("/html/page.spec")))
+            .withValidationListener(validationListener);
+    
+        WebDriver driver = new FirefoxDriver();
         
+        List<ValidationError> errors = runner.run(driver);
+        String pageSource = driver.getPageSource();
+        driver.quit();
+        
+        assertThat("Invokations should be", validationListener.getInvokations(), is("<o header>\n" +
+                "<SpecHeight header>\n" +
+                "<e><msg>\"header\" height is 140px which is not in range of 150 to 170px</msg></e>\n" +
+                "<o menu-item-home>\n" +
+                "<SpecHorizontally menu-item-home>\n" +
+                "<o menu-item-rss>\n" +
+                "<SpecHorizontally menu-item-rss>\n" +
+                "<SpecNear menu-item-rss>\n"
+                ));
+        assertThat("Errors should be empty", errors.size(), is(1));
+        
+        assertThat("Javascript should be run", pageSource, containsString("<div>injected by javascript</div>"));
     }
     
     /*
@@ -100,5 +131,10 @@ public class GalenRunnerTest {
     
     
     //TODO javascript injection tests
-    //TODO test tags exclusion
+    
+    //TODO tags exclusion
+    
+    //TODO implement suite runner
+    
+    
 }

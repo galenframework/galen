@@ -3,6 +3,7 @@ package net.mindengine.galen.runner;
 import java.awt.Dimension;
 import java.util.List;
 
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 
@@ -21,6 +22,7 @@ public class GalenTestRunner {
     private PageSpec spec;
     private ValidationListener validationListener;
     private List<String> includedTags;
+    private String javascript;
 
     public GalenTestRunner withUrl(String url) {
         this.setUrl(url);
@@ -88,6 +90,11 @@ public class GalenTestRunner {
         }
         
         driver.get(url);
+        
+        if (javascript != null) {
+            ((JavascriptExecutor)driver).executeScript(javascript);
+        }
+        
         SeleniumPage page = new SeleniumPage(driver);
         
         List<PageSection> pageSections = spec.findSections(includedTags);
@@ -107,6 +114,19 @@ public class GalenTestRunner {
 
     public void setIncludedTags(List<String> includedTags) {
         this.includedTags = includedTags;
+    }
+
+    public GalenTestRunner withJavascript(String javascript) {
+        this.setJavascript(javascript);
+        return this;
+    }
+
+    public String getJavascript() {
+        return javascript;
+    }
+
+    public void setJavascript(String javascript) {
+        this.javascript = javascript;
     }
 
 }
