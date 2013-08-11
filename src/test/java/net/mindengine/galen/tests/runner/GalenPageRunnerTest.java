@@ -10,7 +10,7 @@ import java.io.IOException;
 import java.util.List;
 
 import net.mindengine.galen.components.validation.TestValidationListener;
-import net.mindengine.galen.runner.GalenTestRunner;
+import net.mindengine.galen.runner.GalenPageRunner;
 import net.mindengine.galen.specs.reader.page.PageSpecReader;
 import net.mindengine.galen.validation.ValidationError;
 
@@ -18,47 +18,22 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.testng.annotations.Test;
 
-public class GalenRunnerTest {
+public class GalenPageRunnerTest {
 
-    private static final String TEST_URL = "file://" + GalenRunnerTest.class.getResource("/html/page1.html").getPath();
+    private static final String TEST_URL = "file://" + GalenPageRunnerTest.class.getResource("/html/page1.html").getPath();
 
 
-    @Test public void runsTestSuccessfully_andInvokesListener() throws IOException {
-        
-        TestValidationListener validationListener = new TestValidationListener();
-        
-        GalenTestRunner runner = new GalenTestRunner()
-            .withUrl(TEST_URL)
-            .withScreenSize(new Dimension(400, 800))
-            .withIncludedTags(asList("mobile"))
-            .withSpec(new PageSpecReader().read(GalenRunnerTest.class.getResourceAsStream("/html/page.spec")))
-            .withValidationListener(validationListener);
-    
-        List<ValidationError> errors = runner.run();
-        assertThat("Invokations should be", validationListener.getInvokations(), is("<o header>\n" +
-                "<SpecHeight header>\n" +
-                "<e><msg>\"header\" height is 140px which is not in range of 150 to 170px</msg></e>\n" +
-                "<o menu-item-home>\n" +
-                "<SpecHorizontally menu-item-home>\n" +
-                "<o menu-item-rss>\n" +
-                "<SpecHorizontally menu-item-rss>\n" +
-                "<SpecNear menu-item-rss>\n"
-                ));
-        assertThat("Errors should be empty", errors.size(), is(1));
-    }
-    
-    
     @Test public void runsTestSuccessfully_inPredefinedBrowser() throws IOException {
         TestValidationListener validationListener = new TestValidationListener();
         
         WebDriver driver = new FirefoxDriver();
         
         String url = "file://" + getClass().getResource("/html/page1.html").getPath();
-        GalenTestRunner runner = new GalenTestRunner()
+        GalenPageRunner runner = new GalenPageRunner()
             .withUrl(TEST_URL)
             .withScreenSize(new Dimension(400, 800))
             .withIncludedTags(asList("mobile"))
-            .withSpec(new PageSpecReader().read(GalenRunnerTest.class.getResourceAsStream("/html/page.spec")))
+            .withSpec(new PageSpecReader().read(GalenPageRunnerTest.class.getResourceAsStream("/html/page.spec")))
             .withValidationListener(validationListener);
     
         List<ValidationError> errors = runner.run(driver);
@@ -83,12 +58,12 @@ public class GalenRunnerTest {
     @Test public void runsTestSuccessfully_withInjectedJavascript() throws IOException {
         TestValidationListener validationListener = new TestValidationListener();
         String javascript = "$('body').append('<div>injected by javascript</div>');";
-        GalenTestRunner runner = new GalenTestRunner()
+        GalenPageRunner runner = new GalenPageRunner()
             .withUrl(TEST_URL)
             .withScreenSize(new Dimension(400, 800))
             .withIncludedTags(asList("mobile"))
             .withJavascript(javascript)
-            .withSpec(new PageSpecReader().read(GalenRunnerTest.class.getResourceAsStream("/html/page.spec")))
+            .withSpec(new PageSpecReader().read(GalenPageRunnerTest.class.getResourceAsStream("/html/page.spec")))
             .withValidationListener(validationListener);
     
         WebDriver driver = new FirefoxDriver();
@@ -114,15 +89,20 @@ public class GalenRunnerTest {
     @Test public void runsTestSuccessfully_andExlcudesSpecifiedTags() throws IOException {
         TestValidationListener validationListener = new TestValidationListener();
         
-        GalenTestRunner runner = new GalenTestRunner()
+        WebDriver driver = new FirefoxDriver();
+        
+        GalenPageRunner runner = new GalenPageRunner()
             .withUrl(TEST_URL)
             .withScreenSize(new Dimension(400, 800))
             .withIncludedTags(asList("mobile"))
             .withExcludedTags(asList("debug"))
-            .withSpec(new PageSpecReader().read(GalenRunnerTest.class.getResourceAsStream("/html/page-exclusion.spec")))
+            .withSpec(new PageSpecReader().read(GalenPageRunnerTest.class.getResourceAsStream("/html/page-exclusion.spec")))
             .withValidationListener(validationListener);
     
-        List<ValidationError> errors = runner.run();
+        List<ValidationError> errors = runner.run(driver);
+        
+        driver.quit();
+        
         assertThat("Invokations should be", validationListener.getInvokations(), is("<o header>\n" +
                 "<SpecHeight header>\n" +
                 "<e><msg>\"header\" height is 140px which is not in range of 150 to 170px</msg></e>\n" +
@@ -134,29 +114,5 @@ public class GalenRunnerTest {
                 ));
         assertThat("Errors should be empty", errors.size(), is(1));
     }
-    
-    /*
-    @Test
-    public void runsTestSuccessfully_andGenerates_htmlReport() {
-        String htmlReportPath = String.format("/tmp/html-report-output-%s.html", UUID.randomUUID().toString());
-        new GalenRunner().run(new GalenArguments()
-                    .withAction("run")
-                    .withUrl("file://" + getClass().getResource("/html/page1.html").getPath())
-                    .withIncludedTags("mobile")
-                    .withSpec(getClass().getResource("/html/page.spec").getPath())
-                    .withScreenSize(new Dimension(400, 800))
-                    .withHtmlReport(htmlReportPath));
-        
-        
-        
-        assertThat("Html report should be generated", new File(htmlReportPath).exists(), is(true));
-    }
-    */
-    
-    
-    //TODO tags exclusion
-    
-    //TODO implement suite runner
-    
     
 }

@@ -3,10 +3,6 @@ package net.mindengine.galen.runner;
 import java.awt.Dimension;
 import java.util.List;
 
-import org.openqa.selenium.JavascriptExecutor;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.firefox.FirefoxDriver;
-
 import net.mindengine.galen.page.selenium.SeleniumPage;
 import net.mindengine.galen.specs.page.PageSection;
 import net.mindengine.galen.specs.reader.page.PageSpec;
@@ -15,7 +11,10 @@ import net.mindengine.galen.validation.SectionValidation;
 import net.mindengine.galen.validation.ValidationError;
 import net.mindengine.galen.validation.ValidationListener;
 
-public class GalenTestRunner {
+import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.WebDriver;
+
+public class GalenPageRunner {
 
     private String url;
     private Dimension screenSize;
@@ -25,7 +24,7 @@ public class GalenTestRunner {
     private String javascript;
     private List<String> excludedTags;
 
-    public GalenTestRunner withUrl(String url) {
+    public GalenPageRunner withUrl(String url) {
         this.setUrl(url);
         return this;
     }
@@ -38,7 +37,7 @@ public class GalenTestRunner {
         this.url = url;
     }
 
-    public GalenTestRunner withScreenSize(Dimension screenSize) {
+    public GalenPageRunner withScreenSize(Dimension screenSize) {
         this.setScreenSize(screenSize);
         return this;
     }
@@ -51,7 +50,7 @@ public class GalenTestRunner {
         this.screenSize = screenSize;
     }
 
-    public GalenTestRunner withSpec(PageSpec spec) {
+    public GalenPageRunner withSpec(PageSpec spec) {
         this.setSpec(spec);
         return this;
     }
@@ -64,7 +63,7 @@ public class GalenTestRunner {
         this.spec = spec;
     }
 
-    public GalenTestRunner withValidationListener(ValidationListener validationListener) {
+    public GalenPageRunner withValidationListener(ValidationListener validationListener) {
         this.setValidationListener(validationListener);
         return this;
     }
@@ -75,14 +74,6 @@ public class GalenTestRunner {
 
     public void setValidationListener(ValidationListener validationListener) {
         this.validationListener = validationListener;
-    }
-
-    public List<ValidationError> run() {
-        WebDriver driver = new FirefoxDriver();
-        List<ValidationError> errors = run(driver);
-        
-        driver.quit();
-        return errors;
     }
 
     public List<ValidationError> run(WebDriver driver) {
@@ -104,7 +95,7 @@ public class GalenTestRunner {
         return sectionValidation.check();
     }
 
-    public GalenTestRunner withIncludedTags(List<String> includedTags) {
+    public GalenPageRunner withIncludedTags(List<String> includedTags) {
         this.setIncludedTags(includedTags);
         return this;
     }
@@ -117,7 +108,7 @@ public class GalenTestRunner {
         this.includedTags = includedTags;
     }
 
-    public GalenTestRunner withJavascript(String javascript) {
+    public GalenPageRunner withJavascript(String javascript) {
         this.setJavascript(javascript);
         return this;
     }
@@ -130,7 +121,7 @@ public class GalenTestRunner {
         this.javascript = javascript;
     }
 
-    public GalenTestRunner withExcludedTags(List<String> excludedTags) {
+    public GalenPageRunner withExcludedTags(List<String> excludedTags) {
         this.setExcludedTags(excludedTags);
         return this;
     }
