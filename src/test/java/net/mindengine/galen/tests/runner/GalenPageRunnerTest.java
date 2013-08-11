@@ -9,6 +9,7 @@ import java.awt.Dimension;
 import java.io.IOException;
 import java.util.List;
 
+import net.mindengine.galen.browser.SeleniumBrowser;
 import net.mindengine.galen.components.validation.TestValidationListener;
 import net.mindengine.galen.runner.GalenPageRunner;
 import net.mindengine.galen.specs.reader.page.PageSpecReader;
@@ -36,7 +37,7 @@ public class GalenPageRunnerTest {
             .withSpec(new PageSpecReader().read(GalenPageRunnerTest.class.getResourceAsStream("/html/page.spec")))
             .withValidationListener(validationListener);
     
-        List<ValidationError> errors = runner.run(driver);
+        List<ValidationError> errors = runner.run(new SeleniumBrowser(driver));
         
         String currentUrl = driver.getCurrentUrl();
         driver.quit();
@@ -68,7 +69,7 @@ public class GalenPageRunnerTest {
     
         WebDriver driver = new FirefoxDriver();
         
-        List<ValidationError> errors = runner.run(driver);
+        List<ValidationError> errors = runner.run(new SeleniumBrowser(driver));
         String pageSource = driver.getPageSource();
         driver.quit();
         
@@ -99,7 +100,7 @@ public class GalenPageRunnerTest {
             .withSpec(new PageSpecReader().read(GalenPageRunnerTest.class.getResourceAsStream("/html/page-exclusion.spec")))
             .withValidationListener(validationListener);
     
-        List<ValidationError> errors = runner.run(driver);
+        List<ValidationError> errors = runner.run(new SeleniumBrowser(driver));
         
         driver.quit();
         

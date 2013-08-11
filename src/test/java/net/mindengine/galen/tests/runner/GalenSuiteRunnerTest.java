@@ -9,11 +9,15 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 
+import net.mindengine.galen.browser.Browser;
+import net.mindengine.galen.browser.BrowserFactory;
+import net.mindengine.galen.browser.SeleniumBrowser;
 import net.mindengine.galen.components.RecordingSuiteListener;
 import net.mindengine.galen.runner.GalenPageRunner;
 import net.mindengine.galen.runner.GalenSuiteRunner;
 import net.mindengine.galen.specs.reader.page.PageSpecReader;
 
+import org.openqa.selenium.firefox.FirefoxDriver;
 import org.testng.annotations.Test;
 
 public class GalenSuiteRunnerTest {
@@ -37,7 +41,12 @@ public class GalenSuiteRunnerTest {
         
         RecordingSuiteListener suiteListener = new RecordingSuiteListener();
         
-        GalenSuiteRunner suiteRunner = new GalenSuiteRunner()
+        GalenSuiteRunner suiteRunner = new GalenSuiteRunner(new BrowserFactory() {
+                @Override
+                public Browser openBrowser() {
+                    return new SeleniumBrowser(new FirefoxDriver());
+                }
+            })
             .withSuiteListener(suiteListener);
         
         suiteRunner.runSuite(pageRunners);
@@ -55,5 +64,11 @@ public class GalenSuiteRunnerTest {
     }
     
     // TODO Galen should be configurable to run with other libraries than Selenium
+    /*
+     * 1. Make browser abstraction layer
+     *  1. 1. Browser component should return PageElement
+     * 2. Change SeleniumPage to BrowserPage
+     * 3. Change GalenPageRunner to use Browser component
+     */
     
 }

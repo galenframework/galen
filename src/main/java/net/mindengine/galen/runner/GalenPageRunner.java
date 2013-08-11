@@ -3,7 +3,8 @@ package net.mindengine.galen.runner;
 import java.awt.Dimension;
 import java.util.List;
 
-import net.mindengine.galen.page.selenium.SeleniumPage;
+import net.mindengine.galen.browser.Browser;
+import net.mindengine.galen.page.Page;
 import net.mindengine.galen.specs.page.PageSection;
 import net.mindengine.galen.specs.reader.page.PageSpec;
 import net.mindengine.galen.validation.PageValidation;
@@ -11,8 +12,6 @@ import net.mindengine.galen.validation.SectionValidation;
 import net.mindengine.galen.validation.ValidationError;
 import net.mindengine.galen.validation.ValidationListener;
 
-import org.openqa.selenium.JavascriptExecutor;
-import org.openqa.selenium.WebDriver;
 
 public class GalenPageRunner {
 
@@ -76,18 +75,18 @@ public class GalenPageRunner {
         this.validationListener = validationListener;
     }
 
-    public List<ValidationError> run(WebDriver driver) {
+    public List<ValidationError> run(Browser browser) {
         if (screenSize != null) {
-            driver.manage().window().setSize(new org.openqa.selenium.Dimension(screenSize.width, screenSize.height));
+            browser.changeWindowSize(screenSize);
         }
         
-        driver.get(url);
+        browser.load(url);
         
         if (javascript != null) {
-            ((JavascriptExecutor)driver).executeScript(javascript);
+            browser.executeJavascript(javascript);
         }
         
-        SeleniumPage page = new SeleniumPage(driver);
+        Page page = browser.getPage();
         
         List<PageSection> pageSections = spec.findSections(includedTags, excludedTags);
         

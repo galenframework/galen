@@ -3,15 +3,20 @@ package net.mindengine.galen.runner;
 import java.util.LinkedList;
 import java.util.List;
 
+import net.mindengine.galen.browser.Browser;
+import net.mindengine.galen.browser.BrowserFactory;
 import net.mindengine.galen.validation.ValidationError;
 
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.firefox.FirefoxDriver;
 
 public class GalenSuiteRunner {
 
     private static final LinkedList<ValidationError> EMPTY_ERRORS = new LinkedList<ValidationError>();
     private SuiteListener suiteListener;
+    private BrowserFactory browserFactory;
+
+    public GalenSuiteRunner(BrowserFactory browserFactory) {
+        this.setBrowserFactory(browserFactory);
+    }
 
     public GalenSuiteRunner withSuiteListener(SuiteListener suiteListener) {
         this.setSuiteListener(suiteListener);
@@ -34,24 +39,25 @@ public class GalenSuiteRunner {
             throw new IllegalArgumentException("Nothing to run. Suite is empty");
         }
         
-        WebDriver driver = new FirefoxDriver();
+        
+        Browser browser = browserFactory.openBrowser();
         tellSuiteStarted();
         
         for (GalenPageRunner pageRunner : pageRunners) {
-            tellBeforePage(pageRunner, driver);
-            List<ValidationError> errors = runPage(pageRunner, driver);
-            tellAfterPage(pageRunner, driver, errors);
+            tellBeforePage(pageRunner, browser);
+            List<ValidationError> errors = runPage(pageRunner, browser);
+            tellAfterPage(pageRunner, browser, errors);
         }
         
         tellSuiteFinished();
         
-        driver.quit();
+        browser.quit();
     }
 
-    private void tellAfterPage(GalenPageRunner pageRunner, WebDriver driver, List<ValidationError> errors) {
+    private void tellAfterPage(GalenPageRunner pageRunner, Browser browser, List<ValidationError> errors) {
         try {
             if (suiteListener != null) {
-                suiteListener.onAfterPage(this, pageRunner, driver, errors);
+                suiteListener.onAfterPage(this, pageRunner, browser, errors);
             }
         }
         catch (Exception e) {
@@ -59,10 +65,10 @@ public class GalenSuiteRunner {
         }
     }
 
-    private void tellBeforePage(GalenPageRunner pageRunner, WebDriver driver) {
+    private void tellBeforePage(GalenPageRunner pageRunner, Browser browser) {
         try {
             if (suiteListener != null) {
-                suiteListener.onBeforePage(this, pageRunner, driver);
+                suiteListener.onBeforePage(this, pageRunner, browser);
             }
         }
         catch (Exception e) {
@@ -70,9 +76,9 @@ public class GalenSuiteRunner {
         }
     }
 
-    private List<ValidationError> runPage(GalenPageRunner pageRunner, WebDriver driver) {
+    private List<ValidationError> runPage(GalenPageRunner pageRunner, Browser browser) {
         try {
-            return pageRunner.run(driver);
+            return pageRunner.run(browser);
         }
         catch (Exception e) {
             e.printStackTrace();
@@ -100,6 +106,14 @@ public class GalenSuiteRunner {
         catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public BrowserFactory getBrowserFactory() {
+        return browserFactory;
+    }
+
+    public void setBrowserFactory(BrowserFactory browserFactory) {
+        this.browserFactory = browserFactory;
     }
 
 }

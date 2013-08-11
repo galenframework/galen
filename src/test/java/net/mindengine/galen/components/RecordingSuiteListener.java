@@ -2,8 +2,7 @@ package net.mindengine.galen.components;
 
 import java.util.List;
 
-import org.openqa.selenium.WebDriver;
-
+import net.mindengine.galen.browser.Browser;
 import net.mindengine.galen.runner.GalenPageRunner;
 import net.mindengine.galen.runner.GalenSuiteRunner;
 import net.mindengine.galen.runner.SuiteListener;
@@ -18,12 +17,12 @@ public class RecordingSuiteListener implements SuiteListener {
     }
 
     @Override
-    public void onAfterPage(GalenSuiteRunner galenSuiteRunner, GalenPageRunner pageRunner, WebDriver driver, List<ValidationError> errors) {
+    public void onAfterPage(GalenSuiteRunner galenSuiteRunner, GalenPageRunner pageRunner, Browser browser, List<ValidationError> errors) {
         record("<after-page errors=" + errors.size() + ">");
     }
 
     @Override
-    public void onBeforePage(GalenSuiteRunner galenSuiteRunner, GalenPageRunner pageRunner, WebDriver driver) {
+    public void onBeforePage(GalenSuiteRunner galenSuiteRunner, GalenPageRunner pageRunner, Browser browser) {
         record("<before-page>");
     }
 
