@@ -1,0 +1,56 @@
+<body>
+    <div class="suite">
+        <h1>page1.test</h1>
+        <div class="test">
+            <h2>http://example.com/page1 400x600</h2>
+            <div class="object">
+                <h3>objectA1</h3>
+                <ul class="test-specs">
+                    <li class="fail" data-screenshot="/screenshot-01.png" data-area="10,10,20,20">
+                        <span>inside: other-object 10px left</span>
+                        <ul class="error-message">
+                            <li>objectA1 is not inside other-object</li>
+                        </ul>
+                    </li>
+                    <li class="success">
+                        <span>width: 10 to 20px</span>
+                    </li>
+                </ul>
+            </div>
+            <div class="object">
+                <h3>objectA2</h3>
+                <ul class="test-specs">
+                    <li class="success">
+                        <span>width: 10 to 20px</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="test">
+            <h2>http://example.com/page2 600x700</h2>
+            <div class="object">
+                <h3>objectB1</h3>
+                <ul class="test-specs">
+                    <li class="success">
+                        <span>width: 10 to 20px</span>
+                    </li>
+                    <li class="fail" data-screenshot="/screenshot-01.png" data-area="10,10,20,20">
+                        <span>inside: other-object 10px left</span>
+                        <ul class="error-message">
+                            <li>objectB1 is not inside other-object</li>
+                            <li>second error message with &lt;xml&gt; &amp;tags</li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+            <div class="object">
+                <h3>objectB2</h3>
+                <ul class="test-specs">
+                    <li class="success">
+                        <span>height: 100px</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</body>

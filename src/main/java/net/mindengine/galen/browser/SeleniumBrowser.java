@@ -46,4 +46,15 @@ public class SeleniumBrowser implements Browser {
         return new SeleniumPage(driver);
     }
 
+    @Override
+    public String getUrl() {
+        return driver.getCurrentUrl();
+    }
+
+    @Override
+    public Dimension getScreenSize() {
+        org.openqa.selenium.Dimension windowSize = driver.manage().window().getSize();
+        return new Dimension(windowSize.getWidth(), windowSize.getHeight());
+    }
+
 }

@@ -26,4 +26,13 @@ public abstract class Spec {
         this.originalText = originalText;
     }
 
+    public String toText() {
+        return originalText;
+    }
+    
+    public Spec withOriginalText(String originalText) {
+        setOriginalText(originalText);
+        return this;
+    }
+
 }

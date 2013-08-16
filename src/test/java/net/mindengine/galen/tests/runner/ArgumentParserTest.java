@@ -29,7 +29,8 @@ public class ArgumentParserTest {
                             "--exclude", "nomobile,testTag", 
                             "--size", "400x700", 
                             "--spec", "some.spec",
-                            "--htmlreport", "some.html"), 
+                            "--htmlreport", "some.html",
+                            "--testngreport", "testng.xml"), 
                 new GalenArguments()
                     .withAction("run")
                     .withUrl("http://mindengine.net")
@@ -38,7 +39,8 @@ public class ArgumentParserTest {
                     .withExcludedTags("nomobile", "testTag")
                     .withScreenSize(new Dimension(400, 700))
                     .withSpec("some.spec")
-                    .withHtmlReport("some.html")),
+                    .withHtmlReport("some.html")
+                    .withTestngReport("testng.xml")),
 
             row(args("run", "-u", "http://mindengine.net", 
                             "-j", "some.js", 
@@ -46,9 +48,9 @@ public class ArgumentParserTest {
                             "-e", "nomobile,testTag", 
                             "-r", "400x700", 
                             "-s", "some.spec",
-                            "-h", "some.html"), 
-                
-            new GalenArguments()
+                            "-R", "some.html",
+                            "-g", "testng.xml"), 
+               new GalenArguments()
                     .withAction("run")
                     .withUrl("http://mindengine.net")
                     .withJavascript("some.js")
@@ -56,7 +58,8 @@ public class ArgumentParserTest {
                     .withExcludedTags("nomobile", "testTag")
                     .withScreenSize(new Dimension(400, 700))
                     .withSpec("some.spec")
-                    .withHtmlReport("some.html")),
+                    .withHtmlReport("some.html")
+                    .withTestngReport("testng.xml")),
 
             row(args("run", "--url", "http://mindengine.net", 
                             "--include", "mobile,all", 

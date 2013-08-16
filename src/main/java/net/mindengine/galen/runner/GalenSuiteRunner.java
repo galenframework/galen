@@ -13,6 +13,8 @@ public class GalenSuiteRunner {
     private static final LinkedList<ValidationError> EMPTY_ERRORS = new LinkedList<ValidationError>();
     private SuiteListener suiteListener;
     private BrowserFactory browserFactory;
+    
+    private String name;
 
     public GalenSuiteRunner(BrowserFactory browserFactory) {
         this.setBrowserFactory(browserFactory);
@@ -114,6 +116,14 @@ public class GalenSuiteRunner {
 
     public void setBrowserFactory(BrowserFactory browserFactory) {
         this.browserFactory = browserFactory;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
 }

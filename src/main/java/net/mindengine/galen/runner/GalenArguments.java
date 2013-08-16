@@ -27,6 +27,7 @@ public class GalenArguments {
     private Dimension screenSize;
     private String spec;
     private String htmlReport;
+    private String testngReport;
     private String url;
     
 
@@ -135,7 +136,8 @@ public class GalenArguments {
         options.addOption("e", "exclude", true, "Tags for sections that should be excluded from test run");
         options.addOption("r", "size", true, "Browser screen size");
         options.addOption("s", "spec", true, "Path for page specifications file");
-        options.addOption("h", "htmlreport", true, "Path for html output report");
+        options.addOption("R", "htmlreport", true, "Path for html output report");
+        options.addOption("g", "testngreport", true, "Path for testng xml report");
         
         CommandLineParser parser = new PosixParser();
         
@@ -169,13 +171,14 @@ public class GalenArguments {
         galen.setExcludedTags(convertTags(cmd.getOptionValue("e", "")));
         galen.setScreenSize(convertScreenSize(cmd.getOptionValue("r")));
         galen.setJavascript(cmd.getOptionValue("javascript"));
+        galen.setTestngReport(cmd.getOptionValue("g"));
         
         galen.setSpec(cmd.getOptionValue("s"));
         if (galen.getSpec() == null) {
             throw new IllegalArgumentException("Missing spec file");
         }
         
-        galen.setHtmlReport(cmd.getOptionValue("h"));
+        galen.setHtmlReport(cmd.getOptionValue("R"));
         
         
         return galen;
@@ -229,6 +232,7 @@ public class GalenArguments {
         .append(screenSize)
         .append(spec)
         .append(htmlReport)
+        .append(testngReport)
         .append(url)
         .toHashCode();
     }
@@ -253,6 +257,7 @@ public class GalenArguments {
             .append(screenSize, rhs.screenSize)
             .append(spec, rhs.spec)
             .append(htmlReport, rhs.htmlReport)
+            .append(testngReport, rhs.testngReport)
             .append(url, rhs.url)
             .isEquals();
     }
@@ -267,7 +272,21 @@ public class GalenArguments {
             .append("screenSize", screenSize)
             .append("spec", spec)
             .append("htmlReport", htmlReport)
+            .append("testngReport", testngReport)
             .append("url", url)
             .toString();
+    }
+
+    public String getTestngReport() {
+        return testngReport;
+    }
+
+    public void setTestngReport(String testngReport) {
+        this.testngReport = testngReport;
+    }
+
+    public GalenArguments withTestngReport(String testngReport) {
+        this.testngReport = testngReport;
+        return this;
     }
 }

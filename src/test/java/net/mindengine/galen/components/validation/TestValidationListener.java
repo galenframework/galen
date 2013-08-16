@@ -21,7 +21,7 @@ public class TestValidationListener implements ValidationListener {
     }
 
     @Override
-    public void onOnObjectCheck(PageValidation pageValidation, String objectName, Spec spec) {
+    public void onSpecSuccess(PageValidation pageValidation, String objectName, Spec spec) {
         append("<" + spec.getClass().getSimpleName() + " " + objectName + ">");
     }
 

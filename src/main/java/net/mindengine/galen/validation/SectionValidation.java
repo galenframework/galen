@@ -52,12 +52,13 @@ public class SectionValidation {
         List<ValidationError> errors = new LinkedList<ValidationError>();
         for (Spec spec : object.getSpecs()) {
             
-            tellOnObjectCheck(pageValidation, object.getObjectName(), spec);
+            
             ValidationError error = pageValidation.check(object.getObjectName(), spec);
             if (error != null) {
                 errors.add(error);
                 tellOnSpecError(pageValidation, object.getObjectName(), spec, error);
             }
+            else tellOnSpecSuccess(pageValidation, object.getObjectName(), spec);
         }
         return errors;
     }
@@ -73,10 +74,10 @@ public class SectionValidation {
         }
     }
 
-    private void tellOnObjectCheck(PageValidation pageValidation, String objectName, Spec spec) {
+    private void tellOnSpecSuccess(PageValidation pageValidation, String objectName, Spec spec) {
         try {
             if (validationListener != null) {
-                validationListener.onOnObjectCheck(pageValidation, objectName, spec);
+                validationListener.onSpecSuccess(pageValidation, objectName, spec);
             }
         }
         catch (Exception e) {

@@ -16,4 +16,8 @@ public interface Browser {
 
     Page getPage();
 
+    String getUrl();
+
+    Dimension getScreenSize();
+
 }

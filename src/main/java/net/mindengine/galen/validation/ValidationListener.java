@@ -8,7 +8,7 @@ public interface ValidationListener {
     
     void onSpecError(PageValidation pageValidation, String objectName, Spec spec, ValidationError error);
 
-    void onOnObjectCheck(PageValidation pageValidation, String objectName, Spec spec);
+    void onSpecSuccess(PageValidation pageValidation, String objectName, Spec spec);
 
     
 
