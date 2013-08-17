@@ -62,13 +62,4 @@ public class GalenSuiteRunnerTest {
     private List<GalenPageRunner> suite(GalenPageRunner...pageRunners) {
         return Arrays.asList(pageRunners);
     }
-    
-    // TODO Galen should be configurable to run with other libraries than Selenium
-    /*
-     * 1. Make browser abstraction layer
-     *  1. 1. Browser component should return PageElement
-     * 2. Change SeleniumPage to BrowserPage
-     * 3. Change GalenPageRunner to use Browser component
-     */
-    
 }

@@ -18,31 +18,22 @@ public class MockedBrowser implements Browser {
 
     @Override
     public void quit() {
-        // TODO Auto-generated method stub
-
     }
 
     @Override
     public void changeWindowSize(Dimension screenSize) {
-        // TODO Auto-generated method stub
-
     }
 
     @Override
     public void load(String url) {
-        // TODO Auto-generated method stub
-
     }
 
     @Override
     public void executeJavascript(String javascript) {
-        // TODO Auto-generated method stub
-
     }
 
     @Override
     public Page getPage() {
-        // TODO Auto-generated method stub
         return null;
     }
 

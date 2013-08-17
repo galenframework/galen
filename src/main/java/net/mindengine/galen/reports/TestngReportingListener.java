@@ -113,8 +113,6 @@ public class TestngReportingListener implements ValidationListener, SuiteListene
 
     @Override
     public void onAfterObject(PageValidation pageValidation, String objectName) {
-        // TODO Auto-generated method stub
-        
     }
 
 }

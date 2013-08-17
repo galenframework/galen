@@ -158,8 +158,6 @@ public class HtmlReportingListener implements ValidationListener, SuiteListener 
 
     @Override
     public void onAfterObject(PageValidation pageValidation, String objectName) {
-        // TODO Auto-generated method stub
-        
     }
 
 }
