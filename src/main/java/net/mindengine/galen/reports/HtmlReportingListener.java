@@ -3,7 +3,6 @@ package net.mindengine.galen.reports;
 import static java.lang.String.format;
 import static net.mindengine.galen.xml.XmlBuilder.node;
 
-import java.awt.Dimension;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -15,6 +14,7 @@ import net.mindengine.galen.runner.GalenPageRunner;
 import net.mindengine.galen.runner.GalenSuiteRunner;
 import net.mindengine.galen.runner.SuiteListener;
 import net.mindengine.galen.specs.Spec;
+import net.mindengine.galen.utils.GalenUtils;
 import net.mindengine.galen.validation.ErrorArea;
 import net.mindengine.galen.validation.PageValidation;
 import net.mindengine.galen.validation.ValidationError;
@@ -61,10 +61,6 @@ public class HtmlReportingListener implements ValidationListener, SuiteListener 
         return node("div").withAttribute("class", clazz);
     }
     
-    private String formatScreenSize(Dimension screenSize) {
-        return String.format("%dx%d", screenSize.width, screenSize.height);
-        //TODO Move to utils
-    }
 
     @Override
     public void onSuiteFinished(GalenSuiteRunner galenSuiteRunner) {
@@ -74,7 +70,7 @@ public class HtmlReportingListener implements ValidationListener, SuiteListener 
     public void onBeforePage(GalenSuiteRunner galenSuiteRunner, GalenPageRunner pageRunner, Browser browser) {
         currentBrowser = browser;
         currentPageNode = div("test");
-        currentPageNode.add(h(2, browser.getUrl() + " " + formatScreenSize(browser.getScreenSize())));
+        currentPageNode.add(h(2, browser.getUrl() + " " + GalenUtils.formatScreenSize(browser.getScreenSize())));
         currentSuiteNode.add(currentPageNode);
     }
     
@@ -158,6 +154,12 @@ public class HtmlReportingListener implements ValidationListener, SuiteListener 
 
     public String toHtml() {
         return new XmlBuilder(null, bodyNode).build();
+    }
+
+    @Override
+    public void onAfterObject(PageValidation pageValidation, String objectName) {
+        // TODO Auto-generated method stub
+        
     }
 
 }

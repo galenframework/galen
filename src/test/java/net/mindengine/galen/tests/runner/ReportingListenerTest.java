@@ -1,19 +1,20 @@
 package net.mindengine.galen.tests.runner;
 
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.endsWith;
 import static org.hamcrest.Matchers.is;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.PrintStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import net.mindengine.galen.components.report.ReportingListenerTestUtils;
+import net.mindengine.galen.reports.ConsoleReportingListener;
 import net.mindengine.galen.reports.HtmlReportingListener;
 import net.mindengine.galen.reports.TestngReportingListener;
 
 import org.apache.commons.io.IOUtils;
-import org.hamcrest.Matchers;
 import org.testng.annotations.Test;
 
 public class ReportingListenerTest {
@@ -27,9 +28,8 @@ public class ReportingListenerTest {
         ReportingListenerTestUtils.performSampleReporting(listener, listener);
         
         String expectedXml = IOUtils.toString(getClass().getResourceAsStream("/expected-reports/testng-report.xml"));
-        assertThat(listener.toXml()
-                .replaceAll("T([0-9]{2}:){2}[0-9]{2}Z", "T00:00:00Z")
-                , is(expectedXml.replace("{expected-date}", expectedDate)));
+        assertThat(listener.toXml() .replaceAll("T([0-9]{2}:){2}[0-9]{2}Z", "T00:00:00Z"), 
+                is(expectedXml.replace("{expected-date}", expectedDate)));
     }
     
     
@@ -38,13 +38,18 @@ public class ReportingListenerTest {
         ReportingListenerTestUtils.performSampleReporting(listener, listener);
         
         String expectedHtml = IOUtils.toString(getClass().getResourceAsStream("/expected-reports/html-report-suffix.html"));
-        
-        
-        String plainHtml = listener.toHtml().replaceAll("\\s+", " ");
-        
-        assertThat(bodyPart(plainHtml), is(expectedHtml.replaceAll("\\s+", " ")));
+        assertThat(bodyPart(listener.toHtml()), is(expectedHtml));
     }
 
+    @Test public void shouldReport_toConsole_successfully() throws IOException {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        PrintStream ps = new PrintStream(baos);
+        ConsoleReportingListener listener = new ConsoleReportingListener(ps, ps);
+        ReportingListenerTestUtils.performSampleReporting(listener, listener);
+        
+        String expectedText = IOUtils.toString(getClass().getResourceAsStream("/expected-reports/console.txt"));
+        assertThat(baos.toString("UTF-8"), is(expectedText));
+    }
 
     private String bodyPart(String plainHtml) {
         int id1 = plainHtml.indexOf("<body>");

@@ -33,8 +33,20 @@ public class SectionValidation {
         for (ObjectSpecs object : section.getObjects()) {
             tellOnObject(object.getObjectName());
             errors.addAll(checkObject(object));
+            tellOnAfterObject(object.getObjectName());
         }
         return errors;
+    }
+
+    private void tellOnAfterObject(String objectName) {
+        if (validationListener != null) {
+            try {
+                validationListener.onAfterObject(pageValidation, objectName);
+            }
+            catch (Exception e) {
+                e.printStackTrace();
+            }
+        } 
     }
 
     private void tellOnObject(String objectName) {

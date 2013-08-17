@@ -3,7 +3,6 @@ package net.mindengine.galen.reports;
 import static net.mindengine.galen.xml.XmlBuilder.node;
 import static net.mindengine.galen.xml.XmlBuilder.textNode;
 
-import java.awt.Dimension;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -13,6 +12,7 @@ import net.mindengine.galen.runner.GalenPageRunner;
 import net.mindengine.galen.runner.GalenSuiteRunner;
 import net.mindengine.galen.runner.SuiteListener;
 import net.mindengine.galen.specs.Spec;
+import net.mindengine.galen.utils.GalenUtils;
 import net.mindengine.galen.validation.PageValidation;
 import net.mindengine.galen.validation.ValidationError;
 import net.mindengine.galen.validation.ValidationListener;
@@ -30,12 +30,11 @@ public class TestngReportingListener implements ValidationListener, SuiteListene
     @Override
     public void onAfterPage(GalenSuiteRunner galenSuiteRunner, GalenPageRunner pageRunner, Browser browser,
             List<ValidationError> errors) {
-        // TODO Auto-generated method stub
     }
 
     @Override
     public void onBeforePage(GalenSuiteRunner galenSuiteRunner, GalenPageRunner pageRunner, Browser browser) {
-        currentPageNode = node("test").withAttribute("name", browser.getUrl() + " " + formatScreenSize(browser.getScreenSize()));
+        currentPageNode = node("test").withAttribute("name", browser.getUrl() + " " + GalenUtils.formatScreenSize(browser.getScreenSize()));
         currentSuiteNode.add(currentPageNode);
     }
 
@@ -112,7 +111,10 @@ public class TestngReportingListener implements ValidationListener, SuiteListene
         return sdf.format(date);
     }
 
-    private String formatScreenSize(Dimension screenSize) {
-        return String.format("%dx%d", screenSize.width, screenSize.height);
+    @Override
+    public void onAfterObject(PageValidation pageValidation, String objectName) {
+        // TODO Auto-generated method stub
+        
     }
+
 }

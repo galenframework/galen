@@ -45,11 +45,14 @@ public class GalenPageRunnerTest {
         assertThat("Invokations should be", validationListener.getInvokations(), is("<o header>\n" +
                 "<SpecHeight header>\n" +
                 "<e><msg>\"header\" height is 140px which is not in range of 150 to 170px</msg></e>\n" +
+                "</o header>\n" +
                 "<o menu-item-home>\n" +
                 "<SpecHorizontally menu-item-home>\n" +
+                "</o menu-item-home>\n" +
                 "<o menu-item-rss>\n" +
                 "<SpecHorizontally menu-item-rss>\n" +
-                "<SpecNear menu-item-rss>\n"
+                "<SpecNear menu-item-rss>\n" +
+                "</o menu-item-rss>\n"
                 ));
         assertThat("Errors should be empty", errors.size(), is(1));
         
@@ -76,11 +79,14 @@ public class GalenPageRunnerTest {
         assertThat("Invokations should be", validationListener.getInvokations(), is("<o header>\n" +
                 "<SpecHeight header>\n" +
                 "<e><msg>\"header\" height is 140px which is not in range of 150 to 170px</msg></e>\n" +
+                "</o header>\n" +
                 "<o menu-item-home>\n" +
                 "<SpecHorizontally menu-item-home>\n" +
+                "</o menu-item-home>\n" +
                 "<o menu-item-rss>\n" +
                 "<SpecHorizontally menu-item-rss>\n" +
-                "<SpecNear menu-item-rss>\n"
+                "<SpecNear menu-item-rss>\n" +
+                "</o menu-item-rss>\n"
                 ));
         assertThat("Errors should be empty", errors.size(), is(1));
         
@@ -107,11 +113,14 @@ public class GalenPageRunnerTest {
         assertThat("Invokations should be", validationListener.getInvokations(), is("<o header>\n" +
                 "<SpecHeight header>\n" +
                 "<e><msg>\"header\" height is 140px which is not in range of 150 to 170px</msg></e>\n" +
+                "</o header>\n" +
                 "<o menu-item-home>\n" +
                 "<SpecHorizontally menu-item-home>\n" +
+                "</o menu-item-home>\n" +
                 "<o menu-item-rss>\n" +
                 "<SpecHorizontally menu-item-rss>\n" +
-                "<SpecNear menu-item-rss>\n"
+                "<SpecNear menu-item-rss>\n" +
+                "</o menu-item-rss>\n"
                 ));
         assertThat("Errors should be empty", errors.size(), is(1));
     }

@@ -39,4 +39,9 @@ public class TestValidationListener implements ValidationListener {
         return invokations.toString();
     }
 
+    @Override
+    public void onAfterObject(PageValidation pageValidation, String objectName) {
+        append("</o " + objectName + ">");
+    }
+
 }
