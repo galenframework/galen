@@ -69,9 +69,14 @@ public class TestngReportingListener implements ValidationListener, SuiteListene
 
     private String convertToText(List<String> messages) {
         StringBuffer buffer = new StringBuffer();
+        
+        boolean separate = false;
         for (String message : messages) {
+            if (separate) {
+                buffer.append("\n");
+            }
+            separate = true;
             buffer.append(message);
-            buffer.append("\n");
         }
         return buffer.toString();
     }

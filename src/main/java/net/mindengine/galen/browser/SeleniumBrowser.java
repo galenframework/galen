@@ -1,12 +1,15 @@
 package net.mindengine.galen.browser;
 
 import java.awt.Dimension;
+import java.io.File;
 
 
 import net.mindengine.galen.page.Page;
 import net.mindengine.galen.page.selenium.SeleniumPage;
 
 import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.OutputType;
+import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
 
 public class SeleniumBrowser implements Browser {
@@ -55,6 +58,12 @@ public class SeleniumBrowser implements Browser {
     public Dimension getScreenSize() {
         org.openqa.selenium.Dimension windowSize = driver.manage().window().getSize();
         return new Dimension(windowSize.getWidth(), windowSize.getHeight());
+    }
+
+    @Override
+    public String createScreenshot() {
+        File file = ((TakesScreenshot)driver).getScreenshotAs(OutputType.FILE);
+        return file.getAbsolutePath();
     }
 
 }

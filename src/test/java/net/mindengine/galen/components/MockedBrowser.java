@@ -1,6 +1,7 @@
 package net.mindengine.galen.components;
 
 import java.awt.Dimension;
+import java.util.UUID;
 
 import net.mindengine.galen.browser.Browser;
 import net.mindengine.galen.page.Page;
@@ -53,6 +54,11 @@ public class MockedBrowser implements Browser {
     @Override
     public Dimension getScreenSize() {
         return this.screenSize;
+    }
+
+    @Override
+    public String createScreenshot() {
+        return "/tmp/screenshot-" + UUID.randomUUID().toString() + ".png";
     }
 
 }

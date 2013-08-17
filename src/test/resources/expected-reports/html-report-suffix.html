@@ -6,8 +6,11 @@
             <div class="object">
                 <h3>objectA1</h3>
                 <ul class="test-specs">
-                    <li class="fail" data-screenshot="/screenshot-01.png" data-area="10,10,20,20">
+                    <li class="fail" data-screenshot="/screenshot-1.png">
                         <span>inside: other-object 10px left</span>
+                        <ul class="areas">
+                            <li data-area="10,10,100,50">objectA1</li>
+                        </ul>
                         <ul class="error-message">
                             <li>objectA1 is not inside other-object</li>
                         </ul>
@@ -23,6 +26,15 @@
                     <li class="success">
                         <span>width: 10 to 20px</span>
                     </li>
+                    <li class="fail" data-screenshot="/screenshot-1.png">
+                        <span>width: 10px</span>
+                        <ul class="areas">
+                            <li data-area="200,300,50,30">objectA2</li>
+                        </ul>
+                        <ul class="error-message">
+                            <li>objectA2 width is 20px instead of 10px</li>
+                        </ul>
+                    </li>
                 </ul>
             </div>
         </div>
@@ -34,8 +46,11 @@
                     <li class="success">
                         <span>width: 10 to 20px</span>
                     </li>
-                    <li class="fail" data-screenshot="/screenshot-01.png" data-area="10,10,20,20">
+                    <li class="fail" data-screenshot="/screenshot-2.png">
                         <span>inside: other-object 10px left</span>
+                        <ul class="areas">
+                            <li data-area="10,10,100,50">objectB1</li>
+                        </ul>
                         <ul class="error-message">
                             <li>objectB1 is not inside other-object</li>
                             <li>second error message with &lt;xml&gt; &amp;tags</li>

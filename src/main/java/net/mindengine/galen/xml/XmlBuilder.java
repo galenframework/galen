@@ -10,7 +10,7 @@ import org.apache.commons.lang3.tuple.Pair;
 
 public class XmlBuilder {
     
-    public static String XML_DECLARATION = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n";
+    public static String XML_DECLARATION = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>";
     private static String INDENTATION = "    ";
     
     public static enum XmlNodeType {
@@ -53,20 +53,29 @@ public class XmlBuilder {
                 sw.append(StringEscapeUtils.escapeXml(name));
             }
             else {
+                sw.append("\n");
                 sw.append(indentation);
-                sw.append('<');
+                sw.append("<");
                 sw.append(name);
                 writeAttributes(sw);
-                sw.append(">\n");
+                sw.append(">");
                 
                 writeChildren(indentation + INDENTATION, sw);
                 
+                if (!containsOnlyText()) {
+                    sw.append("\n");
+                    sw.append(indentation);
+                }
+                
                 sw.append("</");
                 sw.append(name);
-                sw.append(">\n");
+                sw.append(">");
             }
         }
         
+        private boolean containsOnlyText() {
+            return childNodes.size() == 1 && childNodes.get(0).getType() == XmlNodeType.TEXT;
+        }
         private void writeChildren(String indentation, StringWriter sw) {
             for (XmlNode childNode : childNodes) {
                 childNode.toXml(indentation, sw);
@@ -104,6 +113,12 @@ public class XmlBuilder {
             for (XmlNode node : nodes) {
                 childNodes.add(node);
             }
+            return this;
+        }
+        
+        public XmlNode withText(String text) {
+            childNodes = new LinkedList<XmlBuilder.XmlNode>();
+            childNodes.add(node(text).asTextNode());
             return this;
         }
         

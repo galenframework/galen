@@ -29,7 +29,7 @@ public class ReportingListenerTest {
         String expectedXml = IOUtils.toString(getClass().getResourceAsStream("/expected-reports/testng-report.xml"));
         assertThat(listener.toXml()
                 .replaceAll("T([0-9]{2}:){2}[0-9]{2}Z", "T00:00:00Z")
-                .replaceAll("\\s+", " "), is(expectedXml.replace("{expected-date}", expectedDate).replaceAll("\\s+", " ")));
+                , is(expectedXml.replace("{expected-date}", expectedDate)));
     }
     
     
@@ -38,7 +38,19 @@ public class ReportingListenerTest {
         ReportingListenerTestUtils.performSampleReporting(listener, listener);
         
         String expectedHtml = IOUtils.toString(getClass().getResourceAsStream("/expected-reports/html-report-suffix.html"));
-        assertThat(listener.toHtml().replaceAll("\\s+", " "), endsWith(expectedHtml.replaceAll("\\s+", " ")));
+        
+        
+        String plainHtml = listener.toHtml().replaceAll("\\s+", " ");
+        
+        assertThat(bodyPart(plainHtml), is(expectedHtml.replaceAll("\\s+", " ")));
+    }
+
+
+    private String bodyPart(String plainHtml) {
+        int id1 = plainHtml.indexOf("<body>");
+        int id2 = plainHtml.indexOf("</body>");
+        
+        return plainHtml.substring(id1, id2 + 7);
     }
     
     //TODO finish html reporting listener

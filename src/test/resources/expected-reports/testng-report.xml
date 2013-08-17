@@ -5,9 +5,7 @@
             <class name="objectA1">
                 <test-method status="FAIL" signature="objectA1: inside: other-object 10px left" name="inside: other-object 10px left" duration-ms="0" started-at="{expected-date}" finished-at="{expected-date}" description="">
                     <exception class="Error_SpecInside">
-                        <short-stacktrace> 
-                            objectA1 is not inside other-object
-                        </short-stacktrace>
+                        <short-stacktrace>objectA1 is not inside other-object</short-stacktrace>
                     </exception>
                 </test-method>
                 <test-method status="PASS" signature="objectA1: width: 10 to 20px" name="width: 10 to 20px" duration-ms="0" started-at="{expected-date}" finished-at="{expected-date}" description="">
@@ -15,6 +13,11 @@
             </class>
             <class name="objectA2">
                 <test-method status="PASS" signature="objectA2: width: 10 to 20px" name="width: 10 to 20px" duration-ms="0" started-at="{expected-date}" finished-at="{expected-date}" description="">
+                </test-method>
+                <test-method status="FAIL" signature="objectA2: width: 10px" name="width: 10px" duration-ms="0" started-at="{expected-date}" finished-at="{expected-date}" description="">
+                    <exception class="Error_SpecWidth">
+                        <short-stacktrace>objectA2 width is 20px instead of 10px</short-stacktrace>
+                    </exception>
                 </test-method>
             </class>
         </test>
@@ -24,9 +27,8 @@
                 </test-method>
                 <test-method status="FAIL" signature="objectB1: inside: other-object 10px left" name="inside: other-object 10px left" duration-ms="0" started-at="{expected-date}" finished-at="{expected-date}" description="">
                     <exception class="Error_SpecInside">
-                        <short-stacktrace> objectB1 is not inside other-object
-                            second error message with &lt;xml&gt; &amp;tags
-                        </short-stacktrace>
+                        <short-stacktrace>objectB1 is not inside other-object
+second error message with &lt;xml&gt; &amp;tags</short-stacktrace>
                     </exception>
                 </test-method>
             </class>
@@ -36,4 +38,4 @@
             </class>
         </test>
     </suite>
-</testng-results> 
+</testng-results>
