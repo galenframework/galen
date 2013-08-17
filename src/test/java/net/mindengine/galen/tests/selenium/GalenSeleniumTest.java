@@ -60,25 +60,32 @@ public class GalenSeleniumTest {
         		"<SpecNear header>\n" +
         		"<SpecWidth header>\n" +
         		"<SpecHeight header>\n" +
+        		"</o header>\n" +
         		"<o header-with-corrections>\n" +
         		"<SpecWidth header-with-corrections>\n" +
                 "<SpecHeight header-with-corrections>\n" +
+                "</o header-with-corrections>\n" +
         		"<o header-text-1>\n" +
         		"<SpecNear header-text-1>\n" +
         		"<SpecInside header-text-1>\n" +
+        		"</o header-text-1>\n" +
         		"<o header-text-2>\n" +
         		"<SpecNear header-text-2>\n" +
         		"<SpecInside header-text-2>\n" +
+        		"</o header-text-2>\n" +
         		"<o menu>\n" +
         		"<SpecNear menu>\n" +
         		"<SpecNear menu>\n" +
+        		"</o menu>\n" +
         		"<o menu-item-home>\n" +
         		"<SpecHorizontally menu-item-home>\n" +
         		"<SpecNear menu-item-home>\n" +
         		"<SpecInside menu-item-home>\n" +
+        		"</o menu-item-home>\n" +
         		"<o menu-item-categories>\n" +
         		"<SpecInside menu-item-categories>\n" +
-        		"<SpecNear menu-item-categories>\n"));
+        		"<SpecNear menu-item-categories>\n" + 
+        		"</o menu-item-categories>\n"));
         assertThat("Errors should be empty", errors.size(), is(0));
     }
     
@@ -102,11 +109,14 @@ public class GalenSeleniumTest {
         
         assertThat("Invokations should", validationListener.getInvokations(), is("<o header>\n" +
                 "<SpecHeight header>\n" +
+                "</o header>\n" +
                 "<o menu-item-home>\n" +
                 "<SpecHorizontally menu-item-home>\n" +
+                "</o menu-item-home>\n" +
                 "<o menu-item-rss>\n" +
                 "<SpecHorizontally menu-item-rss>\n" +
-                "<SpecNear menu-item-rss>\n"
+                "<SpecNear menu-item-rss>\n" +
+                "</o menu-item-rss>\n"
                 ));
         assertThat("Errors should be empty", errors.size(), is(0));
     }
@@ -132,11 +142,14 @@ public class GalenSeleniumTest {
         assertThat("Invokations should", validationListener.getInvokations(), is("<o header>\n" +
                 "<SpecHeight header>\n" +
                 "<e><msg>\"header\" height is 140px which is not in range of 150 to 170px</msg></e>\n" +
+                "</o header>\n" +
                 "<o menu-item-home>\n" +
                 "<SpecHorizontally menu-item-home>\n" +
+                "</o menu-item-home>\n" +
                 "<o menu-item-rss>\n" +
                 "<SpecHorizontally menu-item-rss>\n" +
-                "<SpecNear menu-item-rss>\n"
+                "<SpecNear menu-item-rss>\n" +
+                "</o menu-item-rss>\n"
                 ));
         assertThat("Errors amount should be", errors.size(), is(1));
     }

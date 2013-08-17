@@ -11,6 +11,7 @@ public class TestValidationListener implements ValidationListener {
 
     @Override
     public void onSpecError(PageValidation pageValidation, String objectName, Spec spec, ValidationError error) {
+        append("<" + spec.getClass().getSimpleName() + " " + objectName + ">");
         StringBuffer buffer = new StringBuffer();
         for (String message : error.getMessages()) {
             buffer.append("<msg>");
