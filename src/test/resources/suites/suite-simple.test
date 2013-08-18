@@ -1,0 +1,27 @@
+
+# This is a comment
+
+This is a name of suite
+------------------------------------------------
+    http://example.com/page1    640x480
+        inject javascript.js  
+        check page1.spec --include mobile,tablet --exclude nomobile
+    
+        inject javascript2.js
+        
+        # The following will be run using Rhino js library
+        selenium  selenium/loginToMyProfile.js    {"login":"user1", "password": "test123"} 
+        check page1_1.spec page1_2.spec page1_3.spec --include sometag
+    
+    
+    http://example.com/page2    1024x768
+        check page2.spec
+        check page3.spec
+        
+        
+This is another suite name
+------------------------------------------------
+    http://example.com/page3    320x240
+        check page3.spec
+        
+        

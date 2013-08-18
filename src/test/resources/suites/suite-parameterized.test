@@ -1,0 +1,30 @@
+
+@ Parameterized
+    | size      | tag                    | name         |   exclude  |
+    | 320x240   | mobile                 | Phone        |   nomobile |
+    | 640x480   | tablet                 | Tablet       |   -        |
+    | 1024x768  | desktop,normal-desktop | Desktop      |   -        |
+    | 2048x1024 | big-desktop,desktop    | Big Desktop  |   -        |
+Parameterized test for ${name}
+------------------------------------------------
+    http://example.com/page1  ${size}
+        check page1.spec   --include ${tag} --exclude ${exclude}
+
+
+
+        
+@ Table custom_global_table
+    | size      | tag                    | name         |   exclude  |   urlPage |
+    | 320x240   | mobile                 | Phone        |   nomobile |   page1   |
+    | 640x480   | tablet                 | Tablet       |   -        |   page2   |
+
+        
+        
+@ Parameterized using custom_global_table
+Parameterized test using predefined table for ${name}
+------------------------------------------------
+    http://example.com/${urlPage}    ${size}
+        inject javascript.js
+        selenium insert-article.js {"title": "This is the title of my article for ${name}"} 
+        check page1.spec --include ${tag}
+        
