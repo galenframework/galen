@@ -17,7 +17,7 @@ public class ExpectString implements Expectation<String>{
             }
             else if (symbol == '\\') {
                 if (reader.hasMore()) {
-                    buffer.append(reader.next());
+                    buffer.append(asEscapeSymbol(reader.next()));
                 }
                 else {
                     buffer.append("\\");
@@ -29,6 +29,25 @@ public class ExpectString implements Expectation<String>{
             }
         }
         return buffer.toString();
+    }
+
+    private char asEscapeSymbol(char symbol) {
+        if (symbol == 'n') {
+            return '\n';
+        }
+        if (symbol == 't') {
+            return '\t';
+        }
+        if (symbol == 'b') {
+            return '\b';
+        }
+        if (symbol == 'r') {
+            return '\r';
+        }
+        if (symbol == 'f') {
+            return '\f';
+        }
+        else return symbol;
     }
 
     public ExpectString setQuotesSymbol(char symbol) {

@@ -27,9 +27,18 @@ public class GalenPageTest {
     public void setActions(List<GalenPageAction> actions) {
         this.actions = actions;
     }
+    
     public static GalenPageTest readFrom(String text) {
         // TODO read galen page test 
         return null;
+    }
+    public GalenPageTest withUrl(String url) {
+        this.url = url;
+        return this;
+    }
+    public GalenPageTest withSize(int width, int height) {
+        this.screenSize = new Dimension(width, height);
+        return this;
     }
 
 }

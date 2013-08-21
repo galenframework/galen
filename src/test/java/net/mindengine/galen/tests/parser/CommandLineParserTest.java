@@ -25,6 +25,7 @@ public class CommandLineParserTest {
             test("script \"\\\"Hi \\\\ \\\"\"", args("script", "\"Hi \\ \"")),
             test("script '\\\'Hi \\\\ \\\''", args("script", "'Hi \\ '")),
             test("\"hello\\", args("hello\\")),
+            test("\"hello\\nworld\\t\"", args("hello\nworld\t")),
             test("\"hello  ' world\"", args("hello  ' world")),
             test("'hello  \" world'", args("hello  \" world")),
             test("'hello  \"'  'world'", args("hello  \"", "world"))
