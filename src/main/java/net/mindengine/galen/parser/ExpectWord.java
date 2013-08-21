@@ -13,14 +13,15 @@
 * See the License for the specific language governing permissions and
 * limitations under the License.
 ******************************************************************************/
-package net.mindengine.galen.specs.reader;
+package net.mindengine.galen.parser;
 
-import static net.mindengine.galen.specs.reader.Expectations.isWordDelimeter;
+import net.mindengine.galen.specs.reader.StringCharReader;
 
 
 public class ExpectWord implements Expectation<String> {
 
-    private char breakSymbol = 0;
+    private char[] delimeters = new char[]{' ', '\t', ','};
+    private char[] breakSymbols = null;
 
     @Override
     public String read(StringCharReader reader) {
@@ -29,7 +30,7 @@ public class ExpectWord implements Expectation<String> {
         while(reader.hasMore()) {
             char symbol = reader.next();
             
-            if (symbol == breakSymbol) {
+            if (isBreaking(symbol)) {
                 reader.back();
                 break;
             }
@@ -47,8 +48,33 @@ public class ExpectWord implements Expectation<String> {
         return buffer.toString();
     }
 
-    public ExpectWord stopOnThisSymbol(char breakSymbol) {
-        this.breakSymbol = breakSymbol;
+    private boolean isBreaking(char symbol) {
+        if (breakSymbols != null) {
+            for (char breakSymbol : breakSymbols) {
+                if (breakSymbol == symbol) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    private boolean isWordDelimeter(char symbol) {
+        for (char delimeter : delimeters) {
+            if (symbol == delimeter) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public ExpectWord stopOnTheseSymbols(char...breakSymbols) {
+        this.breakSymbols = breakSymbols;
+        return this;
+    }
+    
+    public ExpectWord withDelimeters(char...delimeters) {
+        this.delimeters = delimeters;
         return this;
     }
     

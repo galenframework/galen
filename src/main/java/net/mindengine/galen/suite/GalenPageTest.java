@@ -27,5 +27,9 @@ public class GalenPageTest {
     public void setActions(List<GalenPageAction> actions) {
         this.actions = actions;
     }
+    public static GalenPageTest readFrom(String text) {
+        // TODO read galen page test 
+        return null;
+    }
 
 }

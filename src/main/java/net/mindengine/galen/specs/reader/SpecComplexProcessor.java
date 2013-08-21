@@ -17,6 +17,7 @@ package net.mindengine.galen.specs.reader;
 
 import java.util.List;
 
+import net.mindengine.galen.parser.Expectation;
 import net.mindengine.galen.specs.Spec;
 
 public class SpecComplexProcessor implements SpecProcessor {

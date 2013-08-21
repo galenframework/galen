@@ -13,9 +13,9 @@
 * See the License for the specific language governing permissions and
 * limitations under the License.
 ******************************************************************************/
-package net.mindengine.galen.specs.reader;
+package net.mindengine.galen.parser;
 
-import static net.mindengine.galen.specs.reader.Expectations.range;
+import static net.mindengine.galen.parser.Expectations.range;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -23,6 +23,8 @@ import java.util.List;
 import net.mindengine.galen.specs.Location;
 import net.mindengine.galen.specs.Range;
 import net.mindengine.galen.specs.Side;
+import net.mindengine.galen.specs.reader.IncorrectSpecException;
+import net.mindengine.galen.specs.reader.StringCharReader;
 
 public class ExpectLocations implements Expectation<List<Location>> {
 

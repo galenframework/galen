@@ -13,7 +13,9 @@
 * See the License for the specific language governing permissions and
 * limitations under the License.
 ******************************************************************************/
-package net.mindengine.galen.specs.reader;
+package net.mindengine.galen.parser;
+
+import net.mindengine.galen.specs.reader.StringCharReader;
 
 public interface Expectation<T> {
     public T read(StringCharReader charReader);

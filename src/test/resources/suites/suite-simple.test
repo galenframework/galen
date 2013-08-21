@@ -6,11 +6,12 @@ This is a name of suite
     http://example.com/page1    640x480
         inject javascript.js  
         check page1.spec --include mobile,tablet --exclude nomobile
-    
+        )))))))))))))))))))))))))))))))))))
+        ++++++++++++++++++++++++++++++++++++++
         inject javascript2.js
         
         # The following will be run using Rhino js library
-        selenium  selenium/loginToMyProfile.js    {"login":"user1", "password": "test123"} 
+        js  selenium/loginToMyProfile.js    {"login":"user1", "password": "test123"} 
         check page1_1.spec page1_2.spec page1_3.spec --include sometag
     
     
@@ -24,4 +25,48 @@ This is another suite name
     http://example.com/page3    320x240
         check page3.spec
         
+        
+        
+# @ symbol is used for tables, parameterization and constants definitions
+
+# @ Set browser firefox
+# @ Set hub     http://myhub:9000/wd/hub
+
+         
+# @ Table tableName
+#  | header1   | header 2   |
+#  | value1_1  | value1_2   |
+#  | value2_1  | value2_2   |
+
+# @ Parameterized
+#  | header1   | header 2   |
+#  | value1_1  | value1_2   |
+#  | value2_1  | value2_2   |
+        
+        
+# @ Parameterized using tableName        
+        
+# Suite definition        
+# 1-st level is suite name
+    # 2-nd level is browser factory with page url and size
+        # 3-rd level is page action        
+
+
+# Any consequent symbol can be used for visual splitting
+# The only requirement is that no other symbols are used in the line and there are at least 4 symbols
+# -------------------------------
+# ===============================
+# $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$        
+        
+        
+# Browser factories
+# By default it is used a selenium firefox        
+#   http://example.com/page1 640x480
+
+# But you can define it like this
+#   selenium chrome http://example.com/page1 640x480
+
+# Or you can specify that a selenium grid should be used
+#   selenium grid    http://localhost:9000/wd/hub?browserName=firefox&platform=XP&version=21   http://example.com/page1
+
         

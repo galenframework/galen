@@ -13,7 +13,7 @@
 * See the License for the specific language governing permissions and
 * limitations under the License.
 ******************************************************************************/
-package net.mindengine.galen.specs.reader;
+package net.mindengine.galen.parser;
 
 import java.util.Arrays;
 import java.util.List;
@@ -40,6 +40,10 @@ public class Expectations {
 
     public static Expectation<String> objectName() {
         return new ExpectWord();
+    }
+    
+    public static Expectation<String[]> commandLineArguments() {
+        return new ExpectCommandLineArguments();
     }
     
     public static boolean isDelimeter(char symbol) {

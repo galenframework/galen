@@ -1,0 +1,31 @@
+
+@ Set page some-page.html
+@ Set size 640x480
+
+@ Set var_concat ${page} and ${size}
+
+@ Set myvar value
+This is a name of suite {myvar}
+---------------------------------
+    http://example.com/${page}  ${size}
+        js  selenium/loginToMyProfile.js    {"myvar" : "${myvar}", "var_concat" : "${var_concat}"}
+
+# Reseting myvar value
+@ Set myvar value 2
+    http://example.com/${page}  ${size}
+        js  selenium/loginToMyProfile.js    {"myvar" : "${myvar}"}
+        
+        
+        
+@ Set 
+    size        320x240
+    page        page1.html
+    anotherVar  value
+    
+    
+    
+    
+    
+    
+    
+          

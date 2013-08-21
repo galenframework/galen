@@ -18,13 +18,43 @@ Parameterized test for ${name}
     | 320x240   | mobile                 | Phone        |   nomobile |   page1   |
     | 640x480   | tablet                 | Tablet       |   -        |   page2   |
 
+
+@ Table custom_global_table2
+    | size      | tag                    | name         |   exclude   |   urlPage |
+    | 1024x768  | desktop                | Desktop      |   nodesktop |   page3   |
         
         
-@ Parameterized using custom_global_table
+@ Parameterized using custom_global_table, custom_global_table2
 Parameterized test using predefined table for ${name}
 ------------------------------------------------
     http://example.com/${urlPage}    ${size}
         inject javascript.js
         selenium insert-article.js {"title": "This is the title of my article for ${name}"} 
         check page1.spec --include ${tag}
+
+
+
+
+@ Table browsers
+    | browser | browser_name | version |
+    | firefox | Firefox      | any     |
+    | ie      | IE 8         | 8       |
+    | ie      | IE 9         | 9       |
+    
+@ Table sizes
+    | size      | tag                    | device       |   exclude  |   urlPage |
+    | 320x240   | mobile                 | Phone        |   nomobile |   page1   |
+    | 640x480   | tablet                 | Tablet       |   -        |   page2   |
+    
+    
+@ Parameterized using browsers
+@ Parameterized using sizes   
+Parameterized test using 2 layer tables in browser ${browser_name} for type ${device}
+------------------------------------------------------
+    selenium:my-grid:9001/wd/hub?browser=${browser}&version=${version} http://example.com/${urlPage}  ${size}
+        inject javascript.js
+        selenium insert-article.js {"title": "This is the title of my article for ${name}"} 
+        check page1.spec --include ${tag}
+
         
+    

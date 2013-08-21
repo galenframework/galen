@@ -15,16 +15,16 @@
 ******************************************************************************/
 package net.mindengine.galen.specs.reader;
 
+import static net.mindengine.galen.parser.Expectations.expectThese;
+import static net.mindengine.galen.parser.Expectations.locations;
+import static net.mindengine.galen.parser.Expectations.objectName;
+import static net.mindengine.galen.parser.Expectations.range;
 import static net.mindengine.galen.specs.Alignment.ALL;
 import static net.mindengine.galen.specs.Alignment.BOTTOM;
 import static net.mindengine.galen.specs.Alignment.CENTERED;
 import static net.mindengine.galen.specs.Alignment.LEFT;
 import static net.mindengine.galen.specs.Alignment.RIGHT;
 import static net.mindengine.galen.specs.Alignment.TOP;
-import static net.mindengine.galen.specs.reader.Expectations.expectThese;
-import static net.mindengine.galen.specs.reader.Expectations.locations;
-import static net.mindengine.galen.specs.reader.Expectations.objectName;
-import static net.mindengine.galen.specs.reader.Expectations.range;
 
 import java.util.HashMap;
 import java.util.List;

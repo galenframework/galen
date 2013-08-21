@@ -27,13 +27,13 @@ import static org.hamcrest.Matchers.notNullValue;
 import java.util.Arrays;
 import java.util.List;
 
+import net.mindengine.galen.parser.ExpectLocations;
+import net.mindengine.galen.parser.ExpectRange;
+import net.mindengine.galen.parser.ExpectSides;
+import net.mindengine.galen.parser.ExpectWord;
 import net.mindengine.galen.specs.Location;
 import net.mindengine.galen.specs.Range;
 import net.mindengine.galen.specs.Side;
-import net.mindengine.galen.specs.reader.ExpectLocations;
-import net.mindengine.galen.specs.reader.ExpectRange;
-import net.mindengine.galen.specs.reader.ExpectSides;
-import net.mindengine.galen.specs.reader.ExpectWord;
 import net.mindengine.galen.specs.reader.IncorrectSpecException;
 import net.mindengine.galen.specs.reader.StringCharReader;
 
@@ -137,7 +137,7 @@ public class ExpectationsTest {
     @Test(dataProvider="wordWithBreakingSymbolTestData")
     public void expectWordWithBreakingSymbol(String text, char breakingSymbol, String expectedWord) {
         StringCharReader stringCharReader = new StringCharReader(text);
-        String word = new ExpectWord().stopOnThisSymbol(breakingSymbol).read(stringCharReader);
+        String word = new ExpectWord().stopOnTheseSymbols(breakingSymbol).read(stringCharReader);
         assertThat(word, is(expectedWord));
     }
     

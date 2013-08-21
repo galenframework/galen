@@ -6,6 +6,7 @@ import static org.hamcrest.Matchers.is;
 
 import java.awt.Dimension;
 import java.io.File;
+import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -13,14 +14,15 @@ import net.mindengine.galen.suite.GalenPageAction;
 import net.mindengine.galen.suite.GalenPageActions;
 import net.mindengine.galen.suite.GalenPageTest;
 import net.mindengine.galen.suite.GalenSuite;
-import net.mindengine.galen.suite.GalenSuiteReader;
+import net.mindengine.galen.suite.reader.GalenSuiteReader;
 
 import org.testng.annotations.Test;
 
 public class GalenSuiteReaderTest {
 
+    //TODO write negative tests for suite reader
     
-    @Test public void readSuite_successfully() {
+    @Test public void readSuite_successfully() throws IOException {
         GalenSuiteReader reader = new GalenSuiteReader();
         
         List<GalenSuite> galenSuites = reader.read(new File(getClass().getResource("/suites/suite-simple.test").getFile()));
@@ -40,7 +42,7 @@ public class GalenSuiteReaderTest {
                 assertThat(page.getActions(), is(actions(GalenPageActions.injectJavascript("javascript.js"),
                         GalenPageActions.check(asList("page1.spec")).withIncludedTags(asList("mobile", "tablet")).withExcludedTags(asList("nomobile")),
                         GalenPageActions.injectJavascript("javascript2.js"),
-                        GalenPageActions.seleniumJS("selenium/loginToMyProfile.js").withArguments("{\"login\":\"user1\", \"password\": \"test123\"}"),
+                        GalenPageActions.executeJavascript("selenium/loginToMyProfile.js").withArguments("{\"login\":\"user1\", \"password\": \"test123\"}"),
                         GalenPageActions.check(asList("page1_1.spec", "page1_2.spec", "page1_3.spec")).withIncludedTags(asList("someTag"))
                         )));
             }

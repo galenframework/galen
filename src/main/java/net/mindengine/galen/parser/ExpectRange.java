@@ -13,12 +13,14 @@
 * See the License for the specific language governing permissions and
 * limitations under the License.
 ******************************************************************************/
-package net.mindengine.galen.specs.reader;
+package net.mindengine.galen.parser;
 
 import static java.lang.String.format;
-import static net.mindengine.galen.specs.reader.Expectations.isDelimeter;
-import static net.mindengine.galen.specs.reader.Expectations.isNumeric;
+import static net.mindengine.galen.parser.Expectations.isDelimeter;
+import static net.mindengine.galen.parser.Expectations.isNumeric;
 import net.mindengine.galen.specs.Range;
+import net.mindengine.galen.specs.reader.IncorrectSpecException;
+import net.mindengine.galen.specs.reader.StringCharReader;
 
 public class ExpectRange implements Expectation<Range>{
 

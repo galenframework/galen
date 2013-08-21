@@ -4,21 +4,20 @@ import java.util.List;
 
 import net.mindengine.galen.suite.actions.GalenPageActionCheck;
 import net.mindengine.galen.suite.actions.GalenPageActionInjectJavascript;
-import net.mindengine.galen.suite.actions.GalenPageActionSeleniumJS;
+import net.mindengine.galen.suite.actions.GalenPageActionExecuteJavascript;
 
 public class GalenPageActions {
 
     public static GalenPageActionInjectJavascript injectJavascript(String javascriptFilePath) {
-        // TODO Auto-generated method stub
-        return null;
+        return new GalenPageActionInjectJavascript(javascriptFilePath);
     }
 
     public static GalenPageActionCheck check(List<String> specFilePaths) {
         return new GalenPageActionCheck().withSpecs(specFilePaths);
     }
 
-    public static GalenPageActionSeleniumJS seleniumJS(String javascriptPath) {
-        return new GalenPageActionSeleniumJS(javascriptPath);
+    public static GalenPageActionExecuteJavascript executeJavascript(String javascriptPath) {
+        return new GalenPageActionExecuteJavascript(javascriptPath);
     }
 
 }

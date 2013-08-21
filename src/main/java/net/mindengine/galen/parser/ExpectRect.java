@@ -1,7 +1,9 @@
-package net.mindengine.galen.specs.reader;
+package net.mindengine.galen.parser;
 
-import static net.mindengine.galen.specs.reader.Expectations.isDelimeter;
+import static net.mindengine.galen.parser.Expectations.isDelimeter;
 import net.mindengine.galen.page.Rect;
+import net.mindengine.galen.specs.reader.IncorrectSpecException;
+import net.mindengine.galen.specs.reader.StringCharReader;
 
 public class ExpectRect implements Expectation<Rect> {
 

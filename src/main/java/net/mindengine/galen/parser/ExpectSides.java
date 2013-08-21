@@ -13,23 +13,25 @@
 * See the License for the specific language governing permissions and
 * limitations under the License.
 ******************************************************************************/
-package net.mindengine.galen.specs.reader;
+package net.mindengine.galen.parser;
 
 import java.util.LinkedList;
 import java.util.List;
 
 import net.mindengine.galen.specs.Side;
+import net.mindengine.galen.specs.reader.IncorrectSpecException;
+import net.mindengine.galen.specs.reader.StringCharReader;
 
 public class ExpectSides implements Expectation<List<Side>>{
 
     @Override
     public List<Side> read(StringCharReader reader) {
-        ExpectWord expectWord = new ExpectWord();
+        ExpectWord expectWord = new ExpectWord().stopOnTheseSymbols(',');
         
         List<Side> sides = new LinkedList<Side>();
         
         while(reader.hasMore()) {
-            String side = expectWord.stopOnThisSymbol(',').read(reader);
+            String side = expectWord.read(reader);
             if (!side.isEmpty()) {
                 sides.add(Side.fromString(side));
             }

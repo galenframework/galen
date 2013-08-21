@@ -17,9 +17,9 @@ package net.mindengine.galen.specs.reader.page;
 
 import static java.lang.String.format;
 import net.mindengine.galen.page.Rect;
+import net.mindengine.galen.parser.ExpectWord;
+import net.mindengine.galen.parser.Expectations;
 import net.mindengine.galen.specs.page.Locator;
-import net.mindengine.galen.specs.reader.ExpectWord;
-import net.mindengine.galen.specs.reader.Expectations;
 import net.mindengine.galen.specs.reader.IncorrectSpecException;
 import net.mindengine.galen.specs.reader.StringCharReader;
 
@@ -64,7 +64,7 @@ public class StateObjectDefinition extends State {
     }
 
     private String expectCorrectionsOrId(StringCharReader reader, String objectName) {
-        String word = new ExpectWord().stopOnThisSymbol('(').read(reader).trim();
+        String word = new ExpectWord().stopOnTheseSymbols('(').read(reader).trim();
         if (word.isEmpty()) {
             throw new IncorrectSpecException(format("Missing locator for object \"%s\"", objectName));
         }

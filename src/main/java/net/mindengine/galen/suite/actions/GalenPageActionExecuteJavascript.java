@@ -2,12 +2,12 @@ package net.mindengine.galen.suite.actions;
 
 import net.mindengine.galen.suite.GalenPageAction;
 
-public class GalenPageActionSeleniumJS implements GalenPageAction{
+public class GalenPageActionExecuteJavascript implements GalenPageAction{
 
     private String javascriptPath;
     private String jsonArguments;
 
-    public GalenPageActionSeleniumJS(String javascriptPath) {
+    public GalenPageActionExecuteJavascript(String javascriptPath) {
         this.setJavascriptPath(javascriptPath);
     }
 
