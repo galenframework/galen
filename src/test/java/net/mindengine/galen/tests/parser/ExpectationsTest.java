@@ -13,7 +13,7 @@
 * See the License for the specific language governing permissions and
 * limitations under the License.
 ******************************************************************************/
-package net.mindengine.galen.tests.specs.reader;
+package net.mindengine.galen.tests.parser;
 
 import static net.mindengine.galen.specs.Side.BOTTOM;
 import static net.mindengine.galen.specs.Side.LEFT;
@@ -85,7 +85,7 @@ public class ExpectationsTest {
         
         IncorrectSpecException exception = null;
         try {
-            Range range = new ExpectRange().read(stringCharReader);
+            new ExpectRange().read(stringCharReader);
         }
         catch (IncorrectSpecException e) {
             exception = e;
