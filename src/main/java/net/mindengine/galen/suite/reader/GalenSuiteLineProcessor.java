@@ -65,24 +65,4 @@ public class GalenSuiteLineProcessor {
         return line.trim().startsWith("#");
     }
     
-    
-    
-    public static void main(String[] args) {
-        final String s = "\"Video or \\\" movie\"    parent child    \"Media or entertainment\"    \"1\" \"1\" \"1\" \"0\" \"0\"";
-        System.out.println(s);
-        System.out.println("***************");
-        
-        /*final String[] t = s.split("(?<=\") *(?=\")");
-        
-        for (final String x : t) {
-            System.out.println(x);
-        }*/
-        
-        Matcher m = Pattern.compile("([^\"]\\S*|\".+?\")\\s*").matcher(s);
-        while (m.find()) {
-            System.out.println(m.group(1));
-        }
-
-
-    }
 }

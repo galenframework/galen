@@ -3,7 +3,7 @@
 
 This is a name of suite
 ------------------------------------------------
-    http://example.com/page1    640x480
+    selenium http://example.com/page1    640x480
         inject javascript.js  
         check page1.spec --include mobile,tablet --exclude nomobile
         )))))))))))))))))))))))))))))))))))
@@ -22,7 +22,7 @@ This is a name of suite
         
 This is another suite name
 ------------------------------------------------
-    http://example.com/page3    320x240
+    selenium http://example.com/page3    320x240
         check page3.spec
         
         
