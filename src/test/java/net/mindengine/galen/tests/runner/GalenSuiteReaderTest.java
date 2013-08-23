@@ -43,7 +43,7 @@ public class GalenSuiteReaderTest {
                         GalenPageActions.check(asList("page1.spec")).withIncludedTags(asList("mobile", "tablet")).withExcludedTags(asList("nomobile")),
                         GalenPageActions.injectJavascript("javascript2.js"),
                         GalenPageActions.executeJavascript("selenium/loginToMyProfile.js").withArguments("{\"login\":\"user1\", \"password\": \"test123\"}"),
-                        GalenPageActions.check(asList("page1_1.spec", "page1_2.spec", "page1_3.spec")).withIncludedTags(asList("someTag"))
+                        GalenPageActions.check(asList("page1_1.spec", "page1_2.spec", "page1_3.spec")).withIncludedTags(asList("sometag"))
                         )));
             }
             

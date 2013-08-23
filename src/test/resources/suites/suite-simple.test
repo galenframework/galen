@@ -3,7 +3,7 @@
 
 This is a name of suite
 ------------------------------------------------
-    selenium http://example.com/page1    640x480
+    selenium firefox http://example.com/page1    640x480
         inject javascript.js  
         check page1.spec --include mobile,tablet --exclude nomobile
         )))))))))))))))))))))))))))))))))))
@@ -11,7 +11,7 @@ This is a name of suite
         inject javascript2.js
         
         # The following will be run using Rhino js library
-        js  selenium/loginToMyProfile.js    {"login":"user1", "password": "test123"} 
+        run  selenium/loginToMyProfile.js    '{"login":"user1", "password": "test123"}' 
         check page1_1.spec page1_2.spec page1_3.spec --include sometag
     
     
@@ -22,7 +22,7 @@ This is a name of suite
         
 This is another suite name
 ------------------------------------------------
-    selenium http://example.com/page3    320x240
+    selenium ie http://example.com/page3    320x240
         check page3.spec
         
         

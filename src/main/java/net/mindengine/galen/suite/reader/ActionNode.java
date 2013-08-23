@@ -1,5 +1,6 @@
 package net.mindengine.galen.suite.reader;
 
+import net.mindengine.galen.parser.GalenPageActionReader;
 import net.mindengine.galen.suite.GalenPageAction;
 
 public class ActionNode extends Node<GalenPageAction> {
@@ -15,11 +16,8 @@ public class ActionNode extends Node<GalenPageAction> {
 
     @Override
     public GalenPageAction build(Context context) {
-        
         String actionText = context.process(getArguments());
-        
-        // TODO build galen page action
-        return null;
+        return GalenPageActionReader.readFrom(actionText);
     }
 
 }
