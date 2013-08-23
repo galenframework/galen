@@ -4,7 +4,7 @@ import java.util.List;
 
 import net.mindengine.galen.suite.actions.GalenPageActionCheck;
 import net.mindengine.galen.suite.actions.GalenPageActionInjectJavascript;
-import net.mindengine.galen.suite.actions.GalenPageActionExecuteJavascript;
+import net.mindengine.galen.suite.actions.GalenPageActionRunJavascript;
 
 public class GalenPageActions {
 
@@ -16,8 +16,8 @@ public class GalenPageActions {
         return new GalenPageActionCheck().withSpecs(specFilePaths);
     }
 
-    public static GalenPageActionExecuteJavascript executeJavascript(String javascriptPath) {
-        return new GalenPageActionExecuteJavascript(javascriptPath);
+    public static GalenPageActionRunJavascript executeJavascript(String javascriptPath) {
+        return new GalenPageActionRunJavascript(javascriptPath);
     }
 
 }

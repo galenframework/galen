@@ -13,6 +13,7 @@ import net.mindengine.galen.browser.Browser;
 import net.mindengine.galen.browser.BrowserFactory;
 import net.mindengine.galen.browser.SeleniumBrowser;
 import net.mindengine.galen.components.RecordingSuiteListener;
+import net.mindengine.galen.components.TestGroups;
 import net.mindengine.galen.runner.GalenPageRunner;
 import net.mindengine.galen.runner.GalenSuiteRunner;
 import net.mindengine.galen.specs.reader.page.PageSpecReader;
@@ -20,6 +21,7 @@ import net.mindengine.galen.specs.reader.page.PageSpecReader;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.testng.annotations.Test;
 
+@Test(groups=TestGroups.SELENIUM)
 public class GalenSuiteRunnerTest {
 
     private static final String TEST_URL = "file://" + GalenPageRunnerTest.class.getResource("/html/page1.html").getPath();
