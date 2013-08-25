@@ -3,6 +3,8 @@ package net.mindengine.galen.suite.reader;
 import java.util.LinkedList;
 import java.util.List;
 
+import net.mindengine.galen.parser.BashTemplateContext;
+
 public abstract class Node<T> {
 
     private int level = 0;
@@ -30,7 +32,7 @@ public abstract class Node<T> {
     }
 
     
-    public abstract T build(Context context);
+    public abstract T build(BashTemplateContext context);
 
     public Node<?> findProcessingNodeByLevel(int level) {
         if (this.level == level) {

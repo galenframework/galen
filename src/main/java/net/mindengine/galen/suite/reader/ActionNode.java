@@ -1,5 +1,6 @@
 package net.mindengine.galen.suite.reader;
 
+import net.mindengine.galen.parser.BashTemplateContext;
 import net.mindengine.galen.parser.GalenPageActionReader;
 import net.mindengine.galen.suite.GalenPageAction;
 
@@ -15,7 +16,7 @@ public class ActionNode extends Node<GalenPageAction> {
     }
 
     @Override
-    public GalenPageAction build(Context context) {
+    public GalenPageAction build(BashTemplateContext context) {
         String actionText = context.process(getArguments());
         return GalenPageActionReader.readFrom(actionText);
     }

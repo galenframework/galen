@@ -92,7 +92,7 @@ public class GalenSuiteReaderTest {
             assertThat(page.getScreenSize(), is(new Dimension(640, 480)));
             
             assertThat(page.getActions(), is(actions(
-                    GalenPageActions.runJavascript("selenium/loginToMyProfile.js").withArguments("{\"myvar\":\"suite\", \"var_concat\": \"some-page.html and 640x480\"}")
+                    GalenPageActions.runJavascript("selenium/loginToMyProfile.js").withArguments("{\"myvar\" : \"suite\", \"var_concat\" : \"some-page.html and 640x480\"}")
                     )));
        
         }
@@ -108,7 +108,7 @@ public class GalenSuiteReaderTest {
             assertThat(page.getScreenSize(), is(new Dimension(640, 480)));
             
             assertThat(page.getActions(), is(actions(
-                    GalenPageActions.runJavascript("selenium/loginToMyProfile.js").withArguments("{\"myvar\":\"suite 2\"}")
+                    GalenPageActions.runJavascript("selenium/loginToMyProfile.js").withArguments("{\"myvar\" : \"suite 2\"}")
                     )));
         }
     }

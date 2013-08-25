@@ -1,7 +1,5 @@
 package net.mindengine.galen.parser;
 
-import static java.util.Arrays.asList;
-
 import java.util.LinkedList;
 import java.util.List;
 

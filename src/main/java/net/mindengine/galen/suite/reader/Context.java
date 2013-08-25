@@ -7,10 +7,6 @@ public class Context {
     
     private Map<String, String> parameters = new HashMap<String, String>(); 
 
-    public String process(String arguments) {
-        return arguments;
-    }
-
     public Context withParameter(String name, String value) {
         parameters.put(name, value);
         return this;
@@ -18,6 +14,10 @@ public class Context {
 
     public String getValue(String paramName) {
         return parameters.get(paramName);
+    }
+    
+    public void putValue(String name, String value) {
+        parameters.put(name, value);
     }
 
 }

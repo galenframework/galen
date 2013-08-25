@@ -3,6 +3,7 @@ package net.mindengine.galen.suite.reader;
 import java.util.LinkedList;
 import java.util.List;
 
+import net.mindengine.galen.parser.BashTemplateContext;
 import net.mindengine.galen.suite.GalenPageTest;
 import net.mindengine.galen.suite.GalenSuite;
 
@@ -21,7 +22,7 @@ public class SuiteNode extends Node<GalenSuite> {
     }
 
     @Override
-    public GalenSuite build(Context context) {
+    public GalenSuite build(BashTemplateContext context) {
         GalenSuite suite = new GalenSuite();
         List<GalenPageTest> pageTests = new LinkedList<GalenPageTest>();
        

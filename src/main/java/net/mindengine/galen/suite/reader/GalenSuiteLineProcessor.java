@@ -1,9 +1,8 @@
 package net.mindengine.galen.suite.reader;
 
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
+import net.mindengine.galen.parser.BashTemplateContext;
 import net.mindengine.galen.suite.GalenSuite;
 
 public class GalenSuiteLineProcessor {
@@ -15,19 +14,50 @@ public class GalenSuiteLineProcessor {
 
     public void processLine(String line) {
         if (!isBlank(line) && !isCommented(line) && !isSeparator(line)) {
-            
-            int level = indentationLevel(line);
-            
-            Node<?> processingNode = currentNode.findProcessingNodeByLevel(level);
-            Node<?> newNode = processingNode.processNewNode(line);
-            currentNode = newNode;
+            if (line.startsWith("@")) {
+                currentNode = processSpecialInstruction(line.substring(1).trim());
+            }
+            else {
+                int level = indentationLevel(line);
+                
+                Node<?> processingNode = currentNode.findProcessingNodeByLevel(level);
+                Node<?> newNode = processingNode.processNewNode(line);
+                currentNode = newNode;
+            }
         }
     }
     
+    private Node<?> processSpecialInstruction(String line) {
+        currentNode = rootNode;
+        int indexOfFirstSpace = line.indexOf(' ');
+        
+        String firstWord;
+        String leftover;
+        if (indexOfFirstSpace > 0) {
+            firstWord = line.substring(0, indexOfFirstSpace).toLowerCase();
+            leftover = line.substring(indexOfFirstSpace).trim();
+        }
+        else {
+            firstWord = line.toLowerCase();
+            leftover = "";
+        }
+        
+        if (firstWord.equals("set")) {
+            return processInstructionSet(leftover);
+        }
+        else throw new SuiteReaderException("Unknown instruction: " + firstWord);
+    }
+
+    private Node<?> processInstructionSet(String line) {
+        SetNode newNode = new SetNode(line);
+        currentNode.add(newNode);
+        return newNode;
+    }
+
     public List<GalenSuite> buildSuites() {
         //TODO rearrange all nodes based on parameterization
         
-        return rootNode.build(new Context());
+        return rootNode.build(new BashTemplateContext());
     }
 
     private int indentationLevel(String line) {

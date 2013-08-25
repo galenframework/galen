@@ -1,6 +1,9 @@
 
-@ Set page some-page.html
-@ Set size 640x480
+@ Set
+    page        some-page.html
+    width       640
+    height      480
+    size        ${width}x${height}
 
 @ Set var_concat ${page} and ${size}
 
