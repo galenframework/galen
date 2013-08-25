@@ -16,7 +16,7 @@ public class GalenPageActions {
         return new GalenPageActionCheck().withSpecs(specFilePaths);
     }
 
-    public static GalenPageActionRunJavascript executeJavascript(String javascriptPath) {
+    public static GalenPageActionRunJavascript runJavascript(String javascriptPath) {
         return new GalenPageActionRunJavascript(javascriptPath);
     }
 

@@ -4,23 +4,25 @@
 
 @ Set var_concat ${page} and ${size}
 
-@ Set myvar value
-This is a name of suite {myvar}
+@ Set myvar suite
+This is a name of ${myvar}
 ---------------------------------
     http://example.com/${page}  ${size}
-        js  selenium/loginToMyProfile.js    {"myvar" : "${myvar}", "var_concat" : "${var_concat}"}
+        run  selenium/loginToMyProfile.js    '{"myvar" : "${myvar}", "var_concat" : "${var_concat}"}'
 
 # Reseting myvar value
-@ Set myvar value 2
+@ Set myvar suite 2
+
+This is a name of ${myvar}
     http://example.com/${page}  ${size}
-        js  selenium/loginToMyProfile.js    {"myvar" : "${myvar}"}
+        run  selenium/loginToMyProfile.js    '{"myvar" : "${myvar}"}'
         
         
         
-@ Set 
-    size        320x240
-    page        page1.html
-    anotherVar  value
+# @ Set 
+#    size        320x240
+#    page        page1.html
+#    anotherVar  value
     
     
     

@@ -22,7 +22,7 @@ public class GalenSuiteReaderTest {
 
     //TODO write negative tests for suite reader
     
-    @Test public void readSuite_successfully() throws IOException {
+    @Test public void shouldRead_simpleSuite_successfully() throws IOException {
         GalenSuiteReader reader = new GalenSuiteReader();
         
         List<GalenSuite> galenSuites = reader.read(new File(getClass().getResource("/suites/suite-simple.test").getFile()));
@@ -42,7 +42,7 @@ public class GalenSuiteReaderTest {
                 assertThat(page.getActions(), is(actions(GalenPageActions.injectJavascript("javascript.js"),
                         GalenPageActions.check(asList("page1.spec")).withIncludedTags(asList("mobile", "tablet")).withExcludedTags(asList("nomobile")),
                         GalenPageActions.injectJavascript("javascript2.js"),
-                        GalenPageActions.executeJavascript("selenium/loginToMyProfile.js").withArguments("{\"login\":\"user1\", \"password\": \"test123\"}"),
+                        GalenPageActions.runJavascript("selenium/loginToMyProfile.js").withArguments("{\"login\":\"user1\", \"password\": \"test123\"}"),
                         GalenPageActions.check(asList("page1_1.spec", "page1_2.spec", "page1_3.spec")).withIncludedTags(asList("sometag"))
                         )));
             }
@@ -72,6 +72,47 @@ public class GalenSuiteReaderTest {
         }
     }
 
+    
+    @Test public void shouldRead_suiteWithVariables_successfully() throws IOException {
+        GalenSuiteReader reader = new GalenSuiteReader();
+        
+        List<GalenSuite> galenSuites = reader.read(new File(getClass().getResource("/suites/suite-variables.txt").getFile()));
+        
+        assertThat("Amount of suites should be", galenSuites.size(), is(2));
+        
+        /* Checking suite 1*/
+        {
+            GalenSuite suite = galenSuites.get(0);
+            assertThat(suite.getName(), is("This is a name of suite"));
+            assertThat("Amount of pages for 1st suite should be", suite.getPageTests().size(), is(1));
+            // Checking page 1
+            
+            GalenPageTest page = suite.getPageTests().get(0);
+            assertThat(page.getUrl(), is("http://example.com/some-page.html"));
+            assertThat(page.getScreenSize(), is(new Dimension(640, 480)));
+            
+            assertThat(page.getActions(), is(actions(
+                    GalenPageActions.runJavascript("selenium/loginToMyProfile.js").withArguments("{\"myvar\":\"suite\", \"var_concat\": \"some-page.html and 640x480\"}")
+                    )));
+       
+        }
+        
+        // Checking suite 2
+        {
+            GalenSuite suite = galenSuites.get(1);
+            assertThat(suite.getName(), is("This is a name of suite 2"));
+            assertThat("Amount of pages for 1st suite should be", suite.getPageTests().size(), is(1));
+            
+            GalenPageTest page = suite.getPageTests().get(0);
+            assertThat(page.getUrl(), is("http://example.com/some-page.html"));
+            assertThat(page.getScreenSize(), is(new Dimension(640, 480)));
+            
+            assertThat(page.getActions(), is(actions(
+                    GalenPageActions.runJavascript("selenium/loginToMyProfile.js").withArguments("{\"myvar\":\"suite 2\"}")
+                    )));
+        }
+    }
+    
     private List<GalenPageAction> actions(GalenPageAction...actions) {
         List<GalenPageAction> list = new LinkedList<GalenPageAction>();
         for (GalenPageAction action : actions) {
