@@ -5,19 +5,27 @@ import java.util.Map;
 
 public class Context {
     
-    private Map<String, String> parameters = new HashMap<String, String>(); 
+    private Map<String, Object> parameters = new HashMap<String, Object>(); 
 
-    public Context withParameter(String name, String value) {
+    public Context withParameter(String name, Object value) {
         parameters.put(name, value);
         return this;
     }
 
-    public String getValue(String paramName) {
+    public Object getValue(String paramName) {
         return parameters.get(paramName);
     }
     
-    public void putValue(String name, String value) {
+    public void putValue(String name, Object value) {
         parameters.put(name, value);
     }
 
+    public boolean containsValue(String paramName) {
+        return parameters.containsKey(paramName);
+    }
+
+    
+    public void addValuesFromMap(Map<String, String> map) {
+        parameters.putAll(map);
+    }
 }

@@ -42,11 +42,11 @@ public class BashTemplate {
             else if (state ==  PARSING_PARAM) {
                 if (symbol == '}') {
                     String paramName = currentParam.toString().trim();
-                    String value = context.getValue(paramName);
+                    Object value = context.getValue(paramName);
                     if (value == null) {
                         value = "";
                     }
-                    buffer.append(value);
+                    buffer.append(value.toString());
                     state = PARSING_TEXT;
                 }
                 else {

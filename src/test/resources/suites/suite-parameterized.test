@@ -2,21 +2,18 @@
 @ Parameterized
     | size      | tag                    | name         |   exclude  |
     | 320x240   | mobile                 | Phone        |   nomobile |
-    | 640x480   | tablet                 | Tablet       |   -        |
-    | 1024x768  | desktop,normal-desktop | Desktop      |   -        |
-    | 2048x1024 | big-desktop,desktop    | Big Desktop  |   -        |
-Parameterized test for ${name}
+    | 640x480   | tablet                 | Tablet       |            |
+Test for ${name}
 ------------------------------------------------
     http://example.com/page1  ${size}
-        check page1.spec   --include ${tag} --exclude ${exclude}
-
+        check page1.spec   --include "${tag}" --exclude "${exclude}"
 
 
         
 @ Table custom_global_table
     | size      | tag                    | name         |   exclude  |   urlPage |
     | 320x240   | mobile                 | Phone        |   nomobile |   page1   |
-    | 640x480   | tablet                 | Tablet       |   -        |   page2   |
+    | 640x480   | tablet                 | Tablet       |            |   page2   |
 
 
 @ Table custom_global_table2
@@ -25,14 +22,15 @@ Parameterized test for ${name}
         
         
 @ Parameterized using custom_global_table, custom_global_table2
-Parameterized test using predefined table for ${name}
+Test combining 2 tables for ${name}
 ------------------------------------------------
     http://example.com/${urlPage}    ${size}
-        inject javascript.js
-        selenium insert-article.js {"title": "This is the title of my article for ${name}"} 
-        check page1.spec --include ${tag}
+        check page1.spec --include "${tag}" --exclude "${exclude}"
 
 
+
+# Till this moment there should 5 suites already
+# And for the next parameterization it will generate 6 more suites
 
 
 @ Table browsers
@@ -44,17 +42,15 @@ Parameterized test using predefined table for ${name}
 @ Table sizes
     | size      | tag                    | device       |   exclude  |   urlPage |
     | 320x240   | mobile                 | Phone        |   nomobile |   page1   |
-    | 640x480   | tablet                 | Tablet       |   -        |   page2   |
+    | 640x480   | tablet                 | Tablet       |            |   page2   |
     
     
 @ Parameterized using browsers
 @ Parameterized using sizes   
-Parameterized test using 2 layer tables in browser ${browser_name} for type ${device}
+Test using 2 layer tables in browser ${browser_name} for type ${device}
 ------------------------------------------------------
-    selenium:my-grid:9001/wd/hub?browser=${browser}&version=${version} http://example.com/${urlPage}  ${size}
-        inject javascript.js
-        selenium insert-article.js {"title": "This is the title of my article for ${name}"} 
-        check page1.spec --include ${tag}
+    selenium grid http://mygrid:8080/wd/hub --browser "${browser}" --version "${version}" --page http://example.com/${urlPage} --size ${size}
+        check page1.spec --include "${tag}" --exclude "${exclude}"
 
         
     

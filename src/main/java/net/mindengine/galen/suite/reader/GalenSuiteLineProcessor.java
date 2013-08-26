@@ -45,7 +45,25 @@ public class GalenSuiteLineProcessor {
         if (firstWord.equals("set")) {
             return processInstructionSet(leftover);
         }
+        else if (firstWord.equals("table")){
+            return processTable(leftover);
+        }
+        else if (firstWord.equals("parameterized")){
+            return processParameterized(leftover);
+        }
         else throw new SuiteReaderException("Unknown instruction: " + firstWord);
+    }
+
+    private Node<?> processParameterized(String leftover) {
+        ParameterizedNode parameterizedNode = new ParameterizedNode(leftover);
+        currentNode.add(parameterizedNode);
+        return parameterizedNode;
+    }
+
+    private Node<?> processTable(String line) {
+        TableNode tableNode = new TableNode(line);
+        currentNode.add(tableNode);
+        return tableNode;
     }
 
     private Node<?> processInstructionSet(String line) {
@@ -55,8 +73,6 @@ public class GalenSuiteLineProcessor {
     }
 
     public List<GalenSuite> buildSuites() {
-        //TODO rearrange all nodes based on parameterization
-        
         return rootNode.build(new BashTemplateContext());
     }
 
