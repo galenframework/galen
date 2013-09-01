@@ -1,11 +1,13 @@
 package net.mindengine.galen.suite.reader;
 
+import static net.mindengine.galen.suite.reader.Line.UNKNOWN_LINE;
+
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import net.mindengine.galen.parser.SuiteParserException;
+import net.mindengine.galen.parser.SyntaxException;
 
 public class Table {
 
@@ -21,7 +23,7 @@ public class Table {
         }
         else {
             if (row.size() != headers.size()) {
-                throw new SuiteParserException("Amount of cells in a row is not the same in header");
+                throw new SyntaxException(UNKNOWN_LINE, "Amount of cells in a row is not the same in header");
             }
             rows.add(row);
         }
@@ -31,7 +33,7 @@ public class Table {
     public void mergeWith(Table table) {
         if (table.headers != null && table.rows.size() > 0) {
             if (table.headers.size() != headers.size()) {
-                throw new SuiteParserException("Cannot merge tables. Amount of columns should be same");
+                throw new SyntaxException(UNKNOWN_LINE, "Cannot merge tables. Amount of columns should be same");
             }
             else {
                 for (List<String> row : table.rows) {

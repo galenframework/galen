@@ -31,10 +31,10 @@ import net.mindengine.galen.parser.ExpectLocations;
 import net.mindengine.galen.parser.ExpectRange;
 import net.mindengine.galen.parser.ExpectSides;
 import net.mindengine.galen.parser.ExpectWord;
+import net.mindengine.galen.parser.SyntaxException;
 import net.mindengine.galen.specs.Location;
 import net.mindengine.galen.specs.Range;
 import net.mindengine.galen.specs.Side;
-import net.mindengine.galen.specs.reader.IncorrectSpecException;
 import net.mindengine.galen.specs.reader.StringCharReader;
 
 import org.apache.commons.lang3.StringEscapeUtils;
@@ -83,11 +83,11 @@ public class ExpectationsTest {
     public void shouldGiveError_forIncorrectRanges(TestData<String> testData) {
         StringCharReader stringCharReader = new StringCharReader(testData.textForParsing);
         
-        IncorrectSpecException exception = null;
+        SyntaxException exception = null;
         try {
             new ExpectRange().read(stringCharReader);
         }
-        catch (IncorrectSpecException e) {
+        catch (SyntaxException e) {
             exception = e;
         }
         
@@ -198,11 +198,11 @@ public class ExpectationsTest {
     public void shouldGiveError_forIncorrectLocations(String text, String expectedErrorMessage) {
         StringCharReader stringCharReader = new StringCharReader(text);
         
-        IncorrectSpecException exception = null;
+        SyntaxException exception = null;
         try {
             new ExpectLocations().read(stringCharReader);
         }
-        catch (IncorrectSpecException e) {
+        catch (SyntaxException e) {
             exception = e;
         }
         

@@ -12,61 +12,64 @@ public class GalenSuiteLineProcessor {
     
     private static final int INDENTATION = 4;
 
-    public void processLine(String line) {
+    public void processLine(String line, int number) {
         if (!isBlank(line) && !isCommented(line) && !isSeparator(line)) {
             if (line.startsWith("@")) {
-                currentNode = processSpecialInstruction(line.substring(1).trim());
+                currentNode = processSpecialInstruction(new Line(line.substring(1).trim(), number));
             }
             else {
                 int level = indentationLevel(line);
                 
                 Node<?> processingNode = currentNode.findProcessingNodeByLevel(level);
-                Node<?> newNode = processingNode.processNewNode(line);
+                Node<?> newNode = processingNode.processNewNode(new Line(line, number));
                 currentNode = newNode;
             }
         }
     }
     
-    private Node<?> processSpecialInstruction(String line) {
+    private Node<?> processSpecialInstruction(Line line) {
+        String text = line.getText();
         currentNode = rootNode;
-        int indexOfFirstSpace = line.indexOf(' ');
+        int indexOfFirstSpace = text.indexOf(' ');
         
         String firstWord;
         String leftover;
         if (indexOfFirstSpace > 0) {
-            firstWord = line.substring(0, indexOfFirstSpace).toLowerCase();
-            leftover = line.substring(indexOfFirstSpace).trim();
+            firstWord = text.substring(0, indexOfFirstSpace).toLowerCase();
+            leftover = text.substring(indexOfFirstSpace).trim();
         }
         else {
-            firstWord = line.toLowerCase();
+            firstWord = text.toLowerCase();
             leftover = "";
         }
         
+        Line leftoverLine = new Line(leftover, line.getNumber());
+        
         if (firstWord.equals("set")) {
-            return processInstructionSet(leftover);
+            return processInstructionSet(leftoverLine);
         }
         else if (firstWord.equals("table")){
-            return processTable(leftover);
+            return processTable(leftoverLine);
         }
         else if (firstWord.equals("parameterized")){
-            return processParameterized(leftover);
+            return processParameterized(leftoverLine);
         }
         else throw new SuiteReaderException("Unknown instruction: " + firstWord);
     }
 
-    private Node<?> processParameterized(String leftover) {
-        ParameterizedNode parameterizedNode = new ParameterizedNode(leftover);
+    private Node<?> processParameterized(Line line) {
+        ParameterizedNode parameterizedNode = new ParameterizedNode(line);
         currentNode.add(parameterizedNode);
         return parameterizedNode;
     }
 
-    private Node<?> processTable(String line) {
+    private Node<?> processTable(Line line) {
         TableNode tableNode = new TableNode(line);
         currentNode.add(tableNode);
         return tableNode;
     }
 
-    private Node<?> processInstructionSet(String line) {
+    private Node<?> processInstructionSet(Line line) {
         SetNode newNode = new SetNode(line);
         currentNode.add(newNode);
         return newNode;

@@ -16,6 +16,7 @@
 package net.mindengine.galen.parser;
 
 import static net.mindengine.galen.parser.Expectations.range;
+import static net.mindengine.galen.suite.reader.Line.UNKNOWN_LINE;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -23,7 +24,6 @@ import java.util.List;
 import net.mindengine.galen.specs.Location;
 import net.mindengine.galen.specs.Range;
 import net.mindengine.galen.specs.Side;
-import net.mindengine.galen.specs.reader.IncorrectSpecException;
 import net.mindengine.galen.specs.reader.StringCharReader;
 
 public class ExpectLocations implements Expectation<List<Location>> {
@@ -39,7 +39,7 @@ public class ExpectLocations implements Expectation<List<Location>> {
             locations.add(new Location(range, sides));
         }
         if (locations.size() == 0) {
-            throw new IncorrectSpecException("There is no location defined");
+            throw new SyntaxException(UNKNOWN_LINE, "There is no location defined");
         }
         return locations;
     }

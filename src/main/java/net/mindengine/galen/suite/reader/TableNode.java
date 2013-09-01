@@ -2,11 +2,12 @@ package net.mindengine.galen.suite.reader;
 
 
 import net.mindengine.galen.parser.BashTemplateContext;
+import net.mindengine.galen.parser.SyntaxException;
 
 public class TableNode extends Node<Void>{
 
-    public TableNode(String arguments) {
-        super(arguments);
+    public TableNode(Line line) {
+        super(line);
     }
 
     @Override
@@ -14,7 +15,7 @@ public class TableNode extends Node<Void>{
         
         String name = getArguments().trim();
         if (name.isEmpty()) {
-            throw new SuiteReaderException("Table name should not be empty");
+            throw new SyntaxException(getLine(), "Table name should not be empty");
         }
         
         Table table = new Table();
@@ -22,7 +23,13 @@ public class TableNode extends Node<Void>{
         for (Node<?> childNode : getChildNodes()) {
             if (childNode instanceof TableRowNode) {
                 TableRowNode rowNode = (TableRowNode) childNode;
-                 table.addRow(rowNode.build(context));
+                try {
+                    table.addRow(rowNode.build(context));
+                }
+                catch (SyntaxException e) {
+                    e.setLine(childNode.getLine());
+                    throw e;
+                }
             }
         }
         
@@ -32,7 +39,7 @@ public class TableNode extends Node<Void>{
     }
 
     @Override
-    public Node<?> processNewNode(String line) {
+    public Node<?> processNewNode(Line line) {
         add(new TableRowNode(line));
         return this;
     }

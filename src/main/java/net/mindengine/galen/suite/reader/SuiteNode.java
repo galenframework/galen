@@ -10,12 +10,12 @@ import net.mindengine.galen.suite.GalenSuite;
 public class SuiteNode extends Node<GalenSuite> {
 
 
-    public SuiteNode(String suiteName) {
-        super(suiteName);
+    public SuiteNode(Line line) {
+        super(line);
     }
 
     @Override
-    public Node<?> processNewNode(String line) {
+    public Node<?> processNewNode(Line line) {
         PageNode pageNode = new PageNode(line);
         add(pageNode);
         return pageNode;

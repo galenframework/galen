@@ -25,6 +25,7 @@ import static net.mindengine.galen.specs.Alignment.CENTERED;
 import static net.mindengine.galen.specs.Alignment.LEFT;
 import static net.mindengine.galen.specs.Alignment.RIGHT;
 import static net.mindengine.galen.specs.Alignment.TOP;
+import static net.mindengine.galen.suite.reader.Line.UNKNOWN_LINE;
 
 import java.util.HashMap;
 import java.util.List;
@@ -32,6 +33,7 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import net.mindengine.galen.parser.SyntaxException;
 import net.mindengine.galen.specs.Alignment;
 import net.mindengine.galen.specs.Location;
 import net.mindengine.galen.specs.Range;
@@ -98,7 +100,7 @@ public class SpecReader {
                     return new SpecHorizontally(alignment, list);
                 }
                 else {
-                    throw new IncorrectSpecException("Horizontal spec doesn't allow this alignment: " + alignment.toString());
+                    throw new SyntaxException(UNKNOWN_LINE, "Horizontal spec doesn't allow this alignment: " + alignment.toString());
                 }
             }
         }));
@@ -120,7 +122,7 @@ public class SpecReader {
                     return new SpecVertically(alignment, list);
                 }
                 else {
-                    throw new IncorrectSpecException("Vertical spec doesn't allow this alignment: " + alignment.toString());
+                    throw new SyntaxException(UNKNOWN_LINE, "Vertical spec doesn't allow this alignment: " + alignment.toString());
                 }
             }
         }));
@@ -154,7 +156,7 @@ public class SpecReader {
             throw new NullPointerException("Spec text should not be null");
         }
         else if(specText.trim().isEmpty()) {
-            throw new IncorrectSpecException("Spec text should not be empty");
+            throw new SyntaxException(UNKNOWN_LINE, "Spec text should not be empty");
         }
         
         specText = specText.trim();
@@ -164,7 +166,7 @@ public class SpecReader {
         String paramsText = null;
         
         if (args.length > 2) {
-            throw new IncorrectSpecException("Incorrect format");
+            throw new SyntaxException(UNKNOWN_LINE, "Incorrect format");
         }
         else if (args.length == 2) {
             paramsText = args[1].trim();
@@ -189,7 +191,7 @@ public class SpecReader {
                 return entry.getValue();
             }
         }
-        throw new IncorrectSpecException("Such constraint does not exist: " + specName);
+        throw new SyntaxException(UNKNOWN_LINE, "Such constraint does not exist: " + specName);
     }
 
     private void putSpec(String patternText, SpecProcessor specProcessor) {

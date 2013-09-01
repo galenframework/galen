@@ -27,6 +27,7 @@ import static org.hamcrest.Matchers.is;
 import java.util.Arrays;
 import java.util.List;
 
+import net.mindengine.galen.parser.SyntaxException;
 import net.mindengine.galen.specs.Alignment;
 import net.mindengine.galen.specs.Location;
 import net.mindengine.galen.specs.Range;
@@ -40,7 +41,6 @@ import net.mindengine.galen.specs.SpecInside;
 import net.mindengine.galen.specs.SpecNear;
 import net.mindengine.galen.specs.SpecVertically;
 import net.mindengine.galen.specs.SpecWidth;
-import net.mindengine.galen.specs.reader.IncorrectSpecException;
 import net.mindengine.galen.specs.reader.SpecReader;
 
 import org.hamcrest.Matchers;
@@ -285,12 +285,12 @@ public class SpecsReaderTest {
         readSpec(null);
     }
     
-    @Test(expectedExceptions={IncorrectSpecException.class}, expectedExceptionsMessageRegExp="Spec text should not be empty") 
+    @Test(expectedExceptions={SyntaxException.class}, expectedExceptionsMessageRegExp="Spec text should not be empty") 
     public void givesError_whenTextIsEmpty() {
         readSpec(" ");
     }
     
-    @Test(expectedExceptions={IncorrectSpecException.class}, expectedExceptionsMessageRegExp="Incorrect format") 
+    @Test(expectedExceptions={SyntaxException.class}, expectedExceptionsMessageRegExp="Incorrect format") 
     public void givesError_whenUsingMoreThanOneColon() {
         readSpec(" asfasf:asf :asf");
     }

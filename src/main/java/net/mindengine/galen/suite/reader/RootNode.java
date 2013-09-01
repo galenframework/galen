@@ -5,6 +5,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import net.mindengine.galen.parser.BashTemplateContext;
+import net.mindengine.galen.parser.SyntaxException;
 import net.mindengine.galen.suite.GalenSuite;
 
 public class RootNode extends Node<List<GalenSuite>> {
@@ -21,9 +22,9 @@ public class RootNode extends Node<List<GalenSuite>> {
 
 
     @Override
-    public Node<?> processNewNode(String line) {
+    public Node<?> processNewNode(Line line) {
         if (line.startsWith(" ")) {
-            throw new SuiteReaderException("Should not start with space");
+            throw new SyntaxException(line, "Should not start with space");
         }
         
         SuiteNode suiteNode = new SuiteNode(line);

@@ -16,15 +16,16 @@
 package net.mindengine.galen.validation;
 
 import static java.lang.String.format;
+import static net.mindengine.galen.suite.reader.Line.UNKNOWN_LINE;
 
 import java.lang.reflect.Method;
 
 import net.mindengine.galen.page.Page;
 import net.mindengine.galen.page.PageElement;
+import net.mindengine.galen.parser.SyntaxException;
 import net.mindengine.galen.specs.Range;
 import net.mindengine.galen.specs.Spec;
 import net.mindengine.galen.specs.page.Locator;
-import net.mindengine.galen.specs.reader.IncorrectSpecException;
 import net.mindengine.galen.specs.reader.page.PageSpec;
 
 public class PageValidation {
@@ -74,11 +75,11 @@ public class PageValidation {
                     int value = convertToInt(objectValue);
                     return Range.between((range.getFrom() * value) / 100.0, (range.getTo() * value) / 100.0);
                 }
-                else throw new IncorrectSpecException(format("Cannot find object \"%s\" using locator %s \"%s\"", objectName, locator.getLocatorType(), locator.getLocatorValue()));
+                else throw new SyntaxException(UNKNOWN_LINE, format("Cannot find object \"%s\" using locator %s \"%s\"", objectName, locator.getLocatorType(), locator.getLocatorValue()));
             }
-            else throw new IncorrectSpecException(format("Locator for object \"%s\" is not specified", objectName));
+            else throw new SyntaxException(UNKNOWN_LINE, format("Locator for object \"%s\" is not specified", objectName));
         }
-        else throw new IncorrectSpecException(format("Value path is incorrect %s", valuePath));
+        else throw new SyntaxException(UNKNOWN_LINE, format("Value path is incorrect %s", valuePath));
     }
 
     private int convertToInt(Object objectValue) {
@@ -93,7 +94,7 @@ public class PageValidation {
                 return ((Double)objectValue).intValue();
             }
             else {
-                throw new IncorrectSpecException(format("Cannot convert value to integer. The obtained value is of %s type", objectValue.getClass()));
+                throw new SyntaxException(UNKNOWN_LINE, format("Cannot convert value to integer. The obtained value is of %s type", objectValue.getClass()));
             }
         }
     }
@@ -105,7 +106,7 @@ public class PageValidation {
             String fieldName = fieldPath.substring(0, index);
             String leftOverPath = fieldPath.substring(index + 1);
             if (leftOverPath.isEmpty()) {
-                throw new IncorrectSpecException(format("Cannot read path %s", fieldPath));
+                throw new SyntaxException(UNKNOWN_LINE, format("Cannot read path %s", fieldPath));
             }
             
             Object field = getField(object, fieldName);
@@ -124,7 +125,7 @@ public class PageValidation {
             Method getterMethod = object.getClass().getMethod(getterForField(fieldName));
             return getterMethod.invoke(object);
         } catch (Exception e) {
-            throw new IncorrectSpecException(format("Cannot read field: \"%s\"", fieldName));
+            throw new SyntaxException(UNKNOWN_LINE, format("Cannot read field: \"%s\"", fieldName));
         }
     }
 

@@ -13,29 +13,38 @@
 * See the License for the specific language governing permissions and
 * limitations under the License.
 ******************************************************************************/
-package net.mindengine.galen.specs.reader;
+package net.mindengine.galen.parser;
 
-public class IncorrectSpecException extends RuntimeException {
 
-    public IncorrectSpecException() {
-        super();
-    }
-
-    public IncorrectSpecException(String arg0, Throwable arg1) {
-        super(arg0, arg1);
-    }
-
-    public IncorrectSpecException(String arg0) {
-        super(arg0);
-    }
-
-    public IncorrectSpecException(Throwable arg0) {
-        super(arg0);
-    }
+public class FileSyntaxException extends RuntimeException {
 
     /**
      * 
      */
-    private static final long serialVersionUID = -2683604671100132249L;
+    private static final long serialVersionUID = 1698658011707718651L;
 
+    private String filePath;
+    private int line;
+    
+    
+    public FileSyntaxException(Exception cause, String filePath, int line) {
+        super(cause);
+        this.filePath = filePath;
+        this.line = line;
+    }
+    public String getFilePath() {
+        return filePath;
+    }
+    public int getLine() {
+        return line;
+    }
+    
+    @Override
+    public String getMessage() {
+        Throwable cause = getCause();
+        if (cause instanceof SyntaxException) {
+            return cause.getMessage();
+        }
+        return super.getMessage();
+    }
 }

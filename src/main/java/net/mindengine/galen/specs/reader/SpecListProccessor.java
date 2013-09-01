@@ -15,9 +15,12 @@
 ******************************************************************************/
 package net.mindengine.galen.specs.reader;
 
+import static net.mindengine.galen.suite.reader.Line.UNKNOWN_LINE;
+
 import java.util.LinkedList;
 import java.util.List;
 
+import net.mindengine.galen.parser.SyntaxException;
 import net.mindengine.galen.specs.Spec;
 
 public class SpecListProccessor implements SpecProcessor {
@@ -31,7 +34,7 @@ public class SpecListProccessor implements SpecProcessor {
     @Override
     public Spec processSpec(String specName, String paramsText) {
         if (paramsText == null || paramsText.isEmpty()) {
-            throw new IncorrectSpecException("Missing parameters for spec");
+            throw new SyntaxException(UNKNOWN_LINE, "Missing parameters for spec");
         }
         else {
             

@@ -1,5 +1,6 @@
 package net.mindengine.galen.parser;
 
+import static net.mindengine.galen.suite.reader.Line.UNKNOWN_LINE;
 import static net.mindengine.galen.utils.GalenUtils.isUrl;
 import static net.mindengine.galen.utils.GalenUtils.readSize;
 import net.mindengine.galen.browser.SeleniumBrowserFactory;
@@ -17,43 +18,38 @@ import org.openqa.selenium.Platform;
 public class GalenPageTestReader {
 
     public static GalenPageTest readFrom(String text) {
-        try {
-            String[] args = net.mindengine.galen.parser.CommandLineParser.parseCommandLine(text);
-            if (args.length == 0) {
-                throw new SuiteParserException("Cannot parse page: " + text);
-            }
-            
-            if (isUrl(args[0])) {
-                if (args.length < 2) {
-                    throw new SuiteParserException("You should specify screen size");
-                }
-                return defaultGalenPageTest(args[0], args[1]);
-            }
-            else {
-                String first = args[0].toLowerCase();
-                if (first.equals("selenium")) {
-                    return seleniumGalenPageTest(args);
-                }
-                else throw new SuiteParserException("Unknown browser factory: " + first);
-            }
+        String[] args = net.mindengine.galen.parser.CommandLineParser.parseCommandLine(text);
+        if (args.length == 0) {
+            throw new SyntaxException(UNKNOWN_LINE, "Incorrect amount of arguments: " + text.trim());
         }
-        catch (Exception e) {
-            throw new SuiteParserException("Error parsing: " + text, e);
+        
+        if (isUrl(args[0])) {
+            if (args.length < 2) {
+                throw new SyntaxException(UNKNOWN_LINE, "You should specify screen size");
+            }
+            return defaultGalenPageTest(args[0], args[1]);
+        }
+        else {
+            String first = args[0].toLowerCase();
+            if (first.equals("selenium")) {
+                return seleniumGalenPageTest(args, text.trim());
+            }
+            else throw new SyntaxException(UNKNOWN_LINE, "Unknown browser factory: " + first);
         }
     }
-    private static GalenPageTest seleniumGalenPageTest(String[] args) {
+    private static GalenPageTest seleniumGalenPageTest(String[] args, String originalText) {
         if (args.length < 4) {
-            throw new SuiteParserException("Incorrect amount of arguments");
+            throw new SyntaxException(UNKNOWN_LINE, "Incorrect amount of arguments: " + originalText);
         }
         String seleniumType = args[1].toLowerCase();
         if ("grid".equals(seleniumType)) {
-            return gridGalenPageTest(args);
+            return gridGalenPageTest(args, originalText);
         }
         else {
             return seleniumSimpleGalenPageTest(seleniumType, args[2], args[3]);
         }
     }
-    private static GalenPageTest gridGalenPageTest(String[] args) {
+    private static GalenPageTest gridGalenPageTest(String[] args, String originalText) {
         Options options = new Options();
         options.addOption("b", "browser", true, "browser name");
         options.addOption("v", "version", true, "browser version");
@@ -68,19 +64,19 @@ public class GalenPageTestReader {
             String[] gridArgs = cmd.getArgs();
             
             if (gridArgs.length < 3) {
-                throw new SuiteParserException("Couldn't parse grid endpoint");
+                throw new SyntaxException(UNKNOWN_LINE, "Couldn't parse grid endpoint: " + originalText);
             }
             
             
             String gridUrl = args[2];
             String pageUrl = cmd.getOptionValue("u");
             if (pageUrl == null) {
-                throw new SuiteParserException("Page url is not specified");
+                throw new SyntaxException(UNKNOWN_LINE, "Page url is not specified: " + originalText);
             }
             
             String size = cmd.getOptionValue("s");
             if (size == null) {
-                throw new SuiteParserException("Size is not specified");
+                throw new SyntaxException(UNKNOWN_LINE, "Size is not specified: " + originalText);
             }
             
             return new GalenPageTest()
@@ -94,7 +90,7 @@ public class GalenPageTestReader {
            
         }
         catch (ParseException e) {
-            throw new SuiteParserException("Couldn't parse grid arguments", e);
+            throw new SyntaxException(UNKNOWN_LINE, "Couldn't parse grid arguments: " + originalText, e);
         }
     }
     private static Platform readPlatform(String platformText) {

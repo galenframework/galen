@@ -5,17 +5,18 @@ import java.util.List;
 
 import net.mindengine.galen.parser.BashTemplateContext;
 import net.mindengine.galen.parser.GalenPageTestReader;
+import net.mindengine.galen.parser.SyntaxException;
 import net.mindengine.galen.suite.GalenPageAction;
 import net.mindengine.galen.suite.GalenPageTest;
 
 public class PageNode extends Node<GalenPageTest> {
 
-    public PageNode(String pageArguments) {
-        super(pageArguments);
+    public PageNode(Line line) {
+        super(line);
     }
 
     @Override
-    public Node<?> processNewNode(String line) {
+    public Node<?> processNewNode(Line line) {
         ActionNode actionNode = new ActionNode(line);
         add(actionNode);
         return actionNode;
@@ -23,7 +24,14 @@ public class PageNode extends Node<GalenPageTest> {
 
     @Override
     public GalenPageTest build(BashTemplateContext context) {
-        GalenPageTest pageTest = GalenPageTestReader.readFrom(context.process(getArguments()));
+        GalenPageTest pageTest;
+        try {
+            pageTest = GalenPageTestReader.readFrom(context.process(getArguments()));
+        }
+        catch (SyntaxException e) {
+            e.setLine(getLine());
+            throw e;
+        }
         
         List<GalenPageAction> actions = new LinkedList<GalenPageAction>();
         pageTest.setActions(actions);

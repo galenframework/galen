@@ -3,4 +3,4 @@
 set -e
 
 
-mvn clean test -Dtestng.excludedGroups=SELENIUM
+mvn clean test -Dtestng.excluded=SELENIUM

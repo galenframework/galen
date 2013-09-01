@@ -4,8 +4,8 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.hasKey;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
+import net.mindengine.galen.parser.SyntaxException;
 import net.mindengine.galen.specs.page.Locator;
-import net.mindengine.galen.specs.reader.IncorrectSpecException;
 import net.mindengine.galen.specs.reader.page.PageSpec;
 import net.mindengine.galen.specs.reader.page.StateObjectDefinition;
 
@@ -41,12 +41,12 @@ public class ObjectDefinitionReaderTest {
     
     @Test(dataProvider = "provideBadSamples")
     public void shouldGiveError_forIncorrect_objectDefinitions(String objectDefinitionText, String expectedErrorMessage) {
-        IncorrectSpecException exception = null;
+        SyntaxException exception = null;
         try {
             PageSpec pageSpec = new PageSpec();
             new StateObjectDefinition(pageSpec).process(objectDefinitionText);
         }
-        catch (IncorrectSpecException e) {
+        catch (SyntaxException e) {
             exception = e;
         }
         

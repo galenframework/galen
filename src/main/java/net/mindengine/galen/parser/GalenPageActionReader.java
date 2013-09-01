@@ -1,5 +1,7 @@
 package net.mindengine.galen.parser;
 
+import static net.mindengine.galen.suite.reader.Line.UNKNOWN_LINE;
+
 import java.util.LinkedList;
 import java.util.List;
 
@@ -18,7 +20,7 @@ public class GalenPageActionReader {
         String[] args = net.mindengine.galen.parser.CommandLineParser.parseCommandLine(actionText);
         
         if (args.length < 2) {
-            throw new SuiteParserException("Cannot parse: " + actionText);
+            throw new SyntaxException(UNKNOWN_LINE, "Cannot parse: " + actionText);
         }
         
         if (args[0].equals("inject")) {
@@ -30,7 +32,7 @@ public class GalenPageActionReader {
         else if (args[0].equals("check")) {
             return checkActionFrom(args, actionText);
         }
-        else throw new SuiteParserException("Unknown action: " + args[0]);
+        else throw new SyntaxException(UNKNOWN_LINE, "Unknown action: " + args[0]);
     }
 
     private static GalenPageAction checkActionFrom(String[] args, String originalText) {
@@ -45,7 +47,7 @@ public class GalenPageActionReader {
             String[] leftoverArgs = cmd.getArgs();
          
             if (leftoverArgs == null || leftoverArgs.length < 2) {
-                throw new SuiteParserException("There are no page specs: " + originalText);
+                throw new SyntaxException(UNKNOWN_LINE, "There are no page specs: " + originalText);
             }
             
             List<String> specs = new LinkedList<String>();
@@ -59,7 +61,7 @@ public class GalenPageActionReader {
                 .withExcludedTags(readTags(cmd.getOptionValue("e")));
         }
         catch (Exception e) {
-            throw new SuiteParserException("Couldn't parse: " + originalText, e);
+            throw new SyntaxException(UNKNOWN_LINE, "Couldn't parse: " + originalText, e);
         }
     }
 

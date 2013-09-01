@@ -15,9 +15,10 @@
 ******************************************************************************/
 package net.mindengine.galen.specs.reader.page;
 
+import static net.mindengine.galen.suite.reader.Line.UNKNOWN_LINE;
+import net.mindengine.galen.parser.SyntaxException;
 import net.mindengine.galen.specs.page.ObjectSpecs;
 import net.mindengine.galen.specs.page.PageSection;
-import net.mindengine.galen.specs.reader.IncorrectSpecException;
 import net.mindengine.galen.specs.reader.SpecReader;
 
 public class StateDoingSection extends State {
@@ -34,14 +35,14 @@ public class StateDoingSection extends State {
     public void process(String line) {
         if (startsWithIndentation(line)) {
             if (currentObjectSpecs == null) {
-                throw new IncorrectSpecException("There is no object defined in section");
+                throw new SyntaxException(UNKNOWN_LINE,"There is no object defined in section");
             }
             else {
                 try {
                     currentObjectSpecs.getSpecs().add(specReader.read(line.trim()));
                 }
-                catch (IncorrectSpecException exception) {
-                    throw new IncorrectSpecException("Incorrect spec for object \"" + currentObjectSpecs.getObjectName() + "\"", exception);
+                catch (SyntaxException exception) {
+                    throw new SyntaxException(UNKNOWN_LINE, "Incorrect spec for object \"" + currentObjectSpecs.getObjectName() + "\"", exception);
                 }
             }
         }

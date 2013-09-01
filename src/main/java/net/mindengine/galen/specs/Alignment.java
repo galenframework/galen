@@ -16,7 +16,8 @@
 package net.mindengine.galen.specs;
 
 import static java.lang.String.format;
-import net.mindengine.galen.specs.reader.IncorrectSpecException;
+import static net.mindengine.galen.suite.reader.Line.UNKNOWN_LINE;
+import net.mindengine.galen.parser.SyntaxException;
 
 public enum Alignment {
 
@@ -41,7 +42,7 @@ public enum Alignment {
         else if (alignmentText.equals("all")) {
             return ALL;
         }
-        else throw new IncorrectSpecException(format("Unknown alignment \"%s\"", alignmentText));
+        else throw new SyntaxException(UNKNOWN_LINE, format("Unknown alignment \"%s\"", alignmentText));
     }
     
     @Override

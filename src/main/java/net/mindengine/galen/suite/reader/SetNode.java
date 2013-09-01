@@ -4,8 +4,8 @@ import net.mindengine.galen.parser.BashTemplateContext;
 
 public class SetNode extends Node<Void> {
 
-    public SetNode(String arguments) {
-        super(arguments);
+    public SetNode(Line line) {
+        super(line);
     }
 
     @Override
@@ -33,7 +33,7 @@ public class SetNode extends Node<Void> {
     }
 
     @Override
-    public Node<?> processNewNode(String line) {
+    public Node<?> processNewNode(Line line) {
         add(new SetNode(line.trim()));
         return this;
     }

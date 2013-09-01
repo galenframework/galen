@@ -15,6 +15,8 @@
 ******************************************************************************/
 package net.mindengine.galen.specs.reader;
 
+import static net.mindengine.galen.suite.reader.Line.UNKNOWN_LINE;
+import net.mindengine.galen.parser.SyntaxException;
 import net.mindengine.galen.specs.Spec;
 
 public class SimpleSpecProcessor implements SpecProcessor {
@@ -28,7 +30,7 @@ public class SimpleSpecProcessor implements SpecProcessor {
     @Override
     public Spec processSpec(String specName, String paramsText) {
         if (paramsText != null && !paramsText.isEmpty()) {
-            throw new IncorrectSpecException("This spec doesn't take any parameters");
+            throw new SyntaxException(UNKNOWN_LINE, "This spec doesn't take any parameters");
         }
         return specInit.init();
     }

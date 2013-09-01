@@ -15,11 +15,12 @@
 ******************************************************************************/
 package net.mindengine.galen.parser;
 
+import static net.mindengine.galen.suite.reader.Line.UNKNOWN_LINE;
+
 import java.util.LinkedList;
 import java.util.List;
 
 import net.mindengine.galen.specs.Side;
-import net.mindengine.galen.specs.reader.IncorrectSpecException;
 import net.mindengine.galen.specs.reader.StringCharReader;
 
 public class ExpectSides implements Expectation<List<Side>>{
@@ -40,7 +41,7 @@ public class ExpectSides implements Expectation<List<Side>>{
             }
         }
         if (sides.size() == 0) {
-            throw new IncorrectSpecException("There are no sides defined for location");
+            throw new SyntaxException(UNKNOWN_LINE, "There are no sides defined for location");
         }
         return sides;
     }

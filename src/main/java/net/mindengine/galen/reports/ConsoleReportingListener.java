@@ -35,11 +35,11 @@ public class ConsoleReportingListener implements SuiteListener, ValidationListen
 
     @Override
     public void onSpecError(PageValidation pageValidation, String objectName, Spec spec, ValidationError error) {
-        out.print(SPEC_ERROR_INDENTATION);
-        out.println(spec.toText());
+        err.print(SPEC_ERROR_INDENTATION);
+        err.println(spec.toText());
         for(String message : error.getMessages()) {
-            out.print(SPEC_ERROR_MESSAGE_INDENTATION);
-            out.println(message);
+            err.print(SPEC_ERROR_MESSAGE_INDENTATION);
+            err.println(message);
         }
     }
 

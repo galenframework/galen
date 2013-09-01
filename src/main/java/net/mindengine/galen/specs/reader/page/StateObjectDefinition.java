@@ -16,11 +16,12 @@
 package net.mindengine.galen.specs.reader.page;
 
 import static java.lang.String.format;
+import static net.mindengine.galen.suite.reader.Line.UNKNOWN_LINE;
 import net.mindengine.galen.page.Rect;
 import net.mindengine.galen.parser.ExpectWord;
 import net.mindengine.galen.parser.Expectations;
+import net.mindengine.galen.parser.SyntaxException;
 import net.mindengine.galen.specs.page.Locator;
-import net.mindengine.galen.specs.reader.IncorrectSpecException;
 import net.mindengine.galen.specs.reader.StringCharReader;
 
 public class StateObjectDefinition extends State {
@@ -51,22 +52,22 @@ public class StateObjectDefinition extends State {
             
             String value = reader.getTheRest().trim();
             if (value.isEmpty()) {
-                throw new IncorrectSpecException(format("Locator for object \"%s\" is not defined correctly", objectName));
+                throw new SyntaxException(UNKNOWN_LINE, format("Locator for object \"%s\" is not defined correctly", objectName));
             }
             pageSpec.addObject(objectName, new Locator(locatorType, value).withCorrections(corrections));
         }
-        catch (IncorrectSpecException e) {
+        catch (SyntaxException e) {
             throw e;
         }
         catch (Exception e) {
-            throw new IncorrectSpecException("Object \"" + objectName + "\" has incorrect locator", e);
+            throw new SyntaxException(UNKNOWN_LINE, "Object \"" + objectName + "\" has incorrect locator", e);
         }
     }
 
     private String expectCorrectionsOrId(StringCharReader reader, String objectName) {
         String word = new ExpectWord().stopOnTheseSymbols('(').read(reader).trim();
         if (word.isEmpty()) {
-            throw new IncorrectSpecException(format("Missing locator for object \"%s\"", objectName));
+            throw new SyntaxException(UNKNOWN_LINE, format("Missing locator for object \"%s\"", objectName));
         }
         return word;
     }
@@ -74,7 +75,7 @@ public class StateObjectDefinition extends State {
     private String expectWord(StringCharReader reader, String errorMessage) {
         String word = new ExpectWord().read(reader).trim();
         if (word.isEmpty()) {
-            throw new IncorrectSpecException(errorMessage);
+            throw new SyntaxException(UNKNOWN_LINE, errorMessage);
         }
         return word;
     }

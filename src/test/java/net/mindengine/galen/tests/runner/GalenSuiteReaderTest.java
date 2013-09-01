@@ -3,6 +3,7 @@ package net.mindengine.galen.tests.runner;
 import static java.util.Arrays.asList;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.notNullValue;
 
 import java.awt.Dimension;
 import java.io.File;
@@ -12,12 +13,14 @@ import java.util.List;
 
 import net.mindengine.galen.browser.BrowserFactory;
 import net.mindengine.galen.browser.SeleniumGridBrowserFactory;
+import net.mindengine.galen.parser.FileSyntaxException;
 import net.mindengine.galen.suite.GalenPageAction;
 import net.mindengine.galen.suite.GalenPageActions;
 import net.mindengine.galen.suite.GalenPageTest;
 import net.mindengine.galen.suite.GalenSuite;
 import net.mindengine.galen.suite.reader.GalenSuiteReader;
 
+import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
 public class GalenSuiteReaderTest {
@@ -220,4 +223,33 @@ public class GalenSuiteReaderTest {
     }
     
     
+    
+    
+    @Test(dataProvider="provideBadSamples") public void shouldGiveError_withLineNumberInformation_whenParsingIncorrectSuite(String filePath, int expectedLine, String expectedMessage) throws IOException {
+        FileSyntaxException exception = null;
+        try {
+            new GalenSuiteReader().read(new File(getClass().getResource(filePath).getFile()));
+        }
+        catch (FileSyntaxException e) {
+            exception = e;
+            System.out.println("***************");
+            e.printStackTrace();
+        }
+        
+        
+        assertThat("Exception should be thrown", exception, notNullValue());
+        assertThat("Message should be", exception.getMessage(), is(expectedMessage));
+        assertThat("Line should be", exception.getLine(), is(expectedLine));
+        
+    }
+    
+    
+    @DataProvider public Object[][] provideBadSamples() {
+        return new Object[][]{
+            {"/suites/suite-with-error-unknown-table-in-parameterized.test", 16, "Table with name \"some_unknown_table\" does not exist"},
+            {"/suites/suite-with-error-page-error.test", 3, "Incorrect amount of arguments: selenium http://"},
+            {"/suites/suite-with-error-table-wrong-amount-of-columns-1.test", 5, "Amount of cells in a row is not the same in header"},
+            {"/suites/suite-with-error-table-wrong-amount-of-columns-2.test", 4, "Incorrect format. Should end with '|'"}
+        };
+    }
 }

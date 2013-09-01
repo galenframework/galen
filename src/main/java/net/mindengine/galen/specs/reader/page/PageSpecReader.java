@@ -22,6 +22,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
+import net.mindengine.galen.parser.FileSyntaxException;
+
 public class PageSpecReader {
     
     public PageSpec read(File file) throws IOException {
@@ -49,7 +51,7 @@ public class PageSpecReader {
             }
         }
         catch (Exception exception) {
-            throw new PageSpecReaderException(exception, fileLocation, lineNumber);
+            throw new FileSyntaxException(exception, fileLocation, lineNumber);
         }
 
         return lineProcessor.buildPageSpec();

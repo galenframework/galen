@@ -58,7 +58,6 @@ public class ReportingListenerTest {
         return plainHtml.substring(id1, id2 + 7);
     }
     
-    //TODO implement a .gtest file 
     
     //TODO run recursively all galen tests
 }

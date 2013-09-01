@@ -15,10 +15,12 @@
 ******************************************************************************/
 package net.mindengine.galen.specs;
 
+import static net.mindengine.galen.suite.reader.Line.UNKNOWN_LINE;
+
 import java.util.Arrays;
 import java.util.List;
 
-import net.mindengine.galen.specs.reader.IncorrectSpecException;
+import net.mindengine.galen.parser.SyntaxException;
 
 public enum Side {
     
@@ -37,7 +39,7 @@ public enum Side {
         else if("bottom".equals(side)){
             return BOTTOM;
         }
-        throw new IncorrectSpecException(String.format("Unknown side: \"%s\"", side));
+        throw new SyntaxException(UNKNOWN_LINE,String.format("Unknown side: \"%s\"", side));
     }
 
     @Override

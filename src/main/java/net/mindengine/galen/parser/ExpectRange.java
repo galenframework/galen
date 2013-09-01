@@ -18,8 +18,8 @@ package net.mindengine.galen.parser;
 import static java.lang.String.format;
 import static net.mindengine.galen.parser.Expectations.isDelimeter;
 import static net.mindengine.galen.parser.Expectations.isNumeric;
+import static net.mindengine.galen.suite.reader.Line.UNKNOWN_LINE;
 import net.mindengine.galen.specs.Range;
-import net.mindengine.galen.specs.reader.IncorrectSpecException;
 import net.mindengine.galen.specs.reader.StringCharReader;
 
 public class ExpectRange implements Expectation<Range>{
@@ -45,7 +45,7 @@ public class ExpectRange implements Expectation<Range>{
             else if (text.equals("±")) {
                 range = Range.between(firstValue - secondValue, firstValue + secondValue);
             }
-            else throw new IncorrectSpecException(msgFor(text));
+            else throw new SyntaxException(UNKNOWN_LINE, msgFor(text));
             
             String end = expectNonNumeric(reader);
             if (end.equals("px")) {
@@ -54,7 +54,7 @@ public class ExpectRange implements Expectation<Range>{
             else if (end.equals("%")) {
                 return range.withPercentOf(readPercentageOf(reader));
             }
-            else throw new IncorrectSpecException("Missing ending: \"px\" or \"%\"");
+            else throw new SyntaxException(UNKNOWN_LINE, "Missing ending: \"px\" or \"%\"");
         }
     }
 
@@ -63,11 +63,11 @@ public class ExpectRange implements Expectation<Range>{
         if (firstWord.equals("of")) {
             String valuePath = expectNonNumeric(reader).trim();
             if (valuePath.isEmpty()) {
-                throw new IncorrectSpecException("Missing value path for relative range");
+                throw new SyntaxException(UNKNOWN_LINE, "Missing value path for relative range");
             }
             else return valuePath;
         }
-        else throw new IncorrectSpecException("Missing value path for relative range");
+        else throw new SyntaxException(UNKNOWN_LINE, "Missing value path for relative range");
     }
 
     private String expectNonNumeric(StringCharReader reader) {
@@ -103,7 +103,7 @@ public class ExpectRange implements Expectation<Range>{
             }
             else if (symbol == '.') {
                 if (hadPointAlready) {
-                    throw new IncorrectSpecException(msgFor("" + symbol)); 
+                    throw new SyntaxException(UNKNOWN_LINE, msgFor("" + symbol)); 
                 }
                 hadPointAlready = true;
                 buffer.append(symbol);
@@ -123,7 +123,7 @@ public class ExpectRange implements Expectation<Range>{
             return Double.parseDouble(doubleText);
         }
         catch (Exception e) {
-            throw new IncorrectSpecException(format("Cannot parse range value: \"%s\"", doubleText), e);
+            throw new SyntaxException(UNKNOWN_LINE, format("Cannot parse range value: \"%s\"", doubleText), e);
         }
     }
 

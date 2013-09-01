@@ -33,6 +33,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
+import net.mindengine.galen.parser.FileSyntaxException;
 import net.mindengine.galen.specs.Location;
 import net.mindengine.galen.specs.Range;
 import net.mindengine.galen.specs.Spec;
@@ -45,7 +46,6 @@ import net.mindengine.galen.specs.page.ObjectSpecs;
 import net.mindengine.galen.specs.page.PageSection;
 import net.mindengine.galen.specs.reader.page.PageSpec;
 import net.mindengine.galen.specs.reader.page.PageSpecReader;
-import net.mindengine.galen.specs.reader.page.PageSpecReaderException;
 
 import org.testng.annotations.Test;
 
@@ -169,38 +169,38 @@ public class PageSpecsReaderTest {
     
     @Test
     public void givesError_ifThereAreSpecs_withNoObjectSpecified_inSection() throws IOException {
-        PageSpecReaderException exception = expectExceptionFromReading("/negative-specs/no-object-in-section.spec");
+        FileSyntaxException exception = expectExceptionFromReading("/negative-specs/no-object-in-section.spec");
         
         assertThat(exception.getMessage(), is("There is no object defined in section"));
-        assertThat(exception.getSpecFile(), endsWith("/no-object-in-section.spec"));
-        assertThat(exception.getSpecLine(), is(8));
+        assertThat(exception.getFilePath(), endsWith("/no-object-in-section.spec"));
+        assertThat(exception.getLine(), is(8));
     }
     
     @Test
     public void givesError_ifThereAre_invalidSpecs() throws IOException {
-        PageSpecReaderException exception = expectExceptionFromReading("/negative-specs/invalid-spec.spec");
+        FileSyntaxException exception = expectExceptionFromReading("/negative-specs/invalid-spec.spec");
         
         assertThat(exception.getMessage(), is("Incorrect spec for object \"menu\""));
         assertThat(exception.getCause().getCause().getMessage(), is("There is no location defined"));
-        assertThat(exception.getSpecFile(), endsWith("/invalid-spec.spec"));
-        assertThat(exception.getSpecLine(), is(10));
+        assertThat(exception.getFilePath(), endsWith("/invalid-spec.spec"));
+        assertThat(exception.getLine(), is(10));
     }
     
     @Test 
     public void givesError_ifThereAre_invalidObjectLocators() throws Exception {
-        PageSpecReaderException exception = expectExceptionFromReading("/negative-specs/invalid-object-locator.spec");
+        FileSyntaxException exception = expectExceptionFromReading("/negative-specs/invalid-object-locator.spec");
         
         assertThat(exception.getMessage(), is("Missing locator for object \"bad-object\""));
-        assertThat(exception.getSpecFile(), endsWith("/invalid-object-locator.spec"));
-        assertThat(exception.getSpecLine(), is(7));
+        assertThat(exception.getFilePath(), endsWith("/invalid-object-locator.spec"));
+        assertThat(exception.getLine(), is(7));
     }
     
 
-    private PageSpecReaderException expectExceptionFromReading(String file) throws IOException {
+    private FileSyntaxException expectExceptionFromReading(String file) throws IOException {
         try {
             pageSpecReader.read(new File(getClass().getResource(file).getFile()));
         }
-        catch(PageSpecReaderException exception) {
+        catch(FileSyntaxException exception) {
             return exception;
         }
         throw new RuntimeException("Expected exception was not caught when reading page spec: " + file);

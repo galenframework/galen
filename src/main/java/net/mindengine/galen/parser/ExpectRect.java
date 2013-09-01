@@ -1,8 +1,8 @@
 package net.mindengine.galen.parser;
 
 import static net.mindengine.galen.parser.Expectations.isDelimeter;
+import static net.mindengine.galen.suite.reader.Line.UNKNOWN_LINE;
 import net.mindengine.galen.page.Rect;
-import net.mindengine.galen.specs.reader.IncorrectSpecException;
 import net.mindengine.galen.specs.reader.StringCharReader;
 
 public class ExpectRect implements Expectation<Rect> {
@@ -23,13 +23,13 @@ public class ExpectRect implements Expectation<Rect> {
             }
             else if (!isDelimeter(symbol)) {
                 if (!started) {
-                    throw new IncorrectSpecException("Error parsing corrections. Missing starting '(' symbol");
+                    throw new SyntaxException(UNKNOWN_LINE, "Error parsing corrections. Missing starting '(' symbol");
                 }
                 numbersText.append(symbol);
             }
         }
         
-        throw new IncorrectSpecException("Error parsing corrections. Missing closing ')' symbol");
+        throw new SyntaxException(UNKNOWN_LINE, "Error parsing corrections. Missing closing ')' symbol");
     }
 
     private Rect processCorrection(String numbersText) {
@@ -39,9 +39,9 @@ public class ExpectRect implements Expectation<Rect> {
                 int [] numbers = convertToNumbers(values);
                 return new Rect(numbers[0], numbers[1], numbers[2], numbers[3]);
             }
-            else throw new IncorrectSpecException("Wrong number of arguments in corrections: " + values.length);
+            else throw new SyntaxException(UNKNOWN_LINE, "Wrong number of arguments in corrections: " + values.length);
         }
-        else throw new IncorrectSpecException("Error parsing corrections. No values provided");
+        else throw new SyntaxException(UNKNOWN_LINE, "Error parsing corrections. No values provided");
     }
 
     private int[] convertToNumbers(String[] values) {
