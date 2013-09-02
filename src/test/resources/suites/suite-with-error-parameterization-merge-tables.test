@@ -1,0 +1,16 @@
+    
+@ Table table1 
+    | col1 | col2 |
+    | 1    |  1   |
+    | 2    |  2   |
+    
+@ Table table2  
+    | col1 | col2 | col3 |
+    | 1    |  1   |  1   | 
+    | 2    |  2   |  2   |        
+    
+@ Parameterized using table1, table2
+Test 2 
+-------------------------------
+    http://example.com 640x480
+        check page1.spec

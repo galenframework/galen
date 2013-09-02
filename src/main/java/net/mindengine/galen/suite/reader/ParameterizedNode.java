@@ -81,7 +81,7 @@ public class ParameterizedNode extends Node<List<GalenSuite>>{
                             table.mergeWith(contextTable);
                         }
                         catch (Exception ex) {
-                            throw new SyntaxException(getLine(), format("Cannot merge table \"%s\". It probably has different amount of columns", trimmedTableName));
+                            throw new SyntaxException(getLine(), format("Cannot merge table \"%s\". Perhaps it has different amount of columns", trimmedTableName));
                         } 
                     }
                 }

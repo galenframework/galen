@@ -248,8 +248,12 @@ public class GalenSuiteReaderTest {
         return new Object[][]{
             {"/suites/suite-with-error-unknown-table-in-parameterized.test", 16, "Table with name \"some_unknown_table\" does not exist"},
             {"/suites/suite-with-error-page-error.test", 3, "Incorrect amount of arguments: selenium http://"},
+            {"/suites/suite-with-error-action-inject-error.test", 3, "Cannot parse:         inject"},
             {"/suites/suite-with-error-table-wrong-amount-of-columns-1.test", 5, "Amount of cells in a row is not the same in header"},
-            {"/suites/suite-with-error-table-wrong-amount-of-columns-2.test", 4, "Incorrect format. Should end with '|'"}
+            {"/suites/suite-with-error-table-wrong-amount-of-columns-2.test", 4, "Incorrect format. Should end with '|'"},
+            {"/suites/suite-with-error-table-wrong-amount-of-columns-3.test", 4, "Incorrect format. Should start with '|'"},
+            {"/suites/suite-with-error-parameterization-merge-tables.test", 12, "Cannot merge table \"table2\". Perhaps it has different amount of columns"},
+            {"/suites/suite-with-error-parameterization-wrong-amount-of-columns.test", 5, "Amount of cells in a row is not the same in header"}
         };
     }
 }

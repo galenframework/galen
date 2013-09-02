@@ -18,8 +18,14 @@ public class ActionNode extends Node<GalenPageAction> {
 
     @Override
     public GalenPageAction build(BashTemplateContext context) {
-        String actionText = context.process(getArguments());
-        return GalenPageActionReader.readFrom(actionText);
+        try {
+            String actionText = context.process(getArguments());
+            return GalenPageActionReader.readFrom(actionText);
+        }
+        catch(SyntaxException e) {
+            e.setLine(getLine());
+            throw e;
+        }
     }
 
 }
