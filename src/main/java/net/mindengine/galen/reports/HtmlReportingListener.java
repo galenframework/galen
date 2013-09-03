@@ -14,6 +14,7 @@ import net.mindengine.galen.runner.GalenPageRunner;
 import net.mindengine.galen.runner.GalenSuiteRunner;
 import net.mindengine.galen.runner.SuiteListener;
 import net.mindengine.galen.specs.Spec;
+import net.mindengine.galen.suite.GalenSuite;
 import net.mindengine.galen.utils.GalenUtils;
 import net.mindengine.galen.validation.ErrorArea;
 import net.mindengine.galen.validation.PageValidation;
@@ -46,9 +47,9 @@ public class HtmlReportingListener implements ValidationListener, SuiteListener 
     }
     
     @Override
-    public void onSuiteStarted(GalenSuiteRunner galenSuiteRunner) {
+    public void onSuiteStarted(GalenSuiteRunner galenSuiteRunner, GalenSuite suite) {
         currentSuiteNode = div("suite");
-        currentSuiteNode.add(h(1, galenSuiteRunner.getName()));
+        currentSuiteNode.add(h(1, suite.getName()));
         
         bodyNode.add(currentSuiteNode);
     }
@@ -63,7 +64,7 @@ public class HtmlReportingListener implements ValidationListener, SuiteListener 
     
 
     @Override
-    public void onSuiteFinished(GalenSuiteRunner galenSuiteRunner) {
+    public void onSuiteFinished(GalenSuiteRunner galenSuiteRunner, GalenSuite suite) {
     }
 
     @Override

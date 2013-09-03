@@ -6,6 +6,7 @@ import net.mindengine.galen.browser.Browser;
 import net.mindengine.galen.runner.GalenPageRunner;
 import net.mindengine.galen.runner.GalenSuiteRunner;
 import net.mindengine.galen.runner.SuiteListener;
+import net.mindengine.galen.suite.GalenSuite;
 import net.mindengine.galen.validation.ValidationError;
 
 public class RecordingSuiteListener implements SuiteListener {
@@ -27,12 +28,12 @@ public class RecordingSuiteListener implements SuiteListener {
     }
 
     @Override
-    public void onSuiteFinished(GalenSuiteRunner galenSuiteRunner) {
+    public void onSuiteFinished(GalenSuiteRunner galenSuiteRunner, GalenSuite suite) {
         record("<suite-finished>");
     }
 
     @Override
-    public void onSuiteStarted(GalenSuiteRunner galenSuiteRunner) {
+    public void onSuiteStarted(GalenSuiteRunner galenSuiteRunner, GalenSuite suite) {
         record("<suite-started>");
     }
 

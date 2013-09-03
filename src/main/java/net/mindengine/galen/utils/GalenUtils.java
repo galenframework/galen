@@ -1,6 +1,8 @@
 package net.mindengine.galen.utils;
 
 import java.awt.Dimension;
+import java.io.File;
+import java.net.URL;
 
 public class GalenUtils {
 
@@ -28,5 +30,12 @@ public class GalenUtils {
         }
     }
 
+    public static File findFile(String specFile) {
+        URL resource = GalenUtils.class.getResource(specFile);
+        if (resource != null) {
+            return new File(resource.getFile());
+        }
+        else return new File(specFile);
+    }
     
 }

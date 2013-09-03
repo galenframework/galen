@@ -4,7 +4,8 @@ import java.util.LinkedList;
 import java.util.List;
 
 import net.mindengine.galen.browser.Browser;
-import net.mindengine.galen.browser.BrowserFactory;
+import net.mindengine.galen.suite.GalenPageTest;
+import net.mindengine.galen.suite.GalenSuite;
 import net.mindengine.galen.validation.ValidationError;
 
 
@@ -12,12 +13,8 @@ public class GalenSuiteRunner {
 
     private static final LinkedList<ValidationError> EMPTY_ERRORS = new LinkedList<ValidationError>();
     private SuiteListener suiteListener;
-    private BrowserFactory browserFactory;
     
-    private String name;
-
-    public GalenSuiteRunner(BrowserFactory browserFactory) {
-        this.setBrowserFactory(browserFactory);
+    public GalenSuiteRunner() {
     }
 
     public GalenSuiteRunner withSuiteListener(SuiteListener suiteListener) {
@@ -33,27 +30,30 @@ public class GalenSuiteRunner {
         this.suiteListener = suiteListener;
     }
 
-    public void runSuite(List<GalenPageRunner> pageRunners) {
-        if (pageRunners == null) {
+    
+    //TODO Write tests for suite runner
+    public void runSuite(GalenSuite suite) {
+        if (suite == null) {
             throw new IllegalArgumentException("Suite can not be null");
         }
-        else if (pageRunners.size() == 0) {
-            throw new IllegalArgumentException("Nothing to run. Suite is empty");
-        }
         
+        List<GalenPageTest> pageTests = suite.getPageTests();
         
-        Browser browser = browserFactory.openBrowser();
-        tellSuiteStarted();
+        tellSuiteStarted(suite);
         
-        for (GalenPageRunner pageRunner : pageRunners) {
+        GalenPageRunner pageRunner = new GalenPageRunner();
+        
+        for (GalenPageTest pageTest : pageTests) {
+            Browser browser = pageTest.getBrowserFactory().openBrowser();
+            
             tellBeforePage(pageRunner, browser);
-            List<ValidationError> errors = runPage(pageRunner, browser);
+            List<ValidationError> errors = runPageTest(pageRunner, pageTest, browser);
             tellAfterPage(pageRunner, browser, errors);
+            
+            browser.quit();
         }
         
-        tellSuiteFinished();
-        
-        browser.quit();
+        tellSuiteFinished(suite);
     }
 
     private void tellAfterPage(GalenPageRunner pageRunner, Browser browser, List<ValidationError> errors) {
@@ -78,9 +78,9 @@ public class GalenSuiteRunner {
         }
     }
 
-    private List<ValidationError> runPage(GalenPageRunner pageRunner, Browser browser) {
+    private List<ValidationError> runPageTest(GalenPageRunner pageRunner, GalenPageTest pageTest, Browser browser) {
         try {
-            return pageRunner.run(browser);
+            return pageRunner.run(browser, pageTest);
         }
         catch (Exception e) {
             e.printStackTrace();
@@ -88,10 +88,10 @@ public class GalenSuiteRunner {
         return EMPTY_ERRORS;
     }
 
-    private void tellSuiteFinished() {
+    private void tellSuiteFinished(GalenSuite suite) {
         try {
             if (suiteListener != null) {
-                suiteListener.onSuiteFinished(this);
+                suiteListener.onSuiteFinished(this, suite);
             }
         }
         catch (Exception e) {
@@ -99,10 +99,10 @@ public class GalenSuiteRunner {
         }
     }
 
-    private void tellSuiteStarted() {
+    private void tellSuiteStarted(GalenSuite suite) {
         try {
             if (suiteListener != null) {
-                suiteListener.onSuiteStarted(this);
+                suiteListener.onSuiteStarted(this, suite);
             }
         }
         catch (Exception e) {
@@ -110,20 +110,5 @@ public class GalenSuiteRunner {
         }
     }
 
-    public BrowserFactory getBrowserFactory() {
-        return browserFactory;
-    }
-
-    public void setBrowserFactory(BrowserFactory browserFactory) {
-        this.browserFactory = browserFactory;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
 
 }

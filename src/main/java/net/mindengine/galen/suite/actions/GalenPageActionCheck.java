@@ -1,12 +1,24 @@
 package net.mindengine.galen.suite.actions;
 
+import java.util.LinkedList;
 import java.util.List;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
+import net.mindengine.galen.browser.Browser;
+import net.mindengine.galen.page.Page;
+import net.mindengine.galen.specs.page.PageSection;
+import net.mindengine.galen.specs.reader.page.PageSpec;
+import net.mindengine.galen.specs.reader.page.PageSpecReader;
 import net.mindengine.galen.suite.GalenPageAction;
+import net.mindengine.galen.suite.GalenPageTest;
+import net.mindengine.galen.utils.GalenUtils;
+import net.mindengine.galen.validation.PageValidation;
+import net.mindengine.galen.validation.SectionValidation;
+import net.mindengine.galen.validation.ValidationError;
+import net.mindengine.galen.validation.ValidationListener;
 
 public class GalenPageActionCheck implements GalenPageAction {
 
@@ -14,10 +26,32 @@ public class GalenPageActionCheck implements GalenPageAction {
     private List<String> includedTags;
     private List<String> excludedTags;
 
+    
     @Override
-    public void execute() {
-        // TODO Auto-generated method stub
+    public List<ValidationError> execute(Browser browser, GalenPageTest pageTest, ValidationListener validationListener) {
+        List<ValidationError> allErrors = new LinkedList<ValidationError>();
         
+        Page page = browser.getPage();
+        PageSpecReader pageSpecReader = new PageSpecReader();
+        
+        for (String specFile : specs) {
+            try {
+                PageSpec spec = pageSpecReader.read(GalenUtils.findFile(specFile));
+                List<PageSection> pageSections = spec.findSections(includedTags, excludedTags);
+                
+                SectionValidation sectionValidation = new SectionValidation(pageSections, new PageValidation(page, spec), validationListener);
+                
+                List<ValidationError> errors = sectionValidation.check();
+                if (errors != null) {
+                    allErrors.addAll(errors);
+                }
+            }
+            catch (Exception e) {
+                allErrors.add(ValidationError.fromException(e));
+            }
+        }
+        
+        return allErrors;
     }
 
     public GalenPageActionCheck withSpecs(List<String> specFilePaths) {

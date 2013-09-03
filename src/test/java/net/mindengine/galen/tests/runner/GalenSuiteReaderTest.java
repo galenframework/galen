@@ -25,8 +25,6 @@ import org.testng.annotations.Test;
 
 public class GalenSuiteReaderTest {
 
-    //TODO write negative tests for suite reader
-    
     private static final Object EMPTY_TAGS = new LinkedList<String>();
 
     @Test public void shouldRead_simpleSuite_successfully() throws IOException {

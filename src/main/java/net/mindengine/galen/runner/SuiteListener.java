@@ -3,6 +3,7 @@ package net.mindengine.galen.runner;
 import java.util.List;
 
 import net.mindengine.galen.browser.Browser;
+import net.mindengine.galen.suite.GalenSuite;
 import net.mindengine.galen.validation.ValidationError;
 
 
@@ -12,8 +13,8 @@ public interface SuiteListener {
 
     void onBeforePage(GalenSuiteRunner galenSuiteRunner, GalenPageRunner pageRunner, Browser browser);
 
-    void onSuiteFinished(GalenSuiteRunner galenSuiteRunner);
+    void onSuiteFinished(GalenSuiteRunner galenSuiteRunner, GalenSuite suite);
 
-    void onSuiteStarted(GalenSuiteRunner galenSuiteRunner);
+    void onSuiteStarted(GalenSuiteRunner galenSuiteRunner, GalenSuite suite);
 
 }

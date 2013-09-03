@@ -12,6 +12,7 @@ import net.mindengine.galen.runner.GalenPageRunner;
 import net.mindengine.galen.runner.GalenSuiteRunner;
 import net.mindengine.galen.runner.SuiteListener;
 import net.mindengine.galen.specs.Spec;
+import net.mindengine.galen.suite.GalenSuite;
 import net.mindengine.galen.utils.GalenUtils;
 import net.mindengine.galen.validation.PageValidation;
 import net.mindengine.galen.validation.ValidationError;
@@ -40,13 +41,13 @@ public class TestngReportingListener implements ValidationListener, SuiteListene
 
 
     @Override
-    public void onSuiteFinished(GalenSuiteRunner galenSuiteRunner) {
+    public void onSuiteFinished(GalenSuiteRunner galenSuiteRunner, GalenSuite suite) {
     }
     
 
     @Override
-    public void onSuiteStarted(GalenSuiteRunner galenSuiteRunner) {
-        currentSuiteNode = node("suite").withAttribute("name", galenSuiteRunner.getName());
+    public void onSuiteStarted(GalenSuiteRunner galenSuiteRunner, GalenSuite suite) {
+        currentSuiteNode = node("suite").withAttribute("name", suite.getName());
         rootNode.add(currentSuiteNode);
     }
 

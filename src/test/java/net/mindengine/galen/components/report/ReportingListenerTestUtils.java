@@ -18,6 +18,7 @@ import net.mindengine.galen.specs.Location;
 import net.mindengine.galen.specs.SpecHeight;
 import net.mindengine.galen.specs.SpecInside;
 import net.mindengine.galen.specs.SpecWidth;
+import net.mindengine.galen.suite.GalenSuite;
 import net.mindengine.galen.validation.ErrorArea;
 import net.mindengine.galen.validation.PageValidation;
 import net.mindengine.galen.validation.ValidationError;
@@ -28,10 +29,11 @@ public class ReportingListenerTestUtils {
     public static void performSampleReporting(SuiteListener suiteListener, ValidationListener validationListener) {
         GalenPageRunner pageRunner = null;
         
-        GalenSuiteRunner galenSuiteRunner = new GalenSuiteRunner(null);
-        galenSuiteRunner.setName("page1.test");
+        GalenSuiteRunner galenSuiteRunner = new GalenSuiteRunner();
+        GalenSuite suite = new GalenSuite();
+        suite.setName("page1.test");
         
-        suiteListener.onSuiteStarted(galenSuiteRunner);
+        suiteListener.onSuiteStarted(galenSuiteRunner, suite);
         
         Browser browser = new MockedBrowser("http://example.com/page1", new Dimension(400, 600));
         
@@ -81,7 +83,7 @@ public class ReportingListenerTestUtils {
         }
         suiteListener.onAfterPage(galenSuiteRunner, pageRunner, browser2, asList(new ValidationError(asList(new ErrorArea(new Rect(10, 10, 100, 50), "objectB1")), asList("objectA1 is not inside other-object", "second error message"))));
         
-        suiteListener.onSuiteFinished(galenSuiteRunner);
+        suiteListener.onSuiteFinished(galenSuiteRunner, suite);
     }
 
 }

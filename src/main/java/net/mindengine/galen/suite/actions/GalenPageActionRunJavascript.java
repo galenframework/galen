@@ -1,26 +1,47 @@
 package net.mindengine.galen.suite.actions;
 
+import java.io.File;
+import java.io.FileReader;
+import java.io.Reader;
+import java.util.LinkedList;
+import java.util.List;
+
+import javax.script.ScriptContext;
+import javax.script.ScriptEngine;
+import javax.script.ScriptEngineManager;
+
+import net.mindengine.galen.browser.Browser;
+import net.mindengine.galen.suite.GalenPageAction;
+import net.mindengine.galen.suite.GalenPageTest;
+import net.mindengine.galen.validation.ValidationError;
+import net.mindengine.galen.validation.ValidationListener;
+
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
-import net.mindengine.galen.suite.GalenPageAction;
-
 public class GalenPageActionRunJavascript implements GalenPageAction{
 
+    private static final List<ValidationError> NO_ERRORS = new LinkedList<ValidationError>();
     private String javascriptPath;
     private String jsonArguments;
 
     public GalenPageActionRunJavascript(String javascriptPath) {
         this.setJavascriptPath(javascriptPath);
     }
-
+    
     @Override
-    public void execute() {
-        // TODO Auto-generated method stub
-        
+    public List<ValidationError> execute(Browser browser, GalenPageTest pageTest, ValidationListener validationListener) throws Exception {
+        Reader scriptFileReader = new FileReader(new File(javascriptPath));
+        ScriptEngineManager factory = new ScriptEngineManager();
+        ScriptEngine engine = factory.getEngineByName("JavaScript");
+        ScriptContext context = engine.getContext();
+        context.setAttribute("name", "JavaScript", ScriptContext.ENGINE_SCOPE);
+        engine.eval("var arg = " + jsonArguments);
+        engine.eval(scriptFileReader);
+        return NO_ERRORS;
     }
-
+    
     public String getJavascriptPath() {
         return javascriptPath;
     }

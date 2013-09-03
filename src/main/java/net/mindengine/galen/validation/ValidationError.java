@@ -22,6 +22,7 @@ import java.util.List;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 
 public class ValidationError {
 
@@ -96,6 +97,10 @@ public class ValidationError {
 
     public void setErrorAreas(List<ErrorArea> errorAreas) {
         this.errorAreas = errorAreas;
+    }
+
+    public static ValidationError fromException(Exception e) {
+        return new ValidationError().withMessage(ExceptionUtils.getMessage(e));
     }
 
 }

@@ -1,67 +1,19 @@
 package net.mindengine.galen.runner;
 
-import java.awt.Dimension;
+import java.util.LinkedList;
 import java.util.List;
 
 import net.mindengine.galen.browser.Browser;
-import net.mindengine.galen.page.Page;
-import net.mindengine.galen.specs.page.PageSection;
-import net.mindengine.galen.specs.reader.page.PageSpec;
-import net.mindengine.galen.validation.PageValidation;
-import net.mindengine.galen.validation.SectionValidation;
+import net.mindengine.galen.suite.GalenPageAction;
+import net.mindengine.galen.suite.GalenPageTest;
 import net.mindengine.galen.validation.ValidationError;
 import net.mindengine.galen.validation.ValidationListener;
 
 
 public class GalenPageRunner {
 
-    private String url;
-    private Dimension screenSize;
-    private PageSpec spec;
     private ValidationListener validationListener;
-    private List<String> includedTags;
-    private String javascript;
-    private List<String> excludedTags;
-
-    public GalenPageRunner withUrl(String url) {
-        this.setUrl(url);
-        return this;
-    }
-
-    public String getUrl() {
-        return url;
-    }
-
-    public void setUrl(String url) {
-        this.url = url;
-    }
-
-    public GalenPageRunner withScreenSize(Dimension screenSize) {
-        this.setScreenSize(screenSize);
-        return this;
-    }
-
-    public Dimension getScreenSize() {
-        return screenSize;
-    }
-
-    public void setScreenSize(Dimension screenSize) {
-        this.screenSize = screenSize;
-    }
-
-    public GalenPageRunner withSpec(PageSpec spec) {
-        this.setSpec(spec);
-        return this;
-    }
-
-    public PageSpec getSpec() {
-        return spec;
-    }
-
-    public void setSpec(PageSpec spec) {
-        this.spec = spec;
-    }
-
+    
     public GalenPageRunner withValidationListener(ValidationListener validationListener) {
         this.setValidationListener(validationListener);
         return this;
@@ -75,62 +27,28 @@ public class GalenPageRunner {
         this.validationListener = validationListener;
     }
 
-    public List<ValidationError> run(Browser browser) {
-        if (screenSize != null) {
-            browser.changeWindowSize(screenSize);
+    public List<ValidationError> run(Browser browser, GalenPageTest pageTest) {
+        if (pageTest.getScreenSize() != null) {
+            browser.changeWindowSize(pageTest.getScreenSize());
         }
         
-        browser.load(url);
+        browser.load(pageTest.getUrl());
         
-        if (javascript != null) {
-            browser.executeJavascript(javascript);
+        List<ValidationError> allErrors = new LinkedList<ValidationError>();
+        
+        for (GalenPageAction action : pageTest.getActions()) {
+            try {
+                List<ValidationError> errors = action.execute(browser, pageTest, validationListener);
+                if (errors != null) {
+                    allErrors.addAll(errors);
+                }
+            }
+            catch (Exception e) {
+                allErrors.add(ValidationError.fromException(e));
+            }
         }
         
-        Page page = browser.getPage();
-        
-        List<PageSection> pageSections = spec.findSections(includedTags, excludedTags);
-        
-        SectionValidation sectionValidation = new SectionValidation(pageSections, new PageValidation(page, spec), validationListener);
-        return sectionValidation.check();
-    }
-
-    public GalenPageRunner withIncludedTags(List<String> includedTags) {
-        this.setIncludedTags(includedTags);
-        return this;
-    }
-
-    public List<String> getIncludedTags() {
-        return includedTags;
-    }
-
-    public void setIncludedTags(List<String> includedTags) {
-        this.includedTags = includedTags;
-    }
-
-    public GalenPageRunner withJavascript(String javascript) {
-        this.setJavascript(javascript);
-        return this;
-    }
-
-    public String getJavascript() {
-        return javascript;
-    }
-
-    public void setJavascript(String javascript) {
-        this.javascript = javascript;
-    }
-
-    public GalenPageRunner withExcludedTags(List<String> excludedTags) {
-        this.setExcludedTags(excludedTags);
-        return this;
-    }
-
-    public List<String> getExcludedTags() {
-        return excludedTags;
-    }
-
-    public void setExcludedTags(List<String> excludedTags) {
-        this.excludedTags = excludedTags;
+        return allErrors;
     }
 
 }
