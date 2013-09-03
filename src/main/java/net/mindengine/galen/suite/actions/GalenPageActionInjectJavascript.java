@@ -1,14 +1,17 @@
 package net.mindengine.galen.suite.actions;
 
+import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
 
 import net.mindengine.galen.browser.Browser;
 import net.mindengine.galen.suite.GalenPageAction;
 import net.mindengine.galen.suite.GalenPageTest;
+import net.mindengine.galen.utils.GalenUtils;
 import net.mindengine.galen.validation.ValidationError;
 import net.mindengine.galen.validation.ValidationListener;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -31,8 +34,9 @@ public class GalenPageActionInjectJavascript implements GalenPageAction{
     }
     
     @Override
-    public List<ValidationError> execute(Browser browser, GalenPageTest pageTest, ValidationListener validationListener) {
-        browser.executeJavascript(getJavascriptFilePath());
+    public List<ValidationError> execute(Browser browser, GalenPageTest pageTest, ValidationListener validationListener) throws IOException {
+        String javascript = FileUtils.readFileToString(GalenUtils.findFile(javascriptFilePath));
+        browser.executeJavascript(javascript);
         return NO_ERRORS;
     }
     

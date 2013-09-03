@@ -1,0 +1,1 @@
+$("body").append("<injected-tag>Some injected content</injected-tag>");
