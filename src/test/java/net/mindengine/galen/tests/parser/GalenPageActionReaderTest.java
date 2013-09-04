@@ -9,8 +9,6 @@ import net.mindengine.galen.suite.actions.GalenPageActionCheck;
 import net.mindengine.galen.suite.actions.GalenPageActionInjectJavascript;
 import net.mindengine.galen.suite.actions.GalenPageActionRunJavascript;
 
-import org.hamcrest.MatcherAssert;
-import org.hamcrest.Matchers;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
