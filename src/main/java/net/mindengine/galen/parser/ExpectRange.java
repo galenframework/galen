@@ -26,16 +26,26 @@ public class ExpectRange implements Expectation<Range>{
 
     @Override
     public Range read(StringCharReader reader) {
+        
+        boolean approximate = false;
+        if (reader.next() == '~') {
+            approximate = true;
+        }
+        else {
+            reader.back();
+        }
+        
+        
         Double firstValue = expectDouble(reader);
         
         String text = expectNonNumeric(reader);
         if (text.equals("%")) {
-            return Range.exact(firstValue).withPercentOf(readPercentageOf(reader));
+            return createRange(firstValue, approximate).withPercentOf(readPercentageOf(reader));
         }
         if (text.equals("px")) {
-            return Range.exact(firstValue);
+            return createRange(firstValue, approximate);
         }
-        else {
+        else if (!approximate){
             Double secondValue = expectDouble(reader);
             
             Range range = null;
@@ -55,6 +65,22 @@ public class ExpectRange implements Expectation<Range>{
                 return range.withPercentOf(readPercentageOf(reader));
             }
             else throw new SyntaxException(UNKNOWN_LINE, "Missing ending: \"px\" or \"%\"");
+        }
+        else throw new SyntaxException(UNKNOWN_LINE, msgFor(text));
+    }
+
+    private Range createRange(Double firstValue, boolean approximate) {
+        if (approximate) {
+            
+            Double delta = Math.abs(firstValue) / 100;
+            if (delta < 1.0) {
+                delta = 1.0;
+            }
+            
+            return Range.between(firstValue - delta, firstValue + delta);
+        }
+        else {
+            return Range.exact(firstValue);
         }
     }
 

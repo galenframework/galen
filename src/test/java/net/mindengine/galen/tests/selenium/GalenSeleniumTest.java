@@ -125,6 +125,31 @@ public class GalenSeleniumTest {
     }
     
     @Test
+    public void shouldCheck_relativeToScreen() throws Exception {
+        openDriverForNicePage();
+        
+        PageSpec pageSpec = new PageSpecReader().read(getClass().getResourceAsStream("/html/page.spec"));
+        
+        driver.manage().window().setSize(new Dimension(400, 1000));
+        
+        SeleniumPage page = new SeleniumPage(driver);
+        
+        TestValidationListener validationListener = new TestValidationListener();
+        List<PageSection> pageSections = pageSpec.findSections(asList("screen-object-check"));
+        
+        assertThat("Filtered sections size should be", pageSections.size(), is(1));
+        
+        SectionValidation sectionValidation = new SectionValidation(pageSections, new PageValidation(page, pageSpec), validationListener);
+        List<ValidationError> errors = sectionValidation.check();
+        
+        assertThat("Invokations should", validationListener.getInvokations(), is("<o header>\n" +
+                "<SpecWidth header>\n" +
+                "</o header>\n"
+                ));
+        assertThat("Errors should be empty", errors.size(), is(0));
+    }
+    
+    @Test
     public void givesErrors_whenValidating_incorrectWebSite() throws Exception {
         openDriverForBadPage();
         

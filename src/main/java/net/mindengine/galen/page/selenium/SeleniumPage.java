@@ -45,4 +45,13 @@ public class SeleniumPage implements Page {
         else return null;
     }
 
+
+    @Override
+    public PageElement getSpecialObject(String objectName) {
+        if ("screen".equals(objectName)) {
+            return new ScreenElement(driver);
+        }
+        else return null;
+    }
+
 }

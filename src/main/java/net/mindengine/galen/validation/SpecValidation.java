@@ -49,7 +49,9 @@ public abstract class SpecValidation<T extends Spec> {
         if (objectLocator != null) {
             return pageValidation.getPage().getObject(objectName, objectLocator);
         }
-        else return null;
+        else {
+            return pageValidation.getPage().getSpecialObject(objectName);
+        }
     }
     
     protected ValidationError checkAvailability(PageElement object, String objectName) {

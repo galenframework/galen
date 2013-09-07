@@ -68,18 +68,25 @@ public class PageValidation {
             String fieldPath = valuePath.substring(index + 1);
             
             Locator locator = pageSpec.getObjectLocator(objectName);
-            if (locator != null) {
-                PageElement object = page.getObject(objectName, locator);
-                if (object != null) {
-                    Object objectValue = getObjectValue(object, fieldPath);
-                    int value = convertToInt(objectValue);
-                    return Range.between((range.getFrom() * value) / 100.0, (range.getTo() * value) / 100.0);
-                }
-                else throw new SyntaxException(UNKNOWN_LINE, format("Cannot find object \"%s\" using locator %s \"%s\"", objectName, locator.getLocatorType(), locator.getLocatorValue()));
+            PageElement pageElement = findPageElementOnPage(objectName, locator);
+            
+            if (pageElement != null) {
+                Object objectValue = getObjectValue(pageElement, fieldPath);
+                int value = convertToInt(objectValue);
+                return Range.between((range.getFrom() * value) / 100.0, (range.getTo() * value) / 100.0);
             }
             else throw new SyntaxException(UNKNOWN_LINE, format("Locator for object \"%s\" is not specified", objectName));
         }
         else throw new SyntaxException(UNKNOWN_LINE, format("Value path is incorrect %s", valuePath));
+    }
+
+    private PageElement findPageElementOnPage(String objectName, Locator locator) {
+        if (locator != null) {
+            return page.getObject(objectName, locator);
+        }
+        else {
+            return page.getSpecialObject(objectName);
+        }
     }
 
     private int convertToInt(Object objectValue) {

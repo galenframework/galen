@@ -70,6 +70,7 @@ header
 header
     height: 150 to 170px    
 
+
 @ mobile
 ------------------------------
 menu-item-home:
@@ -79,6 +80,11 @@ menu-item-rss:
     horizontally: menu-item-about, menu-item-contacts
     near: menu-item-home 0px bottom
     
+    
+@ screen-object-check
+-----------------------------
+header
+    width: ~100% of screen/width
     
 
 

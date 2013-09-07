@@ -44,38 +44,42 @@ import org.testng.annotations.Test;
 public class ExpectationsTest {
 
     @Test(dataProvider = "rangeTestData")
-    public void expectRangeTest(TestData<Range> testData) {
-        StringCharReader stringCharReader = new StringCharReader(testData.textForParsing);
+    public void expectRangeTest(String textForParsing, Range expected) {
+        StringCharReader stringCharReader = new StringCharReader(textForParsing);
         Range range = new ExpectRange().read(stringCharReader);
-        assertThat(range.getFrom(), is(testData.expected.getFrom()));
-        assertThat(range.getTo(), is(testData.expected.getTo()));
+        assertThat(range.getFrom(), is(expected.getFrom()));
+        assertThat(range.getTo(), is(expected.getTo()));
     }
     
     
     @DataProvider
     public Object[][] rangeTestData() {
         return new Object[][]{
-           row("10 to 15 px", new Range(10, 15)),
-           row("10.0 to 15.4 px", new Range(10, 15.4)),
-           row("10 to 15px", new Range(10, 15)),
-           row("10to15px", new Range(10, 15)),
-           row("-10to-15px", new Range(-15, -10)),
-           row("-10to-15.04px", new Range(-15.04, -10)),
-           row("10to15 px", new Range(10, 15)),
-           row("9 px", new Range(9, 9)),
-           row("9px", new Range(9, 9)),
-           row("9.01px", new Range(9.01, 9.01)),
-           row("   9px", new Range(9, 9)),
-           row("\t9px", new Range(9, 9)),
-           row("\t9\t\tpx", new Range(9, 9)),
-           row("-49px", new Range(-49, -49)),
-           row("15 ± 5 px", new Range(10, 20)),
-           row("15±5px", new Range(10, 20)),
-           row("15% of screen/width", new Range(15, 15).withPercentOf("screen/width")),
-           row("15.05% of screen/width", new Range(15.05, 15.05).withPercentOf("screen/width")),
-           row("15 to 40% of   screen/height", new Range(15, 40).withPercentOf("screen/height")),
-           row("15 ± 5 % of   screen/height", new Range(10, 20).withPercentOf("screen/height")),
-           row("15 to 40% of item-1/some-other-stuff/a/b/c2", new Range(15, 40).withPercentOf("item-1/some-other-stuff/a/b/c2"))
+           {"10 to 15 px", new Range(10, 15)},
+           {"10.0 to 15.4 px", new Range(10, 15.4)},
+           {"10 to 15px", new Range(10, 15)},
+           {"10to15px", new Range(10, 15)},
+           {"-10to-15px", new Range(-15, -10)},
+           {"-10to-15.04px", new Range(-15.04, -10)},
+           {"10to15 px", new Range(10, 15)},
+           {"9 px", new Range(9, 9)},
+           {"9px", new Range(9, 9)},
+           {"9.01px", new Range(9.01, 9.01)},
+           {"   9px", new Range(9, 9)},
+           {"\t9px", new Range(9, 9)},
+           {"\t9\t\tpx", new Range(9, 9)},
+           {"-49px", new Range(-49, -49)},
+           {"15 ± 5 px", new Range(10, 20)},
+           {"15±5px", new Range(10, 20)},
+           {"~100px", new Range(99, 101)},
+           {"~1000px", new Range(990, 1010)},
+           {"~1px", new Range(0, 2)},
+           {"15% of screen/width", new Range(15, 15).withPercentOf("screen/width")},
+           {"15.05% of screen/width", new Range(15.05, 15.05).withPercentOf("screen/width")},
+           {"15 to 40% of   screen/height", new Range(15, 40).withPercentOf("screen/height")},
+           {"15 ± 5 % of   screen/height", new Range(10, 20).withPercentOf("screen/height")},
+           {"15 to 40% of item-1/some-other-stuff/a/b/c2", new Range(15, 40).withPercentOf("item-1/some-other-stuff/a/b/c2")},
+           {"~40% of item-1/some-other-stuff/a/b/c2", new Range(39, 41).withPercentOf("item-1/some-other-stuff/a/b/c2")}
         };
     }
     
@@ -110,6 +114,7 @@ public class ExpectationsTest {
             row("15 ± 5", "Missing ending: \"px\" or \"%\""),
             row("15 ± 5 %", "Missing value path for relative range"),
             row("15 ± 5 % of ", "Missing value path for relative range"),
+            //TODO add negative tests for ~ Range
         };
     }
     
@@ -213,14 +218,14 @@ public class ExpectationsTest {
     @DataProvider
     public Object[][] provideBadLocations() {
         return new Object[][]{
-            new Object[]{"left", "Cannot parse range value: \"\""},
-            new Object[]{"10px qwe", "Unknown side: \"qwe\""},
-            new Object[]{"10 to 30px qwe", "Unknown side: \"qwe\""},
-            new Object[]{"10 to 30% of screen/width qwe", "Unknown side: \"qwe\""},
-            new Object[]{"10px left qwe", "Unknown side: \"qwe\""},
-            new Object[]{"10px left, 20px qwe", "Unknown side: \"qwe\""},
-            new Object[]{"10px left, 20px left qwe", "Unknown side: \"qwe\""},
-            new Object[]{"10px left, right, top", "Cannot parse range value: \"\""},
+            {"left", "Cannot parse range value: \"\""},
+            {"10px qwe", "Unknown side: \"qwe\""},
+            {"10 to 30px qwe", "Unknown side: \"qwe\""},
+            {"10 to 30% of screen/width qwe", "Unknown side: \"qwe\""},
+            {"10px left qwe", "Unknown side: \"qwe\""},
+            {"10px left, 20px qwe", "Unknown side: \"qwe\""},
+            {"10px left, 20px left qwe", "Unknown side: \"qwe\""},
+            {"10px left, right, top", "Cannot parse range value: \"\""},
         };
     }
     

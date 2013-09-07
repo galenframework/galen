@@ -42,5 +42,9 @@ public class MockedPage implements Page {
         this.elements = elements;
     }
 
-    
+    @Override
+    public PageElement getSpecialObject(String objectName) {
+        return null;
+    }
+
 }
