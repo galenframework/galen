@@ -48,6 +48,7 @@ import net.mindengine.galen.specs.SpecHeight;
 import net.mindengine.galen.specs.SpecHorizontally;
 import net.mindengine.galen.specs.SpecInside;
 import net.mindengine.galen.specs.SpecNear;
+import net.mindengine.galen.specs.SpecText;
 import net.mindengine.galen.specs.SpecVertically;
 import net.mindengine.galen.specs.SpecWidth;
 import net.mindengine.galen.specs.page.Locator;
@@ -299,6 +300,27 @@ public class ValidationTest {
               put("item2",  element(10, 30, 10, 10));
           }})),
           
+          
+          /* Text validation */
+          row(specTextIs("Some text"), page(new HashMap<String, PageElement>(){{
+              put("object", element(10, 10, 10, 10).withText("Some text"));
+          }})),
+          
+          row(specTextContains("good"), page(new HashMap<String, PageElement>(){{
+              put("object", element(10, 10, 10, 10).withText("Some good text"));
+          }})),
+          
+          row(specTextStarts("Some"), page(new HashMap<String, PageElement>(){{
+              put("object", element(10, 10, 10, 10).withText("Some text"));
+          }})),
+          
+          row(specTextEnds("text"), page(new HashMap<String, PageElement>(){{
+              put("object", element(10, 10, 10, 10).withText("Some text"));
+          }})),
+          
+          row(specTextMatches("Some text with [0-9]+ numbers"), page(new HashMap<String, PageElement>(){{
+              put("object", element(10, 10, 10, 10).withText("Some text with 12412512512521 numbers"));
+          }}))
           
         };
     }
@@ -848,6 +870,53 @@ public class ValidationTest {
                       put("item2", element(15, 30,   5, 10));
           }})),
           
+          
+          /* Text validation */
+          row(new ValidationError(NO_AREA, messages("Cannot find locator for \"object\" in page spec")),
+                  specTextIs("some wrong text"), 
+                  page(new HashMap<String, PageElement>())),
+                  
+          row(new ValidationError(NO_AREA, messages("\"object\" is absent on page")),
+                  specTextIs("some wrong text"), 
+                  page(new HashMap<String, PageElement>(){{
+                      put("object", invisibleElement(10, 10, 10, 10));
+          }})),
+          
+          row(new ValidationError(NO_AREA, messages("\"object\" is absent on page")),
+                  specTextIs("some wrong text"), 
+                  page(new HashMap<String, PageElement>(){{
+                      put("object", absentElement(10, 10, 10, 10));
+          }})),
+          
+          row(new ValidationError(singleArea(new Rect(10, 10, 10, 10), "object"), messages("\"object\" text is \"Some text\" but should be \"some wrong text\"")),
+                  specTextIs("some wrong text"), 
+                  page(new HashMap<String, PageElement>(){{
+                      put("object", element(10, 10, 10, 10).withText("Some text"));
+          }})),
+          
+          row(new ValidationError(singleArea(new Rect(10, 10, 10, 10), "object"), messages("\"object\" text is \"Some text\" but should contain \"good\"")),
+                  specTextContains("good"), 
+                  page(new HashMap<String, PageElement>(){{
+                      put("object", element(10, 10, 10, 10).withText("Some text"));
+          }})),
+          
+          row(new ValidationError(singleArea(new Rect(10, 10, 10, 10), "object"), messages("\"object\" text is \"Some text\" but should start with \"text\"")),
+                  specTextStarts("text"), 
+                  page(new HashMap<String, PageElement>(){{
+                      put("object", element(10, 10, 10, 10).withText("Some text"));
+          }})),
+          
+          row(new ValidationError(singleArea(new Rect(10, 10, 10, 10), "object"), messages("\"object\" text is \"Some text\" but should end with \"Some\"")),
+                  specTextEnds("Some"), 
+                  page(new HashMap<String, PageElement>(){{
+                      put("object", element(10, 10, 10, 10).withText("Some text"));
+          }})),
+          
+          row(new ValidationError(singleArea(new Rect(10, 10, 10, 10), "object"), messages("\"object\" text is \"Some text\" but should match \"Some [0-9]+ text\"")),
+                  specTextMatches("Some [0-9]+ text"), 
+                  page(new HashMap<String, PageElement>(){{
+                      put("object", element(10, 10, 10, 10).withText("Some text"));
+          }})),
         };
     }
     
@@ -863,6 +932,26 @@ public class ValidationTest {
         return Arrays.asList(new ErrorArea(rect, tooltip));
     }
 
+    private SpecText specTextIs(String text) {
+        return new SpecText(SpecText.Type.IS, text);
+    }
+    
+    private SpecText specTextContains(String text) {
+        return new SpecText(SpecText.Type.CONTAINS, text);
+    }
+    
+    private SpecText specTextStarts(String text) {
+        return new SpecText(SpecText.Type.STARTS, text);
+    }
+    
+    private SpecText specTextEnds(String text) {
+        return new SpecText(SpecText.Type.ENDS, text);
+    }
+    
+    private SpecText specTextMatches(String text) {
+        return new SpecText(SpecText.Type.MATCHES, text);
+    }
+    
     private SpecVertically specVertically(Alignment alignment, String...objectNames) {
         return new SpecVertically(alignment, Arrays.asList(objectNames));
     }

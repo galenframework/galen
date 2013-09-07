@@ -94,4 +94,9 @@ public class WebPageElement implements PageElement {
         this.webElement = webElement;
     }
 
+    @Override
+    public String getText() {
+        return getWebElement().getText().trim();
+    }
+
 }

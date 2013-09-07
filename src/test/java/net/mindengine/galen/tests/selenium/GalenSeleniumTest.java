@@ -213,17 +213,48 @@ public class GalenSeleniumTest {
                 "<SpecWidth header-text-2>\n" +
                 "</o header-text-2>\n"));
         
+        assertThat("Errors should be empty", errors.size(), is(0));
+    }
+    
+    @Test
+    public void shouldCheck_text() throws Exception {
+        openDriverForNicePage();
         
-        /*assertThat("Invokations should contain", validationListener.getInvokations(), is(
+        PageSpec pageSpec = new PageSpecReader().read(getClass().getResourceAsStream("/html/page.spec"));
+        
+        driver.manage().window().setSize(new Dimension(400, 1000));
+        
+        SeleniumPage page = new SeleniumPage(driver);
+        
+        TestValidationListener validationListener = new TestValidationListener();
+        List<PageSection> pageSections = pageSpec.findSections(asList("text-check"));
+        
+        assertThat("Filtered sections size should be", pageSections.size(), is(1));
+        
+        SectionValidation sectionValidation = new SectionValidation(pageSections, new PageValidation(page, pageSpec), validationListener);
+        List<ValidationError> errors = sectionValidation.check();
+        
+        assertThat("Invokations should", validationListener.getInvokations(), is(
+                "<o menu-item-home>\n" +
+                "<SpecText menu-item-home>\n" +
+                "</o menu-item-home>\n" +
                 
-                +
+                "<o menu-item-rss>\n" +
+                "<SpecText menu-item-rss>\n" +
+                "</o menu-item-rss>\n" +
                 
-                +
+                "<o menu-item-categories>\n" +
+                "<SpecText menu-item-categories>\n" +
+                "</o menu-item-categories>\n" +
                 
+                "<o menu-item-categories>\n" +
+                "<SpecText menu-item-categories>\n" +
+                "</o menu-item-categories>\n" +
                 
+                "<o menu-item-categories>\n" +
+                "<SpecText menu-item-categories>\n" +
+                "</o menu-item-categories>\n"
                 ));
-                
-                */
         assertThat("Errors should be empty", errors.size(), is(0));
     }
     

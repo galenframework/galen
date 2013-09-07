@@ -21,6 +21,7 @@ import net.mindengine.galen.page.Rect;
 public class MockedPageElement implements PageElement {
 
     private Rect rect;
+    private String innerText;
 
     public MockedPageElement(int left, int top, int width, int height) {
         this.rect = new Rect(left, top, width, height);
@@ -59,6 +60,16 @@ public class MockedPageElement implements PageElement {
     @Override
     public int getTop() {
         return getArea().getTop();
+    }
+
+    public MockedPageElement withText(String text) {
+        this.innerText = text;
+        return this;
+    }
+    
+    @Override
+    public String getText() {
+        return this.innerText;
     }
 
 }

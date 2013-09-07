@@ -27,4 +27,6 @@ public interface PageElement {
     int getHeight();
     int getLeft();
     int getTop();
+
+    String getText();
 }

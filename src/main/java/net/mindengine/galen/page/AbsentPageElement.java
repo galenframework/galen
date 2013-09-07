@@ -37,4 +37,9 @@ public class AbsentPageElement implements PageElement {
         return 0;
     }
 
+    @Override
+    public String getText() {
+        return "";
+    }
+
 }

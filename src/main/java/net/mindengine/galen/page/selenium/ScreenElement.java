@@ -53,4 +53,9 @@ public class ScreenElement implements PageElement {
         return 0;
     }
 
+    @Override
+    public String getText() {
+        return "";
+    }
+
 }

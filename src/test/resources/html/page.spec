@@ -102,3 +102,22 @@ header-text-1, header-text-2
     width: 900 to 1000px
 
 
+
+
+@ text-check 
+----------------------------
+menu-item-home:
+    text is: Home
+    
+menu-item-rss:
+    text matches: R.*s
+    
+menu-item-categories:
+    text starts: Cat
+    
+menu-item-categories:
+    text ends: ries
+    
+menu-item-categories:
+    text contains: egor
+

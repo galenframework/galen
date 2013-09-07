@@ -44,6 +44,7 @@ import net.mindengine.galen.specs.SpecHeight;
 import net.mindengine.galen.specs.SpecHorizontally;
 import net.mindengine.galen.specs.SpecInside;
 import net.mindengine.galen.specs.SpecNear;
+import net.mindengine.galen.specs.SpecText;
 import net.mindengine.galen.specs.SpecVertically;
 import net.mindengine.galen.specs.SpecWidth;
 
@@ -126,6 +127,37 @@ public class SpecReader {
                 }
             }
         }));
+        
+        putSpec("text.*", new SpecProcessor() {
+            @Override
+            public Spec processSpec(String specName, String paramsText) {
+                String arguments = specName.substring("text".length()).trim();
+                
+                if (arguments.isEmpty()) {
+                    throw new SyntaxException(UNKNOWN_LINE, "Text validation is not fully specified");
+                }
+                
+                SpecText.Type type = null;
+                if (arguments.equals("is")) {
+                    type = SpecText.Type.IS;
+                }
+                else if (arguments.equals("contains")) {
+                    type = SpecText.Type.CONTAINS;
+                }
+                else if (arguments.equals("starts")) {
+                    type = SpecText.Type.STARTS;
+                }
+                else if (arguments.equals("ends")) {
+                    type = SpecText.Type.ENDS;
+                }
+                else if (arguments.equals("matches")) {
+                    type = SpecText.Type.MATCHES;
+                }
+                else throw new SyntaxException(UNKNOWN_LINE, "Unknown text validation: " + arguments); 
+                
+                return new SpecText(type, paramsText.trim());
+            }
+        });
         
         putSpec("inside", new SpecComplexProcessor(expectThese(objectName(), locations()), new SpecComplexInit() {
             @SuppressWarnings("unchecked")
