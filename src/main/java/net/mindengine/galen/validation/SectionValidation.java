@@ -2,6 +2,7 @@ package net.mindengine.galen.validation;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.regex.Pattern;
 
 import net.mindengine.galen.specs.Spec;
 import net.mindengine.galen.specs.page.ObjectSpecs;
@@ -31,11 +32,56 @@ public class SectionValidation {
     private List<ValidationError> checkSection(PageSection section) {
         List<ValidationError> errors = new LinkedList<ValidationError>();
         for (ObjectSpecs object : section.getObjects()) {
-            tellOnObject(object.getObjectName());
-            errors.addAll(checkObject(object));
-            tellOnAfterObject(object.getObjectName());
+            
+            List<String> allObjectNames = findAllObjectNames(object.getObjectName());
+            
+            for (String objectName : allObjectNames) {
+                tellOnObject(objectName);
+                errors.addAll(checkObject(objectName, object.getSpecs()));
+                tellOnAfterObject(objectName);
+            }
         }
         return errors;
+    }
+
+    private List<String> findAllObjectNames(String objectsDefinition) {
+        List<String> objectNames = new LinkedList<String>();
+        
+        String names[] = objectsDefinition.split(",");
+        
+        for (String name : names) {
+            name = name.trim();
+            if (!name.isEmpty()) {
+                if (isRegularExpression(name)) {
+                    objectNames.addAll(fetchUsingRegex(name));
+                }
+                else {
+                    objectNames.add(name);
+                }
+            }
+        }
+        return objectNames;
+    }
+
+    private List<String> fetchUsingRegex(String simpleRegex) {
+        String regex = simpleRegex.replace("*", ".*");
+        Pattern pattern = Pattern.compile(regex);
+        
+        List<String> objectNames = new LinkedList<String>();
+        for (String objectName : pageValidation.getPageSpec().getObjects().keySet()) {
+            if (pattern.matcher(objectName).matches()) {
+                objectNames.add(objectName);
+            }
+        }
+        
+        return objectNames;
+    }
+
+    private boolean isRegularExpression(String name) {
+        if (name.contains("*")) {
+            return true;
+        }
+        else return false;
     }
 
     private void tellOnAfterObject(String objectName) {
@@ -60,17 +106,17 @@ public class SectionValidation {
         }
     }
 
-    private List<ValidationError> checkObject(ObjectSpecs object) {
+    private List<ValidationError> checkObject(String objectName, List<Spec> specs) {
         List<ValidationError> errors = new LinkedList<ValidationError>();
-        for (Spec spec : object.getSpecs()) {
+        for (Spec spec : specs) {
             
             
-            ValidationError error = pageValidation.check(object.getObjectName(), spec);
+            ValidationError error = pageValidation.check(objectName, spec);
             if (error != null) {
                 errors.add(error);
-                tellOnSpecError(pageValidation, object.getObjectName(), spec, error);
+                tellOnSpecError(pageValidation, objectName, spec, error);
             }
-            else tellOnSpecSuccess(pageValidation, object.getObjectName(), spec);
+            else tellOnSpecSuccess(pageValidation, objectName, spec);
         }
         return errors;
     }

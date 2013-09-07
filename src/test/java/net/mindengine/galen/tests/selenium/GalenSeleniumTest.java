@@ -2,6 +2,7 @@ package net.mindengine.galen.tests.selenium;
 
 import static java.util.Arrays.asList;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.is;
 
 import java.util.List;
@@ -148,6 +149,84 @@ public class GalenSeleniumTest {
                 ));
         assertThat("Errors should be empty", errors.size(), is(0));
     }
+    
+    @Test
+    public void shouldCheck_multipleObjects() throws Exception {
+        openDriverForNicePage();
+        
+        PageSpec pageSpec = new PageSpecReader().read(getClass().getResourceAsStream("/html/page.spec"));
+        
+        driver.manage().window().setSize(new Dimension(1024, 1000));
+        
+        SeleniumPage page = new SeleniumPage(driver);
+        
+        TestValidationListener validationListener = new TestValidationListener();
+        List<PageSection> pageSections = pageSpec.findSections(asList("multiple-objects-check"));
+        
+        assertThat("Filtered sections size should be", pageSections.size(), is(1));
+        
+        SectionValidation sectionValidation = new SectionValidation(pageSections, new PageValidation(page, pageSpec), validationListener);
+        List<ValidationError> errors = sectionValidation.check();
+        
+        assertThat("Invokations should contain", validationListener.getInvokations(), containsString(
+                "<o menu-item-home>\n" +
+                "<SpecHeight menu-item-home>\n" +
+                "</o menu-item-home>\n"));
+        
+        assertThat("Invokations should contain", validationListener.getInvokations(), containsString(
+                "<o menu-item-categories>\n" +
+                "<SpecHeight menu-item-categories>\n" +
+                "</o menu-item-categories>\n"));
+        
+        assertThat("Invokations should contain", validationListener.getInvokations(), containsString(
+                "<o menu-item-blog>\n" +
+                "<SpecHeight menu-item-blog>\n" +
+                "</o menu-item-blog>\n" ));
+        
+        assertThat("Invokations should contain", validationListener.getInvokations(), containsString(
+                "<o menu-item-rss>\n" +
+                "<SpecHeight menu-item-rss>\n" +
+                "</o menu-item-rss>\n" ));
+        
+        assertThat("Invokations should contain", validationListener.getInvokations(), containsString(
+                "<o menu-item-about>\n" +
+                "<SpecHeight menu-item-about>\n" +
+                "</o menu-item-about>\n" ));
+        
+        assertThat("Invokations should contain", validationListener.getInvokations(), containsString(
+                "<o menu-item-contacts>\n" +
+                "<SpecHeight menu-item-contacts>\n" +
+                "</o menu-item-contacts>\n" ));
+        
+        assertThat("Invokations should contain", validationListener.getInvokations(), containsString(
+                "<o menu-item-help>\n" +
+                "<SpecHeight menu-item-help>\n" +
+                "</o menu-item-help>\n" ));
+        
+        assertThat("Invokations should contain", validationListener.getInvokations(), containsString(
+                "<o header-text-1>\n" +
+                "<SpecWidth header-text-1>\n" +
+                "</o header-text-1>\n" ));
+        
+        assertThat("Invokations should contain", validationListener.getInvokations(), containsString(
+                "<o header-text-2>\n" +
+                "<SpecWidth header-text-2>\n" +
+                "</o header-text-2>\n"));
+        
+        
+        /*assertThat("Invokations should contain", validationListener.getInvokations(), is(
+                
+                +
+                
+                +
+                
+                
+                ));
+                
+                */
+        assertThat("Errors should be empty", errors.size(), is(0));
+    }
+    
     
     @Test
     public void givesErrors_whenValidating_incorrectWebSite() throws Exception {
