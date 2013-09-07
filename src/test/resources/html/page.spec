@@ -30,7 +30,7 @@ header
     contains:   header-text-1, header-text-2
     near:   menu 0px top
     width: 1000px
-    height: 100 to 120px
+    height: 110 ± 10px
 
 header-with-corrections:
     width: 900px

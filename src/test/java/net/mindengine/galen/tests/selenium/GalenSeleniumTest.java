@@ -42,9 +42,9 @@ public class GalenSeleniumTest {
     
     @Test
     public void performsValidation_forAll() throws Exception {
-        openDriverForNicePage();
-        
         PageSpec pageSpec = new PageSpecReader().read(getClass().getResourceAsStream("/html/page.spec"));
+        
+        openDriverForNicePage();
         
         driver.manage().window().maximize();
         

@@ -38,7 +38,7 @@ public class PageSpecReader {
     public PageSpec read(InputStream inputStream, String fileLocation) throws IOException {
         PageSpecLineProcessor lineProcessor = new PageSpecLineProcessor();
         
-        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream, "UTF-8"));
+        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream, System.getProperty("file.encoding")));
         
         String line = bufferedReader.readLine();
         
