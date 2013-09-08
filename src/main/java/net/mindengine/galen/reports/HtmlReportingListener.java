@@ -25,10 +25,15 @@ import net.mindengine.galen.xml.XmlBuilder;
 import net.mindengine.galen.xml.XmlBuilder.XmlNode;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
 
 public class HtmlReportingListener implements CompleteListener {
 
     private XmlNode bodyNode = node("body");
+    
+    private XmlNode headNode = createHeadNode();
+    private XmlNode htmlNode = node("html").withChildren(headNode).withChildren(bodyNode);
+    
     private XmlNode currentSuiteNode;
     private XmlNode currentPageNode;
     private XmlNode currentObjectNode;
@@ -52,6 +57,26 @@ public class HtmlReportingListener implements CompleteListener {
     
     public HtmlReportingListener(String reportPath) {
         this.reportPath = reportPath;
+    }
+
+    private XmlNode createHeadNode() {
+        XmlNode headNode = node("head");
+        
+        try {
+            String css = IOUtils.toString(getClass().getResourceAsStream("/html-report/galen-report.css"));
+            String jquery = IOUtils.toString(getClass().getResourceAsStream("/html-report/jquery-1.7.1.min.js"));
+            String galenJs = IOUtils.toString(getClass().getResourceAsStream("/html-report/galen-report.js"));
+            
+            headNode.add(node("style").withUnescapedText(css));
+            headNode.add(node("script").withUnescapedText(jquery));
+            headNode.add(node("script").withUnescapedText(galenJs));
+            //TODO make sure it doesn't escape
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+        
+        return headNode;
     }
 
     @Override
@@ -162,7 +187,7 @@ public class HtmlReportingListener implements CompleteListener {
     }
 
     public String toHtml() {
-        return new XmlBuilder(null, bodyNode).build();
+        return new XmlBuilder(null, htmlNode).build();
     }
 
     @Override

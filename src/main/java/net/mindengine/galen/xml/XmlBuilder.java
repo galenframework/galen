@@ -14,7 +14,7 @@ public class XmlBuilder {
     private static String INDENTATION = "    ";
     
     public static enum XmlNodeType {
-        NODE, TEXT
+        NODE, TEXT, TEXT_UNESCAPED
     }
     
     public static class XmlNode {
@@ -51,6 +51,9 @@ public class XmlBuilder {
         public void toXml(String indentation, StringWriter sw) {
             if (type == XmlNodeType.TEXT) {
                 sw.append(StringEscapeUtils.escapeXml(name));
+            }
+            else if (type == XmlNodeType.TEXT_UNESCAPED) {
+                sw.append(name);
             }
             else {
                 sw.append("\n");
@@ -119,6 +122,15 @@ public class XmlBuilder {
         public XmlNode withText(String text) {
             childNodes = new LinkedList<XmlBuilder.XmlNode>();
             childNodes.add(node(text).asTextNode());
+            return this;
+        }
+        public XmlNode withUnescapedText(String text) {
+            childNodes = new LinkedList<XmlBuilder.XmlNode>();
+            childNodes.add(node(text).asUnescapedTextNode());
+            return this;
+        }
+        private XmlNode asUnescapedTextNode() {
+            setType(XmlNodeType.TEXT_UNESCAPED);
             return this;
         }
         
