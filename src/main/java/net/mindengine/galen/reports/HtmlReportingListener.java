@@ -100,7 +100,7 @@ public class HtmlReportingListener implements ValidationListener, SuiteListener 
         for (String message : error.getMessages()) {
             errorList.add(node("li").withText(message));
         }
-        currentSpecsListNode.add(li("fail").withAttribute("data-screenshot", "/" + screenshot.name).withChildren(span(spec.toText()), areas(error.getErrorAreas()), errorList));
+        currentSpecsListNode.add(li("fail").withAttribute("data-screenshot", screenshot.name).withChildren(span(spec.toText()), areas(error.getErrorAreas()), errorList));
     }
 
     private XmlNode areas(List<ErrorArea> errorAreas) {
