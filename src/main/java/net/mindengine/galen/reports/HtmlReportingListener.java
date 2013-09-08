@@ -12,22 +12,21 @@ import java.util.Map;
 import net.mindengine.galen.browser.Browser;
 import net.mindengine.galen.page.Page;
 import net.mindengine.galen.page.Rect;
-import net.mindengine.galen.runner.GalenPageRunner;
+import net.mindengine.galen.runner.CompleteListener;
 import net.mindengine.galen.runner.GalenSuiteRunner;
-import net.mindengine.galen.runner.SuiteListener;
 import net.mindengine.galen.specs.Spec;
+import net.mindengine.galen.suite.GalenPageTest;
 import net.mindengine.galen.suite.GalenSuite;
 import net.mindengine.galen.utils.GalenUtils;
 import net.mindengine.galen.validation.ErrorArea;
 import net.mindengine.galen.validation.PageValidation;
 import net.mindengine.galen.validation.ValidationError;
-import net.mindengine.galen.validation.ValidationListener;
 import net.mindengine.galen.xml.XmlBuilder;
 import net.mindengine.galen.xml.XmlBuilder.XmlNode;
 
 import org.apache.commons.io.FileUtils;
 
-public class HtmlReportingListener implements ValidationListener, SuiteListener {
+public class HtmlReportingListener implements CompleteListener {
 
     private XmlNode bodyNode = node("body");
     private XmlNode currentSuiteNode;
@@ -77,15 +76,15 @@ public class HtmlReportingListener implements ValidationListener, SuiteListener 
     }
 
     @Override
-    public void onBeforePage(GalenSuiteRunner galenSuiteRunner, GalenPageRunner pageRunner, Browser browser) {
+    public void onBeforePage(GalenSuiteRunner galenSuiteRunner, GalenPageTest pageTest, Browser browser) {
         currentBrowser = browser;
         currentPageNode = div("test");
-        currentPageNode.add(h(2, browser.getUrl() + " " + GalenUtils.formatScreenSize(browser.getScreenSize())));
+        currentPageNode.add(h(2, pageTest.getUrl() + " " + GalenUtils.formatScreenSize(pageTest.getScreenSize())));
         currentSuiteNode.add(currentPageNode);
     }
     
     @Override
-    public void onAfterPage(GalenSuiteRunner galenSuiteRunner, GalenPageRunner pageRunner, Browser browser,
+    public void onAfterPage(GalenSuiteRunner galenSuiteRunner, GalenPageTest pageTest, Browser browser,
             List<ValidationError> errors) {
     }
 
@@ -170,14 +169,20 @@ public class HtmlReportingListener implements ValidationListener, SuiteListener 
     public void onAfterObject(PageValidation pageValidation, String objectName) {
     }
 
-    public void save() throws IOException {
-        File file = new File(reportPath);
-        if (file.createNewFile()) {
-            FileUtils.write(file, toHtml());
-            moveScreenshots(file.getParentFile());
+    @Override
+    public void done() {
+        try {
+            File file = new File(reportPath);
+            if (file.createNewFile()) {
+                FileUtils.write(file, toHtml());
+                moveScreenshots(file.getParentFile());
+            }
+            else {
+                throw new RuntimeException("Couldn't create file: " + reportPath);
+            }
         }
-        else {
-            throw new RuntimeException("Couldn't create file: " + reportPath);
+        catch (Exception ex) {
+            ex.printStackTrace();
         }
     }
 

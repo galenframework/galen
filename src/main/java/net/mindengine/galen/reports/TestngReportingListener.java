@@ -4,27 +4,25 @@ import static net.mindengine.galen.xml.XmlBuilder.node;
 import static net.mindengine.galen.xml.XmlBuilder.textNode;
 
 import java.io.File;
-import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
-import org.apache.commons.io.FileUtils;
-
 import net.mindengine.galen.browser.Browser;
-import net.mindengine.galen.runner.GalenPageRunner;
+import net.mindengine.galen.runner.CompleteListener;
 import net.mindengine.galen.runner.GalenSuiteRunner;
-import net.mindengine.galen.runner.SuiteListener;
 import net.mindengine.galen.specs.Spec;
+import net.mindengine.galen.suite.GalenPageTest;
 import net.mindengine.galen.suite.GalenSuite;
 import net.mindengine.galen.utils.GalenUtils;
 import net.mindengine.galen.validation.PageValidation;
 import net.mindengine.galen.validation.ValidationError;
-import net.mindengine.galen.validation.ValidationListener;
 import net.mindengine.galen.xml.XmlBuilder;
 import net.mindengine.galen.xml.XmlBuilder.XmlNode;
 
-public class TestngReportingListener implements ValidationListener, SuiteListener {
+import org.apache.commons.io.FileUtils;
+
+public class TestngReportingListener implements CompleteListener {
 
     private XmlNode rootNode = node("testng-results");
     private XmlBuilder xml = new XmlBuilder(XmlBuilder.XML_DECLARATION, rootNode);
@@ -38,13 +36,13 @@ public class TestngReportingListener implements ValidationListener, SuiteListene
     }
 
     @Override
-    public void onAfterPage(GalenSuiteRunner galenSuiteRunner, GalenPageRunner pageRunner, Browser browser,
+    public void onAfterPage(GalenSuiteRunner galenSuiteRunner, GalenPageTest pageTest, Browser browser,
             List<ValidationError> errors) {
     }
 
     @Override
-    public void onBeforePage(GalenSuiteRunner galenSuiteRunner, GalenPageRunner pageRunner, Browser browser) {
-        currentPageNode = node("test").withAttribute("name", browser.getUrl() + " " + GalenUtils.formatScreenSize(browser.getScreenSize()));
+    public void onBeforePage(GalenSuiteRunner galenSuiteRunner, GalenPageTest pageTest, Browser browser) {
+        currentPageNode = node("test").withAttribute("name", pageTest.getUrl() + " " + GalenUtils.formatScreenSize(pageTest.getScreenSize()));
         currentSuiteNode.add(currentPageNode);
     }
 
@@ -125,13 +123,19 @@ public class TestngReportingListener implements ValidationListener, SuiteListene
     public void onAfterObject(PageValidation pageValidation, String objectName) {
     }
 
-    public void save() throws IOException {
-        File file = new File(reportPath);
-        if (file.createNewFile()) {
-            FileUtils.write(file, toXml());
+    @Override
+    public void done() {
+        try {
+            File file = new File(reportPath);
+            if (file.createNewFile()) {
+                FileUtils.write(file, toXml());
+            }
+            else {
+                throw new RuntimeException("Couldn't create file: " + reportPath);
+            }
         }
-        else {
-            throw new RuntimeException("Couldn't create file: " + reportPath);
+        catch (Exception e) {
+            e.printStackTrace();
         }
     }
 

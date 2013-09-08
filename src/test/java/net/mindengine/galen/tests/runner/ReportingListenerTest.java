@@ -34,7 +34,7 @@ public class ReportingListenerTest {
         
         String expectedXml = IOUtils.toString(getClass().getResourceAsStream("/expected-reports/testng-report.xml"));
         
-        listener.save();
+        listener.done();
         
         String realXml = FileUtils.readFileToString(new File(reportPath));
         
@@ -51,7 +51,7 @@ public class ReportingListenerTest {
         
         String expectedHtml = IOUtils.toString(getClass().getResourceAsStream("/expected-reports/html-report-suffix.html"));
         
-        listener.save();
+        listener.done();
         
         String realHtml = FileUtils.readFileToString(new File(reportDirPath + "/report.html"));
         assertThat(bodyPart(realHtml), is(expectedHtml));

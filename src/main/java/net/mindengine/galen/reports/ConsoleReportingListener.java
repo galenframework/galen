@@ -4,17 +4,16 @@ import java.io.PrintStream;
 import java.util.List;
 
 import net.mindengine.galen.browser.Browser;
-import net.mindengine.galen.runner.GalenPageRunner;
+import net.mindengine.galen.runner.CompleteListener;
 import net.mindengine.galen.runner.GalenSuiteRunner;
-import net.mindengine.galen.runner.SuiteListener;
 import net.mindengine.galen.specs.Spec;
+import net.mindengine.galen.suite.GalenPageTest;
 import net.mindengine.galen.suite.GalenSuite;
 import net.mindengine.galen.utils.GalenUtils;
 import net.mindengine.galen.validation.PageValidation;
 import net.mindengine.galen.validation.ValidationError;
-import net.mindengine.galen.validation.ValidationListener;
 
-public class ConsoleReportingListener implements SuiteListener, ValidationListener{
+public class ConsoleReportingListener implements CompleteListener {
 
     private static final String OBJECT_INDETATION = "    ";
     private static final String SPEC_ERROR_INDENTATION = "->      ";
@@ -51,17 +50,17 @@ public class ConsoleReportingListener implements SuiteListener, ValidationListen
     }
 
     @Override
-    public void onAfterPage(GalenSuiteRunner galenSuiteRunner, GalenPageRunner pageRunner, Browser browser,
+    public void onAfterPage(GalenSuiteRunner galenSuiteRunner, GalenPageTest pageTest, Browser browser,
             List<ValidationError> errors) {
     }
 
     @Override
-    public void onBeforePage(GalenSuiteRunner galenSuiteRunner, GalenPageRunner pageRunner, Browser browser) {
+    public void onBeforePage(GalenSuiteRunner galenSuiteRunner, GalenPageTest pageTest, Browser browser) {
         out.println("----------------------------------------");
         out.print("Page: ");
-        out.print(browser.getUrl());
+        out.print(pageTest.getUrl());
         out.print(" ");
-        out.println(GalenUtils.formatScreenSize(browser.getScreenSize()));
+        out.println(GalenUtils.formatScreenSize(pageTest.getScreenSize()));
     }
 
     @Override
@@ -79,6 +78,12 @@ public class ConsoleReportingListener implements SuiteListener, ValidationListen
     @Override
     public void onAfterObject(PageValidation pageValidation, String objectName) {
         out.println();
+    }
+
+    @Override
+    public void done() {
+        // TODO Output amount of failed specs and list failed tests
+        
     }
 
 }

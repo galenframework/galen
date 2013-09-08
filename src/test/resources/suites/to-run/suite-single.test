@@ -6,5 +6,5 @@ Home page test
         
 
 Home page test 2
-    ${url} 320x240
+    ${url} 320x600
         check ${spec.path} --include desktop

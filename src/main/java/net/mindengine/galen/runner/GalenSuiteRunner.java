@@ -7,12 +7,14 @@ import net.mindengine.galen.browser.Browser;
 import net.mindengine.galen.suite.GalenPageTest;
 import net.mindengine.galen.suite.GalenSuite;
 import net.mindengine.galen.validation.ValidationError;
+import net.mindengine.galen.validation.ValidationListener;
 
 
 public class GalenSuiteRunner {
 
     private static final LinkedList<ValidationError> EMPTY_ERRORS = new LinkedList<ValidationError>();
     private SuiteListener suiteListener;
+    private ValidationListener validationListener;
     
     public GalenSuiteRunner() {
     }
@@ -42,13 +44,14 @@ public class GalenSuiteRunner {
         tellSuiteStarted(suite);
         
         GalenPageRunner pageRunner = new GalenPageRunner();
+        pageRunner.setValidationListener(validationListener);
         
         for (GalenPageTest pageTest : pageTests) {
             Browser browser = pageTest.getBrowserFactory().openBrowser();
             
-            tellBeforePage(pageRunner, browser);
+            tellBeforePage(pageTest, browser);
             List<ValidationError> errors = runPageTest(pageRunner, pageTest, browser);
-            tellAfterPage(pageRunner, browser, errors);
+            tellAfterPage(pageTest, browser, errors);
             
             browser.quit();
         }
@@ -56,10 +59,10 @@ public class GalenSuiteRunner {
         tellSuiteFinished(suite);
     }
 
-    private void tellAfterPage(GalenPageRunner pageRunner, Browser browser, List<ValidationError> errors) {
+    private void tellAfterPage(GalenPageTest pageTest, Browser browser, List<ValidationError> errors) {
         try {
             if (suiteListener != null) {
-                suiteListener.onAfterPage(this, pageRunner, browser, errors);
+                suiteListener.onAfterPage(this, pageTest, browser, errors);
             }
         }
         catch (Exception e) {
@@ -67,10 +70,10 @@ public class GalenSuiteRunner {
         }
     }
 
-    private void tellBeforePage(GalenPageRunner pageRunner, Browser browser) {
+    private void tellBeforePage(GalenPageTest pageTest, Browser browser) {
         try {
             if (suiteListener != null) {
-                suiteListener.onBeforePage(this, pageRunner, browser);
+                suiteListener.onBeforePage(this, pageTest, browser);
             }
         }
         catch (Exception e) {
@@ -108,6 +111,14 @@ public class GalenSuiteRunner {
         catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public ValidationListener getValidationListener() {
+        return validationListener;
+    }
+
+    public void setValidationListener(ValidationListener validationListener) {
+        this.validationListener = validationListener;
     }
 
 

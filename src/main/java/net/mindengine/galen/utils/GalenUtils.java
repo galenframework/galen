@@ -17,7 +17,10 @@ public class GalenUtils {
     }
     
     public static String formatScreenSize(Dimension screenSize) {
-        return String.format("%dx%d", screenSize.width, screenSize.height);
+        if (screenSize != null) {
+            return String.format("%dx%d", screenSize.width, screenSize.height);
+        }
+        else return "0x0";
     }
 
     public static Dimension readSize(String sizeText) {

@@ -11,13 +11,13 @@ import net.mindengine.galen.browser.Browser;
 import net.mindengine.galen.components.MockedBrowser;
 import net.mindengine.galen.components.validation.MockedPage;
 import net.mindengine.galen.page.Rect;
-import net.mindengine.galen.runner.GalenPageRunner;
 import net.mindengine.galen.runner.GalenSuiteRunner;
 import net.mindengine.galen.runner.SuiteListener;
 import net.mindengine.galen.specs.Location;
 import net.mindengine.galen.specs.SpecHeight;
 import net.mindengine.galen.specs.SpecInside;
 import net.mindengine.galen.specs.SpecWidth;
+import net.mindengine.galen.suite.GalenPageTest;
 import net.mindengine.galen.suite.GalenSuite;
 import net.mindengine.galen.validation.ErrorArea;
 import net.mindengine.galen.validation.PageValidation;
@@ -27,7 +27,6 @@ import net.mindengine.galen.validation.ValidationListener;
 public class ReportingListenerTestUtils {
 
     public static void performSampleReporting(SuiteListener suiteListener, ValidationListener validationListener) {
-        GalenPageRunner pageRunner = null;
         
         GalenSuiteRunner galenSuiteRunner = new GalenSuiteRunner();
         GalenSuite suite = new GalenSuite();
@@ -35,10 +34,12 @@ public class ReportingListenerTestUtils {
         
         suiteListener.onSuiteStarted(galenSuiteRunner, suite);
         
-        Browser browser = new MockedBrowser("http://example.com/page1", new Dimension(400, 600));
+        Browser browser = new MockedBrowser("http://example.com/page1", new Dimension(410, 610));
         
         PageValidation pageValidation = new PageValidation(new MockedPage(null), null);
-        suiteListener.onBeforePage(galenSuiteRunner, pageRunner, browser); {
+        
+        GalenPageTest pageTest = new GalenPageTest().withSize(400, 600).withUrl("http://example.com/page1");
+        suiteListener.onBeforePage(galenSuiteRunner, pageTest, browser); {
             validationListener.onObject(pageValidation, "objectA1"); {
                 validationListener.onSpecError(pageValidation, 
                         "objectA1", 
@@ -59,12 +60,13 @@ public class ReportingListenerTestUtils {
             validationListener.onAfterObject(pageValidation, "objectA2");
         
         }
-        suiteListener.onAfterPage(galenSuiteRunner, pageRunner, browser, asList(new ValidationError(asList(new ErrorArea(new Rect(10, 10, 100, 50), "objectA1")), asList("objectA1 is not inside other-object"))));
+        suiteListener.onAfterPage(galenSuiteRunner, pageTest, browser, asList(new ValidationError(asList(new ErrorArea(new Rect(10, 10, 100, 50), "objectA1")), asList("objectA1 is not inside other-object"))));
         
         
         pageValidation = new PageValidation(new MockedPage(null), null);
-        Browser browser2 = new MockedBrowser("http://example.com/page2", new Dimension(600, 700));
-        suiteListener.onBeforePage(galenSuiteRunner, pageRunner, browser2); {
+        Browser browser2 = new MockedBrowser("http://example.com/page2", new Dimension(610, 710));
+        GalenPageTest pageTest2 = new GalenPageTest().withSize(600, 700).withUrl("http://example.com/page2");
+        suiteListener.onBeforePage(galenSuiteRunner, pageTest2, browser2); {
             validationListener.onObject(pageValidation, "objectB1"); {
                 validationListener.onSpecSuccess(pageValidation, "objectB1", new SpecWidth(between(10, 20)).withOriginalText("width: 10 to 20px"));
                 
@@ -81,7 +83,7 @@ public class ReportingListenerTestUtils {
             validationListener.onAfterObject(pageValidation, "objectB2");
             
         }
-        suiteListener.onAfterPage(galenSuiteRunner, pageRunner, browser2, asList(new ValidationError(asList(new ErrorArea(new Rect(10, 10, 100, 50), "objectB1")), asList("objectA1 is not inside other-object", "second error message"))));
+        suiteListener.onAfterPage(galenSuiteRunner, pageTest2, browser2, asList(new ValidationError(asList(new ErrorArea(new Rect(10, 10, 100, 50), "objectB1")), asList("objectA1 is not inside other-object", "second error message"))));
         
         suiteListener.onSuiteFinished(galenSuiteRunner, suite);
     }

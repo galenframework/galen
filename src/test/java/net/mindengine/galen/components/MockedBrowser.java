@@ -1,7 +1,11 @@
 package net.mindengine.galen.components;
 
 import java.awt.Dimension;
+import java.io.File;
+import java.io.IOException;
 import java.util.UUID;
+
+import com.google.common.io.Files;
 
 import net.mindengine.galen.browser.Browser;
 import net.mindengine.galen.page.Page;
@@ -49,7 +53,15 @@ public class MockedBrowser implements Browser {
 
     @Override
     public String createScreenshot() {
-        return "/tmp/screenshot-" + UUID.randomUUID().toString() + ".png";
+        File tempDir = Files.createTempDir();
+        
+        File file = new File(tempDir.getAbsolutePath() + UUID.randomUUID().toString() + ".png");
+        try {
+            file.createNewFile();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return file.getAbsolutePath();
     }
 
 }
