@@ -1,4 +1,4 @@
-package net.mindengine.galen.tests.runner;
+package net.mindengine.galen.tests.parser;
 
 import static java.util.Arrays.asList;
 import static org.hamcrest.MatcherAssert.assertThat;

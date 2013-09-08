@@ -44,7 +44,8 @@ public class BashTemplate {
                     String paramName = currentParam.toString().trim();
                     Object value = context.getValue(paramName);
                     if (value == null) {
-                        value = "";
+                        //Looking for value in system properties
+                        value = System.getProperty(paramName, "");
                     }
                     buffer.append(value.toString());
                     state = PARSING_TEXT;

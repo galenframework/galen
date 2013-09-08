@@ -1,0 +1,10 @@
+
+
+Home page test
+    ${url} 640x480
+        check ${spec.path} --include desktop
+        
+
+Home page test 2
+    ${url} 320x240
+        check ${spec.path} --include desktop

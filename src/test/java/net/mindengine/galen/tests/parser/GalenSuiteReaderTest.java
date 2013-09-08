@@ -1,4 +1,4 @@
-package net.mindengine.galen.tests.runner;
+package net.mindengine.galen.tests.parser;
 
 import static java.util.Arrays.asList;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -79,6 +79,9 @@ public class GalenSuiteReaderTest {
 
     
     @Test public void shouldRead_suiteWithVariables_successfully() throws IOException {
+        
+        System.setProperty("some.system.property", "custom property");
+        
         GalenSuiteReader reader = new GalenSuiteReader();
         
         List<GalenSuite> galenSuites = reader.read(new File(getClass().getResource("/suites/suite-variables.txt").getFile()));
@@ -105,7 +108,7 @@ public class GalenSuiteReaderTest {
         // Checking suite 2
         {
             GalenSuite suite = galenSuites.get(1);
-            assertThat(suite.getName(), is("This is a name of suite 2"));
+            assertThat(suite.getName(), is("This is a name of suite 2 and also custom property"));
             assertThat("Amount of pages for 1st suite should be", suite.getPageTests().size(), is(1));
             
             GalenPageTest page = suite.getPageTests().get(0);
