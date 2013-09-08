@@ -128,7 +128,7 @@ public class TestngReportingListener implements CompleteListener {
         try {
             File file = new File(reportPath);
             if (file.createNewFile()) {
-                FileUtils.write(file, toXml());
+                FileUtils.writeStringToFile(file, toXml());
             }
             else {
                 throw new RuntimeException("Couldn't create file: " + reportPath);

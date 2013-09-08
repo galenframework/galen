@@ -174,7 +174,7 @@ public class HtmlReportingListener implements CompleteListener {
         try {
             File file = new File(reportPath);
             if (file.createNewFile()) {
-                FileUtils.write(file, toHtml());
+                FileUtils.writeStringToFile(file, toHtml());
                 moveScreenshots(file.getParentFile());
             }
             else {
