@@ -1,0 +1,152 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-size: 1em;
+    font-family: helvetica;
+    color: #555;
+}
+
+h1, h2, h3 {
+    margin: 20px 20px 10px 20px;
+    color: #111;
+}
+
+h1 {
+    font-size: 3em;
+}
+
+.suite h1 {
+    margin-top: 20px;
+    font-size: 2em;
+}
+
+.test {
+    margin: 20px;
+    padding-bottom: 20px;
+}
+
+
+.test h2 {
+    font-size: 1.3em;
+}
+
+
+.object {
+    margin-left: 20px;
+}
+.object h3 {
+    font-size: 1em;
+    font-weight: bold;
+}
+
+ul.test-specs {
+    margin-left: 60px;
+    list-style: none;
+}
+
+ul.test-specs li.fail {
+    font-weight: bold;
+    cursor: pointer;
+    color: #E32F0B;
+    position:relative;
+}
+
+ul.test-specs li.fail:before {
+    display: block;
+    position: absolute;
+    left: -30px;
+    font-size: 0.8em;
+    content: "!";
+    color: #fff;
+    background: #F53711;
+    width: 16px;
+    height: 14px;
+    padding-top: 2px;
+    text-align: center;
+    border:1px solid #962E1A;
+    border-radius: 20px;
+    text-shadow: 1px 1px 1px #962109;
+    box-shadow: 1px 1px 1px #999;
+}
+
+ul.areas {
+    display: none;
+}
+ul.error-message {
+    position: absolute;
+    list-style: none;
+    padding: 20px;
+    color: #555;
+    left: 40px;
+    display: none;
+    background: #fff;
+    border:1px solid #999;
+    border-radius: 10px;
+    box-shadow: 1px 1px 3px #999;
+}
+
+ul.error-message li {
+    margin-left: 0;
+    padding-left: 1em;
+    font-weight: normal;
+}
+
+ul.error-message li:before {
+    display:inline-block;
+    content: "-";
+    width: 1em;
+    margin-left:-1em;
+}
+
+ul.test-specs li.fail:hover ul.error-message {
+    display: block;
+}
+
+#tooltip {
+    display: none;
+    position: absolute;
+    background: #fff;
+    padding: 10px;
+    border:1px solid #999;
+    border-radius: 10px;
+    box-shadow: 2px 2px 4px #aaa;
+}
+#close-tooltip {
+    font-weight: bold;
+}
+
+#tooltip-body {
+    position:relative;
+}
+#tooltip-body .canvas {
+    position: absolute;
+    z-index: 10;
+}
+#tooltip-body .canvas .brick {
+    position: absolute;
+    display: block;
+    opacity: 0.9;
+    border:4px solid red;
+    border-radius: 10px;
+    box-shadow:inset 2px 2px 2px #000, 2px 2px 2px #000;
+}
+#tooltip-body .canvas .brick:hover {
+    opacity: 0.3;
+}
+#tooltip-body .canvas .brick span{
+    background: red;
+    color: white;
+    position:absolute;
+    padding: 5px;
+    bottom: -29px;
+    border-radius:5px;
+    box-shadow: 2px 2px 2px #000;
+}
+
+#tooltip-body img {
+    z-index: 9;
+}
+

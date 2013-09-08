@@ -1,0 +1,80 @@
+<html>
+    <head>
+        <link rel="stylesheet" href="galen-report.css" type="text/css"/>
+        <script src="jquery-1.7.1.min.js"></script>
+        <script src="galen-report.js"></script>
+    </head>
+    <body>
+        <h1>Galen Report</h1>
+
+        <div class="suite">
+            <h1>page1.test</h1>
+            <div class="test">
+                <h2>http://example.com/page1 400x600</h2>
+                <div class="object">
+                    <h3>objectA1</h3>
+                    <ul class="test-specs">
+                        <li class="fail" data-screenshot="screenshot-1.png">
+                            <span>inside: other-object 10px left</span>
+                            <ul class="areas">
+                                <li data-area="100,200,100,50">objectA1</li>
+                            </ul>
+                            <ul class="error-message">
+                                <li>objectA1 is not inside other-object</li>
+                            </ul>
+                        </li>
+                        <li class="success">
+                            <span>width: 10 to 20px</span>
+                        </li>
+                    </ul>
+                </div>
+                <div class="object">
+                    <h3>objectA2</h3>
+                    <ul class="test-specs">
+                        <li class="success">
+                            <span>width: 10 to 20px</span>
+                        </li>
+                        <li class="fail" data-screenshot="screenshot-1.png">
+                            <span>width: 10px</span>
+                            <ul class="areas">
+                                <li data-area="200,300,50,30">objectA2</li>
+                            </ul>
+                            <ul class="error-message">
+                                <li>objectA2 width is 20px instead of 10px</li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="test">
+                <h2>http://example.com/page2 600x700</h2>
+                <div class="object">
+                    <h3>objectB1</h3>
+                    <ul class="test-specs">
+                        <li class="success">
+                            <span>width: 10 to 20px</span>
+                        </li>
+                        <li class="fail" data-screenshot="screenshot-2.png">
+                            <span>inside: other-object 10px left</span>
+                            <ul class="areas">
+                                <li data-area="10,10,100,50">objectB1</li>
+                            </ul>
+                            <ul class="error-message">
+                                <li>objectB1 is not inside other-object</li>
+                                <li>second error message with &lt;xml&gt; &amp;tags</li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+                <div class="object">
+                    <h3>objectB2</h3>
+                    <ul class="test-specs">
+                        <li class="success">
+                            <span>height: 100px</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>
