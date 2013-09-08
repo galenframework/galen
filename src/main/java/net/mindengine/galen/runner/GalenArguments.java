@@ -22,6 +22,8 @@ public class GalenArguments {
 
     private String action;
     private String javascript;
+    private List<String> paths;
+    private Boolean recursive = false;
     private List<String> includedTags;
     private List<String> excludedTags;
     private Dimension screenSize;
@@ -134,10 +136,11 @@ public class GalenArguments {
         options.addOption("j", "javascript", true, "Path to javascript file which will be executed after test page loads");
         options.addOption("i", "include", true, "Tags for sections that should be included in test run");
         options.addOption("e", "exclude", true, "Tags for sections that should be excluded from test run");
-        options.addOption("r", "size", true, "Browser screen size");
+        options.addOption("d", "size", true, "Browser screen size");
         options.addOption("s", "spec", true, "Path for page specifications file");
-        options.addOption("R", "htmlreport", true, "Path for html output report");
+        options.addOption("H", "htmlreport", true, "Path for html output report");
         options.addOption("g", "testngreport", true, "Path for testng xml report");
+        options.addOption("r", "recursive", false, "Flag for recursive tests scan");
         
         CommandLineParser parser = new PosixParser();
         
@@ -153,32 +156,32 @@ public class GalenArguments {
         
         GalenArguments galen = new GalenArguments();
         
-        if (cmd.getArgs().length > 0) {
-            String action = cmd.getArgs()[0];
-            if (action.equals("run")) {
-                galen.setAction(action);
+        String[] leftovers = cmd.getArgs();
+        
+        if (leftovers.length > 0) {
+            String action = leftovers[0];
+            galen.setAction(action);
+            
+            if (leftovers.length > 1) {
+                List<String> paths = new LinkedList<String>();
+                for (int i=1; i<leftovers.length; i++) {
+                    paths.add(leftovers[i]);
+                }
+                galen.setPaths(paths);
             }
-            else throw new IllegalArgumentException("Unknown action: " + action);
         }
         else throw new IllegalArgumentException("Missing action");
         
         galen.setUrl(cmd.getOptionValue("u"));
-        if (galen.getUrl() == null) {
-            throw new IllegalArgumentException("Missing url");
-        }
         
         galen.setIncludedTags(convertTags(cmd.getOptionValue("i", "")));
         galen.setExcludedTags(convertTags(cmd.getOptionValue("e", "")));
-        galen.setScreenSize(convertScreenSize(cmd.getOptionValue("r")));
+        galen.setScreenSize(convertScreenSize(cmd.getOptionValue("d")));
         galen.setJavascript(cmd.getOptionValue("javascript"));
         galen.setTestngReport(cmd.getOptionValue("g"));
-        
+        galen.setRecursive(cmd.hasOption("r"));
         galen.setSpec(cmd.getOptionValue("s"));
-        if (galen.getSpec() == null) {
-            throw new IllegalArgumentException("Missing spec file");
-        }
-        
-        galen.setHtmlReport(cmd.getOptionValue("R"));
+        galen.setHtmlReport(cmd.getOptionValue("H"));
         
         
         return galen;
@@ -226,6 +229,8 @@ public class GalenArguments {
     public int hashCode() {
         return new HashCodeBuilder(13, 19)
         .append(action)
+        .append(paths)
+        .append(recursive)
         .append(javascript)
         .append(includedTags)
         .append(excludedTags)
@@ -251,6 +256,8 @@ public class GalenArguments {
         GalenArguments rhs = (GalenArguments)obj;
         return new EqualsBuilder()
             .append(action, rhs.action)
+            .append(paths, rhs.paths)
+            .append(recursive, rhs.recursive)
             .append(javascript, rhs.javascript)
             .append(includedTags, rhs.includedTags)
             .append(excludedTags, rhs.excludedTags)
@@ -266,6 +273,8 @@ public class GalenArguments {
     public String toString() {
         return new ToStringBuilder(this)
             .append("action", action)
+            .append("paths", paths)
+            .append("recursive", recursive)
             .append("javascript", javascript)
             .append("includedTags", includedTags)
             .append("excludedTags", excludedTags)
@@ -287,6 +296,32 @@ public class GalenArguments {
 
     public GalenArguments withTestngReport(String testngReport) {
         this.testngReport = testngReport;
+        return this;
+    }
+
+    public List<String> getPaths() {
+        return paths;
+    }
+
+    public void setPaths(List<String> paths) {
+        this.paths = paths;
+    }
+
+    public Boolean getRecursive() {
+        return recursive;
+    }
+
+    public void setRecursive(Boolean recursive) {
+        this.recursive = recursive;
+    }
+
+    public GalenArguments withPaths(List<String> paths) {
+        this.paths = paths;
+        return this;
+    }
+
+    public GalenArguments withRecursive(Boolean recursive) {
+        this.recursive = recursive;
         return this;
     }
 }

@@ -1,5 +1,6 @@
 package net.mindengine.galen.tests.runner;
 
+import static java.util.Arrays.asList;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
@@ -14,6 +15,8 @@ import org.testng.annotations.Test;
 
 public class ArgumentParserTest {
 
+    private static final String[] EMPTY_TAGS = {};
+
     @Test(dataProvider = "provideGoodSamples")
     public void shoulParseArguments(SimpleArguments args,  GalenArguments expectedArguments) throws ParseException {
         GalenArguments realArguments = GalenArguments.parse(args.args);
@@ -23,7 +26,45 @@ public class ArgumentParserTest {
     @DataProvider
     public Object[][] provideGoodSamples() {
         return new Object[][]{
-            row(args("run", "--url", "http://mindengine.net", 
+            {args("test", "mysuite", 
+                            "--recursive", 
+                            "--htmlreport", "some.html",
+                            "--testngreport", "testng.xml"), 
+                new GalenArguments()
+                    .withAction("test")
+                    .withPaths(asList("mysuite"))
+                    .withRecursive(true)
+                    .withHtmlReport("some.html")
+                    .withTestngReport("testng.xml")
+                    .withIncludedTags(EMPTY_TAGS)
+                    .withExcludedTags(EMPTY_TAGS)},
+                    
+            {args("test", "mysuite", 
+                            "--htmlreport", "some.html",
+                            "--testngreport", "testng.xml"), 
+                new GalenArguments()
+                    .withAction("test")
+                    .withPaths(asList("mysuite"))
+                    .withRecursive(false)
+                    .withHtmlReport("some.html")
+                    .withTestngReport("testng.xml")
+                    .withIncludedTags(EMPTY_TAGS)
+                    .withExcludedTags(EMPTY_TAGS)},
+                    
+            {args("test", "mysuite", "mysuite2", 
+                            "--recursive", 
+                            "--htmlreport", "some.html",
+                            "--testngreport", "testng.xml"), 
+                new GalenArguments()
+                    .withAction("test")
+                    .withPaths(asList("mysuite", "mysuite2"))
+                    .withRecursive(true)
+                    .withHtmlReport("some.html")
+                    .withTestngReport("testng.xml")
+                    .withIncludedTags(EMPTY_TAGS)
+                    .withExcludedTags(EMPTY_TAGS)},
+                    
+            {args("check", "--url", "http://mindengine.net", 
                             "--javascript", "some.js", 
                             "--include", "mobile,all", 
                             "--exclude", "nomobile,testTag", 
@@ -32,7 +73,7 @@ public class ArgumentParserTest {
                             "--htmlreport", "some.html",
                             "--testngreport", "testng.xml"), 
                 new GalenArguments()
-                    .withAction("run")
+                    .withAction("check")
                     .withUrl("http://mindengine.net")
                     .withJavascript("some.js")
                     .withIncludedTags("mobile", "all")
@@ -40,18 +81,18 @@ public class ArgumentParserTest {
                     .withScreenSize(new Dimension(400, 700))
                     .withSpec("some.spec")
                     .withHtmlReport("some.html")
-                    .withTestngReport("testng.xml")),
+                    .withTestngReport("testng.xml")},
 
-            row(args("run", "-u", "http://mindengine.net", 
+            {args("check", "-u", "http://mindengine.net", 
                             "-j", "some.js", 
                             "-i", "mobile,all", 
                             "-e", "nomobile,testTag", 
-                            "-r", "400x700", 
+                            "-d", "400x700", 
                             "-s", "some.spec",
-                            "-R", "some.html",
+                            "-H", "some.html",
                             "-g", "testng.xml"), 
                new GalenArguments()
-                    .withAction("run")
+                    .withAction("check")
                     .withUrl("http://mindengine.net")
                     .withJavascript("some.js")
                     .withIncludedTags("mobile", "all")
@@ -59,31 +100,31 @@ public class ArgumentParserTest {
                     .withScreenSize(new Dimension(400, 700))
                     .withSpec("some.spec")
                     .withHtmlReport("some.html")
-                    .withTestngReport("testng.xml")),
+                    .withTestngReport("testng.xml")},
 
-            row(args("run", "--url", "http://mindengine.net", 
+            {args("check", "--url", "http://mindengine.net", 
                             "--include", "mobile,all", 
                             "--exclude", "nomobile,testTag", 
                             "--size", "400x700", 
                             "--spec", "some.spec",
                             "--htmlreport", "some.html"), 
                 new GalenArguments()
-                    .withAction("run")
+                    .withAction("check")
                     .withUrl("http://mindengine.net")
                     .withIncludedTags("mobile", "all")
                     .withExcludedTags("nomobile", "testTag")
                     .withScreenSize(new Dimension(400, 700))
                     .withSpec("some.spec")
-                    .withHtmlReport("some.html")),
+                    .withHtmlReport("some.html")},
                    
-            row(args("run", "--url", "http://mindengine.net", 
+            {args("check", "--url", "http://mindengine.net", 
                             "--spec", "some.spec"), 
                 new GalenArguments()
-                    .withAction("run")
+                    .withAction("check")
                     .withUrl("http://mindengine.net")
                     .withIncludedTags()
                     .withExcludedTags()
-                    .withSpec("some.spec")),
+                    .withSpec("some.spec")},
         };
     }
     
@@ -105,40 +146,19 @@ public class ArgumentParserTest {
     @DataProvider
     public Object[][] provideBadSamples() {
         return new Object[][]{
-          row("Unknown action: do", 
-              args("do", "--url", "http://example.com")),
+          {"Incorrect size: 123", 
+              args("run", "--url", "http://example.com", "--size", "123")},
           
-          row("Incorrect size: 123", 
-              args("run", "--url", "http://example.com", "--size", "123")),
+          {"Incorrect size: 123xx123", 
+              args("run", "--url", "http://example.com", "--size", "123xx123")},
           
-          row("Incorrect size: 123xx123", 
-              args("run", "--url", "http://example.com", "--size", "123xx123")),
+          {"Incorrect size: a123xx123", 
+              args("run", "--url", "http://example.com", "--size", "a123xx123")},
           
-          row("Incorrect size: a123xx123", 
-              args("run", "--url", "http://example.com", "--size", "a123xx123")),
+          {"Incorrect size: 123x", 
+              args("run", "--url", "http://example.com", "--size", "123x")},
           
-          row("Incorrect size: 123x", 
-              args("run", "--url", "http://example.com", "--size", "123x")),
-          
-          row("Missing url",
-              args("run",  
-                  "--javascript", "some.js", 
-                  "--include", "mobile,all", 
-                  "--exclude", "nomobile,testTag", 
-                  "--size", "400x700", 
-                  "--spec", "some.spec",
-                  "--htmlreport", "some.html")),
-          
-          row("Missing spec file",
-              args("run",
-                  "--url", "http://example.com",
-                  "--javascript", "some.js", 
-                  "--include", "mobile,all", 
-                  "--exclude", "nomobile,testTag", 
-                  "--size", "400x700", 
-                  "--htmlreport", "some.html")),
-          
-          row("Missing value for url",
+          {"Missing value for url",
               args("run",
                   "--url", 
                   "--javascript", "some.js", 
@@ -146,9 +166,9 @@ public class ArgumentParserTest {
                   "--exclude", "nomobile,testTag", 
                   "--size", "400x700", 
                   "--spec", "some.spec",
-                  "--htmlreport", "some.html")),
+                  "--htmlreport", "some.html")},
                   
-          row("Missing value for javascript",
+          {"Missing value for javascript",
               args("run",
                   "--url", "http://example.com", 
                   "--javascript", 
@@ -156,9 +176,9 @@ public class ArgumentParserTest {
                   "--exclude", "nomobile,testTag", 
                   "--size", "400x700", 
                   "--spec", "some.spec",
-                  "--htmlreport", "some.html")),
+                  "--htmlreport", "some.html")},
                   
-          row("Missing value for include",
+          {"Missing value for include",
               args("run",
                   "--url", "http://example.com", 
                   "--javascript", "script.js", 
@@ -166,9 +186,9 @@ public class ArgumentParserTest {
                   "--exclude", "nomobile,testTag", 
                   "--size", "400x700", 
                   "--spec", "some.spec",
-                  "--htmlreport", "some.html")),
+                  "--htmlreport", "some.html")},
                  
-          row("Missing value for exclude",
+          {"Missing value for exclude",
               args("run",
                   "--url", "http://example.com", 
                   "--javascript", "script.js", 
@@ -176,9 +196,9 @@ public class ArgumentParserTest {
                   "--exclude", 
                   "--size", "400x700", 
                   "--spec", "some.spec",
-                  "--htmlreport", "some.html")),
+                  "--htmlreport", "some.html")},
                   
-          row("Missing value for size",
+          {"Missing value for size",
               args("run",
                   "--url", "http://example.com", 
                   "--javascript", "script.js", 
@@ -186,9 +206,9 @@ public class ArgumentParserTest {
                   "--exclude", "nomobile", 
                   "--size", 
                   "--spec", "some.spec",
-                  "--htmlreport", "some.html")),
+                  "--htmlreport", "some.html")},
                   
-          row("Missing value for spec",
+          {"Missing value for spec",
                   args("run",
                       "--url", "http://example.com", 
                       "--javascript", "script.js", 
@@ -196,9 +216,9 @@ public class ArgumentParserTest {
                       "--exclude", "nomobile", 
                       "--size", "540x350", 
                       "--spec",
-                      "--htmlreport", "some.html")),
+                      "--htmlreport", "some.html")},
                       
-          row("Missing value for htmlreport",
+          {"Missing value for htmlreport",
                   args("run",
                       "--url", "http://example.com", 
                       "--javascript", "script.js", 
@@ -206,7 +226,7 @@ public class ArgumentParserTest {
                       "--exclude", "nomobile", 
                       "--size", "540x350", 
                       "--spec", "page.spec",
-                      "--htmlreport")),
+                      "--htmlreport")}
 
         };
     }
@@ -232,8 +252,4 @@ public class ArgumentParserTest {
         return new SimpleArguments(args);
     }
 
-
-    private Object[] row(Object...args) {
-        return args;
-    }
 }
