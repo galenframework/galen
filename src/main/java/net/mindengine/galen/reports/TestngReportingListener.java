@@ -3,9 +3,13 @@ package net.mindengine.galen.reports;
 import static net.mindengine.galen.xml.XmlBuilder.node;
 import static net.mindengine.galen.xml.XmlBuilder.textNode;
 
+import java.io.File;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+
+import org.apache.commons.io.FileUtils;
 
 import net.mindengine.galen.browser.Browser;
 import net.mindengine.galen.runner.GalenPageRunner;
@@ -27,7 +31,12 @@ public class TestngReportingListener implements ValidationListener, SuiteListene
     private XmlNode currentSuiteNode;
     private XmlNode currentPageNode;
     private XmlNode currentObjectNode;
+    private String reportPath;
     
+    public TestngReportingListener(String reportPath) {
+        this.reportPath = reportPath;
+    }
+
     @Override
     public void onAfterPage(GalenSuiteRunner galenSuiteRunner, GalenPageRunner pageRunner, Browser browser,
             List<ValidationError> errors) {
@@ -114,6 +123,16 @@ public class TestngReportingListener implements ValidationListener, SuiteListene
 
     @Override
     public void onAfterObject(PageValidation pageValidation, String objectName) {
+    }
+
+    public void save() throws IOException {
+        File file = new File(reportPath);
+        if (file.createNewFile()) {
+            FileUtils.write(file, toXml());
+        }
+        else {
+            throw new RuntimeException("Couldn't create file: " + reportPath);
+        }
     }
 
 }

@@ -3,6 +3,8 @@ package net.mindengine.galen.reports;
 import static java.lang.String.format;
 import static net.mindengine.galen.xml.XmlBuilder.node;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -23,6 +25,8 @@ import net.mindengine.galen.validation.ValidationListener;
 import net.mindengine.galen.xml.XmlBuilder;
 import net.mindengine.galen.xml.XmlBuilder.XmlNode;
 
+import org.apache.commons.io.FileUtils;
+
 public class HtmlReportingListener implements ValidationListener, SuiteListener {
 
     private XmlNode bodyNode = node("body");
@@ -36,6 +40,7 @@ public class HtmlReportingListener implements ValidationListener, SuiteListener 
     private Map<Page, Screenshot> screenshots = new HashMap<Page, Screenshot>();
     
     private int screenshotId = 0;
+    private String reportPath;
     
     private class Screenshot {
         private String name;
@@ -46,6 +51,10 @@ public class HtmlReportingListener implements ValidationListener, SuiteListener 
         }
     }
     
+    public HtmlReportingListener(String reportPath) {
+        this.reportPath = reportPath;
+    }
+
     @Override
     public void onSuiteStarted(GalenSuiteRunner galenSuiteRunner, GalenSuite suite) {
         currentSuiteNode = div("suite");
@@ -159,6 +168,24 @@ public class HtmlReportingListener implements ValidationListener, SuiteListener 
 
     @Override
     public void onAfterObject(PageValidation pageValidation, String objectName) {
+    }
+
+    public void save() throws IOException {
+        File file = new File(reportPath);
+        if (file.createNewFile()) {
+            FileUtils.write(file, toHtml());
+            moveScreenshots(file.getParentFile());
+        }
+        else {
+            throw new RuntimeException("Couldn't create file: " + reportPath);
+        }
+    }
+
+    private void moveScreenshots(File folder) throws IOException {
+        for (Screenshot screenshot : screenshots.values()) {
+            FileUtils.copyFile(new File(screenshot.filePath), new File(folder.getAbsolutePath() + File.separator + screenshot.name));
+        }
+        
     }
 
 }
