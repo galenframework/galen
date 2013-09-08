@@ -54,7 +54,36 @@ public class GalenMainTest {
         
         assertThat(testngReportContent, containsString("<suite name=\"Home page test 2\">"));
         assertThat(testngReportContent, containsString("<test name=\"" + testUrl + " 320x600\">"));
+    }
+    
+    
+    @Test public void shouldFindAndRun_allTestsRecursivelly() throws IOException {
+        String testUrl = "file://" + getClass().getResource("/html/page-nice.html").getFile();
+        System.setProperty("url", testUrl);
+        System.setProperty("spec.path", getClass().getResource("/html/page.spec").getFile());
         
+        GalenMain galen = new GalenMain();
+        
+        File reportsDir = Files.createTempDir();
+        String testngReportPath = reportsDir.getAbsolutePath() + "/testng-report.html";
+        
+        galen.execute(new GalenArguments()
+            .withAction("test")
+            .withPaths(asList(getClass().getResource("/suites/to-run/recursive-check").getFile()))
+            .withRecursive(true)
+            .withTestngReport(testngReportPath)
+            );
+        
+        String testngReportContent = FileUtils.readFileToString(new File(testngReportPath));
+        
+        assertThat(testngReportContent, containsString("<suite name=\"Recursion check 1\">"));
+        assertThat(testngReportContent, containsString("<test name=\"" + testUrl + " 640x480\">"));
+        
+        assertThat(testngReportContent, containsString("<suite name=\"Recursion check 2\">"));
+        assertThat(testngReportContent, containsString("<test name=\"" + testUrl + " 320x480\">"));
+        
+        assertThat(testngReportContent, containsString("<suite name=\"Recursion check 3\">"));
+        assertThat(testngReportContent, containsString("<test name=\"" + testUrl + " 640x480\">"));
     }
 }
 
