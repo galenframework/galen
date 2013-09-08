@@ -10,6 +10,7 @@ import java.io.PrintStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+
 import net.mindengine.galen.components.report.ReportingListenerTestUtils;
 import net.mindengine.galen.reports.ConsoleReportingListener;
 import net.mindengine.galen.reports.HtmlReportingListener;
@@ -64,6 +65,8 @@ public class ReportingListenerTest {
         PrintStream ps = new PrintStream(baos);
         ConsoleReportingListener listener = new ConsoleReportingListener(ps, ps);
         ReportingListenerTestUtils.performSampleReporting(listener, listener);
+        
+        listener.done();
         
         String expectedText = IOUtils.toString(getClass().getResourceAsStream("/expected-reports/console.txt"));
         assertThat(baos.toString("UTF-8"), is(expectedText));

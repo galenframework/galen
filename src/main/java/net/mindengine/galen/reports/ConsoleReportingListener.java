@@ -1,7 +1,9 @@
 package net.mindengine.galen.reports;
 
 import java.io.PrintStream;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import net.mindengine.galen.browser.Browser;
 import net.mindengine.galen.runner.CompleteListener;
@@ -21,6 +23,11 @@ public class ConsoleReportingListener implements CompleteListener {
     private static final String SPEC_INDENTATION = "        ";
     private PrintStream out;
     private PrintStream err;
+    
+    private int passCount = 0;
+    private int errorCount = 0;
+    private Set<String> suitesWithError = new HashSet<String>();
+    private String currentSuite;
 
     public ConsoleReportingListener(PrintStream out, PrintStream err) {
         this.out = out;
@@ -35,6 +42,9 @@ public class ConsoleReportingListener implements CompleteListener {
 
     @Override
     public void onSpecError(PageValidation pageValidation, String objectName, Spec spec, ValidationError error) {
+        errorCount++;
+        suitesWithError.add(currentSuite);
+        
         err.print(SPEC_ERROR_INDENTATION);
         err.println(spec.toText());
         for(String message : error.getMessages()) {
@@ -45,6 +55,7 @@ public class ConsoleReportingListener implements CompleteListener {
 
     @Override
     public void onSpecSuccess(PageValidation pageValidation, String objectName, Spec spec) {
+        passCount++;
         out.print(SPEC_INDENTATION);
         out.println(spec.toText());
     }
@@ -69,6 +80,8 @@ public class ConsoleReportingListener implements CompleteListener {
 
     @Override
     public void onSuiteStarted(GalenSuiteRunner galenSuiteRunner, GalenSuite suite) {
+        currentSuite = suite.getName();
+        
         out.println("========================================");
         out.print("Suite: ");
         out.println(suite.getName());
@@ -82,8 +95,28 @@ public class ConsoleReportingListener implements CompleteListener {
 
     @Override
     public void done() {
-        // TODO Output amount of failed specs and list failed tests
+        out.println();
+        out.println("========================================");
+        out.println("----------------------------------------");
+        out.println("========================================");
+        if (suitesWithError.size() > 0) {
+            out.println("Failed suites:");
+            for (String name: suitesWithError) {
+                out.println("    " + name);
+            }
+            out.println();
+        }
         
+        out.print("Status: ");
+        if (errorCount > 0) {
+            out.println("FAIL");
+            out.println("Total failures: " + errorCount);
+        }
+        else {
+            out.println("PASS");
+        }
+        int totalTests = passCount +  errorCount;
+        out.println("Total tests: " + totalTests);
     }
 
 }

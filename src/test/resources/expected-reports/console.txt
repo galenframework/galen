@@ -24,3 +24,13 @@ Page: http://example.com/page2 600x700
     objectB2
         height: 100px
 
+
+========================================
+----------------------------------------
+========================================
+Failed suites:
+    page1.test
+
+Status: FAIL
+Total failures: 3
+Total tests: 7

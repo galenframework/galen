@@ -33,7 +33,6 @@ public class GalenSuiteRunner {
     }
 
     
-    //TODO Write tests for suite runner
     public void runSuite(GalenSuite suite) {
         if (suite == null) {
             throw new IllegalArgumentException("Suite can not be null");
