@@ -70,7 +70,6 @@ public class HtmlReportingListener implements CompleteListener {
             headNode.add(node("style").withUnescapedText(css));
             headNode.add(node("script").withUnescapedText(jquery));
             headNode.add(node("script").withUnescapedText(galenJs));
-            //TODO make sure it doesn't escape
         }
         catch (Exception e) {
             e.printStackTrace();

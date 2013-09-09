@@ -4,6 +4,8 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.openqa.selenium.Platform;
+import org.openqa.selenium.remote.DesiredCapabilities;
+import org.openqa.selenium.remote.RemoteWebDriver;
 
 public class SeleniumGridBrowserFactory implements BrowserFactory {
 
@@ -18,8 +20,21 @@ public class SeleniumGridBrowserFactory implements BrowserFactory {
 
     @Override
     public Browser openBrowser() {
-        // TODO create a remote webdriver instance
-        return null;
+        DesiredCapabilities desiredCapabilities = new DesiredCapabilities();
+        
+        if (platform != null) {
+            desiredCapabilities.setPlatform(platform);
+        }
+        
+        if (browser != null) {
+            desiredCapabilities.setBrowserName(browser);
+        }
+        
+        if (browserVersion != null) {
+            desiredCapabilities.setVersion(browserVersion);
+        }
+        
+        return new SeleniumBrowser(new RemoteWebDriver(desiredCapabilities));
     }
 
     public SeleniumGridBrowserFactory withBrowser(String browser) {
