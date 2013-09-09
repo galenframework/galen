@@ -1,11 +1,14 @@
 package net.mindengine.galen;
 
+import static java.util.Arrays.asList;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
 
+import net.mindengine.galen.browser.SeleniumBrowserFactory;
 import net.mindengine.galen.reports.ConsoleReportingListener;
 import net.mindengine.galen.reports.HtmlReportingListener;
 import net.mindengine.galen.reports.TestngReportingListener;
@@ -13,8 +16,13 @@ import net.mindengine.galen.runner.CombinedListener;
 import net.mindengine.galen.runner.CompleteListener;
 import net.mindengine.galen.runner.GalenArguments;
 import net.mindengine.galen.runner.GalenSuiteRunner;
+import net.mindengine.galen.suite.GalenPageAction;
+import net.mindengine.galen.suite.GalenPageTest;
 import net.mindengine.galen.suite.GalenSuite;
+import net.mindengine.galen.suite.actions.GalenPageActionCheck;
 import net.mindengine.galen.suite.reader.GalenSuiteReader;
+
+import org.apache.commons.cli.ParseException;
 
 public class GalenMain {
     
@@ -35,8 +43,58 @@ public class GalenMain {
         if ("test".equals(arguments.getAction())) {
             runTests(arguments, combinedListener);
         }
+        else if ("check".equals(arguments.getAction())) {
+            performCheck(arguments, combinedListener);
+        }
         
         combinedListener.done();
+    }
+    
+    private void performCheck(GalenArguments arguments, CombinedListener listener) throws IOException {
+        verifyArgumentsForPageCheck(arguments);
+        
+        List<GalenSuite> galenSuites = new LinkedList<GalenSuite>();
+        
+        
+        for (String pageSpecPath : arguments.getPaths()) {
+            GalenSuite suite = new GalenSuite();
+            
+            suite.setName(pageSpecPath);
+            
+            
+            suite.setPageTests(asList(new GalenPageTest()
+                .withUrl(arguments.getUrl())
+                .withSize(arguments.getScreenSize())
+                .withBrowserFactory(new SeleniumBrowserFactory(SeleniumBrowserFactory.FIREFOX))
+                .withActions(asList((GalenPageAction)new GalenPageActionCheck()
+                    .withSpecs(asList(pageSpecPath))
+                    .withIncludedTags(arguments.getIncludedTags())
+                    .withExcludedTags(arguments.getExcludedTags()))
+                )));
+                        
+            galenSuites.add(suite);
+        }
+        
+        runSuites(galenSuites, listener);
+    }
+
+    private void verifyArgumentsForPageCheck(GalenArguments arguments) {
+        if (arguments.getUrl() == null) {
+            throw new IllegalArgumentException("Url is not specified");
+        }
+        
+        if (arguments.getScreenSize() == null) {
+            throw new IllegalArgumentException("Screen size is not specified");
+        }
+        
+        if (arguments.getPaths().size() < 1) {
+            throw new IllegalArgumentException("There are no specs specified");
+        }
+        
+    }
+
+    public static void main(String[] args) throws ParseException, IOException {
+        new GalenMain().execute(GalenArguments.parse(args));
     }
 
     private void runTests(GalenArguments arguments, CompleteListener listener) throws IOException {

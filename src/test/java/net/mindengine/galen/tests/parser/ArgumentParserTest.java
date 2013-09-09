@@ -64,12 +64,12 @@ public class ArgumentParserTest {
                     .withIncludedTags(EMPTY_TAGS)
                     .withExcludedTags(EMPTY_TAGS)},
                     
-            {args("check", "--url", "http://mindengine.net", 
+            {args("check",  "some.spec",
+                            "--url", "http://mindengine.net", 
                             "--javascript", "some.js", 
                             "--include", "mobile,all", 
                             "--exclude", "nomobile,testTag", 
                             "--size", "400x700", 
-                            "--spec", "some.spec",
                             "--htmlreport", "some.html",
                             "--testngreport", "testng.xml"), 
                 new GalenArguments()
@@ -79,16 +79,15 @@ public class ArgumentParserTest {
                     .withIncludedTags("mobile", "all")
                     .withExcludedTags("nomobile", "testTag")
                     .withScreenSize(new Dimension(400, 700))
-                    .withSpec("some.spec")
+                    .withPaths(asList("some.spec"))
                     .withHtmlReport("some.html")
                     .withTestngReport("testng.xml")},
 
-            {args("check", "-u", "http://mindengine.net", 
+            {args("check", "some.spec", "-u", "http://mindengine.net", 
                             "-j", "some.js", 
                             "-i", "mobile,all", 
                             "-e", "nomobile,testTag", 
-                            "-d", "400x700", 
-                            "-s", "some.spec",
+                            "-s", "400x700", 
                             "-H", "some.html",
                             "-g", "testng.xml"), 
                new GalenArguments()
@@ -98,15 +97,15 @@ public class ArgumentParserTest {
                     .withIncludedTags("mobile", "all")
                     .withExcludedTags("nomobile", "testTag")
                     .withScreenSize(new Dimension(400, 700))
-                    .withSpec("some.spec")
+                    .withPaths(asList("some.spec"))
                     .withHtmlReport("some.html")
                     .withTestngReport("testng.xml")},
 
-            {args("check", "--url", "http://mindengine.net", 
+            {args("check", "some.spec",
+                            "--url", "http://mindengine.net", 
                             "--include", "mobile,all", 
                             "--exclude", "nomobile,testTag", 
                             "--size", "400x700", 
-                            "--spec", "some.spec",
                             "--htmlreport", "some.html"), 
                 new GalenArguments()
                     .withAction("check")
@@ -114,17 +113,16 @@ public class ArgumentParserTest {
                     .withIncludedTags("mobile", "all")
                     .withExcludedTags("nomobile", "testTag")
                     .withScreenSize(new Dimension(400, 700))
-                    .withSpec("some.spec")
+                    .withPaths(asList("some.spec"))
                     .withHtmlReport("some.html")},
                    
-            {args("check", "--url", "http://mindengine.net", 
-                            "--spec", "some.spec"), 
+            {args("check", "some1.spec", "some2.spec", "--url", "http://mindengine.net"), 
                 new GalenArguments()
                     .withAction("check")
                     .withUrl("http://mindengine.net")
                     .withIncludedTags()
                     .withExcludedTags()
-                    .withSpec("some.spec")},
+                    .withPaths(asList("some1.spec", "some2.spec"))},
         };
     }
     

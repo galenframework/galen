@@ -5,8 +5,10 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.is;
 
+import java.awt.Dimension;
 import java.io.File;
 import java.io.IOException;
+import java.util.Arrays;
 
 import net.mindengine.galen.GalenMain;
 import net.mindengine.galen.runner.GalenArguments;
@@ -84,6 +86,35 @@ public class GalenMainTest {
         
         assertThat(testngReportContent, containsString("<suite name=\"Recursion check 3\">"));
         assertThat(testngReportContent, containsString("<test name=\"" + testUrl + " 640x480\">"));
+    }
+    
+    @Test public void shouldRun_simplePageCheck() throws IOException {
+        String testUrl = "file://" + getClass().getResource("/html/page-nice.html").getFile();
+        String pageSpec = getClass().getResource("/html/page.spec").getFile();
+        File reportsDir = Files.createTempDir();
+        String htmlReportPath = reportsDir.getAbsolutePath() + "/report.html";
+        String testngReportPath = reportsDir.getAbsolutePath() + "/testng-report.html";
+        
+        new GalenMain().execute(new GalenArguments()
+            .withAction("check")
+            .withUrl(testUrl)
+            .withPaths(Arrays.asList(pageSpec))
+            .withScreenSize(new Dimension(450, 500))
+            .withHtmlReport(htmlReportPath)
+            .withTestngReport(testngReportPath)
+            .withIncludedTags("desktop"));
+        
+        assertThat("Should create screenshot 1 and place it in same folder as report", new File(reportsDir.getAbsolutePath() + "/screenshot-1.png").exists(), is(true));
+        
+        String htmlReportContent = FileUtils.readFileToString(new File(htmlReportPath));
+        String testngReportContent = FileUtils.readFileToString(new File(testngReportPath));
+        
+        //Verifying only parts of the report content to make sure that the test were executed
+        assertThat(htmlReportContent, containsString("<h1>" + pageSpec + "</h1>"));
+        assertThat(htmlReportContent, containsString("<h2>" + testUrl + " 450x500</h2>"));
+        
+        assertThat(testngReportContent, containsString("<suite name=\"" + pageSpec + "\">"));
+        assertThat(testngReportContent, containsString("<test name=\"" + testUrl + " 450x500\">"));
     }
 }
 

@@ -27,7 +27,6 @@ public class GalenArguments {
     private List<String> includedTags;
     private List<String> excludedTags;
     private Dimension screenSize;
-    private String spec;
     private String htmlReport;
     private String testngReport;
     private String url;
@@ -98,19 +97,6 @@ public class GalenArguments {
         this.screenSize = screenSize;
     }
 
-    public GalenArguments withSpec(String spec) {
-        this.setSpec(spec);
-        return this;
-    }
-
-    public String getSpec() {
-        return spec;
-    }
-
-    public void setSpec(String spec) {
-        this.spec = spec;
-    }
-
     public GalenArguments withHtmlReport(String htmlReport) {
         this.setHtmlReport(htmlReport);
         return this;
@@ -136,8 +122,7 @@ public class GalenArguments {
         options.addOption("j", "javascript", true, "Path to javascript file which will be executed after test page loads");
         options.addOption("i", "include", true, "Tags for sections that should be included in test run");
         options.addOption("e", "exclude", true, "Tags for sections that should be excluded from test run");
-        options.addOption("d", "size", true, "Browser screen size");
-        options.addOption("s", "spec", true, "Path for page specifications file");
+        options.addOption("s", "size", true, "Browser screen size");
         options.addOption("H", "htmlreport", true, "Path for html output report");
         options.addOption("g", "testngreport", true, "Path for testng xml report");
         options.addOption("r", "recursive", false, "Flag for recursive tests scan");
@@ -176,11 +161,10 @@ public class GalenArguments {
         
         galen.setIncludedTags(convertTags(cmd.getOptionValue("i", "")));
         galen.setExcludedTags(convertTags(cmd.getOptionValue("e", "")));
-        galen.setScreenSize(convertScreenSize(cmd.getOptionValue("d")));
+        galen.setScreenSize(convertScreenSize(cmd.getOptionValue("s")));
         galen.setJavascript(cmd.getOptionValue("javascript"));
         galen.setTestngReport(cmd.getOptionValue("g"));
         galen.setRecursive(cmd.hasOption("r"));
-        galen.setSpec(cmd.getOptionValue("s"));
         galen.setHtmlReport(cmd.getOptionValue("H"));
         
         
@@ -235,7 +219,6 @@ public class GalenArguments {
         .append(includedTags)
         .append(excludedTags)
         .append(screenSize)
-        .append(spec)
         .append(htmlReport)
         .append(testngReport)
         .append(url)
@@ -262,7 +245,6 @@ public class GalenArguments {
             .append(includedTags, rhs.includedTags)
             .append(excludedTags, rhs.excludedTags)
             .append(screenSize, rhs.screenSize)
-            .append(spec, rhs.spec)
             .append(htmlReport, rhs.htmlReport)
             .append(testngReport, rhs.testngReport)
             .append(url, rhs.url)
@@ -279,7 +261,6 @@ public class GalenArguments {
             .append("includedTags", includedTags)
             .append("excludedTags", excludedTags)
             .append("screenSize", screenSize)
-            .append("spec", spec)
             .append("htmlReport", htmlReport)
             .append("testngReport", testngReport)
             .append("url", url)

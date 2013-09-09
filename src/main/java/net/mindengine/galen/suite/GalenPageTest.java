@@ -34,6 +34,10 @@ public class GalenPageTest {
     public void setActions(List<GalenPageAction> actions) {
         this.actions = actions;
     }
+    public GalenPageTest withActions(List<GalenPageAction> actions) {
+        setActions(actions);
+        return this;
+    }
     
     public GalenPageTest withSize(Dimension size) {
         setScreenSize(size);
@@ -99,5 +103,6 @@ public class GalenPageTest {
             .append(this.url, rhs.url)
             .isEquals();
     }
+    
     
 }
