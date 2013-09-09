@@ -163,7 +163,6 @@ public class ArgumentParserTest {
                   "--include", "mobile,all", 
                   "--exclude", "nomobile,testTag", 
                   "--size", "400x700", 
-                  "--spec", "some.spec",
                   "--htmlreport", "some.html")},
                   
           {"Missing value for javascript",
@@ -173,7 +172,6 @@ public class ArgumentParserTest {
                   "--include", "mobile,all", 
                   "--exclude", "nomobile,testTag", 
                   "--size", "400x700", 
-                  "--spec", "some.spec",
                   "--htmlreport", "some.html")},
                   
           {"Missing value for include",
@@ -183,7 +181,6 @@ public class ArgumentParserTest {
                   "--include", 
                   "--exclude", "nomobile,testTag", 
                   "--size", "400x700", 
-                  "--spec", "some.spec",
                   "--htmlreport", "some.html")},
                  
           {"Missing value for exclude",
@@ -193,7 +190,6 @@ public class ArgumentParserTest {
                   "--include", "mobile", 
                   "--exclude", 
                   "--size", "400x700", 
-                  "--spec", "some.spec",
                   "--htmlreport", "some.html")},
                   
           {"Missing value for size",
@@ -203,19 +199,8 @@ public class ArgumentParserTest {
                   "--include", "mobile", 
                   "--exclude", "nomobile", 
                   "--size", 
-                  "--spec", "some.spec",
                   "--htmlreport", "some.html")},
                   
-          {"Missing value for spec",
-                  args("run",
-                      "--url", "http://example.com", 
-                      "--javascript", "script.js", 
-                      "--include", "mobile", 
-                      "--exclude", "nomobile", 
-                      "--size", "540x350", 
-                      "--spec",
-                      "--htmlreport", "some.html")},
-                      
           {"Missing value for htmlreport",
                   args("run",
                       "--url", "http://example.com", 
@@ -223,7 +208,6 @@ public class ArgumentParserTest {
                       "--include", "mobile", 
                       "--exclude", "nomobile", 
                       "--size", "540x350", 
-                      "--spec", "page.spec",
                       "--htmlreport")}
 
         };
