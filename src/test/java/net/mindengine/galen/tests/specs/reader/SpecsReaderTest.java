@@ -159,6 +159,18 @@ public class SpecsReaderTest {
     }
     
     @Test
+    public void shouldReadSpec_near_button_approx_0px_left() {
+        SpecNear spec = (SpecNear) readSpec("near: button ~0px left");
+        assertThat(spec.getObject(), is("button"));
+        
+        List<Location> locations = spec.getLocations();
+        assertThat(locations.size(), is(1));
+        assertThat(spec.getLocations(), contains(new Location(Range.between(-1, 1), sides(LEFT))));
+        assertThat(spec.getOriginalText(), is("near: button ~0px left"));
+    }
+    
+    
+    @Test
     public void shouldReadSpec_horizontally_centered() {
         SpecHorizontally spec = (SpecHorizontally) readSpec("horizontally centered: object, menu, button");
         assertThat(spec.getAlignment(), is(Alignment.CENTERED));

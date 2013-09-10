@@ -28,11 +28,8 @@ public class ExpectRange implements Expectation<Range>{
     public Range read(StringCharReader reader) {
         
         boolean approximate = false;
-        if (reader.next() == '~') {
+        if (reader.firstNonWhiteSpaceSymbol() == '~') {
             approximate = true;
-        }
-        else {
-            reader.back();
         }
         
         

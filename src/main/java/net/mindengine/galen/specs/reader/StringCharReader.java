@@ -61,4 +61,14 @@ public class StringCharReader {
         else return ""; 
     }
 
+    public char firstNonWhiteSpaceSymbol() {
+        for (int i = cursor; i < length; i++) {
+            char symbol = text.charAt(i);
+            if (symbol != ' ' && symbol != '\t') {
+                return symbol;
+            }
+        }
+        return 0;
+    }
+
 }
