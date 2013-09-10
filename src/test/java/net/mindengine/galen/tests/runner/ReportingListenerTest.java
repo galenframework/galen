@@ -26,6 +26,8 @@ import java.io.PrintStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import junit.framework.Assert;
+
 import net.mindengine.galen.components.report.ReportingListenerTestUtils;
 import net.mindengine.galen.reports.ConsoleReportingListener;
 import net.mindengine.galen.reports.HtmlReportingListener;
@@ -54,8 +56,8 @@ public class ReportingListenerTest {
         
         String realXml = FileUtils.readFileToString(new File(reportPath));
         
-        assertThat(realXml.replaceAll("T([0-9]{2}:){2}[0-9]{2}Z", "T00:00:00Z"), 
-                is(expectedXml.replace("{expected-date}", expectedDate).replace("\\t    ", "\t")));
+        Assert.assertEquals(expectedXml.replace("{expected-date}", expectedDate).replace("\\t    ", "\t"),
+                realXml.replaceAll("T([0-9]{2}:){2}[0-9]{2}Z", "T00:00:00Z"));
     }
     
     
@@ -70,7 +72,8 @@ public class ReportingListenerTest {
         listener.done();
         
         String realHtml = FileUtils.readFileToString(new File(reportDirPath + "/report.html"));
-        assertThat(bodyPart(realHtml), is(expectedHtml));
+        
+        Assert.assertEquals(expectedHtml, bodyPart(realHtml));
         
         assertThat(realHtml, containsString("<head>"));
         assertThat(realHtml, containsString("<script>"));
@@ -89,7 +92,8 @@ public class ReportingListenerTest {
         listener.done();
         
         String expectedText = IOUtils.toString(getClass().getResourceAsStream("/expected-reports/console.txt")).replace("\\t    ", "\t");
-        assertThat(baos.toString("UTF-8"), is(expectedText));
+        
+        Assert.assertEquals(expectedText, baos.toString("UTF-8"));
     }
 
     private String bodyPart(String html) {
