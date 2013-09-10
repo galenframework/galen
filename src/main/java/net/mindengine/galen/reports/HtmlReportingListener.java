@@ -47,7 +47,7 @@ public class HtmlReportingListener implements CompleteListener {
     private XmlNode bodyNode = node("body");
     
     private XmlNode headNode = createHeadNode();
-    private XmlNode htmlNode = node("html").withChildren(headNode).withChildren(bodyNode);
+    private XmlNode htmlNode = node("html").withChildren(headNode,bodyNode);
     
     private XmlNode currentSuiteNode;
     private XmlNode currentPageNode;
@@ -212,13 +212,19 @@ public class HtmlReportingListener implements CompleteListener {
     public void done() {
         try {
             File file = new File(reportPath);
-            if (file.createNewFile()) {
-                FileUtils.writeStringToFile(file, toHtml());
-                moveScreenshots(file.getParentFile());
+            
+            if (!file.exists()) {
+                if (!file.createNewFile()) {
+                    throw new RuntimeException("Couldn't create file: " + reportPath);
+                }
             }
-            else {
-                throw new RuntimeException("Couldn't create file: " + reportPath);
+            FileUtils.writeStringToFile(file, toHtml());
+            
+            File parent = file.getParentFile();
+            if (parent == null) {
+                parent = new File(".");
             }
+            moveScreenshots(parent);
         }
         catch (Exception ex) {
             ex.printStackTrace();
@@ -229,7 +235,6 @@ public class HtmlReportingListener implements CompleteListener {
         for (Screenshot screenshot : screenshots.values()) {
             FileUtils.copyFile(new File(screenshot.filePath), new File(folder.getAbsolutePath() + File.separator + screenshot.name));
         }
-        
     }
 
 }

@@ -16,6 +16,7 @@
 package net.mindengine.galen.tests.runner;
 
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.is;
 
 import java.io.ByteArrayOutputStream;
@@ -24,7 +25,6 @@ import java.io.IOException;
 import java.io.PrintStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-
 
 import net.mindengine.galen.components.report.ReportingListenerTestUtils;
 import net.mindengine.galen.reports.ConsoleReportingListener;
@@ -70,7 +70,12 @@ public class ReportingListenerTest {
         listener.done();
         
         String realHtml = FileUtils.readFileToString(new File(reportDirPath + "/report.html"));
-        assertThat(bodyPart(realHtml), is(expectedHtml));
+        assertThat(realHtml, containsString(expectedHtml));
+        
+        assertThat(realHtml, containsString("<head>"));
+        assertThat(realHtml, containsString("<script>"));
+        assertThat(realHtml, containsString("<style>"));
+        
         assertThat("Should place screenshot 1 in same folder", new File(reportDirPath + "/screenshot-1.png").exists(), is(true));
         assertThat("Should place screenshot 2 in same folder", new File(reportDirPath + "/screenshot-2.png").exists(), is(true));
     }
@@ -87,12 +92,5 @@ public class ReportingListenerTest {
         assertThat(baos.toString("UTF-8"), is(expectedText));
     }
 
-    private String bodyPart(String plainHtml) {
-        int id1 = plainHtml.indexOf("<body>");
-        int id2 = plainHtml.indexOf("</body>");
-        
-        return plainHtml.substring(id1, id2 + 7);
-    }
-    
     
 }
