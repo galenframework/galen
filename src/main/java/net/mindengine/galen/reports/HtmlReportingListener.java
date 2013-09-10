@@ -147,9 +147,14 @@ public class HtmlReportingListener implements CompleteListener {
         for (String message : error.getMessages()) {
             errorList.add(node("li").withText(message));
         }
-        currentSpecsListNode.add(li("fail").withAttribute("data-screenshot", screenshot.name).withChildren(span(spec.toText()), areas(error.getErrorAreas()), errorList));
+        
+        XmlNode failNode = li("fail").withAttribute("data-screenshot", screenshot.name).withChildren(span(spec.toText()), errorList);
+        if (error.getErrorAreas() != null) {
+            failNode.add(areas(error.getErrorAreas()));
+        }
+        currentSpecsListNode.add(failNode);
     }
-
+    
     private XmlNode areas(List<ErrorArea> errorAreas) {
         XmlNode ul = node("ul").withAttribute("class", "areas");
         
