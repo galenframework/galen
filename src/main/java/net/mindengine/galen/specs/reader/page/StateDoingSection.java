@@ -42,6 +42,9 @@ public class StateDoingSection extends State {
                     currentObjectSpecs.getSpecs().add(specReader.read(line.trim()));
                 }
                 catch (SyntaxException exception) {
+                    throw exception;
+                }
+                catch (Exception exception) {
                     throw new SyntaxException(UNKNOWN_LINE, "Incorrect spec for object \"" + currentObjectSpecs.getObjectName() + "\"", exception);
                 }
             }

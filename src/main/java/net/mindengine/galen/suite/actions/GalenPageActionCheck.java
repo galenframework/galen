@@ -15,6 +15,7 @@
 ******************************************************************************/
 package net.mindengine.galen.suite.actions;
 
+import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -43,26 +44,21 @@ public class GalenPageActionCheck implements GalenPageAction {
 
     
     @Override
-    public List<ValidationError> execute(Browser browser, GalenPageTest pageTest, ValidationListener validationListener) {
+    public List<ValidationError> execute(Browser browser, GalenPageTest pageTest, ValidationListener validationListener) throws IOException {
         List<ValidationError> allErrors = new LinkedList<ValidationError>();
         
         Page page = browser.getPage();
         PageSpecReader pageSpecReader = new PageSpecReader();
         
         for (String specFile : specs) {
-            try {
-                PageSpec spec = pageSpecReader.read(GalenUtils.findFile(specFile));
-                List<PageSection> pageSections = spec.findSections(includedTags, excludedTags);
-                
-                SectionValidation sectionValidation = new SectionValidation(pageSections, new PageValidation(page, spec), validationListener);
-                
-                List<ValidationError> errors = sectionValidation.check();
-                if (errors != null) {
-                    allErrors.addAll(errors);
-                }
-            }
-            catch (Exception e) {
-                allErrors.add(ValidationError.fromException(e));
+            PageSpec spec = pageSpecReader.read(GalenUtils.findFile(specFile));
+            List<PageSection> pageSections = spec.findSections(includedTags, excludedTags);
+            
+            SectionValidation sectionValidation = new SectionValidation(pageSections, new PageValidation(page, spec), validationListener);
+            
+            List<ValidationError> errors = sectionValidation.check();
+            if (errors != null) {
+                allErrors.addAll(errors);
             }
         }
         

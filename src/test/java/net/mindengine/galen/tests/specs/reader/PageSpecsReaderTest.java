@@ -171,7 +171,9 @@ public class PageSpecsReaderTest {
     public void givesError_ifThereAreSpecs_withNoObjectSpecified_inSection() throws IOException {
         FileSyntaxException exception = expectExceptionFromReading("/negative-specs/no-object-in-section.spec");
         
-        assertThat(exception.getMessage(), is("There is no object defined in section"));
+        String fullSpecPath = getClass().getResource("/negative-specs/no-object-in-section.spec").getFile();
+        
+        assertThat(exception.getMessage(), is("There is no object defined in section (in " + fullSpecPath + ":8)"));
         assertThat(exception.getFilePath(), endsWith("/no-object-in-section.spec"));
         assertThat(exception.getLine(), is(8));
     }
@@ -179,9 +181,9 @@ public class PageSpecsReaderTest {
     @Test
     public void givesError_ifThereAre_invalidSpecs() throws IOException {
         FileSyntaxException exception = expectExceptionFromReading("/negative-specs/invalid-spec.spec");
+        String fullSpecPath = getClass().getResource("/negative-specs/invalid-spec.spec").getFile();
         
-        assertThat(exception.getMessage(), is("Incorrect spec for object \"menu\""));
-        assertThat(exception.getCause().getCause().getMessage(), is("There is no location defined"));
+        assertThat(exception.getMessage(), is("There is no location defined (in " + fullSpecPath + ":10)"));
         assertThat(exception.getFilePath(), endsWith("/invalid-spec.spec"));
         assertThat(exception.getLine(), is(10));
     }
@@ -190,7 +192,9 @@ public class PageSpecsReaderTest {
     public void givesError_ifThereAre_invalidObjectLocators() throws Exception {
         FileSyntaxException exception = expectExceptionFromReading("/negative-specs/invalid-object-locator.spec");
         
-        assertThat(exception.getMessage(), is("Missing locator for object \"bad-object\""));
+        String fullSpecPath = getClass().getResource("/negative-specs/invalid-object-locator.spec").getFile();
+        
+        assertThat(exception.getMessage(), is("Missing locator for object \"bad-object\" (in " + fullSpecPath +":7)"));
         assertThat(exception.getFilePath(), endsWith("/invalid-object-locator.spec"));
         assertThat(exception.getLine(), is(7));
     }

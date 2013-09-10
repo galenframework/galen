@@ -253,8 +253,9 @@ public class GalenSuiteReaderTest {
         }
         
         
+        String fullPath = getClass().getResource(filePath).getFile();
         assertThat("Exception should be thrown", exception, notNullValue());
-        assertThat("Message should be", exception.getMessage(), is(expectedMessage));
+        assertThat("Message should be", exception.getMessage(), is(expectedMessage + " (in " + fullPath + ":" + expectedLine + ")"));
         assertThat("Line should be", exception.getLine(), is(expectedLine));
         
     }

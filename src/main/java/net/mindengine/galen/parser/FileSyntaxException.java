@@ -43,8 +43,11 @@ public class FileSyntaxException extends RuntimeException {
     public String getMessage() {
         Throwable cause = getCause();
         if (cause instanceof SyntaxException) {
-            return cause.getMessage();
+            return withFileInfo(cause.getMessage());
         }
-        return super.getMessage();
+        return withFileInfo(super.getMessage());
+    }
+    private String withFileInfo(String message) {
+        return String.format("%s (in %s:%d)", message, filePath, line);
     }
 }

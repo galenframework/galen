@@ -131,5 +131,31 @@ public class GalenMainTest {
         assertThat(testngReportContent, containsString("<suite name=\"" + pageSpec + "\">"));
         assertThat(testngReportContent, containsString("<test name=\"" + testUrl + " 450x500\">"));
     }
+    
+    @Test public void shouldGiveError_whenPageSpecIsIncorrect() throws IOException {
+        String testUrl = "file://" + getClass().getResource("/html/page-nice.html").getFile();
+        String pageSpec = getClass().getResource("/negative-specs/invalid-spec.spec").getFile();
+        File reportsDir = Files.createTempDir();
+        String htmlReportPath = reportsDir.getAbsolutePath() + "/report.html";
+        String testngReportPath = reportsDir.getAbsolutePath() + "/testng-report.html";
+        
+        new GalenMain().execute(new GalenArguments()
+            .withAction("check")
+            .withUrl(testUrl)
+            .withPaths(Arrays.asList(pageSpec))
+            .withScreenSize(new Dimension(450, 500))
+            .withHtmlReport(htmlReportPath)
+            .withTestngReport(testngReportPath)
+            .withIncludedTags("desktop"));
+        
+        String htmlReportContent = FileUtils.readFileToString(new File(htmlReportPath));
+        String testngReportContent = FileUtils.readFileToString(new File(testngReportPath));
+        
+        assertThat(htmlReportContent, containsString("<div class=\"global-error\">"));
+        assertThat(htmlReportContent, containsString("net.mindengine.galen.parser.FileSyntaxException: There is no location defined (in " + pageSpec + ":10)"));
+        
+        
+        assertThat(testngReportContent, containsString("net.mindengine.galen.parser.FileSyntaxException: There is no location defined (in " + pageSpec + ":10)"));
+    }
 }
 
