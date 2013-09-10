@@ -137,6 +137,7 @@ ul.test-specs li.fail:hover ul.error-message {
     opacity: 0.3;
 }
 #tooltip-body .canvas .brick span{
+    white-space: nowrap;
     background: red;
     color: white;
     position:absolute;
