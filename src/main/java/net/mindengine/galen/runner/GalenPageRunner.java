@@ -21,6 +21,7 @@ import java.util.List;
 import net.mindengine.galen.browser.Browser;
 import net.mindengine.galen.suite.GalenPageAction;
 import net.mindengine.galen.suite.GalenPageTest;
+import net.mindengine.galen.validation.PageValidation;
 import net.mindengine.galen.validation.ValidationError;
 import net.mindengine.galen.validation.ValidationListener;
 
@@ -59,6 +60,7 @@ public class GalenPageRunner {
                 }
             }
             catch (Exception e) {
+                validationListener.onGlobalError(e);
                 allErrors.add(ValidationError.fromException(e));
             }
         }

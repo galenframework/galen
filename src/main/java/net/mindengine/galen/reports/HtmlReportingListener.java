@@ -242,4 +242,23 @@ public class HtmlReportingListener implements CompleteListener {
         }
     }
 
+    @Override
+    public void onGlobalError(Exception e) {
+        currentPageNode.add(div("global-error")
+                .withChildren(
+                        span(e.getClass().getName() + ": " + e.getMessage()),
+                        stacktrace(e)
+                ));
+    }
+
+    private XmlNode stacktrace(Exception e) {
+        XmlNode ul = node("ul");
+        
+        for (StackTraceElement element : e.getStackTrace()) {
+            ul.add(node("li").withText(format("at %s.%s(%s:%d)", element.getClassName(), element.getMethodName(), element.getFileName(), element.getLineNumber())));
+        }
+        
+        return ul;
+    }
+
 }

@@ -39,7 +39,7 @@ public class ConsoleReportingListener implements CompleteListener {
     private PrintStream out;
     private PrintStream err;
     
-    private int passCount = 0;
+    private int totalCount = 0;
     private int errorCount = 0;
     private Set<String> suitesWithError = new HashSet<String>();
     private String currentSuite;
@@ -58,6 +58,7 @@ public class ConsoleReportingListener implements CompleteListener {
     @Override
     public void onSpecError(PageValidation pageValidation, String objectName, Spec spec, ValidationError error) {
         errorCount++;
+        totalCount++;
         suitesWithError.add(currentSuite);
         
         err.print(SPEC_ERROR_INDENTATION);
@@ -70,7 +71,7 @@ public class ConsoleReportingListener implements CompleteListener {
 
     @Override
     public void onSpecSuccess(PageValidation pageValidation, String objectName, Spec spec) {
-        passCount++;
+        totalCount++;
         out.print(SPEC_INDENTATION);
         out.println(spec.toText());
     }
@@ -130,8 +131,13 @@ public class ConsoleReportingListener implements CompleteListener {
         else {
             out.println("PASS");
         }
-        int totalTests = passCount +  errorCount;
-        out.println("Total tests: " + totalTests);
+        out.println("Total tests: " + totalCount);
+    }
+
+    @Override
+    public void onGlobalError(Exception e) {
+        errorCount++;
+        e.printStackTrace(err);
     }
 
 }

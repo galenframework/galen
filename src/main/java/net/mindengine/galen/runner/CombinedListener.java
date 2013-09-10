@@ -96,4 +96,11 @@ public class CombinedListener implements CompleteListener {
             listener.done();
         } 
     }
+
+    @Override
+    public void onGlobalError(Exception e) {
+        for (CompleteListener listener : listeners) {
+            listener.onGlobalError(e);
+        }
+    }
 }

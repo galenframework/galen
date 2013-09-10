@@ -27,6 +27,8 @@ public interface ValidationListener {
 
     void onSpecSuccess(PageValidation pageValidation, String objectName, Spec spec);
 
+    void onGlobalError(Exception e);
+
     
 
 }

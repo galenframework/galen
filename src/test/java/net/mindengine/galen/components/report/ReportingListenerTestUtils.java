@@ -97,6 +97,8 @@ public class ReportingListenerTestUtils {
             }
             validationListener.onAfterObject(pageValidation, "objectB2");
             
+            validationListener.onGlobalError(new NullPointerException("Some exception here"));
+            
         }
         suiteListener.onAfterPage(galenSuiteRunner, pageTest2, browser2, asList(new ValidationError(asList(new ErrorArea(new Rect(10, 10, 100, 50), "objectB1")), asList("objectA1 is not inside other-object", "second error message"))));
         

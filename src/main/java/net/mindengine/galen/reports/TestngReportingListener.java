@@ -19,6 +19,8 @@ import static net.mindengine.galen.xml.XmlBuilder.node;
 import static net.mindengine.galen.xml.XmlBuilder.textNode;
 
 import java.io.File;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -152,6 +154,32 @@ public class TestngReportingListener implements CompleteListener {
         catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public void onGlobalError(Exception e) {
+        String now = formatDate(new Date());
+        
+        currentPageNode.add(node("class")
+                .withAttribute("name", "global error")
+                .withChildren(node("test-method")
+                        .withAttribute("status", "FAIL")
+                        .withAttribute("signature", "global error")
+                        .withAttribute("name", "global error")
+                        .withAttribute("duration-ms", "0")
+                        .withAttribute("started-at", now)
+                        .withAttribute("finished-at", now)
+                        .withAttribute("description", "")
+                        .withChildren(exceptionNode(e))
+                        ));
+    }
+
+    private XmlNode exceptionNode(Exception e) {
+        StringWriter sw = new StringWriter();
+        e.printStackTrace(new PrintWriter(sw));
+        return node("exception")
+                .withAttribute("class", e.getClass().getName())
+                .withChildren(node("short-stacktrace").withText(sw.getBuffer().toString()));
     }
 
 }

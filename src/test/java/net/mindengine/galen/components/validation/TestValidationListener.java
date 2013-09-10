@@ -60,4 +60,9 @@ public class TestValidationListener implements ValidationListener {
         append("</o " + objectName + ">");
     }
 
+    @Override
+    public void onGlobalError(Exception e) {
+        invokations.append("<global-error " + e.getClass().getSimpleName() + ">" + e.getMessage() + "</global-error>");
+    }
+
 }

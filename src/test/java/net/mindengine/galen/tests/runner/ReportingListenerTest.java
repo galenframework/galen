@@ -55,7 +55,7 @@ public class ReportingListenerTest {
         String realXml = FileUtils.readFileToString(new File(reportPath));
         
         assertThat(realXml.replaceAll("T([0-9]{2}:){2}[0-9]{2}Z", "T00:00:00Z"), 
-                is(expectedXml.replace("{expected-date}", expectedDate)));
+                is(expectedXml.replace("{expected-date}", expectedDate).replace("\\t    ", "\t")));
     }
     
     
@@ -70,7 +70,7 @@ public class ReportingListenerTest {
         listener.done();
         
         String realHtml = FileUtils.readFileToString(new File(reportDirPath + "/report.html"));
-        assertThat(realHtml, containsString(expectedHtml));
+        assertThat(bodyPart(realHtml), is(expectedHtml));
         
         assertThat(realHtml, containsString("<head>"));
         assertThat(realHtml, containsString("<script>"));
@@ -88,9 +88,13 @@ public class ReportingListenerTest {
         
         listener.done();
         
-        String expectedText = IOUtils.toString(getClass().getResourceAsStream("/expected-reports/console.txt"));
+        String expectedText = IOUtils.toString(getClass().getResourceAsStream("/expected-reports/console.txt")).replace("\\t    ", "\t");
         assertThat(baos.toString("UTF-8"), is(expectedText));
     }
 
-    
+    private String bodyPart(String html) {
+        int id1 = html.indexOf("    <body>");
+        int id2 = html.indexOf("    </body>");
+        return html.substring(id1 + 4, id2 + 11);
+    }
 }
