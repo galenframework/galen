@@ -21,6 +21,7 @@ mkdir -p dist/$src
 
 echo New dist is $version
 cp target/galen-jar-with-dependencies.jar dist/$bin/galen.jar
+cp galen dist/$bin/.
 cp LICENSE-2.0.txt dist/$bin/.
 cp README dist/$bin/.
 
