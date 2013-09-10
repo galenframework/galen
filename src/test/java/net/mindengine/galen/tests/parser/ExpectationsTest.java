@@ -74,6 +74,7 @@ public class ExpectationsTest {
            {"~100px", new Range(99, 101)},
            {"~1000px", new Range(990, 1010)},
            {"~1px", new Range(0, 2)},
+           {"~0px", new Range(-1, 1)},
            {"15% of screen/width", new Range(15, 15).withPercentOf("screen/width")},
            {"15.05% of screen/width", new Range(15.05, 15.05).withPercentOf("screen/width")},
            {"15 to 40% of   screen/height", new Range(15, 40).withPercentOf("screen/height")},
