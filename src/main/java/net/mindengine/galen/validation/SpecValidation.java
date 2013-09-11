@@ -16,10 +16,15 @@
 package net.mindengine.galen.validation;
 
 import static java.lang.String.format;
+
+import java.util.LinkedList;
+import java.util.List;
+
 import net.mindengine.galen.page.PageElement;
 import net.mindengine.galen.page.Rect;
 import net.mindengine.galen.specs.Spec;
 import net.mindengine.galen.specs.page.Locator;
+import net.mindengine.galen.specs.reader.page.PageSpec;
 
 public abstract class SpecValidation<T extends Spec> {
     
@@ -34,7 +39,7 @@ public abstract class SpecValidation<T extends Spec> {
      * @param spec
      * @return error with a message. If object satisfies the provided spec then a null is returned
      */
-    public abstract ValidationError check(PageValidation pageValidation, String objectName, T spec);
+    public abstract ValidationError check(PageValidation pageValidation, String objectName, T spec) throws ValidationErrorException;
     
     protected ValidationError error(String errorMessage) {
         return new ValidationError().withMessage(errorMessage);
@@ -73,4 +78,29 @@ public abstract class SpecValidation<T extends Spec> {
         else return null;
     }
     
+    /**
+     * Fetches all child object, using simple regular expression
+     * @param childObjects
+     * @param pageSpec
+     * @return
+     * @throws ValidationErrorException
+     */
+    protected List<String> fetchChildObjets(List<String> childObjects, PageSpec pageSpec) throws ValidationErrorException {
+        List<String> resultObjects = new LinkedList<String>();
+        
+        for (String objectName : childObjects) {
+            if (objectName.contains("*")) {
+                
+                List<String> foundObjects = pageSpec.findMatchingObjectNames(objectName);
+                if (foundObjects.size() == 0) {
+                    throw new ValidationErrorException("There are no objects matching: " + objectName);
+                }
+                resultObjects.addAll(foundObjects);
+            }
+            else {
+                resultObjects.add(objectName);
+            }
+        }
+        return resultObjects;
+    }
 }

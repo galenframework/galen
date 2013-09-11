@@ -24,11 +24,12 @@ import net.mindengine.galen.validation.ErrorArea;
 import net.mindengine.galen.validation.PageValidation;
 import net.mindengine.galen.validation.SpecValidation;
 import net.mindengine.galen.validation.ValidationError;
+import net.mindengine.galen.validation.ValidationErrorException;
 
 public abstract class SpecValidationOneLine<T extends SpecObjectsOnOneLine> extends SpecValidation<T> {
 
     @Override
-    public ValidationError check(PageValidation pageValidation, String objectName, T spec) {
+    public ValidationError check(PageValidation pageValidation, String objectName, T spec) throws ValidationErrorException {
         PageElement mainObject = getPageElement(pageValidation, objectName);
         
         ValidationError error = checkAvailability(mainObject, objectName);
@@ -39,7 +40,7 @@ public abstract class SpecValidationOneLine<T extends SpecObjectsOnOneLine> exte
         List<String> misalignedObjectNames = new LinkedList<String>();
         List<ErrorArea> errorAreas = new LinkedList<ErrorArea>();
         
-        for (String childObjectName : spec.getChildObjects()) {
+        for (String childObjectName : fetchChildObjets(spec.getChildObjects(), pageValidation.getPageSpec())) {
             PageElement childObject = getPageElement(pageValidation, childObjectName);
             error = checkAvailability(childObject, childObjectName);
             if (error != null) {

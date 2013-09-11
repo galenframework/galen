@@ -19,6 +19,8 @@ import static java.lang.String.format;
 import static net.mindengine.galen.suite.reader.Line.UNKNOWN_LINE;
 
 import java.lang.reflect.Method;
+import java.util.Arrays;
+import java.util.LinkedList;
 
 import net.mindengine.galen.page.Page;
 import net.mindengine.galen.page.PageElement;
@@ -49,7 +51,12 @@ public class PageValidation {
     @SuppressWarnings({ "rawtypes", "unchecked" })
     public ValidationError check(String objectName, Spec spec) {
         SpecValidation specValidation = ValidationFactory.getValidation(spec, this);
-        return specValidation.check(this, objectName, spec);
+        try {
+            return specValidation.check(this, objectName, spec);
+        }
+        catch (ValidationErrorException ex) {
+            return new ValidationError(null, Arrays.asList(ex.getMessage()));
+        }
     }
 
     public PageSpec getPageSpec() {

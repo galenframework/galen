@@ -22,6 +22,5 @@ public interface Page {
     PageElement getObject(String objectName, Locator objectLocator);
 
     PageElement getSpecialObject(String objectName);
-    
 
 }

@@ -19,6 +19,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Pattern;
 
 import net.mindengine.galen.specs.page.Locator;
 import net.mindengine.galen.specs.page.PageSection;
@@ -72,6 +73,25 @@ public class PageSpec {
             }
         }
         return filteredSections;
+    }
+
+    /**
+     * Find all objects that match simple regex
+     * @param objectNameSimpleRegex - Regex which allows only '*' symbol in expresion
+     * @return
+     */
+    public List<String> findMatchingObjectNames(String objectNameSimpleRegex) {
+        
+        Pattern pattern = Pattern.compile(objectNameSimpleRegex.replace("*", ".*"));
+        List<String> foundObjects = new LinkedList<String>();
+        
+        for (String objectName : objects.keySet()) {
+            if (pattern.matcher(objectName).matches()) {
+                foundObjects.add(objectName);
+            }
+        }
+        
+        return foundObjects;
     }
 
 }

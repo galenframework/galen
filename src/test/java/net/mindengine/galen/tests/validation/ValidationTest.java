@@ -117,6 +117,13 @@ public class ValidationTest {
               put("menu", element(0, 0, 100, 72));
               put("button", element(5, 5, 100, 70));
           }})),
+          row(specContains(CONTAINS_FULLY, "menu-item-*", "button"),  page(new HashMap<String, PageElement>(){{
+              put("object", element(0, 0, 200, 100));
+              put("menu-item-1", element(10, 10, 10, 10));
+              put("menu-item-2", element(30, 10, 10, 10));
+              put("menu-item-3", element(50, 10, 10, 10));
+              put("button", element(70, 10, 10, 10));
+          }})),
           
           /* Absent */
           row(specAbsent(), page(new HashMap<String, PageElement>(){{
@@ -242,6 +249,11 @@ public class ValidationTest {
               put("item1",  element(20, 10, 10, 10));
               put("item2",  element(30, 10, 10, 10));
           }})),
+          row(specHorizontally(Alignment.CENTERED, "item-*"), page(new HashMap<String, PageElement>(){{
+              put("object", element(10, 10, 10, 10));
+              put("item-1",  element(20, 10, 10, 10));
+              put("item-2",  element(30, 10, 10, 10));
+          }})),
           row(specHorizontally(Alignment.CENTERED, "item1", "item2"), page(new HashMap<String, PageElement>(){{
               put("object", element(10, 15, 10, 10));
               put("item1",  element(20, 10, 10, 20));
@@ -273,6 +285,11 @@ public class ValidationTest {
               put("object", element(10, 10, 10, 10));
               put("item1",  element(10, 20, 10, 10));
               put("item2",  element(10, 30, 10, 10));
+          }})),
+          row(specVertically(Alignment.CENTERED, "item-*"), page(new HashMap<String, PageElement>(){{
+              put("object", element(10, 10, 10, 10));
+              put("item-1",  element(10, 20, 10, 10));
+              put("item-2",  element(10, 30, 10, 10));
           }})),
           row(specVertically(Alignment.CENTERED, "item1", "item2"), page(new HashMap<String, PageElement>(){{
               put("object", element(15, 10, 10, 10));
@@ -386,6 +403,19 @@ public class ValidationTest {
                       put("button", element(60, 50, 10, 10));
           }})),
           
+          row(new ValidationError(singleArea(new Rect(350, 10, 10, 10), "menu-item-3"), messages("\"menu-item-3\" is outside \"object\"")),
+                  specContains(CONTAINS_FULLY, "menu-item-*", "button"), page(new HashMap<String, PageElement>(){{
+                      put("object", element(0, 0, 200, 100));
+                      put("menu-item-1", element(10, 10, 10, 10));
+                      put("menu-item-2", element(30, 10, 10, 10));
+                      put("menu-item-3", element(350, 10, 10, 10));
+                      put("button", element(70, 10, 10, 10));
+          }})),
+          row(new ValidationError(NO_AREA, messages("There are no objects matching: menu-item-*")),
+                  specContains(CONTAINS_FULLY, "menu-item-*", "button"), page(new HashMap<String, PageElement>(){{
+                      put("object", element(0, 0, 200, 100));
+                      put("button", element(70, 10, 10, 10));
+          }})),
           
           /* Absent */
           
@@ -742,6 +772,12 @@ public class ValidationTest {
                       put("item1", element(10, 5, 10, 20));
                       put("item2", element(10, 10, 10, 15));
           }})),
+          row(new ValidationError(singleArea(new Rect(10, 10, 10, 15), "item-2"), messages("\"item-2\" is not aligned horizontally centered with \"object\"")),
+                  specHorizontally(Alignment.CENTERED, "item-*"), page(new HashMap<String, PageElement>(){{
+                      put("object", element(10, 10, 50, 10));
+                      put("item-1", element(10, 5, 10, 20));
+                      put("item-2", element(10, 10, 10, 15));
+          }})),
           row(new ValidationError(areas(new ErrorArea(new Rect(10, 10, 10, 20), "item1"), new ErrorArea(new Rect(10, 10, 50, 20), "item2")), messages("\"item1\", \"item2\" are not aligned horizontally centered with \"object\"")),
                   specHorizontally(Alignment.CENTERED, "item1", "item2"), page(new HashMap<String, PageElement>(){{
                       put("object", element(10, 10, 50, 10));
@@ -838,6 +874,12 @@ public class ValidationTest {
                       put("object", element(10, 10, 20, 10));
                       put("item1", element(10, 20, 10, 10));
                       put("item2", element(15, 30, 10, 10));
+          }})),
+          row(new ValidationError(singleArea(new Rect(10, 20, 10, 10), "item-1"), messages("\"item-1\" is not aligned vertically centered with \"object\"")),
+                  specVertically(Alignment.CENTERED, "item-*"), page(new HashMap<String, PageElement>(){{
+                      put("object", element(10, 10, 20, 10));
+                      put("item-1", element(10, 20, 10, 10));
+                      put("item-2", element(15, 30, 10, 10));
           }})),
           row(new ValidationError(areas(new ErrorArea(new Rect(10, 20, 10, 10), "item1"), new ErrorArea(new Rect(10, 30, 10, 10), "item2")), messages("\"item1\", \"item2\" are not aligned vertically centered with \"object\"")),
                   specVertically(Alignment.CENTERED, "item1", "item2"), page(new HashMap<String, PageElement>(){{

@@ -28,13 +28,14 @@ import net.mindengine.galen.validation.ErrorArea;
 import net.mindengine.galen.validation.PageValidation;
 import net.mindengine.galen.validation.SpecValidation;
 import net.mindengine.galen.validation.ValidationError;
+import net.mindengine.galen.validation.ValidationErrorException;
 
 public class SpecValidationContains extends SpecValidation<SpecContains> {
 
     private static final ValidationError NO_ERROR = null;
 
     @Override
-    public ValidationError check(PageValidation pageValidation, String objectName, SpecContains spec) {
+    public ValidationError check(PageValidation pageValidation, String objectName, SpecContains spec) throws ValidationErrorException {
         PageElement mainObject = getPageElement(pageValidation, objectName);
         
         ValidationError error = checkAvailability(mainObject, objectName);
@@ -45,8 +46,10 @@ public class SpecValidationContains extends SpecValidation<SpecContains> {
         Rect objectArea = mainObject.getArea();
         List<ErrorArea> errorAreas = new LinkedList<ErrorArea>();
         List<String> messages = new LinkedList<String>();
+        
+        List<String> childObjects = fetchChildObjets(spec.getChildObjects(), pageValidation.getPageSpec());
 
-        for (String childObjectName : spec.getChildObjects()) {
+        for (String childObjectName : childObjects) {
             PageElement childObject = getPageElement(pageValidation, childObjectName);
             if (childObject != null) {
                 if (!childObject.isPresent()) {
@@ -79,6 +82,7 @@ public class SpecValidationContains extends SpecValidation<SpecContains> {
         else return NO_ERROR;
     }
 
+    
     private boolean childObjectMatches(SpecContains spec, Rect objectArea, Rect childObjectArea) {
         int matchingPoints = findMatchingPoints(objectArea, childObjectArea);
         

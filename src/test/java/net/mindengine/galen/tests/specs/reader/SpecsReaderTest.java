@@ -119,7 +119,7 @@ public class SpecsReaderTest {
     }
     
     @Test public void shouldReadSpec_inside_object_20px_left_and_approximate_30px_top() {
-        SpecInside spec = (SpecInside)readSpec("inside: object 20px left, ~30px top");
+        SpecInside spec = (SpecInside)readSpec("inside: object ~20px left, ~30px top");
         
         List<Location> locations = spec.getLocations();
         assertThat(locations.size(), is(2));
@@ -133,6 +133,14 @@ public class SpecsReaderTest {
         SpecContains specContains = (SpecContains) spec;
         assertThat(specContains.getChildObjects(), contains("object", "menu", "button"));
         assertThat(spec.getOriginalText(), is("contains: object, menu, button"));
+    }
+    
+    @Test
+    public void shouldReadSpec_contains_with_regex() {
+        Spec spec = readSpec("contains: menu-item-*");
+        SpecContains specContains = (SpecContains) spec;
+        assertThat(specContains.getChildObjects(), contains("menu-item-*"));
+        assertThat(spec.getOriginalText(), is("contains: menu-item-*"));
     }
     
     @Test
