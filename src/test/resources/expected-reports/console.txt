@@ -5,21 +5,21 @@ Suite: page1.test
 Page: http://example.com/page1 400x600
     objectA1
 ->      inside: other-object 10px left
-            - objectA1 is not inside other-object
+->      :     objectA1 is not inside other-object
         width: 10 to 20px
 
     objectA2
         width: 10 to 20px
 ->      width: 10px
-            - objectA2 width is 20px instead of 10px
+->      :     objectA2 width is 20px instead of 10px
 
 ----------------------------------------
 Page: http://example.com/page2 600x700
     objectB1
         width: 10 to 20px
 ->      inside: other-object 10px left
-            - objectB1 is not inside other-object
-            - second error message with <xml> &tags
+->      :     objectB1 is not inside other-object
+->      :     second error message with <xml> &tags
 
     objectB2
         height: 100px

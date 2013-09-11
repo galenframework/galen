@@ -34,7 +34,7 @@ public class ConsoleReportingListener implements CompleteListener {
 
     private static final String OBJECT_INDETATION = "    ";
     private static final String SPEC_ERROR_INDENTATION = "->      ";
-    private static final String SPEC_ERROR_MESSAGE_INDENTATION = "            - ";
+    private static final String SPEC_ERROR_MESSAGE_INDENTATION = "->      :     ";
     private static final String SPEC_INDENTATION = "        ";
     private PrintStream out;
     private PrintStream err;
