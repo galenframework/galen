@@ -27,6 +27,7 @@ import static org.hamcrest.Matchers.is;
 import java.util.Arrays;
 import java.util.List;
 
+import junit.framework.Assert;
 import net.mindengine.galen.parser.SyntaxException;
 import net.mindengine.galen.specs.Alignment;
 import net.mindengine.galen.specs.Location;
@@ -119,11 +120,14 @@ public class SpecsReaderTest {
     }
     
     @Test public void shouldReadSpec_inside_object_20px_left_and_approximate_30px_top() {
-        SpecInside spec = (SpecInside)readSpec("inside: object ~20px left, ~30px top");
+        SpecInside spec = (SpecInside)readSpec("inside: object 20px left, ~30px top");
         
         List<Location> locations = spec.getLocations();
         assertThat(locations.size(), is(2));
-        assertThat(spec.getLocations(), contains(new Location(Range.exact(20), sides(LEFT)), new Location(Range.between(29, 31), sides(TOP))));
+        
+        Assert.assertEquals(new Location(Range.exact(20), sides(LEFT)), spec.getLocations().get(0));
+        Assert.assertEquals(new Location(Range.between(29, 31), sides(TOP)), spec.getLocations().get(1));
+        
         assertThat(spec.getOriginalText(), is("inside: object 20px left, ~30px top"));
     }
         
