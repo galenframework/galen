@@ -37,6 +37,9 @@ public class ExpectLocations implements Expectation<List<Location>> {
             List<Side> sides = Expectations.sides().read(reader);
             
             locations.add(new Location(range, sides));
+            if (reader.currentSymbol() == ',') {
+                reader.next();
+            }
         }
         if (locations.size() == 0) {
             throw new SyntaxException(UNKNOWN_LINE, "There is no location defined");

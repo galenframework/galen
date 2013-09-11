@@ -117,6 +117,15 @@ public class SpecsReaderTest {
         assertThat(spec.getLocations(), contains(new Location(Range.exact(25), sides(TOP, LEFT, RIGHT, BOTTOM))));
         assertThat(spec.getOriginalText(), is("inside: object 25px top left right bottom"));
     }
+    
+    @Test public void shouldReadSpec_inside_object_20px_left_and_approximate_30px_top() {
+        SpecInside spec = (SpecInside)readSpec("inside: object 20px left, ~30px top");
+        
+        List<Location> locations = spec.getLocations();
+        assertThat(locations.size(), is(2));
+        assertThat(spec.getLocations(), contains(new Location(Range.exact(20), sides(LEFT)), new Location(Range.between(29, 31), sides(TOP))));
+        assertThat(spec.getOriginalText(), is("inside: object 20px left, ~30px top"));
+    }
         
     @Test
     public void shouldReadSpec_contains() {
