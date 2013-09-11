@@ -16,7 +16,7 @@ $(function() {
     $("ul.test-specs li.fail").click(function () {
         var screenshot = $(this).attr("data-screenshot");
         var img = new Image();
-        
+
         var areas = [];
         $(this).find("ul.areas li").each(function (){
             var areaText = $(this).attr("data-area");
@@ -31,17 +31,21 @@ $(function() {
         };
         img.src = screenshot;
     });
+
+    $(".global-error span").click(function (){
+        $(this).next().slideToggle();
+    });
 });
 
 function showScreenshot(img, width, height, areas) {
     $("#tooltip-body").html("<div class='canvas'></div>").append(img);
 
     for (var i=0; i<areas.length; i++) {
-        $("#tooltip-body .canvas").append("<div class='brick' style='left:" 
-            + areas[i].area[0] + "px; top:" 
-            + areas[i].area[1] + "px; width:" 
-            + areas[i].area[2] + "px; height:" 
-            + areas[i].area[3] + "px'><span>" 
+        $("#tooltip-body .canvas").append("<div class='brick' style='left:"
+            + areas[i].area[0] + "px; top:"
+            + areas[i].area[1] + "px; width:"
+            + areas[i].area[2] + "px; height:"
+            + areas[i].area[3] + "px'><span>"
             + areas[i].text + "</span></div>");
     }
 
