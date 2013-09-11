@@ -19,7 +19,7 @@ menu:
 @ tablet, desktop
 ---------------------------
 submit:
-    inside: big-box    10 to 30px right, 20 to 40px top
+    inside: big-box    10 to 30px right, 30 ± 10px top
     near: menu 20px left
 
 search-field:
