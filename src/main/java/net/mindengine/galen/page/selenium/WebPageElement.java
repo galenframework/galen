@@ -111,7 +111,16 @@ public class WebPageElement implements PageElement {
 
     @Override
     public String getText() {
-        return getWebElement().getText().trim();
+        WebElement webElement = getWebElement();
+        if ("input".equals(webElement.getTagName().toLowerCase())) {
+            String value = webElement.getAttribute("value");
+            if (value == null) {
+                value = "";
+            }
+            
+            return value;
+        }
+        else return getWebElement().getText().trim();
     }
 
 }
