@@ -300,6 +300,13 @@ public class SpecsReaderTest {
     }
     
     @Test
+    public void shouldReadSpec_width_100_percent_of_other_object_width() {
+        SpecWidth spec = (SpecWidth) readSpec("width: 100% of main-big-container/width");
+        assertThat(spec.getRange(), is(Range.exact(100).withPercentOf("main-big-container/width")));
+        assertThat(spec.getOriginalText(), is("width: 100% of main-big-container/width"));
+    }
+    
+    @Test
     public void shouldReadSpec_height_10px() {
         SpecHeight spec = (SpecHeight) readSpec("height: 10px");
         assertThat(spec.getRange(), is(Range.exact(10)));

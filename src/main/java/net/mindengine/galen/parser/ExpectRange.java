@@ -99,7 +99,7 @@ public class ExpectRange implements Expectation<Range>{
     private String readPercentageOf(StringCharReader reader) {
         String firstWord = expectNonNumeric(reader);
         if (firstWord.equals("of")) {
-            String valuePath = expectNonNumeric(reader).trim();
+            String valuePath = reader.getTheRest().trim();
             if (valuePath.isEmpty()) {
                 throw new SyntaxException(UNKNOWN_LINE, "Missing value path for relative range");
             }

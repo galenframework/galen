@@ -215,9 +215,9 @@ public class ValidationTest {
               put("object", element(305, 140, 15, 50));
               put("container", element(305, 400, 30, 50));
           }})),
-          row(specWidth(Range.between(45, 55).withPercentOf("container/width")), page(new HashMap<String, PageElement>(){{
+          row(specWidth(Range.between(45, 55).withPercentOf("main-container-1/width")), page(new HashMap<String, PageElement>(){{
               put("object", element(305, 140, 15, 50));
-              put("container", element(305, 400, 30, 50));
+              put("main-container-1", element(305, 400, 30, 50));
           }})),
           
 
