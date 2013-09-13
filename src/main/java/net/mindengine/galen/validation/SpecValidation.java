@@ -82,13 +82,19 @@ public abstract class SpecValidation<T extends Spec> {
      * Fetches all child object, using simple regular expression
      * @param childObjects
      * @param pageSpec
+     * @param validatedObject 
      * @return
      * @throws ValidationErrorException
      */
-    protected List<String> fetchChildObjets(List<String> childObjects, PageSpec pageSpec) throws ValidationErrorException {
+    protected List<String> fetchChildObjets(List<String> childObjects, PageSpec pageSpec, String validatedObject) throws ValidationErrorException {
         List<String> resultObjects = new LinkedList<String>();
         
         for (String objectName : childObjects) {
+            if (objectName.contains("$")) {
+                objectName = objectName.replace("$", validatedObject);
+            }
+            
+            
             if (objectName.contains("*")) {
                 
                 List<String> foundObjects = pageSpec.findMatchingObjectNames(objectName);

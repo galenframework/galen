@@ -36,6 +36,10 @@ public class SectionValidation {
     }
 
     public List<ValidationError> check() {
+        
+        //Fetching all multi objects from page before validation
+        pageValidation.getPageSpec().updateMultiObjects(pageValidation.getPage());
+        
         List<ValidationError> errors = new LinkedList<ValidationError>();
         
         for (PageSection section : pageSections) {

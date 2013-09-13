@@ -21,6 +21,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
 
+import net.mindengine.galen.page.Page;
 import net.mindengine.galen.specs.page.Locator;
 import net.mindengine.galen.specs.page.PageSection;
 
@@ -29,6 +30,7 @@ public class PageSpec {
 
     private static final List<String> EMPTY_TAGS = new LinkedList<String>();
     private Map<String, Locator> objects = new HashMap<String, Locator>();
+    private Map<String, Locator> multiObjects = new HashMap<String, Locator>();
     private List<PageSection> sections = new LinkedList<PageSection>();
 
     public Map<String, Locator> getObjects() {
@@ -92,6 +94,32 @@ public class PageSpec {
         }
         
         return foundObjects;
+    }
+
+    public Map<String, Locator> getMultiObjects() {
+        return multiObjects;
+    }
+
+    public void setMultiObjects(Map<String, Locator> multiObjects) {
+        this.multiObjects = multiObjects;
+    }
+
+    public void addMultiObject(String objectName, Locator locator) {
+        multiObjects.put(objectName, locator);
+    }
+
+    public void updateMultiObjects(Page page) {
+        for (Map.Entry<String, Locator> object : multiObjects.entrySet()) {
+            Locator locator = object.getValue();
+            
+            int count = page.getObjectCount(locator);
+            
+            for (int index = 1; index <= count; index++) {
+                String objectName = object.getKey().replace("*", Integer.toString(index));
+                Locator newLocator = new Locator(locator.getLocatorType(), locator.getLocatorValue(), index);
+                objects.put(objectName, newLocator);
+            }
+        }
     }
 
 }

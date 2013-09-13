@@ -273,6 +273,93 @@ public class GalenSeleniumTest {
         assertThat("Errors should be empty", errors.size(), is(0));
     }
     
+    @Test
+    public void shouldCheck_multiObjects() throws Exception {
+        openDriverForNicePage();
+        
+        PageSpec pageSpec = new PageSpecReader().read(getClass().getResourceAsStream("/html/page.spec"));
+        
+        driver.manage().window().setSize(new Dimension(1000, 1000));
+        
+        SeleniumPage page = new SeleniumPage(driver);
+        
+        TestValidationListener validationListener = new TestValidationListener();
+        List<PageSection> pageSections = pageSpec.findSections(asList("multi-check"));
+        
+        assertThat("Filtered sections size should be", pageSections.size(), is(1));
+        
+        SectionValidation sectionValidation = new SectionValidation(pageSections, new PageValidation(page, pageSpec), validationListener);
+        List<ValidationError> errors = sectionValidation.check();
+        
+        assertThat("Invokations should contain", validationListener.getInvokations(), containsString(
+                "<o menu-items-1>\n" +
+                "<SpecHeight menu-items-1>\n" +
+                "</o menu-items-1>\n"));
+        
+        assertThat("Invokations should contain", validationListener.getInvokations(), containsString(
+                "<o menu-items-2>\n" +
+                "<SpecHeight menu-items-2>\n" +
+                "</o menu-items-2>\n"));
+        
+        assertThat("Invokations should contain", validationListener.getInvokations(), containsString(
+                "<o menu-items-3>\n" +
+                "<SpecHeight menu-items-3>\n" +
+                "</o menu-items-3>\n" ));
+        
+        assertThat("Invokations should contain", validationListener.getInvokations(), containsString(
+                "<o menu-items-4>\n" +
+                "<SpecHeight menu-items-4>\n" +
+                "</o menu-items-4>\n" ));
+        
+        assertThat("Invokations should contain", validationListener.getInvokations(), containsString(
+                "<o menu-items-5>\n" +
+                "<SpecHeight menu-items-5>\n" +
+                "</o menu-items-5>\n" ));
+        
+        assertThat("Invokations should contain", validationListener.getInvokations(), containsString(
+                "<o menu-items-6>\n" +
+                "<SpecHeight menu-items-6>\n" +
+                "</o menu-items-6>\n" ));
+        
+        assertThat("Invokations should contain", validationListener.getInvokations(), containsString(
+                "<o menu-items-7>\n" +
+                "<SpecHeight menu-items-7>\n" +
+                "</o menu-items-7>\n" ));
+        
+        assertThat("Invokations should contain", validationListener.getInvokations(), containsString(
+                "<o menu-items-1>\n" +
+                "<SpecNear menu-items-1>\n" +
+                "</o menu-items-1>\n" ));
+        assertThat("Errors should be empty", errors.size(), is(0));
+    }
+    
+    @Test 
+    public void shouldCheck_objectReferenceInSpec() throws Exception {
+        openDriverForNicePage();
+        
+        PageSpec pageSpec = new PageSpecReader().read(getClass().getResourceAsStream("/html/page.spec"));
+        
+        driver.manage().window().setSize(new Dimension(400, 1000));
+        
+        SeleniumPage page = new SeleniumPage(driver);
+        
+        TestValidationListener validationListener = new TestValidationListener();
+        List<PageSection> pageSections = pageSpec.findSections(asList("object-reference"));
+        
+        assertThat("Filtered sections size should be", pageSections.size(), is(1));
+        
+        SectionValidation sectionValidation = new SectionValidation(pageSections, new PageValidation(page, pageSpec), validationListener);
+        List<ValidationError> errors = sectionValidation.check();
+        
+        assertThat("Invokations should", validationListener.getInvokations(), is(
+                "<o menu>\n" +
+                "<SpecContains menu>\n" +
+                "<e><msg>Cannot find locator for \"menu-text-1\" in page spec</msg><msg>Cannot find locator for \"menu-text-2\" in page spec</msg></e>\n" +
+                "</o menu>\n" 
+                
+                ));
+        assertThat("Errors should be empty", errors.size(), is(1));
+    }
     
     @Test
     public void givesErrors_whenValidating_incorrectWebSite() throws Exception {
@@ -306,6 +393,8 @@ public class GalenSeleniumTest {
                 ));
         assertThat("Errors amount should be", errors.size(), is(1));
     }
+    
+    
     
     private void openDriverForBadPage() {
         driver.get("file://" + getClass().getResource("/html/page1.html").getPath());

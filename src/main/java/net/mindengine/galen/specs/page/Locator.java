@@ -26,10 +26,15 @@ public class Locator {
     private String locatorType;
     private String locatorValue;
     private Rect corrections;
+    private int index = 0;
 
     public Locator(String locatorType, String locatorValue) {
+        this(locatorType, locatorValue, 0);
+    }
+    public Locator(String locatorType, String locatorValue, int index) {
         this.setLocatorType(locatorType);
         this.setLocatorValue(locatorValue);
+        this.setIndex(index);
     }
 
     public String getLocatorType() {
@@ -92,6 +97,14 @@ public class Locator {
     public Locator withCorrections(Rect corrections) {
         setCorrections(corrections);
         return this;
+    }
+
+    public int getIndex() {
+        return index;
+    }
+
+    public void setIndex(int index) {
+        this.index = index;
     }
 
 }

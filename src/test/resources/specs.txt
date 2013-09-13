@@ -6,6 +6,8 @@ submit              xpath   //input[@name = 'submit']
 search-field        css     #search
 menu                id      menu
 big-box             tag     container
+
+menu-item-*         css     #menu .menu-item
 ====================================================
 
 # This is a tag definition

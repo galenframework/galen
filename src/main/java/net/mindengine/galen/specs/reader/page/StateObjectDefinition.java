@@ -17,6 +17,9 @@ package net.mindengine.galen.specs.reader.page;
 
 import static java.lang.String.format;
 import static net.mindengine.galen.suite.reader.Line.UNKNOWN_LINE;
+
+import org.apache.commons.lang3.StringUtils;
+
 import net.mindengine.galen.page.Rect;
 import net.mindengine.galen.parser.ExpectWord;
 import net.mindengine.galen.parser.Expectations;
@@ -54,13 +57,32 @@ public class StateObjectDefinition extends State {
             if (value.isEmpty()) {
                 throw new SyntaxException(UNKNOWN_LINE, format("Locator for object \"%s\" is not defined correctly", objectName));
             }
-            pageSpec.addObject(objectName, new Locator(locatorType, value).withCorrections(corrections));
+            addObjectToSpec(objectName, locatorType, corrections, value);
         }
         catch (SyntaxException e) {
             throw e;
         }
         catch (Exception e) {
             throw new SyntaxException(UNKNOWN_LINE, "Object \"" + objectName + "\" has incorrect locator", e);
+        }
+    }
+
+    private void addObjectToSpec(String objectName, String locatorType, Rect corrections, String value) {
+        Locator locator = new Locator(locatorType, value).withCorrections(corrections);
+        if (objectName.contains("*")) {
+            addMultiObject(objectName, locator);
+        }
+        else {
+            pageSpec.addObject(objectName, locator);
+        }
+    }
+
+    private void addMultiObject(String objectName, Locator locator) {
+        if (StringUtils.countMatches(objectName, "*") > 1) {
+            throw new SyntaxException(UNKNOWN_LINE, "Incorrect object name: " + objectName);
+        }
+        else {
+            pageSpec.addMultiObject(objectName, locator);
         }
     }
 

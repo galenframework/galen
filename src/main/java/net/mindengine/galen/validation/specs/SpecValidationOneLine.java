@@ -40,7 +40,7 @@ public abstract class SpecValidationOneLine<T extends SpecObjectsOnOneLine> exte
         List<String> misalignedObjectNames = new LinkedList<String>();
         List<ErrorArea> errorAreas = new LinkedList<ErrorArea>();
         
-        for (String childObjectName : fetchChildObjets(spec.getChildObjects(), pageValidation.getPageSpec())) {
+        for (String childObjectName : fetchChildObjets(spec.getChildObjects(), pageValidation.getPageSpec(), objectName)) {
             PageElement childObject = getPageElement(pageValidation, childObjectName);
             error = checkAvailability(childObject, childObjectName);
             if (error != null) {

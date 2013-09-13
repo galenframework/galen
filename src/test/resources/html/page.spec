@@ -17,6 +17,7 @@ menu-item-contacts          xpath       //div[@id="menu"]//li/a[.='Contacts']
 menu-item-help              xpath       //div[@id="menu"]//li/a[.='Help']
 
 
+menu-items-*                css         #menu  li a
 
 main                        id          main
 
@@ -121,3 +122,21 @@ menu-item-categories:
 menu-item-categories:
     text contains: egor
 
+
+@ multi-check
+----------------------------
+menu-items-*
+    height: 40 to 50px
+    
+menu-items-1
+    near: menu-items-2 0px left
+    
+    
+# Checking object reference from spec
+# The following spec should mean the same as "contains: header-text-1, header-text-2"    
+@ object-reference
+-----------------------------
+menu
+    contains: $-text-1, $-text-2
+    
+    

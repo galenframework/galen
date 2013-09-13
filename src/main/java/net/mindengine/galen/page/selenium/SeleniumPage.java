@@ -15,6 +15,8 @@
 ******************************************************************************/
 package net.mindengine.galen.page.selenium;
 
+import java.util.List;
+
 import net.mindengine.galen.page.AbsentPageElement;
 import net.mindengine.galen.page.Page;
 import net.mindengine.galen.page.PageElement;
@@ -23,6 +25,7 @@ import net.mindengine.galen.specs.page.Locator;
 import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 
 public class SeleniumPage implements Page {
 
@@ -38,7 +41,20 @@ public class SeleniumPage implements Page {
         By by = by(objectLocator);
         if (by != null) {
             try {
-                return new WebPageElement(objectName, driver.findElement(by), objectLocator);
+                int index = objectLocator.getIndex() - 1;
+                
+                if (index >= 0) {
+                    List<WebElement> webElements = driver.findElements(by);
+                    if (index < webElements.size()) {
+                        return new WebPageElement(objectName, webElements.get(index), objectLocator);
+                    }
+                    else {
+                        return new AbsentPageElement();
+                    }
+                }
+                else {
+                    return new WebPageElement(objectName, driver.findElement(by), objectLocator);
+                }
             }
             catch (NoSuchElementException e) {
                 return new AbsentPageElement();
@@ -67,6 +83,12 @@ public class SeleniumPage implements Page {
             return new ScreenElement(driver);
         }
         else return null;
+    }
+
+
+    @Override
+    public int getObjectCount(Locator locator) {
+        return driver.findElements(by(locator)).size();
     }
 
 }

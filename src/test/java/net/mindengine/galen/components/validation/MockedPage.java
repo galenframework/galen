@@ -47,4 +47,9 @@ public class MockedPage implements Page {
         return null;
     }
 
+    @Override
+    public int getObjectCount(Locator locator) {
+        return 0;
+    }
+
 }

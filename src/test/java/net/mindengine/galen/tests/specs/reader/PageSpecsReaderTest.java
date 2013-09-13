@@ -82,6 +82,9 @@ public class PageSpecsReaderTest {
         assertThat(objects, hasEntry("menu", new Locator("id", "menu")));
         assertThat(objects, hasEntry("big-box", new Locator("tag", "container")));
         assertThat(objects, hasEntry("anotherObject", new Locator("xpath", "//div")));
+        
+        assertThat("Amount of multi-objects should be", pageSpec.getMultiObjects().size(), is(1));
+        assertThat(pageSpec.getMultiObjects(), hasEntry("menu-item-*", new Locator("css", "#menu .menu-item")));
     }
     
     

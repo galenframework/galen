@@ -23,4 +23,7 @@ public interface Page {
 
     PageElement getSpecialObject(String objectName);
 
+    int getObjectCount(Locator locator);
+    
+
 }
