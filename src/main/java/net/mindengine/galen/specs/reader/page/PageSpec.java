@@ -84,7 +84,7 @@ public class PageSpec {
      */
     public List<String> findMatchingObjectNames(String objectNameSimpleRegex) {
         
-        Pattern pattern = Pattern.compile(objectNameSimpleRegex.replace("*", ".*"));
+        Pattern pattern = Pattern.compile(objectNameSimpleRegex.replace("*", "[a-zA-Z0-9_]+"));
         List<String> foundObjects = new LinkedList<String>();
         
         for (String objectName : objects.keySet()) {

@@ -83,7 +83,7 @@ public class SectionValidation {
     }
 
     private List<String> fetchUsingRegex(String simpleRegex) {
-        String regex = simpleRegex.replace("*", ".*");
+        String regex = simpleRegex.replace("*", "[a-zA-Z0-9_]+");
         Pattern pattern = Pattern.compile(regex);
         
         List<String> objectNames = new LinkedList<String>();
