@@ -46,6 +46,20 @@ submit:
 anotherObject       xpath    //div
 ==================================================
     
-# In order to run specific set of tests this is how you should do it:
-# galen run -t mobile -r 320x480 specs.txt http://exmaple.com/page
-#
+
+
+
+# It is also possible to parameterize test using range of numbers
+
+@ parameterized
+-------------------
+[ 1 - 4 ]
+box-@-link
+    inside: box-@ 10px top left
+
+[ 5 - 6 ]
+box-@-link
+    inside: box-@ 10px top left
+
+
+

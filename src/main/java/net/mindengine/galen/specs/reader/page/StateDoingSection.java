@@ -26,7 +26,28 @@ public class StateDoingSection extends State {
     private PageSection section;
     private ObjectSpecs currentObjectSpecs;
     
+    private Parameterization currentParameterization = null;
+    
+    
+    private class Parameterization {
+        private String[] parameters;
+        private ObjectSpecs[] objectSpecs;
+
+        public Parameterization(String[] parameters, ObjectSpecs[] objectSpecs) {
+            this.parameters = parameters;
+            this.objectSpecs = objectSpecs;
+        }
+
+        public void processObject(String line) {
+            for (int i = 0; i < parameters.length; i++) {
+                String specText = convertParameterizedLine(line, parameters[i]);
+                objectSpecs[i].getSpecs().add(StateDoingSection.this.specReader.read(specText));
+            }
+        }
+    }
+    
     private SpecReader specReader = new SpecReader();
+    private String[] toParameterize;
     public StateDoingSection(PageSection section) {
         this.section = section;
     }
@@ -34,34 +55,77 @@ public class StateDoingSection extends State {
     @Override
     public void process(String line) {
         if (startsWithIndentation(line)) {
-            if (currentObjectSpecs == null) {
-                throw new SyntaxException(UNKNOWN_LINE,"There is no object defined in section");
+            if (currentParameterization != null) {
+                currentParameterization.processObject(line);
             }
             else {
-                try {
-                    currentObjectSpecs.getSpecs().add(specReader.read(line.trim()));
-                }
-                catch (SyntaxException exception) {
-                    throw exception;
-                }
-                catch (Exception exception) {
-                    throw new SyntaxException(UNKNOWN_LINE, "Incorrect spec for object \"" + currentObjectSpecs.getObjectName() + "\"", exception);
-                }
+                processSpecForSimpleObject(line);
             }
         }
         else {
-            beginNewObject(line);
+            if (toParameterize != null) {
+                beginParameterizedObject(line, toParameterize);
+                toParameterize = null;
+            }
+            else {
+                beginNewObject(line);
+                currentParameterization = null;
+            }
         }
     }
 
+    
+    private void processSpecForSimpleObject(String line) {
+        if (currentObjectSpecs == null) {
+            throw new SyntaxException(UNKNOWN_LINE,"There is no object defined in section");
+        }
+        else {
+            try {
+                currentObjectSpecs.getSpecs().add(specReader.read(line.trim()));
+            }
+            catch (SyntaxException exception) {
+                throw exception;
+            }
+            catch (Exception exception) {
+                throw new SyntaxException(UNKNOWN_LINE, "Incorrect spec for object \"" + currentObjectSpecs.getObjectName() + "\"", exception);
+            }
+        }
+    }
+
+    private void beginParameterizedObject(String line, String[] parameters) {
+        String objectNamePattern = readObjectNameFromLine(line);
+        
+        ObjectSpecs[] objectSpecs = new ObjectSpecs[parameters.length];
+        
+        for (int i = 0; i < parameters.length; i++) {
+            String objectName = convertParameterizedLine(objectNamePattern, parameters[i]);
+            objectSpecs[i] = new ObjectSpecs(objectName);
+            section.getObjects().add(objectSpecs[i]);
+        }
+        currentParameterization = new Parameterization(parameters, objectSpecs);
+    }
+
+    private String convertParameterizedLine(String line, String parameter) {
+        return line.replace("@", parameter);
+    }
+
     private void beginNewObject(String line) {
-        String name = line.trim().replace(":", "");
+        String name = readObjectNameFromLine(line);
         currentObjectSpecs = new ObjectSpecs(name);
         section.getObjects().add(currentObjectSpecs);
     }
 
+    private String readObjectNameFromLine(String line) {
+        String name = line.trim().replace(":", "");
+        return name;
+    }
+
     private boolean startsWithIndentation(String line) {
         return line.startsWith("\t") || line.startsWith("  ");
+    }
+
+    public void parameterizeNextObject(String[] parameters) {
+        toParameterize = parameters;
     }
 
 }

@@ -15,10 +15,13 @@
 ******************************************************************************/
 package net.mindengine.galen.specs.reader.page;
 
+import static net.mindengine.galen.suite.reader.Line.UNKNOWN_LINE;
+
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
+import net.mindengine.galen.parser.SyntaxException;
 import net.mindengine.galen.specs.page.PageSection;
 
 
@@ -26,8 +29,8 @@ public class PageSpecLineProcessor {
 
     private static final String TAG = "@";
     private static final String COMMENT = "#";
+    private static final String PARAMETERIZATION_SYMBOL = "[";
     PageSpec pageSpec = new PageSpec();
-    
     
     private State state;
     
@@ -46,10 +49,50 @@ public class PageSpecLineProcessor {
             else if (isSectionSeparator(line)) {
                 //Do nothing
             }
+            else if (line.startsWith(PARAMETERIZATION_SYMBOL)) {
+                startParameterization(line);
+            }
             else state.process(line);
         }
     }
     
+    
+    private void startParameterization(String line) {
+        line = line.replace(" ", "");
+        line = line.replace("\t", "");
+        if (line.matches("\\[[0-9]+\\-[0-9]+\\]")) {
+            
+            int dashIndex = line.indexOf('-');
+            
+            int rangeA = Integer.parseInt(line.substring(1, dashIndex));
+            int rangeB = Integer.parseInt(line.substring(dashIndex + 1, line.length() - 1));
+            
+            int min = Math.min(rangeA, rangeB);
+            int max = Math.max(rangeA, rangeB);
+            startParameterization(createSequence(min, max));
+        }
+        else throw new SyntaxException(UNKNOWN_LINE, "Incorrect parameterization syntax"); 
+        
+    }
+
+    private String[] createSequence(int min, int max) {
+        int size = max - min + 1;
+        String[] parameters = new String[size];
+        for (int i = min; i <= max; i++) {
+            parameters[i - min] = Integer.toString(i);
+        }
+        return parameters;
+    }
+
+    private void startParameterization(String[] parameters) {
+        if (!(state instanceof StateDoingSection)) {
+            startNewSection("");
+        }
+        
+        StateDoingSection doingSection = (StateDoingSection)state;
+        doingSection.parameterizeNextObject(parameters);
+    }
+
     public PageSpec buildPageSpec() {
         Iterator<PageSection> it = pageSpec.getSections().iterator();
         while(it.hasNext()) {
@@ -69,7 +112,16 @@ public class PageSpecLineProcessor {
 
     private boolean isSectionSeparator(String line) {
         line = line.trim();
-        return !containsAnyLetters(line);
+        if (line.length() < 4) {
+            return false;
+        }
+        for (int i = 0; i < line.length(); i++) {
+            if (line.charAt(i) != '-') {
+                return false;
+            }
+        }
+        
+        return true;
     }
 
     private boolean isObjectSeparator(String line) {
@@ -110,18 +162,6 @@ public class PageSpecLineProcessor {
                 }
             }
             return true;
-        }
-        return false;
-    }
-    
-    private boolean containsAnyLetters(String line) {
-        if (line.length() > 0) {
-            for (int i=0; i<line.length(); i++) {
-                char symbol = line.charAt(i);
-                if ((symbol >= 'A' && symbol <= 'Z') || (symbol >= 'a' && symbol <= 'z')) {
-                    return true;
-                }
-            }
         }
         return false;
     }
