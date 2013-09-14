@@ -19,6 +19,7 @@ import java.util.List;
 import java.util.Set;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebDriver.Navigation;
 import org.openqa.selenium.WebDriver.Options;
@@ -40,7 +41,12 @@ public class WebDriverWrapper {
 
     
     public WebElementWrapper findElement(By by) {
-        return new WebElementWrapper(driver.findElement(by));
+        try {
+            return new WebElementWrapper(driver.findElement(by));
+        }
+        catch (NoSuchElementException e) {
+            return null;
+        }
     }
 
     
