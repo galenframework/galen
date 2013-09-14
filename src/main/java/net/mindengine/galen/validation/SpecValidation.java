@@ -86,15 +86,10 @@ public abstract class SpecValidation<T extends Spec> {
      * @return
      * @throws ValidationErrorException
      */
-    protected List<String> fetchChildObjets(List<String> childObjects, PageSpec pageSpec, String validatedObject) throws ValidationErrorException {
+    protected List<String> fetchChildObjets(List<String> childObjects, PageSpec pageSpec) throws ValidationErrorException {
         List<String> resultObjects = new LinkedList<String>();
         
         for (String objectName : childObjects) {
-            if (objectName.contains("$")) {
-                objectName = objectName.replace("$", validatedObject);
-            }
-            
-            
             if (objectName.contains("*")) {
                 
                 List<String> foundObjects = pageSpec.findMatchingObjectNames(objectName);

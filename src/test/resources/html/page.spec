@@ -132,11 +132,4 @@ menu-items-1
     near: menu-items-2 0px left
     
     
-# Checking object reference from spec
-# The following spec should mean the same as "contains: header-text-1, header-text-2"    
-@ object-reference
------------------------------
-menu
-    contains: $-text-1, $-text-2
-    
     
