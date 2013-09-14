@@ -36,16 +36,20 @@ public class WebPageElement implements PageElement {
         this.setLocator(objectLocator);
     }
 
+    private Rect cachedArea = null;
+    
     @Override
     public Rect getArea() {
-        Point location = getWebElement().getLocation();
-        Dimension size = getWebElement().getSize();
-        Rect rect = new Rect(location.getX(), location.getY(), size.getWidth(), size.getHeight());
-        
-        if (getLocator() != null && getLocator().getCorrections() != null) {
-            return correctedRect(rect, getLocator().getCorrections());
+        if (cachedArea == null) {   
+            Point location = getWebElement().getLocation();
+            Dimension size = getWebElement().getSize();
+            cachedArea = new Rect(location.getX(), location.getY(), size.getWidth(), size.getHeight());
+            
+            if (getLocator() != null && getLocator().getCorrections() != null) {
+                cachedArea = correctedRect(cachedArea, getLocator().getCorrections());
+            }
         }
-        else return rect;
+        return cachedArea;
     }
 
     private Rect correctedRect(Rect rect, Rect corrections) {
@@ -60,9 +64,14 @@ public class WebPageElement implements PageElement {
         return true;
     }
 
+    
+    private Boolean cachedVisibility = null;
     @Override
     public boolean isVisible() {
-        return getWebElement().isDisplayed();
+        if (cachedVisibility == null) {
+            cachedVisibility = getWebElement().isDisplayed();
+        }
+        return cachedVisibility;
     }
 
     @Override

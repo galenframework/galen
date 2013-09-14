@@ -15,7 +15,10 @@
 ******************************************************************************/
 package net.mindengine.galen.page.selenium;
 
+import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 import net.mindengine.galen.page.AbsentPageElement;
 import net.mindengine.galen.page.Page;
@@ -36,31 +39,71 @@ public class SeleniumPage implements Page {
     }
 
     
+    private Map<String, List<PageElement>> cachedElementsList = new HashMap<String, List<PageElement>>();
+    private Map<String, PageElement> cachedPageElements = new HashMap<String, PageElement>();
+    
     @Override
     public PageElement getObject(String objectName, Locator objectLocator) {
-        By by = by(objectLocator);
-        if (by != null) {
-            try {
-                int index = objectLocator.getIndex() - 1;
-                
-                if (index >= 0) {
-                    List<WebElement> webElements = driver.findElements(by);
-                    if (index < webElements.size()) {
-                        return new WebPageElement(objectName, webElements.get(index), objectLocator);
-                    }
-                    else {
-                        return new AbsentPageElement();
-                    }
-                }
-                else {
-                    return new WebPageElement(objectName, driver.findElement(by), objectLocator);
-                }
+        int index = objectLocator.getIndex() - 1;
+        
+        if (index >= 0) {
+            return getWebPageElement(objectName, objectLocator, index);
+        }
+        else {
+            return getWebPageElement(objectName, objectLocator);
+        }
+    }
+
+    private PageElement getWebPageElement(String objectName, Locator objectLocator, int index) {
+        List<PageElement> pageElements = cachedElementsList.get(objectName);
+        
+        if (pageElements == null) {
+            By by = by(objectLocator);
+            if (by == null) {
+                return null;
             }
-            catch (NoSuchElementException e) {
-                return new AbsentPageElement();
+            
+            List<WebElement> webElements = driver.findElements(by);
+            
+            pageElements = new LinkedList<PageElement>();
+            int i = 1;
+            for (WebElement webElement : webElements) {
+                pageElements.add(new WebPageElement(objectName, webElement, new Locator(objectLocator.getLocatorType(), objectLocator.getLocatorValue(), i)));
+                i++;
             }
         }
-        return null;
+        if (index < pageElements.size()) {
+             return pageElements.get(index);
+        }
+        else {
+            return new AbsentPageElement();
+        }
+        
+    }
+
+    private PageElement getWebPageElement(String objectName, Locator objectLocator) {
+        PageElement pageElement = cachedPageElements.get(objectName);
+        
+        if (pageElement == null) {
+            By by = by(objectLocator);
+            if (by == null) {
+                return null;
+            }
+            
+            try {
+                WebElement webElement = driver.findElement(by);
+                pageElement = new WebPageElement(objectName, webElement, objectLocator);
+            }
+            catch (NoSuchElementException e) {
+                pageElement = new AbsentPageElement();
+            }
+            
+            cachedPageElements.put(objectName, pageElement);
+            return pageElement;
+        }
+        else {
+            return pageElement;
+        }
     }
 
     private By by(Locator locator) {
