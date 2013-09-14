@@ -193,18 +193,18 @@ public class SpecReader {
         
         specText = specText.trim();
         
-        String args[] = specText.split(":");
+        int splitterIndex = specText.indexOf(":");
         
-        String paramsText = null;
-        
-        if (args.length > 2) {
-            throw new SyntaxException(UNKNOWN_LINE, "Incorrect format");
+        String statement = specText;
+        String paramsText = "";
+        if (splitterIndex > 0) {
+            statement = specText.substring(0, splitterIndex);
+            if (splitterIndex < specText.length()) {
+                paramsText = specText.substring(splitterIndex + 1);
+            }
         }
-        else if (args.length == 2) {
-            paramsText = args[1].trim();
-        }
         
-        Spec spec = readSpecWithParams(args[0].trim(), paramsText);
+        Spec spec = readSpecWithParams(statement, paramsText);
         if (spec != null) {
             spec.setOriginalText(specText);
         }

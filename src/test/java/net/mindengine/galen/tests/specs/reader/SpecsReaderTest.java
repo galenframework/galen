@@ -40,6 +40,7 @@ import net.mindengine.galen.specs.SpecHeight;
 import net.mindengine.galen.specs.SpecHorizontally;
 import net.mindengine.galen.specs.SpecInside;
 import net.mindengine.galen.specs.SpecNear;
+import net.mindengine.galen.specs.SpecText;
 import net.mindengine.galen.specs.SpecVertically;
 import net.mindengine.galen.specs.SpecWidth;
 import net.mindengine.galen.specs.reader.SpecReader;
@@ -320,6 +321,62 @@ public class SpecsReaderTest {
         assertThat(spec.getOriginalText(), is("height: 5 to 8px"));
     }
     
+    @Test
+    public void shouldReadSpec_text_is_some_text() {
+        SpecText spec = (SpecText)readSpec("text is:  Some text ");
+        assertThat(spec.getText(), is("Some text"));
+        assertThat(spec.getType(), is(SpecText.Type.IS));
+    }
+    
+    @Test
+    public void shouldReadSpec_text_is_some_text_2() {
+        SpecText spec = (SpecText)readSpec("text is:Some text with colon:");
+        assertThat(spec.getText(), is("Some text with colon:"));
+        assertThat(spec.getType(), is(SpecText.Type.IS));
+    }
+    
+    @Test
+    public void shouldReadSpec_text_is_empty() {
+        SpecText spec = (SpecText)readSpec("text is:  ");
+        assertThat(spec.getText(), is(""));
+        assertThat(spec.getType(), is(SpecText.Type.IS));
+    }
+    
+    @Test
+    public void shouldReadSpec_text_is_empty_2() {
+        SpecText spec = (SpecText)readSpec("text is:");
+        assertThat(spec.getText(), is(""));
+        assertThat(spec.getType(), is(SpecText.Type.IS));
+    }
+    
+    @Test
+    public void shouldReadSpec_text_contains_some_text() {
+        SpecText spec = (SpecText)readSpec("text contains:  Some text ");
+        assertThat(spec.getText(), is("Some text"));
+        assertThat(spec.getType(), is(SpecText.Type.CONTAINS));
+    }
+    
+    @Test
+    public void shouldReadSpec_text_startsWith_some_text() {
+        SpecText spec = (SpecText)readSpec("text starts:  Some text ");
+        assertThat(spec.getText(), is("Some text"));
+        assertThat(spec.getType(), is(SpecText.Type.STARTS));
+    }
+    
+    @Test
+    public void shouldReadSpec_text_endssWith_some_text() {
+        SpecText spec = (SpecText)readSpec("text ends:  Some text ");
+        assertThat(spec.getText(), is("Some text"));
+        assertThat(spec.getType(), is(SpecText.Type.ENDS));
+    }
+    
+    @Test
+    public void shouldReadSpec_text_matches_some_text() {
+        SpecText spec = (SpecText)readSpec("text matches:  Some * text ");
+        assertThat(spec.getText(), is("Some * text"));
+        assertThat(spec.getType(), is(SpecText.Type.MATCHES));
+    }
+    
     @Test(expectedExceptions={NullPointerException.class}, expectedExceptionsMessageRegExp="Spec text should not be null") 
     public void givesError_whenTextIsNull() {
         readSpec(null);
@@ -328,11 +385,6 @@ public class SpecsReaderTest {
     @Test(expectedExceptions={SyntaxException.class}, expectedExceptionsMessageRegExp="Spec text should not be empty") 
     public void givesError_whenTextIsEmpty() {
         readSpec(" ");
-    }
-    
-    @Test(expectedExceptions={SyntaxException.class}, expectedExceptionsMessageRegExp="Incorrect format") 
-    public void givesError_whenUsingMoreThanOneColon() {
-        readSpec(" asfasf:asf :asf");
     }
     
     private Spec readSpec(String specText) {

@@ -323,6 +323,10 @@ public class ValidationTest {
               put("object", element(10, 10, 10, 10).withText("Some text"));
           }})),
           
+          row(specTextIs(""), page(new HashMap<String, PageElement>(){{
+              put("object", element(10, 10, 10, 10).withText(""));
+          }})),
+          
           row(specTextContains("good"), page(new HashMap<String, PageElement>(){{
               put("object", element(10, 10, 10, 10).withText("Some good text"));
           }})),
