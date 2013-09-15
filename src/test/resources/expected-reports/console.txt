@@ -12,6 +12,8 @@ Page: http://example.com/page1 400x600
         width: 10 to 20px
 ->      width: 10px
 ->      :     objectA2 width is 20px instead of 10px
+    objectA1
+        height: 10 to 20px
 
 ----------------------------------------
 Page: http://example.com/page2 600x700
@@ -37,4 +39,4 @@ Failed suites:
 
 Status: FAIL
 Total failures: 4
-Total tests: 7
+Total tests: 8

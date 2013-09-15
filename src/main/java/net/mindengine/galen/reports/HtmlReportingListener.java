@@ -55,6 +55,8 @@ public class HtmlReportingListener implements CompleteListener {
     private XmlNode currentSpecsListNode;
     private Browser currentBrowser;
     
+    private Map<String, XmlNode> currentObjectSpecListMap;
+    
     
     private Map<Page, Screenshot> screenshots = new HashMap<Page, Screenshot>();
     
@@ -95,9 +97,8 @@ public class HtmlReportingListener implements CompleteListener {
 
     @Override
     public void onSuiteStarted(GalenSuiteRunner galenSuiteRunner, GalenSuite suite) {
+        bodyNode.add(h(1, suite.getName()));
         currentSuiteNode = div("suite");
-        currentSuiteNode.add(h(1, suite.getName()));
-        
         bodyNode.add(currentSuiteNode);
     }
     
@@ -117,9 +118,11 @@ public class HtmlReportingListener implements CompleteListener {
     @Override
     public void onBeforePage(GalenSuiteRunner galenSuiteRunner, GalenPageTest pageTest, Browser browser) {
         currentBrowser = browser;
+        currentSuiteNode.add(h(2, pageTest.getUrl() + " " + GalenUtils.formatScreenSize(pageTest.getScreenSize())));
         currentPageNode = div("test");
-        currentPageNode.add(h(2, pageTest.getUrl() + " " + GalenUtils.formatScreenSize(pageTest.getScreenSize())));
         currentSuiteNode.add(currentPageNode);
+        
+        currentObjectSpecListMap = new HashMap<String, XmlBuilder.XmlNode>();
     }
     
     @Override
@@ -129,12 +132,20 @@ public class HtmlReportingListener implements CompleteListener {
 
     @Override
     public void onObject(PageValidation pageValidation, String objectName) {
-        currentObjectNode = div("object");
-        currentObjectNode.add(h(3, objectName));
-        currentPageNode.add(currentObjectNode);
         
-        currentSpecsListNode = node("ul").withAttribute("class", "test-specs");
-        currentObjectNode.add(currentSpecsListNode);
+        if (currentObjectSpecListMap.containsKey(objectName)) {
+            currentSpecsListNode = currentObjectSpecListMap.get(objectName);
+        }
+        else {
+            currentPageNode.add(h(3, objectName));
+            currentObjectNode = div("object");
+            currentPageNode.add(currentObjectNode);
+            
+            currentSpecsListNode = node("ul").withAttribute("class", "test-specs");
+            currentObjectNode.add(currentSpecsListNode);
+            
+            currentObjectSpecListMap.put(objectName, currentSpecsListNode);
+        }
     }
 
     @Override

@@ -72,6 +72,9 @@ public class ReportingListenerTestUtils {
                         new SpecWidth(exact(10)).withOriginalText("width: 10px"),
                         new ValidationError(asList(new ErrorArea(new Rect(200, 300, 50, 30), "objectA2")), asList("objectA2 width is 20px instead of 10px")));
             }
+            validationListener.onObject(pageValidation, "objectA1"); {
+                validationListener.onSpecSuccess(pageValidation, "objectA1", new SpecHeight(between(10, 20)).withOriginalText("height: 10 to 20px"));
+            }
             validationListener.onAfterObject(pageValidation, "objectA2");
         
         }

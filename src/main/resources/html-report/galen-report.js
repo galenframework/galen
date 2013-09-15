@@ -35,17 +35,36 @@ $(function() {
     $(".global-error span").click(function (){
         $(this).next().slideToggle();
     });
+
+    $("h2").click(function (){
+        $(this).next().slideToggle();
+    });
+
+    $("h2").each(function (){
+        var next = $(this).next();
+
+        if (next.find("ul.test-specs li.fail").length > 0 || 
+            next.find(".global-error").length > 0) {
+            $(this).addClass("has-failures");
+        }
+    });
 });
 
 function showScreenshot(img, width, height, areas) {
     $("#tooltip-body").html("<div class='canvas'></div>").append(img);
 
+    var delta = 2;
     for (var i=0; i<areas.length; i++) {
+        var area = [areas[i].area[0] - delta, 
+            areas[i].area[1] - delta,
+            areas[i].area[2] + delta,
+            areas[i].area[3] + delta
+        ];
         $("#tooltip-body .canvas").append("<div class='brick' style='left:"
-            + areas[i].area[0] + "px; top:"
-            + areas[i].area[1] + "px; width:"
-            + areas[i].area[2] + "px; height:"
-            + areas[i].area[3] + "px'><span>"
+            + area[0] + "px; top:"
+            + area[1] + "px; width:"
+            + area[2] + "px; height:"
+            + area[3] + "px'><span>"
             + areas[i].text + "</span></div>");
     }
 

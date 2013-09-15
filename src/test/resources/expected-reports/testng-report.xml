@@ -20,6 +20,10 @@
                     </exception>
                 </test-method>
             </class>
+            <class name="objectA1">
+                <test-method status="PASS" signature="objectA1: height: 10 to 20px" name="height: 10 to 20px" duration-ms="0" started-at="{expected-date}" finished-at="{expected-date}" description="">
+                </test-method>
+            </class>
         </test>
         <test name="http://example.com/page2 600x700">
             <class name="objectB1">
