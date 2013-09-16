@@ -1,0 +1,260 @@
+<!doctype html>
+<html lang="en">
+
+	<head>
+		<meta charset="utf-8">
+
+		<title>Galen - Testing framework for Responsive Design</title>
+
+		<meta name="description" content="A framework for easily creating beautiful presentations using HTML">
+		<meta name="author" content="Hakim El Hattab">
+
+		<meta name="apple-mobile-web-app-capable" content="yes" />
+		<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+		<link rel="stylesheet" href="css/reveal.min.css">
+		<link rel="stylesheet" href="css/theme/night.css" id="theme">
+		<link rel="stylesheet" href="galen-highlight.css">
+
+		<!-- For syntax highlighting -->
+		<link rel="stylesheet" href="lib/css/zenburn.css">
+
+		<!-- If the query includes 'print-pdf', use the PDF print sheet -->
+		<script>
+			document.write( '<link rel="stylesheet" href="css/print/' + ( window.location.search.match( /print-pdf/gi ) ? 'pdf' : 'paper' ) + '.css" type="text/css" media="print">' );
+		</script>
+
+		<!--[if lt IE 9]>
+		<script src="lib/js/html5shiv.js"></script>
+		<![endif]-->
+	</head>
+
+	<body>
+
+		<div class="reveal">
+
+			<!-- Any section element inside of this container is displayed as a slide -->
+			<div class="slides">
+				<section>
+					<h1>Galen</h1>
+					<h3>Testing Responsive Design Is Easy</h3>
+					<p>
+						<small>Created by <a href="http://mindengine.net">Ivan Shubin</a> </small>
+					</p>
+				</section>
+                <section>
+                    <h2>Galen Features</h2>
+                    <p>
+                        <ul>
+                            <li>Human readable syntax</li>
+                            <li>Runs in Selenium Grid</li>
+                            <li>Complete page interaction with Selenium</li>
+                            <li>Advanced test suite syntax with data-providers</li>
+                        </ul>
+                    </p>
+                </section>
+                <section>
+                    <h2>How Can I Use It?</h2>
+                    <p>
+                        You can start using Galen even before you start working on your html. You can think of the page design, write tests and then implement the website
+                    </p>
+                </section>
+                <section>
+                    <h2>Step 1. Initial Idea</h2> 
+                    <img src="images/sketch.png"/>
+                    <p>
+                        Identify devices for which you will write your Galen tests and make drafts of your website for these devices
+                    </p>
+                </section>
+                <section>
+                    <h2>Step 2. Galen Specs</h2>
+                    <p>
+                        <pre class='galen-spec'>
+<span class='spec-tag'>@ desktop
+----------------------------------</span>
+<span class='spec-object'>side-panel</span>
+    <span class='spec-def'>width:</span> <span class='spec-num'>280</span> to <span class='spec-num'>300</span>px
+    <span class='spec-def'>near:</span> main <span class='spec-num'>10</span>px right
+
+<span class='spec-object'>menu</span>
+    <span class='spec-def'>near:</span> main <span class='spec-num'>20</span>px top 
+    <span class='spec-def'>contains:</span> menu-item-home, menu-item-categories, menu-item-blog
+
+<span class='spec-tag'>@ mobile 
+----------------------------------</span>
+<span class='spec-object'>side-panel</span>
+    <span class='spec-def'>width:</span> <span class='spec-num'>100</span>% of screen/width
+    <span class='spec-def'>near:</span> main <span class='spec-num'>10</span>px bottom
+
+<span class='spec-object'>main</span>
+    <span class='spec-def'>width:</span> <span class='spec-num'>100</span>% of screen/width
+    <span class='spec-def'>near:</span> menu <span class='spec-num'>10</span>px bottom
+
+</pre>
+                        Galen offers various constraints in human readable format. Use them to describe the page layout on different devices
+                    </p>
+                </section>
+
+                <section>
+                    <h2>Step 3. HTML</h2>
+                    <img src="images/html.png"/>
+                    <p>
+                        Implement html for your website
+                    </p>
+                </section>
+                <section>
+                    <h2>Step 4. Object References</h2>
+                    <p>
+                        Once the html is finished you can define the references to all your objects in spec using one of the locators: <b>id</b>, <b>css</b>, <b>xpath</b>
+                    </p>
+                    <pre class="galen-spec">
+=========================================================
+
+<span class="spec-comment"># Here are all object definitions</span>                 
+header              id          header-container
+header text         css         #header-container h1
+menu                xpath       //ul[@data-name='menu']
+
+=========================================================
+</pre>
+                    <p>
+                        These references are used by Selenium to locate objects on the page
+                    </p>
+                </section>
+                <section>
+                    <h2>Step 5. Run Galen tests</h2>
+                    <pre class="bash"><code>
+$ galen check home-page.spec 
+    --url "http://example.com/home" 
+    --size 1024x800 
+    --include desktop 
+    --htmlreport report.html
+                    </code></pre>
+                </section>
+                <section>
+                    <h2>Step 6. Galen reports</h2>
+                    <img src="images/report.png"/>
+                </section>
+                <section>
+                    <h2>How does it work?</h2>
+                </section>
+                <section>
+                    <h2>Constraints</h2>
+                    <p>
+                        The best way to test responsive design is to tell Galen how elements are located relatively to each other on the page 
+                    </p>
+                </section>
+                <section>
+                    <h2>Example 1</h2>
+                    <p>
+                    <pre class="galen-spec">
+<span class="spec-object">search-textfield</span>
+    <span class="spec-def">near:</span> search-button <span class="spec-num">20</span>px left</pre>
+    </p>
+                    <img src="images/ex_1.png"/>
+                </section>
+                <section>
+                    <h2>Example 2</h2>
+                    <p>
+                    <pre class="galen-spec">
+<span class="spec-object">search-button</span>
+    <span class="spec-def">inside:</span> header <span class="spec-num">20</span>px top right</pre>
+    </p>
+                    <img src="images/ex_2.png"/>
+                </section>
+                <section>
+                    <h2>Example 3</h2>
+                    <p>
+                    <pre class="galen-spec">
+<span class="spec-object">menu-item-home</span>
+    <span class="spec-def">hotizontally all:</span> menu-item-categories, menu-item-about, menu-item-rss</pre>
+    </p>
+                    <img src="images/ex_3.png"/>
+                </section>
+                <section>
+                    <h2>Example 4</h2>
+                    <p>
+                    <pre class="galen-spec">
+<span class="spec-object">menu-item-home</span>
+    <span class="spec-def">vertically right:</span> menu-item-categories, menu-item-about, menu-item-rss</pre>
+    </p>
+                    <img src="images/ex_4.png"/>
+                </section>
+                <section>
+                    <h2>All constraints</h2>
+                    <ul class="box">
+                        <li>absent</li>
+                        <li>near</li>
+                        <li>inside</li>
+                        <li>vertically all</li>
+                        <li>vertically left</li>
+                        <li>vertically right</li>
+                        <li>horizontally all</li>
+                        <li>horizontally top</li>
+                        <li>horizontally bottom</li>
+                    </ul>
+                    <ul class="box">
+                        <li>text is</li>
+                        <li>text starts</li>
+                        <li>text ends</li>
+                        <li>text matches</li>
+                        <li>text contains</li>
+                        <li>width</li>
+                        <li>height</li>
+                        <li>contains</li>
+                    </ul>
+                </section>
+
+                <section>
+                    <h2>Advanced Specs</h2>
+                    <pre class="galen-spec">
+============================================================
+<span class="spec-comment"># You can specify multiple references in one line</span>
+<span class="spec-comment"># Galen will fetch all elements and replace * with numbers starting from 1</span>
+menu-item-*             css     #menu li
+============================================================
+
+<span class="spec-comment"># Now you can parameterize object specs</span>
+<span class="spec-comment"># The following syntax will create object specs</span>
+<span class="spec-comment"># for all menu items from 1 to 7</span>
+[ 1 - 7 ]
+<span class="spec-object">menu-item-@</span>
+    <span class="spec-def">width:</span> <span class="spec-num">150</span>px
+    <span class="spec-def">height:</span> <span class="spec-num">40</span>px
+</pre>
+                </section>
+            </div>
+
+		</div>
+
+		<script src="lib/js/head.min.js"></script>
+		<script src="js/reveal.min.js"></script>
+
+		<script>
+
+			Reveal.initialize({
+				controls: true,
+				progress: true,
+				history: true,
+				center: true,
+
+				theme: Reveal.getQueryHash().theme, // available themes are in /css/theme
+				transition: Reveal.getQueryHash().transition || 'default', // default/cube/page/concave/zoom/linear/fade/none
+
+				// Optional libraries used to extend on reveal.js
+				dependencies: [
+					{ src: 'lib/js/classList.js', condition: function() { return !document.body.classList; } },
+					{ src: 'plugin/markdown/marked.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+					{ src: 'plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+					{ src: 'plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } },
+					{ src: 'plugin/zoom-js/zoom.js', async: true, condition: function() { return !!document.body.classList; } },
+					{ src: 'plugin/notes/notes.js', async: true, condition: function() { return !!document.body.classList; } }
+				]
+			});
+
+		</script>
+
+	</body>
+</html>

@@ -1,0 +1,28 @@
+pre.galen-spec {
+    position: relative;
+    background: #333;
+    color: #f0f0f0;
+    text-shadow: 1px 1px 1px #000;
+    padding: 20px;
+    max-height: 400px;
+    overflow: hidden;
+}
+
+pre.galen-spec .spec-object {
+    font-weight: bold;
+    color: #EBDD75;
+}
+pre.galen-spec .spec-def {
+    color: #87EB75;
+}
+pre.galen-spec .spec-num {
+    color: #75DFEB;
+}
+pre.galen-spec .spec-tag {
+    color: #E7B4FA;
+}
+pre.galen-spec .spec-comment {
+    color: #666;
+    font-weight: bold;
+}
+
