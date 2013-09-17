@@ -7,7 +7,7 @@
   <name>Galen Test Framework</name>
   
   <scm>
-      <connection>scm:git:ssh://git@bitbucket.org/ishubin/galen.git</connection>
+      <connection>scm:git:ssh://git@github.com/ishubin/galen.git</connection>
   </scm>
 
   <dependencies>
