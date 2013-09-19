@@ -126,7 +126,7 @@ ul.test-specs li.fail:hover ul.error-message {
     padding: 10px;
     border:1px solid #999;
     border-radius: 10px;
-    box-shadow: 2px 2px 4px #aaa;
+    box-shadow: 0px 0px 10px #aaa;
 }
 #close-tooltip {
     font-weight: bold;
@@ -143,7 +143,6 @@ ul.test-specs li.fail:hover ul.error-message {
     position: absolute;
     display: block;
     opacity: 0.9;
-    border:1px solid red;
     border-radius: 10px;
     box-shadow:inset 1px 1px 2px #000, 1px 1px 2px #000;
 }
@@ -152,7 +151,6 @@ ul.test-specs li.fail:hover ul.error-message {
 }
 #tooltip-body .canvas .brick span{
     white-space: nowrap;
-    background: red;
     color: white;
     position:absolute;
     padding: 3px;
