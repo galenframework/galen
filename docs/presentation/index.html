@@ -45,6 +45,12 @@
 					</p>
 				</section>
                 <section>
+                    <h2>What is it?</h2>
+                    <p>
+                        <a href="https://github.com/ishubin/galen">Galen</a> is a tool for testing html layout in a real browser. 
+                    </p>
+                </section>
+                <section>
                     <h2>Galen Features</h2>
                     <p>
                         <ul>
@@ -65,7 +71,7 @@
                     <h2>Step 1. Initial Idea</h2> 
                     <img src="images/sketch.png"/>
                     <p>
-                        Identify devices for which you will write your Galen tests and make drafts of your website for these devices
+                        Identify devices for which you will write your Galen tests and prepare drafts of your website for these devices
                     </p>
                 </section>
                 <section>
@@ -114,13 +120,13 @@
 
 <span class="spec-comment"># Here are all object definitions</span>                 
 header              id          header-container
-header text         css         #header-container h1
+header-text         css         #header-container h1
 menu                xpath       //ul[@data-name='menu']
 
 =========================================================
 </pre>
                     <p>
-                        These references are used by Selenium to locate objects on the page
+                        These references are used by Selenium to locate objects on page
                     </p>
                 </section>
                 <section>
@@ -143,7 +149,7 @@ $ galen check home-page.spec
                 <section>
                     <h2>Constraints</h2>
                     <p>
-                        The best way to test responsive design is to tell Galen how elements are located relatively to each other on the page 
+                        The best way to test responsive design is to tell Galen how elements are located relatively to each other on page 
                     </p>
                 </section>
                 <section>
@@ -224,6 +230,15 @@ menu-item-*             css     #menu li
     <span class="spec-def">width:</span> <span class="spec-num">150</span>px
     <span class="spec-def">height:</span> <span class="spec-num">40</span>px
 </pre>
+                </section>
+                <section>
+                    <p>
+                        Any questions 
+                    </p>
+                    <h1>?</h1>
+                    <p>
+                        For more information visit <a href="https://github.com/ishubin/galen">Galen</a> project page
+                    </p>
                 </section>
             </div>
 
