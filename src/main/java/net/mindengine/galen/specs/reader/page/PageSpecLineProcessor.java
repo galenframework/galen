@@ -17,9 +17,11 @@ package net.mindengine.galen.specs.reader.page;
 
 import static net.mindengine.galen.suite.reader.Line.UNKNOWN_LINE;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.regex.Pattern;
 
 import net.mindengine.galen.parser.SyntaxException;
 import net.mindengine.galen.specs.page.PageSection;
@@ -60,26 +62,45 @@ public class PageSpecLineProcessor {
     private void startParameterization(String line) {
         line = line.replace(" ", "");
         line = line.replace("\t", "");
-        if (line.matches("\\[[0-9]+\\-[0-9]+\\]")) {
+        Pattern sequencePattern = Pattern.compile("[0-9]+\\-[0-9]+");
+        try {
+            line = line.substring(1, line.length() - 1);
+            String[] values = line.split(",");
             
-            int dashIndex = line.indexOf('-');
+            ArrayList<String> parameterization = new ArrayList<String>();
             
-            int rangeA = Integer.parseInt(line.substring(1, dashIndex));
-            int rangeB = Integer.parseInt(line.substring(dashIndex + 1, line.length() - 1));
+            for (String value : values) {
+                if (sequencePattern.matcher(value).matches()) {
+                    parameterization.addAll(createSequence(value));
+                }
+                else {
+                    parameterization.add(value);
+                }
+            }
             
-            int min = Math.min(rangeA, rangeB);
-            int max = Math.max(rangeA, rangeB);
-            startParameterization(createSequence(min, max));
+            startParameterization(parameterization.toArray(new String[]{}));
         }
-        else throw new SyntaxException(UNKNOWN_LINE, "Incorrect parameterization syntax"); 
+        catch (Exception ex) {
+            throw new SyntaxException(UNKNOWN_LINE, "Incorrect parameterization syntax", ex);
+        }
         
     }
 
-    private String[] createSequence(int min, int max) {
-        int size = max - min + 1;
-        String[] parameters = new String[size];
+    private List<String> createSequence(String value) {
+        int dashIndex = value.indexOf('-');
+        
+        int rangeA = Integer.parseInt(value.substring(0, dashIndex));
+        int rangeB = Integer.parseInt(value.substring(dashIndex + 1));
+        
+        int min = Math.min(rangeA, rangeB);
+        int max = Math.max(rangeA, rangeB);
+        return createSequence(min, max);
+    }
+
+    private List<String> createSequence(int min, int max) {
+        List<String> parameters = new LinkedList<String>();
         for (int i = min; i <= max; i++) {
-            parameters[i - min] = Integer.toString(i);
+            parameters.add(Integer.toString(i));
         }
         return parameters;
     }

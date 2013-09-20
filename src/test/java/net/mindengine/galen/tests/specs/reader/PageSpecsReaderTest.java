@@ -93,7 +93,7 @@ public class PageSpecsReaderTest {
     public void shouldRead_allSpecs_asSections_markedByTags() {
         List<PageSection> sections = pageSpec.getSections();
 
-        assertThat("Amount of sections should be", sections.size(), is(5));
+        assertThat("Amount of sections should be", sections.size(), is(6));
         assertThat(sections.get(0).getTags(), hasSize(0));
         
         assertThat(sections.get(1).getTags(), hasSize(2));
@@ -106,6 +106,9 @@ public class PageSpecsReaderTest {
         
         assertThat(sections.get(4).getTags(), hasSize(1));
         assertThat(sections.get(4).getTags(), contains("parameterized"));
+        
+        assertThat(sections.get(5).getTags(), hasSize(1));
+        assertThat(sections.get(5).getTags(), contains("parameterized2"));
     }
     
     @Test(dependsOnMethods = BASE_TEST)
@@ -124,6 +127,29 @@ public class PageSpecsReaderTest {
             assertThat(objectSpecs.getObjectName(), is("box-" + index + "-link"));
             SpecInside spec = (SpecInside) objectSpecs.getSpecs().get(0);
             assertThat(spec.getObject(), is("box-" + index));
+        }
+    }
+    
+    @Test(dependsOnMethods = BASE_TEST)
+    public void shouldRead_parameterizedSpecs_2() {
+        List<PageSection> sections = pageSpec.findSections(asList("parameterized2"));
+        assertThat(sections.size(), is(1));
+        
+        PageSection section = sections.get(0);
+        
+        List<ObjectSpecs> objects = section.getObjects();
+        
+        assertThat(objects.size(), is(6));
+        
+        //[ 1, 3, 6-8, 10]
+        int[] indexes = {1, 3, 6, 7, 8, 10};
+        
+        for (int index = 0; index <6; index++) {
+            ObjectSpecs objectSpecs = objects.get(index);
+            int number = indexes[index];
+            assertThat("Object name #" + index, objectSpecs.getObjectName(), is("box-" + number + "-link"));
+            SpecInside spec = (SpecInside) objectSpecs.getSpecs().get(0);
+            assertThat(spec.getObject(), is("box-" + number));
         }
     }
     

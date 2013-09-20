@@ -61,5 +61,8 @@ box-@-link
 box-@-link
     inside: box-@ 10px top left
 
-
-
+@ parameterized2
+--------------------
+[ 1, 3, 6-8, 10]
+box-@-link
+    inside: box-@ 10px top left
