@@ -7,19 +7,39 @@ if [ -d dist ]; then
 fi
 
 
+function read_var {
+    printf "$1"
+    if [[ -n $3 ]]; then
+        printf " [$3]: "
+    else
+        printf ": "
+    fi
+    read input
 
-mvn assembly:assembly
+    if [[ -n $3 && -z $input ]]; then
+        input=$3
+    fi
+
+    eval "$2=\$input"
+}
 
 
-version=$( git tag | sort -r | head -n 1 )
+version_promt=$( cat pom.xml | grep "<version>" | head -n 1 | awk -F"[<>]" '/version/{print $3}' | sed "s/-SNAPSHOT//g" )
+
+read_var "Enter version" version "$version_promt"
 
 bin=${version}-bin
 src=${version}-src
+
 
 mkdir -p dist/$bin
 mkdir -p dist/$src
 
 echo New dist is $version
+echo Assemblying new dist
+
+mvn assembly:assembly
+
 cp target/galen-jar-with-dependencies.jar dist/$bin/galen.jar
 cp galen dist/$bin/.
 cp LICENSE-2.0.txt dist/$bin/.
