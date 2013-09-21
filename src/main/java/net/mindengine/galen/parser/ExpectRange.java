@@ -24,6 +24,8 @@ import net.mindengine.galen.specs.reader.StringCharReader;
 
 public class ExpectRange implements Expectation<Range>{
 
+   
+
     @Override
     public Range read(StringCharReader reader) {
         
@@ -49,9 +51,6 @@ public class ExpectRange implements Expectation<Range>{
             if (text.equals("to")) {
                 range = Range.between(firstValue, secondValue);
             }
-            else if (isPlusMinus(text)) {
-                range = Range.between(firstValue - secondValue, firstValue + secondValue);
-            }
             else {
                 throw new SyntaxException(UNKNOWN_LINE, msgFor(text));
             }
@@ -66,19 +65,6 @@ public class ExpectRange implements Expectation<Range>{
             else throw new SyntaxException(UNKNOWN_LINE, "Missing ending: \"px\" or \"%\"");
         }
         else throw new SyntaxException(UNKNOWN_LINE, msgFor(text));
-    }
-
-    private boolean isPlusMinus(String text) {
-        if (text.equals("±")) {
-            return true;
-        }
-        else if (text.length() == 2) {
-            int code = (int)text.charAt(0) * 1000 + (int)text.charAt(1);
-            return code == 172177; //This is '±' (plus-minus) symbol in different encoding
-        }
-        else {
-            return false;
-        }
     }
 
     private Range createRange(Double firstValue, boolean approximate) {

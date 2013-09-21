@@ -287,13 +287,6 @@ public class SpecsReaderTest {
     }
     
     @Test
-    public void shouldReadSpec_width_5_plus_minus_3px() {
-        SpecWidth spec = (SpecWidth) readSpec("width: 5 ± 3px");
-        assertThat(spec.getRange(), is(Range.between(2, 8)));
-        assertThat(spec.getOriginalText(), is("width: 5 ± 3px"));
-    }
-    
-    @Test
     public void shouldReadSpec_width_5_to_8px() {
         SpecWidth spec = (SpecWidth) readSpec("width: 5 to 8px");
         assertThat(spec.getRange(), is(Range.between(5, 8)));

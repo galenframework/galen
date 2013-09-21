@@ -31,11 +31,11 @@ header
     contains:   header-text-1, header-text-2
     near:   menu 0px top
     width: 1000px
-    height: 110 ± 10px
+    height: 100 to 140px
 
 header-with-corrections:
     width: 900px
-    height: 70 to 100px
+    height: 70 to 110px
 
 header-text-1
     near:   header-text-2       0px top
@@ -69,7 +69,7 @@ header
 @ tablet, mobile
 -----------------------------
 header
-    height: 150 to 170px    
+    height: 150 to 185px    
 
 
 

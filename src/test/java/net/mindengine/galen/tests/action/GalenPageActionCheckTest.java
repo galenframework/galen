@@ -61,7 +61,7 @@ public class GalenPageActionCheckTest {
         
         assertThat("Invokations should be", validationListener.getInvokations(), is("<o header>\n" +
                 "<SpecHeight header>\n" +
-                "<e><msg>\"header\" height is 140px which is not in range of 150 to 170px</msg></e>\n" +
+                "<e><msg>\"header\" height is 140px which is not in range of 150 to 185px</msg></e>\n" +
                 "</o header>\n" +
                 "<o menu-item-home>\n" +
                 "<SpecHorizontally menu-item-home>\n" +

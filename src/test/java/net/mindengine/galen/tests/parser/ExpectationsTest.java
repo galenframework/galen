@@ -69,8 +69,6 @@ public class ExpectationsTest {
            {"\t9px", new Range(9, 9)},
            {"\t9\t\tpx", new Range(9, 9)},
            {"-49px", new Range(-49, -49)},
-           {"15 ± 5 px", new Range(10, 20)},
-           {"15±5px", new Range(10, 20)},
            {"~100px", new Range(99, 101)},
            {"~1000px", new Range(990, 1010)},
            {"~1px", new Range(0, 2)},
@@ -79,7 +77,6 @@ public class ExpectationsTest {
            {"15% of screen/width", new Range(15, 15).withPercentOf("screen/width")},
            {"15.05% of screen/width", new Range(15.05, 15.05).withPercentOf("screen/width")},
            {"15 to 40% of   screen/height", new Range(15, 40).withPercentOf("screen/height")},
-           {"15 ± 5 % of   screen/height", new Range(10, 20).withPercentOf("screen/height")},
            {"15 to 40% of item-1/some-other-stuff/a/b/c2", new Range(15, 40).withPercentOf("item-1/some-other-stuff/a/b/c2")},
            {"~40% of item-1/some-other-stuff/a/b/c2", new Range(39, 41).withPercentOf("item-1/some-other-stuff/a/b/c2")}
         };
@@ -113,9 +110,6 @@ public class ExpectationsTest {
             row("10 to 20%", "Missing value path for relative range"),
             row("10 to 20% of ", "Missing value path for relative range"),
             row("10% to 20% of ", "Missing value path for relative range"),
-            row("15 ± 5", "Missing ending: \"px\" or \"%\""),
-            row("15 ± 5 %", "Missing value path for relative range"),
-            row("15 ± 5 % of ", "Missing value path for relative range"),
             //TODO add negative tests for ~ Range
         };
     }
