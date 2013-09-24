@@ -19,8 +19,11 @@ import java.util.HashMap;
 import java.util.Map;
 
 import net.mindengine.galen.specs.Spec;
+import net.mindengine.galen.specs.SpecAbove;
 import net.mindengine.galen.specs.SpecAbsent;
+import net.mindengine.galen.specs.SpecBelow;
 import net.mindengine.galen.specs.SpecContains;
+import net.mindengine.galen.specs.SpecDirectionPosition;
 import net.mindengine.galen.specs.SpecHeight;
 import net.mindengine.galen.specs.SpecHorizontally;
 import net.mindengine.galen.specs.SpecInside;
@@ -30,6 +33,7 @@ import net.mindengine.galen.specs.SpecVertically;
 import net.mindengine.galen.specs.SpecWidth;
 import net.mindengine.galen.validation.specs.SpecValidationAbsent;
 import net.mindengine.galen.validation.specs.SpecValidationContains;
+import net.mindengine.galen.validation.specs.SpecValidationDirectionPosition;
 import net.mindengine.galen.validation.specs.SpecValidationHeight;
 import net.mindengine.galen.validation.specs.SpecValidationHorizontally;
 import net.mindengine.galen.validation.specs.SpecValidationInside;
@@ -66,6 +70,8 @@ public class ValidationFactory {
         validations.put(SpecHorizontally.class, new SpecValidationHorizontally());
         validations.put(SpecVertically.class, new SpecValidationVertically());
         validations.put(SpecText.class, new SpecValidationText());
+        validations.put(SpecAbove.class, new SpecValidationDirectionPosition(SpecValidationDirectionPosition.Direction.ABOVE));
+        validations.put(SpecBelow.class, new SpecValidationDirectionPosition(SpecValidationDirectionPosition.Direction.BELOW));
     }
 
     @SuppressWarnings({ "unchecked", "rawtypes" })

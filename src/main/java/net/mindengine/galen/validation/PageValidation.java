@@ -20,7 +20,6 @@ import static net.mindengine.galen.suite.reader.Line.UNKNOWN_LINE;
 
 import java.lang.reflect.Method;
 import java.util.Arrays;
-import java.util.LinkedList;
 
 import net.mindengine.galen.page.Page;
 import net.mindengine.galen.page.PageElement;

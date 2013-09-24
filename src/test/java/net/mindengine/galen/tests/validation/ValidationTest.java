@@ -42,7 +42,9 @@ import net.mindengine.galen.specs.Location;
 import net.mindengine.galen.specs.Range;
 import net.mindengine.galen.specs.Side;
 import net.mindengine.galen.specs.Spec;
+import net.mindengine.galen.specs.SpecAbove;
 import net.mindengine.galen.specs.SpecAbsent;
+import net.mindengine.galen.specs.SpecBelow;
 import net.mindengine.galen.specs.SpecContains;
 import net.mindengine.galen.specs.SpecHeight;
 import net.mindengine.galen.specs.SpecHorizontally;
@@ -341,14 +343,37 @@ public class ValidationTest {
           
           row(specTextMatches("Some text with [0-9]+ numbers"), page(new HashMap<String, PageElement>(){{
               put("object", element(10, 10, 10, 10).withText("Some text with 12412512512521 numbers"));
-          }}))
+          }})),
           
+          
+          /* Above */
+          
+          row(specAbove("button", Range.exact(20)), page(new HashMap<String, PageElement>(){{
+              put("object", element(10, 10, 10, 10));
+              put("button",  element(10, 40, 10, 10));
+          }})),
+          
+          row(specAbove("button", Range.between(20, 25)), page(new HashMap<String, PageElement>(){{
+              put("object", element(10, 10, 10, 10));
+              put("button",  element(10, 42, 10, 10));
+          }})),
+          
+          /* Below */
+          
+          row(specBelow("button", Range.exact(20)), page(new HashMap<String, PageElement>(){{
+              put("object", element(10, 40, 10, 10));
+              put("button",  element(10, 10, 10, 10));
+          }})),
+          
+          row(specBelow("button", Range.between(20, 25)), page(new HashMap<String, PageElement>(){{
+              put("object", element(10, 42, 10, 10));
+              put("button",  element(10, 10, 10, 10));
+          }})),
         };
     }
-    
-    
-    
-    @SuppressWarnings("serial")
+
+
+	@SuppressWarnings("serial")
     @DataProvider
     public Object[][] provideBadSamples() {
         return new Object[][] {
@@ -963,6 +988,72 @@ public class ValidationTest {
                   page(new HashMap<String, PageElement>(){{
                       put("object", element(10, 10, 10, 10).withText("Some text"));
           }})),
+          
+          
+          /* Above */
+          row(new ValidationError(NO_AREA, messages("\"object\" is absent on page")),
+                  specAbove("button", exact(20)), page(new HashMap<String, PageElement>(){{
+                      put("object", invisibleElement(10, 40, 10, 10));
+                      put("button", element(10, 60, 10, 10));
+              }})),
+          row(new ValidationError(NO_AREA, messages("\"object\" is absent on page")),
+                  specAbove("button", exact(20)), page(new HashMap<String, PageElement>(){{
+                      put("object", absentElement(10, 40, 10, 10));
+                      put("button", element(10, 60, 10, 10));
+              }})),    
+          row(new ValidationError(NO_AREA, messages("\"button\" is absent on page")),
+                  specAbove("button", exact(20)), page(new HashMap<String, PageElement>(){{
+                      put("object", element(10, 40, 10, 10));
+                      put("button", invisibleElement(10, 60, 10, 10));
+              }})),
+          row(new ValidationError(NO_AREA, messages("\"button\" is absent on page")),
+                  specAbove("button", exact(20)), page(new HashMap<String, PageElement>(){{
+                      put("object", element(10, 40, 10, 10));
+                      put("button", absentElement(10, 60, 10, 10));
+              }})),    
+          row(new ValidationError(singleArea(new Rect(10, 40, 10, 10), "object"), messages("\"object\" is 10px above \"button\" instead of 20px")),
+                  specAbove("button", exact(20)), page(new HashMap<String, PageElement>(){{
+                      put("object", element(10, 40, 10, 10));
+                      put("button", element(10, 60, 10, 10));
+              }})),
+          row(new ValidationError(singleArea(new Rect(10, 40, 10, 10), "object"), messages("\"object\" is 10px above \"button\" which is not in range of 20 to 30px")),
+                  specAbove("button", between(20, 30)), page(new HashMap<String, PageElement>(){{
+                      put("object", element(10, 40, 10, 10));
+                      put("button", element(10, 60, 10, 10));
+              }})),
+              
+              
+          /* Below */
+          row(new ValidationError(NO_AREA, messages("\"object\" is absent on page")),
+                  specBelow("button", exact(20)), page(new HashMap<String, PageElement>(){{
+                      put("object", invisibleElement(10, 40, 10, 10));
+                      put("button", element(10, 60, 10, 10));
+              }})),
+          row(new ValidationError(NO_AREA, messages("\"object\" is absent on page")),
+                  specBelow("button", exact(20)), page(new HashMap<String, PageElement>(){{
+                      put("object", absentElement(10, 40, 10, 10));
+                      put("button", element(10, 60, 10, 10));
+              }})),    
+          row(new ValidationError(NO_AREA, messages("\"button\" is absent on page")),
+                  specBelow("button", exact(20)), page(new HashMap<String, PageElement>(){{
+                      put("object", element(10, 40, 10, 10));
+                      put("button", invisibleElement(10, 60, 10, 10));
+              }})),
+          row(new ValidationError(NO_AREA, messages("\"button\" is absent on page")),
+                  specBelow("button", exact(20)), page(new HashMap<String, PageElement>(){{
+                      put("object", element(10, 40, 10, 10));
+                      put("button", absentElement(10, 60, 10, 10));
+              }})),    
+          row(new ValidationError(singleArea(new Rect(10, 60, 10, 10), "object"), messages("\"object\" is 10px below \"button\" instead of 20px")),
+                  specBelow("button", exact(20)), page(new HashMap<String, PageElement>(){{
+                      put("object", element(10, 60, 10, 10));
+                      put("button", element(10, 40, 10, 10));
+              }})),
+          row(new ValidationError(singleArea(new Rect(10, 60, 10, 10), "object"), messages("\"object\" is 10px below \"button\" which is not in range of 20 to 30px")),
+                  specBelow("button", between(20, 30)), page(new HashMap<String, PageElement>(){{
+                      put("object", element(10, 60, 10, 10));
+                      put("button", element(10, 40, 10, 10));
+              }})),    
         };
     }
     
@@ -1050,6 +1141,13 @@ public class ValidationTest {
         return new SpecAbsent();
     }
 
+    private SpecAbove specAbove(String object, Range range) {
+		return new SpecAbove(object, range);
+	}
+    
+    private SpecBelow specBelow(String object, Range range) {
+		return new SpecBelow(object, range);
+	}
 
     public Object[] row (Object...args) {
         return args;

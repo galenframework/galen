@@ -23,11 +23,12 @@ import net.mindengine.galen.validation.ErrorArea;
 import net.mindengine.galen.validation.PageValidation;
 import net.mindengine.galen.validation.SpecValidation;
 import net.mindengine.galen.validation.ValidationError;
+import net.mindengine.galen.validation.ValidationErrorException;
 
 public abstract class SpecValidationSize<T extends SpecRange> extends SpecValidation<T> {
 
     @Override
-    public ValidationError check(PageValidation pageValidation, String objectName, T spec) {
+    public ValidationError check(PageValidation pageValidation, String objectName, T spec) throws ValidationErrorException {
         PageElement mainObject = getPageElement(pageValidation, objectName);
         
         ValidationError error = checkAvailability(mainObject, objectName);
@@ -37,13 +38,7 @@ public abstract class SpecValidationSize<T extends SpecRange> extends SpecValida
         
         int realValue = getSizeValue(mainObject);
         
-        Range range;
-        try {
-            range = pageValidation.convertRange(spec.getRange());
-        }
-        catch (Exception ex) {
-            return error(format("Cannot convert range: " + ex.getMessage()));
-        }
+        Range range = convertRange(spec.getRange(), pageValidation);
         
         if (!range.holds(realValue)) {
             if (range.isExact()) {

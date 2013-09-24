@@ -38,7 +38,9 @@ import net.mindengine.galen.specs.Alignment;
 import net.mindengine.galen.specs.Location;
 import net.mindengine.galen.specs.Range;
 import net.mindengine.galen.specs.Spec;
+import net.mindengine.galen.specs.SpecAbove;
 import net.mindengine.galen.specs.SpecAbsent;
+import net.mindengine.galen.specs.SpecBelow;
 import net.mindengine.galen.specs.SpecContains;
 import net.mindengine.galen.specs.SpecHeight;
 import net.mindengine.galen.specs.SpecHorizontally;
@@ -179,6 +181,21 @@ public class SpecReader {
                 
                 return new SpecNear(objectName, locations);
             }
+        }));
+        
+        putSpec("(above|below)", new SpecComplexProcessor(expectThese(objectName(), range()), new SpecComplexInit() {
+
+			@Override
+			public Spec init(String specName, Object[] args) {
+				String objectName = (String) args[0];
+				Range range = (Range)args[1];
+				
+				if (specName.equals("above")) {
+					return new SpecAbove(objectName, range);
+				}
+				else return new SpecBelow(objectName, range);
+			}
+        	
         }));
         
     }

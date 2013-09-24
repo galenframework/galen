@@ -34,7 +34,9 @@ import net.mindengine.galen.specs.Location;
 import net.mindengine.galen.specs.Range;
 import net.mindengine.galen.specs.Side;
 import net.mindengine.galen.specs.Spec;
+import net.mindengine.galen.specs.SpecAbove;
 import net.mindengine.galen.specs.SpecAbsent;
+import net.mindengine.galen.specs.SpecBelow;
 import net.mindengine.galen.specs.SpecContains;
 import net.mindengine.galen.specs.SpecHeight;
 import net.mindengine.galen.specs.SpecHorizontally;
@@ -368,6 +370,34 @@ public class SpecsReaderTest {
         SpecText spec = (SpecText)readSpec("text matches:  Some * text ");
         assertThat(spec.getText(), is("Some * text"));
         assertThat(spec.getType(), is(SpecText.Type.MATCHES));
+    }
+    
+    @Test 
+    public void shouldReadSpec_above_object_20px() {
+    	SpecAbove spec = (SpecAbove)readSpec("above: object 20px");
+    	assertThat(spec.getObject(), is("object"));
+    	assertThat(spec.getRange(), is(Range.exact(20)));
+    }
+    
+    @Test 
+    public void shouldReadSpec_above_object_10_20px() {
+    	SpecAbove spec = (SpecAbove)readSpec("above: object 10 to 20px");
+    	assertThat(spec.getObject(), is("object"));
+    	assertThat(spec.getRange(), is(Range.between(10, 20)));
+    }
+    
+    @Test 
+    public void shouldReadSpec_below_object_20px() {
+    	SpecBelow spec = (SpecBelow)readSpec("below: object 20px");
+    	assertThat(spec.getObject(), is("object"));
+    	assertThat(spec.getRange(), is(Range.exact(20)));
+    }
+    
+    @Test 
+    public void shouldReadSpec_below_object_10_to_20px() {
+    	SpecBelow spec = (SpecBelow)readSpec("below: object 10 to 20px");
+    	assertThat(spec.getObject(), is("object"));
+    	assertThat(spec.getRange(), is(Range.between(10, 20)));
     }
     
     @Test(expectedExceptions={NullPointerException.class}, expectedExceptionsMessageRegExp="Spec text should not be null") 
