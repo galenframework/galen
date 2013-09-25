@@ -22,19 +22,15 @@ import net.mindengine.galen.specs.SpecRange;
 import net.mindengine.galen.validation.ErrorArea;
 import net.mindengine.galen.validation.PageValidation;
 import net.mindengine.galen.validation.SpecValidation;
-import net.mindengine.galen.validation.ValidationError;
 import net.mindengine.galen.validation.ValidationErrorException;
 
 public abstract class SpecValidationSize<T extends SpecRange> extends SpecValidation<T> {
 
     @Override
-    public ValidationError check(PageValidation pageValidation, String objectName, T spec) throws ValidationErrorException {
+    public void check(PageValidation pageValidation, String objectName, T spec) throws ValidationErrorException {
         PageElement mainObject = getPageElement(pageValidation, objectName);
         
-        ValidationError error = checkAvailability(mainObject, objectName);
-        if (error != null) {
-            return error;
-        }
+        checkAvailability(mainObject, objectName);
         
         int realValue = getSizeValue(mainObject);
         
@@ -42,16 +38,14 @@ public abstract class SpecValidationSize<T extends SpecRange> extends SpecValida
         
         if (!range.holds(realValue)) {
             if (range.isExact()) {
-                return new ValidationError()
-                    .withArea(new ErrorArea(mainObject.getArea(), objectName))
+                throw new ValidationErrorException()
+                    .withErrorArea(new ErrorArea(mainObject.getArea(), objectName))
                     .withMessage(format("\"%s\" %s is %dpx instead of %s", objectName, getUnitName(), realValue, range.prettyString()));
             }
-            else return new ValidationError()
-                .withArea(new ErrorArea(mainObject.getArea(), objectName))
+            else throw new ValidationErrorException()
+                .withErrorArea(new ErrorArea(mainObject.getArea(), objectName))
                 .withMessage(format("\"%s\" %s is %dpx which is not in range of %s", objectName, getUnitName(), realValue, range.prettyString()));
         }
-        
-        return null;
     }
 
     protected abstract String getUnitName();

@@ -27,21 +27,15 @@ import net.mindengine.galen.specs.SpecContains;
 import net.mindengine.galen.validation.ErrorArea;
 import net.mindengine.galen.validation.PageValidation;
 import net.mindengine.galen.validation.SpecValidation;
-import net.mindengine.galen.validation.ValidationError;
 import net.mindengine.galen.validation.ValidationErrorException;
 
 public class SpecValidationContains extends SpecValidation<SpecContains> {
 
-    private static final ValidationError NO_ERROR = null;
-
     @Override
-    public ValidationError check(PageValidation pageValidation, String objectName, SpecContains spec) throws ValidationErrorException {
+    public void check(PageValidation pageValidation, String objectName, SpecContains spec) throws ValidationErrorException {
         PageElement mainObject = getPageElement(pageValidation, objectName);
         
-        ValidationError error = checkAvailability(mainObject, objectName);
-        if (error != null) {
-            return error;
-        }
+        checkAvailability(mainObject, objectName);
         
         Rect objectArea = mainObject.getArea();
         List<ErrorArea> errorAreas = new LinkedList<ErrorArea>();
@@ -77,9 +71,8 @@ public class SpecValidationContains extends SpecValidation<SpecContains> {
         }
         
         if (messages.size() > 0) {
-            return new ValidationError(errorAreas, messages);
+            throw new ValidationErrorException(errorAreas, messages);
         }
-        else return NO_ERROR;
     }
 
     

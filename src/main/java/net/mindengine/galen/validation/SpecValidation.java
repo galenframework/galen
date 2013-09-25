@@ -38,17 +38,10 @@ public abstract class SpecValidation<T extends Spec> {
      * Checks if object satisfies the specified spec
      * @param objectName
      * @param spec
-     * @return error with a message. If object satisfies the provided spec then a null is returned
+     * @throws ValidationErrorException
      */
-    public abstract ValidationError check(PageValidation pageValidation, String objectName, T spec) throws ValidationErrorException;
+    public abstract void check(PageValidation pageValidation, String objectName, T spec) throws ValidationErrorException;
     
-    protected ValidationError error(String errorMessage) {
-        return new ValidationError().withMessage(errorMessage);
-    }
-    
-    protected ValidationError errorObjectMissingInSpec(String objectName) {
-        return error(String.format(OBJECT_WITH_NAME_S_IS_NOT_DEFINED_IN_PAGE_SPEC, objectName));
-    }
     
     protected PageElement getPageElement(PageValidation pageValidation, String objectName) {
         Locator objectLocator = pageValidation.getPageSpec().getObjectLocator(objectName);
@@ -60,23 +53,22 @@ public abstract class SpecValidation<T extends Spec> {
         }
     }
     
-    protected ValidationError checkAvailability(PageElement object, String objectName) {
+    protected void checkAvailability(PageElement object, String objectName) throws ValidationErrorException {
         if (object == null) {
-            return errorObjectMissingInSpec(objectName);
+            throw new ValidationErrorException(format(OBJECT_WITH_NAME_S_IS_NOT_DEFINED_IN_PAGE_SPEC, objectName));
         }
         if (!object.isPresent()) {
-            return error(format(OBJECT_S_IS_ABSENT_ON_PAGE, objectName));
+        	throw new ValidationErrorException(format(OBJECT_S_IS_ABSENT_ON_PAGE, objectName));
         }
         else if (!object.isVisible()) {
-            return error(format(OBJECT_S_IS_ABSENT_ON_PAGE, objectName));
+        	throw new ValidationErrorException((format(OBJECT_S_IS_ABSENT_ON_PAGE, objectName)));
         }
 
         Rect area = object.getArea();
         if (area.getWidth() < 1 || area.getHeight() < 1) {
-            return error(format(OBJECT_HAS_ZERO_SIZE, objectName));
+        	throw new ValidationErrorException((format(OBJECT_HAS_ZERO_SIZE, objectName)));
         }
         
-        else return null;
     }
     
     /**

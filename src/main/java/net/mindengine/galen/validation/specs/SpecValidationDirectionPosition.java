@@ -7,7 +7,6 @@ import net.mindengine.galen.specs.SpecDirectionPosition;
 import net.mindengine.galen.validation.ErrorArea;
 import net.mindengine.galen.validation.PageValidation;
 import net.mindengine.galen.validation.SpecValidation;
-import net.mindengine.galen.validation.ValidationError;
 import net.mindengine.galen.validation.ValidationErrorException;
 
 public class SpecValidationDirectionPosition extends SpecValidation<SpecDirectionPosition> {
@@ -33,21 +32,15 @@ public class SpecValidationDirectionPosition extends SpecValidation<SpecDirectio
 	}
 
 	@Override
-	public ValidationError check(PageValidation pageValidation,
+	public void check(PageValidation pageValidation,
 			String objectName, SpecDirectionPosition spec) throws ValidationErrorException {
 		
 		PageElement mainObject = getPageElement(pageValidation, objectName);
         
-        ValidationError error = checkAvailability(mainObject, objectName);
-        if (error != null) {
-            return error;
-        }
+        checkAvailability(mainObject, objectName);
         
         PageElement secondObject = getPageElement(pageValidation, spec.getObject());
-        error = checkAvailability(secondObject, spec.getObject());
-        if (error != null) {
-            return error;
-        }
+        checkAvailability(secondObject, spec.getObject());
         
         Rect mainArea = mainObject.getArea();
         Rect secondArea = secondObject.getArea();
@@ -57,10 +50,15 @@ public class SpecValidationDirectionPosition extends SpecValidation<SpecDirectio
         Range range = convertRange(spec.getRange(), pageValidation);
         
         if (!range.holds(offset)) {
-        	return new ValidationError().withMessage(String.format("\"%s\" is %dpx %s \"%s\" %s", objectName, offset, direction.toString(), spec.getObject(), rangeErrorText(spec.getRange()))).withArea(new ErrorArea(mainArea, objectName));
+        	throw new ValidationErrorException().withMessage(
+        			String.format("\"%s\" is %dpx %s \"%s\" %s", 
+        					objectName, 
+        					offset, 
+        					direction.toString(), 
+        					spec.getObject(), 
+        					rangeErrorText(spec.getRange())))
+        		.withErrorArea(new ErrorArea(mainArea, objectName));
         }
-        return null;
-        
 	}
 
 	

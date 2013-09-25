@@ -15,25 +15,72 @@
 ******************************************************************************/
 package net.mindengine.galen.validation;
 
+import java.util.LinkedList;
+import java.util.List;
+
 public class ValidationErrorException extends Exception {
 
-    public ValidationErrorException() {
-        super();
-    }
-
+	private List<ErrorArea> errorAreas;
+	private List<String> errorMessages;
+	
+	public ValidationErrorException() {
+		super();
+	}
+	
+	public ValidationErrorException(List<ErrorArea> errorAreas, List<String> errorMessages) {
+		this.errorAreas = errorAreas;
+		this.errorMessages = errorMessages;
+	}
+	
     public ValidationErrorException(String paramString, Throwable paramThrowable) {
         super(paramString, paramThrowable);
+        withMessage(paramString);
     }
+    
+    public ValidationErrorException withMessage(String message) {
+		if (errorMessages == null) {
+			errorMessages = new LinkedList<String>();
+		}
+		errorMessages.add(message);
+		
+		return this;
+	}
 
+	public ValidationErrorException withErrorArea(ErrorArea errorArea) {
+    	if (errorAreas == null) {
+    		errorAreas = new LinkedList<ErrorArea>();
+    	}
+    	errorAreas.add(errorArea);
+    	
+    	return this;
+    }
+    
     public ValidationErrorException(String paramString) {
         super(paramString);
+        withMessage(paramString);
     }
 
     public ValidationErrorException(Throwable paramThrowable) {
         super(paramThrowable);
     }
 
-    /**
+    public List<String> getErrorMessages() {
+		return errorMessages;
+	}
+
+	public void setErrorMessages(List<String> errorMessages) {
+		this.errorMessages = errorMessages;
+	}
+
+	public List<ErrorArea> getErrorAreas() {
+		return errorAreas;
+	}
+
+	public void setErrorAreas(List<ErrorArea> errorAreas) {
+		this.errorAreas = errorAreas;
+	}
+
+	/**
      * 
      */
     private static final long serialVersionUID = -1566513657187992205L;

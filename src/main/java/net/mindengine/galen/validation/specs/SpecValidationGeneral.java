@@ -29,7 +29,7 @@ import net.mindengine.galen.specs.SpecComplex;
 import net.mindengine.galen.validation.ErrorArea;
 import net.mindengine.galen.validation.PageValidation;
 import net.mindengine.galen.validation.SpecValidation;
-import net.mindengine.galen.validation.ValidationError;
+import net.mindengine.galen.validation.ValidationErrorException;
 
 /**
  * Used for specs 'inside' and 'near'
@@ -40,25 +40,18 @@ import net.mindengine.galen.validation.ValidationError;
 public abstract class SpecValidationGeneral<T extends SpecComplex> extends SpecValidation<T>{
 
     @Override
-    public ValidationError check(PageValidation pageValidation, String objectName, T spec) {
+    public void check(PageValidation pageValidation, String objectName, T spec) throws ValidationErrorException {
         PageElement mainObject = getPageElement(pageValidation, objectName);
-        
-        ValidationError error = checkAvailability(mainObject, objectName);
-        if (error != null) {
-            return error;
-        }
+        checkAvailability(mainObject, objectName);
         
         PageElement secondObject = getPageElement(pageValidation, spec.getObject());
-        error = checkAvailability(secondObject, spec.getObject());
-        if (error != null) {
-            return error;
-        }
+        checkAvailability(secondObject, spec.getObject());
         
         Rect mainArea = mainObject.getArea();
         Rect secondArea = secondObject.getArea();
         
         if (secondArea.getWidth() < 1 || secondArea.getHeight() < 1) {
-            return error(format(OBJECT_HAS_ZERO_SIZE, spec.getObject()));
+            throw new ValidationErrorException(format(OBJECT_HAS_ZERO_SIZE, spec.getObject()));
         }
         
         List<String> messages = new LinkedList<String>();
@@ -71,11 +64,10 @@ public abstract class SpecValidationGeneral<T extends SpecComplex> extends SpecV
         }
         
         if (messages.size() > 0) {
-            return new ValidationError()
-                .withArea(new ErrorArea(mainObject.getArea(), objectName))
+        	throw new ValidationErrorException()
+                .withErrorArea(new ErrorArea(mainObject.getArea(), objectName))
                 .withMessage(createMessage(messages, objectName)); 
         }
-        else return null;
     }
 
     private String createMessage(List<String> messages, String objectName) {

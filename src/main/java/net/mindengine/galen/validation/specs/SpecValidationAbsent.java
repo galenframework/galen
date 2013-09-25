@@ -21,22 +21,21 @@ import net.mindengine.galen.specs.SpecAbsent;
 import net.mindengine.galen.validation.ErrorArea;
 import net.mindengine.galen.validation.PageValidation;
 import net.mindengine.galen.validation.SpecValidation;
-import net.mindengine.galen.validation.ValidationError;
+import net.mindengine.galen.validation.ValidationErrorException;
 
 public class SpecValidationAbsent extends SpecValidation<SpecAbsent>{
 
     @Override
-    public ValidationError check(PageValidation pageValidation, String objectName, SpecAbsent spec) {
+    public void check(PageValidation pageValidation, String objectName, SpecAbsent spec) throws ValidationErrorException {
         PageElement mainObject = getPageElement(pageValidation, objectName);
         if (mainObject == null) {
-            return errorObjectMissingInSpec(objectName);
+            throw new ValidationErrorException(String.format(OBJECT_WITH_NAME_S_IS_NOT_DEFINED_IN_PAGE_SPEC, objectName));
         }
         else if (mainObject.isPresent() && mainObject.isVisible()) {
-            return new ValidationError()
-                .withArea(new ErrorArea(mainObject.getArea(), objectName))
+            throw new ValidationErrorException()
+                .withErrorArea(new ErrorArea(mainObject.getArea(), objectName))
                 .withMessage(format("\"%s\" is not absent on page", objectName));
         }
-        else return null;
     }
 
 }

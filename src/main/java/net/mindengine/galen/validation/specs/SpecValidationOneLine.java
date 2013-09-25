@@ -15,6 +15,7 @@
 ******************************************************************************/
 package net.mindengine.galen.validation.specs;
 
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -23,42 +24,35 @@ import net.mindengine.galen.specs.SpecObjectsOnOneLine;
 import net.mindengine.galen.validation.ErrorArea;
 import net.mindengine.galen.validation.PageValidation;
 import net.mindengine.galen.validation.SpecValidation;
-import net.mindengine.galen.validation.ValidationError;
 import net.mindengine.galen.validation.ValidationErrorException;
 
 public abstract class SpecValidationOneLine<T extends SpecObjectsOnOneLine> extends SpecValidation<T> {
 
     @Override
-    public ValidationError check(PageValidation pageValidation, String objectName, T spec) throws ValidationErrorException {
+    public void check(PageValidation pageValidation, String objectName, T spec) throws ValidationErrorException {
         PageElement mainObject = getPageElement(pageValidation, objectName);
         
-        ValidationError error = checkAvailability(mainObject, objectName);
-        if (error != null) {
-            return error;
-        }
+        checkAvailability(mainObject, objectName);
         
         List<String> misalignedObjectNames = new LinkedList<String>();
         List<ErrorArea> errorAreas = new LinkedList<ErrorArea>();
         
         for (String childObjectName : fetchChildObjets(spec.getChildObjects(), pageValidation.getPageSpec())) {
             PageElement childObject = getPageElement(pageValidation, childObjectName);
-            error = checkAvailability(childObject, childObjectName);
-            if (error != null) {
-                return error;
-            }
-            else if (Math.abs(getOffset(spec, mainObject, childObject)) > 1) {
+            checkAvailability(childObject, childObjectName);
+            
+            if (Math.abs(getOffset(spec, mainObject, childObject)) > 1) {
                 misalignedObjectNames.add(childObjectName);
                 errorAreas.add(new ErrorArea(childObject.getArea(), childObjectName));
             }
         }
         
         if (misalignedObjectNames.size() > 0) {
-            return errorMisalignedObjects(objectName, errorAreas, misalignedObjectNames, spec);
+        	throw new ValidationErrorException(errorAreas, Arrays.asList(errorMisalignedObjects(objectName, misalignedObjectNames, spec)));
         }
-        else return null;
     }
 
-    private ValidationError errorMisalignedObjects(String objectName, List<ErrorArea> errorAreas, List<String> misalignedObjectNames, T spec) {
+    private String errorMisalignedObjects(String objectName, List<String> misalignedObjectNames, T spec) {
         String pattern = null;
         if (misalignedObjectNames.size() > 1) {
             pattern = "%s are not aligned %s with \"%s\"";
@@ -66,9 +60,7 @@ public abstract class SpecValidationOneLine<T extends SpecObjectsOnOneLine> exte
         else {
             pattern = "%s is not aligned %s with \"%s\"";
         }
-        return new ValidationError()
-            .withErrorAreas(errorAreas)
-            .withMessage(String.format(pattern, convertObjectNameToCommaSeparated(misalignedObjectNames), getAligmentText(spec), objectName));
+        return (String.format(pattern, convertObjectNameToCommaSeparated(misalignedObjectNames), getAligmentText(spec), objectName));
     }
 
     private String convertObjectNameToCommaSeparated(List<String> misalignedObjectNames) {
