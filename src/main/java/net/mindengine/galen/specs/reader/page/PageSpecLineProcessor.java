@@ -17,12 +17,15 @@ package net.mindengine.galen.specs.reader.page;
 
 import static net.mindengine.galen.suite.reader.Line.UNKNOWN_LINE;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.regex.Pattern;
 
+import net.mindengine.galen.parser.ExpectWord;
 import net.mindengine.galen.parser.SyntaxException;
 import net.mindengine.galen.specs.page.PageSection;
 
@@ -35,14 +38,19 @@ public class PageSpecLineProcessor {
     PageSpec pageSpec = new PageSpec();
     
     private State state;
+	private PageSpecReader pageSpecReader;
     
-    public PageSpecLineProcessor() {
+    public PageSpecLineProcessor(PageSpecReader pageSpecReader) {
+    	this.pageSpecReader = pageSpecReader;
         startNewSection("");
     }
 
-    public void processLine(String line) {
+    public void processLine(String line) throws IOException {
         if (!isCommentedOut(line) && !isEmpty(line)) {
-            if (isObjectSeparator(line)) {
+        	if (isSpecialInstruction(line)) {
+        		doSpecialInstruction(line);
+        	}
+        	else if (isObjectSeparator(line)) {
                 switchObjectDefinitionState();
             }
             else if (line.startsWith(TAG)) {
@@ -58,8 +66,28 @@ public class PageSpecLineProcessor {
         }
     }
     
-    
-    private void startParameterization(String line) {
+    private void doSpecialInstruction(String line) throws IOException {
+		line = line.trim().substring(2).trim();
+		
+		String firstWord = ExpectWord.read(line);
+		
+		if (firstWord.equals("import")) {
+			importPageSpec(line.substring(6).trim());
+		}
+	}
+
+	private void importPageSpec(String filePath) throws IOException {
+		PageSpec spec = pageSpecReader.read(new File(filePath));
+		if (spec != null) {
+			pageSpec.merge(spec);
+		}
+	}
+
+	private boolean isSpecialInstruction(String line) {
+    	return line.trim().startsWith("@@");
+	}
+
+	private void startParameterization(String line) {
         line = line.replace(" ", "");
         line = line.replace("\t", "");
         Pattern sequencePattern = Pattern.compile("[0-9]+\\-[0-9]+");

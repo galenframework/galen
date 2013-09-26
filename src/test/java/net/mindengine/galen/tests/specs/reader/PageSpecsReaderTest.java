@@ -25,6 +25,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.endsWith;
 import static org.hamcrest.Matchers.hasEntry;
+import static org.hamcrest.Matchers.hasKey;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
@@ -48,6 +49,7 @@ import net.mindengine.galen.specs.page.PageSection;
 import net.mindengine.galen.specs.reader.page.PageSpec;
 import net.mindengine.galen.specs.reader.page.PageSpecReader;
 
+import org.hamcrest.Matchers;
 import org.testng.annotations.Test;
 
 public class PageSpecsReaderTest {
@@ -250,6 +252,33 @@ public class PageSpecsReaderTest {
         assertThat(exception.getLine(), is(7));
     }
     
+    @Test
+    public void shouldImport_otherSpecs_fromOtherFiles() throws Exception {
+    	PageSpec pageSpec = pageSpecReader.read(new File(getClass().getResource("/spec-import-test/main.spec").getFile()));
+    	
+    	assertThat(pageSpec.getObjects(), hasKey("content"));
+    	assertThat(pageSpec.getObjects(), hasKey("header"));
+    	assertThat(pageSpec.getObjects(), hasKey("header-text"));
+    	
+    	
+    	List<PageSection> sections = pageSpec.getSections();
+    	
+    	assertThat(sections.size(), is(2));
+    	
+    	assertThat(sections.get(0).getTags(), contains("all"));
+    	
+    	List<ObjectSpecs> objects = sections.get(0).getObjects();
+    	assertThat(objects.size(), is(2));
+    	assertThat(objects.get(0).getObjectName(), is("header"));
+    	assertThat(objects.get(1).getObjectName(), is("header-text"));
+    	
+    	assertThat(sections.get(1).getTags(), contains("all"));
+    	objects = sections.get(1).getObjects();
+    	assertThat(objects.size(), is(1));
+    	assertThat(objects.get(0).getObjectName(), is("content"));
+    	
+    	//TODO check recursive import doesn't give error
+    }
 
     private FileSyntaxException expectExceptionFromReading(String file) throws IOException {
         try {

@@ -122,4 +122,10 @@ public class PageSpec {
         }
     }
 
+	public void merge(PageSpec spec) {
+		objects.putAll(spec.getObjects());
+		multiObjects.putAll(spec.getMultiObjects());
+		sections.addAll(spec.getSections());
+	}
+
 }

@@ -21,13 +21,26 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.HashSet;
+import java.util.Set;
 
 import net.mindengine.galen.parser.FileSyntaxException;
 
 public class PageSpecReader {
     
+	// Used to store information about spec files that were already loaded
+	private Set<String> processedFiles = new HashSet<String>();
+	
     public PageSpec read(File file) throws IOException {
-        return read(new FileInputStream(file), file.getAbsolutePath());
+    	String absolutePath = file.getAbsolutePath();
+
+    	if (processedFiles.contains(absolutePath)) {
+    		return null;
+    	}
+    	else {
+    		processedFiles.add(absolutePath);
+    		return read(new FileInputStream(file), absolutePath);
+    	}
     }
 
     public PageSpec read(InputStream inputStream) throws IOException {
@@ -36,7 +49,7 @@ public class PageSpecReader {
     
     
     public PageSpec read(InputStream inputStream, String fileLocation) throws IOException {
-        PageSpecLineProcessor lineProcessor = new PageSpecLineProcessor();
+        PageSpecLineProcessor lineProcessor = new PageSpecLineProcessor(this);
         
         BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream, System.getProperty("file.encoding")));
         

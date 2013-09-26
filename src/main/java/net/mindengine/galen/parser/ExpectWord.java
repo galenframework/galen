@@ -77,5 +77,9 @@ public class ExpectWord implements Expectation<String> {
         this.delimeters = delimeters;
         return this;
     }
+
+	public static String read(String line) {
+		return new ExpectWord().read(new StringCharReader(line));
+	}
     
 }
