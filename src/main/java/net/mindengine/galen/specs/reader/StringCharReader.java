@@ -71,4 +71,20 @@ public class StringCharReader {
         return 0;
     }
 
+	public String readUntilSymbol(char breakingSymbol) {
+		StringBuffer buffer = new StringBuffer();
+		
+		while(hasMore()) {
+			char ch = next();
+			if (ch == breakingSymbol) {
+				return buffer.toString();
+			}
+			else {
+				buffer.append(ch);
+			}
+		}
+		
+		return buffer.toString();
+	}
+
 }

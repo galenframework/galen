@@ -49,7 +49,6 @@ import net.mindengine.galen.specs.page.PageSection;
 import net.mindengine.galen.specs.reader.page.PageSpec;
 import net.mindengine.galen.specs.reader.page.PageSpecReader;
 
-import org.hamcrest.Matchers;
 import org.testng.annotations.Test;
 
 public class PageSpecsReaderTest {
@@ -278,6 +277,18 @@ public class PageSpecsReaderTest {
     	assertThat(objects.get(0).getObjectName(), is("content"));
     	
     	//TODO check recursive import doesn't give error
+    }
+    
+    @Test
+    public void shouldProcess_simpleMathOperations_inParameterizedSpecs() throws IOException {
+    	PageSpec pageSpec = pageSpecReader.read(new File(getClass().getResource("/spec-math.spec").getFile()));
+    	
+    	 List<Spec> specs = pageSpec.getSections().get(0).getObjects().get(0).getSpecs();
+    	
+    	assertThat(specs.size(), is(2));
+    	assertThat(specs.get(0).getOriginalText(), is("inside: box-2 10px left"));
+    	assertThat(specs.get(1).getOriginalText(), is("inside: box-4 10px left"));
+    	
     }
 
     private FileSyntaxException expectExceptionFromReading(String file) throws IOException {

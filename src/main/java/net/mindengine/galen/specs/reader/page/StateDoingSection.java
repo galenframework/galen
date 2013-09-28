@@ -16,6 +16,7 @@
 package net.mindengine.galen.specs.reader.page;
 
 import static net.mindengine.galen.suite.reader.Line.UNKNOWN_LINE;
+import net.mindengine.galen.parser.MathParser;
 import net.mindengine.galen.parser.SyntaxException;
 import net.mindengine.galen.specs.page.ObjectSpecs;
 import net.mindengine.galen.specs.page.PageSection;
@@ -106,7 +107,8 @@ public class StateDoingSection extends State {
     }
 
     private String convertParameterizedLine(String line, String parameter) {
-        return line.replace("@", parameter);
+    	MathParser parser = new MathParser();
+    	return parser.parse(line, parameter);
     }
 
     private void beginNewObject(String line) {

@@ -46,7 +46,11 @@ public class SyntaxException extends RuntimeException {
         this.line = line;
     }
     
-    public Line getLine() {
+    public SyntaxException(String message) {
+		this(null, message);
+	}
+
+	public Line getLine() {
         return line;
     }
 
