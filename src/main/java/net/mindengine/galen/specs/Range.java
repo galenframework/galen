@@ -24,17 +24,18 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 public class Range {
 
-    public Range(double from, double to) {
+    public Range(Double from, Double to) {
         this.from = from;
         this.to = to;
     }
-    private double from;
-    private double to;
+    
+    private Double from;
+    private Double to;
     private String percentageOfValue;
-    public double getFrom() {
+    public Double getFrom() {
         return from;
     }
-    public double getTo() {
+    public Double getTo() {
         return to;
     }
     public static Range exact(double number) {
@@ -76,7 +77,13 @@ public class Range {
         return from == to;
     }
     public boolean holds(double offset) {
-        return offset >= from && offset <= to;
+    	if (isGreaterThan()) {
+    		return offset > from;
+    	}
+    	else if (isLessThan()) {
+    		return offset < to;
+    	}
+    	else return offset >= from && offset <= to;
     }
     public static String doubleToString(double value) {
         return new DecimalFormat("#.##").format(value);
@@ -85,9 +92,22 @@ public class Range {
         if (isExact()) {
             return String.format("%spx", doubleToString(from));
         }
+        else if (isGreaterThan()) {
+        	return String.format("> %spx", doubleToString(from));
+        }
+        else if (isLessThan()) {
+        	return String.format("< %spx", doubleToString(to));
+        }
         else return String.format("%s to %spx", doubleToString(from), doubleToString(to));
     }
-    public Range withPercentOf(String percentageOfValue) {
+    private boolean isLessThan() {
+		return from == null && to != null;
+	}
+	private boolean isGreaterThan() {
+		return to == null && from != null;
+	}
+    
+	public Range withPercentOf(String percentageOfValue) {
         this.setPercentageOfValue(percentageOfValue);
         return this;
     }
@@ -100,4 +120,10 @@ public class Range {
     public boolean isPercentage() {
         return percentageOfValue != null && !percentageOfValue.isEmpty();
     }
+	public static Range greaterThan(Double value) {
+		return new Range(value, null);
+	}
+	public static Range lessThan(Double value) {
+		return new Range(null, value);
+	}
 }

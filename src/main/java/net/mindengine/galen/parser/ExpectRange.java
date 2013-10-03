@@ -25,26 +25,36 @@ import net.mindengine.galen.specs.reader.StringCharReader;
 public class ExpectRange implements Expectation<Range>{
 
    
+	private enum RangeType {
+		NOTHING, APPROXIMATE, LESS_THAN, GREATER_THAN
+	}
 
     @Override
     public Range read(StringCharReader reader) {
         
-        boolean approximate = false;
-        if (reader.firstNonWhiteSpaceSymbol() == '~') {
-            approximate = true;
-        }
+        RangeType rangeType = RangeType.NOTHING;
         
+        char firstNonWhiteSpaceSymbol = reader.firstNonWhiteSpaceSymbol();
+        if (firstNonWhiteSpaceSymbol == '~') {
+            rangeType = RangeType.APPROXIMATE;
+        }
+        else if (firstNonWhiteSpaceSymbol == '>') {
+        	rangeType = RangeType.GREATER_THAN;
+        }
+        else if (firstNonWhiteSpaceSymbol == '<') {
+        	rangeType = RangeType.LESS_THAN;
+        }
         
         Double firstValue = expectDouble(reader);
         
         String text = expectNonNumeric(reader);
         if (text.equals("%")) {
-            return createRange(firstValue, approximate).withPercentOf(readPercentageOf(reader));
+            return createRange(firstValue, rangeType).withPercentOf(readPercentageOf(reader));
         }
         if (text.equals("px")) {
-            return createRange(firstValue, approximate);
+            return createRange(firstValue, rangeType);
         }
-        else if (!approximate){
+        else if (rangeType == RangeType.NOTHING){
             Double secondValue = expectDouble(reader);
             
             Range range = null;
@@ -67,15 +77,20 @@ public class ExpectRange implements Expectation<Range>{
         else throw new SyntaxException(UNKNOWN_LINE, msgFor(text));
     }
 
-    private Range createRange(Double firstValue, boolean approximate) {
-        if (approximate) {
-            
+    private Range createRange(Double firstValue, RangeType rangeType) {
+        if (rangeType == RangeType.APPROXIMATE) {
             Double delta = Math.abs(firstValue) / 100;
             if (delta < 1.0) {
                 delta = 1.0;
             }
             
             return Range.between(firstValue - delta, firstValue + delta);
+        }
+        else if (rangeType == RangeType.GREATER_THAN) {
+        	return Range.greaterThan(firstValue);
+        }
+        else if (rangeType == RangeType.LESS_THAN) {
+        	return Range.lessThan(firstValue);
         }
         else {
             return Range.exact(firstValue);
