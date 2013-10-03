@@ -15,6 +15,8 @@
 ******************************************************************************/
 package net.mindengine.galen.browser;
 
+import java.net.URL;
+
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -48,8 +50,12 @@ public class SeleniumGridBrowserFactory implements BrowserFactory {
         if (browserVersion != null) {
             desiredCapabilities.setVersion(browserVersion);
         }
-        
-        return new SeleniumBrowser(new RemoteWebDriver(desiredCapabilities));
+        try {
+        	return new SeleniumBrowser(new RemoteWebDriver(new URL(gridUrl), desiredCapabilities));
+        }
+        catch (Exception ex) {
+        	throw new RuntimeException(ex);
+        }
     }
 
     public SeleniumGridBrowserFactory withBrowser(String browser) {
