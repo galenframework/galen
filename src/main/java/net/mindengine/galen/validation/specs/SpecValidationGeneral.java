@@ -65,7 +65,8 @@ public abstract class SpecValidationGeneral<T extends SpecComplex> extends SpecV
         
         if (messages.size() > 0) {
         	throw new ValidationErrorException()
-                .withErrorArea(new ErrorArea(mainObject.getArea(), objectName))
+                .withErrorArea(new ErrorArea(mainArea, objectName))
+                .withErrorArea(new ErrorArea(secondArea, spec.getObject()))
                 .withMessage(createMessage(messages, objectName)); 
         }
     }

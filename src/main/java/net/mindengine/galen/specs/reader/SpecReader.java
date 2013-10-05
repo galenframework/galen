@@ -47,6 +47,7 @@ import net.mindengine.galen.specs.SpecHeight;
 import net.mindengine.galen.specs.SpecHorizontally;
 import net.mindengine.galen.specs.SpecInside;
 import net.mindengine.galen.specs.SpecNear;
+import net.mindengine.galen.specs.SpecOn;
 import net.mindengine.galen.specs.SpecText;
 import net.mindengine.galen.specs.SpecVertically;
 import net.mindengine.galen.specs.SpecWidth;
@@ -66,7 +67,7 @@ public class SpecReader {
             }
         }));
         
-        putSpec("contains.*", new SpecListProccessor(new SpecListInit() {
+        putSpec("contains(\\s+partly)?", new SpecListProccessor(new SpecListInit() {
             public Spec init(String specName, List<String> list) {
                 String arguments = specName.substring("contains".length()).trim();
                 
@@ -131,7 +132,7 @@ public class SpecReader {
             }
         }));
         
-        putSpec("text.*", new SpecProcessor() {
+        putSpec("text\\s+.*", new SpecProcessor() {
             @Override
             public Spec processSpec(String specName, String paramsText) {
                 String arguments = specName.substring("text".length()).trim();
@@ -221,6 +222,16 @@ public class SpecReader {
 			}
 		});
         
+        putSpec("on", new SpecComplexProcessor(expectThese(objectName(), locations()), new SpecComplexInit() {
+            @SuppressWarnings("unchecked")
+            @Override
+            public Spec init(String specName, Object[] args) {
+                String objectName = (String) args[0];
+                List<Location> locations = (List<Location>) args[1];
+                
+                return new SpecOn(objectName, locations);
+            }
+        }));
     }
 
     public Spec read(String specText) {

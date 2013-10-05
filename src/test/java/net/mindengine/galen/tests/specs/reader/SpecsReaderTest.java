@@ -43,6 +43,7 @@ import net.mindengine.galen.specs.SpecHeight;
 import net.mindengine.galen.specs.SpecHorizontally;
 import net.mindengine.galen.specs.SpecInside;
 import net.mindengine.galen.specs.SpecNear;
+import net.mindengine.galen.specs.SpecOn;
 import net.mindengine.galen.specs.SpecText;
 import net.mindengine.galen.specs.SpecVertically;
 import net.mindengine.galen.specs.SpecWidth;
@@ -447,6 +448,30 @@ public class SpecsReaderTest {
     	assertThat(spec.getObject(), is("object"));
     	assertThat(spec.getLocation(), is(SpecCentered.Location.ON));
     	assertThat(spec.getAlignment(), is(SpecCentered.Alignment.VERTICALLY));
+    }
+    
+    @Test
+    public void shoulReadSpec_on_object_10px_left() {
+        SpecOn spec = (SpecOn)readSpec("on: object 10px left");
+        
+        assertThat(spec.getObject(), is("object"));
+        
+        List<Location> locations = spec.getLocations();
+        assertThat(locations.size(), is(1));
+        assertThat(spec.getLocations(), contains(new Location(Range.exact(10), sides(LEFT))));
+        assertThat(spec.getOriginalText(), is("on: object 10px left"));
+    }
+    
+    @Test
+    public void shoulReadSpec_on_object_10px_left_20px_top() {
+        SpecOn spec = (SpecOn)readSpec("on: object 10px left, 20px top");
+        
+        assertThat(spec.getObject(), is("object"));
+        
+        List<Location> locations = spec.getLocations();
+        assertThat(locations.size(), is(2));
+        assertThat(spec.getLocations(), contains(new Location(Range.exact(10), sides(LEFT)), new Location(Range.exact(20), sides(TOP))));
+        assertThat(spec.getOriginalText(), is("on: object 10px left, 20px top"));
     }
     
     @Test(expectedExceptions={NullPointerException.class}, expectedExceptionsMessageRegExp="Spec text should not be null") 

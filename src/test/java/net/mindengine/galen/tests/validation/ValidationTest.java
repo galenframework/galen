@@ -51,6 +51,7 @@ import net.mindengine.galen.specs.SpecHeight;
 import net.mindengine.galen.specs.SpecHorizontally;
 import net.mindengine.galen.specs.SpecInside;
 import net.mindengine.galen.specs.SpecNear;
+import net.mindengine.galen.specs.SpecOn;
 import net.mindengine.galen.specs.SpecText;
 import net.mindengine.galen.specs.SpecVertically;
 import net.mindengine.galen.specs.SpecWidth;
@@ -427,6 +428,27 @@ public class ValidationTest {
               put("object", element(80, 80, 90, 10));
               put("button",  element(100, 100, 50, 50));
           }})),
+          
+          
+          
+          // On
+          
+          row(specOn("container", location(exact(10), LEFT, BOTTOM)), page(new HashMap<String, PageElement>(){{
+              put("object", element(90, 110, 50, 50));
+              put("container", element(100, 100, 100, 100));
+          }})),
+          row(specOn("container", location(exact(10), RIGHT), location(exact(10), TOP)), page(new HashMap<String, PageElement>(){{
+              put("object", element(110, 90, 50, 50));
+              put("container", element(100, 100, 100, 100));
+          }})),
+          row(specOn("container", location(exact(90), RIGHT), location(exact(10), BOTTOM)), page(new HashMap<String, PageElement>(){{
+              put("object", element(190, 110, 50, 50));
+              put("container", element(100, 100, 100, 100));
+          }})),
+          row(specOn("container", location(exact(90), RIGHT), location(exact(20), BOTTOM)), page(new HashMap<String, PageElement>(){{
+              put("object", element(190, 120, 50, 50));
+              put("container", element(100, 100, 100, 100));
+          }})),
         };
     }
 
@@ -520,37 +542,41 @@ public class ValidationTest {
           
           // Inside 
           
-          row(new ValidationError(singleArea(new Rect(30, 10, 50, 50), "object"), messages("\"object\" is 30px left instead of 10px")),
+          row(new ValidationError(areas(new ErrorArea(new Rect(30, 10, 50, 50), "object"), new ErrorArea(new Rect(0, 0, 130, 120), "container")), 
+                  messages("\"object\" is 30px left instead of 10px")),
               specInside("container", location(exact(10), LEFT)), page(new HashMap<String, PageElement>(){{
                   put("object", element(30, 10, 50, 50));
                   put("container", element(0, 0, 130, 120));
           }})),
           
-          row(new ValidationError(singleArea(new Rect(30, 20, 50, 50), "object"), messages("\"object\" is 30px left and 20px top instead of 10px")),
+          row(new ValidationError(areas(new ErrorArea(new Rect(30, 20, 50, 50), "object"), new ErrorArea(new Rect(0, 0, 130, 120), "container")), 
+                  messages("\"object\" is 30px left and 20px top instead of 10px")),
                   specInside("container", location(exact(10), LEFT, TOP)), page(new HashMap<String, PageElement>(){{
                       put("object", element(30, 20, 50, 50));
                       put("container", element(0, 0, 130, 120));
               }})),
           
-          row(new ValidationError(singleArea(new Rect(30, 10, 50, 50), "object"), messages("\"object\" is 50px right instead of 10px")),
+          row(new ValidationError(areas(new ErrorArea(new Rect(30, 10, 50, 50), "object"), new ErrorArea(new Rect(0, 0, 130, 120), "container")), 
+                  messages("\"object\" is 50px right instead of 10px")),
               specInside("container", location(exact(10), RIGHT)), page(new HashMap<String, PageElement>(){{
                   put("object", element(30, 10, 50, 50));
                   put("container", element(0, 0, 130, 120));
           }})),
           
-          row(new ValidationError(singleArea(new Rect(30, 20, 50, 50), "object"), messages("\"object\" is 20px top instead of 10px")),
+          row(new ValidationError(areas(new ErrorArea(new Rect(30, 20, 50, 50), "object"), new ErrorArea(new Rect(0, 0, 130, 120), "container")), 
+                  messages("\"object\" is 20px top instead of 10px")),
               specInside("container", location(exact(10), TOP)), page(new HashMap<String, PageElement>(){{
                   put("object", element(30, 20, 50, 50));
                   put("container", element(0, 0, 130, 120));
           }})),
           
-          row(new ValidationError(singleArea(new Rect(30, 10, 50, 50), "object"), messages("\"object\" is 60px bottom instead of 10px")),
+          row(new ValidationError(areas(new ErrorArea(new Rect(30, 10, 50, 50), "object"), new ErrorArea(new Rect(0, 0, 130, 120), "container")), messages("\"object\" is 60px bottom instead of 10px")),
               specInside("container", location(exact(10), BOTTOM)), page(new HashMap<String, PageElement>(){{
                   put("object", element(30, 10, 50, 50));
                   put("container", element(0, 0, 130, 120));
           }})),
           
-          row(new ValidationError(singleArea(new Rect(30, 10, 50, 50), "object"), messages("\"object\" is 30px left which is not in range of 10 to 20px")),
+          row(new ValidationError(areas(new ErrorArea(new Rect(30, 10, 50, 50), "object"), new ErrorArea(new Rect(0, 0, 130, 120), "container")), messages("\"object\" is 30px left which is not in range of 10 to 20px")),
               specInside("container", location(between(10, 20), LEFT)), page(new HashMap<String, PageElement>(){{
                   put("object", element(30, 10, 50, 50));
                   put("container", element(0, 0, 130, 120));
@@ -561,18 +587,19 @@ public class ValidationTest {
                   put("object", element(30, 10, 50, 50));
           }})),
           
-          row(new ValidationError(singleArea(new Rect(30, 5, 50, 50), "object"), messages("\"object\" is 30px left instead of 10px, is 5px top instead of 20px")),
+          row(new ValidationError(areas(new ErrorArea(new Rect(30, 5, 50, 50), "object"), new ErrorArea(new Rect(0, 0, 130, 120), "container")), 
+                  messages("\"object\" is 30px left instead of 10px, is 5px top instead of 20px")),
               specInside("container", location(exact(10), LEFT), location(exact(20), TOP)), page(new HashMap<String, PageElement>(){{
                   put("object", element(30, 5, 50, 50));
                   put("container", element(0, 0, 130, 120));
           }})),
           
-          row(new ValidationError(singleArea(new Rect(30, 5, 10, 50), "object"), messages("\"object\" is 30px left instead of 10px")),
+          row(new ValidationError(areas(new ErrorArea(new Rect(30, 5, 10, 50), "object"), new ErrorArea(new Rect(0, 0, 50, 120), "container")), messages("\"object\" is 30px left instead of 10px")),
                   specInside("container", location(exact(20).withPercentOf("container/width"), LEFT)), page(new HashMap<String, PageElement>(){{
                       put("object", element(30, 5, 10, 50));
                       put("container", element(0, 0, 50, 120));
           }})),
-          row(new ValidationError(singleArea(new Rect(30, 5, 10, 50), "object"), messages("\"object\" is 30px left which is not in range of 10 to 20px")),
+          row(new ValidationError(areas(new ErrorArea(new Rect(30, 5, 10, 50), "object"), new ErrorArea(new Rect(0, 0, 50, 120), "container")), messages("\"object\" is 30px left which is not in range of 10 to 20px")),
                   specInside("container", location(between(20, 40).withPercentOf("container/width"), LEFT)), page(new HashMap<String, PageElement>(){{
                       put("object", element(30, 5, 10, 50));
                       put("container", element(0, 0, 50, 120));
@@ -625,38 +652,44 @@ public class ValidationTest {
           
           
           // Near 
-          row(new ValidationError(singleArea(new Rect(90, 5, 100, 50), "object"), messages("\"object\" is 10px left instead of 30px")),
+          row(new ValidationError(areas(new ErrorArea(new Rect(90, 5, 100, 50), "object"), new ErrorArea(new Rect(200, 200, 100, 50), "button")), 
+                  messages("\"object\" is 10px left instead of 30px")),
                   specNear("button", location(exact(30), LEFT)), page(new HashMap<String, PageElement>(){{
                       put("object", element(90, 5, 100, 50));
                       put("button", element(200, 200, 100, 50));
           }})),
           
-          row(new ValidationError(singleArea(new Rect(90, 5, 100, 50), "object"), messages("\"object\" is 10px left which is not in range of 20 to 30px")),
+          row(new ValidationError(areas(new ErrorArea(new Rect(90, 5, 100, 50), "object"), new ErrorArea(new Rect(200, 200, 100, 50), "button")), 
+                  messages("\"object\" is 10px left which is not in range of 20 to 30px")),
                   specNear("button", location(between(20, 30), LEFT)), page(new HashMap<String, PageElement>(){{
                       put("object", element(90, 5, 100, 50));
                       put("button", element(200, 200, 100, 50));
           }})),
               
-          row(new ValidationError(singleArea(new Rect(90, 130, 100, 50), "object"), messages("\"object\" is 10px left and 20px top instead of 30px")),
+          row(new ValidationError(areas(new ErrorArea(new Rect(90, 130, 100, 50), "object"), new ErrorArea(new Rect(200, 200, 100, 50), "button")), 
+                  messages("\"object\" is 10px left and 20px top instead of 30px")),
                   specNear("button", location(exact(30), LEFT, TOP)), page(new HashMap<String, PageElement>(){{
                       put("object", element(90, 130, 100, 50));
                       put("button", element(200, 200, 100, 50));
           }})),
           
-          row(new ValidationError(singleArea(new Rect(310, 250, 100, 50), "object"), messages("\"object\" is 10px right instead of 30px, is 0px bottom which is not in range of 10 to 20px")),
+          row(new ValidationError(areas(new ErrorArea(new Rect(310, 250, 100, 50), "object"), new ErrorArea(new Rect(200, 200, 100, 50), "button")), 
+                  messages("\"object\" is 10px right instead of 30px, is 0px bottom which is not in range of 10 to 20px")),
                   specNear("button", location(exact(30), RIGHT), location(between(10, 20), BOTTOM)), page(new HashMap<String, PageElement>(){{
                       put("object", element(310, 250, 100, 50));
                       put("button", element(200, 200, 100, 50));
           }})),
           
           
-          row(new ValidationError(singleArea(new Rect(90, 130, 100, 50), "object"), messages("\"object\" is 10px left instead of 20px")),
+          row(new ValidationError(areas(new ErrorArea(new Rect(90, 130, 100, 50), "object"), new ErrorArea(new Rect(200, 200, 50, 50), "button")),
+                  messages("\"object\" is 10px left instead of 20px")),
                   specNear("button", location(exact(40).withPercentOf("button/width"), LEFT)), page(new HashMap<String, PageElement>(){{
                       put("object", element(90, 130, 100, 50));
                       put("button", element(200, 200, 50, 50));
           }})),
           
-          row(new ValidationError(singleArea(new Rect(90, 130, 100, 50), "object"), messages("\"object\" is 10px left which is not in range of 20 to 25px")),
+          row(new ValidationError(areas(new ErrorArea(new Rect(90, 130, 100, 50), "object"), new ErrorArea(new Rect(200, 200, 50, 50), "button")), 
+                  messages("\"object\" is 10px left which is not in range of 20 to 25px")),
                   specNear("button", location(between(40, 50).withPercentOf("button/area/width"), LEFT)), page(new HashMap<String, PageElement>(){{
                       put("object", element(90, 130, 100, 50));
                       put("button", element(200, 200, 50, 50));
@@ -1180,6 +1213,40 @@ public class ValidationTest {
                       put("container", element(10, 10, 100, 100));
                   }})),
           
+                  
+           // On
+          row(new ValidationError(NO_AREA, messages("\"object\" is absent on page")),
+                  specOn("container", location(exact(10), LEFT, BOTTOM)), page(new HashMap<String, PageElement>(){{
+                      put("object", invisibleElement(10, 40, 50, 50));
+                      put("container", element(100, 100, 100, 100));
+              }})),
+          row(new ValidationError(NO_AREA, messages("\"object\" is absent on page")),
+                  specOn("container", location(exact(10), LEFT, BOTTOM)), page(new HashMap<String, PageElement>(){{
+                      put("object", absentElement(10, 40, 50, 50));
+                      put("container", element(100, 100, 100, 100));
+              }})),
+          row(new ValidationError(NO_AREA, messages("\"container\" is absent on page")),
+                  specOn("container", location(exact(10), LEFT, BOTTOM)), page(new HashMap<String, PageElement>(){{
+                      put("object", element(10, 40, 50, 50));
+                      put("container", invisibleElement(100, 100, 100, 100));
+              }})),
+          row(new ValidationError(NO_AREA, messages("\"container\" is absent on page")),
+                  specOn("container", location(exact(10), LEFT, BOTTOM)), page(new HashMap<String, PageElement>(){{
+                      put("object", element(10, 40, 50, 50));
+                      put("container", absentElement(100, 100, 100, 100));
+              }})),
+          row(new ValidationError(areas(new ErrorArea(new Rect(95, 110, 50, 50), "object"), new ErrorArea(new Rect(100, 100, 100, 100), "container")), 
+                  messages("\"object\" is 5px left instead of 10px")),
+                  specOn("container", location(exact(10), LEFT, BOTTOM)), page(new HashMap<String, PageElement>(){{
+                      put("object", element(95, 110, 50, 50));
+                      put("container", element(100, 100, 100, 100));
+              }})),
+          row(new ValidationError(areas(new ErrorArea(new Rect(105, 90, 50, 50), "object"), new ErrorArea(new Rect(100, 100, 100, 100), "container")), 
+                  messages("\"object\" is 5px right which is not in range of 10 to 15px, is 10px top instead of 5px")),
+                  specOn("container", location(between(10, 15), RIGHT), location(exact(5), TOP)), page(new HashMap<String, PageElement>(){{
+                      put("object", element(105, 90, 50, 50));
+                      put("container", element(100, 100, 100, 100));
+              }})),
         };
     }
     
@@ -1237,6 +1304,10 @@ public class ValidationTest {
 
     private SpecInside specInside(String parentObjectName, Location...locations) {
         return new SpecInside(parentObjectName, Arrays.asList(locations));
+    }
+    
+    private SpecOn specOn(String parentObjectName, Location...locations) {
+        return new SpecOn(parentObjectName, Arrays.asList(locations));
     }
 
     private Location location(Range exact, Side...sides) {
