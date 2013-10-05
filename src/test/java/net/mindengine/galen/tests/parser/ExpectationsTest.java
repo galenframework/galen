@@ -47,44 +47,41 @@ public class ExpectationsTest {
     public void expectRangeTest(String textForParsing, Range expected) {
         StringCharReader stringCharReader = new StringCharReader(textForParsing);
         Range range = new ExpectRange().read(stringCharReader);
-        assertThat(range.getFrom(), is(expected.getFrom()));
-        assertThat(range.getTo(), is(expected.getTo()));
-        
-        assertThat(range.getPercentageOfValue(), is(expected.getPercentageOfValue()));
+        assertThat(range, is(expected));
     }
     
     
     @DataProvider
     public Object[][] rangeTestData() {
         return new Object[][]{
-           {"10 to 15 px", new Range(10.0, 15.0)},
-           {"10.0 to 15.4 px", new Range(10.0, 15.4)},
-           {"10 to 15px", new Range(10.0, 15.0)},
-           {"10to15px", new Range(10.0, 15.0)},
-           {"-10to-15px", new Range(-15.0, -10.0)},
-           {"-10to-15.04px", new Range(-15.04, -10.0)},
-           {"10to15 px", new Range(10.0, 15.0)},
-           {"9 px", new Range(9.0, 9.0)},
-           {"9px", new Range(9.0, 9.0)},
-           {"9.01px", new Range(9.01, 9.01)},
-           {"   9px", new Range(9.0, 9.0)},
-           {"\t9px", new Range(9.0, 9.0)},
-           {"\t9\t\tpx", new Range(9.0, 9.0)},
-           {"-49px", new Range(-49.0, -49.0)},
-           {"~100px", new Range(99.0, 101.0)},
-           {"~1000px", new Range(990.0, 1010.0)},
-           {"~1px", new Range(0.0, 2.0)},
-           {"~0px", new Range(-1.0, 1.0)},
-           {" ~0px", new Range(-1.0, 1.0)},
+           {"10 to 15 px", Range.between(10.0, 15.0)},
+           {"10.0 to 15.4 px", Range.between(10.0, 15.4)},
+           {"10 to 15px", Range.between(10.0, 15.0)},
+           {"10to15px", Range.between(10.0, 15.0)},
+           {"-10to-15px", Range.between(-15.0, -10.0)},
+           {"-10to-15.04px", Range.between(-15.04, -10.0)},
+           {"10to15 px", Range.between(10.0, 15.0)},
+           {"9 px", Range.exact(9.0)},
+           {"9px", Range.exact(9.0)},
+           {"9.01px", Range.exact(9.01)},
+           {"   9px", Range.exact(9.0)},
+           {"\t9px", Range.exact(9.0)},
+           {"\t9\t\tpx", Range.exact(9.0)},
+           {"-49px", Range.exact(-49.0)},
+           {"~100px", Range.between(99.0, 101.0)},
+           {"~1000px", Range.between(990.0, 1010.0)},
+           {"~1px", Range.between(0.0, 2.0)},
+           {"~0px", Range.between(-1.0, 1.0)},
+           {" ~0px", Range.between(-1.0, 1.0)},
            {">10px", Range.greaterThan(10.0)},
            {"> 10px", Range.greaterThan(10.0)},
            {"<10px", Range.lessThan(10.0)},
            {"< 10px", Range.lessThan(10.0)},
-           {"15% of screen/width", new Range(15.0, 15.0).withPercentOf("screen/width")},
-           {"15.05% of screen/width", new Range(15.05, 15.05).withPercentOf("screen/width")},
-           {"15 to 40% of   screen/height", new Range(15.0, 40.0).withPercentOf("screen/height")},
-           {"15 to 40% of item-1/some-other-stuff/a/b/c2", new Range(15.0, 40.0).withPercentOf("item-1/some-other-stuff/a/b/c2")},
-           {"~40% of item-1/some-other-stuff/a/b/c2", new Range(39.0, 41.0).withPercentOf("item-1/some-other-stuff/a/b/c2")}
+           {"15% of screen/width", Range.exact(15.0).withPercentOf("screen/width")},
+           {"15.05% of screen/width", Range.exact(15.05).withPercentOf("screen/width")},
+           {"15 to 40% of   screen/height", Range.between(15.0, 40.0).withPercentOf("screen/height")},
+           {"15 to 40% of item-1/some-other-stuff/a/b/c2", Range.between(15.0, 40.0).withPercentOf("item-1/some-other-stuff/a/b/c2")},
+           {"~40% of item-1/some-other-stuff/a/b/c2", Range.between(39.0, 41.0).withPercentOf("item-1/some-other-stuff/a/b/c2")}
         };
     }
     

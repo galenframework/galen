@@ -24,7 +24,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 public class Range {
 
-    public Range(Double from, Double to) {
+    private Range(Double from, Double to) {
         this.from = from;
         this.to = to;
     }
@@ -32,6 +32,12 @@ public class Range {
     private Double from;
     private Double to;
     private String percentageOfValue;
+    private RangeType rangeType = RangeType.BETWEEN;
+    
+    public enum RangeType {
+        BETWEEN, EXACT, GREATER_THAN, LESS_THAN
+    }
+    
     public Double getFrom() {
         return from;
     }
@@ -39,15 +45,24 @@ public class Range {
         return to;
     }
     public static Range exact(double number) {
-        return new Range(number, number);
+        return new Range(number, number).withType(RangeType.EXACT);
+    }
+    public Range withType(RangeType rangeType) {
+        setRangeType(rangeType);
+        return this;
     }
     public static Range between(double from, double to) {
-        return new Range(Math.min(from, to), Math.max(from, to));
+        return new Range(Math.min(from, to), Math.max(from, to)).withType(RangeType.BETWEEN);
     }
     
     @Override
     public int hashCode() {
-        return new HashCodeBuilder(13, 19).append(from).append(to).append(percentageOfValue).toHashCode();
+        return new HashCodeBuilder(13, 19)
+            .append(from)
+            .append(to)
+            .append(percentageOfValue)
+            .append(rangeType)
+            .toHashCode();
     }
     
     @Override
@@ -62,7 +77,12 @@ public class Range {
             return false;
         }
         Range rhs = (Range)obj;
-        return new EqualsBuilder().append(from, rhs.from).append(to, rhs.to).append(percentageOfValue, rhs.percentageOfValue).isEquals();
+        return new EqualsBuilder()
+            .append(from, rhs.from)
+            .append(to, rhs.to)
+            .append(percentageOfValue, rhs.percentageOfValue)
+            .append(rangeType, rhs.rangeType)
+            .isEquals();
     }
     
     @Override
@@ -74,7 +94,7 @@ public class Range {
         return format("Range{%s%s}", prettyString(), withPercentage);
     }
     public boolean isExact() {
-        return from == to;
+        return rangeType == RangeType.EXACT;
     }
     public boolean holds(double offset) {
     	if (isGreaterThan()) {
@@ -85,8 +105,11 @@ public class Range {
     	}
     	else return offset >= from && offset <= to;
     }
-    public static String doubleToString(double value) {
-        return new DecimalFormat("#.##").format(value);
+    public static String doubleToString(Double value) {
+        if (value != null) {
+            return new DecimalFormat("#.##").format(value);
+        }
+        else return "null";
     }
     public Object prettyString() {
         if (isExact()) {
@@ -101,10 +124,10 @@ public class Range {
         else return String.format("%s to %spx", doubleToString(from), doubleToString(to));
     }
     private boolean isLessThan() {
-		return from == null && to != null;
+		return rangeType == RangeType.LESS_THAN;
 	}
 	private boolean isGreaterThan() {
-		return to == null && from != null;
+	    return rangeType == RangeType.GREATER_THAN;
 	}
     
 	public Range withPercentOf(String percentageOfValue) {
@@ -121,9 +144,15 @@ public class Range {
         return percentageOfValue != null && !percentageOfValue.isEmpty();
     }
 	public static Range greaterThan(Double value) {
-		return new Range(value, null);
+		return new Range(value, null).withType(RangeType.GREATER_THAN);
 	}
 	public static Range lessThan(Double value) {
-		return new Range(null, value);
+		return new Range(null, value).withType(RangeType.LESS_THAN);
 	}
+    public RangeType getRangeType() {
+        return rangeType;
+    }
+    public void setRangeType(RangeType rangeType) {
+        this.rangeType = rangeType;
+    }
 }

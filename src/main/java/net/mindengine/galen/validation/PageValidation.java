@@ -79,7 +79,7 @@ public class PageValidation {
             if (pageElement != null) {
                 Object objectValue = getObjectValue(pageElement, fieldPath);
                 int value = convertToInt(objectValue);
-                return Range.between((range.getFrom() * value) / 100.0, (range.getTo() * value) / 100.0);
+                return Range.between((range.getFrom() * value) / 100.0, (range.getTo() * value) / 100.0).withType(range.getRangeType());
             }
             else throw new SyntaxException(UNKNOWN_LINE, format("Locator for object \"%s\" is not specified", objectName));
         }
