@@ -37,6 +37,7 @@ import net.mindengine.galen.specs.Spec;
 import net.mindengine.galen.specs.SpecAbove;
 import net.mindengine.galen.specs.SpecAbsent;
 import net.mindengine.galen.specs.SpecBelow;
+import net.mindengine.galen.specs.SpecCentered;
 import net.mindengine.galen.specs.SpecContains;
 import net.mindengine.galen.specs.SpecHeight;
 import net.mindengine.galen.specs.SpecHorizontally;
@@ -398,6 +399,54 @@ public class SpecsReaderTest {
     	SpecBelow spec = (SpecBelow)readSpec("below: object 10 to 20px");
     	assertThat(spec.getObject(), is("object"));
     	assertThat(spec.getRange(), is(Range.between(10, 20)));
+    }
+    
+    @Test 
+    public void shouldReadSpec_centered_inside_object() {
+    	SpecCentered spec = (SpecCentered)readSpec("centered inside: object");
+    	assertThat(spec.getObject(), is("object"));
+    	assertThat(spec.getLocation(), is(SpecCentered.Location.INSIDE));
+    	assertThat(spec.getAlignment(), is(SpecCentered.Alignment.ALL));
+    }
+    
+    @Test 
+    public void shouldReadSpec_centered_horizontally_inside_object() {
+    	SpecCentered spec = (SpecCentered)readSpec("centered horizontally inside: object");
+    	assertThat(spec.getObject(), is("object"));
+    	assertThat(spec.getLocation(), is(SpecCentered.Location.INSIDE));
+    	assertThat(spec.getAlignment(), is(SpecCentered.Alignment.HORIZONTALLY));
+    }
+    
+    @Test 
+    public void shouldReadSpec_centered_vertically_inside_object() {
+    	SpecCentered spec = (SpecCentered)readSpec("centered vertically inside: object");
+    	assertThat(spec.getObject(), is("object"));
+    	assertThat(spec.getLocation(), is(SpecCentered.Location.INSIDE));
+    	assertThat(spec.getAlignment(), is(SpecCentered.Alignment.VERTICALLY));
+    }
+    
+    @Test 
+    public void shouldReadSpec_centered_on_object() {
+    	SpecCentered spec = (SpecCentered)readSpec("centered on: object");
+    	assertThat(spec.getObject(), is("object"));
+    	assertThat(spec.getLocation(), is(SpecCentered.Location.ON));
+    	assertThat(spec.getAlignment(), is(SpecCentered.Alignment.ALL));
+    }
+    
+    @Test 
+    public void shouldReadSpec_centered_horizontally_on_object() {
+    	SpecCentered spec = (SpecCentered)readSpec("centered horizontally on: object");
+    	assertThat(spec.getObject(), is("object"));
+    	assertThat(spec.getLocation(), is(SpecCentered.Location.ON));
+    	assertThat(spec.getAlignment(), is(SpecCentered.Alignment.HORIZONTALLY));
+    }
+    
+    @Test 
+    public void shouldReadSpec_centered_vertically_on_object() {
+    	SpecCentered spec = (SpecCentered)readSpec("centered vertically on: object");
+    	assertThat(spec.getObject(), is("object"));
+    	assertThat(spec.getLocation(), is(SpecCentered.Location.ON));
+    	assertThat(spec.getAlignment(), is(SpecCentered.Alignment.VERTICALLY));
     }
     
     @Test(expectedExceptions={NullPointerException.class}, expectedExceptionsMessageRegExp="Spec text should not be null") 

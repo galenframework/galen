@@ -41,6 +41,7 @@ import net.mindengine.galen.specs.Spec;
 import net.mindengine.galen.specs.SpecAbove;
 import net.mindengine.galen.specs.SpecAbsent;
 import net.mindengine.galen.specs.SpecBelow;
+import net.mindengine.galen.specs.SpecCentered;
 import net.mindengine.galen.specs.SpecContains;
 import net.mindengine.galen.specs.SpecHeight;
 import net.mindengine.galen.specs.SpecHorizontally;
@@ -184,7 +185,6 @@ public class SpecReader {
         }));
         
         putSpec("(above|below)", new SpecComplexProcessor(expectThese(objectName(), range()), new SpecComplexInit() {
-
 			@Override
 			public Spec init(String specName, Object[] args) {
 				String objectName = (String) args[0];
@@ -195,8 +195,31 @@ public class SpecReader {
 				}
 				else return new SpecBelow(objectName, range);
 			}
-        	
         }));
+        
+        putSpec("centered(\\s+(horizontally|vertically))?\\s+(on|inside)", new SpecProcessor() {
+			@Override
+			public Spec processSpec(String specName, String paramsText) {
+				specName = specName.replace("centered", "").trim();
+				String args[] = specName.split(" ");
+				
+				SpecCentered.Alignment alignment = SpecCentered.Alignment.ALL;
+				SpecCentered.Location location = null;
+				if (args.length == 1) {
+					location = SpecCentered.Location.fromString(args[0]);
+				}
+				else {
+					alignment = SpecCentered.Alignment.fromString(args[0]);
+					location = SpecCentered.Location.fromString(args[1]);
+				}
+				
+				if (paramsText.trim().isEmpty()) {
+					throw new SyntaxException("There is no object defined in spec");
+				}
+				
+				return new SpecCentered(paramsText.trim(), alignment, location);
+			}
+		});
         
     }
 

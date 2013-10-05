@@ -45,6 +45,7 @@ import net.mindengine.galen.specs.Spec;
 import net.mindengine.galen.specs.SpecAbove;
 import net.mindengine.galen.specs.SpecAbsent;
 import net.mindengine.galen.specs.SpecBelow;
+import net.mindengine.galen.specs.SpecCentered;
 import net.mindengine.galen.specs.SpecContains;
 import net.mindengine.galen.specs.SpecHeight;
 import net.mindengine.galen.specs.SpecHorizontally;
@@ -103,7 +104,7 @@ public class ValidationTest {
     @DataProvider
     public Object[][] provideGoodSamples() {
         return new Object[][] {
-          /* Contains */
+          // Contains 
           row(specContains(CONTAINS_FULLY, "menu", "button"), page(new HashMap<String, PageElement>(){{
               put("object", element(10, 10, 100, 100));
               put("menu", element(11, 11, 10, 10));
@@ -127,7 +128,9 @@ public class ValidationTest {
               put("button", element(70, 10, 10, 10));
           }})),
           
-          /* Absent */
+          
+          // Absent 
+          
           row(specAbsent(), page(new HashMap<String, PageElement>(){{
               put("object", invisibleElement(10, 10, 100, 100));
           }})),
@@ -136,7 +139,7 @@ public class ValidationTest {
           }})),
           
           
-          /* Inside */
+          // Inside 
           
           row(specInside("container", location(exact(10), RIGHT, TOP)), page(new HashMap<String, PageElement>(){{
               put("object", element(10, 20, 100, 100));
@@ -168,7 +171,7 @@ public class ValidationTest {
           }})),
           
           
-          /* Near */
+          // Near 
           
           row(specNear("button", location(exact(10), LEFT, TOP)), page(new HashMap<String, PageElement>(){{
               put("object", element(90, 140, 100, 50));
@@ -199,7 +202,7 @@ public class ValidationTest {
           }})),
           
           
-          /* Width */
+          // Width 
           
           row(specWidth(Range.exact(20)), page(new HashMap<String, PageElement>(){{
               put("object", element(305, 140, 20, 50));
@@ -224,7 +227,7 @@ public class ValidationTest {
           
 
           
-          /* Height */
+          // Height 
           
           row(specHeight(Range.exact(20)), page(new HashMap<String, PageElement>(){{
               put("object", element(305, 140, 60, 20));
@@ -244,7 +247,7 @@ public class ValidationTest {
           }})),
           
           
-          /* Horizontally */
+          // Horizontally 
           
           row(specHorizontally(Alignment.CENTERED, "item1", "item2"), page(new HashMap<String, PageElement>(){{
               put("object", element(10, 10, 10, 10));
@@ -282,7 +285,9 @@ public class ValidationTest {
               put("item2",  element(30, 10, 10, 20));
           }})),
           
-          /* Vertically */
+
+          // Vertically 
+          
           row(specVertically(Alignment.CENTERED, "item1", "item2"), page(new HashMap<String, PageElement>(){{
               put("object", element(10, 10, 10, 10));
               put("item1",  element(10, 20, 10, 10));
@@ -320,7 +325,8 @@ public class ValidationTest {
           }})),
           
           
-          /* Text validation */
+          // Text validation 
+          
           row(specTextIs("Some text"), page(new HashMap<String, PageElement>(){{
               put("object", element(10, 10, 10, 10).withText("Some text"));
           }})),
@@ -346,7 +352,7 @@ public class ValidationTest {
           }})),
           
           
-          /* Above */
+          // Above 
           
           row(specAbove("button", Range.exact(20)), page(new HashMap<String, PageElement>(){{
               put("object", element(10, 10, 10, 10));
@@ -358,7 +364,7 @@ public class ValidationTest {
               put("button",  element(10, 42, 10, 10));
           }})),
           
-          /* Below */
+          // Below 
           
           row(specBelow("button", Range.exact(20)), page(new HashMap<String, PageElement>(){{
               put("object", element(10, 40, 10, 10));
@@ -369,15 +375,68 @@ public class ValidationTest {
               put("object", element(10, 42, 10, 10));
               put("button",  element(10, 10, 10, 10));
           }})),
+          
+          
+          // Centered Inside 
+          
+          row(specCenteredInside("container", SpecCentered.Alignment.ALL), page(new HashMap<String, PageElement>(){{
+              put("object", element(10, 10, 80, 80));
+              put("container",  element(0, 0, 100, 100));
+          }})),
+          row(specCenteredInside("container", SpecCentered.Alignment.ALL), page(new HashMap<String, PageElement>(){{
+              put("object", element(10, 10, 81, 81));
+              put("container",  element(0, 0, 100, 100));
+          }})),
+          row(specCenteredInside("container", SpecCentered.Alignment.ALL), page(new HashMap<String, PageElement>(){{
+              put("object", element(9, 9, 80, 80));
+              put("container",  element(0, 0, 100, 100));
+          }})),
+          row(specCenteredInside("container", SpecCentered.Alignment.HORIZONTALLY), page(new HashMap<String, PageElement>(){{
+              put("object", element(10, 10, 80, 20));
+              put("container",  element(0, 0, 100, 100));
+          }})),
+          row(specCenteredInside("container", SpecCentered.Alignment.VERTICALLY), page(new HashMap<String, PageElement>(){{
+              put("object", element(10, 10, 20, 80));
+              put("container",  element(0, 0, 100, 100));
+          }})),
+          
+          
+          // Centered on 
+          
+          row(specCenteredOn("button", SpecCentered.Alignment.ALL), page(new HashMap<String, PageElement>(){{
+              put("object", element(80, 80, 90, 90));
+              put("button",  element(100, 100, 50, 50));
+          }})),
+          row(specCenteredOn("button", SpecCentered.Alignment.ALL), page(new HashMap<String, PageElement>(){{
+              put("object", element(81, 81, 90, 90));
+              put("button",  element(100, 100, 50, 50));
+          }})),
+          row(specCenteredOn("button", SpecCentered.Alignment.ALL), page(new HashMap<String, PageElement>(){{
+              put("object", element(80, 80, 89, 91));
+              put("button",  element(100, 100, 50, 50));
+          }})),
+          row(specCenteredOn("button", SpecCentered.Alignment.ALL), page(new HashMap<String, PageElement>(){{
+              put("object", element(80, 80, 90, 90));
+              put("button",  element(100, 100, 50, 50));
+          }})),
+          row(specCenteredOn("button", SpecCentered.Alignment.VERTICALLY), page(new HashMap<String, PageElement>(){{
+              put("object", element(80, 80, 10, 90));
+              put("button",  element(100, 100, 50, 50));
+          }})),
+          row(specCenteredOn("button", SpecCentered.Alignment.HORIZONTALLY), page(new HashMap<String, PageElement>(){{
+              put("object", element(80, 80, 90, 10));
+              put("button",  element(100, 100, 50, 50));
+          }})),
         };
     }
 
 
-	@SuppressWarnings("serial")
+    @SuppressWarnings("serial")
     @DataProvider
     public Object[][] provideBadSamples() {
         return new Object[][] {
-          /* Contains */
+          // Contains 
+                
           row(new ValidationError(singleArea(new Rect(9, 11, 10, 10), "menu"), messages("\"menu\" is outside \"object\"")),
               specContains(false, "menu", "button"), page(new HashMap<String, PageElement>(){{
                   put("object", element(10, 10, 100, 100));
@@ -446,7 +505,7 @@ public class ValidationTest {
                       put("button", element(70, 10, 10, 10));
           }})),
           
-          /* Absent */
+          // Absent 
           
           row(new ValidationError(singleArea(new Rect(10, 10, 100, 100), "object"), messages("\"object\" is not absent on page")),
               specAbsent(), page(new HashMap<String, PageElement>(){{
@@ -459,7 +518,7 @@ public class ValidationTest {
           }})),
           
           
-          /* Inside */
+          // Inside 
           
           row(new ValidationError(singleArea(new Rect(30, 10, 50, 50), "object"), messages("\"object\" is 30px left instead of 10px")),
               specInside("container", location(exact(10), LEFT)), page(new HashMap<String, PageElement>(){{
@@ -565,7 +624,7 @@ public class ValidationTest {
           }})),
           
           
-          /* Near */
+          // Near 
           row(new ValidationError(singleArea(new Rect(90, 5, 100, 50), "object"), messages("\"object\" is 10px left instead of 30px")),
                   specNear("button", location(exact(30), LEFT)), page(new HashMap<String, PageElement>(){{
                       put("object", element(90, 5, 100, 50));
@@ -660,7 +719,7 @@ public class ValidationTest {
           
           
           
-          /* Width */
+          // Width 
           
           row(new ValidationError(NO_AREA, messages("Cannot find locator for \"object\" in page spec")),
                   specWidth(Range.exact(10)), page(new HashMap<String, PageElement>())),
@@ -698,7 +757,7 @@ public class ValidationTest {
           }})),
           
           
-          /* Height */
+          // Height 
           
           row(new ValidationError(NO_AREA, messages("Cannot find locator for \"object\" in page spec")),
                   specHeight(Range.exact(10)), page(new HashMap<String, PageElement>())),
@@ -735,7 +794,7 @@ public class ValidationTest {
                       put("container", element(100, 100, 100, 200));
           }})),
           
-          /* Horizontally */
+          // Horizontally 
           
           row(new ValidationError(NO_AREA, messages("Cannot find locator for \"item1\" in page spec")),
                   specHorizontally(Alignment.CENTERED, "item1", "item2"), page(new HashMap<String, PageElement>(){{
@@ -839,7 +898,8 @@ public class ValidationTest {
           }})),
           
           
-          /* Vertically */
+          // Vertically 
+          
           row(new ValidationError(NO_AREA, messages("Cannot find locator for \"item1\" in page spec")),
                   specVertically(Alignment.CENTERED, "item1", "item2"), page(new HashMap<String, PageElement>(){{
                       put("object", element(10, 10, 50, 10));
@@ -942,7 +1002,8 @@ public class ValidationTest {
           }})),
           
           
-          /* Text validation */
+          // Text validation 
+          
           row(new ValidationError(NO_AREA, messages("Cannot find locator for \"object\" in page spec")),
                   specTextIs("some wrong text"), 
                   page(new HashMap<String, PageElement>())),
@@ -990,7 +1051,8 @@ public class ValidationTest {
           }})),
           
           
-          /* Above */
+          // Above 
+          
           row(new ValidationError(NO_AREA, messages("\"object\" is absent on page")),
                   specAbove("button", exact(20)), page(new HashMap<String, PageElement>(){{
                       put("object", invisibleElement(10, 40, 10, 10));
@@ -1023,7 +1085,8 @@ public class ValidationTest {
               }})),
               
               
-          /* Below */
+          // Below 
+              
           row(new ValidationError(NO_AREA, messages("\"object\" is absent on page")),
                   specBelow("button", exact(20)), page(new HashMap<String, PageElement>(){{
                       put("object", invisibleElement(10, 40, 10, 10));
@@ -1053,7 +1116,70 @@ public class ValidationTest {
                   specBelow("button", between(20, 30)), page(new HashMap<String, PageElement>(){{
                       put("object", element(10, 60, 10, 10));
                       put("button", element(10, 40, 10, 10));
-              }})),    
+              }})),
+              
+      
+          // Centered
+      
+          row(new ValidationError(NO_AREA, messages("\"object\" is absent on page")),
+                  specCenteredInside("container", SpecCentered.Alignment.ALL), page(new HashMap<String, PageElement>(){{
+                      put("object", invisibleElement(10, 40, 10, 10));
+                      put("container", element(10, 60, 10, 10));
+              }})),
+          row(new ValidationError(NO_AREA, messages("\"object\" is absent on page")),
+                  specCenteredInside("container", SpecCentered.Alignment.ALL), page(new HashMap<String, PageElement>(){{
+                      put("object", absentElement(10, 40, 10, 10));
+                      put("container", element(10, 60, 10, 10));
+              }})),
+          row(new ValidationError(NO_AREA, messages("\"container\" is absent on page")),
+                  specCenteredInside("container", SpecCentered.Alignment.ALL), page(new HashMap<String, PageElement>(){{
+                      put("object", element(10, 40, 10, 10));
+                      put("container", absentElement(10, 60, 10, 10));
+              }})),
+          row(new ValidationError(NO_AREA, messages("\"container\" is absent on page")),
+                  specCenteredInside("container", SpecCentered.Alignment.ALL), page(new HashMap<String, PageElement>(){{
+                      put("object", element(10, 40, 10, 10));
+                      put("container", invisibleElement(10, 60, 10, 10));
+              }})),
+                      
+          row(new ValidationError(areas(new ErrorArea(new Rect(20, 20, 80, 60), "object"), new ErrorArea(new Rect(0, 0, 100, 100), "container")), 
+                  messages("\"object\" is not centered horizontally inside \"container\"")),
+                  specCenteredInside("container", SpecCentered.Alignment.ALL), page(new HashMap<String, PageElement>(){{
+                      put("object", element(20, 20, 80, 60));
+                      put("container", element(0, 0, 100, 100));
+              }})),
+        
+          row(new ValidationError(areas(new ErrorArea(new Rect(0, 20, 120, 60), "object"), new ErrorArea(new Rect(10, 10, 100, 100), "container")), 
+                  messages("\"object\" is not centered horizontally inside \"container\"")),
+                  specCenteredInside("container", SpecCentered.Alignment.ALL), page(new HashMap<String, PageElement>(){{
+                      put("object", element(0, 20, 120, 60));
+                      put("container", element(10, 10, 100, 100));
+                  }})),
+          row(new ValidationError(areas(new ErrorArea(new Rect(20, 10, 100, 60), "object"), new ErrorArea(new Rect(10, 10, 100, 100), "container")), 
+                  messages("\"object\" is not centered vertically inside \"container\"")),
+                  specCenteredInside("container", SpecCentered.Alignment.VERTICALLY), page(new HashMap<String, PageElement>(){{
+                      put("object", element(20, 10, 100, 60));
+                      put("container", element(10, 10, 100, 100));
+                  }})),
+          row(new ValidationError(areas(new ErrorArea(new Rect(20, 10, 10, 60), "object"), new ErrorArea(new Rect(10, 10, 100, 100), "container")), 
+                  messages("\"object\" is not centered horizontally inside \"container\"")),
+                  specCenteredInside("container", SpecCentered.Alignment.HORIZONTALLY), page(new HashMap<String, PageElement>(){{
+                      put("object", element(20, 10, 10, 60));
+                      put("container", element(10, 10, 100, 100));
+                  }})),
+          row(new ValidationError(areas(new ErrorArea(new Rect(20, 10, 10, 60), "object"), new ErrorArea(new Rect(10, 10, 100, 100), "container")), 
+                  messages("\"object\" is not centered vertically on \"container\"")),
+                  specCenteredOn("container", SpecCentered.Alignment.VERTICALLY), page(new HashMap<String, PageElement>(){{
+                      put("object", element(20, 10, 10, 60));
+                      put("container", element(10, 10, 100, 100));
+                  }})),
+          row(new ValidationError(areas(new ErrorArea(new Rect(20, 10, 10, 60), "object"), new ErrorArea(new Rect(10, 10, 100, 100), "container")), 
+                  messages("\"object\" is not centered horizontally on \"container\"")),
+                  specCenteredOn("container", SpecCentered.Alignment.HORIZONTALLY), page(new HashMap<String, PageElement>(){{
+                      put("object", element(20, 10, 10, 60));
+                      put("container", element(10, 10, 100, 100));
+                  }})),
+          
         };
     }
     
@@ -1148,6 +1274,14 @@ public class ValidationTest {
     private SpecBelow specBelow(String object, Range range) {
 		return new SpecBelow(object, range);
 	}
+    
+    private SpecCentered specCenteredOn(String object, SpecCentered.Alignment alignment) {
+        return new SpecCentered(object, alignment, SpecCentered.Location.ON);
+    }
+
+    private SpecCentered specCenteredInside(String object, SpecCentered.Alignment alignment) {
+        return new SpecCentered(object, alignment, SpecCentered.Location.INSIDE);
+    }
 
     public Object[] row (Object...args) {
         return args;
