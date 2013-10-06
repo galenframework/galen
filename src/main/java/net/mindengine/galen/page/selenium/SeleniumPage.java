@@ -125,6 +125,9 @@ public class SeleniumPage implements Page {
         if ("screen".equals(objectName)) {
             return new ScreenElement(driver);
         }
+        else if ("viewport".equals(objectName)) {
+            return new ViewportElement(driver);
+        }
         else return null;
     }
 

@@ -21,6 +21,7 @@ menu-items-*                css         #menu  li a
 
 main                        id          main
 
+feedback                    id          feedback
 =====================================================================
 
 
@@ -90,6 +91,12 @@ menu-item-rss:
 -----------------------------
 header
     width: ~100% of screen/width
+    
+    
+@ viewport-object-check
+-----------------------------
+feedback
+    inside:viewport 0 to 20px right bottom
     
 
 

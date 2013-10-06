@@ -166,6 +166,31 @@ public class GalenSeleniumTest {
     }
     
     @Test
+    public void shouldCheck_relativeToViewport() throws Exception {
+        openDriverForNicePage();
+        
+        PageSpec pageSpec = new PageSpecReader().read(getClass().getResourceAsStream("/html/page.spec"));
+        
+        driver.manage().window().setSize(new Dimension(400, 1000));
+        
+        SeleniumPage page = new SeleniumPage(driver);
+        
+        TestValidationListener validationListener = new TestValidationListener();
+        List<PageSection> pageSections = pageSpec.findSections(asList("viewport-object-check"));
+        
+        assertThat("Filtered sections size should be", pageSections.size(), is(1));
+        
+        SectionValidation sectionValidation = new SectionValidation(pageSections, new PageValidation(page, pageSpec), validationListener);
+        List<ValidationError> errors = sectionValidation.check();
+        
+        assertThat("Invokations should", validationListener.getInvokations(), is("<o feedback>\n" +
+                "<SpecInside feedback>\n" +
+                "</o feedback>\n"
+                ));
+        assertThat("Errors should be empty", errors.size(), is(0));
+    }
+    
+    @Test
     public void shouldCheck_multipleObjects() throws Exception {
         openDriverForNicePage();
         

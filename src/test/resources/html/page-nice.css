@@ -123,3 +123,14 @@ body.tablet #sections, body.mobile #sections{
     text-decoration: none;
     text-shadow: 1px 1px 1px #000;
 }
+
+#feedback {
+	position: fixed;
+	display: inline-block;
+	background: white;
+	padding:10px;
+	border:1px solid #999;
+	border-radius: 5px;
+	bottom:0;
+	right:0;
+}
