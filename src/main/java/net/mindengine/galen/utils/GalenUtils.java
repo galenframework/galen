@@ -39,6 +39,9 @@ public class GalenUtils {
     }
 
     public static Dimension readSize(String sizeText) {
+        if (sizeText == null) {
+            return null;
+        }
         if (!sizeText.matches("[0-9]+x[0-9]+")) {
             throw new RuntimeException("Incorrect screen size: " + sizeText);
         }

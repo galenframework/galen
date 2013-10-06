@@ -39,10 +39,12 @@ public class GalenPageTestReader {
         }
         
         if (isUrl(args[0])) {
-            if (args.length < 2) {
-                throw new SyntaxException(UNKNOWN_LINE, "You should specify screen size");
+            
+            String size = null;
+            if (args.length > 1) {
+                size = args[1];
             }
-            return defaultGalenPageTest(args[0], args[1]);
+            return defaultGalenPageTest(args[0], size);
         }
         else {
             String first = args[0].toLowerCase();
@@ -90,9 +92,6 @@ public class GalenPageTestReader {
             }
             
             String size = cmd.getOptionValue("s");
-            if (size == null) {
-                throw new SyntaxException(UNKNOWN_LINE, "Size is not specified: " + originalText);
-            }
             
             return new GalenPageTest()
                 .withUrl(pageUrl)
