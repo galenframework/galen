@@ -34,7 +34,15 @@ public class ScreenElement implements PageElement {
     @SuppressWarnings("unchecked")
     @Override
     public Rect getArea() {
-        List<Long> size = (List<Long>)((JavascriptExecutor)driver).executeScript("return [document.body.clientWidth, document.body.clientHeight];");
+        List<Long> size = (List<Long>)((JavascriptExecutor)driver).executeScript("return [Math.max(" +
+                    "document.body.scrollWidth, document.documentElement.scrollWidth," + 
+                    "document.body.offsetWidth, document.documentElement.offsetWidth," +
+                    "document.body.clientWidth, document.documentElement.clientWidth)," +
+                    "Math.max(" + 
+                    "document.body.scrollHeight, document.documentElement.scrollHeight," +
+                    "document.body.offsetHeight, document.documentElement.offsetHeight," +
+                    "document.body.clientHeight, document.documentElement.clientHeight)];"
+                );
         return new Rect(0, 0, size.get(0).intValue(), size.get(1).intValue());
     }
 
