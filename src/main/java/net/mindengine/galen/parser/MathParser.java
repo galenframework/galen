@@ -33,23 +33,28 @@ public class MathParser {
 			char ch = reader.next();
 			
 			if (ch == mathSymbol) {
-				char nextCh = reader.next();
-				if (nextCh == mathSymbol) {
-					text.append(mathSymbol);
-				}
-				else if (nextCh == '{') {
-					 String expression = reader.readUntilSymbol('}').replace(" ", "");
-					 if (expression.length() < 2) {
-						 throw new SyntaxException("Can't parse expression: " + expression);
-					 }
-					 
-					 text.append(convertExpression(initialValue, expression));
-					 
-				}
-				else {
-					text.append(initialValue);
-					text.append(nextCh);
-				}
+			    if (reader.hasMore()) {
+			        char nextCh = reader.next();
+	                if (nextCh == mathSymbol) {
+	                    text.append(mathSymbol);
+	                }
+	                else if (nextCh == '{') {
+	                     String expression = reader.readUntilSymbol('}').replace(" ", "");
+	                     if (expression.length() < 2) {
+	                         throw new SyntaxException("Can't parse expression: " + expression);
+	                     }
+	                     
+	                     text.append(convertExpression(initialValue, expression));
+	                     
+	                }
+	                else {
+	                    text.append(initialValue);
+	                    text.append(nextCh);
+	                }
+			    }
+			    else {
+			        text.append(initialValue);   
+			    }
 			}
 			else {
 				text.append(ch);
