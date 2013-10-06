@@ -81,7 +81,7 @@ public class HtmlReportingListener implements CompleteListener {
         
         try {
             String css = IOUtils.toString(getClass().getResourceAsStream("/html-report/galen-report.css"));
-            String jquery = IOUtils.toString(getClass().getResourceAsStream("/html-report/jquery-1.7.1.min.js"));
+            String jquery = IOUtils.toString(getClass().getResourceAsStream("/html-report/jquery-1.10.2.min.js"));
             String galenJs = IOUtils.toString(getClass().getResourceAsStream("/html-report/galen-report.js"));
             
             headNode.add(node("style").withUnescapedText(css));
