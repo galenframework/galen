@@ -61,7 +61,7 @@ public abstract class SpecValidation<T extends Spec> {
         	throw new ValidationErrorException(format(OBJECT_S_IS_ABSENT_ON_PAGE, objectName));
         }
         else if (!object.isVisible()) {
-        	throw new ValidationErrorException((format(OBJECT_S_IS_ABSENT_ON_PAGE, objectName)));
+        	throw new ValidationErrorException((format(OBJECT_S_IS_NOT_VISIBLE_ON_PAGE, objectName)));
         }
 
         Rect area = object.getArea();

@@ -61,7 +61,7 @@ public class HtmlReportingListener implements CompleteListener {
     private Map<Page, Screenshot> screenshots = new HashMap<Page, Screenshot>();
     
     private int screenshotId = 0;
-    private String reportPath;
+    private String reportFolderPath;
     
     private class Screenshot {
         private String name;
@@ -72,8 +72,8 @@ public class HtmlReportingListener implements CompleteListener {
         }
     }
     
-    public HtmlReportingListener(String reportPath) {
-        this.reportPath = reportPath;
+    public HtmlReportingListener(String reportFolderPath) {
+        this.reportFolderPath = reportFolderPath;
     }
 
     private XmlNode createHeadNode() {
@@ -227,11 +227,11 @@ public class HtmlReportingListener implements CompleteListener {
     @Override
     public void done() {
         try {
-            File file = new File(reportPath);
+            File file = new File(reportFolderPath);
             
             if (!file.exists()) {
                 if (!file.createNewFile()) {
-                    throw new RuntimeException("Couldn't create file: " + reportPath);
+                    throw new RuntimeException("Couldn't create file: " + reportFolderPath);
                 }
             }
             FileUtils.writeStringToFile(file, toHtml());

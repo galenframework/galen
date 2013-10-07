@@ -41,11 +41,11 @@ import net.mindengine.galen.validation.ValidationListener;
 
 public class ReportingListenerTestUtils {
 
-    public static void performSampleReporting(SuiteListener suiteListener, ValidationListener validationListener) {
+    public static void performSampleReporting(String suiteName, SuiteListener suiteListener, ValidationListener validationListener) {
         
         GalenSuiteRunner galenSuiteRunner = new GalenSuiteRunner();
         GalenSuite suite = new GalenSuite();
-        suite.setName("page1.test");
+        suite.setName(suiteName);
         
         suiteListener.onSuiteStarted(galenSuiteRunner, suite);
         
