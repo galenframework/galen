@@ -33,10 +33,20 @@ import org.openqa.selenium.Platform;
 public class GalenPageTestReader {
 
     public static GalenPageTest readFrom(String text) {
+        
+        String title = text.trim();
+        
+        if (text.contains("|")) {
+            String[] values = text.split("\\|");
+            title = values[0].trim();
+            text = values[1];
+        }
+        
         String[] args = net.mindengine.galen.parser.CommandLineParser.parseCommandLine(text);
         if (args.length == 0) {
             throw new SyntaxException(UNKNOWN_LINE, "Incorrect amount of arguments: " + text.trim());
         }
+        
         
         if (isUrl(args[0])) {
             
@@ -44,17 +54,17 @@ public class GalenPageTestReader {
             if (args.length > 1) {
                 size = args[1];
             }
-            return defaultGalenPageTest(args[0], size);
+            return defaultGalenPageTest(title, args[0], size);
         }
         else {
             String first = args[0].toLowerCase();
             if (first.equals("selenium")) {
-                return seleniumGalenPageTest(args, text.trim());
+                return seleniumGalenPageTest(title, args, text.trim());
             }
             else throw new SyntaxException(UNKNOWN_LINE, "Unknown browser factory: " + first);
         }
     }
-    private static GalenPageTest seleniumGalenPageTest(String[] args, String originalText) {
+    private static GalenPageTest seleniumGalenPageTest(String title, String[] args, String originalText) {
         if (args.length < 4) {
             throw new SyntaxException(UNKNOWN_LINE, "Incorrect amount of arguments: " + originalText);
         }
@@ -63,7 +73,7 @@ public class GalenPageTestReader {
             return gridGalenPageTest(args, originalText);
         }
         else {
-            return seleniumSimpleGalenPageTest(seleniumType, args[2], args[3]);
+            return seleniumSimpleGalenPageTest(title, seleniumType, args[2], args[3]);
         }
     }
     private static GalenPageTest gridGalenPageTest(String[] args, String originalText) {
@@ -113,14 +123,16 @@ public class GalenPageTestReader {
         }
         else return Platform.valueOf(platformText.toUpperCase());
     }
-    private static GalenPageTest seleniumSimpleGalenPageTest(String browser, String url, String screenSize) {
+    private static GalenPageTest seleniumSimpleGalenPageTest(String title, String browser, String url, String screenSize) {
         return new GalenPageTest()
+            .withTitle(title)
             .withUrl(url)
             .withSize(GalenUtils.readSize(screenSize))
             .withBrowserFactory(new SeleniumBrowserFactory(browser));
     }
-    private static GalenPageTest defaultGalenPageTest(String url, String sizeText) {
+    private static GalenPageTest defaultGalenPageTest(String title, String url, String sizeText) {
         return new GalenPageTest()
+            .withTitle(title)
             .withUrl(url)
             .withSize(GalenUtils.readSize(sizeText))
             .withBrowserFactory(new SeleniumBrowserFactory());

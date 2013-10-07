@@ -56,6 +56,7 @@ public class GalenSuiteReaderTest {
             // Checking page 1
             {
                 GalenPageTest page = suite.getPageTests().get(0);
+                assertThat(page.getTitle(), is("This is title for page"));
                 assertThat(page.getUrl(), is("http://example.com/page1"));
                 assertThat(page.getScreenSize(), is(new Dimension(640, 480)));
                 
@@ -70,6 +71,7 @@ public class GalenSuiteReaderTest {
             //Checking page 2
             {
                 GalenPageTest page = suite.getPageTests().get(1);
+                assertThat(page.getTitle(), is("http://example.com/page2    1024x768"));
                 assertThat(page.getUrl(), is("http://example.com/page2"));
                 assertThat(page.getScreenSize(), is(new Dimension(1024, 768)));
                 

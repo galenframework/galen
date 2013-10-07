@@ -3,7 +3,7 @@
 
 This is a name of suite
 ------------------------------------------------
-    selenium firefox http://example.com/page1    640x480
+    This is title for page | selenium firefox http://example.com/page1    640x480
         inject javascript.js  
         check page1.spec --include mobile,tablet --exclude nomobile
         )))))))))))))))))))))))))))))))))))

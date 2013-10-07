@@ -26,6 +26,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 
 public class GalenPageTest {
     
+    private String title;
     private String url;
     private Dimension screenSize;
     private List<GalenPageAction> actions;
@@ -117,6 +118,16 @@ public class GalenPageTest {
             .append(this.screenSize, rhs.screenSize)
             .append(this.url, rhs.url)
             .isEquals();
+    }
+    public String getTitle() {
+        return title;
+    }
+    public void setTitle(String title) {
+        this.title = title;
+    }
+    public GalenPageTest withTitle(String title) {
+        setTitle(title);
+        return this;
     }
     
     
