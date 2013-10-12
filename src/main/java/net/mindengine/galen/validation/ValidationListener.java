@@ -15,19 +15,20 @@
 ******************************************************************************/
 package net.mindengine.galen.validation;
 
+import net.mindengine.galen.runner.GalenPageRunner;
 import net.mindengine.galen.specs.Spec;
 
 public interface ValidationListener {
     
-    void onObject(PageValidation pageValidation, String objectName);
+    void onObject(GalenPageRunner pageRunner, PageValidation pageValidation, String objectName);
     
-    void onAfterObject(PageValidation pageValidation, String objectName);
+    void onAfterObject(GalenPageRunner pageRunner, PageValidation pageValidation, String objectName);
     
-    void onSpecError(PageValidation pageValidation, String objectName, Spec spec, ValidationError error);
+    void onSpecError(GalenPageRunner pageRunner, PageValidation pageValidation, String objectName, Spec spec, ValidationError error);
 
-    void onSpecSuccess(PageValidation pageValidation, String objectName, Spec spec);
+    void onSpecSuccess(GalenPageRunner pageRunner, PageValidation pageValidation, String objectName, Spec spec);
 
-    void onGlobalError(Exception e);
+    void onGlobalError(GalenPageRunner pageRunner, Exception e);
 
     
 

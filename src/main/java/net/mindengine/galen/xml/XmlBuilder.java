@@ -71,7 +71,9 @@ public class XmlBuilder {
                 sw.append(name);
             }
             else {
-                sw.append("\n");
+                if (parent != null) {
+                    sw.append("\n");
+                }
                 sw.append(indentation);
                 sw.append("<");
                 sw.append(name);
@@ -80,7 +82,7 @@ public class XmlBuilder {
                 
                 writeChildren(indentation + INDENTATION, sw);
                 
-                if (!containsOnlyText()) {
+                if (childNodes != null && childNodes.size() > 0 && !containsOnlyText()) {
                     sw.append("\n");
                     sw.append(indentation);
                 }
@@ -92,7 +94,9 @@ public class XmlBuilder {
         }
         
         private boolean containsOnlyText() {
-            return childNodes.size() == 1 && childNodes.get(0).getType() == XmlNodeType.TEXT;
+            return childNodes.size() == 1 
+                    && (childNodes.get(0).getType() == XmlNodeType.TEXT 
+                        || childNodes.get(0).getType() == XmlNodeType.TEXT_UNESCAPED);
         }
         private void writeChildren(String indentation, StringWriter sw) {
             for (XmlNode childNode : childNodes) {
@@ -127,21 +131,18 @@ public class XmlBuilder {
             return this;
         }
         public XmlNode withChildren(XmlNode...nodes) {
-            childNodes = new LinkedList<XmlBuilder.XmlNode>();
             for (XmlNode node : nodes) {
-                childNodes.add(node);
+                add(node);
             }
             return this;
         }
         
         public XmlNode withText(String text) {
-            childNodes = new LinkedList<XmlBuilder.XmlNode>();
-            childNodes.add(node(text).asTextNode());
+            add(node(text).asTextNode());
             return this;
         }
         public XmlNode withUnescapedText(String text) {
-            childNodes = new LinkedList<XmlBuilder.XmlNode>();
-            childNodes.add(node(text).asUnescapedTextNode());
+            add(node(text).asUnescapedTextNode());
             return this;
         }
         private XmlNode asUnescapedTextNode() {

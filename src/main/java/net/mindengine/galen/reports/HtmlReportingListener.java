@@ -15,261 +15,282 @@
 ******************************************************************************/
 package net.mindengine.galen.reports;
 
-import static java.lang.String.format;
-import static net.mindengine.galen.xml.XmlBuilder.node;
-
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.io.IOUtils;
+
 import net.mindengine.galen.browser.Browser;
-import net.mindengine.galen.page.Page;
-import net.mindengine.galen.page.Rect;
 import net.mindengine.galen.runner.CompleteListener;
+import net.mindengine.galen.runner.GalenPageRunner;
 import net.mindengine.galen.runner.GalenSuiteRunner;
 import net.mindengine.galen.specs.Spec;
 import net.mindengine.galen.suite.GalenPageTest;
 import net.mindengine.galen.suite.GalenSuite;
-import net.mindengine.galen.utils.GalenUtils;
-import net.mindengine.galen.validation.ErrorArea;
 import net.mindengine.galen.validation.PageValidation;
 import net.mindengine.galen.validation.ValidationError;
-import net.mindengine.galen.xml.XmlBuilder;
-import net.mindengine.galen.xml.XmlBuilder.XmlNode;
-
-import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.IOUtils;
+import freemarker.template.Configuration;
+import freemarker.template.Template;
 
 public class HtmlReportingListener implements CompleteListener {
+    
+    private Configuration freemarkerConfiguration;
+    private Template template;
 
-    private XmlNode bodyNode = node("body");
-    
-    private XmlNode headNode = createHeadNode();
-    private XmlNode htmlNode = node("html").withChildren(headNode,bodyNode);
-    
-    private XmlNode currentSuiteNode;
-    private XmlNode currentPageNode;
-    private XmlNode currentObjectNode;
-    private XmlNode currentSpecsListNode;
-    private Browser currentBrowser;
-    
-    private Map<String, XmlNode> currentObjectSpecListMap;
-    
-    
-    private Map<Page, Screenshot> screenshots = new HashMap<Page, Screenshot>();
-    
-    private int screenshotId = 0;
-    private String reportFolderPath;
-    
-    private class Screenshot {
-        private String name;
-        private String filePath;
-        public Screenshot(String name, String filePath){
-            this.name = name;
-            this.filePath = filePath;
-        }
+    public HtmlReportingListener () throws IOException {
+        freemarkerConfiguration = new Configuration();
+        template = new Template("report-main", new InputStreamReader(getClass().getResourceAsStream("/html-report/report.ftl.html")), freemarkerConfiguration);
     }
     
-    public HtmlReportingListener(String reportFolderPath) {
+    public HtmlReportingListener(String reportFolderPath) throws IOException {
+        this();
         this.reportFolderPath = reportFolderPath;
     }
-
-    private XmlNode createHeadNode() {
-        XmlNode headNode = node("head");
-        
-        try {
-            String css = IOUtils.toString(getClass().getResourceAsStream("/html-report/galen-report.css"));
-            String jquery = IOUtils.toString(getClass().getResourceAsStream("/html-report/jquery-1.10.2.min.js"));
-            String galenJs = IOUtils.toString(getClass().getResourceAsStream("/html-report/galen-report.js"));
-            
-            headNode.add(node("style").withUnescapedText(css));
-            headNode.add(node("script").withUnescapedText(jquery));
-            headNode.add(node("script").withUnescapedText(galenJs));
+    
+    private String reportFolderPath;
+    
+    //private XmlNode mainNode = createMainNode();
+    
+    private Map<GalenSuiteRunner, SuiteRun> suiteRuns = new HashMap<GalenSuiteRunner, HtmlReportingListener.SuiteRun>();
+    private Map<GalenPageRunner, GalenSuiteRunner> pageRunnerLinks = new HashMap<GalenPageRunner, GalenSuiteRunner>();
+    private List<SuiteRun> suiteRunList = new LinkedList<SuiteRun>();
+    
+    private int reportCounter = 0;
+    
+    public class SuiteRun {
+        private HtmlSuiteReportingListener listener;
+        private int passed = 0;
+        private int failed = 0;
+        private String name = "";
+        private int total = 0;
+        private String suiteReportFile = "";
+        public HtmlSuiteReportingListener getListener() {
+            return listener;
         }
-        catch (Exception e) {
-            e.printStackTrace();
+        public void setListener(HtmlSuiteReportingListener listener) {
+            this.listener = listener;
         }
-        
-        return headNode;
+        public int getPassed() {
+            return passed;
+        }
+        public void setPassed(int passed) {
+            this.passed = passed;
+        }
+        public int getFailed() {
+            return failed;
+        }
+        public void setFailed(int failed) {
+            this.failed = failed;
+        }
+        public String getName() {
+            return name;
+        }
+        public void setName(String name) {
+            this.name = name;
+        }
+        public int getTotal() {
+            return total;
+        }
+        public void setTotal(int total) {
+            this.total = total;
+        }
+        public String getSuiteReportFile() {
+            return suiteReportFile;
+        }
+        public void setSuiteReportFile(String suiteReportFile) {
+            this.suiteReportFile = suiteReportFile;
+        }
+    }
+    
+    
+    @Override
+    public void onObject(GalenPageRunner pageRunner, PageValidation pageValidation, String objectName) {
+        if (hasListener(pageRunner)) {
+            findListener(pageRunner).onObject(pageRunner, pageValidation, objectName);
+        }
     }
 
     @Override
-    public void onSuiteStarted(GalenSuiteRunner galenSuiteRunner, GalenSuite suite) {
-        bodyNode.add(h(1, suite.getName()));
-        currentSuiteNode = div("suite");
-        bodyNode.add(currentSuiteNode);
-    }
-    
-    private XmlNode h(int size, String text) {
-        return node("h" + size).withText(text);
+    public void onAfterObject(GalenPageRunner pageRunner, PageValidation pageValidation, String objectName) {
+        if (hasListener(pageRunner)) {
+            findListener(pageRunner).onAfterObject(pageRunner, pageValidation, objectName);
+        }
     }
 
-    private XmlNode div(String clazz) {
-        return node("div").withAttribute("class", clazz);
+    @Override
+    public void onSpecError(GalenPageRunner pageRunner, PageValidation pageValidation, String objectName, Spec spec, ValidationError error) {
+        if (hasListener(pageRunner)) {
+            SuiteRun suiteRun = findSuiteRun(pageRunner);
+            suiteRun.listener.onSpecError(pageRunner, pageValidation, objectName, spec, error);
+            suiteRun.failed++;
+            suiteRun.total++;
+        }
     }
-    
+
+    @Override
+    public void onSpecSuccess(GalenPageRunner pageRunner, PageValidation pageValidation, String objectName, Spec spec) {
+        if (hasListener(pageRunner)) {
+            SuiteRun suiteRun = findSuiteRun(pageRunner);
+            suiteRun.listener.onSpecSuccess(pageRunner, pageValidation, objectName, spec);
+            suiteRun.passed++;
+            suiteRun.total++;
+        }
+    }
+
+    @Override
+    public void onGlobalError(GalenPageRunner pageRunner, Exception e) {
+        if (hasListener(pageRunner)) {
+            SuiteRun suiteRun = findSuiteRun(pageRunner);
+            suiteRun.listener.onGlobalError(pageRunner, e);
+            suiteRun.failed++;
+        }
+    }
+
+    @Override
+    public void onAfterPage(GalenSuiteRunner galenSuiteRunner, GalenPageRunner pageRunner, 
+            GalenPageTest pageTest, Browser browser, List<ValidationError> errors) {
+        if (hasListener(pageRunner)) {
+            findListener(pageRunner).onAfterPage(galenSuiteRunner, pageRunner, pageTest, browser, errors);
+            removeLinkFor(pageRunner);
+        }
+    }
+
+    @Override
+    public void onBeforePage(GalenSuiteRunner galenSuiteRunner, GalenPageRunner pageRunner, GalenPageTest pageTest, Browser browser) {
+        linkPageRunnerToSuite(pageRunner, galenSuiteRunner);
+        if (hasListener(pageRunner)) {
+            findListener(pageRunner).onBeforePage(galenSuiteRunner, pageRunner, pageTest, browser);
+        }
+    }
 
     @Override
     public void onSuiteFinished(GalenSuiteRunner galenSuiteRunner, GalenSuite suite) {
-    }
-
-    @Override
-    public void onBeforePage(GalenSuiteRunner galenSuiteRunner, GalenPageTest pageTest, Browser browser) {
-        currentBrowser = browser;
-        currentSuiteNode.add(h(2, pageTest.getUrl() + " " + GalenUtils.formatScreenSize(pageTest.getScreenSize())));
-        currentPageNode = div("test");
-        currentSuiteNode.add(currentPageNode);
-        
-        currentObjectSpecListMap = new HashMap<String, XmlBuilder.XmlNode>();
+        if (hasListener(galenSuiteRunner)) {
+            findListener(galenSuiteRunner).onSuiteFinished(galenSuiteRunner, suite);
+            findListener(galenSuiteRunner).done();
+            cleanSuiteListener(galenSuiteRunner);
+        }
+       
     }
     
     @Override
-    public void onAfterPage(GalenSuiteRunner galenSuiteRunner, GalenPageTest pageTest, Browser browser,
-            List<ValidationError> errors) {
-    }
-
-    @Override
-    public void onObject(PageValidation pageValidation, String objectName) {
+    public void onSuiteStarted(GalenSuiteRunner galenSuiteRunner, GalenSuite suite) {
+        //Registering a suite run with listener
+        SuiteRun suiteRun = new SuiteRun();
+        suiteRun.suiteReportFile = String.format("report-%d-%s", getUniqueReportId(), convertToFileName(suite.getName()));
+        try {
+            suiteRun.listener = new HtmlSuiteReportingListener(reportFolderPath, suiteRun.suiteReportFile, freemarkerConfiguration);
+        } catch (IOException e) {
+            e.printStackTrace();
+            suiteRun.listener = null;
+        }
+        suiteRun.name = suite.getName();
+        suiteRuns.put(galenSuiteRunner, suiteRun);
+        suiteRunList.add(suiteRun);
         
-        if (currentObjectSpecListMap.containsKey(objectName)) {
-            currentSpecsListNode = currentObjectSpecListMap.get(objectName);
-        }
-        else {
-            currentPageNode.add(h(3, objectName));
-            currentObjectNode = div("object");
-            currentPageNode.add(currentObjectNode);
-            
-            currentSpecsListNode = node("ul").withAttribute("class", "test-specs");
-            currentObjectNode.add(currentSpecsListNode);
-            
-            currentObjectSpecListMap.put(objectName, currentSpecsListNode);
-        }
-    }
-
-    @Override
-    public void onSpecError(PageValidation pageValidation, String objectName, Spec spec, ValidationError error) {
-        Screenshot screenshot = createScreenShot(pageValidation.getPage());
-        
-        
-        XmlNode errorList = node("ul").withAttribute("class", "error-message");
-        
-        for (String message : error.getMessages()) {
-            errorList.add(node("li").withText(message));
-        }
-        
-        XmlNode failNode = li("fail").withAttribute("data-screenshot", screenshot.name).withChildren(span(spec.toText()), errorList);
-        if (error.getErrorAreas() != null) {
-            failNode.add(areas(error.getErrorAreas()));
-        }
-        currentSpecsListNode.add(failNode);
-    }
-    
-    private XmlNode areas(List<ErrorArea> errorAreas) {
-        XmlNode ul = node("ul").withAttribute("class", "areas");
-        
-        for (ErrorArea area : errorAreas) {
-            Rect rect = area.getRect();
-            ul.add(node("li")
-                    .withAttribute("data-area", format("%d,%d,%d,%d", rect.getLeft(), rect.getTop(), rect.getWidth(), rect.getHeight()))
-                    .withText(area.getMessage()));
-        }
-        return ul;
-    }
-
-    private synchronized Screenshot createScreenShot(Page page) {
-        if (screenshots.containsKey(page)) {
-            return screenshots.get(page);
-        }
-        else {
-            screenshotId++;
-            String filePath = currentBrowser.createScreenshot();
-            Screenshot screenshot = new Screenshot("screenshot-" + screenshotId + "." + extensionFrom(filePath), filePath);
-            screenshots.put(page, screenshot);
-            return screenshot;
-        }
-    }
-
-    private String extensionFrom(String filePath) {
-        StringBuilder extension = new StringBuilder();
-        for (int i = filePath.length() - 1; i >= 0; i--) {
-            char ch = filePath.charAt(i);
-            if (ch == '.') {
-                break;
-            }
-            else extension.append(ch);
-        }
-        return extension.reverse().toString();
-    }
-
-    @Override
-    public void onSpecSuccess(PageValidation pageValidation, String objectName, Spec spec) {
-        currentSpecsListNode.add(li("success").withChildren(span(spec.toText())));
-        
-    }
-
-    private XmlNode li(String clazz) {
-        return node("li").withAttribute("class", clazz);
-    }
-    private XmlNode span(String text) {
-        return node("span").withText(text);
-    }
-
-    public String toHtml() {
-        return new XmlBuilder(null, htmlNode).build();
-    }
-
-    @Override
-    public void onAfterObject(PageValidation pageValidation, String objectName) {
+        suiteRun.listener.onSuiteStarted(galenSuiteRunner, suite);
     }
 
     @Override
     public void done() {
         try {
-            File file = new File(reportFolderPath);
-            
+            File file = new File(reportFolderPath + File.separator + "report.html");
             if (!file.exists()) {
                 if (!file.createNewFile()) {
-                    throw new RuntimeException("Couldn't create file: " + reportFolderPath);
+                    throw new RuntimeException("Cannot create file: " + file.getAbsolutePath());
                 }
             }
-            FileUtils.writeStringToFile(file, toHtml());
+            FileWriter fileWriter = new FileWriter(file);
+            Map<String, Object> model = new HashMap<String, Object>();
+            model.put("suiteRuns", suiteRunList);
+            template.process(model, fileWriter);
+            fileWriter.flush();
+            fileWriter.close();
             
-            File parent = file.getParentFile();
-            if (parent == null) {
-                parent = new File(".");
-            }
-            moveScreenshots(parent);
+            copyHtmlResources();
         }
         catch (Exception ex) {
             ex.printStackTrace();
         }
     }
+        
+    private void copyHtmlResources() throws IOException {
+        copyResourceToFolder("/html-report/galen-report.css", "galen-report.css");
+        copyResourceToFolder("/html-report/galen-report.js", "galen-report.js");
+        copyResourceToFolder("/html-report/jquery-1.10.2.min.js", "jquery-1.10.2.min.js");
+    }
 
-    private void moveScreenshots(File folder) throws IOException {
-        for (Screenshot screenshot : screenshots.values()) {
-            FileUtils.copyFile(new File(screenshot.filePath), new File(folder.getAbsolutePath() + File.separator + screenshot.name));
+    private void copyResourceToFolder(String resourcePath, String destFileName) throws IOException {
+        File destFile = new File(reportFolderPath + File.separator + destFileName);
+        
+        if (!destFile.exists()) {
+            if (!destFile.createNewFile()) {
+                throw new RuntimeException("Cannot copy file to: " + destFile.getAbsolutePath());
+            }
+        }
+        IOUtils.copy(getClass().getResourceAsStream(resourcePath), new FileOutputStream(destFile));
+    }
+
+    private CompleteListener findListener(GalenPageRunner pageRunner) {
+        return suiteRuns.get(pageRunnerLinks.get(pageRunner)).listener;
+    }
+    
+    private SuiteRun findSuiteRun(GalenPageRunner pageRunner) {
+        return suiteRuns.get(pageRunnerLinks.get(pageRunner));
+    }
+
+    private boolean hasListener(GalenPageRunner pageRunner) {
+        GalenSuiteRunner galenSuiteRunner = pageRunnerLinks.get(pageRunner);
+        return galenSuiteRunner != null && suiteRuns.containsKey(galenSuiteRunner);
+    }
+    
+    private boolean hasListener(GalenSuiteRunner suiteRunner) {
+        return suiteRuns.containsKey(suiteRunner);
+    }
+    
+    private CompleteListener findListener(GalenSuiteRunner suiteRunner) {
+        return suiteRuns.get(suiteRunner).listener;
+    }
+    
+    private void cleanSuiteListener(GalenSuiteRunner galenSuiteRunner) {
+        if (suiteRuns.containsKey(galenSuiteRunner)) {
+            suiteRuns.get(galenSuiteRunner).listener = null;
         }
     }
-
-    @Override
-    public void onGlobalError(Exception e) {
-        currentPageNode.add(div("global-error")
-                .withChildren(
-                        span(e.getClass().getName() + ": " + e.getMessage()),
-                        stacktrace(e)
-                ));
-    }
-
-    private XmlNode stacktrace(Exception e) {
-        XmlNode ul = node("ul");
-        
-        for (StackTraceElement element : e.getStackTrace()) {
-            ul.add(node("li").withText(format("at %s.%s(%s:%d)", element.getClassName(), element.getMethodName(), element.getFileName(), element.getLineNumber())));
+    
+    /**
+     * Removes the link between pageRunner and suiteRunner
+     * @param pageRunner
+     */
+    private void removeLinkFor(GalenPageRunner pageRunner) {
+        if (pageRunnerLinks.containsKey(pageRunner)) {
+            pageRunnerLinks.remove(pageRunner);
         }
-        
-        return ul;
+    }
+    
+    /**
+     * Not the best solution. But as page runner does not know anything about suite we need to somehow link them together.
+     * This is done by storing them in a map.
+     * @param pageRunner
+     * @param galenSuiteRunner
+     */
+    private void linkPageRunnerToSuite(GalenPageRunner pageRunner, GalenSuiteRunner galenSuiteRunner) {
+        pageRunnerLinks.put(pageRunner, galenSuiteRunner);
+    }
+    
+    private String convertToFileName(String name) {
+        return name.toLowerCase().replaceAll("[^\\dA-Za-z\\.\\-]", " ").replaceAll("\\s+", "-");
     }
 
+    private synchronized int getUniqueReportId() {
+        reportCounter++;
+        return reportCounter;
+    }
 }

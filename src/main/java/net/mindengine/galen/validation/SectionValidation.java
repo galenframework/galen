@@ -19,12 +19,14 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.regex.Pattern;
 
+import net.mindengine.galen.runner.GalenPageRunner;
 import net.mindengine.galen.specs.Spec;
 import net.mindengine.galen.specs.page.ObjectSpecs;
 import net.mindengine.galen.specs.page.PageSection;
 
 public class SectionValidation {
 
+    private static final GalenPageRunner UNKNOWN_PAGE_RUNNER = null;
     private List<PageSection> pageSections;
     private PageValidation pageValidation;
     private ValidationListener validationListener;
@@ -106,7 +108,7 @@ public class SectionValidation {
     private void tellOnAfterObject(String objectName) {
         if (validationListener != null) {
             try {
-                validationListener.onAfterObject(pageValidation, objectName);
+                validationListener.onAfterObject(UNKNOWN_PAGE_RUNNER, pageValidation, objectName);
             }
             catch (Exception e) {
                 e.printStackTrace();
@@ -117,7 +119,7 @@ public class SectionValidation {
     private void tellOnObject(String objectName) {
         if (validationListener != null) {
             try {
-                validationListener.onObject(pageValidation, objectName);
+                validationListener.onObject(UNKNOWN_PAGE_RUNNER, pageValidation, objectName);
             }
             catch (Exception e) {
                 e.printStackTrace();
@@ -143,7 +145,7 @@ public class SectionValidation {
     private void tellOnSpecError(PageValidation pageValidation, String objectName, Spec spec, ValidationError error) {
         try {
             if (validationListener != null) {
-                validationListener.onSpecError(pageValidation, objectName, spec, error);
+                validationListener.onSpecError(UNKNOWN_PAGE_RUNNER, pageValidation, objectName, spec, error);
             }
         }
         catch (Exception e) {
@@ -154,7 +156,7 @@ public class SectionValidation {
     private void tellOnSpecSuccess(PageValidation pageValidation, String objectName, Spec spec) {
         try {
             if (validationListener != null) {
-                validationListener.onSpecSuccess(pageValidation, objectName, spec);
+                validationListener.onSpecSuccess(UNKNOWN_PAGE_RUNNER, pageValidation, objectName, spec);
             }
         }
         catch (Exception e) {

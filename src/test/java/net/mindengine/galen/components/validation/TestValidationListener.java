@@ -15,6 +15,7 @@
 ******************************************************************************/
 package net.mindengine.galen.components.validation;
 
+import net.mindengine.galen.runner.GalenPageRunner;
 import net.mindengine.galen.specs.Spec;
 import net.mindengine.galen.validation.PageValidation;
 import net.mindengine.galen.validation.ValidationError;
@@ -25,7 +26,7 @@ public class TestValidationListener implements ValidationListener {
     private StringBuffer invokations = new StringBuffer();
 
     @Override
-    public void onSpecError(PageValidation pageValidation, String objectName, Spec spec, ValidationError error) {
+    public void onSpecError(GalenPageRunner pageRunner, PageValidation pageValidation, String objectName, Spec spec, ValidationError error) {
         append("<" + spec.getClass().getSimpleName() + " " + objectName + ">");
         StringBuffer buffer = new StringBuffer();
         for (String message : error.getMessages()) {
@@ -37,12 +38,12 @@ public class TestValidationListener implements ValidationListener {
     }
 
     @Override
-    public void onSpecSuccess(PageValidation pageValidation, String objectName, Spec spec) {
+    public void onSpecSuccess(GalenPageRunner pageRunner, PageValidation pageValidation, String objectName, Spec spec) {
         append("<" + spec.getClass().getSimpleName() + " " + objectName + ">");
     }
 
     @Override
-    public void onObject(PageValidation pageValidation, String objectName) {
+    public void onObject(GalenPageRunner pageRunner, PageValidation pageValidation, String objectName) {
         append("<o " + objectName + ">");
     }
 
@@ -56,12 +57,12 @@ public class TestValidationListener implements ValidationListener {
     }
 
     @Override
-    public void onAfterObject(PageValidation pageValidation, String objectName) {
+    public void onAfterObject(GalenPageRunner pageRunner, PageValidation pageValidation, String objectName) {
         append("</o " + objectName + ">");
     }
 
     @Override
-    public void onGlobalError(Exception e) {
+    public void onGlobalError(GalenPageRunner pageRunner, Exception e) {
         invokations.append("<global-error " + e.getClass().getSimpleName() + ">" + e.getMessage() + "</global-error>");
     }
 

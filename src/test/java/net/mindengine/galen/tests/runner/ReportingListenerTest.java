@@ -16,7 +16,6 @@
 package net.mindengine.galen.tests.runner;
 
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.is;
 
 import java.io.ByteArrayOutputStream;
@@ -27,7 +26,6 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import junit.framework.Assert;
-
 import net.mindengine.galen.components.report.ReportingListenerTestUtils;
 import net.mindengine.galen.reports.ConsoleReportingListener;
 import net.mindengine.galen.reports.HtmlReportingListener;
@@ -66,16 +64,29 @@ public class ReportingListenerTest {
         ReportingListenerTestUtils.performSampleReporting("Some page test 1", listener, listener);
         ReportingListenerTestUtils.performSampleReporting("Some page test 2", listener, listener);
         
-        String expectedHtml = IOUtils.toString(getClass().getResourceAsStream("/expected-reports/html-report-suffix.html"));
-        
         listener.done();
         
-        String realHtml = FileUtils.readFileToString(new File(reportDirPath + "/report.html"));
+        String expectedGeneralHtml = IOUtils.toString(getClass().getResourceAsStream("/expected-reports/report.html"));
+        String realGeneralHtml = FileUtils.readFileToString(new File(reportDirPath + "/report.html"));
+        Assert.assertEquals(expectedGeneralHtml, realGeneralHtml);
         
-        Assert.assertEquals(expectedHtml, realHtml);
+        String expectedSuite1Html = IOUtils.toString(getClass().getResourceAsStream("/expected-reports/suite-1.html"));
+        String realSuite1Html = FileUtils.readFileToString(new File(reportDirPath + "/report-1-some-page-test-1.html"));
         
-        assertThat("Should place screenshot 1 in same folder", new File(reportDirPath + "/screenshot-1.png").exists(), is(true));
-        assertThat("Should place screenshot 2 in same folder", new File(reportDirPath + "/screenshot-2.png").exists(), is(true));
+        Assert.assertEquals(expectedSuite1Html, realSuite1Html);
+        
+        String expectedSuite2Html = IOUtils.toString(getClass().getResourceAsStream("/expected-reports/suite-2.html"));
+        String realSuite2Html = FileUtils.readFileToString(new File(reportDirPath + "/report-2-some-page-test-2.html"));
+        Assert.assertEquals(expectedSuite2Html, realSuite2Html);
+        
+        assertThat("Should place screenshot 1 in same folder", new File(reportDirPath + "/report-1-some-page-test-1-screenshot-1.png").exists(), is(true));
+        assertThat("Should place screenshot 2 in same folder", new File(reportDirPath + "/report-1-some-page-test-1-screenshot-2.png").exists(), is(true));
+        assertThat("Should place screenshot 1 in same folder", new File(reportDirPath + "/report-2-some-page-test-2-screenshot-1.png").exists(), is(true));
+        assertThat("Should place screenshot 2 in same folder", new File(reportDirPath + "/report-2-some-page-test-2-screenshot-2.png").exists(), is(true));
+        
+        assertThat("Should place css same folder", new File(reportDirPath + "/galen-report.css").exists(), is(true));
+        assertThat("Should place js same folder", new File(reportDirPath + "/galen-report.js").exists(), is(true));
+        assertThat("Should place jquery same folder", new File(reportDirPath + "/jquery-1.10.2.min.js").exists(), is(true));
     }
 
     @Test public void shouldReport_toConsole_successfully() throws IOException {

@@ -19,14 +19,19 @@ import java.util.LinkedList;
 import java.util.List;
 
 import net.mindengine.galen.browser.Browser;
+import net.mindengine.galen.specs.Spec;
 import net.mindengine.galen.suite.GalenPageAction;
 import net.mindengine.galen.suite.GalenPageTest;
 import net.mindengine.galen.validation.PageValidation;
 import net.mindengine.galen.validation.ValidationError;
 import net.mindengine.galen.validation.ValidationListener;
 
-
-public class GalenPageRunner {
+/**
+ * Implements ValidationListener as a proxy listener so it can pass itself to it. 
+ * @author ishubin
+ *
+ */
+public class GalenPageRunner implements ValidationListener {
 
     private ValidationListener validationListener;
     
@@ -44,6 +49,7 @@ public class GalenPageRunner {
     }
 
     public List<ValidationError> run(Browser browser, GalenPageTest pageTest) {
+        
         if (pageTest.getScreenSize() != null) {
             browser.changeWindowSize(pageTest.getScreenSize());
         }
@@ -54,18 +60,45 @@ public class GalenPageRunner {
         
         for (GalenPageAction action : pageTest.getActions()) {
             try {
-                List<ValidationError> errors = action.execute(browser, pageTest, validationListener);
+                List<ValidationError> errors = action.execute(browser, pageTest, this);
                 if (errors != null) {
                     allErrors.addAll(errors);
                 }
             }
             catch (Exception e) {
-                validationListener.onGlobalError(e);
+                onGlobalError(this, e);
                 allErrors.add(ValidationError.fromException(e));
             }
         }
         
         return allErrors;
+    }
+
+    
+   
+    @Override
+    public void onObject(GalenPageRunner pageRunner, PageValidation pageValidation, String objectName) {
+        validationListener.onObject(this, pageValidation, objectName);     
+    }
+
+    @Override
+    public void onAfterObject(GalenPageRunner pageRunner, PageValidation pageValidation, String objectName) {
+        validationListener.onAfterObject(this, pageValidation, objectName);
+    }
+
+    @Override
+    public void onSpecError(GalenPageRunner pageRunner, PageValidation pageValidation, String objectName, Spec spec, ValidationError error) {
+        validationListener.onSpecError(this, pageValidation, objectName, spec, error);
+    }
+
+    @Override
+    public void onSpecSuccess(GalenPageRunner pageRunner, PageValidation pageValidation, String objectName, Spec spec) {
+        validationListener.onSpecSuccess(this, pageValidation, objectName, spec);
+    }
+
+    @Override
+    public void onGlobalError(GalenPageRunner pageRunner, Exception e) {
+        validationListener.onGlobalError(this, e);
     }
 
 }

@@ -63,9 +63,9 @@ public class GalenSuiteRunner {
         for (GalenPageTest pageTest : pageTests) {
             Browser browser = pageTest.getBrowserFactory().openBrowser();
             
-            tellBeforePage(pageTest, browser);
+            tellBeforePage(pageRunner, pageTest, browser);
             List<ValidationError> errors = runPageTest(pageRunner, pageTest, browser);
-            tellAfterPage(pageTest, browser, errors);
+            tellAfterPage(pageRunner, pageTest, browser, errors);
             
             browser.quit();
         }
@@ -73,10 +73,10 @@ public class GalenSuiteRunner {
         tellSuiteFinished(suite);
     }
 
-    private void tellAfterPage(GalenPageTest pageTest, Browser browser, List<ValidationError> errors) {
+    private void tellAfterPage(GalenPageRunner pageRunner, GalenPageTest pageTest, Browser browser, List<ValidationError> errors) {
         try {
             if (suiteListener != null) {
-                suiteListener.onAfterPage(this, pageTest, browser, errors);
+                suiteListener.onAfterPage(this, pageRunner, pageTest, browser, errors);
             }
         }
         catch (Exception e) {
@@ -84,10 +84,10 @@ public class GalenSuiteRunner {
         }
     }
 
-    private void tellBeforePage(GalenPageTest pageTest, Browser browser) {
+    private void tellBeforePage(GalenPageRunner pageRunner, GalenPageTest pageTest, Browser browser) {
         try {
             if (suiteListener != null) {
-                suiteListener.onBeforePage(this, pageTest, browser);
+                suiteListener.onBeforePage(this, pageRunner, pageTest, browser);
             }
         }
         catch (Exception e) {

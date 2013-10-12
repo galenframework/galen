@@ -34,17 +34,17 @@ public class CombinedListener implements CompleteListener {
     }
     
     @Override
-    public void onAfterPage(GalenSuiteRunner galenSuiteRunner, GalenPageTest pageTest, Browser browser,
+    public void onAfterPage(GalenSuiteRunner galenSuiteRunner, GalenPageRunner pageRunner, GalenPageTest pageTest, Browser browser,
             List<ValidationError> errors) {
         for (CompleteListener listener : listeners) {
-            listener.onAfterPage(galenSuiteRunner, pageTest, browser, errors);
+            listener.onAfterPage(galenSuiteRunner, pageRunner, pageTest, browser, errors);
         }
     }
 
     @Override
-    public void onBeforePage(GalenSuiteRunner galenSuiteRunner, GalenPageTest pageTest, Browser browser) {
+    public void onBeforePage(GalenSuiteRunner galenSuiteRunner, GalenPageRunner pageRunner, GalenPageTest pageTest, Browser browser) {
         for (CompleteListener listener : listeners) {
-            listener.onBeforePage(galenSuiteRunner, pageTest, browser);
+            listener.onBeforePage(galenSuiteRunner, pageRunner, pageTest, browser);
         }
     }
 
@@ -63,30 +63,30 @@ public class CombinedListener implements CompleteListener {
     }
 
     @Override
-    public void onObject(PageValidation pageValidation, String objectName) {
+    public void onObject(GalenPageRunner pageRunner, PageValidation pageValidation, String objectName) {
         for (CompleteListener listener : listeners) {
-            listener.onObject(pageValidation, objectName);
+            listener.onObject(pageRunner, pageValidation, objectName);
         }
     }
 
     @Override
-    public void onAfterObject(PageValidation pageValidation, String objectName) {
+    public void onAfterObject(GalenPageRunner pageRunner, PageValidation pageValidation, String objectName) {
         for (CompleteListener listener : listeners) {
-            listener.onAfterObject(pageValidation, objectName);
+            listener.onAfterObject(pageRunner, pageValidation, objectName);
         }
     }
 
     @Override
-    public void onSpecError(PageValidation pageValidation, String objectName, Spec spec, ValidationError error) {
+    public void onSpecError(GalenPageRunner pageRunner, PageValidation pageValidation, String objectName, Spec spec, ValidationError error) {
         for (CompleteListener listener : listeners) {
-            listener.onSpecError(pageValidation, objectName, spec, error);
+            listener.onSpecError(pageRunner, pageValidation, objectName, spec, error);
         }
     }
 
     @Override
-    public void onSpecSuccess(PageValidation pageValidation, String objectName, Spec spec) {
+    public void onSpecSuccess(GalenPageRunner pageRunner, PageValidation pageValidation, String objectName, Spec spec) {
         for (CompleteListener listener : listeners) {
-            listener.onSpecSuccess(pageValidation, objectName, spec);
+            listener.onSpecSuccess(pageRunner, pageValidation, objectName, spec);
         }
     }
 
@@ -98,9 +98,9 @@ public class CombinedListener implements CompleteListener {
     }
 
     @Override
-    public void onGlobalError(Exception e) {
+    public void onGlobalError(GalenPageRunner pageRunner, Exception e) {
         for (CompleteListener listener : listeners) {
-            listener.onGlobalError(e);
+            listener.onGlobalError(pageRunner, e);
         }
     }
 }

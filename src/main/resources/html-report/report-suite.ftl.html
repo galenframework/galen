@@ -1,0 +1,57 @@
+<html>
+    <head>
+        <title>Galen Report | ${suiteName?html}</title>
+        <link rel="stylesheet" type="text/css" href="galen-report.css"/>
+        <script src="jquery-1.10.2.min.js"></script>
+        <script src="galen-report.js"></script>
+    </head>
+    <body>
+        <script>$(function() {Galen.formatSuiteReport();});</script>
+        <div class="suite">
+            <h1>${suiteName?html}</h1>
+            <#list pageTests as pageTest>
+            <div class="test">
+                <h2>${pageTest.title?html}</h2>
+                <#list pageTest.objects as object>
+                <div class="object">
+                    <h3>${object.name?html}</h3>
+                    <ul class="test-specs">
+                        <#list object.specs as spec>
+                            <#if spec.failed = true>
+                            <li class="fail" data-screenshot="${spec.screenshot}">
+                                <span>${spec.text?html}</span>
+                                <ul class="error-message">
+                                    <#list spec.errorMessages as errorMessage>
+                                    <li>${errorMessage?html}</li>
+                                    </#list>
+                                </ul>
+                                <ul class="areas">
+                                    <#list spec.errorAreas as area>
+                                    <li data-area="${area.rect.left},${area.rect.top},${area.rect.width},${area.rect.height}">${area.message?html}</li>
+                                    </#list>
+                                </ul>
+                            </li>
+                            <#else>
+                            <li class="success">
+                                <span>${spec.text?html}</span>
+                            </li>
+                            </#if>                            
+                        </#list>
+                    </ul>
+                </div>
+                </#list>
+                <#list pageTest.globalErrors as globalError>
+                <div class="global-error">
+                    <span>${globalError.class.name}: ${globalError.message?html}</span>
+                    <ul>
+                        <#list globalError.stackTrace as trace>
+                        <li>at ${trace.className?html}.${trace.methodName?html}(${trace.fileName?html}:${trace.lineNumber})</li>
+                        </#list>
+                    </ul>
+                </div>
+                </#list>
+            </div>
+            </#list>
+        </div>
+    </body>
+</html>

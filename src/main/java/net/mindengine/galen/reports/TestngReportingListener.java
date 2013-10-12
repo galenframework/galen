@@ -27,6 +27,7 @@ import java.util.List;
 
 import net.mindengine.galen.browser.Browser;
 import net.mindengine.galen.runner.CompleteListener;
+import net.mindengine.galen.runner.GalenPageRunner;
 import net.mindengine.galen.runner.GalenSuiteRunner;
 import net.mindengine.galen.specs.Spec;
 import net.mindengine.galen.suite.GalenPageTest;
@@ -53,12 +54,12 @@ public class TestngReportingListener implements CompleteListener {
     }
 
     @Override
-    public void onAfterPage(GalenSuiteRunner galenSuiteRunner, GalenPageTest pageTest, Browser browser,
+    public void onAfterPage(GalenSuiteRunner galenSuiteRunner, GalenPageRunner pageRunner, GalenPageTest pageTest, Browser browser,
             List<ValidationError> errors) {
     }
 
     @Override
-    public void onBeforePage(GalenSuiteRunner galenSuiteRunner, GalenPageTest pageTest, Browser browser) {
+    public void onBeforePage(GalenSuiteRunner galenSuiteRunner, GalenPageRunner pageRunner, GalenPageTest pageTest, Browser browser) {
         currentPageNode = node("test").withAttribute("name", pageTest.getUrl() + " " + GalenUtils.formatScreenSize(pageTest.getScreenSize()));
         currentSuiteNode.add(currentPageNode);
     }
@@ -76,13 +77,13 @@ public class TestngReportingListener implements CompleteListener {
     }
 
     @Override
-    public void onObject(PageValidation pageValidation, String objectName) {
+    public void onObject(GalenPageRunner pageRunner, PageValidation pageValidation, String objectName) {
         currentObjectNode = node("class").withAttribute("name", objectName);
         currentPageNode.add(currentObjectNode);
     }
 
     @Override
-    public void onSpecError(PageValidation pageValidation, String objectName, Spec spec, ValidationError error) {
+    public void onSpecError(GalenPageRunner pageRunner, PageValidation pageValidation, String objectName, Spec spec, ValidationError error) {
         XmlNode errorNode = node("exception").withAttribute("class", "Error_" + spec.getClass().getSimpleName());
         XmlNode errorTrace = node("short-stacktrace");
         errorTrace.add(textNode(convertToText(error.getMessages())));
@@ -106,7 +107,7 @@ public class TestngReportingListener implements CompleteListener {
     }
 
     @Override
-    public void onSpecSuccess(PageValidation pageValidation, String objectName, Spec spec) {
+    public void onSpecSuccess(GalenPageRunner pageRunner, PageValidation pageValidation, String objectName, Spec spec) {
         reportSpec(pageValidation, objectName, spec, "PASS");
     }
 
@@ -137,7 +138,7 @@ public class TestngReportingListener implements CompleteListener {
     }
 
     @Override
-    public void onAfterObject(PageValidation pageValidation, String objectName) {
+    public void onAfterObject(GalenPageRunner pageRunner, PageValidation pageValidation, String objectName) {
     }
 
     @Override
@@ -157,7 +158,7 @@ public class TestngReportingListener implements CompleteListener {
     }
 
     @Override
-    public void onGlobalError(Exception e) {
+    public void onGlobalError(GalenPageRunner pageRunner, Exception e) {
         String now = formatDate(new Date());
         
         currentPageNode.add(node("class")

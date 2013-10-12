@@ -1,0 +1,32 @@
+<html>
+    <head>
+        <title>Galen Report</title>
+        <link rel="stylesheet" type="text/css" href="galen-report.css"></link>
+        <script src="jquery-1.10.2.min.js"></script>
+        <script src="galen-report.js"></script>
+    </head>
+    <body>
+        <script>$(function() {Galen.formatMainOverview();});</script>
+        <div class="suites-overview">
+            <h1>Galen Report</h1>
+            <div class="suites">
+                <div class="status-header">
+                    <div>Passed</div>
+                    <div>Failed</div>
+                    <div>Total</div>
+                    <div>Test</div>
+                </div>
+                <#list suiteRuns as suiteRun>
+                <div class="suite">
+                    <div class="status passed">${suiteRun.passed}</div>
+                    <div class="status failed">${suiteRun.failed}</div>
+                    <div class="status total">${suiteRun.total}</div>
+                    <div class="suite-link">
+                        <a href="${suiteRun.suiteReportFile}.html">${suiteRun.name}</a>
+                    </div>
+                </div>
+                </#list>
+            </div>
+        </div>
+    </body>
+</html>

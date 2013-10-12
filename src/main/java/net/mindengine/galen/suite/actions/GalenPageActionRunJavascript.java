@@ -38,7 +38,6 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 public class GalenPageActionRunJavascript implements GalenPageAction{
 
     private static final List<ValidationError> NO_ERRORS = new LinkedList<ValidationError>();
-    private static final Object By = null;
     private String javascriptPath;
     private String jsonArguments;
 
