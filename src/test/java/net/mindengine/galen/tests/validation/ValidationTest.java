@@ -1106,12 +1106,14 @@ public class ValidationTest {
                       put("object", element(10, 40, 10, 10));
                       put("button", absentElement(10, 60, 10, 10));
               }})),    
-          row(new ValidationError(singleArea(new Rect(10, 40, 10, 10), "object"), messages("\"object\" is 10px above \"button\" instead of 20px")),
+          row(new ValidationError(areas(new ErrorArea(new Rect(10, 40, 10, 10), "object"), new ErrorArea(new Rect(10, 60, 10, 10), "button")), 
+                  messages("\"object\" is 10px above \"button\" instead of 20px")),
                   specAbove("button", exact(20)), page(new HashMap<String, PageElement>(){{
                       put("object", element(10, 40, 10, 10));
                       put("button", element(10, 60, 10, 10));
               }})),
-          row(new ValidationError(singleArea(new Rect(10, 40, 10, 10), "object"), messages("\"object\" is 10px above \"button\" which is not in range of 20 to 30px")),
+          row(new ValidationError(areas(new ErrorArea(new Rect(10, 40, 10, 10), "object"), new ErrorArea(new Rect(10, 60, 10, 10), "button")), 
+                  messages("\"object\" is 10px above \"button\" which is not in range of 20 to 30px")),
                   specAbove("button", between(20, 30)), page(new HashMap<String, PageElement>(){{
                       put("object", element(10, 40, 10, 10));
                       put("button", element(10, 60, 10, 10));
@@ -1140,12 +1142,14 @@ public class ValidationTest {
                       put("object", element(10, 40, 10, 10));
                       put("button", absentElement(10, 60, 10, 10));
               }})),    
-          row(new ValidationError(singleArea(new Rect(10, 60, 10, 10), "object"), messages("\"object\" is 10px below \"button\" instead of 20px")),
+          row(new ValidationError(areas(new ErrorArea(new Rect(10, 60, 10, 10), "object"), new ErrorArea(new Rect(10, 40, 10, 10), "button")), 
+                  messages("\"object\" is 10px below \"button\" instead of 20px")),
                   specBelow("button", exact(20)), page(new HashMap<String, PageElement>(){{
                       put("object", element(10, 60, 10, 10));
                       put("button", element(10, 40, 10, 10));
               }})),
-          row(new ValidationError(singleArea(new Rect(10, 60, 10, 10), "object"), messages("\"object\" is 10px below \"button\" which is not in range of 20 to 30px")),
+              row(new ValidationError(areas(new ErrorArea(new Rect(10, 60, 10, 10), "object"), new ErrorArea(new Rect(10, 40, 10, 10), "button")),
+                  messages("\"object\" is 10px below \"button\" which is not in range of 20 to 30px")),
                   specBelow("button", between(20, 30)), page(new HashMap<String, PageElement>(){{
                       put("object", element(10, 60, 10, 10));
                       put("button", element(10, 40, 10, 10));

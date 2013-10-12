@@ -47,8 +47,7 @@ public class SpecValidationDirectionPosition extends SpecValidation<SpecDirectio
 	}
 
 	@Override
-	public void check(PageValidation pageValidation,
-			String objectName, SpecDirectionPosition spec) throws ValidationErrorException {
+	public void check(PageValidation pageValidation, String objectName, SpecDirectionPosition spec) throws ValidationErrorException {
 		
 		PageElement mainObject = getPageElement(pageValidation, objectName);
         
@@ -71,20 +70,12 @@ public class SpecValidationDirectionPosition extends SpecValidation<SpecDirectio
         					offset, 
         					direction.toString(), 
         					spec.getObject(), 
-        					rangeErrorText(spec.getRange())))
-        		.withErrorArea(new ErrorArea(mainArea, objectName));
+        					spec.getRange().getErrorMessage()))
+        		.withErrorArea(new ErrorArea(mainArea, objectName))
+        		.withErrorArea(new ErrorArea(secondArea, spec.getObject()));
         }
 	}
 
-	
-	protected String rangeErrorText(Range range) {
-		if (range.isExact()) {
-			return String.format("instead of %s", range.prettyString());
-		}
-		else {
-			return String.format("which is not in range of %s", range.prettyString());
-		}
-	}
 
 	private int getOffset(Rect mainArea, Rect secondArea) {
 		if (direction == Direction.ABOVE) {

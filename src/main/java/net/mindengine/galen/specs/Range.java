@@ -155,4 +155,13 @@ public class Range {
     public void setRangeType(RangeType rangeType) {
         this.rangeType = rangeType;
     }
+    
+    public String getErrorMessage() {
+        if (isExact()) {
+            return String.format("instead of %s", prettyString());
+        }
+        else {
+            return String.format("which is not in range of %s", prettyString());
+        }
+    }
 }
