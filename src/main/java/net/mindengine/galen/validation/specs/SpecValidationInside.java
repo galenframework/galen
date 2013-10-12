@@ -15,9 +15,12 @@
 ******************************************************************************/
 package net.mindengine.galen.validation.specs;
 
+import net.mindengine.galen.page.Point;
 import net.mindengine.galen.page.Rect;
+import net.mindengine.galen.specs.Location;
 import net.mindengine.galen.specs.Side;
 import net.mindengine.galen.specs.SpecInside;
+import net.mindengine.galen.validation.PageValidation;
 
 public class SpecValidationInside extends SpecValidationGeneral<SpecInside> {
 
@@ -40,4 +43,16 @@ public class SpecValidationInside extends SpecValidationGeneral<SpecInside> {
         }
     }
 
+    @Override
+    protected String verifyLocation(Rect mainArea, Rect secondArea, Location location, PageValidation pageValidation) {
+        
+        Point[] points = mainArea.getPoints();
+        
+        for (Point point : points) {
+            if (!secondArea.contains(point)) {
+                return "not completely inside";
+            }
+        }
+        return super.verifyLocation(mainArea, secondArea, location, pageValidation);
+    }
 }

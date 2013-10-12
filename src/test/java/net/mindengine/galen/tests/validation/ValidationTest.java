@@ -540,7 +540,21 @@ public class ValidationTest {
           }})),
           
           
-          // Inside 
+          // Inside
+          
+          row(new ValidationError(areas(new ErrorArea(new Rect(10, 10, 500, 50), "object"), new ErrorArea(new Rect(0, 0, 130, 120), "container")), 
+                  messages("\"object\" is not completely inside")),
+              specInside("container", location(exact(10), LEFT)), page(new HashMap<String, PageElement>(){{
+                  put("object", element(10, 10, 500, 50));
+                  put("container", element(0, 0, 130, 120));
+          }})),
+          
+          row(new ValidationError(areas(new ErrorArea(new Rect(90, 110, 100, 100), "object"), new ErrorArea(new Rect(100, 100, 100, 100), "container")), 
+                  messages("\"object\" is not completely inside")),
+              specInside("container", location(exact(10), RIGHT)), page(new HashMap<String, PageElement>(){{
+                  put("object", element(90, 110, 100, 100));
+                  put("container", element(100, 100, 100, 100));
+          }})),
           
           row(new ValidationError(areas(new ErrorArea(new Rect(30, 10, 50, 50), "object"), new ErrorArea(new Rect(0, 0, 130, 120), "container")), 
                   messages("\"object\" is 30px left instead of 10px")),
