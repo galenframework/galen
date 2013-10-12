@@ -21,9 +21,11 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.apache.commons.io.IOUtils;
 
@@ -68,9 +70,14 @@ public class HtmlReportingListener implements CompleteListener {
         private HtmlSuiteReportingListener listener;
         private int passed = 0;
         private int failed = 0;
+        private Set<String> objectNames = new HashSet<String>();
+        
         private String name = "";
         private int total = 0;
         private String suiteReportFile = "";
+        public int getObjectsCount() {
+            return objectNames.size();
+        }
         public HtmlSuiteReportingListener getListener() {
             return listener;
         }
@@ -113,7 +120,9 @@ public class HtmlReportingListener implements CompleteListener {
     @Override
     public void onObject(GalenPageRunner pageRunner, PageValidation pageValidation, String objectName) {
         if (hasListener(pageRunner)) {
-            findListener(pageRunner).onObject(pageRunner, pageValidation, objectName);
+            SuiteRun suiteRun = findSuiteRun(pageRunner);
+            suiteRun.objectNames.add(objectName);
+            suiteRun.listener.onObject(pageRunner, pageValidation, objectName);
         }
     }
 
