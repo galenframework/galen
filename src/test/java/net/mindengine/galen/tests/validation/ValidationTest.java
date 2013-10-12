@@ -611,7 +611,7 @@ public class ValidationTest {
                   put("container", element(0, 0, 130, 120));
           }})),
           
-          row(new ValidationError(NO_AREA, messages("\"object\" is absent on page")),
+          row(new ValidationError(NO_AREA, messages("\"object\" is not visible on page")),
               specInside("container", location(exact(10), LEFT), location(exact(20), TOP)), page(new HashMap<String, PageElement>(){{
                   put("object", invisibleElement(30, 5, 50, 50));
                   put("container", element(0, 0, 130, 120));
@@ -623,7 +623,7 @@ public class ValidationTest {
                   put("container", absentElement(0, 0, 130, 120));
           }})),
           
-          row(new ValidationError(NO_AREA, messages("\"container\" is absent on page")),
+          row(new ValidationError(NO_AREA, messages("\"container\" is not visible on page")),
               specInside("container", location(exact(10), LEFT), location(exact(20), TOP)), page(new HashMap<String, PageElement>(){{
                   put("object", element(30, 5, 50, 50));
                   put("container", invisibleElement(0, 0, 130, 120));
@@ -701,7 +701,7 @@ public class ValidationTest {
                       put("button", element(200, 200, 100, 50));
           }})),
           
-          row(new ValidationError(NO_AREA, messages("\"object\" is absent on page")),
+          row(new ValidationError(NO_AREA, messages("\"object\" is not visible on page")),
                   specNear("button", location(exact(30), RIGHT), location(between(10, 20), BOTTOM)), page(new HashMap<String, PageElement>(){{
                       put("object", invisibleElement(310, 250, 100, 50));
                       put("button", element(200, 200, 100, 50));
@@ -713,7 +713,7 @@ public class ValidationTest {
                       put("button", absentElement(200, 200, 100, 50));
           }})),
           
-          row(new ValidationError(NO_AREA, messages("\"button\" is absent on page")),
+          row(new ValidationError(NO_AREA, messages("\"button\" is not visible on page")),
                   specNear("button", location(exact(30), RIGHT), location(between(10, 20), BOTTOM)), page(new HashMap<String, PageElement>(){{
                       put("object", element(310, 250, 100, 50));
                       put("button", invisibleElement(200, 200, 100, 50));
@@ -762,7 +762,7 @@ public class ValidationTest {
                       put("object", absentElement(310, 250, 100, 50));
           }})),
           
-          row(new ValidationError(NO_AREA, messages("\"object\" is absent on page")),
+          row(new ValidationError(NO_AREA, messages("\"object\" is not visible on page")),
                   specWidth(Range.exact(10)), page(new HashMap<String, PageElement>(){{
                       put("object", invisibleElement(310, 250, 100, 50));
           }})),
@@ -800,7 +800,7 @@ public class ValidationTest {
                       put("object", absentElement(310, 250, 100, 50));
           }})),
           
-          row(new ValidationError(NO_AREA, messages("\"object\" is absent on page")),
+          row(new ValidationError(NO_AREA, messages("\"object\" is not visible on page")),
                   specHeight(Range.exact(10)), page(new HashMap<String, PageElement>(){{
                       put("object", invisibleElement(310, 250, 100, 50));
           }})),
@@ -834,7 +834,7 @@ public class ValidationTest {
                       put("object", element(10, 10, 50, 10));
                       put("item2", element(10, 10, 10, 15));                      
           }})),
-          row(new ValidationError(NO_AREA, messages("\"item1\" is absent on page")),
+          row(new ValidationError(NO_AREA, messages("\"item1\" is not visible on page")),
                   specHorizontally(Alignment.CENTERED, "item1", "item2"), page(new HashMap<String, PageElement>(){{
                       put("object", element(10, 10, 50, 10));
                       put("item1", invisibleElement(10, 10, 10, 20));
@@ -851,7 +851,7 @@ public class ValidationTest {
                       put("item1", element(10, 10, 50, 10));
                       put("item2", element(10, 10, 10, 15));                      
           }})),
-          row(new ValidationError(NO_AREA, messages("\"object\" is absent on page")),
+          row(new ValidationError(NO_AREA, messages("\"object\" is not visible on page")),
                   specHorizontally(Alignment.CENTERED, "item1", "item2"), page(new HashMap<String, PageElement>(){{
                       put("object", invisibleElement(10, 10, 50, 10));
                       put("item1", element(10, 10, 10, 20));
@@ -938,7 +938,7 @@ public class ValidationTest {
                       put("object", element(10, 10, 50, 10));
                       put("item2", element(10, 10, 10, 15));                      
           }})),
-          row(new ValidationError(NO_AREA, messages("\"item1\" is absent on page")),
+          row(new ValidationError(NO_AREA, messages("\"item1\" is not visible on page")),
                   specVertically(Alignment.CENTERED, "item1", "item2"), page(new HashMap<String, PageElement>(){{
                       put("object", element(10, 10, 50, 10));
                       put("item1", invisibleElement(10, 10, 10, 20));
@@ -955,7 +955,7 @@ public class ValidationTest {
                       put("item1", element(10, 10, 50, 10));
                       put("item2", element(10, 10, 10, 15));                      
           }})),
-          row(new ValidationError(NO_AREA, messages("\"object\" is absent on page")),
+          row(new ValidationError(NO_AREA, messages("\"object\" is not visible on page")),
                   specVertically(Alignment.CENTERED, "item1", "item2"), page(new HashMap<String, PageElement>(){{
                       put("object", invisibleElement(10, 10, 50, 10));
                       put("item1", element(10, 10, 10, 20));
@@ -1041,7 +1041,7 @@ public class ValidationTest {
                   specTextIs("some wrong text"), 
                   page(new HashMap<String, PageElement>())),
                   
-          row(new ValidationError(NO_AREA, messages("\"object\" is absent on page")),
+          row(new ValidationError(NO_AREA, messages("\"object\" is not visible on page")),
                   specTextIs("some wrong text"), 
                   page(new HashMap<String, PageElement>(){{
                       put("object", invisibleElement(10, 10, 10, 10));
@@ -1086,7 +1086,7 @@ public class ValidationTest {
           
           // Above 
           
-          row(new ValidationError(NO_AREA, messages("\"object\" is absent on page")),
+          row(new ValidationError(NO_AREA, messages("\"object\" is not visible on page")),
                   specAbove("button", exact(20)), page(new HashMap<String, PageElement>(){{
                       put("object", invisibleElement(10, 40, 10, 10));
                       put("button", element(10, 60, 10, 10));
@@ -1096,7 +1096,7 @@ public class ValidationTest {
                       put("object", absentElement(10, 40, 10, 10));
                       put("button", element(10, 60, 10, 10));
               }})),    
-          row(new ValidationError(NO_AREA, messages("\"button\" is absent on page")),
+          row(new ValidationError(NO_AREA, messages("\"button\" is not visible on page")),
                   specAbove("button", exact(20)), page(new HashMap<String, PageElement>(){{
                       put("object", element(10, 40, 10, 10));
                       put("button", invisibleElement(10, 60, 10, 10));
@@ -1120,7 +1120,7 @@ public class ValidationTest {
               
           // Below 
               
-          row(new ValidationError(NO_AREA, messages("\"object\" is absent on page")),
+          row(new ValidationError(NO_AREA, messages("\"object\" is not visible on page")),
                   specBelow("button", exact(20)), page(new HashMap<String, PageElement>(){{
                       put("object", invisibleElement(10, 40, 10, 10));
                       put("button", element(10, 60, 10, 10));
@@ -1130,7 +1130,7 @@ public class ValidationTest {
                       put("object", absentElement(10, 40, 10, 10));
                       put("button", element(10, 60, 10, 10));
               }})),    
-          row(new ValidationError(NO_AREA, messages("\"button\" is absent on page")),
+          row(new ValidationError(NO_AREA, messages("\"button\" is not visible on page")),
                   specBelow("button", exact(20)), page(new HashMap<String, PageElement>(){{
                       put("object", element(10, 40, 10, 10));
                       put("button", invisibleElement(10, 60, 10, 10));
@@ -1154,7 +1154,7 @@ public class ValidationTest {
       
           // Centered
       
-          row(new ValidationError(NO_AREA, messages("\"object\" is absent on page")),
+          row(new ValidationError(NO_AREA, messages("\"object\" is not visible on page")),
                   specCenteredInside("container", SpecCentered.Alignment.ALL), page(new HashMap<String, PageElement>(){{
                       put("object", invisibleElement(10, 40, 10, 10));
                       put("container", element(10, 60, 10, 10));
@@ -1169,7 +1169,7 @@ public class ValidationTest {
                       put("object", element(10, 40, 10, 10));
                       put("container", absentElement(10, 60, 10, 10));
               }})),
-          row(new ValidationError(NO_AREA, messages("\"container\" is absent on page")),
+          row(new ValidationError(NO_AREA, messages("\"container\" is not visible on page")),
                   specCenteredInside("container", SpecCentered.Alignment.ALL), page(new HashMap<String, PageElement>(){{
                       put("object", element(10, 40, 10, 10));
                       put("container", invisibleElement(10, 60, 10, 10));
@@ -1215,7 +1215,7 @@ public class ValidationTest {
           
                   
            // On
-          row(new ValidationError(NO_AREA, messages("\"object\" is absent on page")),
+          row(new ValidationError(NO_AREA, messages("\"object\" is not visible on page")),
                   specOn("container", location(exact(10), LEFT, BOTTOM)), page(new HashMap<String, PageElement>(){{
                       put("object", invisibleElement(10, 40, 50, 50));
                       put("container", element(100, 100, 100, 100));
@@ -1225,7 +1225,7 @@ public class ValidationTest {
                       put("object", absentElement(10, 40, 50, 50));
                       put("container", element(100, 100, 100, 100));
               }})),
-          row(new ValidationError(NO_AREA, messages("\"container\" is absent on page")),
+          row(new ValidationError(NO_AREA, messages("\"container\" is not visible on page")),
                   specOn("container", location(exact(10), LEFT, BOTTOM)), page(new HashMap<String, PageElement>(){{
                       put("object", element(10, 40, 50, 50));
                       put("container", invisibleElement(100, 100, 100, 100));
