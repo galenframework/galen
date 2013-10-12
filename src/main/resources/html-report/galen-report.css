@@ -20,25 +20,102 @@ h1 {
     font-size: 2em;
 }
 
+a {
+    color: #1271C4;
+}
+
+.suites-overview h1 {
+    margin: 0;
+    padding: 20px;
+    background: #249AE3;
+    color: white;
+    text-shadow: -1px -1px 0px #06578A;
+    font-size: 3em;
+}
+
+.suites-overview .status-header {
+    border-bottom: 1px solid #d0d0d0;
+}
+.suites-overview .status-header > div {
+    padding: 10px;
+    font-weight: bold;
+    color: black;
+    display: block;
+    float: left;
+    width: 70px;
+    border-left: 1px solid #d0d0d0;
+}
+.suites-overview .status-header:after {
+    display: block;
+    clear: both;
+    content: ".";
+    font-size: 0;
+}
+.suites-overview .suites .suite {
+    clear: both;
+}
+.suites-overview .suites .suite > div.status {
+    float: left;
+    padding: 10px;
+    width: 70px;
+}
+.suites-overview .suites .suite > div.suite-link {
+    float: left;
+    padding: 10px;
+}
+.suites-overview .suites .suite > div.suite-link a {
+    color: #1271C4;
+}
+.suites-overview .suites .suite > div.suite-link a:hover {
+    text-decoration: none;
+}
+.suites-overview .suites .failed {
+    color: #D60F26;
+}
+.suites-overview .suites .passed {
+    color: #229605;
+}
+.suites-overview .suites .progress {
+    clear: both;
+    margin-bottom: 10px;
+    margin-left: 10px;
+    width: 260px;
+    padding: 0;
+    height: 3px;
+}
+.suites-overview .suites .progress > div {
+    display: inline-block;
+    height: 3px;
+}
+.suites-overview .suites .progress > div.failed {
+    background: #FA644D;
+}
+.suites-overview .suites .progress > div.passed {
+    background: #71E854;
+}
+
+
+
+
+
+.suite h1 {
+    margin: 0;
+    padding: 20px;
+    background: #249AE3;
+    color: white;
+    text-shadow: -1px -1px 0px #06578A;
+    font-size: 1.6em;
+}
 .test {
     margin: 20px;
     padding-bottom: 20px;
-    display: none;
 }
 
 
-h2 {
+.test h2 {
+    color: #1271C4;
     margin-left: 20px;
     font-size: 1.3em;
-    cursor: pointer;
-}
-
-h2:hover {
-    color: #107AB3;
-}
-
-.suite {
-    margin-left: 20px;
 }
 
 .object {
@@ -57,9 +134,12 @@ ul.test-specs {
 
 ul.test-specs li.fail {
     font-weight: bold;
-    cursor: pointer;
     color: #E32F0B;
     position:relative;
+}
+
+ul.test-specs li.fail span {
+    cursor: pointer;
 }
 
 ul.test-specs li.fail:before, .global-error span:before, h2.has-failures:before {
@@ -93,11 +173,11 @@ ul.error-message {
     position: absolute;
     list-style: none;
     padding: 20px;
-    color: #555;
+    color: #E32F0B;
     left: 40px;
     display: none;
-    background: #fff;
-    border:1px solid #999;
+    background: #FCF6E8;
+    border:1px solid #FAC8CE;
     border-radius: 10px;
     box-shadow: 1px 1px 3px #999;
 }
@@ -120,6 +200,7 @@ ul.test-specs li.fail:hover ul.error-message {
 }
 
 #tooltip {
+    z-index:900;
     display: none;
     position: absolute;
     background: #fff;
@@ -133,6 +214,7 @@ ul.test-specs li.fail:hover ul.error-message {
 }
 
 #tooltip-body {
+    margin-top: 20px;
     position:relative;
 }
 #tooltip-body .canvas {
@@ -155,9 +237,8 @@ ul.test-specs li.fail:hover ul.error-message {
     position:absolute;
     padding: 3px;
     font-size: 0.8em;
-    bottom: -22px;
+    top: -22px;
     border-radius:5px;
-    box-shadow: 2px 2px 2px #000;
 }
 
 #tooltip-body img {

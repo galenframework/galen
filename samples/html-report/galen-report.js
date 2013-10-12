@@ -6,88 +6,99 @@ $.fn.center = function () {
 }
 
 
-var palette = {
-    colors:["#E01B5D", "#1BBFE0", "#AB1BE0", "#2AA30B", "#C45D02", "#348072"],
-    index: 0,
-    start: function () {
-        this.index = -1;
-    },
-    pick: function (){
-        this.index++;
-        if (this.index >= this.colors.length) {
-            this.index = 0;
+var Galen = {
+    palette: {
+        colors:["#E01B5D", "#1BBFE0", "#AB1BE0", "#2AA30B", "#C45D02", "#348072"],
+        index: 0,
+        start: function () {
+            this.index = -1;
+        },
+        pick: function (){
+            this.index++;
+            if (this.index >= this.colors.length) {
+                this.index = 0;
+            }
+            return this.colors[this.index];
         }
-        return this.colors[this.index];
-    }
-};
+    },
+    formatMainOverview: function () {
+        $(".suites .suite").each(function (){
+            var passed = parseInt($(this).find(".passed").text());
+            var failed = parseInt($(this).find(".failed").text());
+            var total = passed + failed;
+            if (total > 0) {
+                var passedPercent = Math.round(passed * 100 / total);
+                var failedPercent = Math.round(failed * 100 / total);
+                $(this).append("<div class='progress'><div class='passed' style='width:" + passedPercent + "%;'></div><div class='failed' style='width:" + failedPercent + "%;'></div></div>");
+            }
+        });
+    },
+    formatSuiteReport: function () {
+        $("body").append("<div id='tooltip'><a id='close-tooltip' href='#'>Close</a><div id='tooltip-body'></div></div>");
 
-$(function() {
-    $("body").append("<div id='tooltip'><a id='close-tooltip' href='#'>Close</a><div id='tooltip-body'></div></div>");
-
-    $("#close-tooltip").click(function (){
-        $("#tooltip").hide();
-        return false;
-    });
-
-    $("ul.test-specs li.fail").click(function () {
-        var screenshot = $(this).attr("data-screenshot");
-        var img = new Image();
-
-        var areas = [];
-        $(this).find("ul.areas li").each(function (){
-            var areaText = $(this).attr("data-area");
-            areas[areas.length] = {
-                area: eval("[" + areaText + "]"),
-                text: $(this).html()
-            };
+        $("#close-tooltip").click(function (){
+            $("#tooltip").hide();
+            return false;
         });
 
-        img.onload = function() {
-            showScreenshot(img, this.width, this.height, areas);
-        };
-        img.src = screenshot;
-    });
+        $("ul.test-specs li.fail span").click(function () {
+            var screenshot = $(this).parent().attr("data-screenshot");
+            var img = new Image();
 
-    $(".global-error span").click(function (){
-        $(this).next().slideToggle();
-    });
+            var areas = [];
+            $(this).find("ul.areas li").each(function (){
+                var areaText = $(this).parent().attr("data-area");
+                areas[areas.length] = {
+                    area: eval("[" + areaText + "]"),
+                    text: $(this).html()
+                };
+            });
 
-    $("h2").click(function (){
-        $(this).next().slideToggle();
-    });
+            img.onload = function() {
+                Galen.showScreenshot(img, this.width, this.height, areas);
+            };
+            img.src = screenshot;
+        });
 
-    $("h2").each(function (){
-        var next = $(this).next();
+        $(".global-error span").click(function (){
+            $(this).next().slideToggle();
+        });
 
-        if (next.find("ul.test-specs li.fail").length > 0 || 
-            next.find(".global-error").length > 0) {
-            $(this).addClass("has-failures");
+        $("h2").each(function (){
+            var next = $(this).next();
+
+            if (next.find("ul.test-specs li.fail").length > 0 || 
+                next.find(".global-error").length > 0) {
+                $(this).addClass("has-failures");
+            }
+        }); 
+    },
+    showScreenshot: function (img, width, height, areas) {
+        $("#tooltip-body").html("<div class='canvas'></div>").append(img);
+
+        var delta = 2;
+        Galen.palette.start();
+        for (var i=0; i<areas.length; i++) {
+            var area = [areas[i].area[0] - delta, 
+                areas[i].area[1] - delta,
+                areas[i].area[2] + delta,
+                areas[i].area[3] + delta
+            ];
+            var color = Galen.palette.pick();
+            $("#tooltip-body .canvas").append("<div class='brick' style='left:"
+                + area[0] + "px; top:"
+                + area[1] + "px; width:"
+                + area[2] + "px; height:"
+                + area[3] + "px;"
+                + "border: 1px solid " + color + ";'>" 
+                + "<span style='background:" + color + ";'>"
+                + areas[i].text + "</span></div>");
         }
-    });
-});
 
-function showScreenshot(img, width, height, areas) {
-    $("#tooltip-body").html("<div class='canvas'></div>").append(img);
+        $("#tooltip").center();
+        $("#tooltip").show();
+    } 
+};
+    
 
-    var delta = 2;
-    palette.start();
-    for (var i=0; i<areas.length; i++) {
-        var area = [areas[i].area[0] - delta, 
-            areas[i].area[1] - delta,
-            areas[i].area[2] + delta,
-            areas[i].area[3] + delta
-        ];
-        var color = palette.pick();
-        $("#tooltip-body .canvas").append("<div class='brick' style='left:"
-            + area[0] + "px; top:"
-            + area[1] + "px; width:"
-            + area[2] + "px; height:"
-            + area[3] + "px;"
-            + "border: 1px solid " + color + ";'>" 
-            + "<span style='background:" + color + ";'>"
-            + areas[i].text + "</span></div>");
-    }
 
-    $("#tooltip").center();
-    $("#tooltip").show();
-}
