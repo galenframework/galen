@@ -44,7 +44,7 @@ public class GalenMainTest {
         GalenMain galen = new GalenMain();
         
         File reportsDir = Files.createTempDir();
-        String htmlReportPath = reportsDir.getAbsolutePath() + "/report.html";
+        String htmlReportPath = reportsDir.getAbsolutePath();
         String testngReportPath = reportsDir.getAbsolutePath() + "/testng-report.html";
         
         galen.execute(new GalenArguments()
@@ -54,17 +54,15 @@ public class GalenMainTest {
             .withTestngReport(testngReportPath)
             );
         
-        assertThat("Should create screenshot 1 and place it in same folder as report", new File(reportsDir.getAbsolutePath() + "/screenshot-1.png").exists(), is(true));
-        assertThat("Should create screenshot 2 and place it in same folder as report", new File(reportsDir.getAbsolutePath() + "/screenshot-2.png").exists(), is(true));
+        assertThat("Should create screenshot 1 and place it in same folder as report", new File(reportsDir.getAbsolutePath() + "/report-1-home-page-test-screenshot-1.png").exists(), is(true));
+        assertThat("Should create screenshot 2 and place it in same folder as report", new File(reportsDir.getAbsolutePath() + "/report-2-home-page-test-2-screenshot-1.png").exists(), is(true));
         
-        String htmlReportContent = FileUtils.readFileToString(new File(htmlReportPath));
+        String htmlReportContent = FileUtils.readFileToString(new File(htmlReportPath + File.separator + "report.html"));
         String testngReportContent = FileUtils.readFileToString(new File(testngReportPath));
         
         //Verifying only parts of the report content to make sure that the test were executed
-        assertThat(htmlReportContent, containsString("<h1>Home page test</h1>"));
-        assertThat(htmlReportContent, containsString("<h2>" + testUrl + " 640x480</h2>"));
-        assertThat(htmlReportContent, containsString("<h1>Home page test 2</h1>"));
-        assertThat(htmlReportContent, containsString("<h2>" + testUrl + " 320x600</h2>"));
+        assertThat(htmlReportContent, containsString("<a href=\"report-1-home-page-test.html\">Home page test</a>"));
+        assertThat(htmlReportContent, containsString("<a href=\"report-2-home-page-test-2.html\">Home page test 2</a>"));
         
         assertThat(testngReportContent, containsString("<suite name=\"Home page test\">"));
         assertThat(testngReportContent, containsString("<test name=\"" + testUrl + " 640x480\">"));
@@ -107,7 +105,7 @@ public class GalenMainTest {
         String testUrl = "file://" + getClass().getResource("/html/page-nice.html").getFile();
         String pageSpec = getClass().getResource("/html/page.spec").getFile();
         File reportsDir = Files.createTempDir();
-        String htmlReportPath = reportsDir.getAbsolutePath() + "/report.html";
+        String htmlReportPath = reportsDir.getAbsolutePath();
         String testngReportPath = reportsDir.getAbsolutePath() + "/testng-report.html";
         
         new GalenMain().execute(new GalenArguments()
@@ -119,14 +117,7 @@ public class GalenMainTest {
             .withTestngReport(testngReportPath)
             .withIncludedTags("desktop"));
         
-        assertThat("Should create screenshot 1 and place it in same folder as report", new File(reportsDir.getAbsolutePath() + "/screenshot-1.png").exists(), is(true));
-        
-        String htmlReportContent = FileUtils.readFileToString(new File(htmlReportPath));
         String testngReportContent = FileUtils.readFileToString(new File(testngReportPath));
-        
-        //Verifying only parts of the report content to make sure that the test were executed
-        assertThat(htmlReportContent, containsString("<h1>" + pageSpec + "</h1>"));
-        assertThat(htmlReportContent, containsString("<h2>" + testUrl + " 450x500</h2>"));
         
         assertThat(testngReportContent, containsString("<suite name=\"" + pageSpec + "\">"));
         assertThat(testngReportContent, containsString("<test name=\"" + testUrl + " 450x500\">"));
@@ -136,7 +127,6 @@ public class GalenMainTest {
         String testUrl = "file://" + getClass().getResource("/html/page-nice.html").getFile();
         String pageSpec = getClass().getResource("/negative-specs/invalid-spec.spec").getFile();
         File reportsDir = Files.createTempDir();
-        String htmlReportPath = reportsDir.getAbsolutePath() + "/report.html";
         String testngReportPath = reportsDir.getAbsolutePath() + "/testng-report.html";
         
         new GalenMain().execute(new GalenArguments()
@@ -144,16 +134,10 @@ public class GalenMainTest {
             .withUrl(testUrl)
             .withPaths(Arrays.asList(pageSpec))
             .withScreenSize(new Dimension(450, 500))
-            .withHtmlReport(htmlReportPath)
             .withTestngReport(testngReportPath)
             .withIncludedTags("desktop"));
         
-        String htmlReportContent = FileUtils.readFileToString(new File(htmlReportPath));
         String testngReportContent = FileUtils.readFileToString(new File(testngReportPath));
-        
-        assertThat(htmlReportContent, containsString("<div class=\"global-error\">"));
-        assertThat(htmlReportContent, containsString("net.mindengine.galen.parser.FileSyntaxException: There is no location defined (in " + pageSpec + ":10)"));
-        
         
         assertThat(testngReportContent, containsString("net.mindengine.galen.parser.FileSyntaxException: There is no location defined (in " + pageSpec + ":10)"));
     }
