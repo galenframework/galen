@@ -169,6 +169,7 @@ public class XmlBuilder {
         
         if (firstLine != null) {
             sw.append(firstLine);
+            sw.append('\n');
         }
         rootNode.toXml("", sw);
         

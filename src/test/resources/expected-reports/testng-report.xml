@@ -8,12 +8,10 @@
                         <short-stacktrace>objectA1 is not inside other-object</short-stacktrace>
                     </exception>
                 </test-method>
-                <test-method status="PASS" signature="objectA1: width: 10 to 20px" name="width: 10 to 20px" duration-ms="0" started-at="{expected-date}" finished-at="{expected-date}" description="">
-                </test-method>
+                <test-method status="PASS" signature="objectA1: width: 10 to 20px" name="width: 10 to 20px" duration-ms="0" started-at="{expected-date}" finished-at="{expected-date}" description=""></test-method>
             </class>
             <class name="objectA2">
-                <test-method status="PASS" signature="objectA2: width: 10 to 20px" name="width: 10 to 20px" duration-ms="0" started-at="{expected-date}" finished-at="{expected-date}" description="">
-                </test-method>
+                <test-method status="PASS" signature="objectA2: width: 10 to 20px" name="width: 10 to 20px" duration-ms="0" started-at="{expected-date}" finished-at="{expected-date}" description=""></test-method>
                 <test-method status="FAIL" signature="objectA2: width: 10px" name="width: 10px" duration-ms="0" started-at="{expected-date}" finished-at="{expected-date}" description="">
                     <exception class="Error_SpecWidth">
                         <short-stacktrace>objectA2 width is 20px instead of 10px</short-stacktrace>
@@ -21,14 +19,12 @@
                 </test-method>
             </class>
             <class name="objectA1">
-                <test-method status="PASS" signature="objectA1: height: 10 to 20px" name="height: 10 to 20px" duration-ms="0" started-at="{expected-date}" finished-at="{expected-date}" description="">
-                </test-method>
+                <test-method status="PASS" signature="objectA1: height: 10 to 20px" name="height: 10 to 20px" duration-ms="0" started-at="{expected-date}" finished-at="{expected-date}" description=""></test-method>
             </class>
         </test>
         <test name="http://example.com/page2 600x700">
             <class name="objectB1">
-                <test-method status="PASS" signature="objectB1: width: 10 to 20px" name="width: 10 to 20px" duration-ms="0" started-at="{expected-date}" finished-at="{expected-date}" description="">
-                </test-method>
+                <test-method status="PASS" signature="objectB1: width: 10 to 20px" name="width: 10 to 20px" duration-ms="0" started-at="{expected-date}" finished-at="{expected-date}" description=""></test-method>
                 <test-method status="FAIL" signature="objectB1: inside: other-object 10px left" name="inside: other-object 10px left" duration-ms="0" started-at="{expected-date}" finished-at="{expected-date}" description="">
                     <exception class="Error_SpecInside">
                         <short-stacktrace>objectB1 is not inside other-object
@@ -37,8 +33,7 @@ second error message with &lt;xml&gt; &amp;tags</short-stacktrace>
                 </test-method>
             </class>
             <class name="objectB2">
-                <test-method status="PASS" signature="objectB2: height: 100px" name="height: 100px" duration-ms="0" started-at="{expected-date}" finished-at="{expected-date}" description="">
-                </test-method>
+                <test-method status="PASS" signature="objectB2: height: 100px" name="height: 100px" duration-ms="0" started-at="{expected-date}" finished-at="{expected-date}" description=""></test-method>
             </class>
             <class name="global error">
                 <test-method status="FAIL" signature="global error" name="global error" duration-ms="0" started-at="{expected-date}" finished-at="{expected-date}" description="">
