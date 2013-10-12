@@ -41,13 +41,13 @@ var Galen = {
             return false;
         });
 
-        $("ul.test-specs li.fail span").click(function () {
-            var screenshot = $(this).parent().attr("data-screenshot");
+        $("ul.test-specs li.fail").click(function () {
+            var screenshot = $(this).attr("data-screenshot");
             var img = new Image();
 
             var areas = [];
             $(this).find("ul.areas li").each(function (){
-                var areaText = $(this).parent().attr("data-area");
+                var areaText = $(this).attr("data-area");
                 areas[areas.length] = {
                     area: eval("[" + areaText + "]"),
                     text: $(this).html()
