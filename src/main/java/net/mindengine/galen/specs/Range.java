@@ -156,12 +156,19 @@ public class Range {
         this.rangeType = rangeType;
     }
     
-    public String getErrorMessage() {
-        if (isExact()) {
+    public String getErrorMessageSuffix() {
+        if (rangeType == RangeType.EXACT) {
             return String.format("instead of %s", prettyString());
         }
-        else {
+        else if (rangeType == RangeType.BETWEEN) {
             return String.format("which is not in range of %s", prettyString());
         }
+        else if (rangeType == RangeType.GREATER_THAN) {
+            return String.format("but it should be greater than %spx", doubleToString(from));
+        }
+        else if (rangeType == RangeType.LESS_THAN) {
+            return String.format("but it should be less than %spx", doubleToString(to));
+        }
+        else return "but the expected range is unknown";
     }
 }

@@ -115,13 +115,9 @@ public abstract class SpecValidationGeneral<T extends SpecComplex> extends SpecV
                 buffer.append(message);
                 comma = true;
             }
-            if (range.isExact()) {
-                buffer.append(format(" instead of %s", range.prettyString()));
-            }
-            else {
-                buffer.append(format(" which is not in range of %s", range.prettyString()));
-            }
             
+            buffer.append(' ');
+            buffer.append(range.getErrorMessageSuffix());
             return buffer.toString(); 
         }
         else return null;

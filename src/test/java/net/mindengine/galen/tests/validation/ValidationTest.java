@@ -772,6 +772,15 @@ public class ValidationTest {
                       put("object", element(100, 100, 100, 50));
           }})),
           
+          row(new ValidationError(singleArea(new Rect(100, 100, 100, 50), "object"), messages("\"object\" width is 100px but it should be greater than 110px")),
+                  specWidth(Range.greaterThan(110.0)), page(new HashMap<String, PageElement>(){{
+                      put("object", element(100, 100, 100, 50));
+          }})),
+          row(new ValidationError(singleArea(new Rect(100, 100, 100, 50), "object"), messages("\"object\" width is 100px but it should be less than 90px")),
+                  specWidth(Range.lessThan(90.0)), page(new HashMap<String, PageElement>(){{
+                      put("object", element(100, 100, 100, 50));
+          }})),
+          
           row(new ValidationError(singleArea(new Rect(100, 100, 100, 50), "object"), messages("\"object\" width is 100px which is not in range of 10 to 40px")),
                   specWidth(Range.between(10, 40)), page(new HashMap<String, PageElement>(){{
                       put("object", element(100, 100, 100, 50));

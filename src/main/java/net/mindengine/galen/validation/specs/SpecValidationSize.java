@@ -37,14 +37,9 @@ public abstract class SpecValidationSize<T extends SpecRange> extends SpecValida
         Range range = convertRange(spec.getRange(), pageValidation);
         
         if (!range.holds(realValue)) {
-            if (range.isExact()) {
                 throw new ValidationErrorException()
                     .withErrorArea(new ErrorArea(mainObject.getArea(), objectName))
-                    .withMessage(format("\"%s\" %s is %dpx instead of %s", objectName, getUnitName(), realValue, range.prettyString()));
-            }
-            else throw new ValidationErrorException()
-                .withErrorArea(new ErrorArea(mainObject.getArea(), objectName))
-                .withMessage(format("\"%s\" %s is %dpx which is not in range of %s", objectName, getUnitName(), realValue, range.prettyString()));
+                    .withMessage(format("\"%s\" %s is %dpx %s", objectName, getUnitName(), realValue, range.getErrorMessageSuffix()));
         }
     }
 

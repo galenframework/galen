@@ -70,7 +70,7 @@ public class SpecValidationDirectionPosition extends SpecValidation<SpecDirectio
         					offset, 
         					direction.toString(), 
         					spec.getObject(), 
-        					spec.getRange().getErrorMessage()))
+        					spec.getRange().getErrorMessageSuffix()))
         		.withErrorArea(new ErrorArea(mainArea, objectName))
         		.withErrorArea(new ErrorArea(secondArea, spec.getObject()));
         }
