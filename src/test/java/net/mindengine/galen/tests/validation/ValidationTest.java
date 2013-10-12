@@ -459,42 +459,42 @@ public class ValidationTest {
         return new Object[][] {
           // Contains 
                 
-          row(new ValidationError(singleArea(new Rect(9, 11, 10, 10), "menu"), messages("\"menu\" is outside \"object\"")),
+          row(new ValidationError(areas(new ErrorArea(new Rect(9, 11, 10, 10), "menu"), new ErrorArea(new Rect(10, 10, 100, 100), "object")), messages("\"menu\" is outside \"object\"")),
               specContains(false, "menu", "button"), page(new HashMap<String, PageElement>(){{
                   put("object", element(10, 10, 100, 100));
                   put("menu", element(9, 11, 10, 10));
                   put("button", element(60, 50, 40, 40));
           }})),
           
-          row(new ValidationError(areas(new ErrorArea(new Rect(50, 50, 110, 10), "menu"), new ErrorArea(new Rect(10, 10, 101, 40), "button")), messages("\"menu\" is outside \"object\"", "\"button\" is outside \"object\"")),
+          row(new ValidationError(areas(new ErrorArea(new Rect(50, 50, 110, 10), "menu"), new ErrorArea(new Rect(10, 10, 101, 40), "button"), new ErrorArea(new Rect(10, 10, 100, 100), "object")), messages("\"menu\" is outside \"object\"", "\"button\" is outside \"object\"")),
               specContains(false, "menu", "button"), page(new HashMap<String, PageElement>(){{
                   put("object", element(10, 10, 100, 100));
                   put("menu", element(50, 50, 110, 10));
                   put("button", element(10, 10, 101, 40));
           }})),
           
-          row(new ValidationError(EMPTY_AREA, messages("\"menu\" is not visible on page")),
+          row(new ValidationError(NO_AREA, messages("\"menu\" is not visible on page")),
               specContains(CONTAINS_FULLY, "menu", "button"), page(new HashMap<String, PageElement>(){{
                   put("object", element(10, 10, 100, 100));
                   put("menu", invisibleElement(11, 11, 10, 10));
                   put("button", element(60, 50, 40, 40));
           }})),
           
-          row(new ValidationError(EMPTY_AREA, messages("\"menu\" is absent on page")),
+          row(new ValidationError(NO_AREA, messages("\"menu\" is absent on page")),
               specContains(CONTAINS_FULLY, "menu", "button"), page(new HashMap<String, PageElement>(){{
                   put("object", element(10, 10, 100, 100));
                   put("menu", absentElement(11, 11, 10, 10));
                   put("button", element(60, 50, 40, 40));
           }})),
           
-          row(new ValidationError(EMPTY_AREA, messages("\"button\" has zero size")),
+          row(new ValidationError(NO_AREA, messages("\"button\" has zero size")),
                   specContains(CONTAINS_FULLY, "menu", "button"), page(new HashMap<String, PageElement>(){{
                       put("object", element(10, 10, 100, 100));
                       put("menu", element(11, 11, 10, 10));
                       put("button", element(60, 50, 0, 40));
           }})),
           
-          row(new ValidationError(EMPTY_AREA, messages("\"button\" has zero size")),
+          row(new ValidationError(NO_AREA, messages("\"button\" has zero size")),
                   specContains(CONTAINS_FULLY, "menu", "button"), page(new HashMap<String, PageElement>(){{
                       put("object", element(10, 10, 100, 100));
                       put("menu", element(11, 11, 10, 10));
@@ -513,7 +513,7 @@ public class ValidationTest {
                       put("button", element(60, 50, 10, 10));
           }})),
           
-          row(new ValidationError(singleArea(new Rect(350, 10, 10, 10), "menu-item-3"), messages("\"menu-item-3\" is outside \"object\"")),
+          row(new ValidationError(areas(new ErrorArea(new Rect(350, 10, 10, 10), "menu-item-3"), new ErrorArea(new Rect(0, 0, 200, 100), "object")), messages("\"menu-item-3\" is outside \"object\"")),
                   specContains(CONTAINS_FULLY, "menu-item-*", "button"), page(new HashMap<String, PageElement>(){{
                       put("object", element(0, 0, 200, 100));
                       put("menu-item-1", element(10, 10, 10, 10));

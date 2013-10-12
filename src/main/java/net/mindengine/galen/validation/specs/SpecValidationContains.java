@@ -38,40 +38,46 @@ public class SpecValidationContains extends SpecValidation<SpecContains> {
         checkAvailability(mainObject, objectName);
         
         Rect objectArea = mainObject.getArea();
-        List<ErrorArea> errorAreas = new LinkedList<ErrorArea>();
-        List<String> messages = new LinkedList<String>();
         
         List<String> childObjects = fetchChildObjets(spec.getChildObjects(), pageValidation.getPageSpec());
 
+        
+        List<ErrorArea> errorAreas = new LinkedList<ErrorArea>();
+        List<String> errorMessages = new LinkedList<String>();
+        
         for (String childObjectName : childObjects) {
             PageElement childObject = getPageElement(pageValidation, childObjectName);
             if (childObject != null) {
                 if (!childObject.isPresent()) {
-                    messages.add(format(OBJECT_S_IS_ABSENT_ON_PAGE, childObjectName));
+                    throw new ValidationErrorException()
+                        .withMessage(format(OBJECT_S_IS_ABSENT_ON_PAGE, childObjectName));
                 }
                 else if (!childObject.isVisible()) {
-                    messages.add(format(OBJECT_S_IS_NOT_VISIBLE_ON_PAGE, childObjectName));
+                    throw new ValidationErrorException()
+                        .withMessage(format(OBJECT_S_IS_NOT_VISIBLE_ON_PAGE, childObjectName));
                 } 
                 else {
                     Rect childObjectArea = childObject.getArea();
                     if (childObjectArea.getWidth() > 0 && childObjectArea.getHeight() > 0) {
                         if (!childObjectMatches(spec, objectArea, childObjectArea)) {
-                            messages.add(format("\"%s\" is outside \"%s\"", childObjectName, objectName));
                             errorAreas.add(new ErrorArea(childObjectArea, childObjectName));
+                            errorMessages.add(format("\"%s\" is outside \"%s\"", childObjectName, objectName));
                         }
                     }
                     else{
-                        messages.add(format(format(OBJECT_HAS_ZERO_SIZE, childObjectName)));
+                        throw new ValidationErrorException()
+                            .withMessage(format(format(OBJECT_HAS_ZERO_SIZE, childObjectName)));
                     }
                 }
             }
             else {
-                messages.add(format(OBJECT_WITH_NAME_S_IS_NOT_DEFINED_IN_PAGE_SPEC, childObjectName));
+                throw new ValidationErrorException()
+                    .withMessage(format(OBJECT_WITH_NAME_S_IS_NOT_DEFINED_IN_PAGE_SPEC, childObjectName));
             }
         }
         
-        if (messages.size() > 0) {
-            throw new ValidationErrorException(errorAreas, messages);
+        if (errorMessages.size() > 0 ) { 
+            throw new ValidationErrorException(errorAreas, errorMessages).withErrorArea(new ErrorArea(objectArea, objectName));
         }
     }
 
