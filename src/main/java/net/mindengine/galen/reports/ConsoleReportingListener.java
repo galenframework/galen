@@ -86,9 +86,18 @@ public class ConsoleReportingListener implements CompleteListener {
     public void onBeforePage(GalenSuiteRunner galenSuiteRunner, GalenPageRunner pageRunner, GalenPageTest pageTest, Browser browser) {
         out.println("----------------------------------------");
         out.print("Page: ");
-        out.print(pageTest.getTitle());
-        out.print(" ");
-        out.println(GalenUtils.formatScreenSize(pageTest.getScreenSize()));
+        
+        if (pageTest.getTitle() != null) {
+            out.print(pageTest.getTitle());
+        }
+        else {
+            out.print(pageTest.getUrl());
+            if (pageTest.getScreenSize() != null) {
+                out.print(" ");
+                out.println(GalenUtils.formatScreenSize(pageTest.getScreenSize()));
+            }
+        }
+        
     }
 
     @Override
