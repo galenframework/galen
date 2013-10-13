@@ -19,10 +19,10 @@
                 </div>
                 <#list suiteRuns as suiteRun>
                 <div class="suite">
-                    <div class="status passed">${suiteRun.passed}</div>
-                    <div class="status failed">${suiteRun.failed}</div>
-                    <div class="status total">${suiteRun.total}</div>
-                    <div class="status objects">${suiteRun.objectsCount}</div>
+                    <div class="status passed">${suiteRun.passed?c}</div>
+                    <div class="status failed">${suiteRun.failed?c}</div>
+                    <div class="status total">${suiteRun.total?c}</div>
+                    <div class="status objects">${suiteRun.objectsCount?c}</div>
                     <div class="suite-link">
                         <a href="${suiteRun.suiteReportFile}.html">${suiteRun.name}</a>
                     </div>

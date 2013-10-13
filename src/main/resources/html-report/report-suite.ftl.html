@@ -27,7 +27,7 @@
                                 </ul>
                                 <ul class="areas">
                                     <#list spec.errorAreas as area>
-                                    <li data-area="${area.rect.left},${area.rect.top},${area.rect.width},${area.rect.height}">${area.message?html}</li>
+                                    <li data-area="${area.rect.left?c},${area.rect.top?c},${area.rect.width?c},${area.rect.height?c}">${area.message?html}</li>
                                     </#list>
                                 </ul>
                             </li>
