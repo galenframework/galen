@@ -21,14 +21,18 @@
                             <li class="fail" data-screenshot="${spec.screenshot}">
                                 <span>${spec.text?html}</span>
                                 <ul class="error-message">
+                                    <#if spec.errorMessages?has_content>
                                     <#list spec.errorMessages as errorMessage>
                                     <li>${errorMessage?html}</li>
                                     </#list>
+                                    </#if>
                                 </ul>
                                 <ul class="areas">
+                                    <#if spec.errorAreas?has_content>
                                     <#list spec.errorAreas as area>
                                     <li data-area="${area.rect.left?c},${area.rect.top?c},${area.rect.width?c},${area.rect.height?c}">${area.message?html}</li>
                                     </#list>
+                                    </#if>
                                 </ul>
                             </li>
                             <#else>
@@ -40,6 +44,7 @@
                     </ul>
                 </div>
                 </#list>
+                <#if pageTest.globalErrors?has_content>
                 <#list pageTest.globalErrors as globalError>
                 <div class="global-error">
                     <span>${globalError.class.name}: ${globalError.message?html}</span>
@@ -50,6 +55,7 @@
                     </ul>
                 </div>
                 </#list>
+                </#if>
             </div>
             </#list>
         </div>
