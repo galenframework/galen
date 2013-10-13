@@ -163,14 +163,21 @@ public class SpecReader {
             }
         });
         
-        putSpec("inside", new SpecComplexProcessor(expectThese(objectName(), locations()), new SpecComplexInit() {
+        putSpec("inside.*", new SpecComplexProcessor(expectThese(objectName(), locations()), new SpecComplexInit() {
             @SuppressWarnings("unchecked")
             @Override
             public Spec init(String specName, Object[] args) {
+                String leftoverName = specName.substring(6).trim();
+                
                 String objectName = (String) args[0];
                 List<Location> locations = (List<Location>) args[1];
                 
-                return new SpecInside(objectName, locations);
+                SpecInside spec =  new SpecInside(objectName, locations);
+                
+                if (leftoverName.equals("partly")) {
+                    spec.setPartly(true);
+                }
+                return spec;
             }
         }));
         

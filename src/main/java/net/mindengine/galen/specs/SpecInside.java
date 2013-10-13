@@ -19,8 +19,21 @@ import java.util.List;
 
 public class SpecInside extends SpecComplex {
 
+    private boolean partly = false;
     public SpecInside(String objectName, List<Location> locations) {
         super(objectName, locations);
     }
+    
+    public boolean getPartly() {
+        return partly;
+    }
+    public void setPartly(boolean partly) {
+        this.partly = partly;
+    }
+    public SpecInside withPartlyCheck() {
+        setPartly(true);
+        return this;
+    }
+    
 
 }

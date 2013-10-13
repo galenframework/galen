@@ -44,15 +44,16 @@ public class SpecValidationInside extends SpecValidationGeneral<SpecInside> {
     }
 
     @Override
-    protected String verifyLocation(Rect mainArea, Rect secondArea, Location location, PageValidation pageValidation) {
-        
-        Point[] points = mainArea.getPoints();
-        
-        for (Point point : points) {
-            if (!secondArea.contains(point)) {
-                return "not completely inside";
+    protected String verifyLocation(Rect mainArea, Rect secondArea, Location location, PageValidation pageValidation, SpecInside spec) {
+        if (!spec.getPartly()) {
+            Point[] points = mainArea.getPoints();
+            
+            for (Point point : points) {
+                if (!secondArea.contains(point)) {
+                    return "not completely inside";
+                }
             }
         }
-        return super.verifyLocation(mainArea, secondArea, location, pageValidation);
+        return super.verifyLocation(mainArea, secondArea, location, pageValidation, spec);
     }
 }

@@ -62,11 +62,26 @@ public class SpecsReaderTest {
         SpecInside specInside = (SpecInside) spec;
 
         assertThat(specInside.getObject(), is("object"));
+        assertThat(specInside.getPartly(), is(false));
         
         List<Location> locations = specInside.getLocations();
         assertThat(locations.size(), is(1));
         assertThat(specInside.getLocations(), contains(new Location(Range.exact(10), sides(RIGHT))));
         assertThat(spec.getOriginalText(), is("inside: object 10px right"));
+    }
+    
+    @Test
+    public void shouldReadSpec_inside_partly_object_10px_right() {
+        Spec spec = readSpec("inside partly: object 10px right");
+        SpecInside specInside = (SpecInside) spec;
+
+        assertThat(specInside.getObject(), is("object"));
+        assertThat(specInside.getPartly(), is(true));
+        
+        List<Location> locations = specInside.getLocations();
+        assertThat(locations.size(), is(1));
+        assertThat(specInside.getLocations(), contains(new Location(Range.exact(10), sides(RIGHT))));
+        assertThat(spec.getOriginalText(), is("inside partly: object 10px right"));
     }
     
 

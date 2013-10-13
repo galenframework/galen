@@ -147,6 +147,11 @@ public class ValidationTest {
               put("container", element(10, 10, 110, 110));
           }})),
           
+          row(specInsidePartly("container", location(exact(10), LEFT, TOP)), page(new HashMap<String, PageElement>(){{
+              put("object", element(20, 20, 200, 100));
+              put("container", element(10, 10, 110, 110));
+          }})),
+          
           row(specInside("container", location(between(5, 12), RIGHT, TOP)), page(new HashMap<String, PageElement>(){{
               put("object", element(10, 20, 100, 100));
               put("container", element(10, 10, 110, 110));
@@ -453,6 +458,7 @@ public class ValidationTest {
     }
 
 
+    
     @SuppressWarnings("serial")
     @DataProvider
     public Object[][] provideBadSamples() {
@@ -549,11 +555,18 @@ public class ValidationTest {
                   put("container", element(0, 0, 130, 120));
           }})),
           
-          row(new ValidationError(areas(new ErrorArea(new Rect(90, 110, 100, 100), "object"), new ErrorArea(new Rect(100, 100, 100, 100), "container")), 
+          row(new ValidationError(areas(new ErrorArea(new Rect(10, 10, 500, 50), "object"), new ErrorArea(new Rect(0, 0, 130, 120), "container")), 
                   messages("\"object\" is not completely inside")),
-              specInside("container", location(exact(10), RIGHT)), page(new HashMap<String, PageElement>(){{
-                  put("object", element(90, 110, 100, 100));
-                  put("container", element(100, 100, 100, 100));
+              specInside("container", location(exact(10), LEFT)), page(new HashMap<String, PageElement>(){{
+                  put("object", element(10, 10, 500, 50));
+                  put("container", element(0, 0, 130, 120));
+          }})),
+          
+          row(new ValidationError(areas(new ErrorArea(new Rect(190, 110, 500, 500), "object"), new ErrorArea(new Rect(10, 10, 100, 100), "container")), 
+                  messages("\"object\" is 180px left instead of 10px")),
+              specInsidePartly("container", location(exact(10), LEFT)), page(new HashMap<String, PageElement>(){{
+                  put("object", element(190, 110, 500, 500));
+                  put("container", element(10, 10, 100, 100));
           }})),
           
           row(new ValidationError(areas(new ErrorArea(new Rect(30, 10, 50, 50), "object"), new ErrorArea(new Rect(0, 0, 130, 120), "container")), 
@@ -1332,6 +1345,11 @@ public class ValidationTest {
     private SpecInside specInside(String parentObjectName, Location...locations) {
         return new SpecInside(parentObjectName, Arrays.asList(locations));
     }
+
+    private SpecInside specInsidePartly(String parentObjectName, Location...locations) {
+        return new SpecInside(parentObjectName, Arrays.asList(locations)).withPartlyCheck();
+    }
+
     
     private SpecOn specOn(String parentObjectName, Location...locations) {
         return new SpecOn(parentObjectName, Arrays.asList(locations));

@@ -57,7 +57,7 @@ public abstract class SpecValidationGeneral<T extends SpecComplex> extends SpecV
         List<String> messages = new LinkedList<String>();
         
         for (Location location : spec.getLocations()) {
-            String message = verifyLocation(mainArea, secondArea, location, pageValidation);
+            String message = verifyLocation(mainArea, secondArea, location, pageValidation, spec);
             if (message != null) {
                 messages.add(message);
             }
@@ -87,7 +87,7 @@ public abstract class SpecValidationGeneral<T extends SpecComplex> extends SpecV
         return buffer.toString();
     }
 
-    protected String verifyLocation(Rect mainArea, Rect secondArea, Location location, PageValidation pageValidation) {
+    protected String verifyLocation(Rect mainArea, Rect secondArea, Location location, PageValidation pageValidation, T spec) {
         List<String> messages = new LinkedList<String>();
         Range range;
         
