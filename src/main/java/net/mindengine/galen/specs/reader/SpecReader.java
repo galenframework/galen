@@ -33,6 +33,7 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import net.mindengine.galen.parser.ExpectWord;
 import net.mindengine.galen.parser.SyntaxException;
 import net.mindengine.galen.specs.Alignment;
 import net.mindengine.galen.specs.Location;
@@ -53,6 +54,7 @@ import net.mindengine.galen.specs.SpecVertically;
 import net.mindengine.galen.specs.SpecWidth;
 
 public class SpecReader {
+    private static final Pattern CENTERED_ERROR_RATE_PATTERN = Pattern.compile("[0-9]+px");
     private Map<Pattern, SpecProcessor> specsMap = new HashMap<Pattern, SpecProcessor>();
     
     public SpecReader() {
@@ -205,6 +207,7 @@ public class SpecReader {
 			}
         }));
         
+        
         putSpec("centered(\\s+(horizontally|vertically))?\\s+(on|inside)", new SpecProcessor() {
 			@Override
 			public Spec processSpec(String specName, String paramsText) {
@@ -221,11 +224,26 @@ public class SpecReader {
 					location = SpecCentered.Location.fromString(args[1]);
 				}
 				
-				if (paramsText.trim().isEmpty()) {
+				String specValue = paramsText.trim();
+				if (specValue.isEmpty()) {
 					throw new SyntaxException("There is no object defined in spec");
 				}
 				
-				return new SpecCentered(paramsText.trim(), alignment, location);
+				StringCharReader reader = new StringCharReader(specValue);
+				String objectName = new ExpectWord().read(reader);
+				
+				SpecCentered spec = new SpecCentered(objectName, alignment, location);
+				
+				if (reader.hasMore()) {
+				    String theRest = reader.getTheRest();
+				    String errorRateText = theRest.replaceAll("\\s", "");
+				    if (CENTERED_ERROR_RATE_PATTERN.matcher(errorRateText).matches()) {
+				        spec.setErrorRate(Integer.parseInt(errorRateText.replace("px", "")));
+				    }
+				    else throw new SyntaxException("Incorrect error rate syntax: \"" + theRest + "\"");
+				}
+				
+				return spec;
 			}
 		});
         

@@ -458,6 +458,15 @@ public class SpecsReaderTest {
     }
     
     @Test 
+    public void shouldReadSpec_centered_horizontally_on_object_25px() {
+        SpecCentered spec = (SpecCentered)readSpec("centered horizontally on: object 25px");
+        assertThat(spec.getObject(), is("object"));
+        assertThat(spec.getLocation(), is(SpecCentered.Location.ON));
+        assertThat(spec.getAlignment(), is(SpecCentered.Alignment.HORIZONTALLY));
+        assertThat(spec.getErrorRate(), is(25));
+    }
+    
+    @Test 
     public void shouldReadSpec_centered_vertically_on_object() {
     	SpecCentered spec = (SpecCentered)readSpec("centered vertically on: object");
     	assertThat(spec.getObject(), is("object"));
@@ -497,6 +506,11 @@ public class SpecsReaderTest {
     @Test(expectedExceptions={SyntaxException.class}, expectedExceptionsMessageRegExp="Spec text should not be empty") 
     public void givesError_whenTextIsEmpty() {
         readSpec(" ");
+    }
+    
+    @Test(expectedExceptions={SyntaxException.class}, expectedExceptionsMessageRegExp="Incorrect error rate syntax: \" 23 to 123px\"") 
+    public void givesError_withIncorrect_errorRate_inSpec_centered() {
+        readSpec("centered horizontally inside: object 23 to 123px");
     }
     
     private Spec readSpec(String specText) {

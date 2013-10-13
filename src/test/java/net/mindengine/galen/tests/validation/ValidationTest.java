@@ -69,7 +69,6 @@ public class ValidationTest {
     private static final boolean CONTAINS_FULLY = false;
     private static final boolean CONTAINS_PARTLY = true;
     private static final List<ErrorArea> NO_AREA = null;
-    private static final List<ErrorArea> EMPTY_AREA = new LinkedList<ErrorArea>();
 
     
     @Test(dataProvider="provideGoodSamples")
@@ -401,6 +400,15 @@ public class ValidationTest {
               put("object", element(10, 10, 80, 20));
               put("container",  element(0, 0, 100, 100));
           }})),
+          row(specCenteredInside("container", SpecCentered.Alignment.HORIZONTALLY, 30), page(new HashMap<String, PageElement>(){{
+              put("object", element(60, 10, 50, 20));
+              put("container",  element(0, 0, 200, 200));
+          }})),
+          row(specCenteredInside("container", SpecCentered.Alignment.HORIZONTALLY, 30), page(new HashMap<String, PageElement>(){{
+              put("object", element(10, 10, 80, 20));
+              put("container",  element(0, 0, 100, 200));
+          }})),
+          
           row(specCenteredInside("container", SpecCentered.Alignment.VERTICALLY), page(new HashMap<String, PageElement>(){{
               put("object", element(10, 10, 20, 80));
               put("container",  element(0, 0, 100, 100));
@@ -1221,6 +1229,14 @@ public class ValidationTest {
                       put("object", element(20, 20, 80, 60));
                       put("container", element(0, 0, 100, 100));
               }})),
+              
+              
+          row(new ValidationError(areas(new ErrorArea(new Rect(20, 20, 75, 60), "object"), new ErrorArea(new Rect(0, 0, 100, 100), "container")), 
+                  messages("\"object\" is not centered horizontally inside \"container\"")),
+                  specCenteredInside("container", SpecCentered.Alignment.HORIZONTALLY, 10), page(new HashMap<String, PageElement>(){{
+                      put("object", element(20, 20, 75, 60));
+                      put("container", element(0, 0, 100, 100));
+              }})),    
         
           row(new ValidationError(areas(new ErrorArea(new Rect(0, 20, 120, 60), "object"), new ErrorArea(new Rect(10, 10, 100, 100), "container")), 
                   messages("\"object\" is not centered horizontally inside \"container\"")),
@@ -1289,6 +1305,7 @@ public class ValidationTest {
               }})),
         };
     }
+    
     
     private List<ErrorArea> areas(ErrorArea...errorAreas) {
         return Arrays.asList(errorAreas);
@@ -1398,6 +1415,11 @@ public class ValidationTest {
     private SpecCentered specCenteredInside(String object, SpecCentered.Alignment alignment) {
         return new SpecCentered(object, alignment, SpecCentered.Location.INSIDE);
     }
+    
+    private SpecCentered specCenteredInside(String object, SpecCentered.Alignment alignment, int errorRate) {
+        return new SpecCentered(object, alignment, SpecCentered.Location.INSIDE).withErrorRate(errorRate);
+    }
+
 
     public Object[] row (Object...args) {
         return args;

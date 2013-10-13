@@ -71,7 +71,7 @@ public class SpecValidationCentered extends SpecValidation<SpecCentered> {
     }
 
     private void checkCentered(int offsetA, int offsetB, String objectName, SpecCentered spec, String location, String alignment) throws ValidationErrorException {
-        if (offsetA < 0 || offsetB < 0 || Math.abs(offsetA - offsetB) > 2) {
+        if (offsetA < 0 || offsetB < 0 || Math.abs(offsetA - offsetB) > spec.getErrorRate()) {
             throw new ValidationErrorException(String.format("\"%s\" is not centered %s %s \"%s\"", objectName, alignment, location, spec.getObject()));
         }
     }

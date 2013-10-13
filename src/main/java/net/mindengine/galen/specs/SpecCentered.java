@@ -52,6 +52,7 @@ public class SpecCentered extends Spec {
 	private String object;
 	private Alignment alignment;
 	private Location location;
+    private int errorRate = 2;
 	
 	public SpecCentered() {
 		
@@ -80,4 +81,14 @@ public class SpecCentered extends Spec {
 	public void setLocation(Location location) {
 		this.location = location;
 	}
+    public SpecCentered withErrorRate(int errorRate) {
+        this.setErrorRate(errorRate);
+        return this;
+    }
+    public int getErrorRate() {
+        return errorRate;
+    }
+    public void setErrorRate(int errorRate) {
+        this.errorRate = errorRate;
+    }
 }
