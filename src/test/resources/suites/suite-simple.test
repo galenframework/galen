@@ -27,24 +27,24 @@ This is another suite name
         
         
         
-# @ symbol is used for tables, parameterization and constants definitions
+# @@ symbol is used for tables, parameterization and constants definitions
 
-# @ Set browser firefox
-# @ Set hub     http://myhub:9000/wd/hub
+# @@ Set browser firefox
+# @@ Set hub     http://myhub:9000/wd/hub
 
          
-# @ Table tableName
+# @@ Table tableName
 #  | header1   | header 2   |
 #  | value1_1  | value1_2   |
 #  | value2_1  | value2_2   |
 
-# @ Parameterized
+# @@ Parameterized
 #  | header1   | header 2   |
 #  | value1_1  | value1_2   |
 #  | value2_1  | value2_2   |
         
         
-# @ Parameterized using tableName        
+# @@ Parameterized using tableName        
         
 # Suite definition        
 # 1-st level is suite name

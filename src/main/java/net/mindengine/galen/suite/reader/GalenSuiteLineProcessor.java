@@ -29,8 +29,8 @@ public class GalenSuiteLineProcessor {
 
     public void processLine(String line, int number) {
         if (!isBlank(line) && !isCommented(line) && !isSeparator(line)) {
-            if (line.startsWith("@")) {
-                currentNode = processSpecialInstruction(new Line(line.substring(1).trim(), number));
+            if (line.startsWith("@@")) {
+                currentNode = processSpecialInstruction(new Line(line.substring(2).trim(), number));
             }
             else {
                 int level = indentationLevel(line);

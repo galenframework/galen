@@ -1,20 +1,20 @@
 
-@ Set
+@@ Set
     page        some-page.html
     width       640
     height      480
     size        ${width}x${height}
 
-@ Set var_concat ${page} and ${size}
+@@ Set var_concat ${page} and ${size}
 
-@ Set myvar suite
+@@ Set myvar suite
 This is a name of ${myvar}
 ---------------------------------
     http://example.com/${page}  ${size}
         run  selenium/loginToMyProfile.js    '{"myvar" : "${myvar}", "var_concat" : "${var_concat}"}'
 
 # Reseting myvar value
-@ Set myvar suite 2
+@@ Set myvar suite 2
 
 This is a name of ${myvar} and also ${some.system.property}
     http://example.com/${page}  ${size}

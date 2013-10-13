@@ -6,14 +6,14 @@ Test 1
     http://example.com 640x480
         check page1.spec
 
-@ Table some_table
+@@ Table some_table
     | column1 | column2 |
     | 0       |    1    |
     | 1       |    2    |
     
     
     
-@ Parameterized using some_unknown_table
+@@ Parameterized using some_unknown_table
 Test 2 
 -------------------------------
     http://example.com 640x480
