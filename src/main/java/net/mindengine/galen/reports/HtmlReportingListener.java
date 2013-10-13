@@ -196,6 +196,7 @@ public class HtmlReportingListener implements CompleteListener {
         suiteRun.suiteReportFile = String.format("report-%d-%s", getUniqueReportId(), convertToFileName(suite.getName()));
         try {
             suiteRun.listener = new HtmlSuiteReportingListener(reportFolderPath, suiteRun.suiteReportFile, freemarkerConfiguration);
+            suiteRun.listener.onSuiteStarted(galenSuiteRunner, suite);
         } catch (IOException e) {
             e.printStackTrace();
             suiteRun.listener = null;
@@ -204,7 +205,6 @@ public class HtmlReportingListener implements CompleteListener {
         suiteRuns.put(galenSuiteRunner, suiteRun);
         suiteRunList.add(suiteRun);
         
-        suiteRun.listener.onSuiteStarted(galenSuiteRunner, suite);
     }
 
     @Override

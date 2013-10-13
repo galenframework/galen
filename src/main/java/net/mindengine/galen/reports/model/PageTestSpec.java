@@ -15,6 +15,7 @@
 ******************************************************************************/
 package net.mindengine.galen.reports.model;
 
+import java.util.LinkedList;
 import java.util.List;
 
 import net.mindengine.galen.validation.ErrorArea;
@@ -24,8 +25,8 @@ public class PageTestSpec {
     private String text;
     private Boolean failed = false;
     private String screenshot;
-    private List<String> errorMessages;
-    private List<ErrorArea> errorAreas;
+    private List<String> errorMessages = new LinkedList<String>();
+    private List<ErrorArea> errorAreas = new LinkedList<ErrorArea>();
 
     public String getText() {
         return text;
