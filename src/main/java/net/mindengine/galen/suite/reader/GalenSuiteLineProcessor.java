@@ -24,19 +24,31 @@ public class GalenSuiteLineProcessor {
 
     private RootNode rootNode = new RootNode();
     private Node<?> currentNode = rootNode;
+    private boolean disableNextSuite = false;
     
     private static final int INDENTATION = 4;
 
     public void processLine(String line, int number) {
         if (!isBlank(line) && !isCommented(line) && !isSeparator(line)) {
             if (line.startsWith("@@")) {
-                currentNode = processSpecialInstruction(new Line(line.substring(2).trim(), number));
+                Node<?> node = processSpecialInstruction(new Line(line.substring(2).trim(), number));
+                if (node != null) {
+                    currentNode = node;
+                }
             }
             else {
                 int level = indentationLevel(line);
                 
                 Node<?> processingNode = currentNode.findProcessingNodeByLevel(level);
                 Node<?> newNode = processingNode.processNewNode(new Line(line, number));
+                
+                if (newNode instanceof SuiteNode) {
+                    if (disableNextSuite) {
+                        disableNextSuite = false; 
+                        ((SuiteNode)newNode).setDisabled(true);
+                    }
+                }
+                
                 currentNode = newNode;
             }
         }
@@ -69,11 +81,25 @@ public class GalenSuiteLineProcessor {
         else if (firstWord.equals("parameterized")){
             return processParameterized(leftoverLine);
         }
+        else if (firstWord.equals("disabled")) {
+            markNextSuiteAsDisabled();
+            return null;
+        }
         else throw new SuiteReaderException("Unknown instruction: " + firstWord);
+    }
+
+    private void markNextSuiteAsDisabled() {
+        this.disableNextSuite = true;
     }
 
     private Node<?> processParameterized(Line line) {
         ParameterizedNode parameterizedNode = new ParameterizedNode(line);
+        
+        if (disableNextSuite) {
+            parameterizedNode.setDisabled(true);
+            disableNextSuite = false;
+        }
+        
         currentNode.add(parameterizedNode);
         return parameterizedNode;
     }

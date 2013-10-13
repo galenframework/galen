@@ -56,11 +56,15 @@ public class RootNode extends Node<List<GalenSuite>> {
         for (Node<?> childNode : getChildNodes()) {
             if (childNode instanceof SuiteNode) {
                 SuiteNode suiteNode = (SuiteNode)childNode;
-                suites.add(suiteNode.build(context));
+                if (suiteNode.isEnabled()) {
+                    suites.add(suiteNode.build(context));
+                }
             }
             else if (childNode instanceof ParameterizedNode) {
                 ParameterizedNode parameterizedNode = (ParameterizedNode)childNode;
-                suites.addAll(parameterizedNode.build(context));
+                if (parameterizedNode.isEnabled()) {
+                    suites.addAll(parameterizedNode.build(context));
+                }
             }
             else {
                 childNode.build(context);

@@ -24,6 +24,7 @@ import net.mindengine.galen.suite.GalenSuite;
 
 public class SuiteNode extends Node<GalenSuite> {
 
+    private boolean disabled = false;
 
     public SuiteNode(Line line) {
         super(line);
@@ -52,6 +53,18 @@ public class SuiteNode extends Node<GalenSuite> {
         }
         
         return suite;
+    }
+
+    public boolean isDisabled() {
+        return disabled;
+    }
+
+    public void setDisabled(boolean disabled) {
+        this.disabled = disabled;
+    }
+
+    public boolean isEnabled() {
+        return !disabled;
     }
     
 

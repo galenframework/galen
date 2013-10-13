@@ -231,6 +231,19 @@ public class GalenSuiteReaderTest {
        
     }
     
+    @Test
+    public void shouldNotInclude_disabledSuites() throws IOException {
+        GalenSuiteReader reader = new GalenSuiteReader();
+        
+        List<GalenSuite> galenSuites = reader.read(new File(getClass().getResource("/suites/suite-disabled.test").getFile()));
+        
+        assertThat("Amount of suites should be", galenSuites.size(), is(3));
+        assertThat(galenSuites.get(0).getName(), is("Suite 1"));
+        assertThat(galenSuites.get(1).getName(), is("Suite 2"));
+        assertThat(galenSuites.get(2).getName(), is("Suite 3"));
+    }
+    
+    
     private List<GalenPageAction> actions(GalenPageAction...actions) {
         List<GalenPageAction> list = new LinkedList<GalenPageAction>();
         for (GalenPageAction action : actions) {

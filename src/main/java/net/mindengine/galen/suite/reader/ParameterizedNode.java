@@ -28,6 +28,8 @@ import net.mindengine.galen.suite.GalenSuite;
 public class ParameterizedNode extends Node<List<GalenSuite>>{
 
     private Node<?> toParameterize;
+    
+    private boolean disabled = false;
 
     public ParameterizedNode(Line line) {
         super(line);
@@ -143,6 +145,18 @@ public class ParameterizedNode extends Node<List<GalenSuite>>{
 
     public void setToParameterize(Node<?> node) {
         this.toParameterize = node;        
+    }
+
+    public boolean isDisabled() {
+        return disabled;
+    }
+
+    public void setDisabled(boolean disabled) {
+        this.disabled = disabled;
+    }
+
+    public boolean isEnabled() {
+        return !disabled;
     }
 
 }

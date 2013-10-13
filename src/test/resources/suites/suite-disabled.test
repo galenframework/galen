@@ -1,0 +1,26 @@
+
+
+Suite 1
+    http://example.com 640x480
+        check some.spec 
+
+@@ Disabled
+This is a disabled suite
+    http://example.com 640x480
+        check some.spec 
+
+Suite 2
+    http://example.com 640x480
+        check some.spec 
+
+@@ Disabled
+@@ Parameterized
+    | col1 | col2|
+    | 1    |   2 |
+Another parameterized disabled suite
+    http://example.com 640x480
+        check some.spec 
+
+Suite 3
+    http://example.com 640x480
+        check some.spec 
