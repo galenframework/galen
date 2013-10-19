@@ -118,7 +118,7 @@ public class StateDoingSection extends State {
     }
 
     private String readObjectNameFromLine(String line) {
-        String name = line.trim().replace(":", "");
+        String name = line.replace(":", "").trim();
         return name;
     }
 
