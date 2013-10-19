@@ -16,14 +16,14 @@ This is a name of suite
     
     
     http://example.com/page2    1024x768
-        check page2.spec
-        check page3.spec
+           check page2.spec
+           check page3.spec
         
         
 This is another suite name
 ------------------------------------------------
-    selenium ie http://example.com/page3    320x240
-        check page3.spec
+ selenium ie http://example.com/page3    320x240
+   check page3.spec
         
         
         

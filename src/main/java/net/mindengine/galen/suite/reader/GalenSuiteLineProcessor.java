@@ -25,8 +25,6 @@ public class GalenSuiteLineProcessor {
     private RootNode rootNode = new RootNode();
     private Node<?> currentNode = rootNode;
     private boolean disableNextSuite = false;
-    
-    private static final int INDENTATION = 4;
 
     public void processLine(String line, int number) {
         if (!isBlank(line) && !isCommented(line) && !isSeparator(line)) {
@@ -37,9 +35,9 @@ public class GalenSuiteLineProcessor {
                 }
             }
             else {
-                int level = indentationLevel(line);
+                int spaces = indentationSpaces(line);
                 
-                Node<?> processingNode = currentNode.findProcessingNodeByLevel(level);
+                Node<?> processingNode = currentNode.findProcessingNodeByIndentation(spaces);
                 Node<?> newNode = processingNode.processNewNode(new Line(line, number));
                 
                 if (newNode instanceof SuiteNode) {
@@ -120,19 +118,19 @@ public class GalenSuiteLineProcessor {
         return rootNode.build(new BashTemplateContext());
     }
 
-    private int indentationLevel(String line) {
+    private int indentationSpaces(String line) {
         int spacesCount = 0;
         for (int i=0; i<line.length(); i++) {
             if (line.charAt(i) == ' ') {
                 spacesCount++;
             }
             else {
-                return (int) Math.floor(spacesCount / INDENTATION);
+                return spacesCount;
             }
         }
         return 0;
     }
-
+    
     private boolean isSeparator(String line) {
         line = line.trim();
         if (line.length() > 3) {

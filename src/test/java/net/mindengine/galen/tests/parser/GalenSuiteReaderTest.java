@@ -285,7 +285,9 @@ public class GalenSuiteReaderTest {
             {"/suites/suite-with-error-table-wrong-amount-of-columns-2.test", 4, "Incorrect format. Should end with '|'"},
             {"/suites/suite-with-error-table-wrong-amount-of-columns-3.test", 4, "Incorrect format. Should start with '|'"},
             {"/suites/suite-with-error-parameterization-merge-tables.test", 12, "Cannot merge table \"table2\". Perhaps it has different amount of columns"},
-            {"/suites/suite-with-error-parameterization-wrong-amount-of-columns.test", 5, "Amount of cells in a row is not the same in header"}
+            {"/suites/suite-with-error-parameterization-wrong-amount-of-columns.test", 5, "Amount of cells in a row is not the same in header"},
+            {"/suites/suite-with-error-wrong-indentation-1.test", 8, "Incorrect indentation. Amount of spaces in indentation should be the same within one level"},
+            {"/suites/suite-with-error-wrong-indentation-2.test", 6, "Incorrect indentation. Should use from 1 to 8 spaces"}
         };
     }
 }

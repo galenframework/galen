@@ -31,10 +31,9 @@ public class RootNode extends Node<List<GalenSuite>> {
     
     
     @Override
-    public Node<?> findProcessingNodeByLevel(int level) {
+    public Node<?> findProcessingNodeByIndentation(int spaces) {
         return this;
     }
-
 
     @Override
     public Node<?> processNewNode(Line line) {

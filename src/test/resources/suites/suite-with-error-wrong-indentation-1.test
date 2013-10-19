@@ -1,0 +1,9 @@
+
+
+
+
+Suite 1
+    http://example.com
+        inject js
+   http://example.com/2
+        inject js

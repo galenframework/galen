@@ -26,32 +26,59 @@ public abstract class Node<T> {
     private int level = 0;
     private Node<?> parent;
     private Line line;
+    private int spacesIndentation = 0;
 
     public Node(Line line) {
         this.setLine(line);
+        this.setSpacesIndentation(calculateSpacesIndentation());
     }
     
+    private int calculateSpacesIndentation() {
+        int spaces = 0;
+        
+        if (line != null && line.getText() != null) {
+            for (int i=0; i<line.getText().length(); i++) {
+                if (line.getText().charAt(i) == ' ') {
+                    spaces++;
+                }
+                else return spaces;
+            }
+        }
+        return spaces;
+    }
+
     private List<Node<?>> childNodes = new LinkedList<Node<?>>();
     
     protected void add(Node<?> childNode) {
         childNode.parent = this;
         childNode.level = this.level + 1;
+        
+        int spaceDiff = childNode.getSpacesIndentation() - this.getSpacesIndentation();
+        if (spaceDiff > 8) {
+            throw new SyntaxException(childNode.line, "Incorrect indentation. Should use from 1 to 8 spaces");
+        }
+        
+        if (getChildNodes().size() > 0) {
+            if (getChildNodes().get(0).getSpacesIndentation() != childNode.getSpacesIndentation()) {
+                throw new SyntaxException(childNode.line, "Incorrect indentation. Amount of spaces in indentation should be the same within one level");
+            }
+        }
+        
         getChildNodes().add(childNode);
     }
     
     public abstract T build(BashTemplateContext context);
 
-    public Node<?> findProcessingNodeByLevel(int level) {
-        if (this.level == level) {
+    
+    public Node<?> findProcessingNodeByIndentation(int spaces) {
+        if (this.spacesIndentation < spaces) {
             return this;
         }
-        else if (this.level > level) {
-            return parent.findProcessingNodeByLevel(level);
-        }
         else {
-            throw new SyntaxException(getLine(), "Wrong nesting");
+            return parent.findProcessingNodeByIndentation(spaces);
         }
     }
+
 
     public abstract Node<?> processNewNode(Line line);
 
@@ -75,4 +102,13 @@ public abstract class Node<T> {
         this.line = line;
     }
 
+    public int getSpacesIndentation() {
+        return spacesIndentation;
+    }
+
+    public void setSpacesIndentation(int spacesIndentation) {
+        this.spacesIndentation = spacesIndentation;
+    }
+
+    
 }
