@@ -68,11 +68,11 @@ public class ExpectationsTest {
            {"\t9px", Range.exact(9.0)},
            {"\t9\t\tpx", Range.exact(9.0)},
            {"-49px", Range.exact(-49.0)},
-           {"~100px", Range.between(99.0, 101.0)},
-           {"~1000px", Range.between(990.0, 1010.0)},
-           {"~1px", Range.between(0.0, 2.0)},
-           {"~0px", Range.between(-1.0, 1.0)},
-           {" ~0px", Range.between(-1.0, 1.0)},
+           {"~100px", Range.between(98.0, 102.0)},
+           {"~1000px", Range.between(980.0, 1020.0)},
+           {"~1px", Range.between(-1.0, 3.0)},
+           {"~0px", Range.between(-2.0, 2.0)},
+           {" ~0px", Range.between(-2.0, 2.0)},
            {">10px", Range.greaterThan(10.0)},
            {"> 10px", Range.greaterThan(10.0)},
            {"<10px", Range.lessThan(10.0)},
@@ -81,7 +81,7 @@ public class ExpectationsTest {
            {"15.05% of screen/width", Range.exact(15.05).withPercentOf("screen/width")},
            {"15 to 40% of   screen/height", Range.between(15.0, 40.0).withPercentOf("screen/height")},
            {"15 to 40% of item-1/some-other-stuff/a/b/c2", Range.between(15.0, 40.0).withPercentOf("item-1/some-other-stuff/a/b/c2")},
-           {"~40% of item-1/some-other-stuff/a/b/c2", Range.between(39.0, 41.0).withPercentOf("item-1/some-other-stuff/a/b/c2")}
+           {"~40% of item-1/some-other-stuff/a/b/c2", Range.between(38.0, 42.0).withPercentOf("item-1/some-other-stuff/a/b/c2")}
         };
     }
     

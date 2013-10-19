@@ -146,7 +146,7 @@ public class SpecsReaderTest {
         assertThat(locations.size(), is(2));
         
         Assert.assertEquals(new Location(Range.exact(20), sides(LEFT)), spec.getLocations().get(0));
-        Assert.assertEquals(new Location(Range.between(29, 31), sides(TOP)), spec.getLocations().get(1));
+        Assert.assertEquals(new Location(Range.between(28, 32), sides(TOP)), spec.getLocations().get(1));
         
         assertThat(spec.getOriginalText(), is("inside: object 20px left, ~30px top"));
     }
@@ -206,7 +206,7 @@ public class SpecsReaderTest {
         
         List<Location> locations = spec.getLocations();
         assertThat(locations.size(), is(1));
-        assertThat(spec.getLocations(), contains(new Location(Range.between(-1, 1), sides(LEFT))));
+        assertThat(spec.getLocations(), contains(new Location(Range.between(-2, 2), sides(LEFT))));
         assertThat(spec.getOriginalText(), is("near: button ~0px left"));
     }
     
