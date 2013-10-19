@@ -9,7 +9,7 @@ header-text		css	 #head h1
 @ all
 ---------------------------------
 header
-	width: 100% of screen/width
+    width: 100% of screen/width
 	
 header-text:
-	text is: Awesome website!
+    text is: Awesome website!

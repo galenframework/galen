@@ -251,6 +251,39 @@ public class PageSpecsReaderTest {
         assertThat(exception.getLine(), is(7));
     }
     
+    @Test 
+    public void givesError_ifThereAre_tooManySpacesInIndentation() throws Exception {
+        FileSyntaxException exception = expectExceptionFromReading("/negative-specs/incorrect-indentation-1.spec");
+        
+        String fullSpecPath = getClass().getResource("/negative-specs/incorrect-indentation-1.spec").getFile();
+        
+        assertThat(exception.getMessage(), is("Incorrect indentation. Use from 1 to 8 spaces for indentation (in " + fullSpecPath +":9)"));
+        assertThat(exception.getFilePath(), endsWith("/incorrect-indentation-1.spec"));
+        assertThat(exception.getLine(), is(9));
+    }
+    
+    @Test 
+    public void givesError_ifThereAre_differentIndentation() throws Exception {
+        FileSyntaxException exception = expectExceptionFromReading("/negative-specs/incorrect-indentation-2.spec");
+        
+        String fullSpecPath = getClass().getResource("/negative-specs/incorrect-indentation-2.spec").getFile();
+        
+        assertThat(exception.getMessage(), is("Incorrect indentation. You should use same indentation within one spec (in " + fullSpecPath +":10)"));
+        assertThat(exception.getFilePath(), endsWith("/incorrect-indentation-2.spec"));
+        assertThat(exception.getLine(), is(10));
+    }
+    
+    @Test 
+    public void givesError_ifThereAre_tabsIndentations() throws Exception {
+        FileSyntaxException exception = expectExceptionFromReading("/negative-specs/incorrect-indentation-3.spec");
+        
+        String fullSpecPath = getClass().getResource("/negative-specs/incorrect-indentation-3.spec").getFile();
+        
+        assertThat(exception.getMessage(), is("Incorrect indentation. Should not use tabs. Use spaces (in " + fullSpecPath +":9)"));
+        assertThat(exception.getFilePath(), endsWith("/incorrect-indentation-3.spec"));
+        assertThat(exception.getLine(), is(9));
+    }
+    
     @Test
     public void shouldImport_otherSpecs_fromOtherFiles() throws Exception {
     	PageSpec pageSpec = pageSpecReader.read(new File(getClass().getResource("/spec-import-test/main.spec").getFile()));
@@ -276,7 +309,6 @@ public class PageSpecsReaderTest {
     	assertThat(objects.size(), is(1));
     	assertThat(objects.get(0).getObjectName(), is("content"));
     	
-    	//TODO check recursive import doesn't give error
     }
     
     @Test
@@ -290,6 +322,8 @@ public class PageSpecsReaderTest {
     	assertThat(specs.get(1).getOriginalText(), is("inside: box-4 10px left"));
     	
     }
+    
+    
 
     private FileSyntaxException expectExceptionFromReading(String file) throws IOException {
         try {

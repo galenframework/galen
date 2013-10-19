@@ -13,5 +13,5 @@ content		id		content
 @ all
 -------------------------
 content
-	below: header 20px
+    below: header 20px
 

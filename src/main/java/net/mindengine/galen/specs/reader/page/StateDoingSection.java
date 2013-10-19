@@ -26,8 +26,10 @@ public class StateDoingSection extends State {
 
     private PageSection section;
     private ObjectSpecs currentObjectSpecs;
-    
+    private SpecReader specReader = new SpecReader();
+    private String[] toParameterize;
     private Parameterization currentParameterization = null;
+    private int currentIndentationLevel;
     
     
     private class Parameterization {
@@ -47,8 +49,6 @@ public class StateDoingSection extends State {
         }
     }
     
-    private SpecReader specReader = new SpecReader();
-    private String[] toParameterize;
     public StateDoingSection(PageSection section) {
         this.section = section;
     }
@@ -123,7 +123,45 @@ public class StateDoingSection extends State {
     }
 
     private boolean startsWithIndentation(String line) {
-        return line.startsWith("\t") || line.startsWith("  ");
+        if (line.startsWith("\t")) {
+            throw new SyntaxException(UNKNOWN_LINE, "Incorrect indentation. Should not use tabs. Use spaces");
+        }
+        
+        int indentationLevel = getIndentationFrom(line).length();
+        if (indentationLevel > 8 ) {
+            throw new SyntaxException(UNKNOWN_LINE, "Incorrect indentation. Use from 1 to 8 spaces for indentation");
+        }
+        else if (indentationLevel == 0) {
+            currentIndentationLevel = 0;
+            return false;
+        }
+        else {
+            if (currentIndentationLevel > 0) {
+                if (currentIndentationLevel != indentationLevel) {
+                    throw new SyntaxException(UNKNOWN_LINE, "Incorrect indentation. You should use same indentation within one spec");
+                }
+            }
+            else {
+                currentIndentationLevel = indentationLevel;
+            }
+            
+            return true;
+        }
+    }
+
+    private String getIndentationFrom(String line) {
+        StringBuffer buffer = new StringBuffer();
+        for (int i=0; i<line.length(); i++) {
+            char symbol = line.charAt(i);
+            if (symbol != ' ') {
+                return buffer.toString();
+            }
+            else {
+                buffer.append(symbol);
+            }
+        }
+        
+        return buffer.toString();
     }
 
     public void parameterizeNextObject(String[] parameters) {
