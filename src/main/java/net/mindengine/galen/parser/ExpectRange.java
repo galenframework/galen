@@ -19,6 +19,7 @@ import static java.lang.String.format;
 import static net.mindengine.galen.parser.Expectations.isDelimeter;
 import static net.mindengine.galen.parser.Expectations.isNumeric;
 import static net.mindengine.galen.suite.reader.Line.UNKNOWN_LINE;
+import net.mindengine.galen.config.GalenConfig;
 import net.mindengine.galen.specs.Range;
 import net.mindengine.galen.specs.reader.StringCharReader;
 
@@ -79,11 +80,15 @@ public class ExpectRange implements Expectation<Range>{
 
     private Range createRange(Double firstValue, RangeType rangeType) {
         if (rangeType == RangeType.APPROXIMATE) {
-            Double delta = Math.abs(firstValue) / 100;
-            if (delta < 1.0) {
-                delta = 1.0;
-            }
+            Double delta = 0.0;
+            int approximationConfig = GalenConfig.getConfig().getRangeApproximation();
             
+            if (Math.abs(firstValue) > 100) {
+                delta = ((double)approximationConfig) * Math.abs(firstValue) / 100.0;
+            }
+            else {
+                delta = (double) approximationConfig;
+            }
             return Range.between(firstValue - delta, firstValue + delta);
         }
         else if (rangeType == RangeType.GREATER_THAN) {

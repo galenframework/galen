@@ -23,6 +23,7 @@ import static org.hamcrest.Matchers.is;
 import java.awt.Dimension;
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
 
 import net.mindengine.galen.GalenMain;
@@ -36,7 +37,7 @@ import com.google.common.io.Files;
 public class GalenMainTest {
 
 
-    @Test public void shouldRun_singleTestSuccessfully() throws IOException {
+    @Test public void shouldRun_singleTestSuccessfully() throws IOException, SecurityException, IllegalArgumentException, ClassNotFoundException, NoSuchMethodException, InstantiationException, IllegalAccessException, InvocationTargetException {
         String testUrl = "file://" + getClass().getResource("/html/page-nice.html").getFile();
         System.setProperty("url", testUrl);
         System.setProperty("spec.path", getClass().getResource("/html/page.spec").getFile());
@@ -72,7 +73,7 @@ public class GalenMainTest {
     }
     
     
-    @Test public void shouldFindAndRun_allTestsRecursivelly() throws IOException {
+    @Test public void shouldFindAndRun_allTestsRecursivelly() throws IOException, SecurityException, IllegalArgumentException, ClassNotFoundException, NoSuchMethodException, InstantiationException, IllegalAccessException, InvocationTargetException {
         String testUrl = "file://" + getClass().getResource("/html/page-nice.html").getFile();
         System.setProperty("url", testUrl);
         System.setProperty("spec.path", getClass().getResource("/html/page.spec").getFile());
@@ -101,7 +102,7 @@ public class GalenMainTest {
         assertThat(testngReportContent, containsString("<test name=\"" + testUrl + " 640x480\">"));
     }
     
-    @Test public void shouldRun_simplePageCheck() throws IOException {
+    @Test public void shouldRun_simplePageCheck() throws IOException, SecurityException, IllegalArgumentException, ClassNotFoundException, NoSuchMethodException, InstantiationException, IllegalAccessException, InvocationTargetException {
         String testUrl = "file://" + getClass().getResource("/html/page-nice.html").getFile();
         String pageSpec = getClass().getResource("/html/page.spec").getFile();
         File reportsDir = Files.createTempDir();
@@ -123,7 +124,7 @@ public class GalenMainTest {
         assertThat(testngReportContent, containsString("<test name=\"" + testUrl + " 450x500\">"));
     }
     
-    @Test public void shouldGiveError_whenPageSpecIsIncorrect() throws IOException {
+    @Test public void shouldGiveError_whenPageSpecIsIncorrect() throws IOException, SecurityException, IllegalArgumentException, ClassNotFoundException, NoSuchMethodException, InstantiationException, IllegalAccessException, InvocationTargetException {
         String testUrl = "file://" + getClass().getResource("/html/page-nice.html").getFile();
         String pageSpec = getClass().getResource("/negative-specs/invalid-spec.spec").getFile();
         File reportsDir = Files.createTempDir();

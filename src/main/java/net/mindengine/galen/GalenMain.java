@@ -20,10 +20,13 @@ import static java.util.Arrays.asList;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.util.LinkedList;
 import java.util.List;
 
 import net.mindengine.galen.browser.SeleniumBrowserFactory;
+import net.mindengine.galen.config.GalenConfig;
 import net.mindengine.galen.reports.ConsoleReportingListener;
 import net.mindengine.galen.reports.HtmlReportingListener;
 import net.mindengine.galen.reports.TestngReportingListener;
@@ -43,17 +46,8 @@ public class GalenMain {
     
     List<CompleteListener> listeners;
 
-    public void execute(GalenArguments arguments) throws IOException {
-        CombinedListener combinedListener = new CombinedListener();
-        
-        combinedListener.add(new ConsoleReportingListener(System.out, System.err));
-        
-        if (arguments.getHtmlReport() != null) {
-            combinedListener.add(new HtmlReportingListener(arguments.getHtmlReport()));
-        }
-        if (arguments.getTestngReport() != null) {
-            combinedListener.add(new TestngReportingListener(arguments.getTestngReport()));
-        }
+    public void execute(GalenArguments arguments) throws IOException, SecurityException, IllegalArgumentException, ClassNotFoundException, NoSuchMethodException, InstantiationException, IllegalAccessException, InvocationTargetException {
+        CombinedListener combinedListener = createListeners(arguments);
         
         if ("test".equals(arguments.getAction())) {
             runTests(arguments, combinedListener);
@@ -64,7 +58,39 @@ public class GalenMain {
         
         combinedListener.done();
     }
+
+    private CombinedListener createListeners(GalenArguments arguments) throws IOException, SecurityException, IllegalArgumentException, ClassNotFoundException, NoSuchMethodException, InstantiationException, IllegalAccessException, InvocationTargetException {
+        CombinedListener combinedListener = new CombinedListener();
+        combinedListener.add(new ConsoleReportingListener(System.out, System.err));
+        
+        if (arguments.getHtmlReport() != null) {
+            combinedListener.add(new HtmlReportingListener(arguments.getHtmlReport()));
+        }
+        if (arguments.getTestngReport() != null) {
+            combinedListener.add(new TestngReportingListener(arguments.getTestngReport()));
+        }
+        
+        //Adding all user defined listeners
+        List<CompleteListener> configuredListeners = getConfiguredListeners();
+        for (CompleteListener configuredListener : configuredListeners) {
+            combinedListener.add(configuredListener);
+        }
+        
+        return combinedListener;
+    }
     
+    @SuppressWarnings("unchecked")
+    public List<CompleteListener> getConfiguredListeners() throws ClassNotFoundException, SecurityException, NoSuchMethodException, IllegalArgumentException, InstantiationException, IllegalAccessException, InvocationTargetException {
+        List<CompleteListener> configuredListeners = new LinkedList<CompleteListener>();
+        List<String> classNames = GalenConfig.getConfig().getReportingListeners();
+        
+        for (String className : classNames) {
+            Constructor<CompleteListener> constructor = (Constructor<CompleteListener>) Class.forName(className).getConstructor();
+            configuredListeners.add(constructor.newInstance());
+        }
+        return configuredListeners;
+    }
+
     private void performCheck(GalenArguments arguments, CombinedListener listener) throws IOException {
         verifyArgumentsForPageCheck(arguments);
         
@@ -108,7 +134,7 @@ public class GalenMain {
         
     }
 
-    public static void main(String[] args) throws ParseException, IOException {
+    public static void main(String[] args) throws ParseException, IOException, SecurityException, IllegalArgumentException, ClassNotFoundException, NoSuchMethodException, InstantiationException, IllegalAccessException, InvocationTargetException {
         new GalenMain().execute(GalenArguments.parse(args));
     }
 

@@ -1,0 +1,6 @@
+# This is a test config
+
+
+galen.range.approximation = 3
+
+galen.reporting.listeners = net.mindengine.CustomListener, net.mindengine.CustomListener2
