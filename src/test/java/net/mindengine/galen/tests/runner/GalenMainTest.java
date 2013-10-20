@@ -102,6 +102,25 @@ public class GalenMainTest {
         assertThat(testngReportContent, containsString("<test name=\"" + testUrl + " 640x480\">"));
     }
     
+    @Test public void shouldFindAndRun_allTestsRecursivelly_inParallel() throws IOException, SecurityException, IllegalArgumentException, ClassNotFoundException, NoSuchMethodException, InstantiationException, IllegalAccessException, InvocationTargetException {
+        String testUrl = "file://" + getClass().getResource("/html/page-nice.html").getFile();
+        System.setProperty("url", testUrl);
+        System.setProperty("spec.path", getClass().getResource("/html/page.spec").getFile());
+        
+        GalenMain galen = new GalenMain();
+        
+        File reportsDir = Files.createTempDir();
+        String testngReportPath = reportsDir.getAbsolutePath() + "/testng-report.html";
+        
+        galen.execute(new GalenArguments()
+            .withAction("test")
+            .withPaths(asList(getClass().getResource("/suites/to-run/recursive-check").getFile()))
+            .withRecursive(true)
+            .withTestngReport(testngReportPath)
+            .withParallelSuites(5)
+            );
+    }
+    
     @Test public void shouldRun_simplePageCheck() throws IOException, SecurityException, IllegalArgumentException, ClassNotFoundException, NoSuchMethodException, InstantiationException, IllegalAccessException, InvocationTargetException {
         String testUrl = "file://" + getClass().getResource("/html/page-nice.html").getFile();
         String pageSpec = getClass().getResource("/html/page.spec").getFile();

@@ -24,6 +24,8 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import net.mindengine.galen.browser.SeleniumBrowserFactory;
 import net.mindengine.galen.config.GalenConfig;
@@ -116,7 +118,7 @@ public class GalenMain {
             galenSuites.add(suite);
         }
         
-        runSuites(galenSuites, listener);
+        runSuites(arguments, galenSuites, listener);
     }
 
     private void verifyArgumentsForPageCheck(GalenArguments arguments) {
@@ -157,14 +159,14 @@ public class GalenMain {
         }
         
         if (testFiles.size() > 0) {
-            runTestFiles(testFiles, listener);
+            runTestFiles(testFiles, listener, arguments);
         }
         else {
             throw new RuntimeException("Couldn't find any test files");
         }
     }
 
-    private void runTestFiles(List<File> testFiles, CompleteListener listener) throws IOException {
+    private void runTestFiles(List<File> testFiles, CompleteListener listener, GalenArguments arguments) throws IOException {
         GalenSuiteReader reader = new GalenSuiteReader();
         
         List<GalenSuite> suites = new LinkedList<GalenSuite>();
@@ -172,16 +174,46 @@ public class GalenMain {
             suites.addAll(reader.read(file));
         }
         
-        runSuites(suites, listener);
+        runSuites(arguments, suites, listener);
     }
 
-    private void runSuites(List<GalenSuite> suites, CompleteListener listener) {
+    private void runSuites(GalenArguments arguments, List<GalenSuite> suites, CompleteListener listener) {
+        
+        if (arguments.getParallelSuites() > 1) {
+            runSuitesInThreads(suites, arguments.getParallelSuites(), listener);
+        }
+        else {
+            runSuitesInSingleThread(suites, listener);
+        }
+    }
+
+    private void runSuitesInSingleThread(List<GalenSuite> suites, CompleteListener listener) {
         GalenSuiteRunner suiteRunner = new GalenSuiteRunner();
         suiteRunner.setSuiteListener(listener);
         suiteRunner.setValidationListener(listener);
         
         for (GalenSuite suite : suites) {
             suiteRunner.runSuite(suite);
+        }
+    }
+
+    private void runSuitesInThreads(List<GalenSuite> suites, int parallelSuites, final CompleteListener listener) {
+        ExecutorService executor = Executors.newFixedThreadPool(parallelSuites);
+        for (final GalenSuite suite : suites) {
+            Runnable thread = new Runnable() {
+                @Override
+                public void run() {
+                    GalenSuiteRunner suiteRunner = new GalenSuiteRunner();
+                    suiteRunner.setSuiteListener(listener);
+                    suiteRunner.setValidationListener(listener);
+                    suiteRunner.runSuite(suite);
+                }
+            };
+            
+            executor.execute(thread);
+        }
+        executor.shutdown();
+        while (!executor.isTerminated()) {
         }
     }
 
