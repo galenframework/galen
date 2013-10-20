@@ -15,6 +15,8 @@
 ******************************************************************************/
 package net.mindengine.galen.browser;
 
+import net.mindengine.galen.config.GalenConfig;
+
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -25,7 +27,7 @@ public class SeleniumBrowserFactory implements BrowserFactory {
     public static final String FIREFOX = "firefox";
     public static final String CHROME = "chrome";
     public static final String IE = "ie";
-    private String browserType = FIREFOX;
+    private String browserType = GalenConfig.getConfig().getDefaultBrowser();
 
     public SeleniumBrowserFactory(String browserType) {
         this.browserType = browserType;

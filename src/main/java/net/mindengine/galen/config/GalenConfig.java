@@ -26,8 +26,9 @@ import java.util.Properties;
 public class GalenConfig {
     
     private final static GalenConfig instance = new GalenConfig();
-    private Integer rangeApproximation;
+    private int rangeApproximation;
     private List<String> reportingListeners;
+    private String defaultBrowser;
     
     private GalenConfig() {
         try {
@@ -50,7 +51,7 @@ public class GalenConfig {
         
         rangeApproximation = Integer.parseInt(readProperty(prop, "galen.range.approximation", "2"));
         reportingListeners = converCommaSeparatedList(readProperty(prop, "galen.reporting.listeners", ""));
-        
+        defaultBrowser = readProperty(prop, "galen.default.browser", "firefox");
     }
 
     private List<String> converCommaSeparatedList(String text) {
@@ -78,12 +79,16 @@ public class GalenConfig {
         loadConfig();
     }
 
-    public Integer getRangeApproximation() {
+    public int getRangeApproximation() {
         return this.rangeApproximation;
     }
 
     public List<String> getReportingListeners() {
         return this.reportingListeners;
+    }
+
+    public String getDefaultBrowser() {
+        return defaultBrowser;
     }
 
 }

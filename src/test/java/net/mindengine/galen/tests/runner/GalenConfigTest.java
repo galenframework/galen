@@ -35,6 +35,7 @@ import net.mindengine.galen.specs.Range;
 import net.mindengine.galen.specs.reader.StringCharReader;
 
 import org.apache.commons.io.FileUtils;
+import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.testng.annotations.Test;
 
@@ -53,7 +54,7 @@ public class GalenConfigTest {
         
         configFile.delete();
         
-        assertThat(config.getRangeApproximation(), is(3));
+        MatcherAssert.assertThat(config.getRangeApproximation(), is(3));
         assertThat(config.getReportingListeners(), Matchers.contains("net.mindengine.CustomListener", "net.mindengine.CustomListener2"));
     }
     

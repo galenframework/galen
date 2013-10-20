@@ -38,6 +38,7 @@ import net.mindengine.galen.specs.Side;
 import net.mindengine.galen.specs.reader.StringCharReader;
 
 import org.apache.commons.lang3.StringEscapeUtils;
+import org.hamcrest.MatcherAssert;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
@@ -47,7 +48,7 @@ public class ExpectationsTest {
     public void expectRangeTest(String textForParsing, Range expected) {
         StringCharReader stringCharReader = new StringCharReader(textForParsing);
         Range range = new ExpectRange().read(stringCharReader);
-        assertThat(range, is(expected));
+        MatcherAssert.assertThat(range, is(expected));
     }
     
     
