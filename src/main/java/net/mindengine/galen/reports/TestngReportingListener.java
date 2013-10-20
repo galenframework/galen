@@ -44,9 +44,9 @@ public class TestngReportingListener implements CompleteListener {
 
     private XmlNode rootNode = node("testng-results");
     private XmlBuilder xml = new XmlBuilder(XmlBuilder.XML_DECLARATION, rootNode);
-    private XmlNode currentSuiteNode;
-    private XmlNode currentPageNode;
-    private XmlNode currentObjectNode;
+    private ThreadLocal<XmlNode> currentSuiteNode = new ThreadLocal<XmlBuilder.XmlNode>();
+    private ThreadLocal<XmlNode> currentPageNode = new ThreadLocal<XmlBuilder.XmlNode>();
+    private ThreadLocal<XmlNode> currentObjectNode = new ThreadLocal<XmlBuilder.XmlNode>();
     private String reportPath;
     
     public TestngReportingListener(String reportPath) {
@@ -56,30 +56,32 @@ public class TestngReportingListener implements CompleteListener {
     @Override
     public void onAfterPage(GalenSuiteRunner galenSuiteRunner, GalenPageRunner pageRunner, GalenPageTest pageTest, Browser browser,
             List<ValidationError> errors) {
+        currentPageNode.remove();
     }
 
     @Override
     public void onBeforePage(GalenSuiteRunner galenSuiteRunner, GalenPageRunner pageRunner, GalenPageTest pageTest, Browser browser) {
-        currentPageNode = node("test").withAttribute("name", pageTest.getUrl() + " " + GalenUtils.formatScreenSize(pageTest.getScreenSize()));
-        currentSuiteNode.add(currentPageNode);
+        currentPageNode.set(node("test").withAttribute("name", pageTest.getUrl() + " " + GalenUtils.formatScreenSize(pageTest.getScreenSize())));
+        currentSuiteNode.get().add(currentPageNode.get());
     }
 
 
     @Override
     public void onSuiteFinished(GalenSuiteRunner galenSuiteRunner, GalenSuite suite) {
+        currentSuiteNode.remove();
     }
     
 
     @Override
-    public void onSuiteStarted(GalenSuiteRunner galenSuiteRunner, GalenSuite suite) {
-        currentSuiteNode = node("suite").withAttribute("name", suite.getName());
-        rootNode.add(currentSuiteNode);
+    public synchronized void onSuiteStarted(GalenSuiteRunner galenSuiteRunner, GalenSuite suite) {
+        currentSuiteNode.set(node("suite").withAttribute("name", suite.getName()));
+        rootNode.add(currentSuiteNode.get());
     }
 
     @Override
     public void onObject(GalenPageRunner pageRunner, PageValidation pageValidation, String objectName) {
-        currentObjectNode = node("class").withAttribute("name", objectName);
-        currentPageNode.add(currentObjectNode);
+        currentObjectNode.set(node("class").withAttribute("name", objectName));
+        currentPageNode.get().add(currentObjectNode.get());
     }
 
     @Override
@@ -127,7 +129,7 @@ public class TestngReportingListener implements CompleteListener {
                 .withAttribute("finished-at", now)
                 .withAttribute("description", "");
         
-        currentObjectNode.add(specNode);
+        currentObjectNode.get().add(specNode);
         return specNode;
     }
     
@@ -139,6 +141,7 @@ public class TestngReportingListener implements CompleteListener {
 
     @Override
     public void onAfterObject(GalenPageRunner pageRunner, PageValidation pageValidation, String objectName) {
+        currentObjectNode.remove();
     }
 
     @Override
@@ -161,7 +164,7 @@ public class TestngReportingListener implements CompleteListener {
     public void onGlobalError(GalenPageRunner pageRunner, Exception e) {
         String now = formatDate(new Date());
         
-        currentPageNode.add(node("class")
+        currentPageNode.get().add(node("class")
                 .withAttribute("name", "global error")
                 .withChildren(node("test-method")
                         .withAttribute("status", "FAIL")
