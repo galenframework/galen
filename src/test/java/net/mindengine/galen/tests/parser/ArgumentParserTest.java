@@ -66,6 +66,20 @@ public class ArgumentParserTest {
                     .withIncludedTags(EMPTY_TAGS)
                     .withExcludedTags(EMPTY_TAGS)},
                     
+            {args("test", "mysuite", 
+                            "--htmlreport", "some.html",
+                            "--testngreport", "testng.xml",
+                            "--parallel-suites", "4"), 
+                new GalenArguments()
+                    .withAction("test")
+                    .withPaths(asList("mysuite"))
+                    .withRecursive(false)
+                    .withHtmlReport("some.html")
+                    .withTestngReport("testng.xml")
+                    .withIncludedTags(EMPTY_TAGS)
+                    .withExcludedTags(EMPTY_TAGS)
+                    .withParallelSuites(4)},
+                    
             {args("test", "mysuite", "mysuite2", 
                             "--recursive", 
                             "--htmlreport", "some.html",

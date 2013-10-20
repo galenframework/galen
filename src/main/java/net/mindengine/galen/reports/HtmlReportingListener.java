@@ -161,7 +161,7 @@ public class HtmlReportingListener implements CompleteListener {
     }
 
     @Override
-    public void onAfterPage(GalenSuiteRunner galenSuiteRunner, GalenPageRunner pageRunner, 
+    public synchronized void onAfterPage(GalenSuiteRunner galenSuiteRunner, GalenPageRunner pageRunner, 
             GalenPageTest pageTest, Browser browser, List<ValidationError> errors) {
         if (hasListener(pageRunner)) {
             findListener(pageRunner).onAfterPage(galenSuiteRunner, pageRunner, pageTest, browser, errors);
@@ -170,7 +170,7 @@ public class HtmlReportingListener implements CompleteListener {
     }
 
     @Override
-    public void onBeforePage(GalenSuiteRunner galenSuiteRunner, GalenPageRunner pageRunner, GalenPageTest pageTest, Browser browser) {
+    public synchronized void onBeforePage(GalenSuiteRunner galenSuiteRunner, GalenPageRunner pageRunner, GalenPageTest pageTest, Browser browser) {
         linkPageRunnerToSuite(pageRunner, galenSuiteRunner);
         if (hasListener(pageRunner)) {
             findListener(pageRunner).onBeforePage(galenSuiteRunner, pageRunner, pageTest, browser);
@@ -188,7 +188,7 @@ public class HtmlReportingListener implements CompleteListener {
     }
     
     @Override
-    public void onSuiteStarted(GalenSuiteRunner galenSuiteRunner, GalenSuite suite) {
+    public synchronized void onSuiteStarted(GalenSuiteRunner galenSuiteRunner, GalenSuite suite) {
         //Registering a suite run with listener
         SuiteRun suiteRun = new SuiteRun();
         suiteRun.suiteReportFile = String.format("report-%d-%s", getUniqueReportId(), convertToFileName(suite.getName()));

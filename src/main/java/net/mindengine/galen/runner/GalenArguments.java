@@ -44,6 +44,7 @@ public class GalenArguments {
     private Dimension screenSize;
     private String htmlReport;
     private String testngReport;
+    private int parallelSuites = 0;
     private String url;
     
 
@@ -141,6 +142,7 @@ public class GalenArguments {
         options.addOption("H", "htmlreport", true, "Path for html output report");
         options.addOption("g", "testngreport", true, "Path for testng xml report");
         options.addOption("r", "recursive", false, "Flag for recursive tests scan");
+        options.addOption("p", "parallel-suites", true, "Amount of suites to be run in parallel");
         
         CommandLineParser parser = new PosixParser();
         
@@ -181,7 +183,7 @@ public class GalenArguments {
         galen.setTestngReport(cmd.getOptionValue("g"));
         galen.setRecursive(cmd.hasOption("r"));
         galen.setHtmlReport(cmd.getOptionValue("H"));
-        
+        galen.setParallelSuites(Integer.parseInt(cmd.getOptionValue("p", "0")));
         
         return galen;
     }
@@ -237,6 +239,7 @@ public class GalenArguments {
         .append(htmlReport)
         .append(testngReport)
         .append(url)
+        .append(parallelSuites)
         .toHashCode();
     }
     
@@ -263,6 +266,7 @@ public class GalenArguments {
             .append(htmlReport, rhs.htmlReport)
             .append(testngReport, rhs.testngReport)
             .append(url, rhs.url)
+            .append(parallelSuites, rhs.parallelSuites)
             .isEquals();
     }
     
@@ -279,6 +283,7 @@ public class GalenArguments {
             .append("htmlReport", htmlReport)
             .append("testngReport", testngReport)
             .append("url", url)
+            .append("parallelSuites", parallelSuites)
             .toString();
     }
 
@@ -318,6 +323,19 @@ public class GalenArguments {
 
     public GalenArguments withRecursive(Boolean recursive) {
         this.recursive = recursive;
+        return this;
+    }
+
+    public int getParallelSuites() {
+        return parallelSuites;
+    }
+
+    public void setParallelSuites(int parallelSuites) {
+        this.parallelSuites = parallelSuites;
+    }
+
+    public GalenArguments withParallelSuites(int parallelSuites) {
+        setParallelSuites(parallelSuites);
         return this;
     }
 }
