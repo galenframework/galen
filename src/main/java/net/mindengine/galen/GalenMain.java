@@ -63,7 +63,7 @@ public class GalenMain {
 
     private CombinedListener createListeners(GalenArguments arguments) throws IOException, SecurityException, IllegalArgumentException, ClassNotFoundException, NoSuchMethodException, InstantiationException, IllegalAccessException, InvocationTargetException {
         CombinedListener combinedListener = new CombinedListener();
-        combinedListener.add(new ConsoleReportingListener(System.out, System.err));
+        combinedListener.add(new ConsoleReportingListener(System.out, System.out));
         
         if (arguments.getHtmlReport() != null) {
             combinedListener.add(new HtmlReportingListener(arguments.getHtmlReport()));
