@@ -51,7 +51,7 @@ public class SeleniumGridBrowserFactory implements BrowserFactory {
             desiredCapabilities.setVersion(browserVersion);
         }
         try {
-        	return new SeleniumBrowser(new RemoteWebDriver(new URL(gridUrl), desiredCapabilities));
+        	return new SeleniumGridBrowser(new RemoteWebDriver(new URL(gridUrl), desiredCapabilities));
         }
         catch (Exception ex) {
         	throw new RuntimeException(ex);
