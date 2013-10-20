@@ -58,8 +58,6 @@ public class HtmlReportingListener implements CompleteListener {
     
     private String reportFolderPath;
     
-    //private XmlNode mainNode = createMainNode();
-    
     private Map<GalenSuiteRunner, SuiteRun> suiteRuns = new HashMap<GalenSuiteRunner, HtmlReportingListener.SuiteRun>();
     private Map<GalenPageRunner, GalenSuiteRunner> pageRunnerLinks = new HashMap<GalenPageRunner, GalenSuiteRunner>();
     private List<SuiteRun> suiteRunList = new LinkedList<SuiteRun>();
@@ -270,7 +268,9 @@ public class HtmlReportingListener implements CompleteListener {
     
     private void cleanSuiteListener(GalenSuiteRunner galenSuiteRunner) {
         if (suiteRuns.containsKey(galenSuiteRunner)) {
-            suiteRuns.get(galenSuiteRunner).listener = null;
+            SuiteRun suiteRun = suiteRuns.get(galenSuiteRunner);
+            suiteRun.listener = null;
+            suiteRuns.remove(galenSuiteRunner);
         }
     }
     
