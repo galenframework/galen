@@ -20,7 +20,9 @@ import net.mindengine.galen.config.GalenConfig;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.ie.InternetExplorerDriver;
 
 public class SeleniumBrowserFactory implements BrowserFactory {
 
@@ -40,6 +42,12 @@ public class SeleniumBrowserFactory implements BrowserFactory {
     public Browser openBrowser() {
         if (FIREFOX.equals(browserType)) {
             return new SeleniumBrowser(new FirefoxDriver());
+        }
+        else if (CHROME.equals(browserType)) {
+            return new SeleniumBrowser(new ChromeDriver());
+        }
+        else if (IE.equals(browserType)) {
+            return new SeleniumBrowser(new InternetExplorerDriver());
         }
         else throw new RuntimeException(String.format("Unknown browser type: \"%s\"", browserType));
     }
