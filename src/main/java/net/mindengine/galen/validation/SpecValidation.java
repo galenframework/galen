@@ -21,7 +21,6 @@ import java.util.LinkedList;
 import java.util.List;
 
 import net.mindengine.galen.page.PageElement;
-import net.mindengine.galen.page.Rect;
 import net.mindengine.galen.specs.Range;
 import net.mindengine.galen.specs.Spec;
 import net.mindengine.galen.specs.page.Locator;
@@ -29,7 +28,6 @@ import net.mindengine.galen.specs.reader.page.PageSpec;
 
 public abstract class SpecValidation<T extends Spec> {
     
-    protected static final String OBJECT_HAS_ZERO_SIZE = "\"%s\" has zero size";
     protected static final String OBJECT_WITH_NAME_S_IS_NOT_DEFINED_IN_PAGE_SPEC = "Cannot find locator for \"%s\" in page spec";
     protected static final String OBJECT_S_IS_ABSENT_ON_PAGE = "\"%s\" is absent on page";
     protected static final String OBJECT_S_IS_NOT_VISIBLE_ON_PAGE = "\"%s\" is not visible on page";
@@ -62,11 +60,6 @@ public abstract class SpecValidation<T extends Spec> {
         }
         else if (!object.isVisible()) {
         	throw new ValidationErrorException((format(OBJECT_S_IS_NOT_VISIBLE_ON_PAGE, objectName)));
-        }
-
-        Rect area = object.getArea();
-        if (area.getWidth() < 1 || area.getHeight() < 1) {
-        	throw new ValidationErrorException((format(OBJECT_HAS_ZERO_SIZE, objectName)));
         }
         
     }
