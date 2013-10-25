@@ -27,11 +27,14 @@ import java.util.regex.Pattern;
 
 import net.mindengine.galen.parser.ExpectWord;
 import net.mindengine.galen.parser.SyntaxException;
+import net.mindengine.galen.specs.page.ConditionalBlock;
 import net.mindengine.galen.specs.page.PageSection;
+import net.mindengine.galen.specs.reader.StringCharReader;
 
 
 public class PageSpecLineProcessor {
 
+    private static final String SPECIAL_INSTRUCTION = "@@";
     private static final String TAG = "@";
     private static final String COMMENT = "#";
     private static final String PARAMETERIZATION_SYMBOL = "[";
@@ -39,6 +42,8 @@ public class PageSpecLineProcessor {
     
     private State state;
 	private PageSpecReader pageSpecReader;
+    private State previousState;
+    private PageSection currentSection;
     
     public PageSpecLineProcessor(PageSpecReader pageSpecReader) {
     	this.pageSpecReader = pageSpecReader;
@@ -66,25 +71,80 @@ public class PageSpecLineProcessor {
         }
     }
     
+    private boolean isSpecialInstruction(String line) {
+        return line.trim().startsWith(SPECIAL_INSTRUCTION);
+    }
+    
     private void doSpecialInstruction(String line) throws IOException {
 		line = line.trim().substring(2).trim();
 		
-		String firstWord = ExpectWord.read(line);
+		StringCharReader reader = new StringCharReader(line);
+		
+		String firstWord = new ExpectWord().read(reader);
 		
 		if (firstWord.equals("import")) {
-			importPageSpec(line.substring(6).trim());
+			importPageSpec(reader.getTheRest());
+		}
+		else if (isPartOfConditionalBlock(firstWord)) {
+		    doConditionalBlock(firstWord.toLowerCase(), reader.getTheRest().trim().toLowerCase());
 		}
 	}
 
-	private void importPageSpec(String filePath) throws IOException {
+	private void doConditionalBlock(String firstWord, String theRest) {
+	    if (firstWord.equals("if")) {
+	        
+	        //Checking that it is not already doing a conditional block
+	        if (state instanceof StateDoingConditionalBlocks) {
+	            throw new SyntaxException(UNKNOWN_LINE, "Cannot use conditional block inside another condition");
+	        }
+	        previousState = state;
+	        boolean inverted = theRest.equals("not");
+            state = new StateDoingConditionalBlocks(inverted);
+        }
+	    else {
+	        if (!(state instanceof StateDoingConditionalBlocks)) {
+                throw new SyntaxException(UNKNOWN_LINE, "Cannot use '" + firstWord + "' statement outside conditional block.");
+            }
+	        StateDoingConditionalBlocks stateConditionalBlock = (StateDoingConditionalBlocks) state;
+	        
+	        if (firstWord.equals("or")) {
+	            boolean inverted = theRest.equals("not");
+	            stateConditionalBlock.startNewStatement(inverted);
+	        }
+	        else {
+	            if (!theRest.isEmpty()) {
+	                throw new SyntaxException(UNKNOWN_LINE, "'" + firstWord + "' statement should not take any arguments");
+	            }
+	            if (firstWord.equals("do")) {
+	                stateConditionalBlock.startBody();
+	            }
+	            else if (firstWord.equals("otherwise")) {
+                    stateConditionalBlock.startOtherwise();
+                }
+	            else if (firstWord.equals("end")) {
+	                ConditionalBlock conditionalBlock = stateConditionalBlock.build();
+                    
+	                if (currentSection == null) {
+	                    startNewSection("");
+	                }
+	                
+	                currentSection.addConditionalBlock(conditionalBlock);
+                    state = previousState;
+                }
+	        }
+	    }
+    }
+
+    private boolean isPartOfConditionalBlock(String firstWord) {
+	    firstWord = firstWord.toLowerCase();
+        return firstWord.equals("if") || firstWord.equals("or") || firstWord.equals("do") || firstWord.equals("otherwise") || firstWord.equals("end");
+    }
+
+    private void importPageSpec(String filePath) throws IOException {
 		PageSpec spec = pageSpecReader.read(new File(filePath));
 		if (spec != null) {
 			pageSpec.merge(spec);
 		}
-	}
-
-	private boolean isSpecialInstruction(String line) {
-    	return line.trim().startsWith("@@");
 	}
 
 	private void startParameterization(String line) {
@@ -145,11 +205,16 @@ public class PageSpecLineProcessor {
     public PageSpec buildPageSpec() {
         Iterator<PageSection> it = pageSpec.getSections().iterator();
         while(it.hasNext()) {
-            if (it.next().getObjects().size() == 0) {
+            PageSection section = it.next();
+            if (section.getObjects().size() == 0 && !hasConditionalBlocks(section)) {
                 it.remove();
             }
          }
         return this.pageSpec;
+    }
+
+    private boolean hasConditionalBlocks(PageSection section) {
+        return section.getConditionalBlocks() != null && section.getConditionalBlocks().size() > 0;
     }
 
     private void switchObjectDefinitionState() {
@@ -178,10 +243,10 @@ public class PageSpecLineProcessor {
     }
 
     private void startNewSection(String tags) {
-        PageSection section = new PageSection();
-        section.setTags(readTags(tags));
-        pageSpec.addSection(section);
-        state = State.startedSection(section);
+        currentSection = new PageSection();
+        currentSection.setTags(readTags(tags));
+        pageSpec.addSection(currentSection);
+        state = State.startedSection(currentSection);
     }
 
     private List<String> readTags(String tagsText) {

@@ -43,6 +43,8 @@ import net.mindengine.galen.specs.SpecAbsent;
 import net.mindengine.galen.specs.SpecInside;
 import net.mindengine.galen.specs.SpecNear;
 import net.mindengine.galen.specs.SpecWidth;
+import net.mindengine.galen.specs.page.ConditionalBlock;
+import net.mindengine.galen.specs.page.ConditionalBlockStatement;
 import net.mindengine.galen.specs.page.Locator;
 import net.mindengine.galen.specs.page.ObjectSpecs;
 import net.mindengine.galen.specs.page.PageSection;
@@ -315,12 +317,181 @@ public class PageSpecsReaderTest {
     public void shouldProcess_simpleMathOperations_inParameterizedSpecs() throws IOException {
     	PageSpec pageSpec = pageSpecReader.read(new File(getClass().getResource("/spec-math.spec").getFile()));
     	
-    	 List<Spec> specs = pageSpec.getSections().get(0).getObjects().get(0).getSpecs();
+        List<Spec> specs = pageSpec.getSections().get(0).getObjects().get(0).getSpecs();
     	
     	assertThat(specs.size(), is(2));
     	assertThat(specs.get(0).getOriginalText(), is("inside: box-2 10px left"));
     	assertThat(specs.get(1).getOriginalText(), is("inside: box-4 10px left"));
     	
+    }
+    
+    @Test 
+    public void shouldParse_conditionalSpecBlocks() throws Exception {
+        PageSpec pageSpec = pageSpecReader.read(new File(getClass().getResource("/specs/spec-conditional-simple.spec").getFile()));
+        
+        List<PageSection> sections = pageSpec.getSections();
+        assertThat(sections.size(), is(1));
+        
+        PageSection pageSection = sections.get(0);
+        List<ConditionalBlock> blocks = pageSection.getConditionalBlocks();
+        assertThat(blocks.size(), is(1));
+        
+        ConditionalBlock block = blocks.get(0);
+        List<ConditionalBlockStatement> statements = block.getStatements();
+        assertThat(statements.size(), is(1));
+        ConditionalBlockStatement statement = statements.get(0);
+        assertThat(statement.isInverted(), is(false));
+        
+        List<ObjectSpecs> statementObjects = statement.getObjects();
+        assertThat(statementObjects.size(), is(2));
+        assertThat(statementObjects.get(0).getObjectName(), is("button-1"));
+        assertThat(statementObjects.get(0).getSpecs().get(0).getOriginalText(), is("width: > 100px"));
+        assertThat(statementObjects.get(1).getObjectName(), is("button-2"));
+        assertThat(statementObjects.get(1).getSpecs().get(0).getOriginalText(), is("height: < 50px"));
+        assertThat(statementObjects.get(1).getSpecs().get(1).getOriginalText(), is("width: 200px"));
+        
+        List<ObjectSpecs> bodyObjects = block.getBodyObjects();
+        assertThat(bodyObjects.size(), is(2));
+        assertThat(bodyObjects.get(0).getObjectName(), is("button-1"));
+        assertThat(bodyObjects.get(0).getSpecs().get(0).getOriginalText(), is("text is: sample text"));
+        assertThat(bodyObjects.get(1).getObjectName(), is("button-2"));
+        assertThat(bodyObjects.get(1).getSpecs().get(0).getOriginalText(), is("text ends: something"));
+        
+        
+        List<ObjectSpecs> sectionObjects = pageSection.getObjects();
+        assertThat(sectionObjects.size(), is(2));
+        assertThat(sectionObjects.get(0).getObjectName(), is("textfield"));
+        assertThat(sectionObjects.get(0).getObjectName(), is("textfield"));
+    }
+    
+    @Test 
+    public void shouldParse_conditionalSpecBlocks_withOrStatement() throws Exception {
+        PageSpec pageSpec = pageSpecReader.read(new File(getClass().getResource("/specs/spec-conditional-or.spec").getFile()));
+        
+        List<PageSection> sections = pageSpec.getSections();
+        assertThat(sections.size(), is(1));
+        
+        PageSection pageSection = sections.get(0);
+        List<ConditionalBlock> blocks = pageSection.getConditionalBlocks();
+        assertThat(blocks.size(), is(1));
+        
+        ConditionalBlock block = blocks.get(0);
+        List<ConditionalBlockStatement> statements = block.getStatements();
+        assertThat(statements.size(), is(3));
+        
+        {
+            ConditionalBlockStatement statement = statements.get(0);
+            assertThat(statement.isInverted(), is(false));
+            List<ObjectSpecs> statementObjects = statement.getObjects();
+            assertThat(statementObjects.size(), is(1));
+            assertThat(statementObjects.get(0).getObjectName(), is("button-1"));
+            assertThat(statementObjects.get(0).getSpecs().get(0).getOriginalText(), is("width: > 100px"));
+        }
+        {
+            ConditionalBlockStatement statement = statements.get(1);
+            assertThat(statement.isInverted(), is(false));
+            List<ObjectSpecs> statementObjects = statement.getObjects();
+            assertThat(statementObjects.size(), is(1));
+            assertThat(statementObjects.get(0).getObjectName(), is("button-2"));
+            assertThat(statementObjects.get(0).getSpecs().get(0).getOriginalText(), is("width: 200px"));
+        }
+        {
+            ConditionalBlockStatement statement = statements.get(2);
+            assertThat(statement.isInverted(), is(false));
+            List<ObjectSpecs> statementObjects = statement.getObjects();
+            assertThat(statementObjects.size(), is(1));
+            assertThat(statementObjects.get(0).getObjectName(), is("button-3"));
+            assertThat(statementObjects.get(0).getSpecs().get(0).getOriginalText(), is("width: 200px"));
+        }
+        
+        List<ObjectSpecs> bodyObjects = block.getBodyObjects();
+        assertThat(bodyObjects.size(), is(2));
+        assertThat(bodyObjects.get(0).getObjectName(), is("button-1"));
+        assertThat(bodyObjects.get(0).getSpecs().get(0).getOriginalText(), is("text is: sample text"));
+        assertThat(bodyObjects.get(1).getObjectName(), is("button-2"));
+        assertThat(bodyObjects.get(1).getSpecs().get(0).getOriginalText(), is("text ends: something"));
+        
+        
+    }
+    
+    @Test 
+    public void shouldParse_conditionalSpecBlocks_inverted() throws Exception {
+        PageSpec pageSpec = pageSpecReader.read(new File(getClass().getResource("/specs/spec-conditional-inverted.spec").getFile()));
+        
+        List<PageSection> sections = pageSpec.getSections();
+        assertThat(sections.size(), is(1));
+        
+        PageSection pageSection = sections.get(0);
+        List<ConditionalBlock> blocks = pageSection.getConditionalBlocks();
+        assertThat(blocks.size(), is(1));
+        
+        ConditionalBlock block = blocks.get(0);
+        List<ConditionalBlockStatement> statements = block.getStatements();
+        assertThat(statements.size(), is(2));
+        
+        {
+            ConditionalBlockStatement statement = statements.get(0);
+            assertThat(statement.isInverted(), is(true));
+            List<ObjectSpecs> statementObjects = statement.getObjects();
+            assertThat(statementObjects.size(), is(1));
+            assertThat(statementObjects.get(0).getObjectName(), is("button-1"));
+            assertThat(statementObjects.get(0).getSpecs().get(0).getOriginalText(), is("width: > 100px"));
+        }
+        {
+            ConditionalBlockStatement statement = statements.get(1);
+            assertThat(statement.isInverted(), is(true));
+            List<ObjectSpecs> statementObjects = statement.getObjects();
+            assertThat(statementObjects.size(), is(1));
+            assertThat(statementObjects.get(0).getObjectName(), is("button-2"));
+            assertThat(statementObjects.get(0).getSpecs().get(0).getOriginalText(), is("width: 200px"));
+        }
+        
+        List<ObjectSpecs> bodyObjects = block.getBodyObjects();
+        assertThat(bodyObjects.size(), is(2));
+        assertThat(bodyObjects.get(0).getObjectName(), is("button-1"));
+        assertThat(bodyObjects.get(0).getSpecs().get(0).getOriginalText(), is("text is: sample text"));
+        assertThat(bodyObjects.get(1).getObjectName(), is("button-2"));
+        assertThat(bodyObjects.get(1).getSpecs().get(0).getOriginalText(), is("text ends: something"));
+        
+        
+    }
+    
+    @Test 
+    public void shouldParse_conditionalSpecBlocks_withOtherwise() throws Exception {
+        PageSpec pageSpec = pageSpecReader.read(new File(getClass().getResource("/specs/spec-conditional-otherwise.spec").getFile()));
+        
+        List<PageSection> sections = pageSpec.getSections();
+        assertThat(sections.size(), is(1));
+        
+        PageSection pageSection = sections.get(0);
+        List<ConditionalBlock> blocks = pageSection.getConditionalBlocks();
+        assertThat(blocks.size(), is(1));
+        
+        ConditionalBlock block = blocks.get(0);
+        List<ConditionalBlockStatement> statements = block.getStatements();
+        assertThat(statements.size(), is(1));
+        
+        {
+            ConditionalBlockStatement statement = statements.get(0);
+            assertThat(statement.isInverted(), is(false));
+            List<ObjectSpecs> statementObjects = statement.getObjects();
+            assertThat(statementObjects.size(), is(1));
+            assertThat(statementObjects.get(0).getObjectName(), is("button-1"));
+            assertThat(statementObjects.get(0).getSpecs().get(0).getOriginalText(), is("width: > 100px"));
+        }
+        
+        List<ObjectSpecs> bodyObjects = block.getBodyObjects();
+        assertThat(bodyObjects.size(), is(1));
+        assertThat(bodyObjects.get(0).getObjectName(), is("button-1"));
+        assertThat(bodyObjects.get(0).getSpecs().get(0).getOriginalText(), is("text is: sample text"));
+        
+        
+        List<ObjectSpecs> otherwiseObjects = block.getOtherwiseObjects();
+        assertThat(otherwiseObjects.size(), is(1));
+        assertThat(otherwiseObjects.get(0).getObjectName(), is("button-2"));
+        assertThat(otherwiseObjects.get(0).getSpecs().get(0).getOriginalText(), is("text ends: something"));
+        
+        
     }
     
     

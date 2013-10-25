@@ -22,6 +22,7 @@ public class PageSection {
 
     private List<String> tags;
     private List<ObjectSpecs> objects = new LinkedList<ObjectSpecs>();
+    private List<ConditionalBlock> conditionalBlocks;
 
     public List<String> getTags() {
         return this.tags;
@@ -49,6 +50,21 @@ public class PageSection {
             }
         }
         return false;
+    }
+
+    public List<ConditionalBlock> getConditionalBlocks() {
+        return this.conditionalBlocks;
+    }
+
+    public void setConditionalBlocks(List<ConditionalBlock> conditionalBlocks) {
+        this.conditionalBlocks = conditionalBlocks;
+    }
+
+    public void addConditionalBlock(ConditionalBlock conditionalBlock) {
+        if (conditionalBlocks == null) {
+            conditionalBlocks = new LinkedList<ConditionalBlock>();
+        }
+        conditionalBlocks.add(conditionalBlock);
     }
 
 }
