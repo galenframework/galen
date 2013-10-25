@@ -134,9 +134,37 @@ public class GalenPageActionCheckTest {
                 "<SpecWidth textfield>\n" +
                 "</o textfield>\n"
         , validationListener.getInvokations());
+    }
+    
+    @SuppressWarnings("serial")
+    @Test public void shouldTest_conditionalBlocks_simpleOtherwise_whenConditionFails() throws IOException {
+        GalenPageActionCheck check = new GalenPageActionCheck();
+        check.setSpecs(Arrays.asList(getClass().getResource("/specs/spec-conditional-simple-otherwise.spec").getFile()));
         
+        MockedBrowser mockedBrowser = new MockedBrowser("http://galenframework.com", new Dimension(640, 480));
+        mockedBrowser.setMockedPage(new MockedPage(new HashMap<String, PageElement>(){{
+            put("textfield", new MockedPageElement(0, 0, 100, 100));
+            put("button-1", new MockedInvisiblePageElement(0, 0, 100, 100));
+            put("button-2", new MockedInvisiblePageElement(0, 0, 100, 100));
+        }}));
+
+        
+        TestValidationListener validationListener = new TestValidationListener();
+        check.execute(mockedBrowser, new GalenPageTest(), validationListener);
+        
+        Assert.assertEquals(
+                "<o textfield>\n" +
+                "<SpecHeight textfield>\n" +
+                "</o textfield>\n" +
+                "<o textfield>\n" +
+                "<SpecWidth textfield>\n" +
+                "</o textfield>\n" +
+                "<o textfield>\n" +
+                "<SpecWidth textfield>\n" +
+                "</o textfield>\n"
+        , validationListener.getInvokations());
     }
     
     
-    //TODO other tests
+    
 }
