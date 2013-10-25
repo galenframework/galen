@@ -353,9 +353,9 @@ public class PageSpecsReaderTest {
         List<ObjectSpecs> bodyObjects = block.getBodyObjects();
         assertThat(bodyObjects.size(), is(2));
         assertThat(bodyObjects.get(0).getObjectName(), is("button-1"));
-        assertThat(bodyObjects.get(0).getSpecs().get(0).getOriginalText(), is("text is: sample text"));
+        assertThat(bodyObjects.get(0).getSpecs().get(0).getOriginalText(), is("above: button-2 0px"));
         assertThat(bodyObjects.get(1).getObjectName(), is("button-2"));
-        assertThat(bodyObjects.get(1).getSpecs().get(0).getOriginalText(), is("text ends: something"));
+        assertThat(bodyObjects.get(1).getSpecs().get(0).getOriginalText(), is("below: button-1 0px"));
         
         
         List<ObjectSpecs> sectionObjects = pageSection.getObjects();

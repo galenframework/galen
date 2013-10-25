@@ -15,7 +15,7 @@ button-2     id     button-2
 textfield
     height: 100px
 
-@@ if
+@@ if not
 button-1
     width: > 100px
     

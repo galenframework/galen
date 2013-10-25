@@ -29,6 +29,7 @@ public class MockedBrowser implements Browser {
 
     private String url;
     private Dimension screenSize;
+    private Page mockedPage;
 
     public MockedBrowser(String url, Dimension screenSize) {
         this.url = url;
@@ -53,7 +54,7 @@ public class MockedBrowser implements Browser {
 
     @Override
     public Page getPage() {
-        return null;
+        return getMockedPage();
     }
 
     @Override
@@ -77,6 +78,14 @@ public class MockedBrowser implements Browser {
             e.printStackTrace();
         }
         return file.getAbsolutePath();
+    }
+
+    public Page getMockedPage() {
+        return mockedPage;
+    }
+
+    public void setMockedPage(Page mockedPage) {
+        this.mockedPage = mockedPage;
     }
 
 }

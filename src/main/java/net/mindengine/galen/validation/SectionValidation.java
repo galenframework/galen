@@ -21,12 +21,17 @@ import java.util.regex.Pattern;
 
 import net.mindengine.galen.runner.GalenPageRunner;
 import net.mindengine.galen.specs.Spec;
+import net.mindengine.galen.specs.page.ConditionalBlock;
+import net.mindengine.galen.specs.page.ConditionalBlockStatement;
 import net.mindengine.galen.specs.page.ObjectSpecs;
 import net.mindengine.galen.specs.page.PageSection;
 
 public class SectionValidation {
 
     private static final GalenPageRunner UNKNOWN_PAGE_RUNNER = null;
+    private static final List<ValidationError> EMPTY_ERRORS = new LinkedList<ValidationError>();
+    private static final boolean SHOULD_REPORT = true;
+    private static final boolean SHOULD_NOT_REPORT = false;
     private List<PageSection> pageSections;
     private PageValidation pageValidation;
     private ValidationListener validationListener;
@@ -52,19 +57,72 @@ public class SectionValidation {
 
     private List<ValidationError> checkSection(PageSection section) {
         List<ValidationError> errors = new LinkedList<ValidationError>();
-        for (ObjectSpecs object : section.getObjects()) {
-            
+        errors.addAll(checkObjects(section.getObjects()));
+        
+        List<ConditionalBlock> conditionalBlocks = section.getConditionalBlocks();
+        if (conditionalBlocks != null) {
+            for (ConditionalBlock block : conditionalBlocks) {
+                errors.addAll(checkConditionalBlock(block));
+            }
+        }
+        
+        return errors;
+    }
+
+    private List<ValidationError> checkObjects(List<ObjectSpecs> objects, boolean shouldReport) {
+        List<ValidationError> errors = new LinkedList<ValidationError>();
+        for (ObjectSpecs object : objects) {
             List<String> allObjectNames = findAllObjectNames(object.getObjectName());
-            
             for (String objectName : allObjectNames) {
-                tellOnObject(objectName);
-                errors.addAll(checkObject(objectName, object.getSpecs()));
-                tellOnAfterObject(objectName);
+                if (shouldReport) {
+                    tellOnObject(objectName);
+                }
+                
+                errors.addAll(checkObject(objectName, object.getSpecs(), shouldReport));
+                
+                if (shouldReport) {
+                    tellOnAfterObject(objectName);
+                }
             }
         }
         return errors;
     }
 
+    private List<ValidationError> checkConditionalBlock(ConditionalBlock block) {
+        if (oneOfConditionsApplies(block.getStatements())) {
+            return checkObjects(block.getBodyObjects());
+        }
+        else if (block.getOtherwiseObjects() != null) {
+            return checkObjects(block.getOtherwiseObjects());
+        }
+        else return EMPTY_ERRORS;
+    }
+
+    private List<ValidationError> checkObjects(List<ObjectSpecs> bodyObjects) {
+        return checkObjects(bodyObjects, SHOULD_REPORT);
+    }
+
+    private boolean oneOfConditionsApplies(List<ConditionalBlockStatement> statements) {
+        for (ConditionalBlockStatement statement : statements) {
+            List<ValidationError> errors = checkObjectsSilently(statement.getObjects());
+            
+            boolean statementStatus =  (errors == null || errors.size() == 0);
+            if (statement.isInverted()) {
+                statementStatus = !statementStatus;
+            }
+            
+            if (statementStatus) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private List<ValidationError> checkObjectsSilently(List<ObjectSpecs> objects) {
+        return checkObjects(objects, SHOULD_NOT_REPORT);
+    }
+
+    
     private List<String> findAllObjectNames(String objectsDefinition) {
         List<String> objectNames = new LinkedList<String>();
         
@@ -127,17 +185,20 @@ public class SectionValidation {
         }
     }
 
-    private List<ValidationError> checkObject(String objectName, List<Spec> specs) {
+    private List<ValidationError> checkObject(String objectName, List<Spec> specs, boolean shouldReport) {
         List<ValidationError> errors = new LinkedList<ValidationError>();
         for (Spec spec : specs) {
-            
             
             ValidationError error = pageValidation.check(objectName, spec);
             if (error != null) {
                 errors.add(error);
-                tellOnSpecError(pageValidation, objectName, spec, error);
+                if (shouldReport) {
+                    tellOnSpecError(pageValidation, objectName, spec, error);
+                }
             }
-            else tellOnSpecSuccess(pageValidation, objectName, spec);
+            else if (shouldReport) {
+                tellOnSpecSuccess(pageValidation, objectName, spec);
+            }
         }
         return errors;
     }

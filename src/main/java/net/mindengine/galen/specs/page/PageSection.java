@@ -41,15 +41,17 @@ public class PageSection {
     }
 
     public boolean hasAnyTag(List<String> includedTags) {
-        if (tags != null && includedTags != null) {
-            
-            for (String tag : includedTags) {
-                if (tags.contains(tag)) {
-                    return true;
+        if (includedTags != null && includedTags.size() > 0) {
+            if (tags != null) {
+                for (String tag : includedTags) {
+                    if (tags.contains(tag)) {
+                        return true;
+                    }
                 }
             }
+            return false;
         }
-        return false;
+        else return true;
     }
 
     public List<ConditionalBlock> getConditionalBlocks() {
