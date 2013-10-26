@@ -28,7 +28,6 @@ import static org.hamcrest.Matchers.nullValue;
 
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
 
 import net.mindengine.galen.components.validation.MockedAbsentPageElement;
@@ -54,6 +53,7 @@ import net.mindengine.galen.specs.SpecNear;
 import net.mindengine.galen.specs.SpecOn;
 import net.mindengine.galen.specs.SpecText;
 import net.mindengine.galen.specs.SpecVertically;
+import net.mindengine.galen.specs.SpecVisible;
 import net.mindengine.galen.specs.SpecWidth;
 import net.mindengine.galen.specs.page.Locator;
 import net.mindengine.galen.specs.reader.page.PageSpec;
@@ -138,6 +138,15 @@ public class ValidationTest {
               put("object", absentElement(10, 10, 100, 100));
           }})),
           
+          
+          // Visible
+          
+          row(specVisible(), page(new HashMap<String, PageElement>(){{
+              put("object", element(10, 10, 100, 100));
+          }})),
+          row(specVisible(), page(new HashMap<String, PageElement>(){{
+              put("object", element(10, 10, 100, 100));
+          }})),
           
           // Inside 
           
@@ -369,6 +378,7 @@ public class ValidationTest {
               put("button",  element(10, 42, 10, 10));
           }})),
           
+          
           // Below 
           
           row(specBelow("button", Range.exact(20)), page(new HashMap<String, PageElement>(){{
@@ -526,6 +536,23 @@ public class ValidationTest {
               specAbsent(), page(new HashMap<String, PageElement>(){{
                   put("blabla", absentElement(10, 10, 100, 100));
           }})),
+          
+          // Visible 
+          
+          row(new ValidationError(NO_AREA, messages("\"object\" is not visible on page")),
+              specVisible(), page(new HashMap<String, PageElement>(){{
+                  put("object", invisibleElement(10, 10, 100, 100));
+          }})),
+          
+          row(new ValidationError(NO_AREA, messages("Cannot find locator for \"object\" in page spec")),
+              specVisible(), page(new HashMap<String, PageElement>(){{
+                  put("blabla", absentElement(10, 10, 100, 100));
+          }})),
+          
+          row(new ValidationError(NO_AREA, messages("\"object\" is absent on page")),
+                  specVisible(), page(new HashMap<String, PageElement>(){{
+                  put("object", absentElement(10, 10, 100, 100));
+              }})),
           
           
           // Inside
@@ -1281,6 +1308,10 @@ public class ValidationTest {
     
     private SpecAbsent specAbsent() {
         return new SpecAbsent();
+    }
+    
+    private SpecVisible specVisible() {
+        return new SpecVisible();
     }
 
     private SpecAbove specAbove(String object, Range range) {

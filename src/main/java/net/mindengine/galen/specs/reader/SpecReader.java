@@ -51,6 +51,7 @@ import net.mindengine.galen.specs.SpecNear;
 import net.mindengine.galen.specs.SpecOn;
 import net.mindengine.galen.specs.SpecText;
 import net.mindengine.galen.specs.SpecVertically;
+import net.mindengine.galen.specs.SpecVisible;
 import net.mindengine.galen.specs.SpecWidth;
 
 public class SpecReader {
@@ -66,6 +67,12 @@ public class SpecReader {
         putSpec("absent", new SimpleSpecProcessor(new SpecInit() {
             public Spec init() {
                 return new SpecAbsent();
+            }
+        }));
+        
+        putSpec("visible", new SimpleSpecProcessor(new SpecInit() {
+            public Spec init() {
+                return new SpecVisible();
             }
         }));
         

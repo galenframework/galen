@@ -46,6 +46,7 @@ import net.mindengine.galen.specs.SpecNear;
 import net.mindengine.galen.specs.SpecOn;
 import net.mindengine.galen.specs.SpecText;
 import net.mindengine.galen.specs.SpecVertically;
+import net.mindengine.galen.specs.SpecVisible;
 import net.mindengine.galen.specs.SpecWidth;
 import net.mindengine.galen.specs.reader.SpecReader;
 
@@ -296,6 +297,13 @@ public class SpecsReaderTest {
         Spec spec = readSpec("absent");
         assertThat(spec, Matchers.instanceOf(SpecAbsent.class));
         assertThat(spec.getOriginalText(), is("absent"));
+    }
+    
+    @Test
+    public void shouldReadSpec_visible() {
+        Spec spec = readSpec("visible");
+        assertThat(spec, Matchers.instanceOf(SpecVisible.class));
+        assertThat(spec.getOriginalText(), is("visible"));
     }
     
     @Test

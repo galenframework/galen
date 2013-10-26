@@ -31,6 +31,7 @@ import net.mindengine.galen.specs.SpecNear;
 import net.mindengine.galen.specs.SpecOn;
 import net.mindengine.galen.specs.SpecText;
 import net.mindengine.galen.specs.SpecVertically;
+import net.mindengine.galen.specs.SpecVisible;
 import net.mindengine.galen.specs.SpecWidth;
 import net.mindengine.galen.validation.specs.SpecValidationAbsent;
 import net.mindengine.galen.validation.specs.SpecValidationCentered;
@@ -43,6 +44,7 @@ import net.mindengine.galen.validation.specs.SpecValidationNear;
 import net.mindengine.galen.validation.specs.SpecValidationOn;
 import net.mindengine.galen.validation.specs.SpecValidationText;
 import net.mindengine.galen.validation.specs.SpecValidationVertically;
+import net.mindengine.galen.validation.specs.SpecValidationVisible;
 import net.mindengine.galen.validation.specs.SpecValidationWidth;
 
 public class ValidationFactory {
@@ -66,6 +68,7 @@ public class ValidationFactory {
     private void initValidations() {
         validations.put(SpecContains.class, new SpecValidationContains());
         validations.put(SpecAbsent.class, new SpecValidationAbsent());
+        validations.put(SpecVisible.class, new SpecValidationVisible());
         validations.put(SpecInside.class, new SpecValidationInside());
         validations.put(SpecNear.class, new SpecValidationNear());
         validations.put(SpecWidth.class, new SpecValidationWidth());
