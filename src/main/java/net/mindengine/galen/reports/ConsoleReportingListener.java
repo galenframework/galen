@@ -88,7 +88,7 @@ public class ConsoleReportingListener implements CompleteListener {
         out.print("Page: ");
         
         if (pageTest.getTitle() != null) {
-            out.print(pageTest.getTitle());
+            out.println(pageTest.getTitle());
         }
         else {
             out.print(pageTest.getUrl());
