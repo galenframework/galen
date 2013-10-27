@@ -28,6 +28,7 @@ import net.mindengine.galen.page.Page;
 import net.mindengine.galen.specs.page.PageSection;
 import net.mindengine.galen.specs.reader.page.PageSpec;
 import net.mindengine.galen.specs.reader.page.PageSpecReader;
+import net.mindengine.galen.specs.reader.page.SectionFilter;
 import net.mindengine.galen.suite.GalenPageAction;
 import net.mindengine.galen.suite.GalenPageTest;
 import net.mindengine.galen.utils.GalenUtils;
@@ -52,9 +53,11 @@ public class GalenPageActionCheck implements GalenPageAction {
         
         for (String specFile : specs) {
             PageSpec spec = pageSpecReader.read(GalenUtils.findFile(specFile));
+            
+            SectionFilter sectionFilter = new SectionFilter(includedTags, excludedTags);
             List<PageSection> pageSections = spec.findSections(includedTags, excludedTags);
             
-            SectionValidation sectionValidation = new SectionValidation(pageSections, new PageValidation(page, spec, validationListener), validationListener);
+            SectionValidation sectionValidation = new SectionValidation(pageSections, new PageValidation(page, spec, validationListener, sectionFilter), validationListener);
             
             List<ValidationError> errors = sectionValidation.check();
             if (errors != null) {

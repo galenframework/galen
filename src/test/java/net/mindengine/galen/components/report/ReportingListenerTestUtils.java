@@ -52,7 +52,7 @@ public class ReportingListenerTestUtils {
         
         Browser browser = new MockedBrowser("http://example.com/page1", new Dimension(410, 610));
         GalenPageRunner pageRunner = new GalenPageRunner();
-        PageValidation pageValidation = new PageValidation(new MockedPage(null), null, null);
+        PageValidation pageValidation = new PageValidation(new MockedPage(null), null, null, null);
         
         GalenPageTest pageTest = new GalenPageTest().withSize(400, 600).withUrl("http://example.com/page1");
         suiteListener.onBeforePage(galenSuiteRunner, pageRunner, pageTest, browser); {
@@ -82,7 +82,7 @@ public class ReportingListenerTestUtils {
         suiteListener.onAfterPage(galenSuiteRunner, pageRunner, pageTest, browser, asList(new ValidationError(asList(new ErrorArea(new Rect(10, 10, 100, 50), "objectA1")), asList("objectA1 is not inside other-object"))));
         
         
-        pageValidation = new PageValidation(new MockedPage(null), null, null);
+        pageValidation = new PageValidation(new MockedPage(null), null, null, null);
         Browser browser2 = new MockedBrowser("http://example.com/page2", new Dimension(610, 710));
         GalenPageTest pageTest2 = new GalenPageTest().withSize(600, 700).withUrl("http://example.com/page2");
         suiteListener.onBeforePage(galenSuiteRunner, pageRunner, pageTest2, browser2); {

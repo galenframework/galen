@@ -27,17 +27,20 @@ import net.mindengine.galen.specs.Range;
 import net.mindengine.galen.specs.Spec;
 import net.mindengine.galen.specs.page.Locator;
 import net.mindengine.galen.specs.reader.page.PageSpec;
+import net.mindengine.galen.specs.reader.page.SectionFilter;
 
 public class PageValidation {
 
     private Page page;
     private PageSpec pageSpec;
     private ValidationListener validationListener;
+    private SectionFilter sectionFilter;
 
-    public PageValidation(Page page, PageSpec pageSpec, ValidationListener validationListener) {
+    public PageValidation(Page page, PageSpec pageSpec, ValidationListener validationListener, SectionFilter sectionFilter) {
         this.setPage(page);
         this.setPageSpec(pageSpec);
         this.setValidationListener(validationListener);
+        this.setSectionFilter(sectionFilter);
     }
 
     public Page getPage() {
@@ -163,6 +166,14 @@ public class PageValidation {
 
     public void setValidationListener(ValidationListener validationListener) {
         this.validationListener = validationListener;
+    }
+
+    public SectionFilter getSectionFilter() {
+        return sectionFilter;
+    }
+
+    public void setSectionFilter(SectionFilter sectionFilter) {
+        this.sectionFilter = sectionFilter;
     }
 
 }

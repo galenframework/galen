@@ -130,4 +130,13 @@ public class PageSpec {
 		sections.addAll(spec.getSections());
 	}
 
+    public List<PageSection> findSections(SectionFilter sectionFilter) {
+        if (sectionFilter != null) {
+            return findSections(sectionFilter.getIncludedTags(), sectionFilter.getExcludedTags());
+        }
+        else {
+            return getSections();
+        }
+    }
+
 }

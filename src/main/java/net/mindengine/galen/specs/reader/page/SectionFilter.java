@@ -13,19 +13,29 @@
 * See the License for the specific language governing permissions and
 * limitations under the License.
 ******************************************************************************/
-package net.mindengine.galen.specs;
+package net.mindengine.galen.specs.reader.page;
 
-import net.mindengine.galen.specs.reader.page.PageSpec;
+import java.util.List;
 
-public class SpecComponent extends Spec {
-
-    private PageSpec pageSpec;
-
-    public PageSpec getPageSpec() {
-        return pageSpec;
+public class SectionFilter {
+    
+    private List<String> includedTags;
+    private List<String> excludedTags;
+    public SectionFilter(List<String> includedTags, List<String> excludedTags) {
+        this.setIncludedTags(includedTags);
+        this.setExcludedTags(excludedTags);
+    }
+    public List<String> getIncludedTags() {
+        return includedTags;
+    }
+    public void setIncludedTags(List<String> includedTags) {
+        this.includedTags = includedTags;
+    }
+    public List<String> getExcludedTags() {
+        return excludedTags;
+    }
+    public void setExcludedTags(List<String> excludedTags) {
+        this.excludedTags = excludedTags;
     }
 
-    public void setPageSpec(PageSpec pageSpec) {
-        this.pageSpec = pageSpec;
-    }
 }

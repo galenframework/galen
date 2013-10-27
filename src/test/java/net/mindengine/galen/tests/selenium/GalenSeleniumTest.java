@@ -30,6 +30,7 @@ import net.mindengine.galen.page.selenium.SeleniumPage;
 import net.mindengine.galen.specs.page.PageSection;
 import net.mindengine.galen.specs.reader.page.PageSpec;
 import net.mindengine.galen.specs.reader.page.PageSpecReader;
+import net.mindengine.galen.specs.reader.page.SectionFilter;
 import net.mindengine.galen.validation.PageValidation;
 import net.mindengine.galen.validation.SectionValidation;
 import net.mindengine.galen.validation.ValidationError;
@@ -72,7 +73,7 @@ public class GalenSeleniumTest {
         
         assertThat("Filtered sections size should be", pageSections.size(), is(1));
         
-        SectionValidation sectionValidation = new SectionValidation(pageSections, new PageValidation(page, pageSpec, validationListener), validationListener);
+        SectionValidation sectionValidation = new SectionValidation(pageSections, new PageValidation(page, pageSpec, validationListener, null), validationListener);
         List<ValidationError> errors = sectionValidation.check();
         
         
@@ -125,7 +126,7 @@ public class GalenSeleniumTest {
         
         assertThat("Filtered sections size should be", pageSections.size(), is(2));
         
-        SectionValidation sectionValidation = new SectionValidation(pageSections, new PageValidation(page, pageSpec, validationListener), validationListener);
+        SectionValidation sectionValidation = new SectionValidation(pageSections, new PageValidation(page, pageSpec, validationListener, null), validationListener);
         List<ValidationError> errors = sectionValidation.check();
         
         assertThat("Invokations should", validationListener.getInvokations(), is("<o header>\n" +
@@ -157,7 +158,7 @@ public class GalenSeleniumTest {
         
         assertThat("Filtered sections size should be", pageSections.size(), is(1));
         
-        SectionValidation sectionValidation = new SectionValidation(pageSections, new PageValidation(page, pageSpec, validationListener), validationListener);
+        SectionValidation sectionValidation = new SectionValidation(pageSections, new PageValidation(page, pageSpec, validationListener, null), validationListener);
         List<ValidationError> errors = sectionValidation.check();
         
         assertThat("Invokations should", validationListener.getInvokations(), is("<o header>\n" +
@@ -182,7 +183,7 @@ public class GalenSeleniumTest {
         
         assertThat("Filtered sections size should be", pageSections.size(), is(1));
         
-        SectionValidation sectionValidation = new SectionValidation(pageSections, new PageValidation(page, pageSpec, validationListener), validationListener);
+        SectionValidation sectionValidation = new SectionValidation(pageSections, new PageValidation(page, pageSpec, validationListener, null), validationListener);
         List<ValidationError> errors = sectionValidation.check();
         
         assertThat("Invokations should", validationListener.getInvokations(), is("<o feedback>\n" +
@@ -207,7 +208,7 @@ public class GalenSeleniumTest {
         
         assertThat("Filtered sections size should be", pageSections.size(), is(1));
         
-        SectionValidation sectionValidation = new SectionValidation(pageSections, new PageValidation(page, pageSpec, validationListener), validationListener);
+        SectionValidation sectionValidation = new SectionValidation(pageSections, new PageValidation(page, pageSpec, validationListener, null), validationListener);
         List<ValidationError> errors = sectionValidation.check();
         
         assertThat("Invokations should contain", validationListener.getInvokations(), containsString(
@@ -273,7 +274,7 @@ public class GalenSeleniumTest {
         
         assertThat("Filtered sections size should be", pageSections.size(), is(1));
         
-        SectionValidation sectionValidation = new SectionValidation(pageSections, new PageValidation(page, pageSpec, validationListener), validationListener);
+        SectionValidation sectionValidation = new SectionValidation(pageSections, new PageValidation(page, pageSpec, validationListener, null), validationListener);
         List<ValidationError> errors = sectionValidation.check();
         
         assertThat("Invokations should", validationListener.getInvokations(), is(
@@ -315,7 +316,7 @@ public class GalenSeleniumTest {
         
         assertThat("Filtered sections size should be", pageSections.size(), is(1));
         
-        SectionValidation sectionValidation = new SectionValidation(pageSections, new PageValidation(page, pageSpec, validationListener), validationListener);
+        SectionValidation sectionValidation = new SectionValidation(pageSections, new PageValidation(page, pageSpec, validationListener, null), validationListener);
         List<ValidationError> errors = sectionValidation.check();
         
         assertThat("Invokations should contain", validationListener.getInvokations(), containsString(
@@ -375,7 +376,7 @@ public class GalenSeleniumTest {
         
         assertThat("Filtered sections size should be", pageSections.size(), is(2));
         
-        SectionValidation sectionValidation = new SectionValidation(pageSections, new PageValidation(page, pageSpec, validationListener), validationListener);
+        SectionValidation sectionValidation = new SectionValidation(pageSections, new PageValidation(page, pageSpec, validationListener, null), validationListener);
         List<ValidationError> errors = sectionValidation.check();
         
         assertThat("Invokations should", validationListener.getInvokations(), is("<o header>\n" +
@@ -408,7 +409,7 @@ public class GalenSeleniumTest {
         List<PageSection> pageSections = pageSpec.getSections();
         assertThat("Filtered sections size should be", pageSections.size(), is(1));
         
-        SectionValidation sectionValidation = new SectionValidation(pageSections, new PageValidation(page, pageSpec, validationListener), validationListener);
+        SectionValidation sectionValidation = new SectionValidation(pageSections, new PageValidation(page, pageSpec, validationListener, null), validationListener);
         List<ValidationError> errors = sectionValidation.check();
         
         assertThat("Invokations should", validationListener.getInvokations(), is(
@@ -461,6 +462,73 @@ public class GalenSeleniumTest {
                 "<SpecInside user-name>\n" +
                 "<SpecNear user-name>\n" +
                 "</o user-name>\n" +
+                "<o user-age>\n" +
+                "<SpecHeight user-age>\n" +
+                "<SpecNear user-age>\n" +
+                "<e><msg>\"user-age\" is 204px right which is not in range of 8 to 12px</msg></e>\n" +
+                "<SpecBelow user-age>\n" +
+                "</o user-age>\n" +
+                "<SpecComponent user-profile-3>\n" +
+                "<e><msg>Child component spec contains 1 errors</msg></e>\n" +
+                "</o user-profile-3>\n"
+                ));
+        assertThat("Errors amount should be", errors.size(), is(1));
+    }
+    
+    
+    @Test
+    public void performsValidations_ofComponentSpecs_withFilteredChildSections() throws IOException {
+        openDriverForPage("page-for-component-specs.html");
+        PageSpec pageSpec = new PageSpecReader().read(new File(getClass().getResource("/specs/components/spec-for-component-test-main.spec").getFile()));
+        
+        driver.manage().window().setSize(new Dimension(1000, 800));
+        
+        SeleniumPage page = new SeleniumPage(driver);
+        
+        TestValidationListener validationListener = new TestValidationListener();
+        List<PageSection> pageSections = pageSpec.getSections();
+        assertThat("Filtered sections size should be", pageSections.size(), is(1));
+        
+        SectionFilter sectionFilter = new SectionFilter(asList("all", "mobile"), asList("nomobile"));
+        
+        SectionValidation sectionValidation = new SectionValidation(pageSections, new PageValidation(page, pageSpec, validationListener, sectionFilter), validationListener);
+        List<ValidationError> errors = sectionValidation.check();
+        
+        assertThat("Invokations should", validationListener.getInvokations(), is(
+                "<o user-profile-1>\n" +
+                "<o user-pic>\n" +
+                "<SpecWidth user-pic>\n" +
+                "<SpecHeight user-pic>\n" +
+                "<SpecInside user-pic>\n" +
+                "</o user-pic>\n" +
+                "<o user-age>\n" +
+                "<SpecHeight user-age>\n" +
+                "<SpecNear user-age>\n" +
+                "<SpecBelow user-age>\n" +
+                "</o user-age>\n" +
+                "<SpecComponent user-profile-1>\n" +
+                "</o user-profile-1>\n" +
+
+                "<o user-profile-2>\n" +
+                "<o user-pic>\n" +
+                "<SpecWidth user-pic>\n" +
+                "<SpecHeight user-pic>\n" +
+                "<SpecInside user-pic>\n" +
+                "</o user-pic>\n" +
+                "<o user-age>\n" +
+                "<SpecHeight user-age>\n" +
+                "<SpecNear user-age>\n" +
+                "<SpecBelow user-age>\n" +
+                "</o user-age>\n" +
+                "<SpecComponent user-profile-2>\n" +
+                "</o user-profile-2>\n" + 
+                
+                "<o user-profile-3>\n" +
+                "<o user-pic>\n" +
+                "<SpecWidth user-pic>\n" +
+                "<SpecHeight user-pic>\n" +
+                "<SpecInside user-pic>\n" +
+                "</o user-pic>\n" +
                 "<o user-age>\n" +
                 "<SpecHeight user-age>\n" +
                 "<SpecNear user-age>\n" +
