@@ -35,7 +35,7 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
-public class GalenPageActionRunJavascript implements GalenPageAction{
+public class GalenPageActionRunJavascript extends GalenPageAction{
 
     private static final List<ValidationError> NO_ERRORS = new LinkedList<ValidationError>();
     private String javascriptPath;

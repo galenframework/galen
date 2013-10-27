@@ -25,6 +25,7 @@ import net.mindengine.galen.runner.CompleteListener;
 import net.mindengine.galen.runner.GalenPageRunner;
 import net.mindengine.galen.runner.GalenSuiteRunner;
 import net.mindengine.galen.specs.Spec;
+import net.mindengine.galen.suite.GalenPageAction;
 import net.mindengine.galen.suite.GalenPageTest;
 import net.mindengine.galen.suite.GalenSuite;
 import net.mindengine.galen.utils.GalenUtils;
@@ -148,6 +149,11 @@ public class ConsoleReportingListener implements CompleteListener {
     public void onGlobalError(GalenPageRunner pageRunner, Exception e) {
         errorCount++;
         e.printStackTrace(err);
+    }
+
+    @Override
+    public void onPageAction(GalenPageRunner pageRunner, GalenSuite suite, GalenPageAction action) {
+        out.println(action.getOriginalCommand());
     }
 
 }

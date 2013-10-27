@@ -30,6 +30,7 @@ import net.mindengine.galen.runner.CompleteListener;
 import net.mindengine.galen.runner.GalenPageRunner;
 import net.mindengine.galen.runner.GalenSuiteRunner;
 import net.mindengine.galen.specs.Spec;
+import net.mindengine.galen.suite.GalenPageAction;
 import net.mindengine.galen.suite.GalenPageTest;
 import net.mindengine.galen.suite.GalenSuite;
 import net.mindengine.galen.utils.GalenUtils;
@@ -184,6 +185,10 @@ public class TestngReportingListener implements CompleteListener {
         return node("exception")
                 .withAttribute("class", e.getClass().getName())
                 .withChildren(node("short-stacktrace").withText(sw.getBuffer().toString()));
+    }
+
+    @Override
+    public void onPageAction(GalenPageRunner pageRunner, GalenSuite suite, GalenPageAction action) {
     }
 
 }

@@ -34,6 +34,7 @@ import net.mindengine.galen.runner.CompleteListener;
 import net.mindengine.galen.runner.GalenPageRunner;
 import net.mindengine.galen.runner.GalenSuiteRunner;
 import net.mindengine.galen.specs.Spec;
+import net.mindengine.galen.suite.GalenPageAction;
 import net.mindengine.galen.suite.GalenPageTest;
 import net.mindengine.galen.suite.GalenSuite;
 import net.mindengine.galen.validation.PageValidation;
@@ -114,6 +115,14 @@ public class HtmlReportingListener implements CompleteListener {
         }
     }
     
+
+    @Override
+    public void onPageAction(GalenPageRunner pageRunner, GalenSuite suite, GalenPageAction action) {
+        if (hasListener(pageRunner)) {
+            SuiteRun suiteRun = findSuiteRun(pageRunner);
+            suiteRun.listener.onPageAction(pageRunner, suite, action);
+        }
+    }
     
     @Override
     public void onObject(GalenPageRunner pageRunner, PageValidation pageValidation, String objectName) {
@@ -302,4 +311,5 @@ public class HtmlReportingListener implements CompleteListener {
         reportCounter++;
         return reportCounter;
     }
+
 }

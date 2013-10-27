@@ -13,23 +13,31 @@
 * See the License for the specific language governing permissions and
 * limitations under the License.
 ******************************************************************************/
-package net.mindengine.galen.suite;
+package net.mindengine.galen.reports.model;
 
+import java.util.LinkedList;
 import java.util.List;
 
-import net.mindengine.galen.browser.Browser;
-import net.mindengine.galen.validation.ValidationError;
-import net.mindengine.galen.validation.ValidationListener;
-
-public abstract class GalenPageAction {
-    private String originalCommand;
+public class PageAction {
     
-    public abstract List<ValidationError> execute(Browser browser, GalenPageTest pageTest, ValidationListener validationListener) throws Exception;
+    private String title;
+    private List<PageTestObject> objects = new LinkedList<PageTestObject>();
+    
+    public List<PageTestObject> getObjects() {
+        return objects;
+    }
 
-    public String getOriginalCommand() {
-        return originalCommand;
+    public void setObjects(List<PageTestObject> objects) {
+        this.objects = objects;
     }
-    public void setOriginalCommand(String originalCommand) {
-        this.originalCommand = originalCommand;
+
+    public String getTitle() {
+        return title;
     }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+
 }

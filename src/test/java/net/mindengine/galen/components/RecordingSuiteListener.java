@@ -21,6 +21,7 @@ import net.mindengine.galen.browser.Browser;
 import net.mindengine.galen.runner.GalenPageRunner;
 import net.mindengine.galen.runner.GalenSuiteRunner;
 import net.mindengine.galen.runner.SuiteListener;
+import net.mindengine.galen.suite.GalenPageAction;
 import net.mindengine.galen.suite.GalenPageTest;
 import net.mindengine.galen.suite.GalenSuite;
 import net.mindengine.galen.validation.ValidationError;
@@ -55,6 +56,10 @@ public class RecordingSuiteListener implements SuiteListener {
 
     private void record(String msg) {
         recorded.append(msg);
+    }
+
+    @Override
+    public void onPageAction(GalenPageRunner pageRunner, GalenSuite suite, GalenPageAction action) {
     }
 
 }

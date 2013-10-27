@@ -11,71 +11,77 @@
             <h1>Some page test 1</h1>
             <div class="test">
                 <h2>http://example.com/page1 400x600</h2>
-                <div class="object">
-                    <h3>objectA1</h3>
-                    <ul class="test-specs">
-                            <li class="fail" data-screenshot="report-1-some-page-test-1-screenshot-1.png">
-                                <span>inside: other-object 10px left</span>
-                                <ul class="error-message">
-                                    <li>objectA1 is not inside other-object</li>
-                                </ul>
-                                <ul class="areas">
-                                    <li data-area="10,10,100,50">objectA1</li>
-                                </ul>
-                            </li>
-                            <li class="success">
-                                <span>width: 10 to 20px</span>
-                            </li>
-                            <li class="success">
-                                <span>height: 10 to 20px</span>
-                            </li>
-                    </ul>
-                </div>
-                <div class="object">
-                    <h3>objectA2</h3>
-                    <ul class="test-specs">
-                            <li class="success">
-                                <span>width: 10 to 20px</span>
-                            </li>
-                            <li class="fail" data-screenshot="report-1-some-page-test-1-screenshot-1.png">
-                                <span>width: 10px</span>
-                                <ul class="error-message">
-                                    <li>objectA2 width is 20px instead of 10px</li>
-                                </ul>
-                                <ul class="areas">
-                                    <li data-area="200,300,50,30">objectA2</li>
-                                </ul>
-                            </li>
-                    </ul>
+                <div class="page-action">
+                    <h2>check homepage.spec --include all,mobile</h2>
+                    <div class="object">
+                        <h3>objectA1</h3>
+                        <ul class="test-specs">
+                                <li class="fail" data-screenshot="report-1-some-page-test-1-screenshot-1.png">
+                                    <span>inside: other-object 10px left</span>
+                                    <ul class="error-message">
+                                        <li>objectA1 is not inside other-object</li>
+                                    </ul>
+                                    <ul class="areas">
+                                        <li data-area="10,10,100,50">objectA1</li>
+                                    </ul>
+                                </li>
+                                <li class="success">
+                                    <span>width: 10 to 20px</span>
+                                </li>
+                                <li class="success">
+                                    <span>height: 10 to 20px</span>
+                                </li>
+                        </ul>
+                    </div>
+                    <div class="object">
+                        <h3>objectA2</h3>
+                        <ul class="test-specs">
+                                <li class="success">
+                                    <span>width: 10 to 20px</span>
+                                </li>
+                                <li class="fail" data-screenshot="report-1-some-page-test-1-screenshot-1.png">
+                                    <span>width: 10px</span>
+                                    <ul class="error-message">
+                                        <li>objectA2 width is 20px instead of 10px</li>
+                                    </ul>
+                                    <ul class="areas">
+                                        <li data-area="200,300,50,30">objectA2</li>
+                                    </ul>
+                                </li>
+                        </ul>
+                    </div>
                 </div>
             </div>
             <div class="test">
                 <h2>http://example.com/page2 600x700</h2>
-                <div class="object">
-                    <h3>objectB1</h3>
-                    <ul class="test-specs">
-                            <li class="success">
-                                <span>width: 10 to 20px</span>
-                            </li>
-                            <li class="fail" data-screenshot="report-1-some-page-test-1-screenshot-2.png">
-                                <span>inside: other-object 10px left</span>
-                                <ul class="error-message">
-                                    <li>objectB1 is not inside other-object</li>
-                                    <li>second error message with &lt;xml&gt; &amp;tags</li>
-                                </ul>
-                                <ul class="areas">
-                                    <li data-area="10,10,100,50">objectB1</li>
-                                </ul>
-                            </li>
-                    </ul>
-                </div>
-                <div class="object">
-                    <h3>objectB2</h3>
-                    <ul class="test-specs">
-                            <li class="success">
-                                <span>height: 100px</span>
-                            </li>
-                    </ul>
+                <div class="page-action">
+                    <h2>check homepage.spec --include all,mobile</h2>
+                    <div class="object">
+                        <h3>objectB1</h3>
+                        <ul class="test-specs">
+                                <li class="success">
+                                    <span>width: 10 to 20px</span>
+                                </li>
+                                <li class="fail" data-screenshot="report-1-some-page-test-1-screenshot-2.png">
+                                    <span>inside: other-object 10px left</span>
+                                    <ul class="error-message">
+                                        <li>objectB1 is not inside other-object</li>
+                                        <li>second error message with &lt;xml&gt; &amp;tags</li>
+                                    </ul>
+                                    <ul class="areas">
+                                        <li data-area="10,10,100,50">objectB1</li>
+                                    </ul>
+                                </li>
+                        </ul>
+                    </div>
+                    <div class="object">
+                        <h3>objectB2</h3>
+                        <ul class="test-specs">
+                                <li class="success">
+                                    <span>height: 100px</span>
+                                </li>
+                        </ul>
+                    </div>
                 </div>
                 <div class="global-error">
                     <span>net.mindengine.galen.components.report.FakeException: Some exception here</span>

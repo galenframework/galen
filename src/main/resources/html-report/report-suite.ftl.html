@@ -12,36 +12,41 @@
             <#list pageTests as pageTest>
             <div class="test">
                 <h2>${pageTest.title?html}</h2>
-                <#list pageTest.objects as object>
-                <div class="object">
-                    <h3>${object.name?html}</h3>
-                    <ul class="test-specs">
-                        <#list object.specs as spec>
-                            <#if spec.failed = true>
-                            <li class="fail" data-screenshot="${spec.screenshot}">
-                                <span>${spec.text?html}</span>
-                                <ul class="error-message">
-                                    <#if spec.errorMessages?has_content>
-                                    <#list spec.errorMessages as errorMessage>
-                                    <li>${errorMessage?html}</li>
-                                    </#list>
-                                    </#if>
-                                </ul>
-                                <ul class="areas">
-                                    <#if spec.errorAreas?has_content>
-                                    <#list spec.errorAreas as area>
-                                    <li data-area="${area.rect.left?c},${area.rect.top?c},${area.rect.width?c},${area.rect.height?c}">${area.message?html}</li>
-                                    </#list>
-                                    </#if>
-                                </ul>
-                            </li>
-                            <#else>
-                            <li class="success">
-                                <span>${spec.text?html}</span>
-                            </li>
-                            </#if>                            
-                        </#list>
-                    </ul>
+                <#list pageTest.pageActions as pageAction>
+                <div class="page-action">
+                    <h2>${pageAction.title?html}</h2>
+                    <#list pageAction.objects as object>
+                    <div class="object">
+                        <h3>${object.name?html}</h3>
+                        <ul class="test-specs">
+                            <#list object.specs as spec>
+                                <#if spec.failed = true>
+                                <li class="fail" data-screenshot="${spec.screenshot}">
+                                    <span>${spec.text?html}</span>
+                                    <ul class="error-message">
+                                        <#if spec.errorMessages?has_content>
+                                        <#list spec.errorMessages as errorMessage>
+                                        <li>${errorMessage?html}</li>
+                                        </#list>
+                                        </#if>
+                                    </ul>
+                                    <ul class="areas">
+                                        <#if spec.errorAreas?has_content>
+                                        <#list spec.errorAreas as area>
+                                        <li data-area="${area.rect.left?c},${area.rect.top?c},${area.rect.width?c},${area.rect.height?c}">${area.message?html}</li>
+                                        </#list>
+                                        </#if>
+                                    </ul>
+                                </li>
+                                <#else>
+                                <li class="success">
+                                    <span>${spec.text?html}</span>
+                                </li>
+                                </#if>                            
+                            </#list>
+                        </ul>
+                    </div>
+                    </#list>
                 </div>
                 </#list>
                 <#if pageTest.globalErrors?has_content>

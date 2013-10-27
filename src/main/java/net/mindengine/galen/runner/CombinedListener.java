@@ -20,6 +20,7 @@ import java.util.List;
 
 import net.mindengine.galen.browser.Browser;
 import net.mindengine.galen.specs.Spec;
+import net.mindengine.galen.suite.GalenPageAction;
 import net.mindengine.galen.suite.GalenPageTest;
 import net.mindengine.galen.suite.GalenSuite;
 import net.mindengine.galen.validation.PageValidation;
@@ -101,6 +102,13 @@ public class CombinedListener implements CompleteListener {
     public void onGlobalError(GalenPageRunner pageRunner, Exception e) {
         for (CompleteListener listener : listeners) {
             listener.onGlobalError(pageRunner, e);
+        }
+    }
+
+    @Override
+    public void onPageAction(GalenPageRunner pageRunner, GalenSuite suite, GalenPageAction action) {
+        for (CompleteListener listener : listeners) {
+            listener.onPageAction(pageRunner, suite, action);
         }
     }
 }

@@ -3,6 +3,7 @@ Suite: page1.test
 ========================================
 ----------------------------------------
 Page: http://example.com/page1 400x600
+check homepage.spec --include all,mobile
     objectA1
 ->      inside: other-object 10px left
 ->      :     objectA1 is not inside other-object
@@ -17,6 +18,7 @@ Page: http://example.com/page1 400x600
 
 ----------------------------------------
 Page: http://example.com/page2 600x700
+check homepage.spec --include all,mobile
     objectB1
         width: 10 to 20px
 ->      inside: other-object 10px left

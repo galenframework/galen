@@ -35,7 +35,9 @@ public class ActionNode extends Node<GalenPageAction> {
     public GalenPageAction build(BashTemplateContext context) {
         try {
             String actionText = context.process(getArguments());
-            return GalenPageActionReader.readFrom(actionText);
+            GalenPageAction pageAction = GalenPageActionReader.readFrom(actionText);
+            pageAction.setOriginalCommand(actionText);
+            return pageAction;
         }
         catch(SyntaxException e) {
             e.setLine(getLine());

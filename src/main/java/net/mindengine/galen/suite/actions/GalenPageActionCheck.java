@@ -37,7 +37,7 @@ import net.mindengine.galen.validation.SectionValidation;
 import net.mindengine.galen.validation.ValidationError;
 import net.mindengine.galen.validation.ValidationListener;
 
-public class GalenPageActionCheck implements GalenPageAction {
+public class GalenPageActionCheck extends GalenPageAction {
 
     private List<String> specs;
     private List<String> includedTags;

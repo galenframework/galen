@@ -21,7 +21,7 @@ import java.util.List;
 public class PageTest {
 
     private String title = "";
-    private List<PageTestObject> objects = new LinkedList<PageTestObject>();
+    private List<PageAction> pageActions = new LinkedList<PageAction>();
     private List<Exception> globalErrors = new LinkedList<Exception>();
 
     public String getTitle() {
@@ -32,15 +32,15 @@ public class PageTest {
         this.title = title;
     }
 
-    public List<PageTestObject> getObjects() {
-        return objects;
-    }
-
-    public void setObjects(List<PageTestObject> objects) {
-        this.objects = objects;
-    }
-
     public List<Exception> getGlobalErrors() {
         return this.globalErrors;
+    }
+
+    public List<PageAction> getPageActions() {
+        return pageActions;
+    }
+
+    public void setPageActions(List<PageAction> pageActions) {
+        this.pageActions = pageActions;
     }
 }

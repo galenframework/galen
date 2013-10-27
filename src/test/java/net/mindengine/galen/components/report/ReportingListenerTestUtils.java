@@ -35,6 +35,7 @@ import net.mindengine.galen.specs.SpecInside;
 import net.mindengine.galen.specs.SpecWidth;
 import net.mindengine.galen.suite.GalenPageTest;
 import net.mindengine.galen.suite.GalenSuite;
+import net.mindengine.galen.suite.actions.GalenPageActionCheck;
 import net.mindengine.galen.validation.ErrorArea;
 import net.mindengine.galen.validation.PageValidation;
 import net.mindengine.galen.validation.ValidationError;
@@ -55,7 +56,12 @@ public class ReportingListenerTestUtils {
         PageValidation pageValidation = new PageValidation(new MockedPage(null), null, null, null);
         
         GalenPageTest pageTest = new GalenPageTest().withSize(400, 600).withUrl("http://example.com/page1");
-        suiteListener.onBeforePage(galenSuiteRunner, pageRunner, pageTest, browser); {
+        suiteListener.onBeforePage(galenSuiteRunner, pageRunner, pageTest, browser);
+        
+        GalenPageActionCheck action = new GalenPageActionCheck();
+        action.setOriginalCommand("check homepage.spec --include all,mobile");
+        suiteListener.onPageAction(pageRunner, suite, action);
+        {
             validationListener.onObject(pageRunner, pageValidation, "objectA1"); {
                 validationListener.onSpecError(pageRunner, pageValidation, 
                         "objectA1", 
@@ -85,7 +91,10 @@ public class ReportingListenerTestUtils {
         pageValidation = new PageValidation(new MockedPage(null), null, null, null);
         Browser browser2 = new MockedBrowser("http://example.com/page2", new Dimension(610, 710));
         GalenPageTest pageTest2 = new GalenPageTest().withSize(600, 700).withUrl("http://example.com/page2");
-        suiteListener.onBeforePage(galenSuiteRunner, pageRunner, pageTest2, browser2); {
+        suiteListener.onBeforePage(galenSuiteRunner, pageRunner, pageTest2, browser2);
+        
+        suiteListener.onPageAction(pageRunner, suite, action);
+        {
             validationListener.onObject(pageRunner, pageValidation, "objectB1"); {
                 validationListener.onSpecSuccess(pageRunner, pageValidation, "objectB1", new SpecWidth(between(10, 20)).withOriginalText("width: 10 to 20px"));
                 

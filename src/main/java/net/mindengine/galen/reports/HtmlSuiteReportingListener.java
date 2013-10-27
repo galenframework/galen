@@ -28,6 +28,7 @@ import org.apache.commons.io.FileUtils;
 
 import net.mindengine.galen.browser.Browser;
 import net.mindengine.galen.page.Page;
+import net.mindengine.galen.reports.model.PageAction;
 import net.mindengine.galen.reports.model.PageTest;
 import net.mindengine.galen.reports.model.PageTestObject;
 import net.mindengine.galen.reports.model.PageTestSpec;
@@ -35,6 +36,7 @@ import net.mindengine.galen.runner.CompleteListener;
 import net.mindengine.galen.runner.GalenPageRunner;
 import net.mindengine.galen.runner.GalenSuiteRunner;
 import net.mindengine.galen.specs.Spec;
+import net.mindengine.galen.suite.GalenPageAction;
 import net.mindengine.galen.suite.GalenPageTest;
 import net.mindengine.galen.suite.GalenSuite;
 import net.mindengine.galen.validation.PageValidation;
@@ -59,6 +61,7 @@ public class HtmlSuiteReportingListener implements CompleteListener {
     private Map<String, PageTestObject> pageTestObjectsMap = new HashMap<String, PageTestObject>();
     
     private int screenshotId = 0;
+    private PageAction currentPageAction;
     private class Screenshot {
         private String name;
         private String filePath;
@@ -86,7 +89,7 @@ public class HtmlSuiteReportingListener implements CompleteListener {
         else {
             currentObject = new PageTestObject();
             currentObject.setName(objectName);
-            currentPageTest.getObjects().add(currentObject);
+            currentPageAction.getObjects().add(currentObject);
             pageTestObjectsMap.put(objectName, currentObject);
         }
     }
@@ -212,5 +215,13 @@ public class HtmlSuiteReportingListener implements CompleteListener {
             else extension.append(ch);
         }
         return extension.reverse().toString();
+    }
+
+
+    @Override
+    public void onPageAction(GalenPageRunner pageRunner, GalenSuite suite, GalenPageAction action) {
+        currentPageAction = new PageAction();
+        currentPageAction.setTitle(action.getOriginalCommand());
+        currentPageTest.getPageActions().add(currentPageAction);
     }
 }
