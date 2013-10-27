@@ -524,23 +524,29 @@ public class PageSpecsReaderTest {
         PageSpec pageSpec = spec.getPageSpec();
         List<PageSection> childSections = pageSpec.getSections();
         
-        assertThat(childSections.size(), is(1));
-        List<ObjectSpecs> objects = childSections.get(0).getObjects();
-        assertThat(objects.size(), is(3));
+        assertThat(childSections.size(), is(3));
+        
+        
         
         {
+            List<ObjectSpecs> objects = childSections.get(0).getObjects();
+            assertThat(objects.size(), is(1));
             assertThat(objects.get(0).getObjectName(), is("user-pic"));
             List<Spec> childSpecs = objects.get(0).getSpecs();
             assertThat(childSpecs.size(), is(3));
         }
         {
-            assertThat(objects.get(1).getObjectName(), is("user-name"));
-            List<Spec> childSpecs = objects.get(1).getSpecs();
+            List<ObjectSpecs> objects = childSections.get(1).getObjects();
+            assertThat(objects.size(), is(1));
+            assertThat(objects.get(0).getObjectName(), is("user-name"));
+            List<Spec> childSpecs = objects.get(0).getSpecs();
             assertThat(childSpecs.size(), is(3));
         }
         {
-            assertThat(objects.get(2).getObjectName(), is("user-age"));
-            List<Spec> childSpecs = objects.get(2).getSpecs();
+            List<ObjectSpecs> objects = childSections.get(2).getObjects();
+            assertThat(objects.size(), is(1));
+            assertThat(objects.get(0).getObjectName(), is("user-age"));
+            List<Spec> childSpecs = objects.get(0).getSpecs();
             assertThat(childSpecs.size(), is(3));
         }
         
