@@ -52,4 +52,10 @@ public class MockedPage implements Page {
         return 0;
     }
 
+    @Override
+    public Page createObjectContextPage(Locator mainObjectLocator) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
 }

@@ -33,14 +33,48 @@ import org.openqa.selenium.WebElement;
 public class SeleniumPage implements Page {
 
     private WebDriver driver;
+    
+    private Map<String, List<PageElement>> cachedElementsList = new HashMap<String, List<PageElement>>();
+    private Map<String, PageElement> cachedPageElements = new HashMap<String, PageElement>();
+    
+    private WebElement objectContext;
+    private Locator objectContextLocator;
+    
 
     public SeleniumPage(WebDriver driver) {
         this.driver = driver;
     }
+    
+    public SeleniumPage(WebDriver driver, Locator objectContextLocator) {
+        this.driver = driver;
+        this.objectContextLocator = objectContextLocator;
+        setObjectContext(objectContextLocator);
+    }
 
     
-    private Map<String, List<PageElement>> cachedElementsList = new HashMap<String, List<PageElement>>();
-    private Map<String, PageElement> cachedPageElements = new HashMap<String, PageElement>();
+    private void setObjectContext(Locator objectContextLocator) {
+        if (objectContextLocator != null) {
+            By by = by(objectContextLocator);
+            if (by == null) {
+                throw new RuntimeException("Cannot convert locator: " + objectContextLocator.getLocatorType() + " " + objectContextLocator.getLocatorValue());
+            }
+            
+            int index = objectContextLocator.getIndex();
+            if (index > 1) {
+                index = index - 1;
+                List<WebElement> elements = driver.findElements(by);
+                if (index >= elements.size()) {
+                    throw new RuntimeException("Incorrect locator for object context. Index out of range");
+                }
+                objectContext = elements.get(index);
+            }
+            else {
+                objectContext = driver.findElement(by);
+            }
+        }
+    }
+
+
     
     @Override
     public PageElement getObject(String objectName, Locator objectLocator) {
@@ -63,7 +97,7 @@ public class SeleniumPage implements Page {
                 return null;
             }
             
-            List<WebElement> webElements = driver.findElements(by);
+            List<WebElement> webElements = driverFindElements(by);
             
             pageElements = new LinkedList<PageElement>();
             int i = 1;
@@ -81,6 +115,25 @@ public class SeleniumPage implements Page {
         
     }
 
+    private List<WebElement> driverFindElements(By by) {
+        if (objectContext == null) {
+            return driver.findElements(by);
+        }
+        else {
+            return objectContext.findElements(by);
+        }
+    }
+
+    private WebElement driverFindElement(By by) {
+        if (objectContext == null) {
+            return driver.findElement(by);
+        }
+        else {
+            return objectContext.findElement(by);
+        }
+    }
+    
+
     private PageElement getWebPageElement(String objectName, Locator objectLocator) {
         PageElement pageElement = cachedPageElements.get(objectName);
         
@@ -91,7 +144,7 @@ public class SeleniumPage implements Page {
             }
             
             try {
-                WebElement webElement = driver.findElement(by);
+                WebElement webElement = driverFindElement(by);
                 pageElement = new WebPageElement(objectName, webElement, objectLocator);
             }
             catch (NoSuchElementException e) {
@@ -128,13 +181,26 @@ public class SeleniumPage implements Page {
         else if ("viewport".equals(objectName)) {
             return new ViewportElement(driver);
         }
+        else if ("parent".equals(objectName)) {
+            if (objectContext != null) {
+                return new WebPageElement("parent", objectContext, objectContextLocator);
+            }
+            else throw new RuntimeException("There is no object context defined on page");
+        }
         else return null;
     }
 
 
     @Override
     public int getObjectCount(Locator locator) {
-        return driver.findElements(by(locator)).size();
+        return driverFindElements(by(locator)).size();
     }
 
+    @Override
+    public Page createObjectContextPage(Locator objectContextLocator) {
+        return new SeleniumPage(this.driver, objectContextLocator);
+    }
+
+    
+    
 }

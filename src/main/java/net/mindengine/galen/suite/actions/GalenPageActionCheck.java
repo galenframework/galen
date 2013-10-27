@@ -54,7 +54,7 @@ public class GalenPageActionCheck implements GalenPageAction {
             PageSpec spec = pageSpecReader.read(GalenUtils.findFile(specFile));
             List<PageSection> pageSections = spec.findSections(includedTags, excludedTags);
             
-            SectionValidation sectionValidation = new SectionValidation(pageSections, new PageValidation(page, spec), validationListener);
+            SectionValidation sectionValidation = new SectionValidation(pageSections, new PageValidation(page, spec, validationListener), validationListener);
             
             List<ValidationError> errors = sectionValidation.check();
             if (errors != null) {

@@ -32,10 +32,12 @@ public class PageValidation {
 
     private Page page;
     private PageSpec pageSpec;
+    private ValidationListener validationListener;
 
-    public PageValidation(Page page, PageSpec pageSpec) {
+    public PageValidation(Page page, PageSpec pageSpec, ValidationListener validationListener) {
         this.setPage(page);
         this.setPageSpec(pageSpec);
+        this.setValidationListener(validationListener);
     }
 
     public Page getPage() {
@@ -153,6 +155,14 @@ public class PageValidation {
             }
         }
         return range;
+    }
+
+    public ValidationListener getValidationListener() {
+        return validationListener;
+    }
+
+    public void setValidationListener(ValidationListener validationListener) {
+        this.validationListener = validationListener;
     }
 
 }
