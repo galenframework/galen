@@ -15,11 +15,13 @@
 ******************************************************************************/
 package net.mindengine.galen.specs.reader.page;
 
+import java.io.IOException;
+
 import net.mindengine.galen.specs.page.PageSection;
 
 public abstract class State {
 
-    public abstract void process(String line);
+    public abstract void process(String line) throws IOException;
 
     public boolean isObjectDefinition() {
         return this instanceof StateObjectDefinition;
@@ -29,8 +31,8 @@ public abstract class State {
         return new StateObjectDefinition(pageSpec);
     }
 
-    public static State startedSection(PageSection section) {
-        return new StateDoingSection(section);
+    public static State startedSection(PageSection section, String contextPath) {
+        return new StateDoingSection(section, contextPath);
     }
 
 }

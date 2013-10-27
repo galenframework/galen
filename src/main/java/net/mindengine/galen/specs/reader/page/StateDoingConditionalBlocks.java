@@ -15,6 +15,7 @@
 ******************************************************************************/
 package net.mindengine.galen.specs.reader.page;
 
+import java.io.IOException;
 import java.util.LinkedList;
 
 import net.mindengine.galen.parser.SyntaxException;
@@ -32,18 +33,21 @@ public class StateDoingConditionalBlocks extends State {
     }
     
     private STATE state = STATE.STATEMENT;
+    private String contextPath;
     
     
     
-    public StateDoingConditionalBlocks(boolean inverted) {
+    public StateDoingConditionalBlocks(boolean inverted, String contextPath) {
         conditionalBlock = new ConditionalBlock();
         conditionalBlock.setStatements(new LinkedList<ConditionalBlockStatement>());
         
+        this.contextPath = contextPath;
         startNewStatement(inverted);
+        
     }
 
     @Override
-    public void process(String line) {
+    public void process(String line) throws IOException {
         currentSectionState.process(line);
     }
 
@@ -57,7 +61,7 @@ public class StateDoingConditionalBlocks extends State {
         conditionalBlock.getStatements().add(currentStatement);
         
         PageSection currentSection = new PageSection();
-        currentSectionState = new StateDoingSection(currentSection);
+        currentSectionState = new StateDoingSection(currentSection, getContextPath());
         
         currentStatement.setObjects(currentSection.getObjects());
     }
@@ -68,7 +72,7 @@ public class StateDoingConditionalBlocks extends State {
         }
         
         PageSection currentSection = new PageSection();
-        currentSectionState = new StateDoingSection(currentSection);
+        currentSectionState = new StateDoingSection(currentSection, getContextPath());
         
         conditionalBlock.setBodyObjects(currentSection.getObjects());
         state = STATE.BODY;
@@ -80,7 +84,7 @@ public class StateDoingConditionalBlocks extends State {
         }
         
         PageSection currentSection = new PageSection();
-        currentSectionState = new StateDoingSection(currentSection);
+        currentSectionState = new StateDoingSection(currentSection, contextPath);
         state = STATE.BODY;
         
         conditionalBlock.setOtherwiseObjects(currentSection.getObjects());
@@ -91,6 +95,14 @@ public class StateDoingConditionalBlocks extends State {
             throw new SyntaxException("There is no body defined for this conditional block");
         }
         return conditionalBlock;
+    }
+
+    public String getContextPath() {
+        return contextPath;
+    }
+
+    public void setContextPath(String contextPath) {
+        this.contextPath = contextPath;
     }
 
 }

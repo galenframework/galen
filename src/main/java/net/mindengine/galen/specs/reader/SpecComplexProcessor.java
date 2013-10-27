@@ -31,7 +31,7 @@ public class SpecComplexProcessor implements SpecProcessor {
     }
 
     @Override
-    public Spec processSpec(String specName, String paramsText) {
+    public Spec processSpec(String specName, String paramsText, String contextPath) {
         StringCharReader reader = new StringCharReader(paramsText);
         
         Object[]args = new Object[toExpect.size()];

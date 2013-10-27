@@ -15,9 +15,11 @@
 ******************************************************************************/
 package net.mindengine.galen.specs.reader;
 
+import java.io.IOException;
+
 import net.mindengine.galen.specs.Spec;
 
 public interface SpecProcessor {
 
-    public Spec processSpec(String specName, String paramsText);
+    public Spec processSpec(String specName, String paramsText, String contextPath) throws IOException;
 }

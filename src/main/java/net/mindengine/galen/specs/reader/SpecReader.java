@@ -27,6 +27,8 @@ import static net.mindengine.galen.specs.Alignment.RIGHT;
 import static net.mindengine.galen.specs.Alignment.TOP;
 import static net.mindengine.galen.suite.reader.Line.UNKNOWN_LINE;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -43,6 +45,7 @@ import net.mindengine.galen.specs.SpecAbove;
 import net.mindengine.galen.specs.SpecAbsent;
 import net.mindengine.galen.specs.SpecBelow;
 import net.mindengine.galen.specs.SpecCentered;
+import net.mindengine.galen.specs.SpecComponent;
 import net.mindengine.galen.specs.SpecContains;
 import net.mindengine.galen.specs.SpecHeight;
 import net.mindengine.galen.specs.SpecHorizontally;
@@ -53,6 +56,8 @@ import net.mindengine.galen.specs.SpecText;
 import net.mindengine.galen.specs.SpecVertically;
 import net.mindengine.galen.specs.SpecVisible;
 import net.mindengine.galen.specs.SpecWidth;
+import net.mindengine.galen.specs.reader.page.PageSpec;
+import net.mindengine.galen.specs.reader.page.PageSpecReader;
 
 public class SpecReader {
     private static final Pattern CENTERED_ERROR_RATE_PATTERN = Pattern.compile("[0-9]+px");
@@ -143,7 +148,7 @@ public class SpecReader {
         
         putSpec("text\\s+.*", new SpecProcessor() {
             @Override
-            public Spec processSpec(String specName, String paramsText) {
+            public Spec processSpec(String specName, String paramsText, String contextPath) {
                 String arguments = specName.substring("text".length()).trim();
                 
                 if (arguments.isEmpty()) {
@@ -217,7 +222,7 @@ public class SpecReader {
         
         putSpec("centered(\\s+(horizontally|vertically))?\\s+(on|inside)", new SpecProcessor() {
 			@Override
-			public Spec processSpec(String specName, String paramsText) {
+			public Spec processSpec(String specName, String paramsText, String contextPath) {
 				specName = specName.replace("centered", "").trim();
 				String args[] = specName.split(" ");
 				
@@ -264,9 +269,31 @@ public class SpecReader {
                 return new SpecOn(objectName, locations);
             }
         }));
+        
+        putSpec("component", new SpecProcessor() {
+            @Override
+            public Spec processSpec(String specName, String paramsText, String contextPath) throws IOException {
+                String childFilePath = paramsText.trim();
+                if (childFilePath.isEmpty()) {
+                    throw new SyntaxException("File path to component spec is not specified");
+                }
+                
+                
+                PageSpecReader pageSpecReader = new PageSpecReader();
+                PageSpec childPageSpec = pageSpecReader.read(new File(contextPath + File.separator + childFilePath));
+                
+                SpecComponent spec = new SpecComponent();
+                spec.setPageSpec(childPageSpec);
+                return spec;
+            }
+        });
     }
 
-    public Spec read(String specText) {
+    public Spec read(String specText) throws IOException {
+        return read(specText, ".");
+    }
+    
+    public Spec read(String specText, String contextPath) throws IOException {
         if (specText == null) {
             throw new NullPointerException("Spec text should not be null");
         }
@@ -287,15 +314,15 @@ public class SpecReader {
             }
         }
         
-        Spec spec = readSpecWithParams(statement, paramsText);
+        Spec spec = readSpecWithParams(statement, paramsText, contextPath);
         if (spec != null) {
             spec.setOriginalText(specText);
         }
         return spec;
     }
 
-    private Spec readSpecWithParams(String specName, String paramsText) {
-        return findMatchingSpec(specName).processSpec(specName, paramsText); 
+    private Spec readSpecWithParams(String specName, String paramsText, String contextPath) throws IOException {
+        return findMatchingSpec(specName).processSpec(specName, paramsText, contextPath); 
     }
 
     private SpecProcessor findMatchingSpec(String specName) {

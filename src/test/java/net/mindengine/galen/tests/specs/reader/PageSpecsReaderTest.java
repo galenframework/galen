@@ -40,6 +40,7 @@ import net.mindengine.galen.specs.Location;
 import net.mindengine.galen.specs.Range;
 import net.mindengine.galen.specs.Spec;
 import net.mindengine.galen.specs.SpecAbsent;
+import net.mindengine.galen.specs.SpecComponent;
 import net.mindengine.galen.specs.SpecInside;
 import net.mindengine.galen.specs.SpecNear;
 import net.mindengine.galen.specs.SpecWidth;
@@ -495,10 +496,55 @@ public class PageSpecsReaderTest {
     
     @Test
     public void shouldParse_componentSpecs() throws Exception {
+        PageSpec pageSpec = pageSpecReader.read(new File(getClass().getResource("/specs/components/spec-for-component-test-main.spec").getFile()));
+        List<PageSection> sections = pageSpec.getSections();
+        assertThat(sections.size(), is(1));
         
+        PageSection pageSection = sections.get(0);
+        
+        List<ObjectSpecs> objects = pageSection.getObjects();
+        assertThat(objects.size(), is(3));
+        
+        assertThat(objects.get(0).getObjectName(), is("user-profile-1"));
+        assertThat(objects.get(1).getObjectName(), is("user-profile-2"));
+        assertThat(objects.get(2).getObjectName(), is("user-profile-3"));
+        
+        assertChildComponentSpec(objects.get(0).getSpecs());
+        assertChildComponentSpec(objects.get(1).getSpecs());
+        assertChildComponentSpec(objects.get(2).getSpecs());
     }
     
     
+
+    private void assertChildComponentSpec(List<Spec> specs) {
+        assertThat(specs.size(), is(1));
+        SpecComponent spec = (SpecComponent) specs.get(0);
+        assertThat(spec.getOriginalText(), is("component: spec-for-component-test-component.spec"));
+        
+        PageSpec pageSpec = spec.getPageSpec();
+        List<PageSection> childSections = pageSpec.getSections();
+        
+        assertThat(childSections.size(), is(1));
+        List<ObjectSpecs> objects = childSections.get(0).getObjects();
+        assertThat(objects.size(), is(3));
+        
+        {
+            assertThat(objects.get(0).getObjectName(), is("user-pic"));
+            List<Spec> childSpecs = objects.get(0).getSpecs();
+            assertThat(childSpecs.size(), is(3));
+        }
+        {
+            assertThat(objects.get(1).getObjectName(), is("user-name"));
+            List<Spec> childSpecs = objects.get(1).getSpecs();
+            assertThat(childSpecs.size(), is(3));
+        }
+        {
+            assertThat(objects.get(2).getObjectName(), is("user-age"));
+            List<Spec> childSpecs = objects.get(2).getSpecs();
+            assertThat(childSpecs.size(), is(3));
+        }
+        
+    }
 
     private FileSyntaxException expectExceptionFromReading(String file) throws IOException {
         try {

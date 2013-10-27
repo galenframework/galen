@@ -102,7 +102,7 @@ public class PageSpecLineProcessor {
 	        }
 	        previousState = state;
 	        boolean inverted = theRest.equals("not");
-            state = new StateDoingConditionalBlocks(inverted);
+            state = new StateDoingConditionalBlocks(inverted, contextPath);
         }
 	    else {
 	        if (!(state instanceof StateDoingConditionalBlocks)) {
@@ -249,7 +249,7 @@ public class PageSpecLineProcessor {
         currentSection = new PageSection();
         currentSection.setTags(readTags(tags));
         pageSpec.addSection(currentSection);
-        state = State.startedSection(currentSection);
+        state = State.startedSection(currentSection, contextPath);
     }
 
     private List<String> readTags(String tagsText) {

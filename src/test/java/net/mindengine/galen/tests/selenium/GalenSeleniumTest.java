@@ -393,6 +393,13 @@ public class GalenSeleniumTest {
     
     
     
+    @Test
+    public void performsValidations_ofComponentSpecs() {
+        //TODO COmponent tests
+    }
+    
+    
+    
     private void openDriverForBadPage() {
         driver.get("file://" + getClass().getResource("/html/page1.html").getPath());
     }

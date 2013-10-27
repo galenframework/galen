@@ -16,6 +16,9 @@
 package net.mindengine.galen.specs.reader.page;
 
 import static net.mindengine.galen.suite.reader.Line.UNKNOWN_LINE;
+
+import java.io.IOException;
+
 import net.mindengine.galen.parser.MathParser;
 import net.mindengine.galen.parser.SyntaxException;
 import net.mindengine.galen.specs.page.ObjectSpecs;
@@ -30,31 +33,33 @@ public class StateDoingSection extends State {
     private String[] toParameterize;
     private Parameterization currentParameterization = null;
     private int currentIndentationLevel;
-    
+    private String contextPath = ".";
     
     private class Parameterization {
         private String[] parameters;
         private ObjectSpecs[] objectSpecs;
+        
 
         public Parameterization(String[] parameters, ObjectSpecs[] objectSpecs) {
             this.parameters = parameters;
             this.objectSpecs = objectSpecs;
         }
 
-        public void processObject(String line) {
+        public void processObject(String line) throws IOException {
             for (int i = 0; i < parameters.length; i++) {
                 String specText = convertParameterizedLine(line, parameters[i]);
-                objectSpecs[i].getSpecs().add(StateDoingSection.this.specReader.read(specText));
+                objectSpecs[i].getSpecs().add(StateDoingSection.this.specReader.read(specText, getContextPath()));
             }
         }
     }
     
-    public StateDoingSection(PageSection section) {
+    public StateDoingSection(PageSection section, String contextPath) {
         this.section = section;
+        this.contextPath = contextPath;
     }
 
     @Override
-    public void process(String line) {
+    public void process(String line) throws IOException {
         if (startsWithIndentation(line)) {
             if (currentParameterization != null) {
                 currentParameterization.processObject(line);
@@ -166,6 +171,14 @@ public class StateDoingSection extends State {
 
     public void parameterizeNextObject(String[] parameters) {
         toParameterize = parameters;
+    }
+
+    public String getContextPath() {
+        return contextPath;
+    }
+
+    public void setContextPath(String contextPath) {
+        this.contextPath = contextPath;
     }
 
 }
