@@ -41,28 +41,35 @@ var Galen = {
             return false;
         });
 
-        $("ul.test-specs li.fail").click(function () {
-            var screenshot = $(this).attr("data-screenshot");
-            var img = new Image();
+        $("ul.test-specs li.fail span").click(function () {
+            var subObjects = $(this).parent().parent().find(".sub-objects");
+            if (subObjects.length > 0) {
+                subObjects.slideToggle();
+            }
+            else {
+                var screenshot = $(this).parent().attr("data-screenshot");
+                var img = new Image();
 
-            var areas = [];
-            $(this).find("ul.areas li").each(function (){
-                var areaText = $(this).attr("data-area");
-                areas[areas.length] = {
-                    area: eval("[" + areaText + "]"),
-                    text: $(this).html()
+                var areas = [];
+                $(this).parent().find("ul.areas li").each(function (){
+                    var areaText = $(this).attr("data-area");
+                    areas[areas.length] = {
+                        area: eval("[" + areaText + "]"),
+                        text: $(this).html()
+                    };
+                });
+
+                img.onload = function() {
+                    Galen.showScreenshot(img, this.width, this.height, areas);
                 };
-            });
-
-            img.onload = function() {
-                Galen.showScreenshot(img, this.width, this.height, areas);
-            };
-            img.src = screenshot;
+                img.src = screenshot;
+            }
         });
 
-        $(".global-error span").click(function (){
-            $(this).next().slideToggle();
-        });
+
+        this.makeSliding(".global-error span");
+        this.makeSliding(".suite h2");
+        this.makeSliding(".suite h3");
 
         $("h2").each(function (){
             var next = $(this).next();
@@ -72,6 +79,12 @@ var Galen = {
                 $(this).addClass("has-failures");
             }
         }); 
+    },
+    makeSliding: function (selector) {
+        $(selector).click(Galen.onSlidingElementClicked);
+    },
+    onSlidingElementClicked: function () {
+        $(this).next().slideToggle();
     },
     showScreenshot: function (img, width, height, areas) {
         $("#tooltip-body").html("<div class='canvas'></div>").append(img);

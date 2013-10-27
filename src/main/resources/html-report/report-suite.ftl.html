@@ -7,40 +7,44 @@
     </head>
     <body>
         <script>$(function() {Galen.formatSuiteReport();});</script>
+        <h1>${suiteName?html}</h1>
         <div class="suite">
-            <h1>${suiteName?html}</h1>
             <#list pageTests as pageTest>
+            <h2 class="test">${pageTest.title?html}</h2>
             <div class="test">
-                <h2>${pageTest.title?html}</h2>
                 <#list pageTest.pageActions as pageAction>
+                <h2 class="page-action">${pageAction.title?html}</h2>
                 <div class="page-action">
-                    <h2>${pageAction.title?html}</h2>
                     <#list pageAction.objects as object>
+                    <h3>${object.name?html}</h3>
                     <div class="object">
-                        <h3>${object.name?html}</h3>
                         <ul class="test-specs">
                             <#list object.specs as spec>
                                 <#if spec.failed = true>
-                                <li class="fail" data-screenshot="${spec.screenshot}">
-                                    <span>${spec.text?html}</span>
-                                    <ul class="error-message">
-                                        <#if spec.errorMessages?has_content>
-                                        <#list spec.errorMessages as errorMessage>
-                                        <li>${errorMessage?html}</li>
-                                        </#list>
-                                        </#if>
-                                    </ul>
-                                    <ul class="areas">
-                                        <#if spec.errorAreas?has_content>
-                                        <#list spec.errorAreas as area>
-                                        <li data-area="${area.rect.left?c},${area.rect.top?c},${area.rect.width?c},${area.rect.height?c}">${area.message?html}</li>
-                                        </#list>
-                                        </#if>
-                                    </ul>
+                                <li class="fail">
+                                    <div class="description" data-screenshot="${spec.screenshot}">
+                                        <span>${spec.text?html}</span>
+                                        <ul class="error-message">
+                                            <#if spec.errorMessages?has_content>
+                                            <#list spec.errorMessages as errorMessage>
+                                            <li>${errorMessage?html}</li>
+                                            </#list>
+                                            </#if>
+                                        </ul>
+                                        <ul class="areas">
+                                            <#if spec.errorAreas?has_content>
+                                            <#list spec.errorAreas as area>
+                                            <li data-area="${area.rect.left?c},${area.rect.top?c},${area.rect.width?c},${area.rect.height?c}">${area.message?html}</li>
+                                            </#list>
+                                            </#if>
+                                        </ul>
+                                    </div>
                                 </li>
                                 <#else>
                                 <li class="success">
-                                    <span>${spec.text?html}</span>
+                                    <div class="description">
+                                        <span>${spec.text?html}</span>
+                                    </div>
                                 </li>
                                 </#if>                            
                             </#list>
