@@ -11,8 +11,9 @@ body {
 }
 
 h1, h2, h3 {
-    margin: 20px 20px 10px 20px;
     color: #111;
+    margin-top: 10px;
+    margin-bottom: 10px;
 }
 
 h1 {
@@ -24,7 +25,7 @@ a {
     color: #1271C4;
 }
 
-.suites-overview h1 {
+.suites-overview h1,  {
     margin: 0;
     padding: 20px;
     background: #249AE3;
@@ -97,49 +98,39 @@ a {
 
 
 
-
-.suite h1 {
-    margin: 0;
-    padding: 20px;
-    background: #249AE3;
-    color: white;
-    text-shadow: -1px -1px 0px #06578A;
-    font-size: 1.6em;
+.suite h2, .suite h3 {
+    cursor: pointer;
 }
-.test {
-    margin: 20px;
-    padding-bottom: 20px;
+.suite h2:hover, .suite h3:hover {
+    color: #555;
 }
 
-
-.test h2 {
-    color: #1271C4;
-    margin-left: 20px;
-    font-size: 1.3em;
+.suite h2.page-action { 
+    font-size: 1.2em;
 }
-
-.object {
-    margin-left: 20px;
+.suite h3 {
+    font-size: 1.0em;
 }
-
-h3 {
-    font-size: 1em;
-    font-weight: bold;
+div.suite, div.test, div.page-action, div.object, div.sub-objects {
+    padding-left: 40px;
 }
 
 ul.test-specs {
-    margin-left: 60px;
     list-style: none;
 }
 
-ul.test-specs li.fail {
-    font-weight: bold;
-    color: #E32F0B;
-    position:relative;
-}
 
+ul.test-specs li {
+    padding: 0;
+    margin: 0;
+    position: relative;
+}
 ul.test-specs li.fail span {
-    cursor: pointer;
+    color: red;
+    cursor:pointer;
+}
+ul.test-specs li.fail span:hover {
+    color: #FA7F05;
 }
 
 ul.test-specs li.fail:before, .global-error span:before, h2.has-failures:before {
@@ -159,7 +150,6 @@ ul.test-specs li.fail:before, .global-error span:before, h2.has-failures:before 
     text-shadow: 1px 1px 1px #962109;
     box-shadow: 1px 1px 1px #999;
 }
-
 h2.has-failures:before {
     left: 10px;
     font-size: 0.6em;
@@ -171,10 +161,11 @@ ul.areas {
 ul.error-message {
     z-index: 9;
     position: absolute;
+    top: 20px;
+    left: 20px;
     list-style: none;
     padding: 20px;
     color: #E32F0B;
-    left: 40px;
     display: none;
     background: #FCF6E8;
     border:1px solid #FAC8CE;
@@ -195,7 +186,7 @@ ul.error-message li:before {
     margin-left:-1em;
 }
 
-ul.test-specs li.fail:hover ul.error-message {
+ul.test-specs li.fail div.description:hover > ul.error-message {
     display: block;
 }
 
