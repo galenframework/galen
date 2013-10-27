@@ -51,11 +51,13 @@ public class GalenConfigTest {
         FileUtils.copyFile(new File(getClass().getResource("/config").getFile()), configFile);
         
         GalenConfig config = GalenConfig.getConfig();
+        config.reset();
         
         configFile.delete();
         
         MatcherAssert.assertThat(config.getRangeApproximation(), is(3));
         assertThat(config.getReportingListeners(), Matchers.contains("net.mindengine.CustomListener", "net.mindengine.CustomListener2"));
+        config.reset();
     }
     
     @Test public void shouldRead_configForLocalProject_fromSystemProperties() throws IOException {
@@ -67,6 +69,9 @@ public class GalenConfigTest {
         assertThat(config.getRangeApproximation(), is(5));
         assertThat(config.getReportingListeners(), Matchers.contains("net.mindengine.system.CustomListener", "net.mindengine.system.CustomListener2"));
         
+        deleteSystemProperty("galen.range.approximation");
+        deleteSystemProperty("galen.reporting.listeners");
+        config.reset();
     }
     
     
@@ -91,6 +96,8 @@ public class GalenConfigTest {
         Range range = Expectations.range().read(reader);
         
         assertThat(range, is(Range.between(15, 25)));
+        
+        deleteSystemProperty("galen.range.approximation");
     }
 
     @Test public void shouldUseConfig_forReportingListeners() throws IOException, SecurityException, IllegalArgumentException, ClassNotFoundException, NoSuchMethodException, InstantiationException, IllegalAccessException, InvocationTargetException {
@@ -103,6 +110,8 @@ public class GalenConfigTest {
         assertThat(listeners, is(notNullValue()));
         assertThat(listeners.size(), is(1));
         assertThat(listeners.get(0), is(instanceOf(DummyCompleteListener.class)));
+        
+        deleteSystemProperty("galen.reporting.listeners");
     }
     
     private void deleteSystemProperty(String key) {

@@ -17,6 +17,7 @@ package net.mindengine.galen.page.selenium;
 
 import net.mindengine.galen.page.PageElement;
 import net.mindengine.galen.page.Rect;
+import net.mindengine.galen.specs.page.CorrectionsRect;
 import net.mindengine.galen.specs.page.Locator;
 
 import org.openqa.selenium.Dimension;
@@ -52,11 +53,11 @@ public class WebPageElement implements PageElement {
         return cachedArea;
     }
 
-    private Rect correctedRect(Rect rect, Rect corrections) {
-        return new Rect(rect.getLeft() + corrections.getLeft(),
-                rect.getTop() + corrections.getTop(),
-                rect.getWidth() + corrections.getWidth(),
-                rect.getHeight() + corrections.getHeight());
+    private Rect correctedRect(Rect rect, CorrectionsRect corrections) {
+        return new Rect(corrections.getLeft().correct(rect.getLeft()),
+                corrections.getTop().correct(rect.getTop()),
+                corrections.getWidth().correct(rect.getWidth()),
+                corrections.getHeight().correct(rect.getHeight()));
     }
 
     @Override

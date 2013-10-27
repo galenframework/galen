@@ -17,18 +17,18 @@ package net.mindengine.galen.specs.reader.page;
 
 import static java.lang.String.format;
 import static net.mindengine.galen.suite.reader.Line.UNKNOWN_LINE;
-
-import org.apache.commons.lang3.StringUtils;
-
-import net.mindengine.galen.page.Rect;
 import net.mindengine.galen.parser.ExpectWord;
 import net.mindengine.galen.parser.Expectations;
 import net.mindengine.galen.parser.SyntaxException;
+import net.mindengine.galen.specs.page.CorrectionsRect;
 import net.mindengine.galen.specs.page.Locator;
 import net.mindengine.galen.specs.reader.StringCharReader;
 
+import org.apache.commons.lang3.StringUtils;
+
 public class StateObjectDefinition extends State {
 
+    private static final String CORRECTIONS_SYMBOL = "@";
     private PageSpec pageSpec;
 
     public StateObjectDefinition(PageSpec pageSpec) {
@@ -44,8 +44,8 @@ public class StateObjectDefinition extends State {
         try {
             String word = expectCorrectionsOrId(reader, objectName);
             String locatorType;
-            Rect corrections = null;
-            if (word.equals("corrections")) {
+            CorrectionsRect corrections = null;
+            if (word.equals(CORRECTIONS_SYMBOL)) {
                 corrections = Expectations.corrections().read(reader);
                 
                 locatorType = expectWord(reader, format("Missing locator for object \"%s\"", objectName));
@@ -67,7 +67,7 @@ public class StateObjectDefinition extends State {
         }
     }
 
-    private void addObjectToSpec(String objectName, String locatorType, Rect corrections, String value) {
+    private void addObjectToSpec(String objectName, String locatorType, CorrectionsRect corrections, String value) {
         Locator locator = new Locator(locatorType, value).withCorrections(corrections);
         if (objectName.contains("*")) {
             addMultiObject(objectName, locator);

@@ -22,6 +22,7 @@ import net.mindengine.galen.page.Rect;
 import net.mindengine.galen.specs.Location;
 import net.mindengine.galen.specs.Side;
 import net.mindengine.galen.specs.Range;
+import net.mindengine.galen.specs.page.CorrectionsRect;
 
 public class Expectations {
 
@@ -62,8 +63,8 @@ public class Expectations {
         return new ExpectLocations();
     }
 
-    public static Expectation<Rect> corrections() {
-        return new ExpectRect();
+    public static Expectation<CorrectionsRect> corrections() {
+        return new ExpectCorrection();
     }
 
     

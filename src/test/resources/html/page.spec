@@ -2,7 +2,7 @@
 
 =====================================================================
 header                      id          header
-header-with-corrections     corrections (0, 0, -100, -30)       id  header
+header-with-corrections     @ (0, 0, -100, -30)       id  header
 header-text-1               css         #header h1
 header-text-2               css         #header h2
 
