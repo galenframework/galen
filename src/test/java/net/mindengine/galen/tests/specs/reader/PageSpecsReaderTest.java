@@ -490,7 +490,11 @@ public class PageSpecsReaderTest {
         assertThat(otherwiseObjects.size(), is(1));
         assertThat(otherwiseObjects.get(0).getObjectName(), is("button-2"));
         assertThat(otherwiseObjects.get(0).getSpecs().get(0).getOriginalText(), is("text ends: something"));
-        
+    }
+    
+    
+    @Test
+    public void shouldParse_componentSpecs() throws Exception {
         
     }
     

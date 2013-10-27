@@ -39,17 +39,17 @@ public class PageSpecReader {
     	}
     	else {
     		processedFiles.add(absolutePath);
-    		return read(new FileInputStream(file), absolutePath);
+    		return read(new FileInputStream(file), absolutePath, file.getParent());
     	}
     }
 
     public PageSpec read(InputStream inputStream) throws IOException {
-        return read(inputStream, "<unknown location>");
+        return read(inputStream, "<unknown location>", ".");
     }
     
     
-    public PageSpec read(InputStream inputStream, String fileLocation) throws IOException {
-        PageSpecLineProcessor lineProcessor = new PageSpecLineProcessor(this);
+    public PageSpec read(InputStream inputStream, String fileLocation, String contextPath) throws IOException {
+        PageSpecLineProcessor lineProcessor = new PageSpecLineProcessor(contextPath, this);
         
         BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream, System.getProperty("file.encoding")));
         

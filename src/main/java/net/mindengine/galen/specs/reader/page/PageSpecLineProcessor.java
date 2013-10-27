@@ -45,8 +45,11 @@ public class PageSpecLineProcessor {
     private State previousState;
     private PageSection currentSection;
     
-    public PageSpecLineProcessor(PageSpecReader pageSpecReader) {
+    private String contextPath = ".";
+    
+    public PageSpecLineProcessor(String contextPath, PageSpecReader pageSpecReader) {
     	this.pageSpecReader = pageSpecReader;
+    	this.contextPath = contextPath;
         startNewSection("");
     }
 
@@ -141,7 +144,7 @@ public class PageSpecLineProcessor {
     }
 
     private void importPageSpec(String filePath) throws IOException {
-		PageSpec spec = pageSpecReader.read(new File(filePath));
+		PageSpec spec = pageSpecReader.read(new File(contextPath + File.separator + filePath.trim()));
 		if (spec != null) {
 			pageSpec.merge(spec);
 		}

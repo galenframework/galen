@@ -1,5 +1,5 @@
 
-@@ import target/test-classes/spec-import-test/header.spec
+@@ import header.spec
 ====================
 
 content		id		content
@@ -7,7 +7,7 @@ content		id		content
 
 # Second import should not be used
 
-@@ import target/test-classes/spec-import-test/header.spec
+@@ import header.spec
 
 
 @ all
