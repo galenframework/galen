@@ -152,8 +152,11 @@ public class ConsoleReportingListener implements CompleteListener {
     }
 
     @Override
-    public void onPageAction(GalenPageRunner pageRunner, GalenSuite suite, GalenPageAction action) {
+    public void onBeforePageAction(GalenPageRunner pageRunner, GalenPageAction action) {
         out.println(action.getOriginalCommand());
     }
-
+    
+    @Override
+    public void onAfterPageAction(GalenPageRunner pageRunner, GalenPageAction action) {
+    }
 }

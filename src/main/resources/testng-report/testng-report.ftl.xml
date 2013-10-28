@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testng-results>
+    <suite name="">
+        <#list testRuns as testRun>
+        <test name="${testRun.name?html}">
+            <#list testRun.testClasses as testClass>
+            <class name="${testClass.name?html}">
+                <#list testClass.testMethods as testMethod>
+                <test-method status="${testMethod.status?html}" signature="${testMethod.name?html}" name="${testMethod.name?html}" duration-ms="${testMethod.duration?c}" started-at="${testMethod.startedAtFormatted}" finished-at="${testMethod.endedAtFormatted}" description="">
+                    <#if testMethod.error?has_content>
+                    <exception class="${testMethod.error.path?html}">
+                        <short-stacktrace>${testMethod.error.stackTrace?html}</short-stacktrace>
+                    </exception>
+                    </#if>
+                </test-method>
+                </#list>
+            </class>
+            </#list>
+        </test>
+        </#list>
+    </suite>
+</testng-results>

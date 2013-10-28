@@ -117,11 +117,15 @@ public class HtmlReportingListener implements CompleteListener {
     
 
     @Override
-    public void onPageAction(GalenPageRunner pageRunner, GalenSuite suite, GalenPageAction action) {
+    public void onBeforePageAction(GalenPageRunner pageRunner, GalenPageAction action) {
         if (hasListener(pageRunner)) {
             SuiteRun suiteRun = findSuiteRun(pageRunner);
-            suiteRun.listener.onPageAction(pageRunner, suite, action);
+            suiteRun.listener.onBeforePageAction(pageRunner, action);
         }
+    }
+    
+    @Override
+    public void onAfterPageAction(GalenPageRunner pageRunner, GalenPageAction action) {
     }
     
     @Override

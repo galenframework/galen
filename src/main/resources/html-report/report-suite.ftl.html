@@ -1,3 +1,53 @@
+<#macro object_node object>
+<h3>${object.name?html}</h3>
+<div class="object">
+    <ul class="test-specs">
+        <#list object.specs as spec>
+            <#if spec.failed = true>
+            <li class="fail">
+                <div class="description" data-screenshot="${spec.screenshot}">
+                    <span>${spec.text?html}</span>
+                    <ul class="error-message">
+                        <#if spec.errorMessages?has_content>
+                        <#list spec.errorMessages as errorMessage>
+                        <li>${errorMessage?html}</li>
+                        </#list>
+                        </#if>
+                    </ul>
+                    <ul class="areas">
+                        <#if spec.errorAreas?has_content>
+                        <#list spec.errorAreas as area>
+                        <li data-area="${area.rect.left?c},${area.rect.top?c},${area.rect.width?c},${area.rect.height?c}">${area.message?html}</li>
+                        </#list>
+                        </#if>
+                    </ul>
+                    <#if spec.subObjects?has_content>
+                    <div class="sub-objects">
+                        <#list spec.subObjects as subObject>
+                        <@object_node object=subObject/>
+                        </#list>
+                    </div>
+                    </#if>
+                </div>
+            </li>
+            <#else>
+            <li class="success">
+                <div class="description">
+                    <span>${spec.text?html}</span>
+                </div>
+                <#if spec.subObjects?has_content>
+                <div class="sub-objects">
+                    <#list spec.subObjects as subObject>
+                    <@object_node object=subObject/>
+                    </#list>
+                </div>
+                </#if>
+            </li>
+            </#if>                            
+        </#list>
+    </ul>
+</div>
+</#macro>
 <html>
     <head>
         <title>Galen Report | ${suiteName?html}</title>
@@ -15,41 +65,8 @@
                 <#list pageTest.pageActions as pageAction>
                 <h2 class="page-action">${pageAction.title?html}</h2>
                 <div class="page-action">
-                    <#list pageAction.objects as object>
-                    <h3>${object.name?html}</h3>
-                    <div class="object">
-                        <ul class="test-specs">
-                            <#list object.specs as spec>
-                                <#if spec.failed = true>
-                                <li class="fail">
-                                    <div class="description" data-screenshot="${spec.screenshot}">
-                                        <span>${spec.text?html}</span>
-                                        <ul class="error-message">
-                                            <#if spec.errorMessages?has_content>
-                                            <#list spec.errorMessages as errorMessage>
-                                            <li>${errorMessage?html}</li>
-                                            </#list>
-                                            </#if>
-                                        </ul>
-                                        <ul class="areas">
-                                            <#if spec.errorAreas?has_content>
-                                            <#list spec.errorAreas as area>
-                                            <li data-area="${area.rect.left?c},${area.rect.top?c},${area.rect.width?c},${area.rect.height?c}">${area.message?html}</li>
-                                            </#list>
-                                            </#if>
-                                        </ul>
-                                    </div>
-                                </li>
-                                <#else>
-                                <li class="success">
-                                    <div class="description">
-                                        <span>${spec.text?html}</span>
-                                    </div>
-                                </li>
-                                </#if>                            
-                            </#list>
-                        </ul>
-                    </div>
+                    <#list pageAction.objects as obj>
+                    <@object_node object=obj/>
                     </#list>
                 </div>
                 </#list>

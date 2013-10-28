@@ -59,16 +59,20 @@ public class GalenPageRunner implements ValidationListener {
         List<ValidationError> allErrors = new LinkedList<ValidationError>();
         
         for (GalenPageAction action : pageTest.getActions()) {
+            tellBeforeAction(action);
             try {
                 List<ValidationError> errors = action.execute(browser, pageTest, this);
+                
                 if (errors != null) {
                     allErrors.addAll(errors);
                 }
+                
             }
             catch (Exception e) {
                 onGlobalError(this, e);
                 allErrors.add(ValidationError.fromException(e));
             }
+            tellAfterAction(action);
         }
         
         return allErrors;
@@ -76,29 +80,65 @@ public class GalenPageRunner implements ValidationListener {
 
     
    
+    private void tellAfterAction(GalenPageAction action) {
+        if (validationListener != null) {
+            validationListener.onAfterPageAction(this, action);
+        }
+    }
+
+    private void tellBeforeAction(GalenPageAction action) {
+        if (validationListener != null) {
+            validationListener.onBeforePageAction(this, action);
+        } 
+    }
+
     @Override
     public void onObject(GalenPageRunner pageRunner, PageValidation pageValidation, String objectName) {
-        validationListener.onObject(this, pageValidation, objectName);     
+        if (validationListener != null) {
+            validationListener.onObject(this, pageValidation, objectName);     
+        }
     }
 
     @Override
     public void onAfterObject(GalenPageRunner pageRunner, PageValidation pageValidation, String objectName) {
-        validationListener.onAfterObject(this, pageValidation, objectName);
+        if (validationListener != null) {
+            validationListener.onAfterObject(this, pageValidation, objectName);
+        }
     }
 
     @Override
     public void onSpecError(GalenPageRunner pageRunner, PageValidation pageValidation, String objectName, Spec spec, ValidationError error) {
-        validationListener.onSpecError(this, pageValidation, objectName, spec, error);
+        if (validationListener != null) {
+            validationListener.onSpecError(this, pageValidation, objectName, spec, error);
+        }
     }
 
     @Override
     public void onSpecSuccess(GalenPageRunner pageRunner, PageValidation pageValidation, String objectName, Spec spec) {
-        validationListener.onSpecSuccess(this, pageValidation, objectName, spec);
+        if (validationListener != null) {
+            validationListener.onSpecSuccess(this, pageValidation, objectName, spec);
+        }
     }
 
     @Override
     public void onGlobalError(GalenPageRunner pageRunner, Exception e) {
-        validationListener.onGlobalError(this, e);
+        if (validationListener != null) {
+            validationListener.onGlobalError(this, e);
+        }
+    }
+
+    @Override
+    public void onBeforePageAction(GalenPageRunner pageRunner, GalenPageAction action) {
+        if (validationListener != null) {
+            this.onBeforePageAction(this, action);
+        }
+    }
+
+    @Override
+    public void onAfterPageAction(GalenPageRunner pageRunner, GalenPageAction action) {
+        if (validationListener != null) {
+            this.onAfterPageAction(this, action);
+        }
     }
 
 }

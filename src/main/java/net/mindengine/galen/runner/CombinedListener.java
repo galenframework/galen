@@ -106,9 +106,16 @@ public class CombinedListener implements CompleteListener {
     }
 
     @Override
-    public void onPageAction(GalenPageRunner pageRunner, GalenSuite suite, GalenPageAction action) {
+    public void onBeforePageAction(GalenPageRunner pageRunner, GalenPageAction action) {
         for (CompleteListener listener : listeners) {
-            listener.onPageAction(pageRunner, suite, action);
+            listener.onBeforePageAction(pageRunner, action);
+        }
+    }
+
+    @Override
+    public void onAfterPageAction(GalenPageRunner pageRunner, GalenPageAction action) {
+        for (CompleteListener listener : listeners) {
+            listener.onAfterPageAction(pageRunner, action);
         }
     }
 }

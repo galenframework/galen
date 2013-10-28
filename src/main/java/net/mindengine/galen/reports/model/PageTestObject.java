@@ -22,6 +22,28 @@ public class PageTestObject {
     
     private String name;
     private List<PageTestSpec> specs = new LinkedList<PageTestSpec>();
+    private PageTestObject parent;
+    
+    // Here it will temporarily store sub objects that will be later picked up by spec
+    private List<PageTestObject> subObjects = null;
+
+    public PageTestObject() {
+        
+    }
+    
+    public PageTestObject(PageTestObject parent) {
+        this.setParent(parent);
+        if (parent != null) {
+            parent.appendChildObject(this);
+        }
+    }
+
+    private void appendChildObject(PageTestObject pageTestObject) {
+        if (getSubObjects() == null) {
+            setSubObjects(new LinkedList<PageTestObject>());
+        }
+        getSubObjects().add(pageTestObject);
+    }
 
     public String getName() {
         return name;
@@ -37,6 +59,22 @@ public class PageTestObject {
 
     public void setSpecs(List<PageTestSpec> specs) {
         this.specs = specs;
+    }
+
+    public PageTestObject getParent() {
+        return parent;
+    }
+
+    public void setParent(PageTestObject parent) {
+        this.parent = parent;
+    }
+
+    public List<PageTestObject> getSubObjects() {
+        return subObjects;
+    }
+
+    public void setSubObjects(List<PageTestObject> subObjects) {
+        this.subObjects = subObjects;
     }
 
 }

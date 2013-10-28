@@ -17,6 +17,7 @@ package net.mindengine.galen.components.validation;
 
 import net.mindengine.galen.runner.GalenPageRunner;
 import net.mindengine.galen.specs.Spec;
+import net.mindengine.galen.suite.GalenPageAction;
 import net.mindengine.galen.validation.PageValidation;
 import net.mindengine.galen.validation.ValidationError;
 import net.mindengine.galen.validation.ValidationListener;
@@ -64,6 +65,14 @@ public class TestValidationListener implements ValidationListener {
     @Override
     public void onGlobalError(GalenPageRunner pageRunner, Exception e) {
         invokations.append("<global-error " + e.getClass().getSimpleName() + ">" + e.getMessage() + "</global-error>");
+    }
+
+    @Override
+    public void onBeforePageAction(GalenPageRunner pageRunner, GalenPageAction action) {
+    }
+
+    @Override
+    public void onAfterPageAction(GalenPageRunner pageRunner, GalenPageAction action) {
     }
 
 }

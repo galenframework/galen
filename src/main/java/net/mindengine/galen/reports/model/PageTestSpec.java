@@ -27,6 +27,7 @@ public class PageTestSpec {
     private String screenshot;
     private List<String> errorMessages = new LinkedList<String>();
     private List<ErrorArea> errorAreas = new LinkedList<ErrorArea>();
+    private List<PageTestObject> subObjects;
 
     public String getText() {
         return text;
@@ -65,5 +66,13 @@ public class PageTestSpec {
     }
     public List<ErrorArea> getErrorAreas() {
         return this.errorAreas;
+    }
+
+    public List<PageTestObject> getSubObjects() {
+        return subObjects;
+    }
+
+    public void setSubObjects(List<PageTestObject> subObjects) {
+        this.subObjects = subObjects;
     }
 }

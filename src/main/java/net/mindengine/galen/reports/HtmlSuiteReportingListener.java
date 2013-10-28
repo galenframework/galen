@@ -82,20 +82,32 @@ public class HtmlSuiteReportingListener implements CompleteListener {
     
     @Override
     public void onObject(GalenPageRunner pageRunner, PageValidation pageValidation, String objectName) {
-        
-        if (pageTestObjectsMap.containsKey(objectName)) {
-            currentObject = pageTestObjectsMap.get(objectName);
+        if (currentObject == null) {
+            if (pageTestObjectsMap.containsKey(objectName)) {
+                currentObject = pageTestObjectsMap.get(objectName);
+            }
+            else {
+                currentObject = new PageTestObject();
+                currentObject.setName(objectName);
+                currentPageAction.getObjects().add(currentObject);
+                pageTestObjectsMap.put(objectName, currentObject);
+            }
         }
         else {
-            currentObject = new PageTestObject();
+            PageTestObject parentObject = currentObject;
+            currentObject = new PageTestObject(parentObject);
             currentObject.setName(objectName);
-            currentPageAction.getObjects().add(currentObject);
-            pageTestObjectsMap.put(objectName, currentObject);
         }
     }
 
     @Override
-    public void onAfterObject(GalenPageRunner pageRunner, PageValidation pageValidation, String objectName) {   
+    public void onAfterObject(GalenPageRunner pageRunner, PageValidation pageValidation, String objectName) {
+        if (currentObject.getParent() != null) {
+            currentObject = currentObject.getParent();
+        }
+        else {
+            currentObject = null;
+        }
     }
 
     @Override
@@ -110,6 +122,8 @@ public class HtmlSuiteReportingListener implements CompleteListener {
         spec.setScreenshot(screenshot.name);
         spec.setErrorMessages(error.getMessages());
         spec.setErrorAreas(error.getErrorAreas());
+        
+        pickSubObjectsForSpec(spec);
     }
 
     @Override
@@ -118,6 +132,15 @@ public class HtmlSuiteReportingListener implements CompleteListener {
         currentObject.getSpecs().add(spec);
         spec.setText(originalSpec.getOriginalText());
         spec.setFailed(false);
+        
+        pickSubObjectsForSpec(spec);
+    }
+    
+    private void pickSubObjectsForSpec(PageTestSpec spec) {
+        if (currentObject.getSubObjects() != null) {
+            spec.setSubObjects(currentObject.getSubObjects());
+            currentObject.setSubObjects(null);
+        }
     }
 
     @Override
@@ -219,9 +242,13 @@ public class HtmlSuiteReportingListener implements CompleteListener {
 
 
     @Override
-    public void onPageAction(GalenPageRunner pageRunner, GalenSuite suite, GalenPageAction action) {
+    public void onBeforePageAction(GalenPageRunner pageRunner, GalenPageAction action) {
         currentPageAction = new PageAction();
         currentPageAction.setTitle(action.getOriginalCommand());
         currentPageTest.getPageActions().add(currentPageAction);
+    }
+    
+    @Override
+    public void onAfterPageAction(GalenPageRunner pageRunner, GalenPageAction action) {
     }
 }

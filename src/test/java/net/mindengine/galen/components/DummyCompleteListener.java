@@ -71,7 +71,11 @@ public class DummyCompleteListener implements CompleteListener {
     }
 
     @Override
-    public void onPageAction(GalenPageRunner pageRunner, GalenSuite suite, GalenPageAction action) {
+    public void onBeforePageAction(GalenPageRunner pageRunner, GalenPageAction action) {
+    }
+
+    @Override
+    public void onAfterPageAction(GalenPageRunner pageRunner, GalenPageAction action) {
     }
 
 }

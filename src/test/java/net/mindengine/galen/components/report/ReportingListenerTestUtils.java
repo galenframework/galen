@@ -60,7 +60,7 @@ public class ReportingListenerTestUtils {
         
         GalenPageActionCheck action = new GalenPageActionCheck();
         action.setOriginalCommand("check homepage.spec --include all,mobile");
-        suiteListener.onPageAction(pageRunner, suite, action);
+        validationListener.onBeforePageAction(pageRunner, action);
         {
             validationListener.onObject(pageRunner, pageValidation, "objectA1"); {
                 validationListener.onSpecError(pageRunner, pageValidation, 
@@ -79,12 +79,28 @@ public class ReportingListenerTestUtils {
                         new SpecWidth(exact(10)).withOriginalText("width: 10px"),
                         new ValidationError(asList(new ErrorArea(new Rect(200, 300, 50, 30), "objectA2")), asList("objectA2 width is 20px instead of 10px")));
             }
+            validationListener.onAfterObject(pageRunner, pageValidation, "objectA2");
+            
             validationListener.onObject(pageRunner, pageValidation, "objectA1"); {
                 validationListener.onSpecSuccess(pageRunner, pageValidation, "objectA1", new SpecHeight(between(10, 20)).withOriginalText("height: 10 to 20px"));
+                
+                //Doing sub-objects call
+                {
+                    validationListener.onObject(pageRunner, pageValidation, "sub-objectA1"); {
+                        validationListener.onSpecSuccess(pageRunner, pageValidation, "sub-objectA1", new SpecHeight(between(10, 20)).withOriginalText("height: 10 to 20px"));
+                        validationListener.onSpecError(pageRunner, pageValidation, 
+                                "sub-objectA1", 
+                                new SpecWidth(exact(10)).withOriginalText("width: 10px"),
+                                new ValidationError(asList(new ErrorArea(new Rect(200, 300, 50, 30), "sub-objectA1")), asList("sub-objectA1 width is 20px instead of 10px")));
+                    }
+                    validationListener.onAfterObject(pageRunner, pageValidation, "sub-objectA1");
+                }
+                validationListener.onSpecSuccess(pageRunner, pageValidation, "objectA1", new SpecHeight(between(10, 20)).withOriginalText("component: some-component.spec"));
             }
-            validationListener.onAfterObject(pageRunner, pageValidation, "objectA2");
+            validationListener.onAfterObject(pageRunner, pageValidation, "objectA1");
         
         }
+        validationListener.onAfterPageAction(pageRunner, action);
         suiteListener.onAfterPage(galenSuiteRunner, pageRunner, pageTest, browser, asList(new ValidationError(asList(new ErrorArea(new Rect(10, 10, 100, 50), "objectA1")), asList("objectA1 is not inside other-object"))));
         
         
@@ -93,7 +109,7 @@ public class ReportingListenerTestUtils {
         GalenPageTest pageTest2 = new GalenPageTest().withSize(600, 700).withUrl("http://example.com/page2");
         suiteListener.onBeforePage(galenSuiteRunner, pageRunner, pageTest2, browser2);
         
-        suiteListener.onPageAction(pageRunner, suite, action);
+        validationListener.onBeforePageAction(pageRunner, action);
         {
             validationListener.onObject(pageRunner, pageValidation, "objectB1"); {
                 validationListener.onSpecSuccess(pageRunner, pageValidation, "objectB1", new SpecWidth(between(10, 20)).withOriginalText("width: 10 to 20px"));
@@ -113,6 +129,7 @@ public class ReportingListenerTestUtils {
             validationListener.onGlobalError(pageRunner, new FakeException("Some exception here"));
             
         }
+        validationListener.onAfterPageAction(pageRunner, action);
         suiteListener.onAfterPage(galenSuiteRunner, pageRunner, pageTest2, browser2, asList(new ValidationError(asList(new ErrorArea(new Rect(10, 10, 100, 50), "objectB1")), asList("objectA1 is not inside other-object", "second error message"))));
         
         suiteListener.onSuiteFinished(galenSuiteRunner, suite);

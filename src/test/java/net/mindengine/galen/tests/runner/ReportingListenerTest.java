@@ -45,7 +45,7 @@ public class ReportingListenerTest {
         String expectedDate = new SimpleDateFormat("yyyy-MM-dd").format(new Date()) + "T00:00:00Z";
         
         TestngReportingListener listener = new TestngReportingListener(reportPath);
-        ReportingListenerTestUtils.performSampleReporting("page1.test", listener, listener);
+        ReportingListenerTestUtils.performSampleReporting("Home page on mobile", listener, listener);
         
         String expectedXml = IOUtils.toString(getClass().getResourceAsStream("/expected-reports/testng-report.xml"));
         
@@ -54,7 +54,9 @@ public class ReportingListenerTest {
         String realXml = FileUtils.readFileToString(new File(reportPath));
         
         Assert.assertEquals(expectedXml.replace("{expected-date}", expectedDate).replace("\\t    ", "\t"),
-                realXml.replaceAll("T([0-9]{2}:){2}[0-9]{2}Z", "T00:00:00Z"));
+                realXml
+                    .replaceAll("T([0-9]{2}:){2}[0-9]{2}Z", "T00:00:00Z")
+                    .replaceAll("duration-ms=\"[0-9]+\"", "duration-ms=\"0\""));
     }
     
     @Test public void shouldReport_inHtmlFormat_successfully_andSplitFiles_perTest() throws IOException {
