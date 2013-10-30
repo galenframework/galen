@@ -34,10 +34,9 @@ import net.mindengine.galen.validation.ValidationError;
 
 public class ConsoleReportingListener implements CompleteListener {
 
-    private static final String OBJECT_INDETATION = "    ";
-    private static final String SPEC_ERROR_INDENTATION = "->      ";
-    private static final String SPEC_ERROR_MESSAGE_INDENTATION = "->      :     ";
-    private static final String SPEC_INDENTATION = "        ";
+    private static final String SPEC_ERROR_MESSAGE_INDENTATION_SUFFIX   = ":   ";
+    private static final String SPEC_ERROR_INDENTATION_HEADER           = "->  ";
+    private static final String NORMAL_INDETATION                       = "    ";
     private PrintStream out;
     private PrintStream err;
     
@@ -46,6 +45,8 @@ public class ConsoleReportingListener implements CompleteListener {
     private Set<String> suitesWithError = new HashSet<String>();
     private String currentSuite;
 
+    private ThreadLocal<Integer> currentObjectLevel = new ThreadLocal<Integer>();
+    
     public ConsoleReportingListener(PrintStream out, PrintStream err) {
         this.out = out;
         this.err = err;
@@ -53,8 +54,53 @@ public class ConsoleReportingListener implements CompleteListener {
 
     @Override
     public void onObject(GalenPageRunner pageRunner, PageValidation pageValidation, String objectName) {
-        out.print(OBJECT_INDETATION);
+        increaseCurrentObjectLevel();
+        
+        out.print(getObjectIndentation());
         out.println(objectName);
+    }
+    
+    private String getObjectIndentation() {
+        Integer level = currentObjectLevel.get();
+        if (level != null && level > 0) {
+            StringBuffer buffer = new StringBuffer(NORMAL_INDETATION);
+            for (int i =0; i <= level; i++) {
+                buffer.append(NORMAL_INDETATION);
+            }
+            return buffer.toString();
+        }
+        return NORMAL_INDETATION;
+    }
+
+    @Override
+    public void onAfterObject(GalenPageRunner pageRunner, PageValidation pageValidation, String objectName) {
+        decreaseCurrentObjectLevel();
+        out.println();
+    }
+
+    private void decreaseCurrentObjectLevel() {
+        Integer value = currentObjectLevel.get();
+        if (value != null) {
+            if (value > 0) {
+                value = value - 1;
+                currentObjectLevel.set(value);
+            }
+            else {
+                currentObjectLevel.remove();
+            }
+        }
+        
+    }
+
+    private void increaseCurrentObjectLevel() {
+        Integer value = currentObjectLevel.get();
+        if (value == null) {
+            currentObjectLevel.set(0);
+        }
+        else {
+            value = value + 1;
+            currentObjectLevel.set(value);
+        }
     }
 
     @Override
@@ -63,18 +109,32 @@ public class ConsoleReportingListener implements CompleteListener {
         totalCount++;
         suitesWithError.add(currentSuite);
         
-        err.print(SPEC_ERROR_INDENTATION);
+        err.print(getSpecErrorIndentation());
         err.println(spec.toText());
         for(String message : error.getMessages()) {
-            err.print(SPEC_ERROR_MESSAGE_INDENTATION);
+            err.print(getSpecErrorIndentation());
+            err.print(SPEC_ERROR_MESSAGE_INDENTATION_SUFFIX);
             err.println(message);
         }
+    }
+
+    private String getSpecErrorIndentation() {
+        Integer level = currentObjectLevel.get();
+        if (level != null && level > 0) {
+            StringBuffer buffer = new StringBuffer(SPEC_ERROR_INDENTATION_HEADER);
+            for (int i =0; i <= level + 1; i++) {
+                buffer.append(NORMAL_INDETATION);
+            }
+            return buffer.toString();
+        }
+        return SPEC_ERROR_INDENTATION_HEADER + NORMAL_INDETATION;
     }
 
     @Override
     public void onSpecSuccess(GalenPageRunner pageRunner, PageValidation pageValidation, String objectName, Spec spec) {
         totalCount++;
-        out.print(SPEC_INDENTATION);
+        out.print(getObjectIndentation());
+        out.print(NORMAL_INDETATION);
         out.println(spec.toText());
     }
 
@@ -115,11 +175,7 @@ public class ConsoleReportingListener implements CompleteListener {
         out.println("========================================");
     }
 
-    @Override
-    public void onAfterObject(GalenPageRunner pageRunner, PageValidation pageValidation, String objectName) {
-        out.println();
-    }
-
+    
     @Override
     public void done() {
         out.println();

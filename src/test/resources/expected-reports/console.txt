@@ -6,15 +6,22 @@ Page: http://example.com/page1 400x600
 check homepage.spec --include all,mobile
     objectA1
 ->      inside: other-object 10px left
-->      :     objectA1 is not inside other-object
+->      :   objectA1 is not inside other-object
         width: 10 to 20px
 
     objectA2
         width: 10 to 20px
 ->      width: 10px
-->      :     objectA2 width is 20px instead of 10px
+->      :   objectA2 width is 20px instead of 10px
+
     objectA1
         height: 10 to 20px
+            sub-objectA1
+                height: 10 to 20px
+->              width: 10px
+->              :   sub-objectA1 width is 20px instead of 10px
+
+        component: some-component.spec
 
 ----------------------------------------
 Page: http://example.com/page2 600x700
@@ -22,8 +29,8 @@ check homepage.spec --include all,mobile
     objectB1
         width: 10 to 20px
 ->      inside: other-object 10px left
-->      :     objectB1 is not inside other-object
-->      :     second error message with <xml> &tags
+->      :   objectB1 is not inside other-object
+->      :   second error message with <xml> &tags
 
     objectB2
         height: 100px
@@ -40,5 +47,5 @@ Failed suites:
     page1.test
 
 Status: FAIL
-Total failures: 4
-Total tests: 8
+Total failures: 5
+Total tests: 11
