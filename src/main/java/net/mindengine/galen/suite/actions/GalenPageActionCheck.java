@@ -143,5 +143,10 @@ public class GalenPageActionCheck extends GalenPageAction {
             .append("excludedTags", excludedTags)
             .toString();
     }
+
+    public GalenPageAction withOriginalCommand(String originalCommand) {
+        setOriginalCommand(originalCommand);
+        return this;
+    }
    
 }

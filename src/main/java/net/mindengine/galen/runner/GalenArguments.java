@@ -46,6 +46,7 @@ public class GalenArguments {
     private String testngReport;
     private int parallelSuites = 0;
     private String url;
+    private String original;
     
 
     public GalenArguments withAction(String action) {
@@ -133,6 +134,7 @@ public class GalenArguments {
 
     public static GalenArguments parse(String[] args) throws ParseException {
         
+        
         Options options = new Options();
         options.addOption("u", "url", true, "Url for test page");
         options.addOption("j", "javascript", true, "Path to javascript file which will be executed after test page loads");
@@ -158,6 +160,7 @@ public class GalenArguments {
         
         GalenArguments galen = new GalenArguments();
         
+        galen.setOriginal(merge(args));
         String[] leftovers = cmd.getArgs();
         
         if (leftovers.length > 0) {
@@ -186,6 +189,15 @@ public class GalenArguments {
         galen.setParallelSuites(Integer.parseInt(cmd.getOptionValue("p", "0")));
         
         return galen;
+    }
+
+    private static String merge(String[] args) {
+        StringBuffer buffer = new StringBuffer();
+        for (String arg : args) {
+            buffer.append(arg);
+            buffer.append(" ");
+        }
+        return buffer.toString();
     }
 
     private static Dimension convertScreenSize(String text) {
@@ -336,6 +348,19 @@ public class GalenArguments {
 
     public GalenArguments withParallelSuites(int parallelSuites) {
         setParallelSuites(parallelSuites);
+        return this;
+    }
+
+    public String getOriginal() {
+        return this.original;
+    }
+
+    public void setOriginal(String original) {
+        this.original = original;
+    }
+
+    public GalenArguments withOriginal(String original) {
+        this.setOriginal(original);
         return this;
     }
 }

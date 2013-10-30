@@ -65,11 +65,11 @@ public class GalenMainTest {
         assertThat(htmlReportContent, containsString("<a href=\"report-1-home-page-test.html\">Home page test</a>"));
         assertThat(htmlReportContent, containsString("<a href=\"report-2-home-page-test-2.html\">Home page test 2</a>"));
         
-        assertThat(testngReportContent, containsString("<suite name=\"Home page test\">"));
-        assertThat(testngReportContent, containsString("<test name=\"" + testUrl + " 640x480\">"));
+        assertThat(testngReportContent, containsString("<test name=\"Home page test\">"));
+        assertThat(testngReportContent, containsString("<class name=\"" + testUrl + " 640x480\">"));
         
-        assertThat(testngReportContent, containsString("<suite name=\"Home page test 2\">"));
-        assertThat(testngReportContent, containsString("<test name=\"" + testUrl + " 320x600\">"));
+        assertThat(testngReportContent, containsString("<test name=\"Home page test 2\">"));
+        assertThat(testngReportContent, containsString("<class name=\"" + testUrl + " 320x600\">"));
     }
     
     
@@ -92,14 +92,14 @@ public class GalenMainTest {
         
         String testngReportContent = FileUtils.readFileToString(new File(testngReportPath));
         
-        assertThat(testngReportContent, containsString("<suite name=\"Recursion check 1\">"));
-        assertThat(testngReportContent, containsString("<test name=\"" + testUrl + " 640x480\">"));
+        assertThat(testngReportContent, containsString("<test name=\"Recursion check 1\">"));
+        assertThat(testngReportContent, containsString("<class name=\"" + testUrl + " 640x480\">"));
         
-        assertThat(testngReportContent, containsString("<suite name=\"Recursion check 2\">"));
-        assertThat(testngReportContent, containsString("<test name=\"" + testUrl + " 320x480\">"));
+        assertThat(testngReportContent, containsString("<test name=\"Recursion check 2\">"));
+        assertThat(testngReportContent, containsString("<class name=\"" + testUrl + " 320x480\">"));
         
-        assertThat(testngReportContent, containsString("<suite name=\"Recursion check 3\">"));
-        assertThat(testngReportContent, containsString("<test name=\"" + testUrl + " 640x480\">"));
+        assertThat(testngReportContent, containsString("<test name=\"Recursion check 3\">"));
+        assertThat(testngReportContent, containsString("<class name=\"" + testUrl + " 640x480\">"));
     }
     
     @Test public void shouldFindAndRun_allTestsRecursivelly_inParallel() throws IOException, SecurityException, IllegalArgumentException, ClassNotFoundException, NoSuchMethodException, InstantiationException, IllegalAccessException, InvocationTargetException {
@@ -139,8 +139,8 @@ public class GalenMainTest {
         
         String testngReportContent = FileUtils.readFileToString(new File(testngReportPath));
         
-        assertThat(testngReportContent, containsString("<suite name=\"" + pageSpec + "\">"));
-        assertThat(testngReportContent, containsString("<test name=\"" + testUrl + " 450x500\">"));
+        assertThat(testngReportContent, containsString("<test name=\"" + pageSpec + "\">"));
+        assertThat(testngReportContent, containsString("<class name=\"" + testUrl + " 450x500\">"));
     }
     
     @Test public void shouldGiveError_whenPageSpecIsIncorrect() throws IOException, SecurityException, IllegalArgumentException, ClassNotFoundException, NoSuchMethodException, InstantiationException, IllegalAccessException, InvocationTargetException {
@@ -155,7 +155,8 @@ public class GalenMainTest {
             .withPaths(Arrays.asList(pageSpec))
             .withScreenSize(new Dimension(450, 500))
             .withTestngReport(testngReportPath)
-            .withIncludedTags("desktop"));
+            .withIncludedTags("desktop")
+            .withOriginal("check invalid-spec.spec --include desktop"));
         
         String testngReportContent = FileUtils.readFileToString(new File(testngReportPath));
         

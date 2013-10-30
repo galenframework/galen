@@ -112,7 +112,8 @@ public class GalenMain {
                 .withActions(asList((GalenPageAction)new GalenPageActionCheck()
                     .withSpecs(asList(pageSpecPath))
                     .withIncludedTags(arguments.getIncludedTags())
-                    .withExcludedTags(arguments.getExcludedTags()))
+                    .withExcludedTags(arguments.getExcludedTags())
+                    .withOriginalCommand(arguments.getOriginal()))
                 )));
                         
             galenSuites.add(suite);

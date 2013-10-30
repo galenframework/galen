@@ -72,7 +72,7 @@ public class TestngReportingListener implements CompleteListener {
     }
     
     public class TestMethod {
-        private String name;
+        private String name = "";
         private Date startedAt;
         private Date endedAt;
         private String status = "PASS";
