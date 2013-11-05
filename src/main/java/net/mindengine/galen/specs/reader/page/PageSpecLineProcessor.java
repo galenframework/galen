@@ -144,7 +144,15 @@ public class PageSpecLineProcessor {
     }
 
     private void importPageSpec(String filePath) throws IOException {
-		PageSpec spec = pageSpecReader.read(new File(contextPath + File.separator + filePath.trim()));
+        filePath = filePath.trim();
+        String path;
+        if (contextPath != null) {
+            path = contextPath + File.separator + filePath;
+        }
+        else {
+            path = filePath;
+        }
+		PageSpec spec = pageSpecReader.read(new File(path));
 		if (spec != null) {
 			pageSpec.merge(spec);
 		}
