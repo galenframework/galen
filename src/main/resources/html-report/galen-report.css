@@ -159,18 +159,14 @@ ul.areas {
     display: none;
 }
 ul.error-message {
-    z-index: 9;
-    position: absolute;
-    top: 20px;
-    left: 20px;
+    margin-bottom: 20px;
+    display:block;
     list-style: none;
     padding: 20px;
-    color: #E32F0B;
-    display: none;
+    color: #A86232;
     background: #FCF6E8;
-    border:1px solid #FAC8CE;
     border-radius: 10px;
-    box-shadow: 1px 1px 3px #999;
+    box-shadow: 1px 1px 4px #bbb;
 }
 
 ul.error-message li {
@@ -186,9 +182,6 @@ ul.error-message li:before {
     margin-left:-1em;
 }
 
-ul.test-specs li.fail div.description:hover > ul.error-message {
-    display: block;
-}
 
 #tooltip {
     z-index:900;
