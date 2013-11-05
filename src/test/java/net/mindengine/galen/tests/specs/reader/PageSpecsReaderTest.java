@@ -221,6 +221,33 @@ public class PageSpecsReaderTest {
         assertThat((SpecAbsent) specs.get(0), is(new SpecAbsent()));
     }
     
+    @Test
+    public void shouldRead_sectionsNames_withTags() throws IOException {
+        PageSpec pageSpec = new PageSpecReader().read(getClass().getResourceAsStream("/specs/spec-sections-advanced.spec"));
+        assertThat(pageSpec, is(notNullValue()));
+        
+        List<PageSection> sections = pageSpec.getSections();
+        assertThat(sections.size(), is(6));
+        
+        assertThat(sections.get(0).getName(), is("Section 1"));
+        assertThat(sections.get(0).getTags(), contains("all", "mobile"));
+        
+        assertThat(sections.get(1).getName(), is("Section 2"));
+        assertThat(sections.get(1).getTags().size(), is(0));
+        
+        assertThat(sections.get(2).getName(), is("Section 3"));
+        assertThat(sections.get(2).getTags(), contains("mobile", "tablet"));
+        
+        assertThat(sections.get(3).getName(), is("Section 4"));
+        assertThat(sections.get(3).getTags(), contains("mobile", "tablet"));
+        
+        assertThat(sections.get(4).getName(), is("mobile,tablet,  desktop"));
+        assertThat(sections.get(4).getTags(), contains("mobile", "tablet", "desktop"));
+        
+        assertThat(sections.get(5).getName(), is(""));
+        assertThat(sections.get(5).getTags().size(), is(0));
+    }
+    
     
     @Test
     public void givesError_ifThereAreSpecs_withNoObjectSpecified_inSection() throws IOException {

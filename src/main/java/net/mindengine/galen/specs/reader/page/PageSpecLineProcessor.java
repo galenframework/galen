@@ -253,9 +253,36 @@ public class PageSpecLineProcessor {
         return containsOnly(line.trim(), '=');
     }
 
-    private void startNewSection(String tags) {
+    private void startNewSection(String sectionDeclaration) {
+        
+        PageSection previousSection = currentSection;
         currentSection = new PageSection();
-        currentSection.setTags(readTags(tags));
+        
+        sectionDeclaration = sectionDeclaration.trim();
+        
+        String name = sectionDeclaration;
+        String tags = sectionDeclaration;
+        
+        int pipeIndex = sectionDeclaration.indexOf("|");
+        if (pipeIndex > 0) { 
+            name = sectionDeclaration.substring(0, pipeIndex).trim();
+            tags = sectionDeclaration.substring(pipeIndex + 1).trim();
+        }
+        else if (pipeIndex == 0) {
+            name = "";
+            tags = sectionDeclaration.substring(1);
+        }
+        
+        if (tags.equals("^")) {
+            //taking tags from previous section
+            if (previousSection != null) {
+                currentSection.setTags(previousSection.getTags());
+            }
+        }
+        else {
+            currentSection.setTags(readTags(tags));
+        }
+        currentSection.setName(name);
         pageSpec.addSection(currentSection);
         state = State.startedSection(currentSection, contextPath);
     }

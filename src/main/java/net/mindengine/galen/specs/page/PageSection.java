@@ -23,6 +23,7 @@ public class PageSection {
     private List<String> tags;
     private List<ObjectSpecs> objects = new LinkedList<ObjectSpecs>();
     private List<ConditionalBlock> conditionalBlocks;
+    private String name;
 
     public List<String> getTags() {
         return this.tags;
@@ -67,6 +68,14 @@ public class PageSection {
             conditionalBlocks = new LinkedList<ConditionalBlock>();
         }
         conditionalBlocks.add(conditionalBlock);
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
 }
