@@ -220,7 +220,7 @@ public class SpecReader {
         }));
         
         
-        putSpec("centered(\\s+(horizontally|vertically))?\\s+(on|inside)", new SpecProcessor() {
+        putSpec("centered\\s.*", new SpecProcessor() {
 			@Override
 			public Spec processSpec(String specName, String paramsText, String contextPath) {
 				specName = specName.replace("centered", "").trim();

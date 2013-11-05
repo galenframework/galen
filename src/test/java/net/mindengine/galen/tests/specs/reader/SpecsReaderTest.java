@@ -451,6 +451,22 @@ public class SpecsReaderTest {
     }
     
     @Test 
+    public void shouldReadSpec_centered_all_inside_object()  throws IOException {
+        SpecCentered spec = (SpecCentered)readSpec("centered all inside: object");
+        assertThat(spec.getObject(), is("object"));
+        assertThat(spec.getLocation(), is(SpecCentered.Location.INSIDE));
+        assertThat(spec.getAlignment(), is(SpecCentered.Alignment.ALL));
+    }
+    
+    @Test 
+    public void shouldReadSpec_centered_all_on_object()  throws IOException {
+        SpecCentered spec = (SpecCentered)readSpec("centered all on: object");
+        assertThat(spec.getObject(), is("object"));
+        assertThat(spec.getLocation(), is(SpecCentered.Location.ON));
+        assertThat(spec.getAlignment(), is(SpecCentered.Alignment.ALL));
+    }
+    
+    @Test 
     public void shouldReadSpec_centered_on_object()  throws IOException {
     	SpecCentered spec = (SpecCentered)readSpec("centered on: object");
     	assertThat(spec.getObject(), is("object"));
