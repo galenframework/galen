@@ -31,11 +31,13 @@ import net.mindengine.galen.page.Page;
 import net.mindengine.galen.reports.model.PageAction;
 import net.mindengine.galen.reports.model.PageTest;
 import net.mindengine.galen.reports.model.PageTestObject;
+import net.mindengine.galen.reports.model.PageTestSection;
 import net.mindengine.galen.reports.model.PageTestSpec;
 import net.mindengine.galen.runner.CompleteListener;
 import net.mindengine.galen.runner.GalenPageRunner;
 import net.mindengine.galen.runner.GalenSuiteRunner;
 import net.mindengine.galen.specs.Spec;
+import net.mindengine.galen.specs.page.PageSection;
 import net.mindengine.galen.suite.GalenPageAction;
 import net.mindengine.galen.suite.GalenPageTest;
 import net.mindengine.galen.suite.GalenSuite;
@@ -57,11 +59,15 @@ public class HtmlSuiteReportingListener implements CompleteListener {
     
     private Map<Page, Screenshot> screenshots = new HashMap<Page, Screenshot>();
     
-    //This is need in order to group objects by name within single page test
-    private Map<String, PageTestObject> pageTestObjectsMap = new HashMap<String, PageTestObject>();
+    //This is needed in order to group objects by name within single page section
+    //After each section this map should be cleared
+    private Map<String, PageTestObject> cachedPageTestObjectsMap = new HashMap<String, PageTestObject>();
+    private Map<String, PageTestSection> cachedSections = new HashMap<String, PageTestSection>();
     
     private int screenshotId = 0;
     private PageAction currentPageAction;
+    private PageTestSection currentSection;
+    
     private class Screenshot {
         private String name;
         private String filePath;
@@ -83,14 +89,14 @@ public class HtmlSuiteReportingListener implements CompleteListener {
     @Override
     public void onObject(GalenPageRunner pageRunner, PageValidation pageValidation, String objectName) {
         if (currentObject == null) {
-            if (pageTestObjectsMap.containsKey(objectName)) {
-                currentObject = pageTestObjectsMap.get(objectName);
+            if (cachedPageTestObjectsMap.containsKey(objectName)) {
+                currentObject = cachedPageTestObjectsMap.get(objectName);
             }
             else {
                 currentObject = new PageTestObject();
                 currentObject.setName(objectName);
-                currentPageAction.getObjects().add(currentObject);
-                pageTestObjectsMap.put(objectName, currentObject);
+                currentSection.getObjects().add(currentObject);
+                cachedPageTestObjectsMap.put(objectName, currentObject);
             }
         }
         else {
@@ -154,9 +160,6 @@ public class HtmlSuiteReportingListener implements CompleteListener {
 
     @Override
     public void onBeforePage(GalenSuiteRunner galenSuiteRunner, GalenPageRunner pageRunner, GalenPageTest pageTest, Browser browser) {
-        //Reseting objects map
-        pageTestObjectsMap = new HashMap<String, PageTestObject>();
-        
         currentBrowser = browser;
         
         currentPageTest = new PageTest();
@@ -244,11 +247,52 @@ public class HtmlSuiteReportingListener implements CompleteListener {
     @Override
     public void onBeforePageAction(GalenPageRunner pageRunner, GalenPageAction action) {
         currentPageAction = new PageAction();
+        
+        //Reseting cache for sections
+        cachedSections = new HashMap<String, PageTestSection>();
+        
         currentPageAction.setTitle(action.getOriginalCommand());
         currentPageTest.getPageActions().add(currentPageAction);
     }
     
     @Override
     public void onAfterPageAction(GalenPageRunner pageRunner, GalenPageAction action) {
+    }
+
+
+    /* Using section level counter so that in html reports only the higher level section gets shown 
+     * */ 
+    int sectionLevel = 0;
+    
+    @Override
+    public void onBeforeSection(GalenPageRunner pageRunner, PageValidation pageValidation, PageSection pageSection) {
+        sectionLevel++;
+        
+        if (sectionLevel <= 1) {
+            //Reseting objects map
+            cachedPageTestObjectsMap = new HashMap<String, PageTestObject>();
+            
+            currentSection = createSection(pageSection.getName());
+        }
+    }
+
+
+    private PageTestSection createSection(String name) {
+        if (cachedSections.containsKey(name)) {
+            return cachedSections.get(name);
+        }
+        else {
+            PageTestSection section = new PageTestSection();
+            section.setName(name);
+            cachedSections.put(name, section);
+            currentPageAction.getSections().add(section);
+            return section;
+        }
+    }
+
+
+    @Override
+    public void onAfterSection(GalenPageRunner pageRunner, PageValidation pageValidation, PageSection pageSection) {
+        sectionLevel--;
     }
 }

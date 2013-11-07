@@ -17,6 +17,7 @@ package net.mindengine.galen.validation;
 
 import net.mindengine.galen.runner.GalenPageRunner;
 import net.mindengine.galen.specs.Spec;
+import net.mindengine.galen.specs.page.PageSection;
 import net.mindengine.galen.suite.GalenPageAction;
 
 public interface ValidationListener {
@@ -35,5 +36,8 @@ public interface ValidationListener {
     
     void onAfterPageAction(GalenPageRunner pageRunner, GalenPageAction action);
     
-
+    void onBeforeSection(GalenPageRunner pageRunner, PageValidation pageValidation, PageSection pageSection);
+    
+    void onAfterSection(GalenPageRunner pageRunner, PageValidation pageValidation, PageSection pageSection);
+    
 }

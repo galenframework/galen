@@ -43,7 +43,6 @@ public class SpecValidationComponent extends SpecValidation<SpecComponent> {
         
         ValidationListener validationListener = pageValidation.getValidationListener();
         
-        //TODO pass tags filter to child section validation
         SectionValidation sectionValidation = new SectionValidation(spec.getPageSpec().findSections(pageValidation.getSectionFilter()), 
                 new PageValidation(objectContextPage, spec.getPageSpec(), validationListener, pageValidation.getSectionFilter()), 
                 validationListener);

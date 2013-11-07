@@ -227,7 +227,7 @@ public class PageSpecsReaderTest {
         assertThat(pageSpec, is(notNullValue()));
         
         List<PageSection> sections = pageSpec.getSections();
-        assertThat(sections.size(), is(6));
+        assertThat(sections.size(), is(7));
         
         assertThat(sections.get(0).getName(), is("Section 1"));
         assertThat(sections.get(0).getTags(), contains("all", "mobile"));
@@ -241,11 +241,14 @@ public class PageSpecsReaderTest {
         assertThat(sections.get(3).getName(), is("Section 4"));
         assertThat(sections.get(3).getTags(), contains("mobile", "tablet"));
         
-        assertThat(sections.get(4).getName(), is("mobile,tablet,  desktop"));
-        assertThat(sections.get(4).getTags(), contains("mobile", "tablet", "desktop"));
+        assertThat(sections.get(4).getName(), is("Section 4"));
+        assertThat(sections.get(4).getTags(), contains("mobile", "tablet"));
         
-        assertThat(sections.get(5).getName(), is(""));
-        assertThat(sections.get(5).getTags().size(), is(0));
+        assertThat(sections.get(5).getName(), is("mobile,tablet,  desktop"));
+        assertThat(sections.get(5).getTags(), contains("mobile", "tablet", "desktop"));
+        
+        assertThat(sections.get(6).getName(), is(""));
+        assertThat(sections.get(6).getTags().size(), is(0));
     }
     
     

@@ -34,6 +34,7 @@ import net.mindengine.galen.runner.CompleteListener;
 import net.mindengine.galen.runner.GalenPageRunner;
 import net.mindengine.galen.runner.GalenSuiteRunner;
 import net.mindengine.galen.specs.Spec;
+import net.mindengine.galen.specs.page.PageSection;
 import net.mindengine.galen.suite.GalenPageAction;
 import net.mindengine.galen.suite.GalenPageTest;
 import net.mindengine.galen.suite.GalenSuite;
@@ -314,6 +315,22 @@ public class HtmlReportingListener implements CompleteListener {
     private synchronized int getUniqueReportId() {
         reportCounter++;
         return reportCounter;
+    }
+
+    @Override
+    public void onBeforeSection(GalenPageRunner pageRunner, PageValidation pageValidation, PageSection pageSection) {
+        if (hasListener(pageRunner)) {
+            SuiteRun suiteRun = findSuiteRun(pageRunner);
+            suiteRun.listener.onBeforeSection(pageRunner, pageValidation, pageSection);
+        }
+    }
+
+    @Override
+    public void onAfterSection(GalenPageRunner pageRunner, PageValidation pageValidation, PageSection pageSection) {
+        if (hasListener(pageRunner)) {
+            SuiteRun suiteRun = findSuiteRun(pageRunner);
+            suiteRun.listener.onAfterSection(pageRunner, pageValidation, pageSection);
+        }
     }
 
 }

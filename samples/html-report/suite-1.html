@@ -18,78 +18,81 @@
 
                 <h2 class="page-action">check homepage.spec --include all,mobile</h2>
                 <div class="page-action">
-                    <h3>objectA1</h3>
-                    <div class="object">
-                        <ul class="test-specs">
-                            <li class="fail">
-                                <div class="description" data-screenshot="report-1-some-page-test-1-screenshot-1.png">
-                                    <span>inside: other-object 10px left</span>
-                                    <ul class="error-message">
-                                        <li>objectA1 is not inside other-object</li>
-                                    </ul>
-                                    <ul class="areas">
-                                        <li data-area="10,10,100,50">objectA1</li>
-                                    </ul>
-                                </div>
-                            </li>
-                            <li class="success">
-                                <div class="description">
-                                    <span>width: 10 to 20px</span>
-                                </div>
-                            </li>
-                            <li class="success">
-                                <div class="description">
-                                    <span>height: 10 to 20px</span>
-                                </div>
-                            </li>
-                            <li class="fail">
-                                <div class="description">
-                                    <span>component: some-component.spec</span>
-                                    <ul class="error-message">
-                                        <li>There are 2 errors</li>
-                                    </ul>
-                                </div>
-                                <div class="sub-objects">
-                                    <h3>object-component-1</h3>
-                                    <div class="object">
-                                        <ul class="test-specs">
-                                            <li class="fail">
-                                                <div class="description" data-screenshot="report-1-some-page-test-1-screenshot-1.png">
-                                                    <span>inside: parent 10px left</span>
-                                                    <ul class="error-message">
-                                                        <li>some error message</li>
-                                                    </ul>
-                                                    <ul class="areas">
-                                                        <li data-area="10,10,20,5">object-component-1</li>
-                                                    </ul>
-                                                </div>
-                                            </li>
+                    <h2 class="page-section">Some section 1</h2>
+                    <div class="page-section">
+                        <h3>objectA1</h3>
+                        <div class="object">
+                            <ul class="test-specs">
+                                <li class="fail">
+                                    <div class="description" data-screenshot="report-1-some-page-test-1-screenshot-1.png">
+                                        <span>inside: other-object 10px left</span>
+                                        <ul class="error-message">
+                                            <li>objectA1 is not inside other-object</li>
+                                        </ul>
+                                        <ul class="areas">
+                                            <li data-area="10,10,100,50">objectA1</li>
                                         </ul>
                                     </div>
-                                </div>
-                            </li>
-                        </ul>
-                    </div>
-                    <h3>objectA2</h3>
-                    <div class="object">
-                        <ul class="test-specs">
-                            <li class="success">
-                                <div class="description">
-                                    <span>width: 10 to 20px</span>
-                                </div>
-                            </li>
-                            <li class="fail">
-                                <div class="description" data-screenshot="report-1-some-page-test-1-screenshot-1.png">
-                                    <span>width: 10px</span>
-                                    <ul class="error-message">
-                                        <li>objectA2 width is 20px instead of 10px</li>
-                                    </ul>
-                                    <ul class="areas">
-                                        <li data-area="200,300,50,30">objectA2</li>
-                                    </ul>
-                                </div>
-                            </li>
-                        </ul>
+                                </li>
+                                <li class="success">
+                                    <div class="description">
+                                        <span>width: 10 to 20px</span>
+                                    </div>
+                                </li>
+                                <li class="success">
+                                    <div class="description">
+                                        <span>height: 10 to 20px</span>
+                                    </div>
+                                </li>
+                                <li class="fail">
+                                    <div class="description">
+                                        <span>component: some-component.spec</span>
+                                        <ul class="error-message">
+                                            <li>There are 2 errors</li>
+                                        </ul>
+                                    </div>
+                                    <div class="sub-objects">
+                                        <h3>object-component-1</h3>
+                                        <div class="object">
+                                            <ul class="test-specs">
+                                                <li class="fail">
+                                                    <div class="description" data-screenshot="report-1-some-page-test-1-screenshot-1.png">
+                                                        <span>inside: parent 10px left</span>
+                                                        <ul class="error-message">
+                                                            <li>some error message</li>
+                                                        </ul>
+                                                        <ul class="areas">
+                                                            <li data-area="10,10,20,5">object-component-1</li>
+                                                        </ul>
+                                                    </div>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                        <h3>objectA2</h3>
+                        <div class="object">
+                            <ul class="test-specs">
+                                <li class="success">
+                                    <div class="description">
+                                        <span>width: 10 to 20px</span>
+                                    </div>
+                                </li>
+                                <li class="fail">
+                                    <div class="description" data-screenshot="report-1-some-page-test-1-screenshot-1.png">
+                                        <span>width: 10px</span>
+                                        <ul class="error-message">
+                                            <li>objectA2 width is 20px instead of 10px</li>
+                                        </ul>
+                                        <ul class="areas">
+                                            <li data-area="200,300,50,30">objectA2</li>
+                                        </ul>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -97,37 +100,40 @@
             <div class="test">
                 <h2 class="page-action">check homepage.spec --include all,mobile</h2>
                 <div class="page-action">
-                    <h3>objectB1</h3>
-                    <div class="object">
-                        <ul class="test-specs">
-                            <li class="success">
-                                <div class="description">
-                                    <span>width: 10 to 20px</span>
-                                </div>
-                            </li>
-                            <li class="fail">
-                                <div class="description" data-screenshot="report-1-some-page-test-1-screenshot-2.png">
-                                    <span>inside: other-object 10px left</span>
-                                    <ul class="error-message">
-                                        <li>objectB1 is not inside other-object</li>
-                                        <li>second error message with &lt;xml&gt; &amp;tags</li>
-                                    </ul>
-                                    <ul class="areas">
-                                        <li data-area="10,10,100,50">objectB1</li>
-                                    </ul>
-                                </div>
-                            </li>
-                        </ul>
-                    </div>
-                    <h3>objectB2</h3>
-                    <div class="object">
-                        <ul class="test-specs">
-                            <li class="success">
-                                <div class="description">
-                                    <span>height: 100px</span>
-                                </div>
-                            </li>
-                        </ul>
+                    <h2 class="page-section">Some section 2</h2>
+                    <div class="page-section">
+                        <h3>objectB1</h3>
+                        <div class="object">
+                            <ul class="test-specs">
+                                <li class="success">
+                                    <div class="description">
+                                        <span>width: 10 to 20px</span>
+                                    </div>
+                                </li>
+                                <li class="fail">
+                                    <div class="description" data-screenshot="report-1-some-page-test-1-screenshot-2.png">
+                                        <span>inside: other-object 10px left</span>
+                                        <ul class="error-message">
+                                            <li>objectB1 is not inside other-object</li>
+                                            <li>second error message with &lt;xml&gt; &amp;tags</li>
+                                        </ul>
+                                        <ul class="areas">
+                                            <li data-area="10,10,100,50">objectB1</li>
+                                        </ul>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                        <h3>objectB2</h3>
+                        <div class="object">
+                            <ul class="test-specs">
+                                <li class="success">
+                                    <div class="description">
+                                        <span>height: 100px</span>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
                     </div>
                 </div>
                 <div class="global-error">

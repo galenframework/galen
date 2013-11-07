@@ -4,6 +4,8 @@ Suite: page1.test
 ----------------------------------------
 Page: http://example.com/page1 400x600
 check homepage.spec --include all,mobile
+@ some section 1
+-------------------------
     objectA1
 ->      inside: other-object 10px left
 ->      :   objectA1 is not inside other-object
@@ -14,6 +16,8 @@ check homepage.spec --include all,mobile
 ->      width: 10px
 ->      :   objectA2 width is 20px instead of 10px
 
+@ some section 2
+-------------------------
     objectA1
         height: 10 to 20px
             sub-objectA1
@@ -26,6 +30,8 @@ check homepage.spec --include all,mobile
 ----------------------------------------
 Page: http://example.com/page2 600x700
 check homepage.spec --include all,mobile
+@ some section 1
+-------------------------
     objectB1
         width: 10 to 20px
 ->      inside: other-object 10px left

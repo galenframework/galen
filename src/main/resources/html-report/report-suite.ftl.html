@@ -65,8 +65,13 @@
                 <#list pageTest.pageActions as pageAction>
                 <h2 class="page-action">${pageAction.title?html}</h2>
                 <div class="page-action">
-                    <#list pageAction.objects as obj>
-                    <@object_node object=obj/>
+                    <#list pageAction.sections as section>
+                    <h2 class="page-section">${section.name}</h2>
+                    <div class="page-section">
+                        <#list section.objects as obj>
+                        <@object_node object=obj/>
+                        </#list>
+                    </div>
                     </#list>
                 </div>
                 </#list>

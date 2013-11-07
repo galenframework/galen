@@ -56,6 +56,7 @@ public class SectionValidation {
     }
 
     private List<ValidationError> checkSection(PageSection section) {
+        tellBeforeSection(section);
         List<ValidationError> errors = new LinkedList<ValidationError>();
         errors.addAll(checkObjects(section.getObjects()));
         
@@ -66,7 +67,20 @@ public class SectionValidation {
             }
         }
         
+        tellAfterSection(section);
         return errors;
+    }
+
+    private void tellAfterSection(PageSection section) {
+        if (validationListener != null) {
+            validationListener.onAfterSection(UNKNOWN_PAGE_RUNNER, pageValidation, section);
+        }
+    }
+
+    private void tellBeforeSection(PageSection section) {
+        if (validationListener != null) {
+            validationListener.onBeforeSection(UNKNOWN_PAGE_RUNNER, pageValidation, section);
+        }
     }
 
     private List<ValidationError> checkObjects(List<ObjectSpecs> objects, boolean shouldReport) {

@@ -25,6 +25,7 @@ import net.mindengine.galen.runner.CompleteListener;
 import net.mindengine.galen.runner.GalenPageRunner;
 import net.mindengine.galen.runner.GalenSuiteRunner;
 import net.mindengine.galen.specs.Spec;
+import net.mindengine.galen.specs.page.PageSection;
 import net.mindengine.galen.suite.GalenPageAction;
 import net.mindengine.galen.suite.GalenPageTest;
 import net.mindengine.galen.suite.GalenSuite;
@@ -157,6 +158,9 @@ public class ConsoleReportingListener implements CompleteListener {
                 out.print(" ");
                 out.println(GalenUtils.formatScreenSize(pageTest.getScreenSize()));
             }
+            else {
+                out.println();
+            }
         }
         
     }
@@ -214,5 +218,16 @@ public class ConsoleReportingListener implements CompleteListener {
     
     @Override
     public void onAfterPageAction(GalenPageRunner pageRunner, GalenPageAction action) {
+    }
+
+    @Override
+    public void onBeforeSection(GalenPageRunner pageRunner, PageValidation pageValidation, PageSection pageSection) {
+        out.print("@ ");
+        out.println(pageSection.getName());
+        out.println("-------------------------");
+    }
+
+    @Override
+    public void onAfterSection(GalenPageRunner pageRunner, PageValidation pageValidation, PageSection pageSection) {
     }
 }

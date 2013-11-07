@@ -105,14 +105,19 @@ a {
     color: #555;
 }
 
-.suite h2.page-action { 
+.suite h2.page-action, .suite h2.page-section { 
     font-size: 1.2em;
 }
+
 .suite h3 {
     font-size: 1.0em;
 }
-div.suite, div.test, div.page-action, div.object, div.sub-objects {
+div.suite, div.test, div.page-action, div.page-section, div.object, div.sub-objects {
     padding-left: 40px;
+}
+
+div.page-section {
+    display: none;
 }
 
 ul.test-specs {

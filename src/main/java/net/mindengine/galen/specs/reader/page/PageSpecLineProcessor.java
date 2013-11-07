@@ -273,6 +273,10 @@ public class PageSpecLineProcessor {
             tags = sectionDeclaration.substring(1);
         }
         
+        if (name.equals("^") && previousSection != null) {
+            name = previousSection.getName();
+        }
+        
         if (tags.equals("^")) {
             //taking tags from previous section
             if (previousSection != null) {

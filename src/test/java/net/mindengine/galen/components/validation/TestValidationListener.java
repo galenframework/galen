@@ -17,6 +17,7 @@ package net.mindengine.galen.components.validation;
 
 import net.mindengine.galen.runner.GalenPageRunner;
 import net.mindengine.galen.specs.Spec;
+import net.mindengine.galen.specs.page.PageSection;
 import net.mindengine.galen.suite.GalenPageAction;
 import net.mindengine.galen.validation.PageValidation;
 import net.mindengine.galen.validation.ValidationError;
@@ -73,6 +74,15 @@ public class TestValidationListener implements ValidationListener {
 
     @Override
     public void onAfterPageAction(GalenPageRunner pageRunner, GalenPageAction action) {
+    }
+
+    
+    @Override
+    public void onBeforeSection(GalenPageRunner pageRunner, PageValidation pageValidation, PageSection pageSection) {
+    }
+
+    @Override
+    public void onAfterSection(GalenPageRunner pageRunner, PageValidation pageValidation, PageSection pageSection) {
     }
 
 }

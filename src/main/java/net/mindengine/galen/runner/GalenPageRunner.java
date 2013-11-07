@@ -20,6 +20,7 @@ import java.util.List;
 
 import net.mindengine.galen.browser.Browser;
 import net.mindengine.galen.specs.Spec;
+import net.mindengine.galen.specs.page.PageSection;
 import net.mindengine.galen.suite.GalenPageAction;
 import net.mindengine.galen.suite.GalenPageTest;
 import net.mindengine.galen.validation.PageValidation;
@@ -138,6 +139,20 @@ public class GalenPageRunner implements ValidationListener {
     public void onAfterPageAction(GalenPageRunner pageRunner, GalenPageAction action) {
         if (validationListener != null) {
             this.onAfterPageAction(this, action);
+        }
+    }
+
+    @Override
+    public void onBeforeSection(GalenPageRunner pageRunner, PageValidation pageValidation, PageSection pageSection) {
+        if (validationListener != null) {
+            validationListener.onBeforeSection(this, pageValidation, pageSection);
+        }
+    }
+
+    @Override
+    public void onAfterSection(GalenPageRunner pageRunner, PageValidation pageValidation, PageSection pageSection) {
+        if (validationListener != null) {
+            validationListener.onAfterSection(this, pageValidation, pageSection);
         }
     }
 

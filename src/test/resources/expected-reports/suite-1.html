@@ -13,6 +13,8 @@
             <div class="test">
                 <h2 class="page-action">check homepage.spec --include all,mobile</h2>
                 <div class="page-action">
+                    <h2 class="page-section">some section 1</h2>
+                    <div class="page-section">
 <h3>objectA1</h3>
 <div class="object">
     <ul class="test-specs">
@@ -32,6 +34,35 @@
                     <span>width: 10 to 20px</span>
                 </div>
             </li>
+    </ul>
+</div>
+<h3>objectA2</h3>
+<div class="object">
+    <ul class="test-specs">
+            <li class="success">
+                <div class="description">
+                    <span>width: 10 to 20px</span>
+                </div>
+            </li>
+            <li class="fail">
+                <div class="description" data-screenshot="report-1-some-page-test-1-screenshot-1.png">
+                    <span>width: 10px</span>
+                    <ul class="error-message">
+                        <li>objectA2 width is 20px instead of 10px</li>
+                    </ul>
+                    <ul class="areas">
+                        <li data-area="200,300,50,30">objectA2</li>
+                    </ul>
+                </div>
+            </li>
+    </ul>
+</div>
+                    </div>
+                    <h2 class="page-section">some section 2</h2>
+                    <div class="page-section">
+<h3>objectA1</h3>
+<div class="object">
+    <ul class="test-specs">
             <li class="success">
                 <div class="description">
                     <span>height: 10 to 20px</span>
@@ -67,33 +98,15 @@
             </li>
     </ul>
 </div>
-<h3>objectA2</h3>
-<div class="object">
-    <ul class="test-specs">
-            <li class="success">
-                <div class="description">
-                    <span>width: 10 to 20px</span>
-                </div>
-            </li>
-            <li class="fail">
-                <div class="description" data-screenshot="report-1-some-page-test-1-screenshot-1.png">
-                    <span>width: 10px</span>
-                    <ul class="error-message">
-                        <li>objectA2 width is 20px instead of 10px</li>
-                    </ul>
-                    <ul class="areas">
-                        <li data-area="200,300,50,30">objectA2</li>
-                    </ul>
-                </div>
-            </li>
-    </ul>
-</div>
+                    </div>
                 </div>
             </div>
             <h2 class="test">http://example.com/page2 600x700</h2>
             <div class="test">
                 <h2 class="page-action">check homepage.spec --include all,mobile</h2>
                 <div class="page-action">
+                    <h2 class="page-section">some section 1</h2>
+                    <div class="page-section">
 <h3>objectB1</h3>
 <div class="object">
     <ul class="test-specs">
@@ -126,6 +139,7 @@
             </li>
     </ul>
 </div>
+                    </div>
                 </div>
                 <div class="global-error">
                     <span>net.mindengine.galen.components.report.FakeException: Some exception here</span>

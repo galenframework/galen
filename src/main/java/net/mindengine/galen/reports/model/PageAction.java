@@ -21,22 +21,23 @@ import java.util.List;
 public class PageAction {
     
     private String title;
-    private List<PageTestObject> objects = new LinkedList<PageTestObject>();
     
-    public List<PageTestObject> getObjects() {
-        return objects;
-    }
-
-    public void setObjects(List<PageTestObject> objects) {
-        this.objects = objects;
-    }
-
+    private List<PageTestSection> sections = new LinkedList<PageTestSection>();
+    
     public String getTitle() {
         return title;
     }
 
     public void setTitle(String title) {
         this.title = title;
+    }
+
+    public List<PageTestSection> getSections() {
+        return sections;
+    }
+
+    public void setSections(List<PageTestSection> sections) {
+        this.sections = sections;
     }
 
 

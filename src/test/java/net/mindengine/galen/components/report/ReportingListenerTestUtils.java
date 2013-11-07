@@ -33,6 +33,7 @@ import net.mindengine.galen.specs.Location;
 import net.mindengine.galen.specs.SpecHeight;
 import net.mindengine.galen.specs.SpecInside;
 import net.mindengine.galen.specs.SpecWidth;
+import net.mindengine.galen.specs.page.PageSection;
 import net.mindengine.galen.suite.GalenPageTest;
 import net.mindengine.galen.suite.GalenSuite;
 import net.mindengine.galen.suite.actions.GalenPageActionCheck;
@@ -62,6 +63,10 @@ public class ReportingListenerTestUtils {
         action.setOriginalCommand("check homepage.spec --include all,mobile");
         validationListener.onBeforePageAction(pageRunner, action);
         {
+            
+            PageSection section1 = sectionWithName("some section 1");
+            validationListener.onBeforeSection(pageRunner, pageValidation, section1);
+            
             validationListener.onObject(pageRunner, pageValidation, "objectA1"); {
                 validationListener.onSpecError(pageRunner, pageValidation, 
                         "objectA1", 
@@ -81,6 +86,11 @@ public class ReportingListenerTestUtils {
             }
             validationListener.onAfterObject(pageRunner, pageValidation, "objectA2");
             
+            validationListener.onAfterSection(pageRunner, pageValidation, section1);
+            
+            PageSection section2 = sectionWithName("some section 2");
+            validationListener.onBeforeSection(pageRunner, pageValidation, section2);
+            
             validationListener.onObject(pageRunner, pageValidation, "objectA1"); {
                 validationListener.onSpecSuccess(pageRunner, pageValidation, "objectA1", new SpecHeight(between(10, 20)).withOriginalText("height: 10 to 20px"));
                 
@@ -98,6 +108,8 @@ public class ReportingListenerTestUtils {
                 validationListener.onSpecSuccess(pageRunner, pageValidation, "objectA1", new SpecHeight(between(10, 20)).withOriginalText("component: some-component.spec"));
             }
             validationListener.onAfterObject(pageRunner, pageValidation, "objectA1");
+            
+            validationListener.onAfterSection(pageRunner, pageValidation, section2);
         
         }
         validationListener.onAfterPageAction(pageRunner, action);
@@ -111,6 +123,9 @@ public class ReportingListenerTestUtils {
         
         validationListener.onBeforePageAction(pageRunner, action);
         {
+            PageSection section1 = sectionWithName("some section 1");
+            validationListener.onBeforeSection(pageRunner, pageValidation, section1);
+            
             validationListener.onObject(pageRunner, pageValidation, "objectB1"); {
                 validationListener.onSpecSuccess(pageRunner, pageValidation, "objectB1", new SpecWidth(between(10, 20)).withOriginalText("width: 10 to 20px"));
                 
@@ -128,11 +143,18 @@ public class ReportingListenerTestUtils {
             
             validationListener.onGlobalError(pageRunner, new FakeException("Some exception here"));
             
+            validationListener.onAfterSection(pageRunner, pageValidation, section1);
         }
         validationListener.onAfterPageAction(pageRunner, action);
         suiteListener.onAfterPage(galenSuiteRunner, pageRunner, pageTest2, browser2, asList(new ValidationError(asList(new ErrorArea(new Rect(10, 10, 100, 50), "objectB1")), asList("objectA1 is not inside other-object", "second error message"))));
         
         suiteListener.onSuiteFinished(galenSuiteRunner, suite);
+    }
+
+    private static PageSection sectionWithName(String name) {
+        PageSection section = new PageSection();
+        section.setName(name);
+        return section;
     }
 
 }
