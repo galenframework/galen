@@ -28,8 +28,8 @@ version_promt=$( cat pom.xml | grep "<version>" | head -n 1 | awk -F"[<>]" '/ver
 
 read_var "Enter version" version "$version_promt"
 
-bin=${version}-bin
-src=${version}-src
+bin=bin-${version}
+src=src-${version}
 
 
 mkdir -p dist/$bin
@@ -38,7 +38,7 @@ mkdir -p dist/$src
 echo New dist is $version
 echo Assemblying new dist
 
-mvn assembly:assembly
+mvn assembly:assembly -DskipTests=true
 
 cp target/galen-jar-with-dependencies.jar dist/$bin/galen.jar
 cp galen dist/$bin/.
@@ -52,5 +52,5 @@ cp -r src dist/$src/src
 
 cd dist
 
-zip -r -9 $bin.zip $bin
-zip -r -9 $src.zip $src
+zip -r -9 galen-$bin.zip $bin
+zip -r -9 galen-$src.zip $src
