@@ -102,46 +102,43 @@ public class SpecReader {
             }
         }));
         
-        putSpec("horizontally.*", new SpecListProccessor(new SpecListInit(){
+        putSpec("aligned\\s+.*", new SpecListProccessor(new SpecListInit(){
             @Override
             public Spec init(String specName, List<String> list) {
-                String arguments = specName.substring("horizontally".length()).trim();
+                String arguments = specName.substring("aligned".length()).trim();
                 
-                Alignment alignment = null;
-                if (arguments.isEmpty()){
-                    alignment = Alignment.ALL;
-                }
-                else {
-                    alignment = Alignment.parse(arguments);
-                }
+                StringCharReader reader = new StringCharReader(arguments);
                 
-                if (alignment.isOneOf(CENTERED, TOP, BOTTOM, ALL)) {
-                    return new SpecHorizontally(alignment, list);
-                }
-                else {
-                    throw new SyntaxException(UNKNOWN_LINE, "Horizontal spec doesn't allow this alignment: " + alignment.toString());
-                }
-            }
-        }));
-        
-        putSpec("vertically.*", new SpecListProccessor(new SpecListInit(){
-            @Override
-            public Spec init(String specName, List<String> list) {
-                String arguments = specName.substring("Vertically".length()).trim();
+                String[] words = ExpectWord.readAllWords(reader);
                 
-                Alignment alignment = null;
-                if (arguments.isEmpty()){
-                    alignment = Alignment.ALL;
+                if (words.length == 0) {
+                    throw new SyntaxException("Alignment is not defined. Should be either 'vertically' either 'horizonally'");
                 }
-                else {
-                    alignment = Alignment.parse(arguments);
+                String type = words[0];
+                
+                Alignment alignment = Alignment.ALL;
+                if (words.length > 1) {
+                    alignment = Alignment.parse(words[1]);
                 }
                 
-                if (alignment.isOneOf(CENTERED, LEFT, RIGHT, ALL)) {
-                    return new SpecVertically(alignment, list);
+                if (type.equals("horizontally")) {
+                    if (alignment.isOneOf(CENTERED, TOP, BOTTOM, ALL)) {
+                        return new SpecHorizontally(alignment, list);
+                    }
+                    else {
+                        throw new SyntaxException(UNKNOWN_LINE, "Horizontal alignment doesn't allow this side: " + alignment.toString());
+                    }
+                }
+                else if (type.equals("vertically")) {
+                    if (alignment.isOneOf(CENTERED, LEFT, RIGHT, ALL)) {
+                        return new SpecVertically(alignment, list);
+                    }
+                    else {
+                        throw new SyntaxException(UNKNOWN_LINE, "Verticall alignment doesn't allow this side: " + alignment.toString());
+                    }
                 }
                 else {
-                    throw new SyntaxException(UNKNOWN_LINE, "Vertical spec doesn't allow this alignment: " + alignment.toString());
+                    throw new SyntaxException("Unknown alignment: " + type);
                 }
             }
         }));

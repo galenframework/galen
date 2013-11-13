@@ -15,6 +15,8 @@
 ******************************************************************************/
 package net.mindengine.galen.parser;
 
+import java.util.ArrayList;
+
 import net.mindengine.galen.specs.reader.StringCharReader;
 
 
@@ -81,5 +83,21 @@ public class ExpectWord implements Expectation<String> {
 	public static String read(String line) {
 		return new ExpectWord().read(new StringCharReader(line));
 	}
+
+    public static String[] readAllWords(StringCharReader reader) {
+        ArrayList<String> words = new ArrayList<String>();
+        
+        while(reader.hasMore()) {
+            String word = new ExpectWord().read(reader);
+            if (!word.isEmpty()) {
+                words.add(word);
+            }
+            else {
+                break;
+            }
+        }
+        
+        return words.toArray(new String[]{});
+    }
     
 }
