@@ -49,7 +49,7 @@ menu:
     near:   main                0px top
 
 menu-item-home:
-    horizontally centered: menu-item-categories, menu-item-blog, menu-item-rss, menu-item-about, menu-item-contacts, menu-item-help
+    aligned horizontally centered: menu-item-categories, menu-item-blog, menu-item-rss, menu-item-about, menu-item-contacts, menu-item-help
     near: menu-item-categories 0px left
     inside: menu 0 to 1px top left bottom
 
@@ -80,10 +80,10 @@ header
 @ mobile
 ------------------------------
 menu-item-home:
-    horizontally: menu-item-categories, menu-item-blog
+    aligned horizontally: menu-item-categories, menu-item-blog
 
 menu-item-rss:
-    horizontally: menu-item-about, menu-item-contacts
+    aligned horizontally: menu-item-about, menu-item-contacts
     near: menu-item-home 0px bottom
     
     
