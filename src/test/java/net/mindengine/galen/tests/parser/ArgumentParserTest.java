@@ -174,19 +174,19 @@ public class ArgumentParserTest {
     public Object[][] provideBadSamples() {
         return new Object[][]{
           {"Incorrect size: 123", 
-              args("run", "--url", "http://example.com", "--size", "123")},
+              args("check", "some.spec", "--url", "http://example.com", "--size", "123")},
           
           {"Incorrect size: 123xx123", 
-              args("run", "--url", "http://example.com", "--size", "123xx123")},
+              args("check", "some.spec", "--url", "http://example.com", "--size", "123xx123")},
           
           {"Incorrect size: a123xx123", 
-              args("run", "--url", "http://example.com", "--size", "a123xx123")},
+              args("check", "some.spec", "--url", "http://example.com", "--size", "a123xx123")},
           
           {"Incorrect size: 123x", 
-              args("run", "--url", "http://example.com", "--size", "123x")},
+              args("check", "some.spec", "--url", "http://example.com", "--size", "123x")},
           
           {"Missing value for url",
-              args("run",
+              args("check", "some.spec", 
                   "--url", 
                   "--javascript", "some.js", 
                   "--include", "mobile,all", 
@@ -195,7 +195,7 @@ public class ArgumentParserTest {
                   "--htmlreport", "some.html")},
                   
           {"Missing value for javascript",
-              args("run",
+              args("check", "some.spec", 
                   "--url", "http://example.com", 
                   "--javascript", 
                   "--include", "mobile,all", 
@@ -204,7 +204,7 @@ public class ArgumentParserTest {
                   "--htmlreport", "some.html")},
                   
           {"Missing value for include",
-              args("run",
+              args("check", "some.spec", 
                   "--url", "http://example.com", 
                   "--javascript", "script.js", 
                   "--include", 
@@ -213,7 +213,7 @@ public class ArgumentParserTest {
                   "--htmlreport", "some.html")},
                  
           {"Missing value for exclude",
-              args("run",
+              args("check", "some.spec", 
                   "--url", "http://example.com", 
                   "--javascript", "script.js", 
                   "--include", "mobile", 
@@ -222,7 +222,7 @@ public class ArgumentParserTest {
                   "--htmlreport", "some.html")},
                   
           {"Missing value for size",
-              args("run",
+              args("check", "some.spec", 
                   "--url", "http://example.com", 
                   "--javascript", "script.js", 
                   "--include", "mobile", 
@@ -231,13 +231,25 @@ public class ArgumentParserTest {
                   "--htmlreport", "some.html")},
                   
           {"Missing value for htmlreport",
-                  args("run",
+                  args("check", "some.spec", 
                       "--url", "http://example.com", 
                       "--javascript", "script.js", 
                       "--include", "mobile", 
                       "--exclude", "nomobile", 
                       "--size", "540x350", 
-                      "--htmlreport")}
+                      "--htmlreport")},
+                  
+          {"Missing spec files",
+              args("check", 
+                  "--url", "http://example.com", 
+                  "--javascript", "script.js", 
+                  "--include", "mobile", 
+                  "--exclude", "nomobile", 
+                  "--size", "540x350")},
+                  
+          {"Missing test files",
+              args("test", 
+                  "--htmlreport", "reports")}
 
         };
     }

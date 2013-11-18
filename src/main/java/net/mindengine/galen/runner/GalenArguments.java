@@ -188,7 +188,31 @@ public class GalenArguments {
         galen.setHtmlReport(cmd.getOptionValue("H"));
         galen.setParallelSuites(Integer.parseInt(cmd.getOptionValue("p", "0")));
         
+        
+        verifyArguments(galen);
         return galen;
+    }
+
+    private static void verifyArguments(GalenArguments galen) {
+        if (galen.getAction().equals("test")) {
+            verifyTestAction(galen);
+        }
+        else if (galen.getAction().equals("check")) {
+            verifyCheckAction(galen);
+        }
+        else throw new IllegalArgumentException("Unknown action: " + galen.getAction());
+    }
+
+    private static void verifyCheckAction(GalenArguments galen) {
+        if (galen.getPaths() == null || galen.getPaths().isEmpty()) {
+            throw new IllegalArgumentException("Missing spec files");
+        }
+    }
+
+    private static void verifyTestAction(GalenArguments galen) {
+        if (galen.getPaths() == null || galen.getPaths().isEmpty()) {
+            throw new IllegalArgumentException("Missing test files");
+        }
     }
 
     private static String merge(String[] args) {
