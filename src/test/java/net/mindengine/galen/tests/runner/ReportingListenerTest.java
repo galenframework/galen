@@ -60,7 +60,7 @@ public class ReportingListenerTest {
     }
     
     @Test public void shouldReport_inHtmlFormat_successfully_andSplitFiles_perTest() throws IOException {
-        String reportDirPath = Files.createTempDir().getAbsolutePath();
+        String reportDirPath = Files.createTempDir().getAbsolutePath() + "/reports";
         
         HtmlReportingListener listener = new HtmlReportingListener(reportDirPath);
         ReportingListenerTestUtils.performSampleReporting("Some page test 1", listener, listener);

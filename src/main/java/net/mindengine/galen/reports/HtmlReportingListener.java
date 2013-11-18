@@ -222,6 +222,8 @@ public class HtmlReportingListener implements CompleteListener {
     @Override
     public void done() {
         try {
+            makeSureReportFolderExists(reportFolderPath);
+            
             File file = new File(reportFolderPath + File.separator + "report.html");
             if (!file.exists()) {
                 if (!file.createNewFile()) {
@@ -239,6 +241,15 @@ public class HtmlReportingListener implements CompleteListener {
         }
         catch (Exception ex) {
             ex.printStackTrace();
+        }
+    }
+    
+    protected static void makeSureReportFolderExists(String reportFolderPath) throws IOException {
+        File reportFolder = new File(reportFolderPath);
+        if (!reportFolder.exists()) {
+            if (!reportFolder.mkdirs()) {
+                throw new IOException("Could not create directories: " + reportFolderPath);
+            }
         }
     }
         

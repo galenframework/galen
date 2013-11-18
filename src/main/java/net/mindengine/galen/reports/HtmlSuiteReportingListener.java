@@ -189,6 +189,8 @@ public class HtmlSuiteReportingListener implements CompleteListener {
     @Override
     public void done() {
         try {
+            HtmlReportingListener.makeSureReportFolderExists(reportFolderPath);
+            
             File file = new File(reportFolderPath + File.separator + reportFileName + ".html");
             if (!file.exists()) {
                 if (!file.createNewFile()) {
@@ -210,6 +212,9 @@ public class HtmlSuiteReportingListener implements CompleteListener {
         }
     }
     
+    
+
+
     private void moveScreenshots() throws IOException {
         File folder = new File(reportFolderPath);
         for (Screenshot screenshot : screenshots.values()) {
