@@ -3,7 +3,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>net.mindengine</groupId>
   <artifactId>galen</artifactId>
-  <version>0.6.3-SNAPSHOT</version>
+  <version>0.6.3</version>
   <name>Galen Test Framework</name>
   
   <scm>
