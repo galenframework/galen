@@ -492,6 +492,15 @@ public class SpecsReaderTest {
     }
     
     @Test 
+    public void shouldReadSpec_centered_horizontally_on_object_25_px() throws IOException {
+        SpecCentered spec = (SpecCentered)readSpec("centered horizontally on: object 25 px");
+        assertThat(spec.getObject(), is("object"));
+        assertThat(spec.getLocation(), is(SpecCentered.Location.ON));
+        assertThat(spec.getAlignment(), is(SpecCentered.Alignment.HORIZONTALLY));
+        assertThat(spec.getErrorRate(), is(25));
+    }
+    
+    @Test 
     public void shouldReadSpec_centered_vertically_on_object() throws IOException {
     	SpecCentered spec = (SpecCentered)readSpec("centered vertically on: object");
     	assertThat(spec.getObject(), is("object"));

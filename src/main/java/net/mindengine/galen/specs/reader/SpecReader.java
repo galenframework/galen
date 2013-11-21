@@ -60,7 +60,7 @@ import net.mindengine.galen.specs.reader.page.PageSpec;
 import net.mindengine.galen.specs.reader.page.PageSpecReader;
 
 public class SpecReader {
-    private static final Pattern CENTERED_ERROR_RATE_PATTERN = Pattern.compile("[0-9]+px");
+    
     private Map<Pattern, SpecProcessor> specsMap = new HashMap<Pattern, SpecProcessor>();
     
     public SpecReader() {
@@ -217,44 +217,31 @@ public class SpecReader {
         }));
         
         
-        putSpec("centered\\s.*", new SpecProcessor() {
-			@Override
-			public Spec processSpec(String specName, String paramsText, String contextPath) {
-				specName = specName.replace("centered", "").trim();
-				String args[] = specName.split(" ");
-				
-				SpecCentered.Alignment alignment = SpecCentered.Alignment.ALL;
-				SpecCentered.Location location = null;
-				if (args.length == 1) {
-					location = SpecCentered.Location.fromString(args[0]);
-				}
-				else {
-					alignment = SpecCentered.Alignment.fromString(args[0]);
-					location = SpecCentered.Location.fromString(args[1]);
-				}
-				
-				String specValue = paramsText.trim();
-				if (specValue.isEmpty()) {
-					throw new SyntaxException("There is no object defined in spec");
-				}
-				
-				StringCharReader reader = new StringCharReader(specValue);
-				String objectName = new ExpectWord().read(reader);
-				
-				SpecCentered spec = new SpecCentered(objectName, alignment, location);
-				
-				if (reader.hasMore()) {
-				    String theRest = reader.getTheRest();
-				    String errorRateText = theRest.replaceAll("\\s", "");
-				    if (CENTERED_ERROR_RATE_PATTERN.matcher(errorRateText).matches()) {
-				        spec.setErrorRate(Integer.parseInt(errorRateText.replace("px", "")));
-				    }
-				    else throw new SyntaxException("Incorrect error rate syntax: \"" + theRest + "\"");
-				}
-				
-				return spec;
-			}
-		});
+        putSpec("centered\\s.*", new SpecObjectAndErrorRateProcessor(new SpecObjectAndErrorRateInit() {
+            
+            @Override
+            public Spec init(String specName, String objectName, Integer errorRate) {
+                specName = specName.replace("centered", "").trim();
+                String args[] = specName.split(" ");
+                
+                SpecCentered.Alignment alignment = SpecCentered.Alignment.ALL;
+                SpecCentered.Location location = null;
+                if (args.length == 1) {
+                    location = SpecCentered.Location.fromString(args[0]);
+                }
+                else {
+                    alignment = SpecCentered.Alignment.fromString(args[0]);
+                    location = SpecCentered.Location.fromString(args[1]);
+                }
+                
+                // Setting default 2 px error rate in case it was not provided in page spec
+                if (errorRate == null) {
+                    errorRate = 2;
+                }
+                
+                return new SpecCentered(objectName, alignment, location).withErrorRate(errorRate);
+            }
+		}));
         
         putSpec("on", new SpecComplexProcessor(expectThese(objectName(), locations()), new SpecComplexInit() {
             @SuppressWarnings("unchecked")
