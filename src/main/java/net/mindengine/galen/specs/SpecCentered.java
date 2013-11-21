@@ -15,7 +15,7 @@
 ******************************************************************************/
 package net.mindengine.galen.specs;
 
-public class SpecCentered extends Spec {
+public class SpecCentered extends SpecObjectWithErrorRate {
 
 	public enum Alignment {
 		ALL, VERTICALLY, HORIZONTALLY;
@@ -48,27 +48,18 @@ public class SpecCentered extends Spec {
 		}
 	}
 	
-	
-	private String object;
 	private Alignment alignment;
 	private Location location;
-    private int errorRate = 2;
 	
 	public SpecCentered() {
 		
 	}
 	public SpecCentered(String object, Alignment alignment, Location location) {
-		this.object = object;
+		this.setObject(object);
 		this.alignment = alignment;
 		this.location = location;
 	}
 	
-	public String getObject() {
-		return object;
-	}
-	public void setObject(String object) {
-		this.object = object;
-	}
 	public Alignment getAlignment() {
 		return alignment;
 	}
@@ -84,11 +75,5 @@ public class SpecCentered extends Spec {
     public SpecCentered withErrorRate(int errorRate) {
         this.setErrorRate(errorRate);
         return this;
-    }
-    public int getErrorRate() {
-        return errorRate;
-    }
-    public void setErrorRate(int errorRate) {
-        this.errorRate = errorRate;
     }
 }
