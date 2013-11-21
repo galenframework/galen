@@ -3,7 +3,7 @@ package net.mindengine.galen.specs;
 public class SpecObjectWithErrorRate extends Spec {
 
     private String object;
-    private int errorRate = 2;
+    private int errorRate = 0;
     public String getObject() {
         return object;
     }

@@ -15,7 +15,7 @@
 ******************************************************************************/
 package net.mindengine.galen.specs;
 
-public class SpecObjectsOnOneLine extends SpecObjectList {
+public class SpecAligned extends SpecObjectWithErrorRate {
     
     private Alignment alignment;
 
@@ -25,5 +25,10 @@ public class SpecObjectsOnOneLine extends SpecObjectList {
 
     public void setAlignment(Alignment alignment) {
         this.alignment = alignment;
+    }
+    
+    public Spec withErrorRate(Integer errorRate) {
+        setErrorRate(errorRate);
+        return this;
     }
 }

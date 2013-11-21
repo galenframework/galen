@@ -215,82 +215,128 @@ public class SpecsReaderTest {
     
     @Test
     public void shouldReadSpec_aligned_horizontally_centered()  throws IOException {
-        SpecHorizontally spec = (SpecHorizontally) readSpec("aligned horizontally centered: object, menu, button");
+        SpecHorizontally spec = (SpecHorizontally) readSpec("aligned horizontally centered: object");
         assertThat(spec.getAlignment(), is(Alignment.CENTERED));
-        assertThat(spec.getChildObjects(), contains("object", "menu", "button"));
-        assertThat(spec.getOriginalText(), is("aligned horizontally centered: object, menu, button"));
+        assertThat(spec.getObject(), is("object"));
+        assertThat(spec.getErrorRate(), is(0));
+        assertThat(spec.getOriginalText(), is("aligned horizontally centered: object"));
     }
     
     @Test
     public void shouldReadSpec_aligned_horizontally_top()  throws IOException {
-        SpecHorizontally spec = (SpecHorizontally) readSpec("aligned horizontally top: object, menu, button");
+        SpecHorizontally spec = (SpecHorizontally) readSpec("aligned horizontally top: object");
         assertThat(spec.getAlignment(), is(Alignment.TOP));
-        assertThat(spec.getChildObjects(), contains("object", "menu", "button"));
-        assertThat(spec.getOriginalText(), is("aligned horizontally top: object, menu, button"));
+        assertThat(spec.getObject(), is("object"));
+        assertThat(spec.getErrorRate(), is(0));
+        assertThat(spec.getOriginalText(), is("aligned horizontally top: object"));
     }
     
     @Test
     public void shouldReadSpec_aligned_horizontally_bottom()  throws IOException {
-        SpecHorizontally spec = (SpecHorizontally) readSpec("aligned horizontally bottom: object, menu, button");
+        SpecHorizontally spec = (SpecHorizontally) readSpec("aligned horizontally bottom: object");
         assertThat(spec.getAlignment(), is(Alignment.BOTTOM));
-        assertThat(spec.getChildObjects(), contains("object", "menu", "button"));
-        assertThat(spec.getOriginalText(), is("aligned horizontally bottom: object, menu, button"));
+        assertThat(spec.getObject(), is("object"));
+        assertThat(spec.getErrorRate(), is(0));
+        assertThat(spec.getOriginalText(), is("aligned horizontally bottom: object"));
     }
     
     @Test
     public void shouldReadSpec_aligned_horizontally()  throws IOException {
-        SpecHorizontally spec = (SpecHorizontally) readSpec("aligned horizontally: object, menu, button");
+        SpecHorizontally spec = (SpecHorizontally) readSpec("aligned horizontally: object");
         assertThat(spec.getAlignment(), is(Alignment.ALL));
-        assertThat(spec.getChildObjects(), contains("object", "menu", "button"));
-        assertThat(spec.getOriginalText(), is("aligned horizontally: object, menu, button"));
+        assertThat(spec.getObject(), is("object"));
+        assertThat(spec.getErrorRate(), is(0));
+        assertThat(spec.getOriginalText(), is("aligned horizontally: object"));
     }
     
     @Test
     public void shouldReadSpec_aligned_horizontally_all()  throws IOException {
-        SpecHorizontally spec = (SpecHorizontally) readSpec("aligned horizontally all: object, menu, button");
+        SpecHorizontally spec = (SpecHorizontally) readSpec("aligned horizontally all: object");
         assertThat(spec.getAlignment(), is(Alignment.ALL));
-        assertThat(spec.getChildObjects(), contains("object", "menu", "button"));
-        assertThat(spec.getOriginalText(), is("aligned horizontally all: object, menu, button"));
+        assertThat(spec.getObject(), is("object"));
+        assertThat(spec.getErrorRate(), is(0));
+        assertThat(spec.getOriginalText(), is("aligned horizontally all: object"));
     }
     
     @Test
     public void shouldReadSpec_aligned_vertically_centered()  throws IOException {
-        SpecVertically spec = (SpecVertically) readSpec("aligned  vertically  centered: object, menu, button");
+        SpecVertically spec = (SpecVertically) readSpec("aligned  vertically  centered: object");
         assertThat(spec.getAlignment(), is(Alignment.CENTERED));
-        assertThat(spec.getChildObjects(), contains("object", "menu", "button"));
-        assertThat(spec.getOriginalText(), is("aligned  vertically  centered: object, menu, button"));
+        assertThat(spec.getObject(), is("object"));
+        assertThat(spec.getErrorRate(), is(0));
+        assertThat(spec.getOriginalText(), is("aligned  vertically  centered: object"));
     }
     
     @Test
     public void shouldReadSpec_aligned_vertically_left()  throws IOException {
-        SpecVertically spec = (SpecVertically) readSpec("aligned vertically left: object, menu, button");
+        SpecVertically spec = (SpecVertically) readSpec("aligned vertically left: object");
         assertThat(spec.getAlignment(), is(Alignment.LEFT));
-        assertThat(spec.getChildObjects(), contains("object", "menu", "button"));
-        assertThat(spec.getOriginalText(), is("aligned vertically left: object, menu, button"));
+        assertThat(spec.getObject(), is("object"));
+        assertThat(spec.getErrorRate(), is(0));
+        assertThat(spec.getOriginalText(), is("aligned vertically left: object"));
     }
     
     @Test
     public void shouldReadSpec_aligned_vertically_right()  throws IOException {
-        SpecVertically spec = (SpecVertically) readSpec("aligned vertically right: object, menu, button");
+        SpecVertically spec = (SpecVertically) readSpec("aligned vertically right: object");
         assertThat(spec.getAlignment(), is(Alignment.RIGHT));
-        assertThat(spec.getChildObjects(), contains("object", "menu", "button"));
-        assertThat(spec.getOriginalText(), is("aligned vertically right: object, menu, button"));
+        assertThat(spec.getObject(), is("object"));
+        assertThat(spec.getErrorRate(), is(0));
+        assertThat(spec.getOriginalText(), is("aligned vertically right: object"));
     }
     
     @Test
     public void shouldReadSpec_aligned_vertically()  throws IOException {
-        SpecVertically spec = (SpecVertically) readSpec("aligned vertically: object, menu, button");
+        SpecVertically spec = (SpecVertically) readSpec("aligned vertically: object");
         assertThat(spec.getAlignment(), is(Alignment.ALL));
-        assertThat(spec.getChildObjects(), contains("object", "menu", "button"));
-        assertThat(spec.getOriginalText(), is("aligned vertically: object, menu, button"));
+        assertThat(spec.getObject(), is("object"));
+        assertThat(spec.getErrorRate(), is(0));
+        assertThat(spec.getOriginalText(), is("aligned vertically: object"));
     }
     
     @Test
     public void shouldReadSpec_aligned_vertically_all()  throws IOException {
-        SpecVertically spec = (SpecVertically) readSpec("aligned vertically all: object, menu, button");
+        SpecVertically spec = (SpecVertically) readSpec("aligned vertically all: object");
         assertThat(spec.getAlignment(), is(Alignment.ALL));
-        assertThat(spec.getChildObjects(), contains("object", "menu", "button"));
-        assertThat(spec.getOriginalText(), is("aligned vertically all: object, menu, button"));
+        assertThat(spec.getObject(), is("object"));
+        assertThat(spec.getErrorRate(), is(0));
+        assertThat(spec.getOriginalText(), is("aligned vertically all: object"));
+    }
+    
+    @Test
+    public void shouldReadSpec_aligned_vertically_with_error_rate_10px()  throws IOException {
+        SpecVertically spec = (SpecVertically) readSpec("aligned vertically all: object 10px");
+        assertThat(spec.getAlignment(), is(Alignment.ALL));
+        assertThat(spec.getObject(), is("object"));
+        assertThat(spec.getErrorRate(), is(10));
+        assertThat(spec.getOriginalText(), is("aligned vertically all: object 10px"));
+    }
+    
+    @Test
+    public void shouldReadSpec_aligned_vertically_with_error_rate_10_px()  throws IOException {
+        SpecVertically spec = (SpecVertically) readSpec("aligned vertically all: object 10  px");
+        assertThat(spec.getAlignment(), is(Alignment.ALL));
+        assertThat(spec.getObject(), is("object"));
+        assertThat(spec.getErrorRate(), is(10));
+        assertThat(spec.getOriginalText(), is("aligned vertically all: object 10  px"));
+    }
+    
+    @Test
+    public void shouldReadSpec_aligned_horizontally_with_error_rate_10px()  throws IOException {
+        SpecHorizontally spec = (SpecHorizontally) readSpec("aligned horizontally all: object 10px");
+        assertThat(spec.getAlignment(), is(Alignment.ALL));
+        assertThat(spec.getObject(), is("object"));
+        assertThat(spec.getErrorRate(), is(10));
+        assertThat(spec.getOriginalText(), is("aligned horizontally all: object 10px"));
+    }
+    
+    @Test
+    public void shouldReadSpec_aligned_horizontally_with_error_rate_10_px()  throws IOException {
+        SpecHorizontally spec = (SpecHorizontally) readSpec("aligned horizontally all: object 10 px");
+        assertThat(spec.getAlignment(), is(Alignment.ALL));
+        assertThat(spec.getObject(), is("object"));
+        assertThat(spec.getErrorRate(), is(10));
+        assertThat(spec.getOriginalText(), is("aligned horizontally all: object 10 px"));
     }
     
     @Test

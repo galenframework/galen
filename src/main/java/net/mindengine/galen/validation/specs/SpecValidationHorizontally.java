@@ -19,7 +19,7 @@ import net.mindengine.galen.page.PageElement;
 import net.mindengine.galen.page.Rect;
 import net.mindengine.galen.specs.SpecHorizontally;
 
-public class SpecValidationHorizontally extends SpecValidationOneLine<SpecHorizontally> {
+public class SpecValidationHorizontally extends SpecValidationAligned<SpecHorizontally> {
 
     @Override
     protected String getAligmentText(SpecHorizontally spec) {
@@ -33,13 +33,13 @@ public class SpecValidationHorizontally extends SpecValidationOneLine<SpecHorizo
         
         switch(spec.getAlignment()) {
         case CENTERED:
-            return childArea.getTop() + (childArea.getHeight() / 2) - (mainArea.getTop() + (mainArea.getHeight() / 2)); 
+            return Math.abs(childArea.getTop() + (childArea.getHeight() / 2) - (mainArea.getTop() + (mainArea.getHeight() / 2))); 
         case TOP:
-            return childArea.getTop() - mainArea.getTop();
+            return Math.abs(childArea.getTop() - mainArea.getTop());
         case BOTTOM:
-            return childArea.getTop() + childArea.getHeight() - (mainArea.getTop() + mainArea.getHeight());
+            return Math.abs(childArea.getTop() + childArea.getHeight() - (mainArea.getTop() + mainArea.getHeight()));
         case ALL:
-            return Math.abs(childArea.getTop() - mainArea.getTop()) + Math.abs(childArea.getHeight() - mainArea.getHeight());
+            return Math.max(Math.abs(childArea.getTop() - mainArea.getTop()), Math.abs(childArea.getHeight() - mainArea.getHeight()));
         }
         return 0;
     }

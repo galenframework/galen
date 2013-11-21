@@ -15,12 +15,13 @@
 ******************************************************************************/
 package net.mindengine.galen.specs;
 
-import java.util.List;
 
-public class SpecHorizontally extends SpecObjectsOnOneLine {
+public class SpecHorizontally extends SpecAligned {
 
-    public SpecHorizontally(Alignment alignment, List<String> list) {
+    public SpecHorizontally(Alignment alignment, String object) {
         setAlignment(alignment);
-        setChildObjects(list);
+        setObject(object);
     }
+
+    
 }

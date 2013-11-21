@@ -263,79 +263,65 @@ public class ValidationTest {
           
           // Horizontally 
           
-          row(specHorizontally(Alignment.CENTERED, "item1", "item2"), page(new HashMap<String, PageElement>(){{
+          row(specHorizontally(Alignment.CENTERED, "item", 0), page(new HashMap<String, PageElement>(){{
               put("object", element(10, 10, 10, 10));
-              put("item1",  element(20, 10, 10, 10));
-              put("item2",  element(30, 10, 10, 10));
+              put("item",  element(20, 10, 10, 10));
           }})),
-          row(specHorizontally(Alignment.CENTERED, "item-*"), page(new HashMap<String, PageElement>(){{
-              put("object", element(10, 10, 10, 10));
-              put("item-1",  element(20, 10, 10, 10));
-              put("item-2",  element(30, 10, 10, 10));
-          }})),
-          row(specHorizontally(Alignment.CENTERED, "item1", "item2"), page(new HashMap<String, PageElement>(){{
+          row(specHorizontally(Alignment.CENTERED, "item", 0), page(new HashMap<String, PageElement>(){{
               put("object", element(10, 15, 10, 10));
-              put("item1",  element(20, 10, 10, 20));
-              put("item2",  element(30, 15, 10, 10));
+              put("item",  element(20, 10, 10, 20));
           }})),
-          row(specHorizontally(Alignment.CENTERED, "item1", "item2"), page(new HashMap<String, PageElement>(){{
+          row(specHorizontally(Alignment.CENTERED, "item", 0), page(new HashMap<String, PageElement>(){{
               put("object", element(10, 15, 10, 10));
-              put("item1",  element(20, 10, 10, 19));
-              put("item2",  element(30, 15, 10, 10));
+              put("item",  element(20, 10, 10, 19));
           }})),
-          row(specHorizontally(Alignment.TOP, "item1", "item2"), page(new HashMap<String, PageElement>(){{
+          row(specHorizontally(Alignment.TOP, "item", 0), page(new HashMap<String, PageElement>(){{
               put("object", element(10, 10, 10, 10));
-              put("item1",  element(20, 10, 10, 20));
-              put("item2",  element(30, 10, 10, 40));
+              put("item",  element(20, 10, 10, 20));
           }})),
-          row(specHorizontally(Alignment.BOTTOM, "item1", "item2"), page(new HashMap<String, PageElement>(){{
+          row(specHorizontally(Alignment.BOTTOM, "item", 0), page(new HashMap<String, PageElement>(){{
               put("object", element(10, 40, 10, 10));
-              put("item1",  element(20, 30, 10, 20));
-              put("item2",  element(30, 10, 10, 40));
+              put("item",  element(20, 30, 10, 20));
           }})),
-          row(specHorizontally(Alignment.ALL, "item1", "item2"), page(new HashMap<String, PageElement>(){{
+          row(specHorizontally(Alignment.ALL, "item", 0), page(new HashMap<String, PageElement>(){{
               put("object", element(10, 10, 10, 20));
-              put("item1",  element(20, 10, 10, 20));
-              put("item2",  element(30, 10, 10, 20));
+              put("item",  element(20, 10, 10, 20));
+          }})),
+          row(specHorizontally(Alignment.ALL, "item", 1), page(new HashMap<String, PageElement>(){{
+              put("object", element(10, 10, 10, 20));
+              put("item",  element(20, 11, 10, 21));
           }})),
           
 
           // Vertically 
           
-          row(specVertically(Alignment.CENTERED, "item1", "item2"), page(new HashMap<String, PageElement>(){{
+          row(specVertically(Alignment.CENTERED, "item", 0), page(new HashMap<String, PageElement>(){{
               put("object", element(10, 10, 10, 10));
-              put("item1",  element(10, 20, 10, 10));
-              put("item2",  element(10, 30, 10, 10));
+              put("item",  element(10, 20, 10, 10));
           }})),
-          row(specVertically(Alignment.CENTERED, "item-*"), page(new HashMap<String, PageElement>(){{
-              put("object", element(10, 10, 10, 10));
-              put("item-1",  element(10, 20, 10, 10));
-              put("item-2",  element(10, 30, 10, 10));
-          }})),
-          row(specVertically(Alignment.CENTERED, "item1", "item2"), page(new HashMap<String, PageElement>(){{
+          row(specVertically(Alignment.CENTERED, "item", 0), page(new HashMap<String, PageElement>(){{
               put("object", element(15, 10, 10, 10));
-              put("item1",  element(10, 20, 20, 10));
-              put("item2",  element(15, 30, 10, 10));
+              put("item",  element(10, 20, 20, 10));
           }})),
-          row(specVertically(Alignment.CENTERED, "item1", "item2"), page(new HashMap<String, PageElement>(){{
+          row(specVertically(Alignment.CENTERED, "item", 0), page(new HashMap<String, PageElement>(){{
               put("object", element(15, 10, 10, 10));
-              put("item1",  element(10, 20, 19, 10));
-              put("item2",  element(15, 30, 10, 10));
+              put("item",  element(10, 20, 19, 10));
           }})),
-          row(specVertically(Alignment.LEFT, "item1", "item2"), page(new HashMap<String, PageElement>(){{
+          row(specVertically(Alignment.LEFT, "item", 0), page(new HashMap<String, PageElement>(){{
               put("object", element(10, 10, 10, 10));
-              put("item1",  element(10, 20, 20, 10));
-              put("item2",  element(10, 30, 30, 10));
+              put("item",  element(10, 20, 20, 10));
           }})),
-          row(specVertically(Alignment.RIGHT, "item1", "item2"), page(new HashMap<String, PageElement>(){{
+          row(specVertically(Alignment.RIGHT, "item", 0), page(new HashMap<String, PageElement>(){{
               put("object", element(30, 10, 10, 10));
-              put("item1",  element(20, 20, 20, 10));
-              put("item2",  element(10, 30, 30, 10));
+              put("item",  element(20, 20, 20, 10));
           }})),
-          row(specVertically(Alignment.ALL, "item1", "item2"), page(new HashMap<String, PageElement>(){{
+          row(specVertically(Alignment.ALL, "item", 0), page(new HashMap<String, PageElement>(){{
               put("object", element(10, 10, 10, 10));
-              put("item1",  element(10, 20, 10, 10));
-              put("item2",  element(10, 30, 10, 10));
+              put("item",  element(10, 20, 10, 10));
+          }})),
+          row(specVertically(Alignment.ALL, "item", 1), page(new HashMap<String, PageElement>(){{
+              put("object", element(10, 10, 10, 10));
+              put("item",  element(11, 20, 11, 10));
           }})),
           
           
@@ -831,161 +817,125 @@ public class ValidationTest {
           
           // Horizontally 
           
-          row(new ValidationError(NO_AREA, messages("Cannot find locator for \"item1\" in page spec")),
-                  specHorizontally(Alignment.CENTERED, "item1", "item2"), page(new HashMap<String, PageElement>(){{
+          row(new ValidationError(NO_AREA, messages("Cannot find locator for \"item\" in page spec")),
+                  specHorizontally(Alignment.CENTERED, "item", 0), page(new HashMap<String, PageElement>(){{
                       put("object", element(10, 10, 50, 10));
-                      put("item2", element(10, 10, 10, 15));                      
           }})),
-          row(new ValidationError(NO_AREA, messages("\"item1\" is not visible on page")),
-                  specHorizontally(Alignment.CENTERED, "item1", "item2"), page(new HashMap<String, PageElement>(){{
+          row(new ValidationError(NO_AREA, messages("\"item\" is not visible on page")),
+                  specHorizontally(Alignment.CENTERED, "item", 0), page(new HashMap<String, PageElement>(){{
                       put("object", element(10, 10, 50, 10));
-                      put("item1", invisibleElement(10, 10, 10, 20));
-                      put("item2", element(10, 10, 10, 15));
+                      put("item", invisibleElement(10, 10, 10, 20));
           }})),
-          row(new ValidationError(NO_AREA, messages("\"item2\" is absent on page")),
-                  specHorizontally(Alignment.CENTERED, "item1", "item2"), page(new HashMap<String, PageElement>(){{
+          row(new ValidationError(NO_AREA, messages("\"item\" is absent on page")),
+                  specHorizontally(Alignment.CENTERED, "item", 0), page(new HashMap<String, PageElement>(){{
                       put("object", element(10, 10, 50, 10));
-                      put("item1", element(10, 10, 10, 20));
-                      put("item2", absentElement(10, 10, 10, 15));
+                      put("item", absentElement(10, 10, 10, 15));
           }})),
           row(new ValidationError(NO_AREA, messages("Cannot find locator for \"object\" in page spec")),
-                  specHorizontally(Alignment.CENTERED, "item1", "item2"), page(new HashMap<String, PageElement>(){{
-                      put("item1", element(10, 10, 50, 10));
-                      put("item2", element(10, 10, 10, 15));                      
+                  specHorizontally(Alignment.CENTERED, "item", 0), page(new HashMap<String, PageElement>(){{
+                      put("item", element(10, 10, 50, 10));
           }})),
           row(new ValidationError(NO_AREA, messages("\"object\" is not visible on page")),
-                  specHorizontally(Alignment.CENTERED, "item1", "item2"), page(new HashMap<String, PageElement>(){{
+                  specHorizontally(Alignment.CENTERED, "item", 0), page(new HashMap<String, PageElement>(){{
                       put("object", invisibleElement(10, 10, 50, 10));
-                      put("item1", element(10, 10, 10, 20));
-                      put("item2", element(10, 10, 10, 15));
+                      put("item", element(10, 10, 10, 15));
           }})),
           row(new ValidationError(NO_AREA, messages("\"object\" is absent on page")),
-                  specHorizontally(Alignment.CENTERED, "item1", "item2"), page(new HashMap<String, PageElement>(){{
+                  specHorizontally(Alignment.CENTERED, "item", 0), page(new HashMap<String, PageElement>(){{
                       put("object", absentElement(10, 10, 50, 10));
-                      put("item1", element(10, 10, 10, 20));
-                      put("item2", element(10, 10, 10, 15));
+                      put("item", element(10, 10, 10, 15));
           }})),
-          row(new ValidationError(singleArea(new Rect(10, 10, 10, 15), "item2"), messages("\"item2\" is not aligned horizontally centered with \"object\"")),
-                  specHorizontally(Alignment.CENTERED, "item1", "item2"), page(new HashMap<String, PageElement>(){{
+          row(new ValidationError(singleArea(new Rect(10, 10, 10, 15), "item"), messages("\"item\" is not aligned horizontally centered with \"object\". Offset is 1px")),
+                  specHorizontally(Alignment.CENTERED, "item", 0), page(new HashMap<String, PageElement>(){{
                       put("object", element(10, 10, 50, 10));
-                      put("item1", element(10, 5, 10, 20));
-                      put("item2", element(10, 10, 10, 15));
+                      put("item", element(10, 10, 10, 15));
           }})),
-          row(new ValidationError(singleArea(new Rect(10, 10, 10, 15), "item-2"), messages("\"item-2\" is not aligned horizontally centered with \"object\"")),
-                  specHorizontally(Alignment.CENTERED, "item-*"), page(new HashMap<String, PageElement>(){{
+          row(new ValidationError(areas(new ErrorArea(new Rect(10, 10, 10, 20), "item")), messages("\"item\" is not aligned horizontally centered with \"object\". Offset is 1px")),
+                  specHorizontally(Alignment.CENTERED, "item", 0), page(new HashMap<String, PageElement>(){{
                       put("object", element(10, 10, 50, 10));
-                      put("item-1", element(10, 5, 10, 20));
-                      put("item-2", element(10, 10, 10, 15));
+                      put("item", element(10, 10, 10, 20));
           }})),
-          row(new ValidationError(areas(new ErrorArea(new Rect(10, 10, 10, 20), "item1"), new ErrorArea(new Rect(10, 10, 50, 20), "item2")), messages("\"item1\", \"item2\" are not aligned horizontally centered with \"object\"")),
-                  specHorizontally(Alignment.CENTERED, "item1", "item2"), page(new HashMap<String, PageElement>(){{
-                      put("object", element(10, 10, 50, 10));
-                      put("item1", element(10, 10, 10, 20));
-                      put("item2", element(10, 10, 50, 20));
-          }})),
-          row(new ValidationError(singleArea(new Rect(10, 10, 10, 20), "item1"), messages("\"item1\" is not aligned horizontally top with \"object\"")),
-                  specHorizontally(Alignment.TOP, "item1", "item2"), page(new HashMap<String, PageElement>(){{
+          row(new ValidationError(singleArea(new Rect(10, 10, 10, 20), "item"), messages("\"item\" is not aligned horizontally top with \"object\". Offset is 1px")),
+                  specHorizontally(Alignment.TOP, "item", 0), page(new HashMap<String, PageElement>(){{
                       put("object", element(10, 15, 10, 10));
-                      put("item1", element(10, 10, 10, 20));
-                      put("item2", element(10, 15, 10, 15));
+                      put("item", element(10, 10, 10, 20));
           }})),
-          row(new ValidationError(singleArea(new Rect(10, 10, 10, 5), "item2"), messages("\"item2\" is not aligned horizontally bottom with \"object\"")),
-                  specHorizontally(Alignment.BOTTOM, "item1", "item2"), page(new HashMap<String, PageElement>(){{
+          row(new ValidationError(singleArea(new Rect(10, 10, 10, 5), "item"), messages("\"item\" is not aligned horizontally bottom with \"object\". Offset is 1px")),
+                  specHorizontally(Alignment.BOTTOM, "item", 0), page(new HashMap<String, PageElement>(){{
                       put("object", element(10, 10, 10, 10));
-                      put("item1", element(10, 5, 10, 15));
-                      put("item2", element(10, 10, 10, 5));
+                      put("item", element(10, 10, 10, 5));
           }})),
-          row(new ValidationError(singleArea(new Rect(30, 10, 10, 5), "item2"), messages("\"item2\" is not aligned horizontally all with \"object\"")),
-                  specHorizontally(Alignment.ALL, "item1", "item2"), page(new HashMap<String, PageElement>(){{
+          row(new ValidationError(singleArea(new Rect(30, 10, 10, 5), "item"), messages("\"item\" is not aligned horizontally all with \"object\". Offset is 1px")),
+                  specHorizontally(Alignment.ALL, "item", 0), page(new HashMap<String, PageElement>(){{
                       put("object", element(10, 10, 10, 10));
-                      put("item1", element(20, 10, 10, 10));
-                      put("item2", element(30, 10, 10, 5));
+                      put("item", element(30, 10, 10, 5));
           }})),
-          row(new ValidationError(singleArea(new Rect(30, 10, 15, 5), "item2"), messages("\"item2\" is not aligned horizontally all with \"object\"")),
-                  specHorizontally(Alignment.ALL, "item1", "item2"), page(new HashMap<String, PageElement>(){{
+          row(new ValidationError(singleArea(new Rect(30, 10, 15, 5), "item"), messages("\"item\" is not aligned horizontally all with \"object\". Offset is 1px")),
+                  specHorizontally(Alignment.ALL, "item", 0), page(new HashMap<String, PageElement>(){{
                       put("object", element(10, 10, 10, 10));
-                      put("item1", element(20, 10, 10, 10));
-                      put("item2", element(30, 10, 15, 5));
+                      put("item", element(30, 10, 15, 5));
           }})),
           
           
           // Vertically 
           
-          row(new ValidationError(NO_AREA, messages("Cannot find locator for \"item1\" in page spec")),
-                  specVertically(Alignment.CENTERED, "item1", "item2"), page(new HashMap<String, PageElement>(){{
+          row(new ValidationError(NO_AREA, messages("Cannot find locator for \"item\" in page spec")),
+                  specVertically(Alignment.CENTERED, "item", 0), page(new HashMap<String, PageElement>(){{
                       put("object", element(10, 10, 50, 10));
-                      put("item2", element(10, 10, 10, 15));                      
           }})),
-          row(new ValidationError(NO_AREA, messages("\"item1\" is not visible on page")),
-                  specVertically(Alignment.CENTERED, "item1", "item2"), page(new HashMap<String, PageElement>(){{
+          row(new ValidationError(NO_AREA, messages("\"item\" is not visible on page")),
+                  specVertically(Alignment.CENTERED, "item", 0), page(new HashMap<String, PageElement>(){{
                       put("object", element(10, 10, 50, 10));
-                      put("item1", invisibleElement(10, 10, 10, 20));
-                      put("item2", element(10, 10, 10, 15));
+                      put("item", invisibleElement(10, 10, 10, 20));
           }})),
-          row(new ValidationError(NO_AREA, messages("\"item2\" is absent on page")),
-                  specVertically(Alignment.CENTERED, "item1", "item2"), page(new HashMap<String, PageElement>(){{
+          row(new ValidationError(NO_AREA, messages("\"item\" is absent on page")),
+                  specVertically(Alignment.CENTERED, "item", 0), page(new HashMap<String, PageElement>(){{
                       put("object", element(10, 10, 50, 10));
-                      put("item1", element(10, 10, 10, 20));
-                      put("item2", absentElement(10, 10, 10, 15));
+                      put("item", absentElement(10, 10, 10, 15));
           }})),
           row(new ValidationError(NO_AREA, messages("Cannot find locator for \"object\" in page spec")),
-                  specVertically(Alignment.CENTERED, "item1", "item2"), page(new HashMap<String, PageElement>(){{
-                      put("item1", element(10, 10, 50, 10));
-                      put("item2", element(10, 10, 10, 15));                      
+                  specVertically(Alignment.CENTERED, "item", 0), page(new HashMap<String, PageElement>(){{
+                      put("item", element(10, 10, 50, 10));
           }})),
           row(new ValidationError(NO_AREA, messages("\"object\" is not visible on page")),
-                  specVertically(Alignment.CENTERED, "item1", "item2"), page(new HashMap<String, PageElement>(){{
+                  specVertically(Alignment.CENTERED, "item", 0), page(new HashMap<String, PageElement>(){{
                       put("object", invisibleElement(10, 10, 50, 10));
-                      put("item1", element(10, 10, 10, 20));
-                      put("item2", element(10, 10, 10, 15));
+                      put("item", element(10, 10, 10, 20));
           }})),
           row(new ValidationError(NO_AREA, messages("\"object\" is absent on page")),
-                  specVertically(Alignment.CENTERED, "item1", "item2"), page(new HashMap<String, PageElement>(){{
+                  specVertically(Alignment.CENTERED, "item", 0), page(new HashMap<String, PageElement>(){{
                       put("object", absentElement(10, 10, 50, 10));
-                      put("item1", element(10, 10, 10, 20));
-                      put("item2", element(10, 10, 10, 15));
+                      put("item", element(10, 10, 10, 20));
           }})),
-          row(new ValidationError(singleArea(new Rect(10, 20, 10, 10), "item1"), messages("\"item1\" is not aligned vertically centered with \"object\"")),
-                  specVertically(Alignment.CENTERED, "item1", "item2"), page(new HashMap<String, PageElement>(){{
+          row(new ValidationError(singleArea(new Rect(10, 20, 10, 10), "item"), messages("\"item\" is not aligned vertically centered with \"object\". Offset is 1px")),
+                  specVertically(Alignment.CENTERED, "item", 0), page(new HashMap<String, PageElement>(){{
                       put("object", element(10, 10, 20, 10));
-                      put("item1", element(10, 20, 10, 10));
-                      put("item2", element(15, 30, 10, 10));
+                      put("item", element(10, 20, 10, 10));
           }})),
-          row(new ValidationError(singleArea(new Rect(10, 20, 10, 10), "item-1"), messages("\"item-1\" is not aligned vertically centered with \"object\"")),
-                  specVertically(Alignment.CENTERED, "item-*"), page(new HashMap<String, PageElement>(){{
+          row(new ValidationError(areas(new ErrorArea(new Rect(10, 20, 10, 10), "item")), messages("\"item\" is not aligned vertically centered with \"object\". Offset is 1px")),
+                  specVertically(Alignment.CENTERED, "item", 0), page(new HashMap<String, PageElement>(){{
                       put("object", element(10, 10, 20, 10));
-                      put("item-1", element(10, 20, 10, 10));
-                      put("item-2", element(15, 30, 10, 10));
+                      put("item", element(10, 20, 10, 10));
           }})),
-          row(new ValidationError(areas(new ErrorArea(new Rect(10, 20, 10, 10), "item1"), new ErrorArea(new Rect(10, 30, 10, 10), "item2")), messages("\"item1\", \"item2\" are not aligned vertically centered with \"object\"")),
-                  specVertically(Alignment.CENTERED, "item1", "item2"), page(new HashMap<String, PageElement>(){{
+          row(new ValidationError(singleArea(new Rect(5, 20, 10, 10), "item"), messages("\"item\" is not aligned vertically left with \"object\". Offset is 1px")),
+                  specVertically(Alignment.LEFT, "item", 0), page(new HashMap<String, PageElement>(){{
                       put("object", element(10, 10, 20, 10));
-                      put("item1", element(10, 20, 10, 10));
-                      put("item2", element(10, 30, 10, 10));
+                      put("item", element(5, 20, 10, 10));
           }})),
-          row(new ValidationError(singleArea(new Rect(5, 20, 10, 10), "item1"), messages("\"item1\" is not aligned vertically left with \"object\"")),
-                  specVertically(Alignment.LEFT, "item1", "item2"), page(new HashMap<String, PageElement>(){{
+          row(new ValidationError(singleArea(new Rect(10, 30, 10, 10), "item"), messages("\"item\" is not aligned vertically right with \"object\". Offset is 1px")),
+                  specVertically(Alignment.RIGHT, "item", 0), page(new HashMap<String, PageElement>(){{
                       put("object", element(10, 10, 20, 10));
-                      put("item1", element(5, 20, 10, 10));
-                      put("item2", element(10, 30, 10, 10));
+                      put("item", element(10, 30, 10, 10));
           }})),
-          row(new ValidationError(singleArea(new Rect(10, 30, 10, 10), "item2"), messages("\"item2\" is not aligned vertically right with \"object\"")),
-                  specVertically(Alignment.RIGHT, "item1", "item2"), page(new HashMap<String, PageElement>(){{
-                      put("object", element(10, 10, 20, 10));
-                      put("item1", element(20, 20, 10, 10));
-                      put("item2", element(10, 30, 10, 10));
-          }})),
-          row(new ValidationError(singleArea(new Rect(10, 30, 5, 10), "item2"), messages("\"item2\" is not aligned vertically all with \"object\"")),
-                  specVertically(Alignment.ALL, "item1", "item2"), page(new HashMap<String, PageElement>(){{
+          row(new ValidationError(singleArea(new Rect(10, 30, 5, 10), "item"), messages("\"item\" is not aligned vertically all with \"object\". Offset is 1px")),
+                  specVertically(Alignment.ALL, "item", 0), page(new HashMap<String, PageElement>(){{
                       put("object", element(10, 10, 10, 10));
-                      put("item1", element(10, 20, 10, 10));
-                      put("item2", element(10, 30, 5, 10));
+                      put("item", element(10, 30, 5, 10));
           }})),
-          row(new ValidationError(singleArea(new Rect(15, 30, 5, 10), "item2"), messages("\"item2\" is not aligned vertically all with \"object\"")),
-                  specVertically(Alignment.ALL, "item1", "item2"), page(new HashMap<String, PageElement>(){{
+          row(new ValidationError(singleArea(new Rect(15, 30, 5, 10), "item"), messages("\"item\" is not aligned vertically all with \"object\". Offset is 1px")),
+                  specVertically(Alignment.ALL, "item", 0), page(new HashMap<String, PageElement>(){{
                       put("object", element(10, 10, 10, 10));
-                      put("item1", element(10, 20, 10, 10));
-                      put("item2", element(15, 30,   5, 10));
+                      put("item", element(15, 30,   5, 10));
           }})),
           
           
@@ -1249,12 +1199,16 @@ public class ValidationTest {
         return new SpecText(SpecText.Type.MATCHES, text);
     }
     
-    private SpecVertically specVertically(Alignment alignment, String...objectNames) {
-        return new SpecVertically(alignment, Arrays.asList(objectNames));
+    private SpecVertically specVertically(Alignment alignment, String objectName, int errorRate) {
+        SpecVertically spec = new SpecVertically(alignment, objectName);
+        spec.setErrorRate(errorRate);
+        return spec;
     }
 
-    private SpecHorizontally specHorizontally(Alignment alignment, String...objectNames) {
-        return new SpecHorizontally(alignment, Arrays.asList(objectNames));
+    private SpecHorizontally specHorizontally(Alignment alignment, String objectName, int errorRate) {
+        SpecHorizontally spec =  new SpecHorizontally(alignment, objectName);
+        spec.setErrorRate(errorRate);
+        return spec;
     }
     
     private SpecHeight specHeight(Range range) {
