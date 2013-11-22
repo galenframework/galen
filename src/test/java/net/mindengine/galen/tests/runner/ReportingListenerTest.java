@@ -40,7 +40,7 @@ import com.google.common.io.Files;
 public class ReportingListenerTest {
     
     @Test public void shouldReport_inTestNgFormat_successfully() throws IOException {
-        String reportPath = Files.createTempDir().getAbsolutePath() + "/report.xml";
+        String reportPath = Files.createTempDir().getAbsolutePath() + "/testng-report/report.xml";
         
         String expectedDate = new SimpleDateFormat("yyyy-MM-dd").format(new Date()) + "T00:00:00Z";
         

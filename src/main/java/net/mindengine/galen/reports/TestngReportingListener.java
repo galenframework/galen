@@ -17,6 +17,7 @@ package net.mindengine.galen.reports;
 
 import java.io.File;
 import java.io.FileWriter;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -246,6 +247,9 @@ public class TestngReportingListener implements CompleteListener {
             Template template  = new Template("testng-report", new InputStreamReader(getClass().getResourceAsStream("/testng-report/testng-report.ftl.xml")), new Configuration());
             
             File file = new File(this.reportPath);
+            
+            makeSurePathExists(file);
+            
             if (!file.exists()) {
                 if (!file.createNewFile()) {
                     throw new RuntimeException("Cannot create file: " + file.getAbsolutePath());
@@ -262,6 +266,15 @@ public class TestngReportingListener implements CompleteListener {
             
         } catch (Exception e) {
             e.printStackTrace();
+        }
+    }
+
+    private void makeSurePathExists(File file) throws IOException {
+        File parentDir = file.getParentFile();
+        if (!parentDir.exists()) {
+            if (!parentDir.mkdirs()) {
+                throw new IOException("Could not create path: " + parentDir.getAbsolutePath()); 
+            }
         }
     }
 
