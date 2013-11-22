@@ -29,7 +29,7 @@ var Galen = {
             if (total > 0) {
                 var passedPercent = Math.round(passed * 100 / total);
                 var failedPercent = Math.round(failed * 100 / total);
-                $(this).append("<div class='progress'><div class='passed' style='width:" + passedPercent + "%;'></div><div class='failed' style='width:" + failedPercent + "%;'></div></div>");
+                $(this).append("<table class='progress'><tr><td class='passed' style='width:" + passedPercent + "%;'></td><td style='width:" + failedPercent + "%;' class='failed'></td></tr></tablet>");
             }
         });
     },

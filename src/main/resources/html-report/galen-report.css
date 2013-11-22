@@ -77,6 +77,8 @@ a {
     color: #229605;
 }
 .suites-overview .suites .progress {
+    border: none;
+    border-collapse: collapse;
     clear: both;
     margin-bottom: 10px;
     margin-left: 10px;
@@ -84,14 +86,13 @@ a {
     padding: 0;
     height: 3px;
 }
-.suites-overview .suites .progress > div {
-    display: inline-block;
+.suites-overview .suites .progress td {
     height: 3px;
 }
-.suites-overview .suites .progress > div.failed {
+.suites-overview .suites .progress td.failed {
     background: #FA644D;
 }
-.suites-overview .suites .progress > div.passed {
+.suites-overview .suites .progress td.passed {
     background: #71E854;
 }
 
