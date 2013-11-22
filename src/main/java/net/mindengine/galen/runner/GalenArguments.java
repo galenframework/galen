@@ -47,7 +47,7 @@ public class GalenArguments {
     private int parallelSuites = 0;
     private String url;
     private String original;
-    
+    private Boolean printVersion;
 
     public GalenArguments withAction(String action) {
         this.setAction(action);
@@ -133,7 +133,7 @@ public class GalenArguments {
     }
 
     public static GalenArguments parse(String[] args) throws ParseException {
-        
+        //TODO Refactor this ugly way of handling command line arguments. It should be separate per action.
         
         Options options = new Options();
         options.addOption("u", "url", true, "Url for test page");
@@ -145,6 +145,7 @@ public class GalenArguments {
         options.addOption("g", "testngreport", true, "Path for testng xml report");
         options.addOption("r", "recursive", false, "Flag for recursive tests scan");
         options.addOption("p", "parallel-suites", true, "Amount of suites to be run in parallel");
+        options.addOption("v", "version", false, "Current version");
         
         CommandLineParser parser = new PosixParser();
         
@@ -175,7 +176,6 @@ public class GalenArguments {
                 galen.setPaths(paths);
             }
         }
-        else throw new IllegalArgumentException("Missing action");
         
         galen.setUrl(cmd.getOptionValue("u"));
         
@@ -187,6 +187,7 @@ public class GalenArguments {
         galen.setRecursive(cmd.hasOption("r"));
         galen.setHtmlReport(cmd.getOptionValue("H"));
         galen.setParallelSuites(Integer.parseInt(cmd.getOptionValue("p", "0")));
+        galen.setPrintVersion(cmd.hasOption("v"));
         
         
         verifyArguments(galen);
@@ -194,13 +195,15 @@ public class GalenArguments {
     }
 
     private static void verifyArguments(GalenArguments galen) {
-        if (galen.getAction().equals("test")) {
-            verifyTestAction(galen);
+        if (galen.getAction() != null) {
+            if ("test".equals(galen.getAction())) {
+                verifyTestAction(galen);
+            }
+            else if ("check".equals(galen.getAction())) {
+                verifyCheckAction(galen);
+            }
+            else throw new IllegalArgumentException("Unknown action: " + galen.getAction());
         }
-        else if (galen.getAction().equals("check")) {
-            verifyCheckAction(galen);
-        }
-        else throw new IllegalArgumentException("Unknown action: " + galen.getAction());
     }
 
     private static void verifyCheckAction(GalenArguments galen) {
@@ -386,5 +389,13 @@ public class GalenArguments {
     public GalenArguments withOriginal(String original) {
         this.setOriginal(original);
         return this;
+    }
+
+    public Boolean getPrintVersion() {
+        return printVersion;
+    }
+
+    public void setPrintVersion(Boolean printVersion) {
+        this.printVersion = printVersion;
     }
 }

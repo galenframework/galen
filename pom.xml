@@ -4,7 +4,7 @@
   <groupId>net.mindengine</groupId>
   <artifactId>galen</artifactId>
   <version>0.6.4-SNAPSHOT</version>
-  <name>Galen Test Framework</name>
+  <name>Galen Framework</name>
   
   <scm>
       <connection>scm:git:ssh://git@github.com/ishubin/galen.git</connection>
@@ -71,6 +71,8 @@
           <archive>
             <manifest>
               <mainClass>net.mindengine.galen.GalenMain</mainClass>
+              <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+              <addDefaultSpecificationEntries>true</addDefaultSpecificationEntries>
             </manifest>
           </archive>
           <finalName>galen</finalName>

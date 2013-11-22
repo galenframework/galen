@@ -49,16 +49,31 @@ public class GalenMain {
     List<CompleteListener> listeners;
 
     public void execute(GalenArguments arguments) throws IOException, SecurityException, IllegalArgumentException, ClassNotFoundException, NoSuchMethodException, InstantiationException, IllegalAccessException, InvocationTargetException {
-        CombinedListener combinedListener = createListeners(arguments);
-        
-        if ("test".equals(arguments.getAction())) {
-            runTests(arguments, combinedListener);
+        if (arguments.getAction() != null) {
+            CombinedListener combinedListener = createListeners(arguments);
+            if ("test".equals(arguments.getAction())) {
+                runTests(arguments, combinedListener);
+            }
+            else if ("check".equals(arguments.getAction())) {
+                performCheck(arguments, combinedListener);
+            }
+            combinedListener.done();
         }
-        else if ("check".equals(arguments.getAction())) {
-            performCheck(arguments, combinedListener);
+        else {
+            if (arguments.getPrintVersion()) {
+                
+                System.out.println("Galen Framework");
+                
+                String version = getClass().getPackage().getImplementationVersion();
+                if (version == null) {
+                    version = "unknown";
+                }
+                else {
+                    version = version.replace("-SNAPSHOT", "");
+                }
+                System.out.println("Version: " + version);
+            }
         }
-        
-        combinedListener.done();
     }
 
     private CombinedListener createListeners(GalenArguments arguments) throws IOException, SecurityException, IllegalArgumentException, ClassNotFoundException, NoSuchMethodException, InstantiationException, IllegalAccessException, InvocationTargetException {
