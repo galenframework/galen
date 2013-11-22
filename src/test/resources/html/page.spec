@@ -51,7 +51,7 @@ menu:
     near:   main                0px top
 
 menu-item-home:
-    aligned horizontally centered: menu-item-categories, menu-item-blog, menu-item-rss, menu-item-about, menu-item-contacts, menu-item-help
+    aligned horizontally centered: menu-item-categories
     near: menu-item-categories 0px left
     inside: menu 0 to 1px top left bottom
 
@@ -78,10 +78,10 @@ header
 @ mobile
 ------------------------------
 menu-item-home:
-    aligned horizontally: menu-item-categories, menu-item-blog
+    aligned horizontally: menu-item-categories
 
 menu-item-rss:
-    aligned horizontally: menu-item-about, menu-item-contacts
+    aligned horizontally: menu-item-about
     near: menu-item-home 0px bottom
     
     
