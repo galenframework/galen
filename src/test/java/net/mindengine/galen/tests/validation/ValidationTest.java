@@ -271,10 +271,6 @@ public class ValidationTest {
               put("object", element(10, 15, 10, 10));
               put("item",  element(20, 10, 10, 20));
           }})),
-          row(specHorizontally(Alignment.CENTERED, "item", 0), page(new HashMap<String, PageElement>(){{
-              put("object", element(10, 15, 10, 10));
-              put("item",  element(20, 10, 10, 19));
-          }})),
           row(specHorizontally(Alignment.TOP, "item", 0), page(new HashMap<String, PageElement>(){{
               put("object", element(10, 10, 10, 10));
               put("item",  element(20, 10, 10, 20));
@@ -302,10 +298,6 @@ public class ValidationTest {
           row(specVertically(Alignment.CENTERED, "item", 0), page(new HashMap<String, PageElement>(){{
               put("object", element(15, 10, 10, 10));
               put("item",  element(10, 20, 20, 10));
-          }})),
-          row(specVertically(Alignment.CENTERED, "item", 0), page(new HashMap<String, PageElement>(){{
-              put("object", element(15, 10, 10, 10));
-              put("item",  element(10, 20, 19, 10));
           }})),
           row(specVertically(Alignment.LEFT, "item", 0), page(new HashMap<String, PageElement>(){{
               put("object", element(10, 10, 10, 10));
@@ -380,19 +372,19 @@ public class ValidationTest {
           
           // Centered Inside 
           
-          row(specCenteredInside("container", SpecCentered.Alignment.ALL), page(new HashMap<String, PageElement>(){{
+          row(specCenteredInside("container", SpecCentered.Alignment.ALL).withErrorRate(2), page(new HashMap<String, PageElement>(){{
               put("object", element(10, 10, 80, 80));
               put("container",  element(0, 0, 100, 100));
           }})),
-          row(specCenteredInside("container", SpecCentered.Alignment.ALL), page(new HashMap<String, PageElement>(){{
+          row(specCenteredInside("container", SpecCentered.Alignment.ALL).withErrorRate(2), page(new HashMap<String, PageElement>(){{
               put("object", element(10, 10, 81, 81));
               put("container",  element(0, 0, 100, 100));
           }})),
-          row(specCenteredInside("container", SpecCentered.Alignment.ALL), page(new HashMap<String, PageElement>(){{
+          row(specCenteredInside("container", SpecCentered.Alignment.ALL).withErrorRate(2), page(new HashMap<String, PageElement>(){{
               put("object", element(9, 9, 80, 80));
               put("container",  element(0, 0, 100, 100));
           }})),
-          row(specCenteredInside("container", SpecCentered.Alignment.HORIZONTALLY), page(new HashMap<String, PageElement>(){{
+          row(specCenteredInside("container", SpecCentered.Alignment.HORIZONTALLY).withErrorRate(2), page(new HashMap<String, PageElement>(){{
               put("object", element(10, 10, 80, 20));
               put("container",  element(0, 0, 100, 100));
           }})),
@@ -405,7 +397,7 @@ public class ValidationTest {
               put("container",  element(0, 0, 100, 200));
           }})),
           
-          row(specCenteredInside("container", SpecCentered.Alignment.VERTICALLY), page(new HashMap<String, PageElement>(){{
+          row(specCenteredInside("container", SpecCentered.Alignment.VERTICALLY).withErrorRate(2), page(new HashMap<String, PageElement>(){{
               put("object", element(10, 10, 20, 80));
               put("container",  element(0, 0, 100, 100));
           }})),
@@ -845,32 +837,38 @@ public class ValidationTest {
                       put("object", absentElement(10, 10, 50, 10));
                       put("item", element(10, 10, 10, 15));
           }})),
-          row(new ValidationError(singleArea(new Rect(10, 10, 10, 15), "item"), messages("\"item\" is not aligned horizontally centered with \"object\". Offset is 1px")),
+          row(new ValidationError(areas(new ErrorArea(new Rect(10, 10, 50, 10), "object"), new ErrorArea(new Rect(10, 10, 10, 15), "item")), 
+                  messages("\"item\" is not aligned horizontally centered with \"object\". Offset is 2px")),
                   specHorizontally(Alignment.CENTERED, "item", 0), page(new HashMap<String, PageElement>(){{
                       put("object", element(10, 10, 50, 10));
                       put("item", element(10, 10, 10, 15));
           }})),
-          row(new ValidationError(areas(new ErrorArea(new Rect(10, 10, 10, 20), "item")), messages("\"item\" is not aligned horizontally centered with \"object\". Offset is 1px")),
+          row(new ValidationError(areas(new ErrorArea(new Rect(10, 10, 50, 10), "object"), new ErrorArea(new Rect(10, 10, 10, 20), "item")), 
+                  messages("\"item\" is not aligned horizontally centered with \"object\". Offset is 5px")),
                   specHorizontally(Alignment.CENTERED, "item", 0), page(new HashMap<String, PageElement>(){{
                       put("object", element(10, 10, 50, 10));
                       put("item", element(10, 10, 10, 20));
           }})),
-          row(new ValidationError(singleArea(new Rect(10, 10, 10, 20), "item"), messages("\"item\" is not aligned horizontally top with \"object\". Offset is 1px")),
+          row(new ValidationError(areas(new ErrorArea(new Rect(10, 15, 10, 10), "object"), new ErrorArea(new Rect(10, 10, 10, 20), "item")), 
+                  messages("\"item\" is not aligned horizontally top with \"object\". Offset is 5px")),
                   specHorizontally(Alignment.TOP, "item", 0), page(new HashMap<String, PageElement>(){{
                       put("object", element(10, 15, 10, 10));
                       put("item", element(10, 10, 10, 20));
           }})),
-          row(new ValidationError(singleArea(new Rect(10, 10, 10, 5), "item"), messages("\"item\" is not aligned horizontally bottom with \"object\". Offset is 1px")),
+          row(new ValidationError(areas(new ErrorArea(new Rect(10, 10, 10, 10), "object"), new ErrorArea(new Rect(10, 10, 10, 5), "item")), 
+                  messages("\"item\" is not aligned horizontally bottom with \"object\". Offset is 5px")),
                   specHorizontally(Alignment.BOTTOM, "item", 0), page(new HashMap<String, PageElement>(){{
                       put("object", element(10, 10, 10, 10));
                       put("item", element(10, 10, 10, 5));
           }})),
-          row(new ValidationError(singleArea(new Rect(30, 10, 10, 5), "item"), messages("\"item\" is not aligned horizontally all with \"object\". Offset is 1px")),
+          row(new ValidationError(areas(new ErrorArea(new Rect(10, 10, 10, 10), "object"), new ErrorArea(new Rect(30, 10, 10, 5), "item")), 
+                  messages("\"item\" is not aligned horizontally all with \"object\". Offset is 5px")),
                   specHorizontally(Alignment.ALL, "item", 0), page(new HashMap<String, PageElement>(){{
                       put("object", element(10, 10, 10, 10));
                       put("item", element(30, 10, 10, 5));
           }})),
-          row(new ValidationError(singleArea(new Rect(30, 10, 15, 5), "item"), messages("\"item\" is not aligned horizontally all with \"object\". Offset is 1px")),
+          row(new ValidationError(areas(new ErrorArea(new Rect(10, 10, 10, 10), "object"), new ErrorArea(new Rect(30, 10, 15, 5), "item")), 
+                  messages("\"item\" is not aligned horizontally all with \"object\". Offset is 5px")),
                   specHorizontally(Alignment.ALL, "item", 0), page(new HashMap<String, PageElement>(){{
                       put("object", element(10, 10, 10, 10));
                       put("item", element(30, 10, 15, 5));
@@ -907,32 +905,32 @@ public class ValidationTest {
                       put("object", absentElement(10, 10, 50, 10));
                       put("item", element(10, 10, 10, 20));
           }})),
-          row(new ValidationError(singleArea(new Rect(10, 20, 10, 10), "item"), messages("\"item\" is not aligned vertically centered with \"object\". Offset is 1px")),
+          row(new ValidationError(areas(new ErrorArea(new Rect(10, 10, 20, 10), "object"), new ErrorArea(new Rect(10, 20, 10, 10), "item")), 
+                  messages("\"item\" is not aligned vertically centered with \"object\". Offset is 5px")),
                   specVertically(Alignment.CENTERED, "item", 0), page(new HashMap<String, PageElement>(){{
                       put("object", element(10, 10, 20, 10));
                       put("item", element(10, 20, 10, 10));
           }})),
-          row(new ValidationError(areas(new ErrorArea(new Rect(10, 20, 10, 10), "item")), messages("\"item\" is not aligned vertically centered with \"object\". Offset is 1px")),
-                  specVertically(Alignment.CENTERED, "item", 0), page(new HashMap<String, PageElement>(){{
-                      put("object", element(10, 10, 20, 10));
-                      put("item", element(10, 20, 10, 10));
-          }})),
-          row(new ValidationError(singleArea(new Rect(5, 20, 10, 10), "item"), messages("\"item\" is not aligned vertically left with \"object\". Offset is 1px")),
+          row(new ValidationError(areas(new ErrorArea(new Rect(10, 10, 20, 10), "object"), new ErrorArea(new Rect(5, 20, 10, 10), "item")), 
+                  messages("\"item\" is not aligned vertically left with \"object\". Offset is 5px")),
                   specVertically(Alignment.LEFT, "item", 0), page(new HashMap<String, PageElement>(){{
                       put("object", element(10, 10, 20, 10));
                       put("item", element(5, 20, 10, 10));
           }})),
-          row(new ValidationError(singleArea(new Rect(10, 30, 10, 10), "item"), messages("\"item\" is not aligned vertically right with \"object\". Offset is 1px")),
+          row(new ValidationError(areas(new ErrorArea(new Rect(10, 10, 20, 10), "object"), new ErrorArea(new Rect(10, 30, 10, 10), "item")), 
+                  messages("\"item\" is not aligned vertically right with \"object\". Offset is 10px")),
                   specVertically(Alignment.RIGHT, "item", 0), page(new HashMap<String, PageElement>(){{
                       put("object", element(10, 10, 20, 10));
                       put("item", element(10, 30, 10, 10));
           }})),
-          row(new ValidationError(singleArea(new Rect(10, 30, 5, 10), "item"), messages("\"item\" is not aligned vertically all with \"object\". Offset is 1px")),
+          row(new ValidationError(areas(new ErrorArea(new Rect(10, 10, 10, 10), "object"), new ErrorArea(new Rect(10, 30, 5, 10), "item")), 
+                  messages("\"item\" is not aligned vertically all with \"object\". Offset is 5px")),
                   specVertically(Alignment.ALL, "item", 0), page(new HashMap<String, PageElement>(){{
                       put("object", element(10, 10, 10, 10));
                       put("item", element(10, 30, 5, 10));
           }})),
-          row(new ValidationError(singleArea(new Rect(15, 30, 5, 10), "item"), messages("\"item\" is not aligned vertically all with \"object\". Offset is 1px")),
+          row(new ValidationError(areas(new ErrorArea(new Rect(10, 10, 10, 10), "object"), new ErrorArea(new Rect(15, 30, 5, 10), "item")), 
+                  messages("\"item\" is not aligned vertically all with \"object\". Offset is 5px")),
                   specVertically(Alignment.ALL, "item", 0), page(new HashMap<String, PageElement>(){{
                       put("object", element(10, 10, 10, 10));
                       put("item", element(15, 30,   5, 10));
@@ -1084,7 +1082,7 @@ public class ValidationTest {
               }})),
                       
           row(new ValidationError(areas(new ErrorArea(new Rect(20, 20, 80, 60), "object"), new ErrorArea(new Rect(0, 0, 100, 100), "container")), 
-                  messages("\"object\" is not centered horizontally inside \"container\"")),
+                  messages("\"object\" is not centered horizontally inside \"container\". Offset is 20px")),
                   specCenteredInside("container", SpecCentered.Alignment.ALL), page(new HashMap<String, PageElement>(){{
                       put("object", element(20, 20, 80, 60));
                       put("container", element(0, 0, 100, 100));
@@ -1092,38 +1090,38 @@ public class ValidationTest {
               
               
           row(new ValidationError(areas(new ErrorArea(new Rect(20, 20, 75, 60), "object"), new ErrorArea(new Rect(0, 0, 100, 100), "container")), 
-                  messages("\"object\" is not centered horizontally inside \"container\"")),
+                  messages("\"object\" is not centered horizontally inside \"container\". Offset is 15px")),
                   specCenteredInside("container", SpecCentered.Alignment.HORIZONTALLY, 10), page(new HashMap<String, PageElement>(){{
                       put("object", element(20, 20, 75, 60));
                       put("container", element(0, 0, 100, 100));
               }})),    
         
           row(new ValidationError(areas(new ErrorArea(new Rect(0, 20, 120, 60), "object"), new ErrorArea(new Rect(10, 10, 100, 100), "container")), 
-                  messages("\"object\" is not centered horizontally inside \"container\"")),
+                  messages("\"object\" is centered but not horizontally inside \"container\"")),
                   specCenteredInside("container", SpecCentered.Alignment.ALL), page(new HashMap<String, PageElement>(){{
                       put("object", element(0, 20, 120, 60));
                       put("container", element(10, 10, 100, 100));
                   }})),
           row(new ValidationError(areas(new ErrorArea(new Rect(20, 10, 100, 60), "object"), new ErrorArea(new Rect(10, 10, 100, 100), "container")), 
-                  messages("\"object\" is not centered vertically inside \"container\"")),
+                  messages("\"object\" is not centered vertically inside \"container\". Offset is 40px")),
                   specCenteredInside("container", SpecCentered.Alignment.VERTICALLY), page(new HashMap<String, PageElement>(){{
                       put("object", element(20, 10, 100, 60));
                       put("container", element(10, 10, 100, 100));
                   }})),
           row(new ValidationError(areas(new ErrorArea(new Rect(20, 10, 10, 60), "object"), new ErrorArea(new Rect(10, 10, 100, 100), "container")), 
-                  messages("\"object\" is not centered horizontally inside \"container\"")),
+                  messages("\"object\" is not centered horizontally inside \"container\". Offset is 70px")),
                   specCenteredInside("container", SpecCentered.Alignment.HORIZONTALLY), page(new HashMap<String, PageElement>(){{
                       put("object", element(20, 10, 10, 60));
                       put("container", element(10, 10, 100, 100));
                   }})),
           row(new ValidationError(areas(new ErrorArea(new Rect(20, 10, 10, 60), "object"), new ErrorArea(new Rect(10, 10, 100, 100), "container")), 
-                  messages("\"object\" is not centered vertically on \"container\"")),
+                  messages("\"object\" is not centered vertically on \"container\". Offset is 40px")),
                   specCenteredOn("container", SpecCentered.Alignment.VERTICALLY), page(new HashMap<String, PageElement>(){{
                       put("object", element(20, 10, 10, 60));
                       put("container", element(10, 10, 100, 100));
                   }})),
           row(new ValidationError(areas(new ErrorArea(new Rect(20, 10, 10, 60), "object"), new ErrorArea(new Rect(10, 10, 100, 100), "container")), 
-                  messages("\"object\" is not centered horizontally on \"container\"")),
+                  messages("\"object\" is not centered horizontally on \"container\". Offset is 70px")),
                   specCenteredOn("container", SpecCentered.Alignment.HORIZONTALLY), page(new HashMap<String, PageElement>(){{
                       put("object", element(20, 10, 10, 60));
                       put("container", element(10, 10, 100, 100));
@@ -1277,7 +1275,7 @@ public class ValidationTest {
 	}
     
     private SpecCentered specCenteredOn(String object, SpecCentered.Alignment alignment) {
-        return new SpecCentered(object, alignment, SpecCentered.Location.ON);
+        return new SpecCentered(object, alignment, SpecCentered.Location.ON).withErrorRate(2);
     }
 
     private SpecCentered specCenteredInside(String object, SpecCentered.Alignment alignment) {
