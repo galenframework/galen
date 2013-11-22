@@ -28,8 +28,8 @@ version_promt=$( cat pom.xml | grep "<version>" | head -n 1 | awk -F"[<>]" '/ver
 
 read_var "Enter version" version "$version_promt"
 
-bin=bin-${version}
-src=src-${version}
+bin=galen-bin-${version}
+src=galen-src-${version}
 
 
 mkdir -p dist/$bin
@@ -52,5 +52,5 @@ cp -r src dist/$src/src
 
 cd dist
 
-zip -r -9 galen-$bin.zip $bin
-zip -r -9 galen-$src.zip $src
+zip -r -9 $bin.zip $bin
+zip -r -9 $src.zip $src
