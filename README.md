@@ -1,5 +1,5 @@
 [Galen Framework](http://galenframework.com)
-
+==============
 
 Galen is an open-source tool for testing layout and responsive design of web applications.
 For more information visit http://galenframework.com
@@ -7,7 +7,9 @@ For more information visit http://galenframework.com
 How does it work?
 ------------
 
-It uses a special language to describe the layout of web page for different browser sizes. Here is a small example of basic syntax.
+Galen Framework uses Selenium in order to open web browser and select the tested elements on page.
+It has a special language to describe the layout of web page for different browser sizes. You just need to define your own tags for devices and sizes and then using the galen spec language write checks for each element on page. The best way to test the layout is to check location and dimensions of elements relatively to each other.
+Here is a small example of basic syntax.
 
 ```
 # Objects definition
@@ -51,7 +53,6 @@ side-panel
     below: content 0px
 ```
 
-Galen Framework uses Selenium in order to open web browser and select the tested elements on page.
 
 For more information please read [Galen Framework Documentation](http://galenframework.com/docs/all/)
 
