@@ -18,6 +18,8 @@ package net.mindengine.galen.components;
 import java.awt.Dimension;
 import java.io.File;
 import java.io.IOException;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.UUID;
 
 import com.google.common.io.Files;
@@ -27,6 +29,9 @@ import net.mindengine.galen.page.Page;
 
 public class MockedBrowser implements Browser {
 
+    
+    private List<String> recordedActions = new LinkedList<String>();
+    
     private String url;
     private Dimension screenSize;
     private Page mockedPage;
@@ -50,6 +55,7 @@ public class MockedBrowser implements Browser {
 
     @Override
     public void executeJavascript(String javascript) {
+        recordedActions.add("executeJavascript\n" + javascript);
     }
 
     @Override
@@ -86,6 +92,19 @@ public class MockedBrowser implements Browser {
 
     public void setMockedPage(Page mockedPage) {
         this.mockedPage = mockedPage;
+    }
+
+    public List<String> getRecordedActions() {
+        return recordedActions;
+    }
+
+    public void setRecordedActions(List<String> recordedActions) {
+        this.recordedActions = recordedActions;
+    }
+
+    @Override
+    public void refresh() {
+        recordedActions.add("refresh");
     }
 
 }

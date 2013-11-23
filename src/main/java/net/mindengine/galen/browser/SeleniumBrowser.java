@@ -81,4 +81,9 @@ public class SeleniumBrowser implements Browser {
         return file.getAbsolutePath();
     }
 
+    @Override
+    public void refresh() {
+        driver.navigate().refresh();
+    }
+
 }

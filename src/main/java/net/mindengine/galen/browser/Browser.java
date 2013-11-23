@@ -30,6 +30,8 @@ public interface Browser {
     void executeJavascript(String javascript);
 
     Page getPage();
+    
+    void refresh();
 
     /**
      * Returns the current page url
