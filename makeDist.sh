@@ -43,10 +43,10 @@ mvn assembly:assembly -DskipTests=true
 cp target/galen-jar-with-dependencies.jar dist/$bin/galen.jar
 cp galen dist/$bin/.
 cp LICENSE-2.0.txt dist/$bin/.
-cp README dist/$bin/.
+cp .README dist/$bin/README
 
 cp LICENSE-2.0.txt dist/$src/.
-cp README dist/$src/.
+cp .README dist/$src/README
 cp -r src dist/$src/src
 
 
