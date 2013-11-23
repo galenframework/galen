@@ -21,6 +21,7 @@ import static org.hamcrest.Matchers.is;
 import net.mindengine.galen.parser.GalenPageActionReader;
 import net.mindengine.galen.suite.GalenPageAction;
 import net.mindengine.galen.suite.actions.GalenPageActionCheck;
+import net.mindengine.galen.suite.actions.GalenPageActionCookie;
 import net.mindengine.galen.suite.actions.GalenPageActionInjectJavascript;
 import net.mindengine.galen.suite.actions.GalenPageActionRunJavascript;
 
@@ -59,6 +60,8 @@ public class GalenPageActionReaderTest {
                 .withSpecs(asList("page1.spec", "page2.spec", "page3.spec"))
                 .withIncludedTags(asList("mobile", "tablet"))
                 .withExcludedTags(asList("nomobile", "debug"))},
+            {"cookie \"somecookie1\" \"somecookie2\" \"somecookie3\"", new GalenPageActionCookie().withCookies("somecookie1", "somecookie2", "somecookie3")},
+            {"cookie \"somecookie1\"", new GalenPageActionCookie().withCookies("somecookie1")}
         };
     }
     

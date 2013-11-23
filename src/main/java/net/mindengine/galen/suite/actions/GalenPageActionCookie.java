@@ -15,15 +15,19 @@
 ******************************************************************************/
 package net.mindengine.galen.suite.actions;
 
+import java.util.Arrays;
 import java.util.List;
-
-import org.apache.commons.lang3.StringEscapeUtils;
 
 import net.mindengine.galen.browser.Browser;
 import net.mindengine.galen.suite.GalenPageAction;
 import net.mindengine.galen.suite.GalenPageTest;
 import net.mindengine.galen.validation.ValidationError;
 import net.mindengine.galen.validation.ValidationListener;
+
+import org.apache.commons.lang3.StringEscapeUtils;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.lang3.builder.ToStringBuilder;
 
 public class GalenPageActionCookie extends GalenPageAction {
 
@@ -49,6 +53,40 @@ public class GalenPageActionCookie extends GalenPageAction {
 
     public void setCookies(List<String> cookies) {
         this.cookies = cookies;
+    }
+
+    public GalenPageActionCookie withCookies(String...cookieArray) {
+        cookies = Arrays.asList(cookieArray);
+        return this;
+    }
+    
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder()
+                .append(cookies)
+                .toHashCode();
+    }
+    
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null)
+            return false;
+        if (obj == this)
+            return true;
+        if (!(obj instanceof GalenPageActionCookie))
+            return false;
+        
+        GalenPageActionCookie rhs = (GalenPageActionCookie) obj;
+        return new EqualsBuilder()
+            .append(cookies, rhs.cookies)
+            .isEquals();
+    }
+    
+    @Override
+    public String toString() {
+        return new ToStringBuilder(this)
+            .append("cookies", cookies)
+            .toString();
     }
 
 }

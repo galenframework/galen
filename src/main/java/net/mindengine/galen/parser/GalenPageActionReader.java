@@ -22,6 +22,7 @@ import java.util.List;
 
 import net.mindengine.galen.suite.GalenPageAction;
 import net.mindengine.galen.suite.actions.GalenPageActionCheck;
+import net.mindengine.galen.suite.actions.GalenPageActionCookie;
 import net.mindengine.galen.suite.actions.GalenPageActionInjectJavascript;
 import net.mindengine.galen.suite.actions.GalenPageActionRunJavascript;
 
@@ -47,7 +48,20 @@ public class GalenPageActionReader {
         else if (args[0].equals("check")) {
             return checkActionFrom(args, actionText);
         }
+        else if (args[0].equals("cookie")) {
+            return cookieActionFrom(args);
+        }
         else throw new SyntaxException(UNKNOWN_LINE, "Unknown action: " + args[0]);
+    }
+
+    private static GalenPageAction cookieActionFrom(String[] args) {
+        GalenPageActionCookie action = new GalenPageActionCookie();
+        List<String> cookies = new LinkedList<String>();
+        for(int i = 1; i<args.length; i++) {
+            cookies.add(args[i]);
+        }
+        action.setCookies(cookies);
+        return action;
     }
 
     private static GalenPageAction checkActionFrom(String[] args, String originalText) {
