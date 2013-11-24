@@ -1,0 +1,6 @@
+
+@@ import suite-for-import.test
+
+
+Suite 3 ${name}
+    http://example.com 1024x768

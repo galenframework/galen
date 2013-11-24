@@ -15,9 +15,17 @@
 ******************************************************************************/
 package net.mindengine.galen.suite.reader;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.List;
 
 import net.mindengine.galen.parser.BashTemplateContext;
+import net.mindengine.galen.parser.SyntaxException;
 import net.mindengine.galen.suite.GalenSuite;
 
 public class GalenSuiteLineProcessor {
@@ -25,8 +33,13 @@ public class GalenSuiteLineProcessor {
     private RootNode rootNode = new RootNode();
     private Node<?> currentNode = rootNode;
     private boolean disableNextSuite = false;
+    private String contextPath;
 
-    public void processLine(String line, int number) {
+    public GalenSuiteLineProcessor(String contextPath) {
+        this.contextPath = contextPath;
+    }
+
+    public void processLine(String line, int number) throws FileNotFoundException, IOException {
         if (!isBlank(line) && !isCommented(line) && !isSeparator(line)) {
             if (line.startsWith("@@")) {
                 Node<?> node = processSpecialInstruction(new Line(line.substring(2).trim(), number));
@@ -52,7 +65,7 @@ public class GalenSuiteLineProcessor {
         }
     }
     
-    private Node<?> processSpecialInstruction(Line line) {
+    private Node<?> processSpecialInstruction(Line line) throws FileNotFoundException, IOException {
         String text = line.getText();
         currentNode = rootNode;
         int indexOfFirstSpace = text.indexOf(' ');
@@ -83,7 +96,29 @@ public class GalenSuiteLineProcessor {
             markNextSuiteAsDisabled();
             return null;
         }
+        else if (firstWord.equals("import")) {
+            List<Node<?>> nodes = importSuite(leftover, line);
+            rootNode.getChildNodes().addAll(nodes);
+            return null;
+        }
         else throw new SuiteReaderException("Unknown instruction: " + firstWord);
+    }
+
+    private List<Node<?>> importSuite(String path, Line line) throws FileNotFoundException, IOException {
+        if (path.isEmpty()) {
+            throw new SyntaxException(line, "No path specified for importing");
+        }
+        
+        String fullChildPath = contextPath + File.separator + path;
+        String childContextPath = new File(fullChildPath).getParent();
+        GalenSuiteLineProcessor childProcessor = new GalenSuiteLineProcessor(childContextPath);
+        
+        File file = new File(fullChildPath);
+        if (!file.exists()) {
+            throw new SyntaxException(line, "File doesn't exist: " + file.getAbsolutePath());
+        }
+        childProcessor.readLines(new FileInputStream(file));
+        return childProcessor.rootNode.getChildNodes();
     }
 
     private void markNextSuiteAsDisabled() {
@@ -151,6 +186,18 @@ public class GalenSuiteLineProcessor {
 
     private boolean isCommented(String line) {
         return line.trim().startsWith("#");
+    }
+
+    public void readLines(InputStream inputStream) throws IOException {
+        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream, "UTF-8"));
+        
+        String line = bufferedReader.readLine();
+        int lineNumber = 0;
+        while(line != null){
+            lineNumber++;
+            processLine(line, lineNumber);
+            line = bufferedReader.readLine();
+        }
     }
     
 }

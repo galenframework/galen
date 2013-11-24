@@ -15,12 +15,10 @@
 ******************************************************************************/
 package net.mindengine.galen.suite.reader;
 
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.util.List;
 
 import net.mindengine.galen.parser.FileSyntaxException;
@@ -39,17 +37,8 @@ public class GalenSuiteReader {
     
     private List<GalenSuite> read(InputStream inputStream, String filePath) throws IOException {
         try {
-            GalenSuiteLineProcessor lineProcessor = new GalenSuiteLineProcessor();
-            
-            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream, "UTF-8"));
-            
-            String line = bufferedReader.readLine();
-            int lineNumber = 0;
-            while(line != null){
-                lineNumber++;
-                lineProcessor.processLine(line, lineNumber);
-                line = bufferedReader.readLine();
-            }
+            GalenSuiteLineProcessor lineProcessor = new GalenSuiteLineProcessor(getContextPath(filePath));
+            lineProcessor.readLines(inputStream);
             return lineProcessor.buildSuites();
         }
         catch (SyntaxException e) {
@@ -60,6 +49,9 @@ public class GalenSuiteReader {
             }
             throw new FileSyntaxException(e, filePath, lineNumber);
         }
+    }
+    private String getContextPath(String filePath) {
+        return new File(filePath).getParent();
     }
 
 }

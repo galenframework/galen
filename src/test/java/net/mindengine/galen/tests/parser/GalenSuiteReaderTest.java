@@ -243,6 +243,19 @@ public class GalenSuiteReaderTest {
         assertThat(galenSuites.get(2).getName(), is("Suite 3"));
     }
     
+    @Test
+    public void shouldIncludeEverything_forImportedTestSuites() throws IOException {
+        GalenSuiteReader reader = new GalenSuiteReader();
+        
+        List<GalenSuite> galenSuites = reader.read(new File(getClass().getResource("/suites/suite-import.test").getFile()));
+        
+        assertThat("Amount of suites should be", galenSuites.size(), is(3));
+        assertThat(galenSuites.get(0).getName(), is("Suite 1"));
+        assertThat(galenSuites.get(1).getName(), is("Suite 2"));
+        assertThat(galenSuites.get(2).getName(), is("Suite 3 imported test suite name"));
+    }
+    
+    
     
     private List<GalenPageAction> actions(GalenPageAction...actions) {
         List<GalenPageAction> list = new LinkedList<GalenPageAction>();
