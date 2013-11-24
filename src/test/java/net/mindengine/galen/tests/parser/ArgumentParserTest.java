@@ -25,6 +25,8 @@ import java.awt.Dimension;
 import net.mindengine.galen.runner.GalenArguments;
 
 import org.apache.commons.cli.ParseException;
+import org.hamcrest.MatcherAssert;
+import org.hamcrest.Matchers;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
@@ -36,6 +38,13 @@ public class ArgumentParserTest {
     public void shoulParseArguments(SimpleArguments args,  GalenArguments expectedArguments) throws ParseException {
         GalenArguments realArguments = GalenArguments.parse(args.args);
         assertThat(realArguments, is(expectedArguments));
+    }
+    
+    @Test
+    public void shouldParseSystemProperties() throws ParseException {
+        GalenArguments.parse(new String[]{"test", ".", "--htmlreport", "report", "-DsomeCustomVar=123", "-DsomeOtherVar=456"});
+        assertThat(System.getProperty("someCustomVar"), is("123"));
+        assertThat(System.getProperty("someOtherVar"), is("456"));
     }
     
     @DataProvider

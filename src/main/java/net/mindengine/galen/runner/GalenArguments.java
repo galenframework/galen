@@ -18,6 +18,7 @@ package net.mindengine.galen.runner;
 import static java.lang.Integer.parseInt;
 
 import java.awt.Dimension;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
@@ -133,6 +134,9 @@ public class GalenArguments {
     }
 
     public static GalenArguments parse(String[] args) throws ParseException {
+        
+        args = processSystemProperties(args);
+        
         //TODO Refactor this ugly way of handling command line arguments. It should be separate per action.
         
         Options options = new Options();
@@ -192,6 +196,30 @@ public class GalenArguments {
         
         verifyArguments(galen);
         return galen;
+    }
+
+    private static String[] processSystemProperties(String[] args) {
+        ArrayList<String> list = new ArrayList<String>();
+        
+        for (String arg : args) {
+            if (arg.startsWith("-D")) {
+                setSystemProperty(arg);
+            }
+            else {
+                list.add(arg);
+            }
+        }
+        return list.toArray(new String[]{});
+    }
+
+    private static void setSystemProperty(String systemPropertyDefinition) {
+        String string = systemPropertyDefinition.substring(2);
+        String values[] = string.split("=");
+        if (values.length != 2) {
+            throw new IllegalArgumentException("Cannot parse: " + systemPropertyDefinition);
+        }
+        
+        System.setProperty(values[0].trim(), values[1].trim());
     }
 
     private static void verifyArguments(GalenArguments galen) {
