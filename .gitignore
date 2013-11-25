@@ -5,3 +5,4 @@ target/
 test-output/
 bin/
 dist/
+.release-notes
