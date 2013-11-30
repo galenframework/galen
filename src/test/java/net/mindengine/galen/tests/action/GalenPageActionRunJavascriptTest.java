@@ -44,7 +44,7 @@ public class GalenPageActionRunJavascriptTest {
         
         action.execute(browser, new GalenPageTest(), null);
         
-        assertThat("Search input should contain text", element.getAttribute("value"), is("This was typed by a selenium from javascript"));
+        assertThat("Search input should contain text", element.getAttribute("value"), is("This was typed by a selenium from javascript text from imported script"));
         browser.quit();
     }
 }

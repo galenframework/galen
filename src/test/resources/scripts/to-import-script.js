@@ -1,0 +1,1 @@
+var varFromImportedScript = "text from imported script";

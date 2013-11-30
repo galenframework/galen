@@ -15,6 +15,7 @@
 ******************************************************************************/
 package net.mindengine.galen.suite.actions;
 
+import java.io.File;
 import java.io.FileReader;
 import java.io.Reader;
 import java.util.LinkedList;
@@ -27,6 +28,7 @@ import javax.script.ScriptEngineManager;
 import net.mindengine.galen.browser.Browser;
 import net.mindengine.galen.suite.GalenPageAction;
 import net.mindengine.galen.suite.GalenPageTest;
+import net.mindengine.galen.suite.actions.javascript.ScriptExecutor;
 import net.mindengine.galen.utils.GalenUtils;
 import net.mindengine.galen.validation.ValidationError;
 import net.mindengine.galen.validation.ValidationListener;
@@ -45,13 +47,18 @@ public class GalenPageActionRunJavascript extends GalenPageAction{
         this.setJavascriptPath(javascriptPath);
     }
     
+    
     @Override
     public List<ValidationError> execute(Browser browser, GalenPageTest pageTest, ValidationListener validationListener) throws Exception {
-        Reader scriptFileReader = new FileReader(GalenUtils.findFile(javascriptPath));
+        
+        File file = GalenUtils.findFile(javascriptPath);
+        Reader scriptFileReader = new FileReader(file);
         ScriptEngineManager factory = new ScriptEngineManager();
         ScriptEngine engine = factory.getEngineByName("JavaScript");
         ScriptContext context = engine.getContext();
         context.setAttribute("name", "JavaScript", ScriptContext.ENGINE_SCOPE);
+        
+        engine.put("global", new ScriptExecutor(engine, file.getParent()));
         engine.put("browser", browser);
         engine.eval("var arg = " + jsonArguments);
         engine.eval(scriptFileReader);
