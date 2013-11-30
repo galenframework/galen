@@ -29,7 +29,12 @@ public class ScriptExecutor {
 
     public ScriptExecutor(ScriptEngine engine, String contextFolder) {
         this.engine = engine;
-        this.contextFolder = contextFolder;
+        if (contextFolder != null && !contextFolder.isEmpty()) {
+            this.contextFolder = contextFolder;
+        }
+        else { 
+            this.contextFolder = ".";
+        }
     }
 
     public void load(String filePath) throws FileNotFoundException, ScriptException {
