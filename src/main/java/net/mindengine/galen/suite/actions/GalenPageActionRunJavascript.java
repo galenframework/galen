@@ -24,8 +24,10 @@ import java.util.List;
 import javax.script.ScriptContext;
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
+import javax.script.ScriptException;
 
 import net.mindengine.galen.browser.Browser;
+import net.mindengine.galen.browser.WebDriverWrapper;
 import net.mindengine.galen.suite.GalenPageAction;
 import net.mindengine.galen.suite.GalenPageTest;
 import net.mindengine.galen.suite.actions.javascript.ScriptExecutor;
@@ -36,6 +38,9 @@ import net.mindengine.galen.validation.ValidationListener;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 
 public class GalenPageActionRunJavascript extends GalenPageAction{
 
@@ -60,11 +65,30 @@ public class GalenPageActionRunJavascript extends GalenPageAction{
         
         engine.put("global", new ScriptExecutor(engine, file.getParent()));
         engine.put("browser", browser);
+        importAllMajorClasses(engine);
         engine.eval("var arg = " + jsonArguments);
         engine.eval(scriptFileReader);
         return NO_ERRORS;
     }
     
+    private void importAllMajorClasses(ScriptEngine engine) throws ScriptException {
+        importClasses(engine, new Class[]{
+                Thread.class,
+                WebDriverWrapper.class,
+                By.class,
+                WebElement.class,
+                WebDriver.class
+        });
+    }
+
+
+    private void importClasses(ScriptEngine engine, Class<?>[] classes) throws ScriptException {
+        for (Class<?> clazz : classes) {
+            engine.eval("importClass(" + clazz.getName() + ")");
+        }
+    }
+
+
     public String getJavascriptPath() {
         return javascriptPath;
     }
