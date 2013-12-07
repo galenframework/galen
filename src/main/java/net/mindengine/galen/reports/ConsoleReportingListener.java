@@ -223,7 +223,13 @@ public class ConsoleReportingListener implements CompleteListener {
     @Override
     public void onBeforeSection(GalenPageRunner pageRunner, PageValidation pageValidation, PageSection pageSection) {
         out.print("@ ");
-        out.println(pageSection.getName());
+        String name = pageSection.getName();
+        if (name != null && !name.trim().isEmpty()) {
+            out.println(pageSection.getName());
+        }
+        else {
+            out.println("Unnamed");
+        }
         out.println("-------------------------");
     }
 

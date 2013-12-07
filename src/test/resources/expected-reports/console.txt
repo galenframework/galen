@@ -4,7 +4,7 @@ Suite: page1.test
 ----------------------------------------
 Page: http://example.com/page1 400x600
 check homepage.spec --include all,mobile
-@ some section 1
+@ Unnamed
 -------------------------
     objectA1
 ->      inside: other-object 10px left

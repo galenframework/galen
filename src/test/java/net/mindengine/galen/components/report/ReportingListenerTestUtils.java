@@ -64,7 +64,7 @@ public class ReportingListenerTestUtils {
         validationListener.onBeforePageAction(pageRunner, action);
         {
             
-            PageSection section1 = sectionWithName("some section 1");
+            PageSection section1 = sectionWithName("");
             validationListener.onBeforeSection(pageRunner, pageValidation, section1);
             
             validationListener.onObject(pageRunner, pageValidation, "objectA1"); {

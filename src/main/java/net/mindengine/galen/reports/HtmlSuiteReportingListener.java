@@ -277,7 +277,12 @@ public class HtmlSuiteReportingListener implements CompleteListener {
             //Reseting objects map
             cachedPageTestObjectsMap = new HashMap<String, PageTestObject>();
             
-            currentSection = createSection(pageSection.getName());
+            String name = pageSection.getName();
+            if (name == null || name.trim().isEmpty()) {
+                name = "Unnamed";
+            }
+            
+            currentSection = createSection(name);
         }
     }
 
