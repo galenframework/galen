@@ -77,7 +77,8 @@ public class GalenPageActionRunJavascript extends GalenPageAction{
                 WebDriverWrapper.class,
                 By.class,
                 WebElement.class,
-                WebDriver.class
+                WebDriver.class,
+                System.class
         });
     }
 
