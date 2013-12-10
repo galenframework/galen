@@ -18,6 +18,8 @@ package net.mindengine.galen.suite.actions.javascript;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.script.ScriptEngine;
 import javax.script.ScriptException;
@@ -26,6 +28,8 @@ public class ScriptExecutor {
     
     private ScriptEngine engine;
     private String contextFolder;
+    
+    private Set<String> loadedFiles = new HashSet<String>();
 
     public ScriptExecutor(ScriptEngine engine, String contextFolder) {
         this.engine = engine;
@@ -38,7 +42,13 @@ public class ScriptExecutor {
     }
 
     public void load(String filePath) throws FileNotFoundException, ScriptException {
-        engine.eval(new FileReader(new File(contextFolder + File.separator + filePath)));
+        File file = new File(contextFolder + File.separator + filePath);
+        String absolutePath = file.getAbsolutePath();
+        
+        if (!loadedFiles.contains(absolutePath)) {
+            engine.eval(new FileReader(file));
+            loadedFiles.add(absolutePath);
+        }
     }
     
     public void print(String message) {

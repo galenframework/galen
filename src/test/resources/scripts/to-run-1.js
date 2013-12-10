@@ -3,8 +3,13 @@ importClass(org.openqa.selenium.By);
 importClass(org.openqa.selenium.remote.RemoteWebElement);
 importClass(net.mindengine.galen.browser.WebDriverWrapper);
 
+this.doubleLoadCheck = 0;
+
 global.load("to-import-script.js");
 
+
+
+global.load("to-import-script.js");
 
 var text = arg.prefix + " typed by a selenium from javascript " + varFromImportedScript;
 
