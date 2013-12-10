@@ -15,6 +15,9 @@
 ******************************************************************************/
 package net.mindengine.galen.parser;
 
+import java.io.PrintStream;
+import java.io.PrintWriter;
+
 
 public class FileSyntaxException extends RuntimeException {
 
@@ -48,6 +51,21 @@ public class FileSyntaxException extends RuntimeException {
         return withFileInfo(super.getMessage());
     }
     private String withFileInfo(String message) {
-        return String.format("%s (in %s:%d)", message, filePath, line);
+        return String.format("%s\n    in %s:%d", message, filePath, line);
+    }
+    
+    @Override
+    public void printStackTrace() {
+        printStackTrace(System.err);
+    }
+    
+    @Override
+    public void printStackTrace(PrintStream stream) {
+        stream.println("Error: " + getMessage());
+    }
+    
+    @Override
+    public void printStackTrace(PrintWriter writer) {
+        writer.println("Error: " + getMessage());
     }
 }

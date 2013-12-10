@@ -160,7 +160,7 @@ public class GalenMainTest {
         
         String testngReportContent = FileUtils.readFileToString(new File(testngReportPath));
         
-        assertThat(testngReportContent, containsString("net.mindengine.galen.parser.FileSyntaxException: There is no location defined (in " + pageSpec + ":10)"));
+        assertThat(testngReportContent, containsString("Error: There is no location defined\n    in " + pageSpec + ":10"));
     }
 }
 

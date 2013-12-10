@@ -258,7 +258,7 @@ public class PageSpecsReaderTest {
         
         String fullSpecPath = getClass().getResource("/negative-specs/no-object-in-section.spec").getFile();
         
-        assertThat(exception.getMessage(), is("There is no object defined in section (in " + fullSpecPath + ":8)"));
+        assertThat(exception.getMessage(), is("There is no object defined in section\n    in " + fullSpecPath + ":8"));
         assertThat(exception.getFilePath(), endsWith("/no-object-in-section.spec"));
         assertThat(exception.getLine(), is(8));
     }
@@ -268,7 +268,7 @@ public class PageSpecsReaderTest {
         FileSyntaxException exception = expectExceptionFromReading("/negative-specs/invalid-spec.spec");
         String fullSpecPath = getClass().getResource("/negative-specs/invalid-spec.spec").getFile();
         
-        assertThat(exception.getMessage(), is("There is no location defined (in " + fullSpecPath + ":10)"));
+        assertThat(exception.getMessage(), is("There is no location defined\n    in " + fullSpecPath + ":10"));
         assertThat(exception.getFilePath(), endsWith("/invalid-spec.spec"));
         assertThat(exception.getLine(), is(10));
     }
@@ -279,7 +279,7 @@ public class PageSpecsReaderTest {
         
         String fullSpecPath = getClass().getResource("/negative-specs/invalid-object-locator.spec").getFile();
         
-        assertThat(exception.getMessage(), is("Missing locator for object \"bad-object\" (in " + fullSpecPath +":7)"));
+        assertThat(exception.getMessage(), is("Missing locator for object \"bad-object\"\n    in " + fullSpecPath +":7"));
         assertThat(exception.getFilePath(), endsWith("/invalid-object-locator.spec"));
         assertThat(exception.getLine(), is(7));
     }
@@ -290,7 +290,7 @@ public class PageSpecsReaderTest {
         
         String fullSpecPath = getClass().getResource("/negative-specs/incorrect-indentation-1.spec").getFile();
         
-        assertThat(exception.getMessage(), is("Incorrect indentation. Use from 1 to 8 spaces for indentation (in " + fullSpecPath +":9)"));
+        assertThat(exception.getMessage(), is("Incorrect indentation. Use from 1 to 8 spaces for indentation\n    in " + fullSpecPath +":9"));
         assertThat(exception.getFilePath(), endsWith("/incorrect-indentation-1.spec"));
         assertThat(exception.getLine(), is(9));
     }
@@ -301,7 +301,7 @@ public class PageSpecsReaderTest {
         
         String fullSpecPath = getClass().getResource("/negative-specs/incorrect-indentation-2.spec").getFile();
         
-        assertThat(exception.getMessage(), is("Incorrect indentation. You should use same indentation within one spec (in " + fullSpecPath +":10)"));
+        assertThat(exception.getMessage(), is("Incorrect indentation. You should use same indentation within one spec\n    in " + fullSpecPath +":10"));
         assertThat(exception.getFilePath(), endsWith("/incorrect-indentation-2.spec"));
         assertThat(exception.getLine(), is(10));
     }
@@ -312,7 +312,7 @@ public class PageSpecsReaderTest {
         
         String fullSpecPath = getClass().getResource("/negative-specs/incorrect-indentation-3.spec").getFile();
         
-        assertThat(exception.getMessage(), is("Incorrect indentation. Should not use tabs. Use spaces (in " + fullSpecPath +":9)"));
+        assertThat(exception.getMessage(), is("Incorrect indentation. Should not use tabs. Use spaces\n    in " + fullSpecPath +":9"));
         assertThat(exception.getFilePath(), endsWith("/incorrect-indentation-3.spec"));
         assertThat(exception.getLine(), is(9));
     }

@@ -29,6 +29,7 @@ import java.util.concurrent.Executors;
 
 import net.mindengine.galen.browser.SeleniumBrowserFactory;
 import net.mindengine.galen.config.GalenConfig;
+import net.mindengine.galen.parser.FileSyntaxException;
 import net.mindengine.galen.reports.ConsoleReportingListener;
 import net.mindengine.galen.reports.HtmlReportingListener;
 import net.mindengine.galen.reports.TestngReportingListener;
