@@ -40,6 +40,7 @@ import net.mindengine.galen.parser.SyntaxException;
 import net.mindengine.galen.specs.Alignment;
 import net.mindengine.galen.specs.Location;
 import net.mindengine.galen.specs.Range;
+import net.mindengine.galen.specs.Side;
 import net.mindengine.galen.specs.Spec;
 import net.mindengine.galen.specs.SpecAbove;
 import net.mindengine.galen.specs.SpecAbsent;
@@ -248,14 +249,52 @@ public class SpecReader {
             }
 		}));
         
-        putSpec("on", new SpecComplexProcessor(expectThese(objectName(), locations()), new SpecComplexInit() {
+        putSpec("(on\\s.*|on)", new SpecComplexProcessor(expectThese(objectName(), locations()), new SpecComplexInit() {
             @SuppressWarnings("unchecked")
             @Override
             public Spec init(String specName, Object[] args) {
                 String objectName = (String) args[0];
+                
+                String[] words = ExpectWord.readAllWords(new StringCharReader(specName));
+                
+                if (words.length > 3) {
+                    throw new SyntaxException("Too many sides. Should use only 2");
+                }
+                
+                
+                Side sideHorizontal = Side.TOP;
+                Side sideVertical = Side.LEFT;
+                
+                boolean isFirstHorizontal = false;
+                if (words.length > 1) {
+                    Side side = Side.fromString(words[1]);
+                    if (side == Side.TOP || side == Side.BOTTOM) {
+                        isFirstHorizontal = true;
+                        sideHorizontal = side;
+                    }
+                    else sideVertical = side;
+                }
+                
+                if (words.length > 2) {
+                    Side side = Side.fromString(words[2]);
+                    if (side == Side.TOP || side == Side.BOTTOM) {
+                        if (isFirstHorizontal) {
+                            throw new SyntaxException("Cannot use theses sides: " + words[1] + " " + words[2]);
+                        }
+                        sideHorizontal = side;
+                    }
+                    else {
+                        if (!isFirstHorizontal) {
+                            throw new SyntaxException("Cannot use theses sides: " + words[1] + " " + words[2]);
+                        }
+                        sideVertical = side;
+                    }
+                }
+                
+                
                 List<Location> locations = (List<Location>) args[1];
                 
-                return new SpecOn(objectName, locations);
+                return new SpecOn(objectName, sideHorizontal, sideVertical, locations);
             }
         }));
         

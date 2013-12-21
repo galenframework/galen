@@ -95,7 +95,7 @@ public abstract class SpecValidationGeneral<T extends SpecComplex> extends SpecV
         }
         
         for (Side side : location.getSides()) {
-            int offset = getOffsetForSide(mainArea, secondArea, side);
+            int offset = getOffsetForSide(mainArea, secondArea, side, spec);
             if (!range.holds(offset)) {
                 messages.add(format("%dpx %s", offset, side));
             }
@@ -119,6 +119,6 @@ public abstract class SpecValidationGeneral<T extends SpecComplex> extends SpecV
         else return null;
     }
 
-    protected abstract int getOffsetForSide(Rect mainArea, Rect secondArea, Side side);
+    protected abstract int getOffsetForSide(Rect mainArea, Rect secondArea, Side side, T spec);
     
 }

@@ -22,7 +22,7 @@ import net.mindengine.galen.specs.SpecNear;
 public class SpecValidationNear extends SpecValidationGeneral<SpecNear> {
 
     @Override
-    protected int getOffsetForSide(Rect mainArea, Rect secondArea, Side side) {
+    protected int getOffsetForSide(Rect mainArea, Rect secondArea, Side side, SpecNear spec) {
         if (side == Side.LEFT) {
             return secondArea.getLeft() - (mainArea.getLeft() + mainArea.getWidth());
         }

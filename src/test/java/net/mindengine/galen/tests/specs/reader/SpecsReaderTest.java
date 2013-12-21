@@ -558,6 +558,8 @@ public class SpecsReaderTest {
     public void shoulReadSpec_on_object_10px_left() throws IOException {
         SpecOn spec = (SpecOn)readSpec("on: object 10px left");
         
+        assertThat(spec.getSideHorizontal(), is(TOP));
+        assertThat(spec.getSideVertical(), is(LEFT));
         assertThat(spec.getObject(), is("object"));
         
         List<Location> locations = spec.getLocations();
@@ -570,12 +572,66 @@ public class SpecsReaderTest {
     public void shoulReadSpec_on_object_10px_left_20px_top() throws IOException {
         SpecOn spec = (SpecOn)readSpec("on: object 10px left, 20px top");
         
+        assertThat(spec.getSideHorizontal(), is(TOP));
+        assertThat(spec.getSideVertical(), is(LEFT));
         assertThat(spec.getObject(), is("object"));
         
         List<Location> locations = spec.getLocations();
         assertThat(locations.size(), is(2));
         assertThat(spec.getLocations(), contains(new Location(Range.exact(10), sides(LEFT)), new Location(Range.exact(20), sides(TOP))));
         assertThat(spec.getOriginalText(), is("on: object 10px left, 20px top"));
+    }
+    
+    @Test
+    public void shouldReadSpec_on_top_object_10px_top_right() throws Exception {
+        SpecOn spec = (SpecOn)readSpec("on top: object 10px top right");
+        
+        assertThat(spec.getSideHorizontal(), is(TOP));
+        assertThat(spec.getSideVertical(), is(LEFT));
+        assertThat(spec.getObject(), is("object"));
+        
+        List<Location> locations = spec.getLocations();
+        assertThat(locations.size(), is(1));
+        assertThat(spec.getLocations(), contains(new Location(Range.exact(10), sides(TOP, RIGHT))));
+        assertThat(spec.getOriginalText(), is("on top: object 10px top right"));
+    }
+    
+    @Test
+    public void shouldReadSpec_on_left_object_10px_top_right() throws Exception {
+        SpecOn spec = (SpecOn)readSpec("on left: object 10px top right");
+        
+        assertThat(spec.getSideHorizontal(), is(TOP));
+        assertThat(spec.getSideVertical(), is(LEFT));
+        assertThat(spec.getObject(), is("object"));
+        
+        List<Location> locations = spec.getLocations();
+        assertThat(locations.size(), is(1));
+        assertThat(spec.getLocations(), contains(new Location(Range.exact(10), sides(TOP, RIGHT))));
+        assertThat(spec.getOriginalText(), is("on left: object 10px top right"));
+    }
+    
+    @Test
+    public void shouldReadSpec_on_bottom_right_object_10px_top_right() throws Exception {
+        SpecOn spec = (SpecOn)readSpec("on right bottom: object 10px top right");
+        
+        assertThat(spec.getSideHorizontal(), is(BOTTOM));
+        assertThat(spec.getSideVertical(), is(RIGHT));
+        assertThat(spec.getObject(), is("object"));
+        
+        List<Location> locations = spec.getLocations();
+        assertThat(locations.size(), is(1));
+        assertThat(spec.getLocations(), contains(new Location(Range.exact(10), sides(TOP, RIGHT))));
+        assertThat(spec.getOriginalText(), is("on right bottom: object 10px top right"));
+    }
+    
+    @Test(expectedExceptions={SyntaxException.class}, expectedExceptionsMessageRegExp="Cannot use theses sides: top bottom") 
+    public void givesError_withIncorrect_sides_for_spec_on() throws IOException {
+        readSpec("on top bottom: object 10px top");
+    }
+    
+    @Test(expectedExceptions={SyntaxException.class}, expectedExceptionsMessageRegExp="Too many sides. Should use only 2") 
+    public void givesError_withIncorrect_too_many_sides_for_spec_on() throws IOException {
+        readSpec("on top bottom right: object 10px top");
     }
     
     @Test(expectedExceptions={NullPointerException.class}, expectedExceptionsMessageRegExp="Spec text should not be null") 

@@ -22,18 +22,30 @@ import net.mindengine.galen.specs.SpecOn;
 public class SpecValidationOn extends SpecValidationGeneral<SpecOn> {
 
     @Override
-    protected int getOffsetForSide(Rect mainArea, Rect secondArea, Side side) {
+    protected int getOffsetForSide(Rect mainArea, Rect secondArea, Side side, SpecOn spec) {
         if (side == Side.LEFT) {
-            return secondArea.getLeft() - mainArea.getLeft();
+            if (spec.getSideVertical() == Side.LEFT) {
+                return secondArea.getLeft() - mainArea.getLeft();
+            }
+            else return secondArea.getLeft() + secondArea.getWidth() - mainArea.getLeft();
         }
         else if (side == Side.TOP) {
-            return secondArea.getTop() - mainArea.getTop();
+            if (spec.getSideHorizontal() == Side.TOP) {
+                return secondArea.getTop() - mainArea.getTop();
+            }
+            else return secondArea.getTop() + secondArea.getHeight() - mainArea.getTop();
         }
         else if (side == Side.RIGHT) {
-            return mainArea.getLeft() - secondArea.getLeft();
+            if (spec.getSideVertical() == Side.LEFT) {
+                return mainArea.getLeft() - secondArea.getLeft();
+            }
+            else return mainArea.getLeft() - secondArea.getLeft() - secondArea.getWidth();
         }
         else if (side == Side.BOTTOM) {
-            return mainArea.getTop() - secondArea.getTop();
+            if (spec.getSideHorizontal() == Side.TOP) {
+                return mainArea.getTop() - secondArea.getTop();
+            }
+            else return mainArea.getTop() - secondArea.getTop() - secondArea.getHeight();
         }
         else {
             return 0;

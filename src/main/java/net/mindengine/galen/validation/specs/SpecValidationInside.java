@@ -25,7 +25,7 @@ import net.mindengine.galen.validation.PageValidation;
 public class SpecValidationInside extends SpecValidationGeneral<SpecInside> {
 
     @Override
-    protected int getOffsetForSide(Rect mainArea, Rect parentArea, Side side) {
+    protected int getOffsetForSide(Rect mainArea, Rect parentArea, Side side, SpecInside spec) {
         if (side == Side.LEFT) {
             return mainArea.getLeft() - parentArea.getLeft();
         }

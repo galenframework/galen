@@ -434,20 +434,28 @@ public class ValidationTest {
           
           // On
           
-          row(specOn("container", location(exact(10), LEFT, BOTTOM)), page(new HashMap<String, PageElement>(){{
+          row(specOn(TOP, LEFT, "container", location(exact(10), LEFT, BOTTOM)), page(new HashMap<String, PageElement>(){{
               put("object", element(90, 110, 50, 50));
               put("container", element(100, 100, 100, 100));
           }})),
-          row(specOn("container", location(exact(10), RIGHT), location(exact(10), TOP)), page(new HashMap<String, PageElement>(){{
+          row(specOn(TOP, LEFT, "container", location(exact(10), RIGHT), location(exact(10), TOP)), page(new HashMap<String, PageElement>(){{
               put("object", element(110, 90, 50, 50));
               put("container", element(100, 100, 100, 100));
           }})),
-          row(specOn("container", location(exact(90), RIGHT), location(exact(10), BOTTOM)), page(new HashMap<String, PageElement>(){{
+          row(specOn(TOP, LEFT, "container", location(exact(90), RIGHT), location(exact(10), BOTTOM)), page(new HashMap<String, PageElement>(){{
               put("object", element(190, 110, 50, 50));
               put("container", element(100, 100, 100, 100));
           }})),
-          row(specOn("container", location(exact(90), RIGHT), location(exact(20), BOTTOM)), page(new HashMap<String, PageElement>(){{
+          row(specOn(TOP, LEFT, "container", location(exact(90), RIGHT), location(exact(20), BOTTOM)), page(new HashMap<String, PageElement>(){{
               put("object", element(190, 120, 50, 50));
+              put("container", element(100, 100, 100, 100));
+          }})),
+          row(specOn(BOTTOM, RIGHT, "container", location(exact(10), LEFT), location(exact(20), TOP)), page(new HashMap<String, PageElement>(){{
+              put("object", element(190, 180, 50, 50));
+              put("container", element(100, 100, 100, 100));
+          }})),
+          row(specOn(BOTTOM, RIGHT, "container", location(exact(10), RIGHT), location(exact(20), BOTTOM)), page(new HashMap<String, PageElement>(){{
+              put("object", element(210, 220, 50, 50));
               put("container", element(100, 100, 100, 100));
           }})),
         };
@@ -1130,34 +1138,34 @@ public class ValidationTest {
                   
            // On
           row(new ValidationError(NO_AREA, messages("\"object\" is not visible on page")),
-                  specOn("container", location(exact(10), LEFT, BOTTOM)), page(new HashMap<String, PageElement>(){{
+                  specOn(TOP, LEFT, "container", location(exact(10), LEFT, BOTTOM)), page(new HashMap<String, PageElement>(){{
                       put("object", invisibleElement(10, 40, 50, 50));
                       put("container", element(100, 100, 100, 100));
               }})),
           row(new ValidationError(NO_AREA, messages("\"object\" is absent on page")),
-                  specOn("container", location(exact(10), LEFT, BOTTOM)), page(new HashMap<String, PageElement>(){{
+                  specOn(TOP, LEFT, "container", location(exact(10), LEFT, BOTTOM)), page(new HashMap<String, PageElement>(){{
                       put("object", absentElement(10, 40, 50, 50));
                       put("container", element(100, 100, 100, 100));
               }})),
           row(new ValidationError(NO_AREA, messages("\"container\" is not visible on page")),
-                  specOn("container", location(exact(10), LEFT, BOTTOM)), page(new HashMap<String, PageElement>(){{
+                  specOn(TOP, LEFT, "container", location(exact(10), LEFT, BOTTOM)), page(new HashMap<String, PageElement>(){{
                       put("object", element(10, 40, 50, 50));
                       put("container", invisibleElement(100, 100, 100, 100));
               }})),
           row(new ValidationError(NO_AREA, messages("\"container\" is absent on page")),
-                  specOn("container", location(exact(10), LEFT, BOTTOM)), page(new HashMap<String, PageElement>(){{
+                  specOn(TOP, LEFT, "container", location(exact(10), LEFT, BOTTOM)), page(new HashMap<String, PageElement>(){{
                       put("object", element(10, 40, 50, 50));
                       put("container", absentElement(100, 100, 100, 100));
               }})),
           row(new ValidationError(areas(new ErrorArea(new Rect(95, 110, 50, 50), "object"), new ErrorArea(new Rect(100, 100, 100, 100), "container")), 
                   messages("\"object\" is 5px left instead of 10px")),
-                  specOn("container", location(exact(10), LEFT, BOTTOM)), page(new HashMap<String, PageElement>(){{
+                  specOn(TOP, LEFT, "container", location(exact(10), LEFT, BOTTOM)), page(new HashMap<String, PageElement>(){{
                       put("object", element(95, 110, 50, 50));
                       put("container", element(100, 100, 100, 100));
               }})),
           row(new ValidationError(areas(new ErrorArea(new Rect(105, 90, 50, 50), "object"), new ErrorArea(new Rect(100, 100, 100, 100), "container")), 
                   messages("\"object\" is 5px right which is not in range of 10 to 15px, is 10px top instead of 5px")),
-                  specOn("container", location(between(10, 15), RIGHT), location(exact(5), TOP)), page(new HashMap<String, PageElement>(){{
+                  specOn(TOP, LEFT, "container", location(between(10, 15), RIGHT), location(exact(5), TOP)), page(new HashMap<String, PageElement>(){{
                       put("object", element(105, 90, 50, 50));
                       put("container", element(100, 100, 100, 100));
               }})),
@@ -1229,9 +1237,8 @@ public class ValidationTest {
         return new SpecInside(parentObjectName, Arrays.asList(locations)).withPartlyCheck();
     }
 
-    
-    private SpecOn specOn(String parentObjectName, Location...locations) {
-        return new SpecOn(parentObjectName, Arrays.asList(locations));
+    private SpecOn specOn(Side sideHorizontal, Side sideVertical, String parentObjectName, Location...locations) {
+        return new SpecOn(parentObjectName, sideHorizontal, sideVertical, Arrays.asList(locations));
     }
 
     private Location location(Range exact, Side...sides) {

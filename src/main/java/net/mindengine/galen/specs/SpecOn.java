@@ -17,10 +17,44 @@ package net.mindengine.galen.specs;
 
 import java.util.List;
 
-public class SpecOn extends SpecComplex {
+import org.apache.commons.lang3.builder.ToStringBuilder;
 
-    public SpecOn(String objectName, List<Location> locations) {
+public class SpecOn extends SpecComplex {
+    
+    private Side sideVertical;
+    private Side sideHorizontal;
+
+    public SpecOn(String objectName, Side sideHorizontal, Side sideVertical, List<Location> locations) {
         super(objectName, locations);
+        
+        this.setSideVertical(sideVertical);
+        this.setSideHorizontal(sideHorizontal);
     }
 
+    public Side getSideVertical() {
+        return sideVertical;
+    }
+
+    public void setSideVertical(Side sideVertical) {
+        this.sideVertical = sideVertical;
+    }
+
+    public Side getSideHorizontal() {
+        return sideHorizontal;
+    }
+
+    public void setSideHorizontal(Side sideHorizontal) {
+        this.sideHorizontal = sideHorizontal;
+    }
+
+    
+    @Override
+    public String toString() {
+        return new ToStringBuilder(this)
+            .append("sideVertical", sideVertical)
+            .append("sideHorizontal", sideHorizontal)
+            .append("object", getObject())
+            .append("locations", getLocations())
+            .toString();
+    }
 }
