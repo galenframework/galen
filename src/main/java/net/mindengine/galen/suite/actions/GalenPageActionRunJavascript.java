@@ -27,6 +27,7 @@ import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
 
 import net.mindengine.galen.browser.Browser;
+import net.mindengine.galen.browser.SeleniumBrowser;
 import net.mindengine.galen.browser.WebDriverWrapper;
 import net.mindengine.galen.suite.GalenPageAction;
 import net.mindengine.galen.suite.GalenPageTest;
@@ -65,12 +66,24 @@ public class GalenPageActionRunJavascript extends GalenPageAction{
         
         engine.put("global", new ScriptExecutor(engine, file.getParent()));
         engine.put("browser", browser);
+        
+        provideWrappedWebDriver(engine, browser);
+
         importAllMajorClasses(engine);
         engine.eval("var arg = " + jsonArguments);
         engine.eval(scriptFileReader);
         return NO_ERRORS;
     }
     
+    private void provideWrappedWebDriver(ScriptEngine engine, Browser browser) {
+        if (browser instanceof SeleniumBrowser) {
+            SeleniumBrowser seleniumBrowser = (SeleniumBrowser)browser;
+            engine.put("browser", new WebDriverWrapper(seleniumBrowser.getDriver()));
+        }
+        
+    }
+
+
     private void importAllMajorClasses(ScriptEngine engine) throws ScriptException {
         importClasses(engine, new Class[]{
                 Thread.class,
