@@ -78,7 +78,7 @@ public class GalenPageActionRunJavascript extends GalenPageAction{
     private void provideWrappedWebDriver(ScriptEngine engine, Browser browser) {
         if (browser instanceof SeleniumBrowser) {
             SeleniumBrowser seleniumBrowser = (SeleniumBrowser)browser;
-            engine.put("browser", new WebDriverWrapper(seleniumBrowser.getDriver()));
+            engine.put("driver", new WebDriverWrapper(seleniumBrowser.getDriver()));
         }
         
     }
