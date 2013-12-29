@@ -24,10 +24,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.commons.io.FileUtils;
-
 import net.mindengine.galen.browser.Browser;
-import net.mindengine.galen.page.Page;
+import net.mindengine.galen.page.PageElement;
 import net.mindengine.galen.reports.model.PageAction;
 import net.mindengine.galen.reports.model.PageTest;
 import net.mindengine.galen.reports.model.PageTestObject;
@@ -41,8 +39,12 @@ import net.mindengine.galen.specs.page.PageSection;
 import net.mindengine.galen.suite.GalenPageAction;
 import net.mindengine.galen.suite.GalenPageTest;
 import net.mindengine.galen.suite.GalenSuite;
+import net.mindengine.galen.suite.actions.GalenPageActionCheck;
 import net.mindengine.galen.validation.PageValidation;
 import net.mindengine.galen.validation.ValidationError;
+
+import org.apache.commons.io.FileUtils;
+
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 
@@ -57,7 +59,7 @@ public class HtmlSuiteReportingListener implements CompleteListener {
     private PageTestObject currentObject;
     private Browser currentBrowser;
     
-    private Map<Page, Screenshot> screenshots = new HashMap<Page, Screenshot>();
+    private List<Screenshot> screenshots = new LinkedList<Screenshot>();
     
     //This is needed in order to group objects by name within single page section
     //After each section this map should be cleared
@@ -95,6 +97,12 @@ public class HtmlSuiteReportingListener implements CompleteListener {
             else {
                 currentObject = new PageTestObject();
                 currentObject.setName(objectName);
+                
+                PageElement objectPageElement = pageValidation.findPageElement(objectName);
+                if (objectPageElement != null && objectPageElement.isVisible()) {
+                    currentObject.setArea(objectPageElement.getArea());
+                }
+                
                 currentSection.getObjects().add(currentObject);
                 cachedPageTestObjectsMap.put(objectName, currentObject);
             }
@@ -103,6 +111,11 @@ public class HtmlSuiteReportingListener implements CompleteListener {
             PageTestObject parentObject = currentObject;
             currentObject = new PageTestObject(parentObject);
             currentObject.setName(objectName);
+            
+            PageElement objectPageElement = pageValidation.findPageElement(objectName);
+            if (objectPageElement != null && objectPageElement.isVisible()) {
+                currentObject.setArea(objectPageElement.getArea());
+            }
         }
     }
 
@@ -118,14 +131,13 @@ public class HtmlSuiteReportingListener implements CompleteListener {
 
     @Override
     public void onSpecError(GalenPageRunner pageRunner, PageValidation pageValidation, String objectName, Spec originalSpec, ValidationError error) {
-        Screenshot screenshot = createScreenShot(pageValidation.getPage());
         
         PageTestSpec spec = new PageTestSpec();
         currentObject.getSpecs().add(spec);
         
         spec.setText(originalSpec.getOriginalText());
         spec.setFailed(true);
-        spec.setScreenshot(screenshot.name);
+        
         spec.setErrorMessages(error.getMessages());
         spec.setErrorAreas(error.getErrorAreas());
         
@@ -217,23 +229,18 @@ public class HtmlSuiteReportingListener implements CompleteListener {
 
     private void moveScreenshots() throws IOException {
         File folder = new File(reportFolderPath);
-        for (Screenshot screenshot : screenshots.values()) {
+        for (Screenshot screenshot : screenshots) {
             FileUtils.copyFile(new File(screenshot.filePath), new File(folder.getAbsolutePath() + File.separator + screenshot.name));
         }
     }
 
 
-    private synchronized Screenshot createScreenShot(Page page) {
-        if (screenshots.containsKey(page)) {
-            return screenshots.get(page);
-        }
-        else {
-            screenshotId++;
-            String filePath = currentBrowser.createScreenshot();
-            Screenshot screenshot = new Screenshot(reportFileName + "-screenshot-" + screenshotId + "." + extensionFrom(filePath), filePath);
-            screenshots.put(page, screenshot);
-            return screenshot;
-        }
+    private synchronized Screenshot createScreenShot() {
+        screenshotId++;
+        String filePath = currentBrowser.createScreenshot();
+        Screenshot screenshot = new Screenshot(reportFileName + "-screenshot-" + screenshotId + "." + extensionFrom(filePath), filePath);
+        screenshots.add(screenshot);
+        return screenshot;
     }
 
     private String extensionFrom(String filePath) {
@@ -257,6 +264,13 @@ public class HtmlSuiteReportingListener implements CompleteListener {
         cachedSections = new HashMap<String, PageTestSection>();
         
         currentPageAction.setTitle(action.getOriginalCommand());
+        
+        if (action instanceof GalenPageActionCheck) {
+            String screenshotPath = createScreenShot().name;
+            currentPageAction.setScreenshot(screenshotPath);
+        }
+        
+        
         currentPageTest.getPageActions().add(currentPageAction);
     }
     

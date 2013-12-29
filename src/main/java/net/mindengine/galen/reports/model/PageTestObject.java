@@ -18,6 +18,8 @@ package net.mindengine.galen.reports.model;
 import java.util.LinkedList;
 import java.util.List;
 
+import net.mindengine.galen.page.Rect;
+
 public class PageTestObject {
     
     private String name;
@@ -26,6 +28,7 @@ public class PageTestObject {
     
     // Here it will temporarily store sub objects that will be later picked up by spec
     private List<PageTestObject> subObjects = null;
+    private Rect area;
 
     public PageTestObject() {
         
@@ -75,6 +78,13 @@ public class PageTestObject {
 
     public void setSubObjects(List<PageTestObject> subObjects) {
         this.subObjects = subObjects;
+    }
+
+    public void setArea(Rect area) {
+        this.area = area;
+    }
+    public Rect getArea() {
+        return this.area;
     }
 
 }

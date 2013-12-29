@@ -25,7 +25,7 @@ public class SpecValidationVisible extends SpecValidation<SpecVisible> {
 
     @Override
     public void check(PageValidation pageValidation, String objectName, SpecVisible spec) throws ValidationErrorException {
-        PageElement mainObject = getPageElement(pageValidation, objectName);
+        PageElement mainObject = pageValidation.findPageElement(objectName);
         checkAvailability(mainObject, objectName);
     }
 

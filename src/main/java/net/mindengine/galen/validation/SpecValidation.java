@@ -23,7 +23,6 @@ import java.util.List;
 import net.mindengine.galen.page.PageElement;
 import net.mindengine.galen.specs.Range;
 import net.mindengine.galen.specs.Spec;
-import net.mindengine.galen.specs.page.Locator;
 import net.mindengine.galen.specs.reader.page.PageSpec;
 
 public abstract class SpecValidation<T extends Spec> {
@@ -41,15 +40,6 @@ public abstract class SpecValidation<T extends Spec> {
     public abstract void check(PageValidation pageValidation, String objectName, T spec) throws ValidationErrorException;
     
     
-    protected PageElement getPageElement(PageValidation pageValidation, String objectName) {
-        Locator objectLocator = pageValidation.getPageSpec().getObjectLocator(objectName);
-        if (objectLocator != null) {
-            return pageValidation.getPage().getObject(objectName, objectLocator);
-        }
-        else {
-            return pageValidation.getPage().getSpecialObject(objectName);
-        }
-    }
     
     protected void checkAvailability(PageElement object, String objectName) throws ValidationErrorException {
         if (object == null) {

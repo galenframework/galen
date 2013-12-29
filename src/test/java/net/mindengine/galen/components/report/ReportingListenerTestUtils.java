@@ -21,10 +21,14 @@ import static net.mindengine.galen.specs.Range.exact;
 import static net.mindengine.galen.specs.Side.LEFT;
 
 import java.awt.Dimension;
+import java.util.HashMap;
+import java.util.Map;
 
 import net.mindengine.galen.browser.Browser;
 import net.mindengine.galen.components.MockedBrowser;
-import net.mindengine.galen.components.validation.MockedPage;
+import net.mindengine.galen.components.MockedPageValidation;
+import net.mindengine.galen.components.validation.MockedPageElement;
+import net.mindengine.galen.page.PageElement;
 import net.mindengine.galen.page.Rect;
 import net.mindengine.galen.runner.GalenPageRunner;
 import net.mindengine.galen.runner.GalenSuiteRunner;
@@ -38,7 +42,6 @@ import net.mindengine.galen.suite.GalenPageTest;
 import net.mindengine.galen.suite.GalenSuite;
 import net.mindengine.galen.suite.actions.GalenPageActionCheck;
 import net.mindengine.galen.validation.ErrorArea;
-import net.mindengine.galen.validation.PageValidation;
 import net.mindengine.galen.validation.ValidationError;
 import net.mindengine.galen.validation.ValidationListener;
 
@@ -54,7 +57,16 @@ public class ReportingListenerTestUtils {
         
         Browser browser = new MockedBrowser("http://example.com/page1", new Dimension(410, 610));
         GalenPageRunner pageRunner = new GalenPageRunner();
-        PageValidation pageValidation = new PageValidation(new MockedPage(null), null, null, null);
+        
+        Map<String, PageElement> pageElements = new HashMap<String, PageElement>();
+
+        pageElements.put("objectA1", new MockedPageElement(10, 10, 100, 50));
+        pageElements.put("objectA2", new MockedPageElement(200, 300, 50, 30));
+        pageElements.put("objectB1", new MockedPageElement(10, 10, 100, 50));
+        pageElements.put("objectB2", new MockedPageElement(200, 300, 50, 30));
+        pageElements.put("sub-objectA1", new MockedPageElement(200, 300, 50, 30));
+        
+        MockedPageValidation pageValidation = new MockedPageValidation(pageElements);
         
         GalenPageTest pageTest = new GalenPageTest().withSize(400, 600).withUrl("http://example.com/page1");
         suiteListener.onBeforePage(galenSuiteRunner, pageRunner, pageTest, browser);
@@ -116,7 +128,6 @@ public class ReportingListenerTestUtils {
         suiteListener.onAfterPage(galenSuiteRunner, pageRunner, pageTest, browser, asList(new ValidationError(asList(new ErrorArea(new Rect(10, 10, 100, 50), "objectA1")), asList("objectA1 is not inside other-object"))));
         
         
-        pageValidation = new PageValidation(new MockedPage(null), null, null, null);
         Browser browser2 = new MockedBrowser("http://example.com/page2", new Dimension(610, 710));
         GalenPageTest pageTest2 = new GalenPageTest().withSize(600, 700).withUrl("http://example.com/page2");
         suiteListener.onBeforePage(galenSuiteRunner, pageRunner, pageTest2, browser2);

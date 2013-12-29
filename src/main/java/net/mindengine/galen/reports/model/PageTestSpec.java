@@ -24,7 +24,6 @@ public class PageTestSpec {
     
     private String text;
     private Boolean failed = false;
-    private String screenshot;
     private List<String> errorMessages = new LinkedList<String>();
     private List<ErrorArea> errorAreas = new LinkedList<ErrorArea>();
     private List<PageTestObject> subObjects;
@@ -43,14 +42,6 @@ public class PageTestSpec {
 
     public void setFailed(Boolean failed) {
         this.failed = failed;
-    }
-
-    public String getScreenshot() {
-        return screenshot;
-    }
-
-    public void setScreenshot(String screenshot) {
-        this.screenshot = screenshot;
     }
 
     public void setErrorMessages(List<String> errorMessages) {

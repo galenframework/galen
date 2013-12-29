@@ -27,7 +27,7 @@ public class SpecValidationAbsent extends SpecValidation<SpecAbsent>{
 
     @Override
     public void check(PageValidation pageValidation, String objectName, SpecAbsent spec) throws ValidationErrorException {
-        PageElement mainObject = getPageElement(pageValidation, objectName);
+        PageElement mainObject = pageValidation.findPageElement(objectName);
         if (mainObject == null) {
             throw new ValidationErrorException(String.format(OBJECT_WITH_NAME_S_IS_NOT_DEFINED_IN_PAGE_SPEC, objectName));
         }

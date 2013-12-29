@@ -30,7 +30,7 @@ public class SpecValidationText extends SpecValidation<SpecText> {
     @Override
     public void check(PageValidation pageValidation, String objectName, SpecText spec) throws ValidationErrorException {
         
-        PageElement mainObject = getPageElement(pageValidation, objectName);
+        PageElement mainObject = pageValidation.findPageElement(objectName);
         
         checkAvailability(mainObject, objectName);
         

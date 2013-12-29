@@ -13,41 +13,25 @@
 * See the License for the specific language governing permissions and
 * limitations under the License.
 ******************************************************************************/
-package net.mindengine.galen.reports.model;
+package net.mindengine.galen.components;
 
-import java.util.LinkedList;
-import java.util.List;
+import java.util.Map;
 
-public class PageAction {
+import net.mindengine.galen.page.PageElement;
+import net.mindengine.galen.validation.PageValidation;
+
+public class MockedPageValidation extends PageValidation{
+
+    public Map<String, PageElement> pageElements;
     
-    private String title;
+    public MockedPageValidation(Map<String, PageElement> pageElements) {
+        super(null, null, null, null);
+        this.pageElements = pageElements;
+    }
     
-    private List<PageTestSection> sections = new LinkedList<PageTestSection>();
-
-    private String screenshot;
-    
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public List<PageTestSection> getSections() {
-        return sections;
-    }
-
-    public void setSections(List<PageTestSection> sections) {
-        this.sections = sections;
-    }
-
-    public String getScreenshot() {
-        return screenshot;
-    }
-
-    public void setScreenshot(String screenshot) {
-        this.screenshot = screenshot;
+    @Override
+    public PageElement findPageElement(String objectName) {
+        return pageElements.get(objectName);
     }
 
 }

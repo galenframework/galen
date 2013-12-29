@@ -41,10 +41,10 @@ public abstract class SpecValidationGeneral<T extends SpecComplex> extends SpecV
 
     @Override
     public void check(PageValidation pageValidation, String objectName, T spec) throws ValidationErrorException {
-        PageElement mainObject = getPageElement(pageValidation, objectName);
+        PageElement mainObject = pageValidation.findPageElement(objectName);
         checkAvailability(mainObject, objectName);
         
-        PageElement secondObject = getPageElement(pageValidation, spec.getObject());
+        PageElement secondObject = pageValidation.findPageElement(spec.getObject());
         checkAvailability(secondObject, spec.getObject());
         
         Rect mainArea = mainObject.getArea();

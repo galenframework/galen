@@ -29,10 +29,10 @@ public class SpecValidationCentered extends SpecValidation<SpecCentered> {
 
     @Override
     public void check(PageValidation pageValidation, String objectName, SpecCentered spec) throws ValidationErrorException {
-        PageElement mainObject = getPageElement(pageValidation, objectName);
+        PageElement mainObject = pageValidation.findPageElement(objectName);
         checkAvailability(mainObject, objectName);
         
-        PageElement secondObject = getPageElement(pageValidation, spec.getObject());
+        PageElement secondObject = pageValidation.findPageElement(spec.getObject());
         checkAvailability(secondObject, spec.getObject());
         
         Rect mainArea = mainObject.getArea();

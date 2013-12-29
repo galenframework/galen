@@ -28,7 +28,7 @@ public abstract class SpecValidationSize<T extends SpecRange> extends SpecValida
 
     @Override
     public void check(PageValidation pageValidation, String objectName, T spec) throws ValidationErrorException {
-        PageElement mainObject = getPageElement(pageValidation, objectName);
+        PageElement mainObject = pageValidation.findPageElement(objectName);
         
         checkAvailability(mainObject, objectName);
         

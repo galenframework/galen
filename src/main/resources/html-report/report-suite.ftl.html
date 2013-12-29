@@ -1,11 +1,11 @@
 <#macro object_node object>
-<h3>${object.name?html}</h3>
-<div class="object">
+<h3 class="object">${object.name?html}</h3>
+<div class="object"<#if object.area?has_content> data-area="${object.area.left?c},${object.area.top?c},${object.area.width?c},${object.area.height?c}"</#if> data-name="${object.name?html}">
     <ul class="test-specs">
         <#list object.specs as spec>
             <#if spec.failed = true>
             <li class="fail">
-                <div class="description" data-screenshot="${spec.screenshot}">
+                <div class="description">
                     <span>${spec.text?html}</span>
                     <ul class="error-message">
                         <#if spec.errorMessages?has_content>
@@ -64,7 +64,7 @@
             <div class="test">
                 <#list pageTest.pageActions as pageAction>
                 <h2 class="page-action">${pageAction.title?html}</h2>
-                <div class="page-action">
+                <div class="page-action"<#if pageAction.screenshot?has_content> data-screenshot="${pageAction.screenshot?html}"</#if>>
                     <#list pageAction.sections as section>
                     <h2 class="page-section">${section.name}</h2>
                     <div class="page-section">

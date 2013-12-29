@@ -47,7 +47,7 @@ var Galen = {
                 subObjects.slideToggle();
             }
             else {
-                var screenshot = $(this).parent().attr("data-screenshot");
+                var screenshot = $(this).closest("div.page-action").attr("data-screenshot");
                 var img = new Image();
 
                 var areas = [];
@@ -66,10 +66,28 @@ var Galen = {
             }
         });
 
+        $("h3.object").click(function (){
+            var container = $(this).next();
+            var screenshot = $(this).closest("div.page-action").attr("data-screenshot");
+
+            var areaText = container.attr("data-area"); 
+            if (areaText != null) {
+                var areas = [{
+                    area: eval("[" + areaText + "]"),
+                    text: container.attr("data-name")
+                }];
+
+                var img = new Image();
+                img.onload = function() {
+                    Galen.showScreenshot(img, this.width, this.height, areas);
+                };
+                img.src = screenshot;
+            }
+        }); 
+
 
         this.makeSliding(".global-error span");
         this.makeSliding(".suite h2");
-        this.makeSliding(".suite h3");
 
         $("h2").each(function (){
             var next = $(this).next();

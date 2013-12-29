@@ -71,6 +71,16 @@ public class PageValidation {
         this.pageSpec = pageSpec;
     }
 
+    public PageElement findPageElement(String objectName) {
+        Locator objectLocator = pageSpec.getObjectLocator(objectName);
+        if (objectLocator != null) {
+            return page.getObject(objectName, objectLocator);
+        }
+        else {
+            return page.getSpecialObject(objectName);
+        }
+    }
+    
     public Range convertRangeFromPercentageToPixels(Range range) {
         String valuePath = range.getPercentageOfValue();
         int index = valuePath.indexOf("/");

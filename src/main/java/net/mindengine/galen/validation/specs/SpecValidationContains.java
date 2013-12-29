@@ -33,7 +33,7 @@ public class SpecValidationContains extends SpecValidation<SpecContains> {
 
     @Override
     public void check(PageValidation pageValidation, String objectName, SpecContains spec) throws ValidationErrorException {
-        PageElement mainObject = getPageElement(pageValidation, objectName);
+        PageElement mainObject = pageValidation.findPageElement(objectName);
         
         checkAvailability(mainObject, objectName);
         
@@ -46,7 +46,7 @@ public class SpecValidationContains extends SpecValidation<SpecContains> {
         List<String> errorMessages = new LinkedList<String>();
         
         for (String childObjectName : childObjects) {
-            PageElement childObject = getPageElement(pageValidation, childObjectName);
+            PageElement childObject = pageValidation.findPageElement(childObjectName);
             if (childObject != null) {
                 if (!childObject.isPresent()) {
                     throw new ValidationErrorException()

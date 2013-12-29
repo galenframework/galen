@@ -28,11 +28,11 @@ public abstract class SpecValidationAligned<T extends SpecAligned> extends SpecV
 
     @Override
     public void check(PageValidation pageValidation, String objectName, T spec) throws ValidationErrorException {
-        PageElement mainObject = getPageElement(pageValidation, objectName);
+        PageElement mainObject = pageValidation.findPageElement(objectName);
         
         checkAvailability(mainObject, objectName);
         
-        PageElement childObject = getPageElement(pageValidation, spec.getObject());
+        PageElement childObject = pageValidation.findPageElement(spec.getObject());
         checkAvailability(childObject, spec.getObject());
         
         int offset = Math.abs(getOffset(spec, mainObject, childObject)); 

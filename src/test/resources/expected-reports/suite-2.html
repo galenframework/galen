@@ -12,14 +12,14 @@
             <h2 class="test">http://example.com/page1 400x600</h2>
             <div class="test">
                 <h2 class="page-action">check homepage.spec --include all,mobile</h2>
-                <div class="page-action">
+                <div class="page-action" data-screenshot="report-2-some-page-test-2-screenshot-1.png">
                     <h2 class="page-section">Unnamed</h2>
                     <div class="page-section">
-<h3>objectA1</h3>
-<div class="object">
+<h3 class="object">objectA1</h3>
+<div class="object" data-area="10,10,100,50" data-name="objectA1">
     <ul class="test-specs">
             <li class="fail">
-                <div class="description" data-screenshot="report-2-some-page-test-2-screenshot-1.png">
+                <div class="description">
                     <span>inside: other-object 10px left</span>
                     <ul class="error-message">
                         <li>objectA1 is not inside other-object</li>
@@ -36,8 +36,8 @@
             </li>
     </ul>
 </div>
-<h3>objectA2</h3>
-<div class="object">
+<h3 class="object">objectA2</h3>
+<div class="object" data-area="200,300,50,30" data-name="objectA2">
     <ul class="test-specs">
             <li class="success">
                 <div class="description">
@@ -45,7 +45,7 @@
                 </div>
             </li>
             <li class="fail">
-                <div class="description" data-screenshot="report-2-some-page-test-2-screenshot-1.png">
+                <div class="description">
                     <span>width: 10px</span>
                     <ul class="error-message">
                         <li>objectA2 width is 20px instead of 10px</li>
@@ -60,8 +60,8 @@
                     </div>
                     <h2 class="page-section">some section 2</h2>
                     <div class="page-section">
-<h3>objectA1</h3>
-<div class="object">
+<h3 class="object">objectA1</h3>
+<div class="object" data-area="10,10,100,50" data-name="objectA1">
     <ul class="test-specs">
             <li class="success">
                 <div class="description">
@@ -73,8 +73,8 @@
                     <span>component: some-component.spec</span>
                 </div>
                 <div class="sub-objects">
-<h3>sub-objectA1</h3>
-<div class="object">
+<h3 class="object">sub-objectA1</h3>
+<div class="object" data-area="200,300,50,30" data-name="sub-objectA1">
     <ul class="test-specs">
             <li class="success">
                 <div class="description">
@@ -82,7 +82,7 @@
                 </div>
             </li>
             <li class="fail">
-                <div class="description" data-screenshot="report-2-some-page-test-2-screenshot-1.png">
+                <div class="description">
                     <span>width: 10px</span>
                     <ul class="error-message">
                         <li>sub-objectA1 width is 20px instead of 10px</li>
@@ -104,11 +104,11 @@
             <h2 class="test">http://example.com/page2 600x700</h2>
             <div class="test">
                 <h2 class="page-action">check homepage.spec --include all,mobile</h2>
-                <div class="page-action">
+                <div class="page-action" data-screenshot="report-2-some-page-test-2-screenshot-2.png">
                     <h2 class="page-section">some section 1</h2>
                     <div class="page-section">
-<h3>objectB1</h3>
-<div class="object">
+<h3 class="object">objectB1</h3>
+<div class="object" data-area="10,10,100,50" data-name="objectB1">
     <ul class="test-specs">
             <li class="success">
                 <div class="description">
@@ -116,7 +116,7 @@
                 </div>
             </li>
             <li class="fail">
-                <div class="description" data-screenshot="report-2-some-page-test-2-screenshot-2.png">
+                <div class="description">
                     <span>inside: other-object 10px left</span>
                     <ul class="error-message">
                         <li>objectB1 is not inside other-object</li>
@@ -129,8 +129,8 @@
             </li>
     </ul>
 </div>
-<h3>objectB2</h3>
-<div class="object">
+<h3 class="object">objectB2</h3>
+<div class="object" data-area="200,300,50,30" data-name="objectB2">
     <ul class="test-specs">
             <li class="success">
                 <div class="description">
