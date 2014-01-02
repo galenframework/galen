@@ -311,7 +311,7 @@ public class SpecReader {
                 
                 String filePath = childFilePath;
                 if (contextPath != null) {
-                    filePath = filePath + File.separator + childFilePath;
+                    filePath = contextPath + File.separator + childFilePath;
                 }
                 
                 PageSpec childPageSpec = pageSpecReader.read(new File(filePath));
