@@ -308,7 +308,13 @@ public class SpecReader {
                 
                 
                 PageSpecReader pageSpecReader = new PageSpecReader();
-                PageSpec childPageSpec = pageSpecReader.read(new File(contextPath + File.separator + childFilePath));
+                
+                String filePath = childFilePath;
+                if (contextPath != null) {
+                    filePath = filePath + File.separator + childFilePath;
+                }
+                
+                PageSpec childPageSpec = pageSpecReader.read(new File(filePath));
                 
                 SpecComponent spec = new SpecComponent();
                 spec.setPageSpec(childPageSpec);
