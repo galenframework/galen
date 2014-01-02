@@ -624,6 +624,38 @@ public class SpecsReaderTest {
         assertThat(spec.getOriginalText(), is("on right bottom: object 10px top right"));
     }
     
+    @Test
+    public void shouldReadSpec_color_scheme_40percent_black_approx_30percent_white() throws Exception {
+        SpecColorScheme spec = (SpecColorScheme)readSpec("color scheme: 40% black, ~30% white");
+        List<ColorContraint> colors = spec.getColors();
+        assertThat(colors.size(), is(2));
+        
+        assertThat(colors.get(0).getRange(), is(Range.exact(40)));
+        assertThat(colors.get(0).getColor(), is(new Color(0, 0, 0)));
+        assertThat(colors.get(1).getRange(), is(Range.between(29, 31)));
+        assertThat(colors.get(1).getColor(), is(new Color(255, 255, 255)));
+    }
+    
+    @Test
+    public void shouldReadSpec_color_scheme_greater_than_40percent_ffaa03() throws Exception {
+        SpecColorScheme spec = (SpecColorScheme)readSpec("color scheme: > 40% #ffaa03");
+        List<ColorContraint> colors = spec.getColors();
+        assertThat(colors.size(), is(1));
+        
+        assertThat(colors.get(0).getRange(), is(Range.greaterThan(40.0)));
+        assertThat(colors.get(0).getColor(), is(new Color(255, 170, 3)));
+    }
+    
+    @Test
+    public void shouldReadSpec_color_scheme_40_to_50percent_ffaa03() throws Exception {
+        SpecColorScheme spec = (SpecColorScheme)readSpec("color scheme: 40 to 50% red");
+        List<ColorContraint> colors = spec.getColors();
+        assertThat(colors.size(), is(1));
+        
+        assertThat(colors.get(0).getRange(), is(Range.between(40, 50)));
+        assertThat(colors.get(0).getColor(), is(new Color(255, 0, 0)));
+    }
+    
     @Test(expectedExceptions={SyntaxException.class}, expectedExceptionsMessageRegExp="Cannot use theses sides: top bottom") 
     public void givesError_withIncorrect_sides_for_spec_on() throws IOException {
         readSpec("on top bottom: object 10px top");
