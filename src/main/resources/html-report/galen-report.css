@@ -131,11 +131,11 @@ ul.test-specs li {
     margin: 0;
     position: relative;
 }
-ul.test-specs li.fail span {
+ul.test-specs li.fail > div > span {
     color: red;
     cursor:pointer;
 }
-ul.test-specs li.fail span:hover {
+ul.test-specs li.fail > div > span:hover {
     color: #FA7F05;
 }
 
