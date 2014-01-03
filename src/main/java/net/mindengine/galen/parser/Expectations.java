@@ -1,5 +1,5 @@
 /*******************************************************************************
-* Copyright 2013 Ivan Shubin http://mindengine.net
+* Copyright 2014 Ivan Shubin http://mindengine.net
 * 
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -18,10 +18,10 @@ package net.mindengine.galen.parser;
 import java.util.Arrays;
 import java.util.List;
 
-import net.mindengine.galen.page.Rect;
 import net.mindengine.galen.specs.Location;
-import net.mindengine.galen.specs.Side;
 import net.mindengine.galen.specs.Range;
+import net.mindengine.galen.specs.Side;
+import net.mindengine.galen.specs.colors.ColorRange;
 import net.mindengine.galen.specs.page.CorrectionsRect;
 
 public class Expectations {
@@ -65,6 +65,10 @@ public class Expectations {
 
     public static Expectation<CorrectionsRect> corrections() {
         return new ExpectCorrection();
+    }
+
+    public static Expectation<List<ColorRange>> colorRanges() {
+        return new ExpectColorRanges();
     }
 
     

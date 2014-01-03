@@ -13,48 +13,22 @@
 * See the License for the specific language governing permissions and
 * limitations under the License.
 ******************************************************************************/
-package net.mindengine.galen.page;
+package net.mindengine.galen.specs;
 
-public class AbsentPageElement implements PageElement {
+import java.util.List;
 
-    @Override
-    public Rect getArea() {
-        return null;
+import net.mindengine.galen.specs.colors.ColorRange;
+
+public class SpecColorScheme extends Spec {
+
+    private List<ColorRange> colorRanges;
+
+    public List<ColorRange> getColorRanges() {
+        return this.colorRanges;
     }
 
-    @Override
-    public boolean isPresent() {
-        return false;
-    }
-
-    @Override
-    public boolean isVisible() {
-        return false;
-    }
-
-    @Override
-    public int getWidth() {
-        return 0;
-    }
-
-    @Override
-    public int getHeight() {
-        return 0;
-    }
-
-    @Override
-    public int getLeft() {
-        return 0;
-    }
-
-    @Override
-    public int getTop() {
-        return 0;
-    }
-
-    @Override
-    public String getText() {
-        return "";
+    public void setColorRanges(List<ColorRange> colorRanges) {
+        this.colorRanges = colorRanges;
     }
 
 }

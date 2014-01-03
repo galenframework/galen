@@ -13,48 +13,36 @@
 * See the License for the specific language governing permissions and
 * limitations under the License.
 ******************************************************************************/
-package net.mindengine.galen.page;
+package net.mindengine.galen.specs.colors;
 
-public class AbsentPageElement implements PageElement {
+import java.awt.Color;
 
-    @Override
-    public Rect getArea() {
-        return null;
+import net.mindengine.galen.specs.Range;
+
+public class ColorRange {
+
+    private Range range;
+    private Color color;
+
+    public ColorRange(Color color, Range range) {
+        this.color = color;
+        this.range = range;
     }
 
-    @Override
-    public boolean isPresent() {
-        return false;
+    public Range getRange() {
+        return this.range;
     }
 
-    @Override
-    public boolean isVisible() {
-        return false;
+    public void setRange(Range range) {
+        this.range = range;
     }
 
-    @Override
-    public int getWidth() {
-        return 0;
+    public Color getColor() {
+        return this.color;
     }
 
-    @Override
-    public int getHeight() {
-        return 0;
-    }
-
-    @Override
-    public int getLeft() {
-        return 0;
-    }
-
-    @Override
-    public int getTop() {
-        return 0;
-    }
-
-    @Override
-    public String getText() {
-        return "";
+    public void setColor(Color color) {
+        this.color = color;
     }
 
 }

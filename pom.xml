@@ -5,11 +5,9 @@
   <artifactId>galen</artifactId>
   <version>0.6.11-SNAPSHOT</version>
   <name>Galen Framework</name>
-  
   <scm>
-      <connection>scm:git:ssh://git@github.com/ishubin/galen.git</connection>
+    <connection>scm:git:ssh://git@github.com/ishubin/galen.git</connection>
   </scm>
-
   <dependencies>
     <dependency>
       <groupId>org.testng</groupId>
@@ -53,6 +51,11 @@
       <artifactId>freemarker</artifactId>
       <version>2.3.19</version>
     </dependency>
+    <dependency>
+      <groupId>net.mindengine</groupId>
+      <artifactId>rainbow4j</artifactId>
+      <version>0.1.3</version>
+    </dependency>
   </dependencies>
   <build>
     <plugins>
@@ -89,6 +92,13 @@
       <url>file:///${basedir}/../maven-repo/repository</url>
     </repository>
   </distributionManagement>
+  <repositories>
+    <repository>
+      <id>mindengine.net</id>
+      <name>mindengine.net repo</name>
+      <url>http://mvnrepo.mindengine.net/repository</url>
+    </repository>
+  </repositories>
   <licenses>
     <license>
       <name>Apache 2</name>

@@ -1,5 +1,5 @@
 /*******************************************************************************
-* Copyright 2013 Ivan Shubin http://mindengine.net
+* Copyright 2014 Ivan Shubin http://mindengine.net
 * 
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -25,6 +25,7 @@ import net.mindengine.galen.specs.reader.StringCharReader;
 
 public class ExpectRange implements Expectation<Range>{
 
+    private String endingWord = "px";
    
 	private enum RangeType {
 		NOTHING, APPROXIMATE, LESS_THAN, GREATER_THAN
@@ -49,11 +50,11 @@ public class ExpectRange implements Expectation<Range>{
         Double firstValue = expectDouble(reader);
         
         String text = expectNonNumeric(reader);
+        if (text.equals(endingWord)) {
+            return createRange(firstValue, rangeType);
+        }
         if (text.equals("%")) {
             return createRange(firstValue, rangeType).withPercentOf(readPercentageOf(reader));
-        }
-        if (text.equals("px")) {
-            return createRange(firstValue, rangeType);
         }
         else if (rangeType == RangeType.NOTHING){
             Double secondValue = expectDouble(reader);
@@ -67,7 +68,7 @@ public class ExpectRange implements Expectation<Range>{
             }
             
             String end = expectNonNumeric(reader);
-            if (end.equals("px")) {
+            if (end.equals(endingWord)) {
                 return range;
             }
             else if (end.equals("%")) {
@@ -190,6 +191,14 @@ public class ExpectRange implements Expectation<Range>{
 
     private String msgFor(String text) {
         return String.format("Cannot parse range: \"%s\"", text);
+    }
+
+    public String getEndingWord() {
+        return endingWord;
+    }
+
+    public void setEndingWord(String endingWord) {
+        this.endingWord = endingWord;
     }
          
 }
