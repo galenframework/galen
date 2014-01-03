@@ -15,6 +15,7 @@
 ******************************************************************************/
 package net.mindengine.galen.specs.reader;
 
+import static net.mindengine.galen.parser.Expectations.colorRanges;
 import static net.mindengine.galen.parser.Expectations.expectThese;
 import static net.mindengine.galen.parser.Expectations.locations;
 import static net.mindengine.galen.parser.Expectations.objectName;
@@ -46,6 +47,7 @@ import net.mindengine.galen.specs.SpecAbove;
 import net.mindengine.galen.specs.SpecAbsent;
 import net.mindengine.galen.specs.SpecBelow;
 import net.mindengine.galen.specs.SpecCentered;
+import net.mindengine.galen.specs.SpecColorScheme;
 import net.mindengine.galen.specs.SpecComponent;
 import net.mindengine.galen.specs.SpecContains;
 import net.mindengine.galen.specs.SpecHeight;
@@ -57,6 +59,7 @@ import net.mindengine.galen.specs.SpecText;
 import net.mindengine.galen.specs.SpecVertically;
 import net.mindengine.galen.specs.SpecVisible;
 import net.mindengine.galen.specs.SpecWidth;
+import net.mindengine.galen.specs.colors.ColorRange;
 import net.mindengine.galen.specs.reader.page.PageSpec;
 import net.mindengine.galen.specs.reader.page.PageSpecReader;
 
@@ -321,6 +324,24 @@ public class SpecReader {
                 return spec;
             }
         });
+        
+        putSpec("color\\s+scheme", new SpecComplexProcessor(expectThese(colorRanges()), new SpecComplexInit() {
+            @SuppressWarnings("unchecked")
+            @Override
+            public Spec init(String specName, Object[] args) {
+                
+                List<ColorRange> colorRanges = (List<ColorRange>)args[0];
+                if (colorRanges == null || colorRanges.size() == 0) {
+                    throw new SyntaxException("There are no colors defined");
+                }
+                
+                SpecColorScheme spec = new SpecColorScheme();
+                spec.setColorRanges(colorRanges);
+                return spec;
+            }
+        }));
+        
+
     }
 
     public Spec read(String specText) throws IOException {

@@ -24,6 +24,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.is;
 
+import java.awt.Color;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
@@ -39,6 +40,7 @@ import net.mindengine.galen.specs.SpecAbove;
 import net.mindengine.galen.specs.SpecAbsent;
 import net.mindengine.galen.specs.SpecBelow;
 import net.mindengine.galen.specs.SpecCentered;
+import net.mindengine.galen.specs.SpecColorScheme;
 import net.mindengine.galen.specs.SpecContains;
 import net.mindengine.galen.specs.SpecHeight;
 import net.mindengine.galen.specs.SpecHorizontally;
@@ -49,6 +51,7 @@ import net.mindengine.galen.specs.SpecText;
 import net.mindengine.galen.specs.SpecVertically;
 import net.mindengine.galen.specs.SpecVisible;
 import net.mindengine.galen.specs.SpecWidth;
+import net.mindengine.galen.specs.colors.ColorRange;
 import net.mindengine.galen.specs.reader.SpecReader;
 
 import org.hamcrest.Matchers;
@@ -626,20 +629,20 @@ public class SpecsReaderTest {
     
     @Test
     public void shouldReadSpec_color_scheme_40percent_black_approx_30percent_white() throws Exception {
-        SpecColorScheme spec = (SpecColorScheme)readSpec("color scheme: 40% black, ~30% white");
-        List<ColorContraint> colors = spec.getColors();
+        SpecColorScheme spec = (SpecColorScheme)readSpec("color scheme: 40% black  , ~30% white");
+        List<ColorRange> colors = spec.getColorRanges();
         assertThat(colors.size(), is(2));
         
         assertThat(colors.get(0).getRange(), is(Range.exact(40)));
         assertThat(colors.get(0).getColor(), is(new Color(0, 0, 0)));
-        assertThat(colors.get(1).getRange(), is(Range.between(29, 31)));
+        assertThat(colors.get(1).getRange(), is(Range.between(28, 32)));
         assertThat(colors.get(1).getColor(), is(new Color(255, 255, 255)));
     }
     
     @Test
     public void shouldReadSpec_color_scheme_greater_than_40percent_ffaa03() throws Exception {
         SpecColorScheme spec = (SpecColorScheme)readSpec("color scheme: > 40% #ffaa03");
-        List<ColorContraint> colors = spec.getColors();
+        List<ColorRange> colors = spec.getColorRanges();
         assertThat(colors.size(), is(1));
         
         assertThat(colors.get(0).getRange(), is(Range.greaterThan(40.0)));
@@ -649,11 +652,16 @@ public class SpecsReaderTest {
     @Test
     public void shouldReadSpec_color_scheme_40_to_50percent_ffaa03() throws Exception {
         SpecColorScheme spec = (SpecColorScheme)readSpec("color scheme: 40 to 50% red");
-        List<ColorContraint> colors = spec.getColors();
+        List<ColorRange> colors = spec.getColorRanges();
         assertThat(colors.size(), is(1));
         
         assertThat(colors.get(0).getRange(), is(Range.between(40, 50)));
         assertThat(colors.get(0).getColor(), is(new Color(255, 0, 0)));
+    }
+    
+    @Test(expectedExceptions={SyntaxException.class}, expectedExceptionsMessageRegExp="Unknown color: orrrrraangeee") 
+    public void givesError_withUnknownColor() throws IOException {
+        readSpec("color scheme: 40% orrrrraangeee");
     }
     
     @Test(expectedExceptions={SyntaxException.class}, expectedExceptionsMessageRegExp="Cannot use theses sides: top bottom") 
