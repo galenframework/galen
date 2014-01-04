@@ -15,6 +15,8 @@
 ******************************************************************************/
 package net.mindengine.galen.page;
 
+import java.awt.image.BufferedImage;
+
 import net.mindengine.galen.specs.page.Locator;
 
 public interface Page {
@@ -26,6 +28,8 @@ public interface Page {
     int getObjectCount(Locator locator);
 
     Page createObjectContextPage(Locator mainObjectLocator);
+
+    BufferedImage getScreenshotImage();
     
 
 }

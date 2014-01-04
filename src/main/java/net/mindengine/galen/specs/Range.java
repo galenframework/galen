@@ -111,18 +111,23 @@ public class Range {
         }
         else return "null";
     }
-    public Object prettyString() {
+    public String prettyString() {
+        return prettyString("px");
+    }
+    
+    private String prettyString(String dimension) {
         if (isExact()) {
-            return String.format("%spx", doubleToString(from));
+            return String.format("%s%s", doubleToString(from), dimension);
         }
         else if (isGreaterThan()) {
-        	return String.format("> %spx", doubleToString(from));
+            return String.format("> %s%s", doubleToString(from), dimension);
         }
         else if (isLessThan()) {
-        	return String.format("< %spx", doubleToString(to));
+            return String.format("< %s%s", doubleToString(to), dimension);
         }
-        else return String.format("%s to %spx", doubleToString(from), doubleToString(to));
+        else return String.format("%s to %s%s", doubleToString(from), doubleToString(to), dimension);
     }
+    
     private boolean isLessThan() {
 		return rangeType == RangeType.LESS_THAN;
 	}
@@ -157,18 +162,22 @@ public class Range {
     }
     
     public String getErrorMessageSuffix() {
+        return getErrorMessageSuffix("px");
+    }
+    public String getErrorMessageSuffix(String dimension) {
         if (rangeType == RangeType.EXACT) {
-            return String.format("instead of %s", prettyString());
+            return String.format("instead of %s", prettyString(dimension));
         }
         else if (rangeType == RangeType.BETWEEN) {
-            return String.format("which is not in range of %s", prettyString());
+            return String.format("which is not in range of %s", prettyString(dimension));
         }
         else if (rangeType == RangeType.GREATER_THAN) {
-            return String.format("but it should be greater than %spx", doubleToString(from));
+            return String.format("but it should be greater than %s%s", doubleToString(from), dimension);
         }
         else if (rangeType == RangeType.LESS_THAN) {
-            return String.format("but it should be less than %spx", doubleToString(to));
+            return String.format("but it should be less than %s%s", doubleToString(to), dimension);
         }
         else return "but the expected range is unknown";
     }
+    
 }

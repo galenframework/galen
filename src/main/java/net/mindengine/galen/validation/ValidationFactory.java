@@ -23,6 +23,7 @@ import net.mindengine.galen.specs.SpecAbove;
 import net.mindengine.galen.specs.SpecAbsent;
 import net.mindengine.galen.specs.SpecBelow;
 import net.mindengine.galen.specs.SpecCentered;
+import net.mindengine.galen.specs.SpecColorScheme;
 import net.mindengine.galen.specs.SpecComponent;
 import net.mindengine.galen.specs.SpecContains;
 import net.mindengine.galen.specs.SpecHeight;
@@ -36,6 +37,7 @@ import net.mindengine.galen.specs.SpecVisible;
 import net.mindengine.galen.specs.SpecWidth;
 import net.mindengine.galen.validation.specs.SpecValidationAbsent;
 import net.mindengine.galen.validation.specs.SpecValidationCentered;
+import net.mindengine.galen.validation.specs.SpecValidationColorScheme;
 import net.mindengine.galen.validation.specs.SpecValidationComponent;
 import net.mindengine.galen.validation.specs.SpecValidationContains;
 import net.mindengine.galen.validation.specs.SpecValidationDirectionPosition;
@@ -83,6 +85,7 @@ public class ValidationFactory {
         validations.put(SpecCentered.class, new SpecValidationCentered());
         validations.put(SpecOn.class, new SpecValidationOn());
         validations.put(SpecComponent.class, new SpecValidationComponent());
+        validations.put(SpecColorScheme.class, new SpecValidationColorScheme());
     }
 
     @SuppressWarnings({ "unchecked", "rawtypes" })

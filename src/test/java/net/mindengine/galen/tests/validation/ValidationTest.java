@@ -26,6 +26,9 @@ import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.hamcrest.Matchers.nullValue;
 
+import java.awt.Color;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -45,6 +48,7 @@ import net.mindengine.galen.specs.SpecAbove;
 import net.mindengine.galen.specs.SpecAbsent;
 import net.mindengine.galen.specs.SpecBelow;
 import net.mindengine.galen.specs.SpecCentered;
+import net.mindengine.galen.specs.SpecColorScheme;
 import net.mindengine.galen.specs.SpecContains;
 import net.mindengine.galen.specs.SpecHeight;
 import net.mindengine.galen.specs.SpecHorizontally;
@@ -55,11 +59,13 @@ import net.mindengine.galen.specs.SpecText;
 import net.mindengine.galen.specs.SpecVertically;
 import net.mindengine.galen.specs.SpecVisible;
 import net.mindengine.galen.specs.SpecWidth;
+import net.mindengine.galen.specs.colors.ColorRange;
 import net.mindengine.galen.specs.page.Locator;
 import net.mindengine.galen.specs.reader.page.PageSpec;
 import net.mindengine.galen.validation.ErrorArea;
 import net.mindengine.galen.validation.PageValidation;
 import net.mindengine.galen.validation.ValidationError;
+import net.mindengine.rainbow4j.Rainbow4J;
 
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
@@ -71,6 +77,8 @@ public class ValidationTest {
     private static final List<ErrorArea> NO_AREA = null;
 
     
+    private BufferedImage testImage = loadTestImage(); 
+    
     @Test(dataProvider="provideGoodSamples")
     public void shouldPassValidation(Spec spec, MockedPage page) {
         PageSpec pageSpec = createMockedPageSpec(page);
@@ -80,6 +88,14 @@ public class ValidationTest {
         assertThat(error, is(nullValue()));
     }
     
+    private BufferedImage loadTestImage() {
+        try {
+            return Rainbow4J.loadImage(getClass().getResourceAsStream("/color-scheme-image-1.png"));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     @Test(dataProvider="provideBadSamples")
     public void shouldGiveError(ValidationError expectedError, Spec spec, MockedPage page) {
         PageSpec pageSpec = createMockedPageSpec(page);
@@ -458,10 +474,22 @@ public class ValidationTest {
               put("object", element(210, 220, 50, 50));
               put("container", element(100, 100, 100, 100));
           }})),
+          
+          
+          // Color Scheme
+          
+          row(specColorScheme(new ColorRange(Color.white, between(50, 60)), new ColorRange(Color.black, between(15, 18))), page(new HashMap<String, PageElement>(){{
+              put("object", element(10, 10, 400, 300));
+          }}, testImage)),
+          
+          row(specColorScheme(new ColorRange(Color.white, exact(100))), page(new HashMap<String, PageElement>(){{
+              put("object", element(10, 10, 50, 40));
+          }}, testImage))
         };
     }
 
 
+    
     
     @SuppressWarnings("serial")
     @DataProvider
@@ -1169,6 +1197,34 @@ public class ValidationTest {
                       put("object", element(105, 90, 50, 50));
                       put("container", element(100, 100, 100, 100));
               }})),
+              
+              
+          // Color Scheme
+          row(new ValidationError(NO_AREA, messages("\"object\" is not visible on page")), 
+                  specColorScheme(new ColorRange(Color.black, between(30, 33))), page(new HashMap<String, PageElement>(){{
+                      put("object", invisibleElement(10, 10, 400, 300));
+              }}, testImage)),
+          row(new ValidationError(NO_AREA, messages("\"object\" is absent on page")), 
+                  specColorScheme(new ColorRange(Color.black, between(30, 33))), page(new HashMap<String, PageElement>(){{
+                      put("object", absentElement(10, 10, 400, 300));
+              }}, testImage)),
+          row(new ValidationError(areas(new ErrorArea(new Rect(10, 10, 400, 300), "object")), 
+                  messages("color #000000 on \"object\" is 16% which is not in range of 30 to 33%")),
+                  specColorScheme(new ColorRange(Color.black, between(30, 33))), page(new HashMap<String, PageElement>(){{
+                      put("object", element(10, 10, 400, 300));
+              }}, testImage)),
+              
+          row(new ValidationError(areas(new ErrorArea(new Rect(10, 10, 400, 300), "object")), 
+                  messages("color #ffffff on \"object\" is 54% instead of 30%")),
+                  specColorScheme(new ColorRange(Color.white, exact(30))), page(new HashMap<String, PageElement>(){{
+                      put("object", element(10, 10, 400, 300));
+              }}, testImage)),
+              
+          row(new ValidationError(areas(new ErrorArea(new Rect(10, 10, 400, 300), "object")), 
+                      messages("color #3070cf on \"object\" is 135% instead of 30%")),
+                      specColorScheme(new ColorRange(Color.decode("#3070CF"), exact(30))), page(new HashMap<String, PageElement>(){{
+                          put("object", element(10, 10, 500, 300));
+                  }}, testImage)),
         };
     }
     
@@ -1248,6 +1304,10 @@ public class ValidationTest {
     private MockedPage page(HashMap<String, PageElement> elements) {
         return new MockedPage(elements);
     }
+    
+    private MockedPage page(HashMap<String, PageElement> elements, BufferedImage screenshotImage) {
+        return new MockedPage(elements, screenshotImage);
+    }
 
     private MockedPageElement element(int left, int top, int width, int height) {
         return new MockedPageElement(left, top, width, height);
@@ -1293,6 +1353,11 @@ public class ValidationTest {
         return new SpecCentered(object, alignment, SpecCentered.Location.INSIDE).withErrorRate(errorRate);
     }
 
+    private SpecColorScheme specColorScheme(ColorRange...colorRanges) {
+        SpecColorScheme spec = new SpecColorScheme();
+        spec.setColorRanges(Arrays.asList(colorRanges));
+        return spec;
+    }
 
     public Object[] row (Object...args) {
         return args;

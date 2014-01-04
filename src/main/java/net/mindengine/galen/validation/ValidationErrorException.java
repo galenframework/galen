@@ -85,4 +85,9 @@ public class ValidationErrorException extends Exception {
      */
     private static final long serialVersionUID = -1566513657187992205L;
 
+    public ValidationErrorException withMessages(List<String> messages) {
+        setErrorMessages(messages);
+        return this;
+    }
+
 }

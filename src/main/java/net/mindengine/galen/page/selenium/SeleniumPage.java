@@ -15,6 +15,9 @@
 ******************************************************************************/
 package net.mindengine.galen.page.selenium;
 
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.FileInputStream;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -24,9 +27,12 @@ import net.mindengine.galen.page.AbsentPageElement;
 import net.mindengine.galen.page.Page;
 import net.mindengine.galen.page.PageElement;
 import net.mindengine.galen.specs.page.Locator;
+import net.mindengine.rainbow4j.Rainbow4J;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
+import org.openqa.selenium.OutputType;
+import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 
@@ -39,6 +45,8 @@ public class SeleniumPage implements Page {
     
     private WebElement objectContext;
     private Locator objectContextLocator;
+
+    private BufferedImage cachedScreenshotImage;
     
 
     public SeleniumPage(WebDriver driver) {
@@ -199,6 +207,19 @@ public class SeleniumPage implements Page {
     @Override
     public Page createObjectContextPage(Locator objectContextLocator) {
         return new SeleniumPage(this.driver, objectContextLocator);
+    }
+
+    @Override
+    public BufferedImage getScreenshotImage() {
+        if (this.cachedScreenshotImage == null) {
+            File file = ((TakesScreenshot)driver).getScreenshotAs(OutputType.FILE);
+            try {
+                cachedScreenshotImage = Rainbow4J.loadImage(new FileInputStream(file));
+            } catch (Exception e) {
+                throw new RuntimeException("Couldn't take screenshot for page", e);
+            }
+        }
+        return this.cachedScreenshotImage;
     }
 
     

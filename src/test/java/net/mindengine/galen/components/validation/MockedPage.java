@@ -15,6 +15,7 @@
 ******************************************************************************/
 package net.mindengine.galen.components.validation;
 
+import java.awt.image.BufferedImage;
 import java.util.HashMap;
 
 import net.mindengine.galen.page.Page;
@@ -24,9 +25,15 @@ import net.mindengine.galen.specs.page.Locator;
 public class MockedPage implements Page {
 
     private HashMap<String, PageElement> elements;
+    private BufferedImage screenshotImage;
 
     public MockedPage(HashMap<String, PageElement> elements) {
         this.setElements(elements);
+    }
+    
+    public MockedPage(HashMap<String, PageElement> elements, BufferedImage screenshotImage) {
+        this.setElements(elements);
+        this.screenshotImage = screenshotImage;
     }
 
     @Override
@@ -56,6 +63,16 @@ public class MockedPage implements Page {
     public Page createObjectContextPage(Locator mainObjectLocator) {
         // TODO Auto-generated method stub
         return null;
+    }
+
+    @Override
+    public BufferedImage getScreenshotImage() {
+        // TODO Auto-generated method stub
+        return screenshotImage;
+    }
+
+    public void setScreenshotImage(BufferedImage screenshotImage) {
+        this.screenshotImage = screenshotImage;
     }
 
 }
