@@ -90,7 +90,7 @@ public class ValidationTest {
     
     private BufferedImage loadTestImage() {
         try {
-            return Rainbow4J.loadImage(getClass().getResourceAsStream("/color-scheme-image-1.png"));
+            return Rainbow4J.loadImage(getClass().getResource("/color-scheme-image-1.png").getFile());
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -478,7 +478,7 @@ public class ValidationTest {
           
           // Color Scheme
           
-          row(specColorScheme(new ColorRange(Color.white, between(50, 60)), new ColorRange(Color.black, between(15, 18))), page(new HashMap<String, PageElement>(){{
+          row(specColorScheme(new ColorRange(Color.white, between(46, 52)), new ColorRange(Color.black, between(34, 40))), page(new HashMap<String, PageElement>(){{
               put("object", element(10, 10, 400, 300));
           }}, testImage)),
           
@@ -1209,20 +1209,20 @@ public class ValidationTest {
                       put("object", absentElement(10, 10, 400, 300));
               }}, testImage)),
           row(new ValidationError(areas(new ErrorArea(new Rect(10, 10, 400, 300), "object")), 
-                  messages("color #000000 on \"object\" is 16% which is not in range of 30 to 33%")),
-                  specColorScheme(new ColorRange(Color.black, between(30, 33))), page(new HashMap<String, PageElement>(){{
+                  messages("color #000000 on \"object\" is 36% which is not in range of 10 to 20%")),
+                  specColorScheme(new ColorRange(Color.black, between(10, 20))), page(new HashMap<String, PageElement>(){{
                       put("object", element(10, 10, 400, 300));
               }}, testImage)),
               
           row(new ValidationError(areas(new ErrorArea(new Rect(10, 10, 400, 300), "object")), 
-                  messages("color #ffffff on \"object\" is 54% instead of 30%")),
+                  messages("color #ffffff on \"object\" is 48% instead of 30%")),
                   specColorScheme(new ColorRange(Color.white, exact(30))), page(new HashMap<String, PageElement>(){{
                       put("object", element(10, 10, 400, 300));
               }}, testImage)),
               
-          row(new ValidationError(areas(new ErrorArea(new Rect(10, 10, 400, 300), "object")), 
-                      messages("color #3070cf on \"object\" is 135% instead of 30%")),
-                      specColorScheme(new ColorRange(Color.decode("#3070CF"), exact(30))), page(new HashMap<String, PageElement>(){{
+          row(new ValidationError(areas(new ErrorArea(new Rect(10, 10, 500, 300), "object")), 
+                      messages("color #3a70d0 on \"object\" is 12% instead of 30%")),
+                      specColorScheme(new ColorRange(Color.decode("#3A70D0"), exact(30))), page(new HashMap<String, PageElement>(){{
                           put("object", element(10, 10, 500, 300));
                   }}, testImage)),
         };

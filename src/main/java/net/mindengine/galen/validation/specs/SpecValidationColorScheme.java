@@ -16,6 +16,7 @@
 package net.mindengine.galen.validation.specs;
 
 import java.awt.Color;
+import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 import java.util.LinkedList;
 import java.util.List;
@@ -48,11 +49,9 @@ public class SpecValidationColorScheme extends SpecValidation<SpecColorScheme> {
                 .withMessage("Can't fetch image for \"object\" as it is outside of screenshot");
         }
         
-        BufferedImage objectImage = Rainbow4J.crop(pageImage, area.getLeft(), area.getTop(), area.getWidth(), area.getHeight());
-        
         Spectrum spectrum;
         try {
-            spectrum = Rainbow4J.readSpectrum(objectImage, 128);
+            spectrum = Rainbow4J.readSpectrum(pageImage, new Rectangle(area.getLeft(), area.getTop(), area.getWidth(), area.getHeight()), 256);
         } catch (Exception e) {
             throw new ValidationErrorException(String.format("Couldn't fetch spectrum for \"%s\"", objectName));
         }
@@ -61,7 +60,7 @@ public class SpecValidationColorScheme extends SpecValidation<SpecColorScheme> {
         
         for (ColorRange colorRange : spec.getColorRanges()) {
             Color color = colorRange.getColor();
-            double percentage = spectrum.getPercentage(color.getRed(), color.getGreen(), color.getBlue(), 20);
+            double percentage = spectrum.getPercentage(color.getRed(), color.getGreen(), color.getBlue(), 6);
             
             if (!colorRange.getRange().holds(percentage)) {
                 messages.add(String.format("color %s on \"%s\" is %d%% %s", toHexColor(color), objectName, (int)percentage, colorRange.getRange().getErrorMessageSuffix("%")));

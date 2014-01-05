@@ -17,7 +17,6 @@ package net.mindengine.galen.page.selenium;
 
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.io.FileInputStream;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -214,7 +213,7 @@ public class SeleniumPage implements Page {
         if (this.cachedScreenshotImage == null) {
             File file = ((TakesScreenshot)driver).getScreenshotAs(OutputType.FILE);
             try {
-                cachedScreenshotImage = Rainbow4J.loadImage(new FileInputStream(file));
+                cachedScreenshotImage = Rainbow4J.loadImage(file.getAbsolutePath());
             } catch (Exception e) {
                 throw new RuntimeException("Couldn't take screenshot for page", e);
             }
