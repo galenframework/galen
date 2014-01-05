@@ -462,6 +462,20 @@ public class SpecsReaderTest {
     }
     
     @Test 
+    public void shouldReadSpec_above()  throws IOException {
+        SpecAbove spec = (SpecAbove)readSpec("above: object");
+        assertThat(spec.getObject(), is("object"));
+        assertThat(spec.getRange(), is(Range.greaterThan(-1.0)));
+    }
+    
+    @Test 
+    public void shouldReadSpec_below()  throws IOException {
+        SpecBelow spec = (SpecBelow)readSpec("below: object");
+        assertThat(spec.getObject(), is("object"));
+        assertThat(spec.getRange(), is(Range.greaterThan(-1.0)));
+    }
+    
+    @Test 
     public void shouldReadSpec_below_object_20px()  throws IOException {
     	SpecBelow spec = (SpecBelow)readSpec("below: object 20px");
     	assertThat(spec.getObject(), is("object"));

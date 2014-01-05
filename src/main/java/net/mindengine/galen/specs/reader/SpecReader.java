@@ -37,6 +37,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import net.mindengine.galen.parser.ExpectWord;
+import net.mindengine.galen.parser.Expectations;
 import net.mindengine.galen.parser.SyntaxException;
 import net.mindengine.galen.specs.Alignment;
 import net.mindengine.galen.specs.Location;
@@ -166,18 +167,27 @@ public class SpecReader {
             }
         }));
         
-        putSpec("(above|below)", new SpecComplexProcessor(expectThese(objectName(), range()), new SpecComplexInit() {
-			@Override
-			public Spec init(String specName, Object[] args) {
-				String objectName = (String) args[0];
-				Range range = (Range)args[1];
+        putSpec("(above|below)", new SpecProcessor() {
+            @Override
+            public Spec processSpec(String specName, String paramsText, String contextPath) throws IOException {
 				
+                StringCharReader reader = new StringCharReader(paramsText.trim());
+                String objectName = new ExpectWord().read(reader);
+                
+                Range range;
+                if (reader.hasMore()) {
+                    range = Expectations.range().read(reader);
+                }
+                else {
+                    range = Range.greaterThan(-1.0);
+                }
+                
 				if (specName.equals("above")) {
 					return new SpecAbove(objectName, range);
 				}
 				else return new SpecBelow(objectName, range);
 			}
-        }));
+        });
         
         putSpec("aligned\\s+.*", new SpecObjectAndErrorRateProcessor(new SpecObjectAndErrorRateInit() {
             
