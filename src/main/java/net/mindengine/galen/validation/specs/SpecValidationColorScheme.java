@@ -60,7 +60,7 @@ public class SpecValidationColorScheme extends SpecValidation<SpecColorScheme> {
         
         for (ColorRange colorRange : spec.getColorRanges()) {
             Color color = colorRange.getColor();
-            double percentage = spectrum.getPercentage(color.getRed(), color.getGreen(), color.getBlue(), 6);
+            int percentage = (int)spectrum.getPercentage(color.getRed(), color.getGreen(), color.getBlue(), 6);
             
             if (!colorRange.getRange().holds(percentage)) {
                 messages.add(String.format("color %s on \"%s\" is %d%% %s", toHexColor(color), objectName, (int)percentage, colorRange.getRange().getErrorMessageSuffix("%")));

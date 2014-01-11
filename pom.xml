@@ -54,7 +54,7 @@
     <dependency>
       <groupId>net.mindengine</groupId>
       <artifactId>rainbow4j</artifactId>
-      <version>0.2.2</version>
+      <version>0.2.3</version>
     </dependency>
   </dependencies>
   <build>
