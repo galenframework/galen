@@ -161,6 +161,10 @@ public class ArgumentParserTest {
                     .withIncludedTags()
                     .withExcludedTags()
                     .withPaths(asList("some1.spec", "some2.spec"))},
+           
+            {args("config"), 
+                new GalenArguments()
+                    .withAction("config")},
         };
     }
     

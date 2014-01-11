@@ -19,7 +19,9 @@ import static java.util.Arrays.asList;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.StringWriter;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.LinkedList;
@@ -29,7 +31,6 @@ import java.util.concurrent.Executors;
 
 import net.mindengine.galen.browser.SeleniumBrowserFactory;
 import net.mindengine.galen.config.GalenConfig;
-import net.mindengine.galen.parser.FileSyntaxException;
 import net.mindengine.galen.reports.ConsoleReportingListener;
 import net.mindengine.galen.reports.HtmlReportingListener;
 import net.mindengine.galen.reports.TestngReportingListener;
@@ -44,6 +45,7 @@ import net.mindengine.galen.suite.actions.GalenPageActionCheck;
 import net.mindengine.galen.suite.reader.GalenSuiteReader;
 
 import org.apache.commons.cli.ParseException;
+import org.apache.commons.io.IOUtils;
 
 public class GalenMain {
     
@@ -57,6 +59,9 @@ public class GalenMain {
             }
             else if ("check".equals(arguments.getAction())) {
                 performCheck(arguments, combinedListener);
+            }
+            else if ("config".equals(arguments.getAction())) {
+                performConfig();
             }
             combinedListener.done();
         }
@@ -74,6 +79,25 @@ public class GalenMain {
                 }
                 System.out.println("Version: " + version);
             }
+        }
+    }
+
+    public void performConfig() throws IOException {
+        File file = new File("config");
+        
+        if (!file.exists()) {
+            file.createNewFile();
+            FileOutputStream fos = new FileOutputStream(file);
+            
+            StringWriter writer = new StringWriter();
+            IOUtils.copy(getClass().getResourceAsStream("/config-template.conf"), writer, "UTF-8");
+            IOUtils.write(writer.toString(), fos, "UTF-8");
+            fos.flush();
+            fos.close();
+            System.out.println("Created config file");
+        }
+        else {
+            System.out.println("Config file already exists");
         }
     }
 

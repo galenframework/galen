@@ -162,5 +162,22 @@ public class GalenMainTest {
         
         assertThat(testngReportContent, containsString("Error: There is no location defined\n    in " + pageSpec + ":10"));
     }
+    
+    @Test public void shouldGenerate_configFile() throws IOException {
+        new GalenMain().performConfig();
+        assertThat("config file should exist", new File("config").exists(), is(true));
+        new File("config").delete();
+    }
+    
+    @Test public void shouldNot_overrideExistingConfigFile() throws IOException {
+        File file = new File("config");
+        file.createNewFile();
+        FileUtils.writeStringToFile(file, "someTestDate = qwertyuiop");
+        
+        new GalenMain().performConfig();
+        
+        String data = FileUtils.readFileToString(file);
+        assertThat(data, is("someTestDate = qwertyuiop"));    
+    }
 }
 

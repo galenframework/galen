@@ -40,8 +40,8 @@ public class GalenArguments {
     private String javascript;
     private List<String> paths;
     private Boolean recursive = false;
-    private List<String> includedTags;
-    private List<String> excludedTags;
+    private List<String> includedTags = new LinkedList<String>();
+    private List<String> excludedTags = new LinkedList<String>();
     private Dimension screenSize;
     private String htmlReport;
     private String testngReport;
@@ -229,6 +229,9 @@ public class GalenArguments {
             }
             else if ("check".equals(galen.getAction())) {
                 verifyCheckAction(galen);
+            }
+            else if ("config".equals(galen.getAction())) {
+                return;
             }
             else throw new IllegalArgumentException("Unknown action: " + galen.getAction());
         }
