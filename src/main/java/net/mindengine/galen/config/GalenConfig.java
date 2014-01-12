@@ -29,6 +29,7 @@ public class GalenConfig {
     private int rangeApproximation;
     private List<String> reportingListeners;
     private String defaultBrowser;
+    private Properties properties;
     
     private GalenConfig() {
         try {
@@ -40,18 +41,18 @@ public class GalenConfig {
     }
     
     private void loadConfig() throws IOException {
-        Properties prop = new Properties();
+        this.properties = new Properties();
         File configFile = new File("config");
         
         if (configFile.exists()) {
             InputStream in = new FileInputStream(configFile);
-            prop.load(in);
+            properties.load(in);
             in.close();
         }
         
-        rangeApproximation = Integer.parseInt(readProperty(prop, "galen.range.approximation", "2"));
-        reportingListeners = converCommaSeparatedList(readProperty(prop, "galen.reporting.listeners", ""));
-        defaultBrowser = readProperty(prop, "galen.default.browser", "firefox");
+        rangeApproximation = Integer.parseInt(readProperty(properties, "galen.range.approximation", "2"));
+        reportingListeners = converCommaSeparatedList(readProperty(properties, "galen.reporting.listeners", ""));
+        defaultBrowser = readProperty(properties, "galen.default.browser", "firefox");
     }
 
     private List<String> converCommaSeparatedList(String text) {
@@ -89,6 +90,39 @@ public class GalenConfig {
 
     public String getDefaultBrowser() {
         return defaultBrowser;
+    }
+
+    public String getProperty(String name) {
+        return properties.getProperty(name);
+    }
+    
+    public String getProperty(String name, String defaultValue) {
+        return properties.getProperty(name, defaultValue);
+    }
+
+    public Integer getIntProperty(String name, int defaultValue) {
+        String value = properties.getProperty(name);
+        if (value == null) {
+            return defaultValue;
+        }
+        else {
+            try {
+                return Integer.parseInt(value);
+            }
+            catch (Exception e) {
+                throw new RuntimeException(String.format("Couldn't parse property \"%s\" from config file", name));
+            }
+        }
+    }
+
+    public int getIntProperty(String name, int defaultValue, int min, int max) {
+        int value = getIntProperty(name, defaultValue);
+        if (value >= min && value <=max) {
+            return value;
+        }
+        else {
+            throw new RuntimeException(String.format("Property \"%s\"=%d in config file is not in allowed range [%d, %d]", name, value, min, max));
+        }
     }
 
 }
