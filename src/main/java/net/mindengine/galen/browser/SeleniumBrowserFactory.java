@@ -20,10 +20,17 @@ import net.mindengine.galen.config.GalenConfig;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.openqa.selenium.Platform;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.ie.InternetExplorerDriver;
 
+/**
+ * This is a general browser factory which could also 
+ * be configured to run in Selenium Grid via config file.
+ * @author Ivan Shubin
+ *
+ */
 public class SeleniumBrowserFactory implements BrowserFactory {
 
     public static final String FIREFOX = "firefox";
@@ -40,6 +47,35 @@ public class SeleniumBrowserFactory implements BrowserFactory {
 
     @Override
     public Browser openBrowser() {
+        
+        if (shouldBeUsingGrid()) {
+            return createSeleniumGridBrowser();
+        }
+        else {
+            return createLocalBrowser();
+        }
+    }
+
+    private Browser createSeleniumGridBrowser() {
+        
+        String gridUrl = GalenConfig.getConfig().readMandatoryProperty("galen.browserFactory.selenium.grid.url");
+        SeleniumGridBrowserFactory gridFactory = new SeleniumGridBrowserFactory(gridUrl);
+        
+        gridFactory.setBrowser(GalenConfig.getConfig().readProperty("galen.browserFactory.selenium.grid.browser"));
+        gridFactory.setBrowserVersion(GalenConfig.getConfig().readProperty("galen.browserFactory.selenium.grid.browserVersion"));
+        String platform = GalenConfig.getConfig().readProperty("galen.browserFactory.selenium.grid.platform");
+        if (platform != null && !platform.trim().isEmpty()) {
+            gridFactory.setPlatform(Platform.valueOf(platform.toUpperCase()));
+        }
+        
+        return gridFactory.openBrowser();
+    }
+
+    private boolean shouldBeUsingGrid() {
+        return GalenConfig.getConfig().getBooleanProperty("galen.browserFactory.selenium.runInGrid", false);
+    }
+
+    private Browser createLocalBrowser() {
         if (FIREFOX.equals(browserType)) {
             return new SeleniumBrowser(new FirefoxDriver());
         }

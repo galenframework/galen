@@ -177,7 +177,9 @@ public class GalenMainTest {
         new GalenMain().performConfig();
         
         String data = FileUtils.readFileToString(file);
-        assertThat(data, is("someTestDate = qwertyuiop"));    
+        assertThat(data, is("someTestDate = qwertyuiop"));
+        
+        file.delete();
     }
 }
 

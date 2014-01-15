@@ -50,9 +50,9 @@ public class GalenConfig {
             in.close();
         }
         
-        rangeApproximation = Integer.parseInt(readProperty(properties, "galen.range.approximation", "2"));
-        reportingListeners = converCommaSeparatedList(readProperty(properties, "galen.reporting.listeners", ""));
-        defaultBrowser = readProperty(properties, "galen.default.browser", "firefox");
+        rangeApproximation = Integer.parseInt(readProperty("galen.range.approximation", "2"));
+        reportingListeners = converCommaSeparatedList(readProperty("galen.reporting.listeners", ""));
+        defaultBrowser = readProperty("galen.default.browser", "firefox");
     }
 
     private List<String> converCommaSeparatedList(String text) {
@@ -68,9 +68,22 @@ public class GalenConfig {
         return list;
     }
 
-    private String readProperty(Properties prop, String name, String defaultValue) {
-        return prop.getProperty(name, System.getProperty(name, defaultValue));
+    public String readProperty(String name, String defaultValue) {
+        return properties.getProperty(name, System.getProperty(name, defaultValue));
     }
+    
+    public String readProperty(String name) {
+        return properties.getProperty(name, System.getProperty(name));
+    }
+    
+    public String readMandatoryProperty(String name) {
+        String value = properties.getProperty(name, System.getProperty(name));
+        if (value == null || value.trim().isEmpty()) {
+            throw new RuntimeException("Missing property: " + name);
+        }
+        return value;
+    }
+
 
     public synchronized static GalenConfig getConfig() {
         return instance;
@@ -92,16 +105,8 @@ public class GalenConfig {
         return defaultBrowser;
     }
 
-    public String getProperty(String name) {
-        return properties.getProperty(name);
-    }
-    
-    public String getProperty(String name, String defaultValue) {
-        return properties.getProperty(name, defaultValue);
-    }
-
     public Integer getIntProperty(String name, int defaultValue) {
-        String value = properties.getProperty(name);
+        String value = readProperty(name);
         if (value == null) {
             return defaultValue;
         }
@@ -115,6 +120,7 @@ public class GalenConfig {
         }
     }
 
+    
     public int getIntProperty(String name, int defaultValue, int min, int max) {
         int value = getIntProperty(name, defaultValue);
         if (value >= min && value <=max) {
@@ -122,6 +128,16 @@ public class GalenConfig {
         }
         else {
             throw new RuntimeException(String.format("Property \"%s\"=%d in config file is not in allowed range [%d, %d]", name, value, min, max));
+        }
+    }
+
+    public boolean getBooleanProperty(String name, boolean defaultValue) {
+        String value = readProperty(name);
+        if (value == null) {
+            return defaultValue;
+        }
+        else {
+            return Boolean.parseBoolean(value);
         }
     }
 

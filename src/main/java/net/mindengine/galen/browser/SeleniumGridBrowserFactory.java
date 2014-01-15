@@ -21,6 +21,8 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.openqa.selenium.Platform;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.remote.Augmenter;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.remote.RemoteWebDriver;
 
@@ -51,7 +53,10 @@ public class SeleniumGridBrowserFactory implements BrowserFactory {
             desiredCapabilities.setVersion(browserVersion);
         }
         try {
-        	return new SeleniumGridBrowser(new RemoteWebDriver(new URL(gridUrl), desiredCapabilities));
+            
+            WebDriver driver = new RemoteWebDriver(new URL(gridUrl), desiredCapabilities);
+            WebDriver augmentedDriver = new Augmenter().augment(driver);
+        	return new SeleniumGridBrowser(augmentedDriver);
         }
         catch (Exception ex) {
         	throw new RuntimeException(ex);
