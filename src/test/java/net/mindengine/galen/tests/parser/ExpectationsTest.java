@@ -82,7 +82,9 @@ public class ExpectationsTest {
            {"15.05% of screen/width", Range.exact(15.05).withPercentOf("screen/width")},
            {"15 to 40% of   screen/height", Range.between(15.0, 40.0).withPercentOf("screen/height")},
            {"15 to 40% of item-1/some-other-stuff/a/b/c2", Range.between(15.0, 40.0).withPercentOf("item-1/some-other-stuff/a/b/c2")},
-           {"~40% of item-1/some-other-stuff/a/b/c2", Range.between(38.0, 42.0).withPercentOf("item-1/some-other-stuff/a/b/c2")}
+           {"~40% of item-1/some-other-stuff/a/b/c2", Range.between(38.0, 42.0).withPercentOf("item-1/some-other-stuff/a/b/c2")},
+           {"> 67 % of object/width", Range.greaterThan(67.0).withPercentOf("object/width")},
+           {" < 30% of object/width", Range.lessThan(30.0).withPercentOf("object/width")}
         };
     }
     
