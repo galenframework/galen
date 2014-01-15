@@ -24,7 +24,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 public class Range {
 
-    private Range(Double from, Double to) {
+    public Range(Double from, Double to) {
         this.from = from;
         this.to = to;
     }
