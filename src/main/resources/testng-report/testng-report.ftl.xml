@@ -9,7 +9,8 @@
                 <test-method status="${testMethod.status?html}" signature="${testMethod.name?html}" name="${testMethod.name?html}" duration-ms="${testMethod.duration?c}" started-at="${testMethod.startedAtFormatted}" finished-at="${testMethod.endedAtFormatted}" description="">
                     <#if testMethod.error?has_content>
                     <exception class="${testMethod.error.path?html}">
-                        <short-stacktrace>${testMethod.error.stackTrace?html}</short-stacktrace>
+                        <message>${testMethod.error.path?html}: ${testMethod.error.message?html}</message>
+                        <full-stacktrace>${testMethod.error.stackTrace?html}</full-stacktrace>
                     </exception>
                     </#if>
                 </test-method>

@@ -53,9 +53,11 @@ public class TestngReportingListener implements CompleteListener {
     }
     
     public class Error {
+        private String message;
         private String stackTrace;
         private String path;
-        public Error(String path, String stackTrace) {
+        public Error(String message, String path, String stackTrace) {
+            this.message = message;
             this.path = path;
             this.stackTrace = stackTrace;
         }
@@ -70,6 +72,12 @@ public class TestngReportingListener implements CompleteListener {
         }
         public void setStackTrace(String stackTrace) {
             this.stackTrace = stackTrace;
+        }
+        public String getMessage() {
+            return message;
+        }
+        public void setMessage(String message) {
+            this.message = message;
         }
     }
     
@@ -291,7 +299,7 @@ public class TestngReportingListener implements CompleteListener {
             method.setStartedAt(new Date());
             method.markAsFailed();
             method.setEndedAt(new Date());
-            method.setError(new Error(e.getClass().getName(), sw.getBuffer().toString()));
+            method.setError(new Error(e.getMessage(), e.getClass().getName(), sw.getBuffer().toString()));
             
             testClass.testMethods.add(method);
         }

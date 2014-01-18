@@ -11,11 +11,12 @@
                 </test-method>
                 <test-method status="FAIL" signature="global error" name="global error" duration-ms="0" started-at="{expected-date}" finished-at="{expected-date}" description="">
                     <exception class="net.mindengine.galen.components.report.FakeException">
-                        <short-stacktrace>net.mindengine.galen.components.report.FakeException: Some exception here
+                        <message>net.mindengine.galen.components.report.FakeException: Some exception here</message>
+                        <full-stacktrace>net.mindengine.galen.components.report.FakeException: Some exception here
 \t    at net.mindengine.someclass.SomeClass.method1(SomeClass.java:4)
 \t    at net.mindengine.someclass.SomeClass2.method2(SomeClass2.java:5)
 \t    at net.mindengine.someclass.SomeClass3.method3(SomeClass3.java:6)
-</short-stacktrace>
+</full-stacktrace>
                     </exception>
                 </test-method>
             </class>
