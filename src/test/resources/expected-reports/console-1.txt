@@ -1,0 +1,17 @@
+========================================
+Suite: page1.test
+========================================
+net.mindengine.galen.components.report.FakeException: Some exception here
+\t    at net.mindengine.someclass.SomeClass.method1(SomeClass.java:4)
+\t    at net.mindengine.someclass.SomeClass2.method2(SomeClass2.java:5)
+\t    at net.mindengine.someclass.SomeClass3.method3(SomeClass3.java:6)
+
+========================================
+----------------------------------------
+========================================
+Failed suites:
+    page1.test
+
+Status: FAIL
+Total failures: 5
+Total tests: 11

@@ -21,6 +21,7 @@ import java.util.List;
 import java.util.Set;
 
 import net.mindengine.galen.browser.Browser;
+import net.mindengine.galen.config.GalenConfig;
 import net.mindengine.galen.runner.CompleteListener;
 import net.mindengine.galen.runner.GalenPageRunner;
 import net.mindengine.galen.runner.GalenSuiteRunner;
@@ -38,6 +39,12 @@ public class ConsoleReportingListener implements CompleteListener {
     private static final String SPEC_ERROR_MESSAGE_INDENTATION_SUFFIX   = ":   ";
     private static final String SPEC_ERROR_INDENTATION_HEADER           = "->  ";
     private static final String NORMAL_INDETATION                       = "    ";
+    private static final int SUITE_LEVEL = 1;
+    private static final int PAGE_LEVEL = 2;
+    private static final int SECTION_LEVEL = 3;
+    private static final int OBJECT_LEVEL = 4;
+    private static final int OBJECT_SPEC_LEVEL = 5;
+    
     private PrintStream out;
     private PrintStream err;
     
@@ -48,17 +55,25 @@ public class ConsoleReportingListener implements CompleteListener {
 
     private ThreadLocal<Integer> currentObjectLevel = new ThreadLocal<Integer>();
     
+    private int logLevel = getLogLevel();
+    
     public ConsoleReportingListener(PrintStream out, PrintStream err) {
         this.out = out;
         this.err = err;
     }
 
+    private int getLogLevel() {
+        return GalenConfig.getConfig().getLogLevel();
+    }
+
     @Override
     public void onObject(GalenPageRunner pageRunner, PageValidation pageValidation, String objectName) {
-        increaseCurrentObjectLevel();
-        
-        out.print(getObjectIndentation());
-        out.println(objectName);
+        if (logLevel >= OBJECT_LEVEL) {
+            increaseCurrentObjectLevel();
+            
+            out.print(getObjectIndentation());
+            out.println(objectName);
+        }
     }
     
     private String getObjectIndentation() {
@@ -76,7 +91,9 @@ public class ConsoleReportingListener implements CompleteListener {
     @Override
     public void onAfterObject(GalenPageRunner pageRunner, PageValidation pageValidation, String objectName) {
         decreaseCurrentObjectLevel();
-        out.println();
+        if (logLevel >= OBJECT_LEVEL) {
+            out.println();
+        }
     }
 
     private void decreaseCurrentObjectLevel() {
@@ -109,13 +126,14 @@ public class ConsoleReportingListener implements CompleteListener {
         errorCount++;
         totalCount++;
         suitesWithError.add(currentSuite);
-        
-        err.print(getSpecErrorIndentation());
-        err.println(spec.toText());
-        for(String message : error.getMessages()) {
+        if (logLevel >= OBJECT_SPEC_LEVEL) {
             err.print(getSpecErrorIndentation());
-            err.print(SPEC_ERROR_MESSAGE_INDENTATION_SUFFIX);
-            err.println(message);
+            err.println(spec.toText());
+            for(String message : error.getMessages()) {
+                err.print(getSpecErrorIndentation());
+                err.print(SPEC_ERROR_MESSAGE_INDENTATION_SUFFIX);
+                err.println(message);
+            }
         }
     }
 
@@ -134,9 +152,12 @@ public class ConsoleReportingListener implements CompleteListener {
     @Override
     public void onSpecSuccess(GalenPageRunner pageRunner, PageValidation pageValidation, String objectName, Spec spec) {
         totalCount++;
-        out.print(getObjectIndentation());
-        out.print(NORMAL_INDETATION);
-        out.println(spec.toText());
+        
+        if (logLevel >= OBJECT_SPEC_LEVEL) {
+            out.print(getObjectIndentation());
+            out.print(NORMAL_INDETATION);
+            out.println(spec.toText());
+        }
     }
 
     @Override
@@ -146,23 +167,24 @@ public class ConsoleReportingListener implements CompleteListener {
 
     @Override
     public void onBeforePage(GalenSuiteRunner galenSuiteRunner, GalenPageRunner pageRunner, GalenPageTest pageTest, Browser browser) {
-        out.println("----------------------------------------");
-        out.print("Page: ");
-        
-        if (pageTest.getTitle() != null) {
-            out.println(pageTest.getTitle());
-        }
-        else {
-            out.print(pageTest.getUrl());
-            if (pageTest.getScreenSize() != null) {
-                out.print(" ");
-                out.println(GalenUtils.formatScreenSize(pageTest.getScreenSize()));
+        if (logLevel >= PAGE_LEVEL) {
+            out.println("----------------------------------------");
+            out.print("Page: ");
+            
+            if (pageTest.getTitle() != null) {
+                out.println(pageTest.getTitle());
             }
             else {
-                out.println();
+                out.print(pageTest.getUrl());
+                if (pageTest.getScreenSize() != null) {
+                    out.print(" ");
+                    out.println(GalenUtils.formatScreenSize(pageTest.getScreenSize()));
+                }
+                else {
+                    out.println();
+                }
             }
         }
-        
     }
 
     @Override
@@ -172,11 +194,12 @@ public class ConsoleReportingListener implements CompleteListener {
     @Override
     public void onSuiteStarted(GalenSuiteRunner galenSuiteRunner, GalenSuite suite) {
         currentSuite = suite.getName();
-        
-        out.println("========================================");
-        out.print("Suite: ");
-        out.println(suite.getName());
-        out.println("========================================");
+        if (logLevel >= SUITE_LEVEL) {
+            out.println("========================================");
+            out.print("Suite: ");
+            out.println(suite.getName());
+            out.println("========================================");
+        }
     }
 
     
@@ -213,7 +236,9 @@ public class ConsoleReportingListener implements CompleteListener {
 
     @Override
     public void onBeforePageAction(GalenPageRunner pageRunner, GalenPageAction action) {
-        out.println(action.getOriginalCommand());
+        if (logLevel > PAGE_LEVEL) {
+            out.println(action.getOriginalCommand());
+        }
     }
     
     @Override
@@ -222,15 +247,17 @@ public class ConsoleReportingListener implements CompleteListener {
 
     @Override
     public void onBeforeSection(GalenPageRunner pageRunner, PageValidation pageValidation, PageSection pageSection) {
-        out.print("@ ");
-        String name = pageSection.getName();
-        if (name != null && !name.trim().isEmpty()) {
-            out.println(pageSection.getName());
+        if (logLevel >= SECTION_LEVEL) {
+            out.print("@ ");
+            String name = pageSection.getName();
+            if (name != null && !name.trim().isEmpty()) {
+                out.println(pageSection.getName());
+            }
+            else {
+                out.println("Unnamed");
+            }
+            out.println("-------------------------");
         }
-        else {
-            out.println("Unnamed");
-        }
-        out.println("-------------------------");
     }
 
     @Override

@@ -23,6 +23,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Properties;
 
+import org.apache.commons.lang3.StringUtils;
+
 public class GalenConfig {
     
     private final static GalenConfig instance = new GalenConfig();
@@ -139,6 +141,14 @@ public class GalenConfig {
         else {
             return Boolean.parseBoolean(value);
         }
+    }
+
+    public int getLogLevel() {
+        String value = readProperty("galen.log.level", "10");
+        if (StringUtils.isNumeric(value)) {
+            return Integer.parseInt(value);
+        }
+        else return 10;
     }
 
 }

@@ -22,6 +22,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintStream;
+import java.io.UnsupportedEncodingException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -33,11 +34,18 @@ import net.mindengine.galen.reports.TestngReportingListener;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
+import org.testng.annotations.AfterMethod;
 import org.testng.annotations.Test;
 
 import com.google.common.io.Files;
 
 public class ReportingListenerTest {
+    
+    private static final String GALEN_LOG_LEVEL = "galen.log.level";
+
+    @AfterMethod public void removeAllSystemProperties() {
+        System.getProperties().remove(GALEN_LOG_LEVEL);
+    }
     
     @Test public void shouldReport_inTestNgFormat_successfully() throws IOException {
         String reportPath = Files.createTempDir().getAbsolutePath() + "/testng-report/report.xml";
@@ -92,16 +100,28 @@ public class ReportingListenerTest {
     }
 
     @Test public void shouldReport_toConsole_successfully() throws IOException {
+        performConsoleReporting_andCompare("/expected-reports/console.txt");
+    }
+
+    @Test public void shouldReport_toConsole_onlySuites_whenLogLevel_is_1() throws IOException {
+        System.setProperty(GALEN_LOG_LEVEL, "1");
+        performConsoleReporting_andCompare("/expected-reports/console-1.txt");
+    }
+    
+    @Test public void shouldReport_toConsole_onlySuites_andPages_whenLogLevel_is_2() throws IOException {
+        System.setProperty(GALEN_LOG_LEVEL, "2");
+        performConsoleReporting_andCompare("/expected-reports/console-2.txt");
+    }
+    
+    private void performConsoleReporting_andCompare(String expectedReport) throws IOException, UnsupportedEncodingException {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         PrintStream ps = new PrintStream(baos);
         ConsoleReportingListener listener = new ConsoleReportingListener(ps, ps);
         ReportingListenerTestUtils.performSampleReporting("page1.test", listener, listener);
         
         listener.done();
-        
-        String expectedText = IOUtils.toString(getClass().getResourceAsStream("/expected-reports/console.txt")).replace("\\t    ", "\t");
+        String expectedText = IOUtils.toString(getClass().getResourceAsStream(expectedReport)).replace("\\t    ", "\t");
         
         Assert.assertEquals(expectedText, baos.toString("UTF-8"));
     }
-    
 }
