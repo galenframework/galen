@@ -43,6 +43,7 @@ import net.mindengine.galen.suite.GalenPageTest;
 import net.mindengine.galen.suite.GalenSuite;
 import net.mindengine.galen.suite.actions.GalenPageActionCheck;
 import net.mindengine.galen.suite.reader.GalenSuiteReader;
+import net.mindengine.galen.validation.FailureListener;
 
 import org.apache.commons.cli.ParseException;
 import org.apache.commons.io.IOUtils;
@@ -53,7 +54,11 @@ public class GalenMain {
 
     public void execute(GalenArguments arguments) throws IOException, SecurityException, IllegalArgumentException, ClassNotFoundException, NoSuchMethodException, InstantiationException, IllegalAccessException, InvocationTargetException {
         if (arguments.getAction() != null) {
+            
+            FailureListener failureListener = new FailureListener();
             CombinedListener combinedListener = createListeners(arguments);
+            combinedListener.add(failureListener);
+            
             if ("test".equals(arguments.getAction())) {
                 runTests(arguments, combinedListener);
             }
@@ -64,6 +69,10 @@ public class GalenMain {
                 performConfig();
             }
             combinedListener.done();
+            
+            if (failureListener.hasFailures()) {
+                System.exit(1);
+            }
         }
         else {
             if (arguments.getPrintVersion()) {
