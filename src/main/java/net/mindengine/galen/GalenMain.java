@@ -70,8 +70,10 @@ public class GalenMain {
             }
             combinedListener.done();
             
-            if (failureListener.hasFailures()) {
-                System.exit(1);
+            if (GalenConfig.getConfig().getUseFailExitCode()){
+                if (failureListener.hasFailures()) {
+                    System.exit(1);
+                }
             }
         }
         else {

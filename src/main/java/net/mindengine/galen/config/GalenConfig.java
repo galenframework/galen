@@ -150,5 +150,13 @@ public class GalenConfig {
         }
         else return 10;
     }
+    
+    public boolean getUseFailExitCode() {
+        String value = readProperty("galen.use.fail.exit.code");
+        if (value != null && !value.trim().isEmpty()) {
+            return Boolean.parseBoolean(value);
+        }
+        else return false;
+    }
 
 }
