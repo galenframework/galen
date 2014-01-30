@@ -105,6 +105,13 @@ public class GalenPageTestParserTest {
                            .withBrowser("chrome")
                            .withBrowserVersion("21.1")
                            .withPlatform(Platform.WIN8))),
+                           
+           test("selenium grid http://mygrid:8080/wd/hub --dc.device-orientation portrait --dc.platform \"OS X 10.0\" --page http://example.org --size 640x480", new GalenPageTest()
+                   .withUrl("http://example.org")
+                   .withSize(640, 480)
+                   .withBrowserFactory(new SeleniumGridBrowserFactory("http://mygrid:8080/wd/hub")
+                       .withDesiredCapability("device-orientation", "portrait")
+                       .withDesiredCapability("platform", "OS X 10.0"))),
         };
     }
 

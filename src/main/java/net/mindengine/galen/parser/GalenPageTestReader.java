@@ -18,16 +18,14 @@ package net.mindengine.galen.parser;
 import static net.mindengine.galen.suite.reader.Line.UNKNOWN_LINE;
 import static net.mindengine.galen.utils.GalenUtils.isUrl;
 import static net.mindengine.galen.utils.GalenUtils.readSize;
+
+import java.util.List;
+
 import net.mindengine.galen.browser.SeleniumBrowserFactory;
 import net.mindengine.galen.browser.SeleniumGridBrowserFactory;
 import net.mindengine.galen.suite.GalenPageTest;
 import net.mindengine.galen.utils.GalenUtils;
 
-import org.apache.commons.cli.CommandLine;
-import org.apache.commons.cli.CommandLineParser;
-import org.apache.commons.cli.Options;
-import org.apache.commons.cli.ParseException;
-import org.apache.commons.cli.PosixParser;
 import org.openqa.selenium.Platform;
 
 public class GalenPageTestReader {
@@ -70,52 +68,55 @@ public class GalenPageTestReader {
         }
         String seleniumType = args[1].toLowerCase();
         if ("grid".equals(seleniumType)) {
-            return gridGalenPageTest(args, originalText);
+            return gridGalenPageTest(stripFirst(2, args), originalText);
         }
         else {
             return seleniumSimpleGalenPageTest(title, seleniumType, args[2], args[3]);
         }
     }
+    private static String[] stripFirst(int number, String[] args) {
+        if (number > 0 && number < args.length) {
+             String[] newArgs = new String[args.length - number];
+             for (int i=number; i < args.length; i++) {
+                 newArgs[i-number] = args[i];
+             }
+             return newArgs;
+        }
+        else return args;
+    }
     private static GalenPageTest gridGalenPageTest(String[] args, String originalText) {
-        Options options = new Options();
-        options.addOption("b", "browser", true, "browser name");
-        options.addOption("v", "version", true, "browser version");
-        options.addOption("p", "platform", true, "platform name");
-        options.addOption("u", "page", true, "page url");
-        options.addOption("s", "size", true, "size");
+        GalenCommand command = new GalenCommandLineParser().parse(args);
+        List<String> leftovers = command.getLeftovers();
         
-        CommandLineParser parser = new PosixParser();
+        if (leftovers.size() == 0) {
+            throw new SyntaxException(UNKNOWN_LINE, "Cannot parse grid arguments: " + originalText);
+        }
+
+        String gridUrl = leftovers.get(0);
         
-        try {
-            CommandLine cmd = parser.parse(options, args);
-            String[] gridArgs = cmd.getArgs();
-            
-            if (gridArgs.length < 3) {
-                throw new SyntaxException(UNKNOWN_LINE, "Couldn't parse grid endpoint: " + originalText);
-            }
-            
-            
-            String gridUrl = args[2];
-            String pageUrl = cmd.getOptionValue("u");
-            if (pageUrl == null) {
-                throw new SyntaxException(UNKNOWN_LINE, "Page url is not specified: " + originalText);
-            }
-            
-            String size = cmd.getOptionValue("s");
-            
-            return new GalenPageTest()
-                .withUrl(pageUrl)
-                .withSize(readSize(size))
-                .withBrowserFactory(new SeleniumGridBrowserFactory(gridUrl)
-                    .withBrowser(cmd.getOptionValue("b"))
-                    .withBrowserVersion(cmd.getOptionValue("v"))
-                    .withPlatform(readPlatform(cmd.getOptionValue("p")))
-                );
-           
+        String pageUrl = command.get("page");
+        if (pageUrl == null) {
+            throw new SyntaxException(UNKNOWN_LINE, "Page url is not specified: " + originalText);
         }
-        catch (ParseException e) {
-            throw new SyntaxException(UNKNOWN_LINE, "Couldn't parse grid arguments: " + originalText, e);
+        
+        String size = command.get("size");
+        
+        SeleniumGridBrowserFactory browserFactory = new SeleniumGridBrowserFactory(gridUrl)
+            .withBrowser(command.get("browser"))
+            .withBrowserVersion(command.get("version"))
+            .withPlatform(readPlatform(command.get("platform")));
+        
+        for (String parameter : command.getParameterNames()) {
+            if (parameter.startsWith("dc.")) {
+                String desiredCapaibility = parameter.substring(3);
+                browserFactory.withDesiredCapability(desiredCapaibility, command.get(parameter));
+            }
         }
+        
+        return new GalenPageTest()
+            .withUrl(pageUrl)
+            .withSize(readSize(size))
+            .withBrowserFactory(browserFactory);
     }
     private static Platform readPlatform(String platformText) {
         if (platformText == null) {

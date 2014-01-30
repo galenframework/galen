@@ -16,6 +16,8 @@
 package net.mindengine.galen.browser;
 
 import java.net.URL;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
@@ -32,6 +34,7 @@ public class SeleniumGridBrowserFactory implements BrowserFactory {
     private String browser;
     private String browserVersion;
     private Platform platform;
+    private Map<String, String> desiredCapabilities = new HashMap<String, String>();
 
     public SeleniumGridBrowserFactory(String gridUrl) {
         this.setGridUrl(gridUrl);
@@ -52,6 +55,11 @@ public class SeleniumGridBrowserFactory implements BrowserFactory {
         if (browserVersion != null) {
             desiredCapabilities.setVersion(browserVersion);
         }
+        
+        for (Map.Entry<String, String> dc : this.desiredCapabilities.entrySet()) {
+            desiredCapabilities.setCapability(dc.getKey(), dc.getValue());
+        }
+        
         try {
             
             WebDriver driver = new RemoteWebDriver(new URL(gridUrl), desiredCapabilities);
@@ -117,6 +125,7 @@ public class SeleniumGridBrowserFactory implements BrowserFactory {
             .append(this.browserVersion)
             .append(this.gridUrl)
             .append(this.platform)
+            .append(this.desiredCapabilities)
             .toHashCode();
     }
     
@@ -127,6 +136,7 @@ public class SeleniumGridBrowserFactory implements BrowserFactory {
             .append("browserVersion", this.browserVersion)
             .append("gridUrl", this.gridUrl)
             .append("platform", this.platform)
+            .append("desiredCapabilities", this.desiredCapabilities)
             .toString();
     }
     
@@ -148,7 +158,13 @@ public class SeleniumGridBrowserFactory implements BrowserFactory {
             .append(this.browserVersion, rhs.browserVersion)
             .append(this.gridUrl, rhs.gridUrl)
             .append(this.platform, rhs.platform)
+            .append(this.desiredCapabilities, desiredCapabilities)
             .isEquals();
+    }
+
+    public SeleniumGridBrowserFactory withDesiredCapability(String name, String value) {
+        desiredCapabilities.put(name, value);
+        return this;
     }
 
 }
