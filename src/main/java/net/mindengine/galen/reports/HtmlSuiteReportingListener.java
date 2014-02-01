@@ -79,7 +79,7 @@ public class HtmlSuiteReportingListener implements CompleteListener {
         }
     }
     
-
+    
 
     public HtmlSuiteReportingListener(String reportFolderPath, String reportFileName, Configuration freemarkerConfiguration) throws IOException {
         this.reportFolderPath = reportFolderPath;
@@ -163,7 +163,8 @@ public class HtmlSuiteReportingListener implements CompleteListener {
 
     @Override
     public void onGlobalError(GalenPageRunner pageRunner, Exception e) {
-        currentPageTest.getGlobalErrors().add(e);
+        Screenshot screenshot = createScreenShot();
+        currentPageTest.getGlobalErrors().add(new PageTest.GlobalError(e, screenshot.name));
     }
 
     @Override

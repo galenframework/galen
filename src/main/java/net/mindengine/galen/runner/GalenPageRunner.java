@@ -59,24 +59,35 @@ public class GalenPageRunner implements ValidationListener {
         
         List<ValidationError> allErrors = new LinkedList<ValidationError>();
         
-        for (GalenPageAction action : pageTest.getActions()) {
-            tellBeforeAction(action);
-            try {
-                List<ValidationError> errors = action.execute(browser, pageTest, this);
+        try {
+            for (GalenPageAction action : pageTest.getActions()) {
+                tellBeforeAction(action);
                 
+                List<ValidationError> errors = executeAction(browser, pageTest, action);
+                    
                 if (errors != null) {
                     allErrors.addAll(errors);
                 }
                 
+                tellAfterAction(action);
             }
-            catch (Exception e) {
-                onGlobalError(this, e);
-                allErrors.add(ValidationError.fromException(e));
-            }
-            tellAfterAction(action);
+        }
+        catch (GalenPageActionException e) {
+            onGlobalError(this, e.getReason());
+            allErrors.add(ValidationError.fromException(e));
+            tellAfterAction(e.getAction());
         }
         
         return allErrors;
+    }
+
+    private List<ValidationError> executeAction(Browser browser, GalenPageTest pageTest, GalenPageAction action) throws GalenPageActionException {
+        try {
+            return action.execute(browser, pageTest, this);
+        }
+        catch (Exception ex) {
+            throw new GalenPageActionException(ex, action);
+        }
     }
 
     

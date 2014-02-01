@@ -20,9 +20,27 @@ import java.util.List;
 
 public class PageTest {
 
+    public static class GlobalError {
+        private Exception exception;
+        private String screenshotPath;
+
+        public GlobalError(Exception exception, String screenshotPath) {
+            this.exception = exception;
+            this.screenshotPath = screenshotPath;
+        }
+
+        public String getScreenshotPath() {
+            return screenshotPath;
+        }
+
+        public Exception getException() {
+            return exception;
+        }
+    }
+    
     private String title = "";
     private List<PageAction> pageActions = new LinkedList<PageAction>();
-    private List<Exception> globalErrors = new LinkedList<Exception>();
+    private List<GlobalError> globalErrors = new LinkedList<GlobalError>();
 
     public String getTitle() {
         return title;
@@ -32,7 +50,7 @@ public class PageTest {
         this.title = title;
     }
 
-    public List<Exception> getGlobalErrors() {
+    public List<GlobalError> getGlobalErrors() {
         return this.globalErrors;
     }
 

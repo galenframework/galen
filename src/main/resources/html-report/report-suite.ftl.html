@@ -78,12 +78,13 @@
                 <#if pageTest.globalErrors?has_content>
                 <#list pageTest.globalErrors as globalError>
                 <div class="global-error">
-                    <span>${globalError.class.name}: ${globalError.message?html}</span>
+                    <span>${globalError.exception.class.name}: ${globalError.exception.message?html}</span>
                     <ul>
-                        <#list globalError.stackTrace as trace>
+                        <#list globalError.exception.stackTrace as trace>
                         <li>at ${trace.className?html}.${trace.methodName?html}(${trace.fileName?html}:${trace.lineNumber})</li>
                         </#list>
                     </ul>
+                    <a href="${globalError.screenshotPath}">Screenshot</a>
                 </div>
                 </#list>
                 </#if>
