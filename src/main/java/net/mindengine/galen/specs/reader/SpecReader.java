@@ -327,7 +327,11 @@ public class SpecReader {
                     filePath = contextPath + File.separator + childFilePath;
                 }
                 
-                PageSpec childPageSpec = pageSpecReader.read(new File(filePath));
+                File file = new File(filePath);
+                if (!file.exists()) {
+                    throw new SyntaxException("Component spec file not found: " + filePath);
+                }
+                PageSpec childPageSpec = pageSpecReader.read(file);
                 
                 SpecComponent spec = new SpecComponent();
                 spec.setPageSpec(childPageSpec);

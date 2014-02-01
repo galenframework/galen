@@ -318,6 +318,17 @@ public class PageSpecsReaderTest {
     }
     
     @Test
+    public void givesError_ifComponentSpecFile_notFound() throws Exception {
+        FileSyntaxException exception = expectExceptionFromReading("/negative-specs/component-spec-not-found.spec");
+        
+        String fullSpecPath = getClass().getResource("/negative-specs/component-spec-not-found.spec").getFile();
+        
+        assertThat(exception.getMessage(), is("Component spec file not found: ./blablaalba.spec\n    in " + fullSpecPath +":10"));
+        assertThat(exception.getFilePath(), endsWith("/component-spec-not-found.spec"));
+        assertThat(exception.getLine(), is(10));
+    }
+    
+    @Test
     public void shouldImport_otherSpecs_fromOtherFiles() throws Exception {
     	PageSpec pageSpec = pageSpecReader.read(new File(getClass().getResource("/spec-import-test/main.spec").getFile()));
     	
