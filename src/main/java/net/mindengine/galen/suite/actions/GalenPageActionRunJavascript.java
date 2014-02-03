@@ -42,6 +42,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.interactions.Actions;
 
 public class GalenPageActionRunJavascript extends GalenPageAction{
 
@@ -67,6 +68,7 @@ public class GalenPageActionRunJavascript extends GalenPageAction{
         engine.put("global", new ScriptExecutor(engine, file.getParent()));
         engine.put("browser", browser);
         
+        
         provideWrappedWebDriver(engine, browser);
 
         importAllMajorClasses(engine);
@@ -91,7 +93,8 @@ public class GalenPageActionRunJavascript extends GalenPageAction{
                 By.class,
                 WebElement.class,
                 WebDriver.class,
-                System.class
+                System.class,
+                Actions.class
         });
     }
 

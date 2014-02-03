@@ -1,5 +1,5 @@
 /*******************************************************************************
-* Copyright 2014 Ivan Shubin http://mindengine.net
+* Copyright 2013 Ivan Shubin http://mindengine.net
 * 
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -89,4 +89,7 @@ public class WebElementWrapper {
         return webElement.getCssValue(propertyName);
     }
 
+    public WebElement getOriginalWebElement() {
+        return this.webElement;
+    }
 }

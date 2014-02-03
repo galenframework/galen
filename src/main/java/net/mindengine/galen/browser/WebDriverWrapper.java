@@ -19,6 +19,7 @@ import java.util.List;
 import java.util.Set;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebDriver.Navigation;
@@ -68,9 +69,6 @@ public class WebDriverWrapper {
     }
     
     
-    
-
-    
     public void get(String url) {
         driver.get(url);
     }
@@ -94,7 +92,21 @@ public class WebDriverWrapper {
     public String getWindowHandle() {
         return driver.getWindowHandle();
     }
+    
+    public Object executeScript(String script) {
+        return executeScript(script, new Object[]{});
+    }
 
+    public Object executeScript(String script, Object[] args) {
+        return ((JavascriptExecutor)driver).executeScript(script, args);
+    }
+    
+    public Object executeAsyncScript(String script) { 
+        return executeAsyncScript(script, new Object[]{});
+    }
+    public Object executeAsyncScript(String script, Object[] args) {
+        return ((JavascriptExecutor)driver).executeAsyncScript(script, args);
+    }
     
     public String[] getWindowHandles() {
         Set<String> handlesSet = driver.getWindowHandles();
@@ -122,6 +134,10 @@ public class WebDriverWrapper {
     
     public TargetLocator switchTo() {
         return driver.switchTo();
+    }
+    
+    public WebDriver getOriginalDriver() {
+        return this.driver;
     }
 
 }
