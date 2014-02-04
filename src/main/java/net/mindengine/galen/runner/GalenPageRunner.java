@@ -55,7 +55,9 @@ public class GalenPageRunner implements ValidationListener {
             browser.changeWindowSize(pageTest.getScreenSize());
         }
         
-        browser.load(pageTest.getUrl());
+        if (pageTest.getUrl() != null && !pageTest.getUrl().isEmpty()) {
+            browser.load(pageTest.getUrl());
+        }
         
         List<ValidationError> allErrors = new LinkedList<ValidationError>();
         

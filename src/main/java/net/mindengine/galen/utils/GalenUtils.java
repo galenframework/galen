@@ -28,7 +28,7 @@ public class GalenUtils {
         if (url == null) {
             return false;
         }
-        return url.matches(URL_REGEX);
+        return url.matches(URL_REGEX) || url.equals("-");
     }
     
     public static String formatScreenSize(Dimension screenSize) {

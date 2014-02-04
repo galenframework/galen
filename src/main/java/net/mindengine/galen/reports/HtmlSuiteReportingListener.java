@@ -15,6 +15,9 @@
 ******************************************************************************/
 package net.mindengine.galen.reports;
 
+import static java.lang.String.format;
+
+import java.awt.Dimension;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -25,6 +28,7 @@ import java.util.List;
 import java.util.Map;
 
 import net.mindengine.galen.browser.Browser;
+import net.mindengine.galen.config.GalenConfig;
 import net.mindengine.galen.page.PageElement;
 import net.mindengine.galen.reports.model.PageAction;
 import net.mindengine.galen.reports.model.PageTest;
@@ -169,6 +173,11 @@ public class HtmlSuiteReportingListener implements CompleteListener {
 
     @Override
     public void onAfterPage(GalenSuiteRunner galenSuiteRunner, GalenPageRunner pageRunner, GalenPageTest pageTest, Browser browser, List<ValidationError> errors) {
+        if (GalenConfig.getConfig().getBooleanProperty("galen.reporting.html.useLastPageUrls", false)) {
+            String url = browser.getUrl();
+            Dimension size = browser.getScreenSize();
+            currentPageTest.setTitle(format("%s %dx%d", url, size.width, size.height));
+        }
     }
 
     @Override

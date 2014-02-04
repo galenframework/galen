@@ -19,6 +19,7 @@ import static java.util.Arrays.asList;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
+import static org.hamcrest.Matchers.nullValue;
 
 import java.awt.Dimension;
 import java.io.File;
@@ -229,6 +230,26 @@ public class GalenSuiteReaderTest {
             }
         }
        
+    }
+    
+    @Test
+    public void shouldParse_suitesWithEmptyUrls() throws IOException {
+        GalenSuiteReader reader = new GalenSuiteReader();
+        
+        List<GalenSuite> galenSuites = reader.read(new File(getClass().getResource("/suites/suite-empty-url.test").getFile()));
+        
+        assertThat("Amount of suites should be", galenSuites.size(), is(4));
+        
+        for (int i = 0; i < 4; i++) {
+            assertThat(galenSuites.get(i).getName(), is("Suite " + (i+1)));
+            GalenPageTest pageTest = galenSuites.get(i).getPageTests().get(0);
+            assertThat(pageTest.getUrl(), is(nullValue()));
+        }
+        
+        assertThat(galenSuites.get(0).getPageTests().get(0).getScreenSize(), is(new Dimension(640, 480)));
+        assertThat(galenSuites.get(1).getPageTests().get(0).getScreenSize(), is(nullValue()));
+        assertThat(galenSuites.get(2).getPageTests().get(0).getScreenSize(), is(new Dimension(320, 240)));
+        assertThat(galenSuites.get(3).getPageTests().get(0).getScreenSize(), is(nullValue()));
     }
     
     @Test

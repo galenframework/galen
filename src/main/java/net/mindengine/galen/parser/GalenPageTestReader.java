@@ -63,7 +63,7 @@ public class GalenPageTestReader {
         }
     }
     private static GalenPageTest seleniumGalenPageTest(String title, String[] args, String originalText) {
-        if (args.length < 4) {
+        if (args.length < 3) {
             throw new SyntaxException(UNKNOWN_LINE, "Incorrect amount of arguments: " + originalText);
         }
         String seleniumType = args[1].toLowerCase();
@@ -71,7 +71,11 @@ public class GalenPageTestReader {
             return gridGalenPageTest(stripFirst(2, args), originalText);
         }
         else {
-            return seleniumSimpleGalenPageTest(title, seleniumType, args[2], args[3]);
+            String size = null;
+            if (args.length > 3) {
+                size = args[3];
+            }
+            return seleniumSimpleGalenPageTest(title, seleniumType, args[2], size);
         }
     }
     private static String[] stripFirst(int number, String[] args) {
@@ -95,10 +99,6 @@ public class GalenPageTestReader {
         String gridUrl = leftovers.get(0);
         
         String pageUrl = command.get("page");
-        if (pageUrl == null) {
-            throw new SyntaxException(UNKNOWN_LINE, "Page url is not specified: " + originalText);
-        }
-        
         String size = command.get("size");
         
         SeleniumGridBrowserFactory browserFactory = new SeleniumGridBrowserFactory(gridUrl)
@@ -125,6 +125,9 @@ public class GalenPageTestReader {
         else return Platform.valueOf(platformText.toUpperCase());
     }
     private static GalenPageTest seleniumSimpleGalenPageTest(String title, String browser, String url, String screenSize) {
+        if (url.equals("-")) {
+            url = null;
+        }
         return new GalenPageTest()
             .withTitle(title)
             .withUrl(url)
@@ -132,6 +135,11 @@ public class GalenPageTestReader {
             .withBrowserFactory(new SeleniumBrowserFactory(browser));
     }
     private static GalenPageTest defaultGalenPageTest(String title, String url, String sizeText) {
+        
+        if (url.equals("-")) {
+            url = null;
+        }
+        
         return new GalenPageTest()
             .withTitle(title)
             .withUrl(url)
