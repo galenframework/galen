@@ -132,6 +132,8 @@ public class SeleniumBrowser implements Browser {
                 g2dTile.drawImage(lastPart, 0, scrollHeight - leftover, null);
             }
             
+            ((JavascriptExecutor)driver).executeAsyncScript("document.body.scrollTop = 0; arguments[arguments.length - 1]();");
+            
             ImageIO.write(tiledImage, "png", file);
         }
         else {
