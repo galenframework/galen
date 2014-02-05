@@ -15,10 +15,6 @@
 ******************************************************************************/
 package net.mindengine.galen.browser;
 
-import java.io.File;
-
-import org.openqa.selenium.OutputType;
-import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.remote.Augmenter;
 
@@ -30,10 +26,8 @@ public class SeleniumGridBrowser extends SeleniumBrowser {
     
     @Override
     public String createScreenshot() {
-        WebDriver augmentedDriver = new Augmenter().augment(getDriver()); 
-        File file = ((TakesScreenshot)augmentedDriver).getScreenshotAs(OutputType.FILE);
-        return file.getAbsolutePath();
+        WebDriver augmentedDriver = new Augmenter().augment(getDriver());
+        return new SeleniumBrowser(augmentedDriver).createScreenshot();
     }
  
-
 }
