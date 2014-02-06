@@ -64,7 +64,7 @@ public class SeleniumGridBrowserFactory implements BrowserFactory {
             
             WebDriver driver = new RemoteWebDriver(new URL(gridUrl), desiredCapabilities);
             WebDriver augmentedDriver = new Augmenter().augment(driver);
-        	return new SeleniumGridBrowser(augmentedDriver);
+        	return new SeleniumBrowser(augmentedDriver);
         }
         catch (Exception ex) {
         	throw new RuntimeException(ex);

@@ -21,6 +21,7 @@ import static net.mindengine.galen.utils.GalenUtils.readSize;
 
 import java.util.List;
 
+import net.mindengine.galen.browser.JsBrowserFactory;
 import net.mindengine.galen.browser.SeleniumBrowserFactory;
 import net.mindengine.galen.browser.SeleniumGridBrowserFactory;
 import net.mindengine.galen.suite.GalenPageTest;
@@ -59,8 +60,21 @@ public class GalenPageTestReader {
             if (first.equals("selenium")) {
                 return seleniumGalenPageTest(title, args, text.trim());
             }
-            else throw new SyntaxException(UNKNOWN_LINE, "Unknown browser factory: " + first);
+            else if (first.equals("jsfactory")) {
+                return jsBrowserFactory(args);
+            }
+            else   throw new SyntaxException(UNKNOWN_LINE, "Unknown browser factory: " + first);
         }
+    }
+    private static GalenPageTest jsBrowserFactory(String[] args) {
+        if (args.length < 2) {
+            throw new SyntaxException("Missing script path");
+        }
+        GalenPageTest pageTest = new GalenPageTest();
+        
+        pageTest.setBrowserFactory(new JsBrowserFactory(args[1], stripFirst(2, args)));
+        
+        return pageTest;
     }
     private static GalenPageTest seleniumGalenPageTest(String title, String[] args, String originalText) {
         if (args.length < 3) {

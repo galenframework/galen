@@ -278,6 +278,7 @@ public class GalenSuiteReaderTest {
     
     
     
+    
     private List<GalenPageAction> actions(GalenPageAction...actions) {
         List<GalenPageAction> list = new LinkedList<GalenPageAction>();
         for (GalenPageAction action : actions) {

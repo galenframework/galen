@@ -18,7 +18,6 @@ package net.mindengine.galen.browser;
 import java.awt.Dimension;
 import java.io.File;
 
-
 import net.mindengine.galen.page.Page;
 import net.mindengine.galen.page.selenium.SeleniumPage;
 

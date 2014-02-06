@@ -17,6 +17,7 @@ package net.mindengine.galen.tests.parser;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
+import net.mindengine.galen.browser.JsBrowserFactory;
 import net.mindengine.galen.browser.SeleniumBrowserFactory;
 import net.mindengine.galen.browser.SeleniumGridBrowserFactory;
 import net.mindengine.galen.parser.GalenPageTestReader;
@@ -112,6 +113,10 @@ public class GalenPageTestParserTest {
                    .withBrowserFactory(new SeleniumGridBrowserFactory("http://mygrid:8080/wd/hub")
                        .withDesiredCapability("device-orientation", "portrait")
                        .withDesiredCapability("platform", "OS X 10.0"))),
+                       
+                       
+           test("jsfactory script.js http://example.com 640x480", new GalenPageTest()
+                   .withBrowserFactory(new JsBrowserFactory("script.js", new String[]{"http://example.com", "640x480"})))
         };
     }
 
