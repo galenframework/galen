@@ -61,20 +61,18 @@ public class GalenPageTestReader {
                 return seleniumGalenPageTest(title, args, text.trim());
             }
             else if (first.equals("jsfactory")) {
-                return jsBrowserFactory(args);
+                return jsBrowserFactory(title, args);
             }
             else   throw new SyntaxException(UNKNOWN_LINE, "Unknown browser factory: " + first);
         }
     }
-    private static GalenPageTest jsBrowserFactory(String[] args) {
+    private static GalenPageTest jsBrowserFactory(String title, String[] args) {
         if (args.length < 2) {
             throw new SyntaxException("Missing script path");
         }
-        GalenPageTest pageTest = new GalenPageTest();
-        
-        pageTest.setBrowserFactory(new JsBrowserFactory(args[1], stripFirst(2, args)));
-        
-        return pageTest;
+        return new GalenPageTest()
+            .withBrowserFactory(new JsBrowserFactory(args[1], stripFirst(2, args)))
+            .withTitle(title);
     }
     private static GalenPageTest seleniumGalenPageTest(String title, String[] args, String originalText) {
         if (args.length < 3) {
