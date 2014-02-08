@@ -1,0 +1,10 @@
+
+Home page test
+    -
+        open http://example.com
+        resize 640x480
+        cookie "cookie1=somevalue; path=/"
+        run script.js
+        inject script.js
+        check homepage.spec
+        

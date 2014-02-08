@@ -94,8 +94,25 @@ public class GalenSuiteReaderTest {
             assertThat(page.getActions(), is(actions(GalenPageActions.check(asList("page3.spec")))));
         }
     }
-
     
+    @Test public void shouldRead_allPageActions() throws IOException {
+        GalenSuiteReader reader = new GalenSuiteReader();
+        List<GalenSuite> galenSuites = reader.read(new File(getClass().getResource("/suites/suite-all-page-actions.test").getFile()));
+        assertThat(galenSuites.size(), is(1));
+        
+        List<GalenPageAction> pageActions = galenSuites.get(0).getPageTests().get(0).getActions();
+        
+        assertThat(pageActions.size(), is(6));
+        assertThat(pageActions.get(0), is((GalenPageAction)GalenPageActions.open("http://example.com")));
+        assertThat(pageActions.get(1), is((GalenPageAction)GalenPageActions.resize(640, 480)));
+        assertThat(pageActions.get(2), is((GalenPageAction)GalenPageActions.cookie("cookie1=somevalue; path=/")));
+        assertThat(pageActions.get(3), is((GalenPageAction)GalenPageActions.runJavascript("script.js")));
+        assertThat(pageActions.get(4), is((GalenPageAction)GalenPageActions.injectJavascript("script.js")));
+        assertThat(pageActions.get(5), is((GalenPageAction)GalenPageActions.check(asList("homepage.spec"))));
+        
+    }
+    
+        
     @Test public void shouldRead_suiteWithVariables_successfully() throws IOException {
         
         System.setProperty("some.system.property", "custom property");

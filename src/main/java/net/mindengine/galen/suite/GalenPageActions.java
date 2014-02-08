@@ -18,7 +18,10 @@ package net.mindengine.galen.suite;
 import java.util.List;
 
 import net.mindengine.galen.suite.actions.GalenPageActionCheck;
+import net.mindengine.galen.suite.actions.GalenPageActionCookie;
 import net.mindengine.galen.suite.actions.GalenPageActionInjectJavascript;
+import net.mindengine.galen.suite.actions.GalenPageActionOpen;
+import net.mindengine.galen.suite.actions.GalenPageActionResize;
 import net.mindengine.galen.suite.actions.GalenPageActionRunJavascript;
 
 public class GalenPageActions {
@@ -33,6 +36,18 @@ public class GalenPageActions {
 
     public static GalenPageActionRunJavascript runJavascript(String javascriptPath) {
         return new GalenPageActionRunJavascript(javascriptPath);
+    }
+
+    public static GalenPageActionOpen open(String url) {
+        return new GalenPageActionOpen(url);
+    }
+
+    public static GalenPageAction resize(int width, int height) {
+        return new GalenPageActionResize(width, height);
+    }
+
+    public static GalenPageAction cookie(String cookie) {
+        return new GalenPageActionCookie().withCookies(cookie);
     }
 
 }
