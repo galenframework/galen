@@ -29,11 +29,12 @@ public class StateDoingSection extends State {
 
     private PageSection section;
     private ObjectSpecs currentObjectSpecs;
-    private SpecReader specReader = new SpecReader();
+    private SpecReader specReader;
     private String[] toParameterize;
     private Parameterization currentParameterization = null;
     private int currentIndentationLevel;
     private String contextPath = ".";
+    private PageSpecReader pageSpecReader;
     
     private class Parameterization {
         private String[] parameters;
@@ -53,9 +54,11 @@ public class StateDoingSection extends State {
         }
     }
     
-    public StateDoingSection(PageSection section, String contextPath) {
+    public StateDoingSection(PageSection section, String contextPath, PageSpecReader pageSpecReader) {
         this.section = section;
         this.contextPath = contextPath;
+        this.setPageSpecReader(pageSpecReader);
+        this.specReader = new SpecReader(pageSpecReader.getBrowser());
     }
 
     @Override
@@ -179,6 +182,14 @@ public class StateDoingSection extends State {
 
     public void setContextPath(String contextPath) {
         this.contextPath = contextPath;
+    }
+
+    public PageSpecReader getPageSpecReader() {
+        return pageSpecReader;
+    }
+
+    public void setPageSpecReader(PageSpecReader pageSpecReader) {
+        this.pageSpecReader = pageSpecReader;
     }
 
 }

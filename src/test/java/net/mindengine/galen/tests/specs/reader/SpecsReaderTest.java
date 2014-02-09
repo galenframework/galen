@@ -30,6 +30,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import junit.framework.Assert;
+import net.mindengine.galen.browser.Browser;
 import net.mindengine.galen.parser.SyntaxException;
 import net.mindengine.galen.specs.Alignment;
 import net.mindengine.galen.specs.Location;
@@ -61,6 +62,8 @@ import org.testng.annotations.Test;
 public class SpecsReaderTest {
 
     
+    private static final Browser NO_BROWSER = null;
+
     @Test
     public void shouldReadSpec_inside_object_10px_right() throws IOException {
         Spec spec = readSpec("inside: object 10px right");
@@ -704,7 +707,7 @@ public class SpecsReaderTest {
     }
     
     private Spec readSpec(String specText) throws IOException {
-        return new SpecReader().read(specText);
+        return new SpecReader(NO_BROWSER).read(specText);
     }
     
     private List<Side> sides(Side...sides) {

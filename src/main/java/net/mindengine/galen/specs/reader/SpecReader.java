@@ -36,6 +36,7 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import net.mindengine.galen.browser.Browser;
 import net.mindengine.galen.parser.ExpectWord;
 import net.mindengine.galen.parser.Expectations;
 import net.mindengine.galen.parser.SyntaxException;
@@ -67,9 +68,11 @@ import net.mindengine.galen.specs.reader.page.PageSpecReader;
 public class SpecReader {
     
     private Map<Pattern, SpecProcessor> specsMap = new HashMap<Pattern, SpecProcessor>();
+    private Browser browser;
     
-    public SpecReader() {
+    public SpecReader(Browser browser) {
         initSpecs();
+        this.setBrowser(browser);
     }
     
     private void initSpecs() {
@@ -312,6 +315,7 @@ public class SpecReader {
         }));
         
         putSpec("component", new SpecProcessor() {
+            
             @Override
             public Spec processSpec(String specName, String paramsText, String contextPath) throws IOException {
                 String childFilePath = paramsText.trim();
@@ -320,7 +324,7 @@ public class SpecReader {
                 }
                 
                 
-                PageSpecReader pageSpecReader = new PageSpecReader();
+                PageSpecReader pageSpecReader = new PageSpecReader(getBrowser());
                 
                 String filePath = childFilePath;
                 if (contextPath != null) {
@@ -407,5 +411,13 @@ public class SpecReader {
 
     private void putSpec(String patternText, SpecProcessor specProcessor) {
         specsMap.put(Pattern.compile(patternText), specProcessor);
+    }
+
+    public Browser getBrowser() {
+        return browser;
+    }
+
+    public void setBrowser(Browser browser) {
+        this.browser = browser;
     }
 }

@@ -24,9 +24,20 @@ import java.io.InputStreamReader;
 import java.util.HashSet;
 import java.util.Set;
 
+import net.mindengine.galen.browser.Browser;
 import net.mindengine.galen.parser.FileSyntaxException;
 
 public class PageSpecReader {
+    
+    
+    public PageSpecReader(Browser browser) {
+        this.browser = browser;
+    }
+    
+    // Browser is used in order to fetch multi object 
+    // at earlier state so that it is possible to use dynamic ranges
+    private Browser browser;
+    
     
 	// Used to store information about spec files that were already loaded
 	private Set<String> processedFiles = new HashSet<String>();
@@ -68,6 +79,14 @@ public class PageSpecReader {
         }
 
         return lineProcessor.buildPageSpec();
+    }
+
+    public Browser getBrowser() {
+        return browser;
+    }
+
+    public void setBrowser(Browser browser) {
+        this.browser = browser;
     }
     
     

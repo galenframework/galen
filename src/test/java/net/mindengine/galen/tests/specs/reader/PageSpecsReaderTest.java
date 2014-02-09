@@ -35,6 +35,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
+import net.mindengine.galen.browser.Browser;
 import net.mindengine.galen.parser.FileSyntaxException;
 import net.mindengine.galen.specs.Location;
 import net.mindengine.galen.specs.Range;
@@ -57,18 +58,19 @@ import org.testng.annotations.Test;
 public class PageSpecsReaderTest {
     
     private static final String BASE_TEST = "shouldLoadSpecSuccessfully";
-    PageSpecReader pageSpecReader = new PageSpecReader();
+    private static final Browser NO_BROWSER = null;
+    PageSpecReader pageSpecReader = new PageSpecReader(NO_BROWSER);
     PageSpec pageSpec;
     
     @Test
     public void shouldBePossible_toReadSpec_fromInputStream() throws IOException {
-        PageSpec pageSpec = new PageSpecReader().read(getClass().getResourceAsStream("/specs.txt"));
+        PageSpec pageSpec = new PageSpecReader(NO_BROWSER).read(getClass().getResourceAsStream("/specs.txt"));
         assertThat(pageSpec, is(notNullValue()));
     }
     
     @Test
     public void shouldBePossible_toReadSpec_fromFile() throws IOException {
-        PageSpec pageSpec = new PageSpecReader().read(new File(getClass().getResource("/specs.txt").getFile()));
+        PageSpec pageSpec = new PageSpecReader(NO_BROWSER).read(new File(getClass().getResource("/specs.txt").getFile()));
         assertThat(pageSpec, is(notNullValue()));
     }
     
@@ -223,7 +225,7 @@ public class PageSpecsReaderTest {
     
     @Test
     public void shouldRead_sectionsNames_withTags() throws IOException {
-        PageSpec pageSpec = new PageSpecReader().read(getClass().getResourceAsStream("/specs/spec-sections-advanced.spec"));
+        PageSpec pageSpec = new PageSpecReader(NO_BROWSER).read(getClass().getResourceAsStream("/specs/spec-sections-advanced.spec"));
         assertThat(pageSpec, is(notNullValue()));
         
         List<PageSection> sections = pageSpec.getSections();
@@ -554,6 +556,7 @@ public class PageSpecsReaderTest {
         assertChildComponentSpec(objects.get(1).getSpecs());
         assertChildComponentSpec(objects.get(2).getSpecs());
     }
+    
     
     
 

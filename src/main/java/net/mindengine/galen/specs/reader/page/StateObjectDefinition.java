@@ -30,9 +30,11 @@ public class StateObjectDefinition extends State {
 
     private static final String CORRECTIONS_SYMBOL = "@";
     private PageSpec pageSpec;
+    private PageSpecReader pageSpecReader;
 
-    public StateObjectDefinition(PageSpec pageSpec) {
+    public StateObjectDefinition(PageSpec pageSpec, PageSpecReader pageSpecReader) {
         this.pageSpec = pageSpec;
+        this.pageSpecReader = pageSpecReader;
     }
 
     @Override
@@ -82,7 +84,13 @@ public class StateObjectDefinition extends State {
             throw new SyntaxException(UNKNOWN_LINE, "Incorrect object name: " + objectName);
         }
         else {
-            pageSpec.addMultiObject(objectName, locator);
+            
+            if (pageSpecReader.getBrowser() != null) {
+                pageSpec.updateMultiObject(pageSpecReader.getBrowser().getPage(), objectName, locator);
+            }
+            else {
+                pageSpec.addMultiObject(objectName, locator);
+            }
         }
     }
 

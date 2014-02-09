@@ -110,17 +110,22 @@ public class PageSpec {
         multiObjects.put(objectName, locator);
     }
 
+    
+    
     public void updateMultiObjects(Page page) {
         for (Map.Entry<String, Locator> object : multiObjects.entrySet()) {
-            Locator locator = object.getValue();
-            
-            int count = page.getObjectCount(locator);
-            
-            for (int index = 1; index <= count; index++) {
-                String objectName = object.getKey().replace("*", Integer.toString(index));
-                Locator newLocator = new Locator(locator.getLocatorType(), locator.getLocatorValue(), index);
-                objects.put(objectName, newLocator);
-            }
+            updateMultiObject(page, object.getKey(), object.getValue());
+        }
+    }
+
+    public void updateMultiObject(Page page,String objectName, Locator objectLocator) {
+        
+        int count = page.getObjectCount(objectLocator);
+        
+        for (int index = 1; index <= count; index++) {
+            String singleObjectName = objectName.replace("*", Integer.toString(index));
+            Locator newLocator = new Locator(objectLocator.getLocatorType(), objectLocator.getLocatorValue(), index);
+            objects.put(singleObjectName, newLocator);
         }
     }
 

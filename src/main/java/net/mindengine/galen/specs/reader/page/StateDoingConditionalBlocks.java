@@ -34,13 +34,14 @@ public class StateDoingConditionalBlocks extends State {
     
     private STATE state = STATE.STATEMENT;
     private String contextPath;
+    private PageSpecReader pageSpecReader;
     
     
     
-    public StateDoingConditionalBlocks(boolean inverted, String contextPath) {
+    public StateDoingConditionalBlocks(boolean inverted, String contextPath, PageSpecReader pageSpecReader) {
         conditionalBlock = new ConditionalBlock();
         conditionalBlock.setStatements(new LinkedList<ConditionalBlockStatement>());
-        
+        this.setPageSpecReader(pageSpecReader);
         this.contextPath = contextPath;
         startNewStatement(inverted);
         
@@ -61,7 +62,7 @@ public class StateDoingConditionalBlocks extends State {
         conditionalBlock.getStatements().add(currentStatement);
         
         PageSection currentSection = new PageSection();
-        currentSectionState = new StateDoingSection(currentSection, getContextPath());
+        currentSectionState = new StateDoingSection(currentSection, getContextPath(), getPageSpecReader());
         
         currentStatement.setObjects(currentSection.getObjects());
     }
@@ -72,7 +73,7 @@ public class StateDoingConditionalBlocks extends State {
         }
         
         PageSection currentSection = new PageSection();
-        currentSectionState = new StateDoingSection(currentSection, getContextPath());
+        currentSectionState = new StateDoingSection(currentSection, getContextPath(), getPageSpecReader());
         
         conditionalBlock.setBodyObjects(currentSection.getObjects());
         state = STATE.BODY;
@@ -84,7 +85,7 @@ public class StateDoingConditionalBlocks extends State {
         }
         
         PageSection currentSection = new PageSection();
-        currentSectionState = new StateDoingSection(currentSection, contextPath);
+        currentSectionState = new StateDoingSection(currentSection, contextPath, getPageSpecReader());
         state = STATE.BODY;
         
         conditionalBlock.setOtherwiseObjects(currentSection.getObjects());
@@ -103,6 +104,14 @@ public class StateDoingConditionalBlocks extends State {
 
     public void setContextPath(String contextPath) {
         this.contextPath = contextPath;
+    }
+
+    public PageSpecReader getPageSpecReader() {
+        return pageSpecReader;
+    }
+
+    public void setPageSpecReader(PageSpecReader pageSpecReader) {
+        this.pageSpecReader = pageSpecReader;
     }
 
 }

@@ -102,7 +102,7 @@ public class PageSpecLineProcessor {
 	        }
 	        previousState = state;
 	        boolean inverted = theRest.equals("not");
-            state = new StateDoingConditionalBlocks(inverted, contextPath);
+            state = new StateDoingConditionalBlocks(inverted, contextPath, pageSpecReader);
         }
 	    else {
 	        if (!(state instanceof StateDoingConditionalBlocks)) {
@@ -232,7 +232,7 @@ public class PageSpecLineProcessor {
         if (state.isObjectDefinition()) {
             startNewSection("");
         }
-        else state = State.objectDefinition(pageSpec);
+        else state = State.objectDefinition(pageSpec, pageSpecReader);
     }
 
     private boolean isSectionSeparator(String line) {
@@ -288,7 +288,7 @@ public class PageSpecLineProcessor {
         }
         currentSection.setName(name);
         pageSpec.addSection(currentSection);
-        state = State.startedSection(currentSection, contextPath);
+        state = State.startedSection(currentSection, contextPath, pageSpecReader);
     }
 
     private List<String> readTags(String tagsText) {

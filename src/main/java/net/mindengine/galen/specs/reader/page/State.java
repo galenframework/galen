@@ -27,12 +27,12 @@ public abstract class State {
         return this instanceof StateObjectDefinition;
     }
 
-    public static State objectDefinition(PageSpec pageSpec) {
-        return new StateObjectDefinition(pageSpec);
+    public static State objectDefinition(PageSpec pageSpec, PageSpecReader pageSpecReader) {
+        return new StateObjectDefinition(pageSpec, pageSpecReader);
     }
 
-    public static State startedSection(PageSection section, String contextPath) {
-        return new StateDoingSection(section, contextPath);
+    public static State startedSection(PageSection section, String contextPath, PageSpecReader pageSpecReader) {
+        return new StateDoingSection(section, contextPath, pageSpecReader);
     }
 
 }

@@ -49,7 +49,7 @@ public class GalenPageActionCheck extends GalenPageAction {
         List<ValidationError> allErrors = new LinkedList<ValidationError>();
         
         Page page = browser.getPage();
-        PageSpecReader pageSpecReader = new PageSpecReader();
+        PageSpecReader pageSpecReader = new PageSpecReader(browser);
         
         for (String specFile : specs) {
             PageSpec spec = pageSpecReader.read(GalenUtils.findFile(specFile));

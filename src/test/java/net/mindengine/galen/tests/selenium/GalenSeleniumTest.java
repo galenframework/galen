@@ -24,6 +24,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
+import net.mindengine.galen.browser.SeleniumBrowser;
 import net.mindengine.galen.components.TestGroups;
 import net.mindengine.galen.components.validation.TestValidationListener;
 import net.mindengine.galen.page.selenium.SeleniumPage;
@@ -60,7 +61,7 @@ public class GalenSeleniumTest {
     
     @Test
     public void performsValidation_forAll() throws Exception {
-        PageSpec pageSpec = new PageSpecReader().read(getClass().getResourceAsStream("/html/page.spec"));
+        PageSpec pageSpec = new PageSpecReader(new SeleniumBrowser(driver)).read(getClass().getResourceAsStream("/html/page.spec"));
         
         openDriverForNicePage();
         
@@ -115,7 +116,7 @@ public class GalenSeleniumTest {
     public void performsValidation_forMobile_withTwoSections() throws Exception {
         openDriverForNicePage();
         
-        PageSpec pageSpec = new PageSpecReader().read(getClass().getResourceAsStream("/html/page.spec"));
+        PageSpec pageSpec = new PageSpecReader(new SeleniumBrowser(driver)).read(getClass().getResourceAsStream("/html/page.spec"));
         
         driver.manage().window().setSize(new Dimension(400, 1000));
         
@@ -147,7 +148,7 @@ public class GalenSeleniumTest {
     public void shouldCheck_relativeToScreen() throws Exception {
         openDriverForNicePage();
         
-        PageSpec pageSpec = new PageSpecReader().read(getClass().getResourceAsStream("/html/page.spec"));
+        PageSpec pageSpec = new PageSpecReader(new SeleniumBrowser(driver)).read(getClass().getResourceAsStream("/html/page.spec"));
         
         driver.manage().window().setSize(new Dimension(400, 1000));
         
@@ -172,7 +173,7 @@ public class GalenSeleniumTest {
     public void shouldCheck_relativeToViewport() throws Exception {
         openDriverForNicePage();
         
-        PageSpec pageSpec = new PageSpecReader().read(getClass().getResourceAsStream("/html/page.spec"));
+        PageSpec pageSpec = new PageSpecReader(new SeleniumBrowser(driver)).read(getClass().getResourceAsStream("/html/page.spec"));
         
         driver.manage().window().setSize(new Dimension(400, 1000));
         
@@ -197,7 +198,7 @@ public class GalenSeleniumTest {
     public void shouldCheck_multipleObjects() throws Exception {
         openDriverForNicePage();
         
-        PageSpec pageSpec = new PageSpecReader().read(getClass().getResourceAsStream("/html/page.spec"));
+        PageSpec pageSpec = new PageSpecReader(new SeleniumBrowser(driver)).read(getClass().getResourceAsStream("/html/page.spec"));
         
         driver.manage().window().setSize(new Dimension(1024, 1000));
         
@@ -263,7 +264,7 @@ public class GalenSeleniumTest {
     public void shouldCheck_text() throws Exception {
         openDriverForNicePage();
         
-        PageSpec pageSpec = new PageSpecReader().read(getClass().getResourceAsStream("/html/page.spec"));
+        PageSpec pageSpec = new PageSpecReader(new SeleniumBrowser(driver)).read(getClass().getResourceAsStream("/html/page.spec"));
         
         driver.manage().window().setSize(new Dimension(400, 1000));
         
@@ -305,7 +306,7 @@ public class GalenSeleniumTest {
     public void shouldCheck_multiObjects() throws Exception {
         openDriverForNicePage();
         
-        PageSpec pageSpec = new PageSpecReader().read(getClass().getResourceAsStream("/html/page.spec"));
+        PageSpec pageSpec = new PageSpecReader(new SeleniumBrowser(driver)).read(getClass().getResourceAsStream("/html/page.spec"));
         
         driver.manage().window().setSize(new Dimension(1000, 1000));
         
@@ -365,7 +366,7 @@ public class GalenSeleniumTest {
     public void givesErrors_whenValidating_incorrectWebSite() throws Exception {
         openDriverForBadPage();
         
-        PageSpec pageSpec = new PageSpecReader().read(getClass().getResourceAsStream("/html/page.spec"));
+        PageSpec pageSpec = new PageSpecReader(new SeleniumBrowser(driver)).read(getClass().getResourceAsStream("/html/page.spec"));
         
         driver.manage().window().setSize(new Dimension(400, 1000));
         
@@ -399,7 +400,7 @@ public class GalenSeleniumTest {
     @Test
     public void performsValidations_ofComponentSpecs() throws IOException {
         openDriverForPage("page-for-component-specs.html");
-        PageSpec pageSpec = new PageSpecReader().read(new File(getClass().getResource("/specs/components/spec-for-component-test-main.spec").getFile()));
+        PageSpec pageSpec = new PageSpecReader(new SeleniumBrowser(driver)).read(new File(getClass().getResource("/specs/components/spec-for-component-test-main.spec").getFile()));
         
         driver.manage().window().setSize(new Dimension(1000, 800));
         
@@ -479,7 +480,7 @@ public class GalenSeleniumTest {
     @Test
     public void performsValidations_ofComponentSpecs_withFilteredChildSections() throws IOException {
         openDriverForPage("page-for-component-specs.html");
-        PageSpec pageSpec = new PageSpecReader().read(new File(getClass().getResource("/specs/components/spec-for-component-test-main.spec").getFile()));
+        PageSpec pageSpec = new PageSpecReader(new SeleniumBrowser(driver)).read(new File(getClass().getResource("/specs/components/spec-for-component-test-main.spec").getFile()));
         
         driver.manage().window().setSize(new Dimension(1000, 800));
         
