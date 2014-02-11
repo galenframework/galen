@@ -7,26 +7,8 @@ if [ -d dist ]; then
 fi
 
 
-function read_var {
-    printf "$1"
-    if [[ -n $3 ]]; then
-        printf " [$3]: "
-    else
-        printf ": "
-    fi
-    read input
+version=$( cat pom.xml | grep "<version>" | head -n 1 | awk -F"[<>]" '/version/{print $3}' | sed "s/-SNAPSHOT//g" )
 
-    if [[ -n $3 && -z $input ]]; then
-        input=$3
-    fi
-
-    eval "$2=\$input"
-}
-
-
-version_promt=$( cat pom.xml | grep "<version>" | head -n 1 | awk -F"[<>]" '/version/{print $3}' | sed "s/-SNAPSHOT//g" )
-
-read_var "Enter version" version "$version_promt"
 
 bin=galen-bin-${version}
 src=galen-src-${version}
