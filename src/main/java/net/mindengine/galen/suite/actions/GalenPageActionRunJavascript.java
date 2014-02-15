@@ -21,10 +21,6 @@ import java.io.Reader;
 import java.util.LinkedList;
 import java.util.List;
 
-import javax.script.ScriptContext;
-import javax.script.ScriptEngine;
-import javax.script.ScriptEngineManager;
-import javax.script.ScriptException;
 
 import net.mindengine.galen.browser.Browser;
 import net.mindengine.galen.browser.SeleniumBrowser;
@@ -39,6 +35,9 @@ import net.mindengine.galen.validation.ValidationListener;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.mozilla.javascript.Context;
+import org.mozilla.javascript.ImporterTopLevel;
+import org.mozilla.javascript.ScriptableObject;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -60,34 +59,37 @@ public class GalenPageActionRunJavascript extends GalenPageAction{
         
         File file = GalenUtils.findFile(javascriptPath);
         Reader scriptFileReader = new FileReader(file);
-        ScriptEngineManager factory = new ScriptEngineManager();
-        ScriptEngine engine = factory.getEngineByName("JavaScript");
-        ScriptContext context = engine.getContext();
-        context.setAttribute("name", "JavaScript", ScriptContext.ENGINE_SCOPE);
         
-        engine.put("global", new ScriptExecutor(engine, file.getParent()));
-        engine.put("browser", browser);
+        Context cx = Context.enter();
+        
+        ScriptableObject scope = new ImporterTopLevel(cx);
+        
+        ScriptableObject.putProperty(scope, "browser", Context.javaToJS(browser, scope));
         
         
-        provideWrappedWebDriver(engine, browser);
-
-        importAllMajorClasses(engine);
-        engine.eval("var arg = " + jsonArguments);
-        engine.eval(scriptFileReader);
+        ScriptableObject.putProperty(scope, "global", Context.javaToJS(new ScriptExecutor(scope, cx, file.getParent()), scope));
+        
+        provideWrappedWebDriver(scope, browser);
+        importAllMajorClasses(scope, cx);
+        
+        cx.evaluateString(scope, "var arg = " + jsonArguments, "<cmd>", 1, null);       
+        cx.evaluateReader(scope, scriptFileReader, javascriptPath, 1, null);
+        
         return NO_ERRORS;
     }
     
-    private void provideWrappedWebDriver(ScriptEngine engine, Browser browser) {
+    private void provideWrappedWebDriver(ScriptableObject scope, Browser browser) {
         if (browser instanceof SeleniumBrowser) {
-            SeleniumBrowser seleniumBrowser = (SeleniumBrowser)browser;
-            engine.put("driver", new WebDriverWrapper(seleniumBrowser.getDriver()));
+            SeleniumBrowser seleniumBrowser = (SeleniumBrowser) browser;
+            WebDriverWrapper driver = new WebDriverWrapper(seleniumBrowser.getDriver());
+            ScriptableObject.putProperty(scope, "driver", Context.javaToJS(driver, scope));
         }
         
     }
 
 
-    private void importAllMajorClasses(ScriptEngine engine) throws ScriptException {
-        importClasses(engine, new Class[]{
+    private void importAllMajorClasses(ScriptableObject scope, Context cx)  {
+        importClasses(scope, cx, new Class[]{
                 Thread.class,
                 WebDriverWrapper.class,
                 By.class,
@@ -99,9 +101,9 @@ public class GalenPageActionRunJavascript extends GalenPageAction{
     }
 
 
-    private void importClasses(ScriptEngine engine, Class<?>[] classes) throws ScriptException {
+    private void importClasses(ScriptableObject scope, Context cx, Class<?>[] classes) {
         for (Class<?> clazz : classes) {
-            engine.eval("importClass(" + clazz.getName() + ")");
+            cx.evaluateString(scope, "importClass(" + clazz.getName() + ");", "<cmd>", 1, null);
         }
     }
 

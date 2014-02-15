@@ -16,23 +16,27 @@
 package net.mindengine.galen.suite.actions.javascript;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.IOException;
 import java.util.HashSet;
 import java.util.Set;
 
-import javax.script.ScriptEngine;
-import javax.script.ScriptException;
+import org.mozilla.javascript.Context;
+import org.mozilla.javascript.ScriptableObject;
 
 public class ScriptExecutor {
     
-    private ScriptEngine engine;
     private String contextFolder;
     
     private Set<String> loadedFiles = new HashSet<String>();
 
-    public ScriptExecutor(ScriptEngine engine, String contextFolder) {
-        this.engine = engine;
+    private ScriptableObject scope;
+    private Context cx;
+
+    public ScriptExecutor(ScriptableObject scope, Context cx, String contextFolder) {
+        this.scope = scope;
+        this.cx = cx;
+        
         if (contextFolder != null && !contextFolder.isEmpty()) {
             this.contextFolder = contextFolder;
         }
@@ -41,12 +45,12 @@ public class ScriptExecutor {
         }
     }
 
-    public void load(String filePath) throws FileNotFoundException, ScriptException {
+    public void load(String filePath) throws IOException {
         File file = new File(contextFolder + File.separator + filePath);
         String absolutePath = file.getAbsolutePath();
         
         if (!loadedFiles.contains(absolutePath)) {
-            engine.eval(new FileReader(file));
+            cx.evaluateReader(scope, new FileReader(file), file.getAbsolutePath(), 1, null);
             loadedFiles.add(absolutePath);
         }
     }

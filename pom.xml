@@ -56,6 +56,11 @@
       <artifactId>rainbow4j</artifactId>
       <version>0.2.3</version>
     </dependency>
+    <dependency>
+      <groupId>org.mozilla</groupId>
+      <artifactId>rhino</artifactId>
+      <version>1.7R4</version>
+    </dependency>
   </dependencies>
   <build>
     <plugins>
