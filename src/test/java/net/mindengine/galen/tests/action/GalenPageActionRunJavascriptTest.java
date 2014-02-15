@@ -39,7 +39,7 @@ public class GalenPageActionRunJavascriptTest {
         WebElement element = driver.findElement(By.id("search-query"));
         assertThat("Search input should not contain any text yet", element.getAttribute("value"), is(""));
         
-        GalenPageActionRunJavascript action = new GalenPageActionRunJavascript("/scripts/to-run-1.js");
+        GalenPageActionRunJavascript action = new GalenPageActionRunJavascript(getClass().getResource("/scripts/to-run-1.js").getFile());
         action.setJsonArguments("{prefix: 'This was'}");
         
         action.execute(browser, new GalenPageTest(), null);

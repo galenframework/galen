@@ -21,13 +21,12 @@ import java.io.Reader;
 import java.util.LinkedList;
 import java.util.List;
 
-
 import net.mindengine.galen.browser.Browser;
 import net.mindengine.galen.browser.SeleniumBrowser;
 import net.mindengine.galen.browser.WebDriverWrapper;
+import net.mindengine.galen.javascript.GalenJsExecutor;
 import net.mindengine.galen.suite.GalenPageAction;
 import net.mindengine.galen.suite.GalenPageTest;
-import net.mindengine.galen.suite.actions.javascript.ScriptExecutor;
 import net.mindengine.galen.utils.GalenUtils;
 import net.mindengine.galen.validation.ValidationError;
 import net.mindengine.galen.validation.ValidationListener;
@@ -35,13 +34,6 @@ import net.mindengine.galen.validation.ValidationListener;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.mozilla.javascript.Context;
-import org.mozilla.javascript.ImporterTopLevel;
-import org.mozilla.javascript.ScriptableObject;
-import org.openqa.selenium.By;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
-import org.openqa.selenium.interactions.Actions;
 
 public class GalenPageActionRunJavascript extends GalenPageAction{
 
@@ -60,51 +52,24 @@ public class GalenPageActionRunJavascript extends GalenPageAction{
         File file = GalenUtils.findFile(javascriptPath);
         Reader scriptFileReader = new FileReader(file);
         
-        Context cx = Context.enter();
         
-        ScriptableObject scope = new ImporterTopLevel(cx);
+        GalenJsExecutor js = new GalenJsExecutor();
+        js.putObject("browser", browser);
+        provideWrappedWebDriver(js, browser);
         
-        ScriptableObject.putProperty(scope, "browser", Context.javaToJS(browser, scope));
-        
-        
-        ScriptableObject.putProperty(scope, "global", Context.javaToJS(new ScriptExecutor(scope, cx, file.getParent()), scope));
-        
-        provideWrappedWebDriver(scope, browser);
-        importAllMajorClasses(scope, cx);
-        
-        cx.evaluateString(scope, "var arg = " + jsonArguments, "<cmd>", 1, null);       
-        cx.evaluateReader(scope, scriptFileReader, javascriptPath, 1, null);
-        
+        js.eval("var arg = " + jsonArguments);
+        js.eval(scriptFileReader, javascriptPath);
+               
         return NO_ERRORS;
     }
     
-    private void provideWrappedWebDriver(ScriptableObject scope, Browser browser) {
+    private void provideWrappedWebDriver(GalenJsExecutor jsExecutor, Browser browser) {
         if (browser instanceof SeleniumBrowser) {
             SeleniumBrowser seleniumBrowser = (SeleniumBrowser) browser;
             WebDriverWrapper driver = new WebDriverWrapper(seleniumBrowser.getDriver());
-            ScriptableObject.putProperty(scope, "driver", Context.javaToJS(driver, scope));
+            jsExecutor.putObject("driver", driver);
         }
         
-    }
-
-
-    private void importAllMajorClasses(ScriptableObject scope, Context cx)  {
-        importClasses(scope, cx, new Class[]{
-                Thread.class,
-                WebDriverWrapper.class,
-                By.class,
-                WebElement.class,
-                WebDriver.class,
-                System.class,
-                Actions.class
-        });
-    }
-
-
-    private void importClasses(ScriptableObject scope, Context cx, Class<?>[] classes) {
-        for (Class<?> clazz : classes) {
-            cx.evaluateString(scope, "importClass(" + clazz.getName() + ");", "<cmd>", 1, null);
-        }
     }
 
 

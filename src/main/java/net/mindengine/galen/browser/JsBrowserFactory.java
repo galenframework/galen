@@ -19,16 +19,12 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.Reader;
 
-
-import net.mindengine.galen.suite.actions.javascript.ScriptExecutor;
+import net.mindengine.galen.javascript.GalenJsExecutor;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.mozilla.javascript.Context;
-import org.mozilla.javascript.ImporterTopLevel;
 import org.mozilla.javascript.NativeJavaObject;
-import org.mozilla.javascript.ScriptableObject;
 import org.openqa.selenium.WebDriver;
 
 public class JsBrowserFactory implements BrowserFactory {
@@ -44,16 +40,15 @@ public class JsBrowserFactory implements BrowserFactory {
     @Override
     public Browser openBrowser() {
         File file = new File(scriptPath);
-        Context cx = Context.enter();
-        ScriptableObject scope = new ImporterTopLevel(cx);
-        ScriptableObject.putProperty(scope, "args", Context.javaToJS(args, scope));
-        ScriptableObject.putProperty(scope, "global", Context.javaToJS(new ScriptExecutor(scope, cx, file.getParent()), scope));
+        
+        GalenJsExecutor js = new GalenJsExecutor();
+        js.putObject("args", args);
         
         Reader scriptFileReader;
         Object result;
         try {
             scriptFileReader = new FileReader(file);
-            result = cx.evaluateReader(scope, scriptFileReader, scriptPath, 1, null);
+            result = js.eval(scriptFileReader, scriptPath);
         } catch (Exception e) {
             throw new RuntimeException("Error opening browser", e);
         }
