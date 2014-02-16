@@ -38,7 +38,7 @@ public class PageSpecLineProcessor {
     private static final String TAG = "@";
     private static final String COMMENT = "#";
     private static final String PARAMETERIZATION_SYMBOL = "[";
-    PageSpec pageSpec = new PageSpec();
+    
     
     private State state;
 	private PageSpecReader pageSpecReader;
@@ -46,8 +46,10 @@ public class PageSpecLineProcessor {
     private PageSection currentSection;
     
     private String contextPath = ".";
+    private PageSpec pageSpec;
     
-    public PageSpecLineProcessor(String contextPath, PageSpecReader pageSpecReader) {
+    public PageSpecLineProcessor(String contextPath, PageSpecReader pageSpecReader, PageSpec pageSpec) {
+        this.pageSpec = pageSpec;
     	this.pageSpecReader = pageSpecReader;
     	this.contextPath = contextPath;
         startNewSection("");

@@ -23,16 +23,28 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.regex.Pattern;
 
 import net.mindengine.galen.browser.Browser;
+import net.mindengine.galen.parser.BashTemplateContext;
+import net.mindengine.galen.parser.BashTemplateJsFunctions;
 import net.mindengine.galen.parser.FileSyntaxException;
 
-public class PageSpecReader {
+public class PageSpecReader implements BashTemplateJsFunctions {
     
+    private BashTemplateContext bashTemplateContext;
+    
+    /*
+     *  This field is need to look up early building of objects
+     *  so they could be used within bash templates
+     */
+    private PageSpec pageSpec;
     
     public PageSpecReader(Browser browser) {
         this.browser = browser;
+        bashTemplateContext = new BashTemplateContext(this);
     }
+    
     
     // Browser is used in order to fetch multi object 
     // at earlier state so that it is possible to use dynamic ranges
@@ -43,7 +55,7 @@ public class PageSpecReader {
 	private Set<String> processedFiles = new HashSet<String>();
 	
     public PageSpec read(File file) throws IOException {
-    	String absolutePath = file.getAbsolutePath();
+        String absolutePath = file.getAbsolutePath();
 
     	if (processedFiles.contains(absolutePath)) {
     		return null;
@@ -60,7 +72,9 @@ public class PageSpecReader {
     
     
     public PageSpec read(InputStream inputStream, String fileLocation, String contextPath) throws IOException {
-        PageSpecLineProcessor lineProcessor = new PageSpecLineProcessor(contextPath, this);
+        
+        pageSpec = new PageSpec();
+        PageSpecLineProcessor lineProcessor = new PageSpecLineProcessor(contextPath, this, pageSpec);
         
         BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream, System.getProperty("file.encoding")));
         
@@ -68,8 +82,8 @@ public class PageSpecReader {
         
         int lineNumber = 1;
         try {
-            while(line != null){
-                lineProcessor.processLine(line);
+            while(line != null) {
+                lineProcessor.processLine(bashTemplateContext.process(line));
                 line = bufferedReader.readLine();
                 lineNumber++;
             }
@@ -87,6 +101,20 @@ public class PageSpecReader {
 
     public void setBrowser(Browser browser) {
         this.browser = browser;
+    }
+
+    @Override
+    public int count(String regex) {
+        String jRegex = regex.replace("*", ".*");
+        Pattern pattern = Pattern.compile(jRegex);
+        
+        int count = 0;
+        for (String name : pageSpec.getObjects().keySet()) {
+            if (pattern.matcher(name).matches()) {
+                count ++;
+            }
+        }
+        return count;
     }
     
     

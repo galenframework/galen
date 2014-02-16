@@ -224,6 +224,22 @@ public class PageSpecsReaderTest {
     }
     
     @Test
+    public void shouldRead_andProcess_bashTemplateExpressions() throws IOException {
+        PageSpec pageSpec = new PageSpecReader(NO_BROWSER).read(getClass().getResourceAsStream("/specs/spec-bash-template.spec"));
+        assertThat(pageSpec, is(notNullValue()));
+        
+        List<PageSection> sections = pageSpec.getSections();
+        assertThat(sections.size(), is(1));
+        
+        List<ObjectSpecs> objects = sections.get(0).getObjects();
+        assertThat(objects.size(), is(3));
+        
+        assertThat(objects.get(0).getObjectName(), is("obj-1"));
+        assertThat(objects.get(1).getObjectName(), is("obj-2"));
+        assertThat(objects.get(2).getObjectName(), is("obj-3"));
+    }
+    
+    @Test
     public void shouldRead_sectionsNames_withTags() throws IOException {
         PageSpec pageSpec = new PageSpecReader(NO_BROWSER).read(getClass().getResourceAsStream("/specs/spec-sections-advanced.spec"));
         assertThat(pageSpec, is(notNullValue()));
