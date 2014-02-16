@@ -16,17 +16,12 @@
 package net.mindengine.galen.browser;
 
 import java.awt.Dimension;
-import java.awt.Graphics2D;
-import java.awt.image.BufferedImage;
-import java.io.ByteArrayInputStream;
 import java.io.File;
-import java.io.IOException;
-
-import javax.imageio.ImageIO;
 
 import net.mindengine.galen.config.GalenConfig;
 import net.mindengine.galen.page.Page;
 import net.mindengine.galen.page.selenium.SeleniumPage;
+import net.mindengine.galen.utils.GalenUtils;
 
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.OutputType;
@@ -85,7 +80,7 @@ public class SeleniumBrowser implements Browser {
     public String createScreenshot() {
         if (GalenConfig.getConfig().getBooleanProperty("galen.browser.screenshots.fullPage", true)) {
             try {
-                return makeFullScreenshots();
+                return GalenUtils.makeFullScreenshot(driver);
             } catch (Exception e) {
                 throw new RuntimeException("Error making screenshot", e);
             }
@@ -93,55 +88,6 @@ public class SeleniumBrowser implements Browser {
         else return makeSimpleScreenshot();
     }
     
-    private String makeFullScreenshots() throws IOException, InterruptedException {
-        byte[] bytes = ((TakesScreenshot)driver).getScreenshotAs(OutputType.BYTES);
-        BufferedImage image = ImageIO.read(new ByteArrayInputStream(bytes));
-        int capturedWidth = image.getWidth();
-        int capturedHeight = image.getHeight();
-        
-        long longScrollHeight = (Long)((JavascriptExecutor)driver).executeScript("return Math.max(" + 
-                "document.body.scrollHeight, document.documentElement.scrollHeight," +
-                "document.body.offsetHeight, document.documentElement.offsetHeight," +
-                "document.body.clientHeight, document.documentElement.clientHeight);"
-            );
-        
-        int scrollHeight = (int)longScrollHeight;
-        
-        File file = File.createTempFile("screenshot", ".png");
-        
-        if (Math.abs(capturedHeight - scrollHeight) > 40) {
-            int scrollOffset = capturedHeight;
-            
-            int times = scrollHeight / capturedHeight;
-            int leftover = scrollHeight % capturedHeight;
-            
-            final BufferedImage tiledImage = new BufferedImage(capturedWidth, scrollHeight, BufferedImage.TYPE_INT_RGB);
-            Graphics2D g2dTile = tiledImage.createGraphics();
-            g2dTile.drawImage(image, 0,0, null);
-
-            for (int i = 0; i < times - 1; i++) {
-                ((JavascriptExecutor)driver).executeAsyncScript("document.body.scrollTop += " + scrollOffset + ";arguments[arguments.length - 1]();");
-                Thread.sleep(100);
-                BufferedImage nextImage = ImageIO.read(new ByteArrayInputStream(((TakesScreenshot)driver).getScreenshotAs(OutputType.BYTES)));
-                g2dTile.drawImage(nextImage, 0, (i+1) * capturedHeight, null);
-            }
-            if (leftover > 0) {
-                ((JavascriptExecutor)driver).executeAsyncScript("document.body.scrollTop += " + scrollOffset + ";arguments[arguments.length - 1]();");
-                BufferedImage nextImage = ImageIO.read(new ByteArrayInputStream(((TakesScreenshot)driver).getScreenshotAs(OutputType.BYTES)));
-                BufferedImage lastPart = nextImage.getSubimage(0, nextImage.getHeight() - leftover, nextImage.getWidth(), leftover);
-                g2dTile.drawImage(lastPart, 0, scrollHeight - leftover, null);
-            }
-            
-            ((JavascriptExecutor)driver).executeAsyncScript("document.body.scrollTop = 0; arguments[arguments.length - 1]();");
-            
-            ImageIO.write(tiledImage, "png", file);
-        }
-        else {
-            ImageIO.write(image, "png", file);
-        }
-        return file.getAbsolutePath();
-    }
-
     private String makeSimpleScreenshot() {
         File file = ((TakesScreenshot)driver).getScreenshotAs(OutputType.FILE);
         return file.getAbsolutePath();
