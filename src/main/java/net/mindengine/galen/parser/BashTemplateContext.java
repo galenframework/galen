@@ -21,16 +21,21 @@ public class BashTemplateContext extends Context {
 
     
     private BashTemplateContext parent;
+    private BashTemplateJsFunctions jsFunctions;
 
+    public BashTemplateContext() {
+        
+    }
     public BashTemplateContext(BashTemplateContext context) {
         this.parent = context;
     }
 
-    public BashTemplateContext() {
+    public BashTemplateContext(BashTemplateJsFunctions jsFunctions) {
+        this.jsFunctions = jsFunctions;
     }
 
     public String process(String arguments) {
-        return new BashTemplate(arguments).process(this);
+        return new BashTemplate(arguments, jsFunctions).process(this);
     }
 
 

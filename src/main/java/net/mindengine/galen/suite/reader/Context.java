@@ -23,24 +23,32 @@ public class Context {
     private Map<String, Object> parameters = new HashMap<String, Object>(); 
 
     public Context withParameter(String name, Object value) {
-        parameters.put(name, value);
+        getParameters().put(name, value);
         return this;
     }
 
     public Object getValue(String paramName) {
-        return parameters.get(paramName);
+        return getParameters().get(paramName);
     }
     
     public void putValue(String name, Object value) {
-        parameters.put(name, value);
+        getParameters().put(name, value);
     }
 
     public boolean containsValue(String paramName) {
-        return parameters.containsKey(paramName);
+        return getParameters().containsKey(paramName);
     }
 
     
     public void addValuesFromMap(Map<String, String> map) {
-        parameters.putAll(map);
+        getParameters().putAll(map);
+    }
+
+    public Map<String, Object> getParameters() {
+        return parameters;
+    }
+
+    public void setParameters(Map<String, Object> parameters) {
+        this.parameters = parameters;
     }
 }

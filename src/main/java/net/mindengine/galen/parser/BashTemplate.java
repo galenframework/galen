@@ -15,8 +15,15 @@
 ******************************************************************************/
 package net.mindengine.galen.parser;
 
+import java.util.Map;
+
 import net.mindengine.galen.specs.reader.StringCharReader;
 import net.mindengine.galen.suite.reader.Context;
+
+import org.mozilla.javascript.BaseFunction;
+import org.mozilla.javascript.ImporterTopLevel;
+import org.mozilla.javascript.Scriptable;
+import org.mozilla.javascript.ScriptableObject;
 
 public class BashTemplate {
 
@@ -26,9 +33,13 @@ public class BashTemplate {
     private String templateText;
     
     private int state = PARSING_TEXT;
+    private BashTemplateJsFunctions jsFunctions;
+    
+   
 
-    public BashTemplate(String templateText) {
+    public BashTemplate(String templateText, BashTemplateJsFunctions jsFunctions) {
         this.templateText = templateText;
+        this.setJsFunctions(jsFunctions);
     }
 
     public String process(Context context) {
@@ -36,14 +47,14 @@ public class BashTemplate {
         
         StringBuffer buffer = new StringBuffer();
         
-        StringBuffer currentParam = new StringBuffer();
+        StringBuffer currentExpression = new StringBuffer();
         
         while(reader.hasMore()) {
             char symbol = reader.next();
             if (state ==  PARSING_TEXT) {
                 if (symbol == '$' && reader.currentSymbol() == '{') {
                     state = PARSING_PARAM;
-                    currentParam = new StringBuffer();
+                    currentExpression = new StringBuffer();
                     reader.next();
                 }
                 else if(symbol=='\\' && reader.currentSymbol() == '$') {
@@ -56,22 +67,84 @@ public class BashTemplate {
             }
             else if (state ==  PARSING_PARAM) {
                 if (symbol == '}') {
-                    String paramName = currentParam.toString().trim();
-                    Object value = context.getValue(paramName);
+                    String expression = currentExpression.toString().trim();
+                    Object value = getExpressionValue(expression, context);
                     if (value == null) {
-                        //Looking for value in system properties
-                        value = System.getProperty(paramName, "");
+                        value = "";
                     }
                     buffer.append(value.toString());
                     state = PARSING_TEXT;
                 }
                 else {
-                    currentParam.append(symbol);
+                    currentExpression.append(symbol);
                 }
                 
             }
         }
         return buffer.toString();
+    }
+
+    
+    private Object getExpressionValue(String expression, Context context) {
+        if (expression.matches("[a-zA-Z0-9..._]*")) {
+            Object value = context.getValue(expression);
+            if (value == null) {
+                //Looking for value in system properties
+                value = System.getProperty(expression, "");
+            }
+            return value;
+        }
+        else {
+            return readJsExpression(expression, context);
+        }
+    }
+
+    @SuppressWarnings("serial")
+    private Object readJsExpression(String expression, Context context) {
+        org.mozilla.javascript.Context cx = org.mozilla.javascript.Context.enter();
+        ScriptableObject scope = new ImporterTopLevel(cx);
+        
+        for (Map.Entry<String, Object> parameter : context.getParameters().entrySet()) {
+            if (!conflictsWithFunctionNames(parameter.getKey())) {
+                ScriptableObject.putProperty(scope, parameter.getKey(), parameter.getValue());
+            }
+        }
+        
+        if (jsFunctions != null) {
+            scope.defineProperty("count", new BaseFunction() {
+                @Override
+                public Object call(org.mozilla.javascript.Context cx, Scriptable scope, Scriptable thisObj, Object[] args) {
+                    if (args.length == 0 || !(args[0] instanceof String)) {
+                        throw new IllegalArgumentException("Should take string argument");
+                    }
+                    return jsFunctions.count((String)args[0]);
+                }
+            }, ScriptableObject.DONTENUM);
+        }
+        
+        Object returnedObject = cx.evaluateString(scope, expression, "<cmd>", 1, null);
+        if (returnedObject instanceof Double) {
+            return ((Double)returnedObject).intValue();
+        }
+        else if (returnedObject instanceof Float) {
+            return ((Float)returnedObject).intValue();
+        }
+        return returnedObject;
+    }
+
+    private boolean conflictsWithFunctionNames(String name) {
+        if (name.equals("count")) {
+            return true;
+        }
+        return false;
+    }
+
+    public BashTemplateJsFunctions getJsFunctions() {
+        return jsFunctions;
+    }
+
+    public void setJsFunctions(BashTemplateJsFunctions jsFunctions) {
+        this.jsFunctions = jsFunctions;
     }
 
 }
