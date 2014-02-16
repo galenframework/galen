@@ -5,11 +5,11 @@ importClass(net.mindengine.galen.browser.WebDriverWrapper);
 
 this.doubleLoadCheck = 0;
 
-global.load("to-import-script.js");
+load("to-import-script.js");
 
 
 
-global.load("to-import-script.js");
+load("to-import-script.js");
 
 var text = arg.prefix + " typed by a selenium from javascript " + varFromImportedScript;
 
