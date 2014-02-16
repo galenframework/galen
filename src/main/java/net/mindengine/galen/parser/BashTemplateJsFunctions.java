@@ -15,6 +15,7 @@
 ******************************************************************************/
 package net.mindengine.galen.parser;
 
+
 public interface BashTemplateJsFunctions {
     
     /**
@@ -23,5 +24,4 @@ public interface BashTemplateJsFunctions {
      * @return
      */
     int count(String regex);
-
 }

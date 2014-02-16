@@ -18,8 +18,11 @@ package net.mindengine.galen.browser;
 import java.awt.Dimension;
 import java.io.File;
 
+
+import net.mindengine.galen.config.GalenConfig;
 import net.mindengine.galen.page.Page;
 import net.mindengine.galen.page.selenium.SeleniumPage;
+import net.mindengine.galen.utils.GalenUtils;
 
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.OutputType;
@@ -76,10 +79,21 @@ public class SeleniumBrowser implements Browser {
 
     @Override
     public String createScreenshot() {
+        if (GalenConfig.getConfig().getBooleanProperty("galen.browser.screenshots.fullPage", true)) {
+            try {
+                return GalenUtils.makeFullScreenshot(driver);
+            } catch (Exception e) {
+                throw new RuntimeException("Error making screenshot", e);
+            }
+        }
+        else return makeSimpleScreenshot();
+    }
+    
+    private String makeSimpleScreenshot() {
         File file = ((TakesScreenshot)driver).getScreenshotAs(OutputType.FILE);
         return file.getAbsolutePath();
     }
-
+    
     @Override
     public void refresh() {
         driver.navigate().refresh();
