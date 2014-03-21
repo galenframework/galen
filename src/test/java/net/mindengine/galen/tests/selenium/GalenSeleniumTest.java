@@ -16,6 +16,9 @@
 package net.mindengine.galen.tests.selenium;
 
 import static java.util.Arrays.asList;
+import static net.mindengine.galen.components.TestUtils.assertLines;
+import static net.mindengine.galen.components.TestUtils.lines;
+import static net.mindengine.galen.components.TestUtils.regex;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.is;
@@ -79,36 +82,36 @@ public class GalenSeleniumTest {
         
         
         assertThat("Invokations should", validationListener.getInvokations(), is("<o header>\n" +
-        		"<SpecContains header>\n" +
-        		"<SpecNear header>\n" +
-        		"<SpecWidth header>\n" +
-        		"<SpecHeight header>\n" +
-        		"</o header>\n" +
-        		"<o header-with-corrections>\n" +
-        		"<SpecWidth header-with-corrections>\n" +
+                "<SpecContains header>\n" +
+                "<SpecNear header>\n" +
+                "<SpecWidth header>\n" +
+                "<SpecHeight header>\n" +
+                "</o header>\n" +
+                "<o header-with-corrections>\n" +
+                "<SpecWidth header-with-corrections>\n" +
                 "<SpecHeight header-with-corrections>\n" +
                 "</o header-with-corrections>\n" +
-        		"<o header-text-1>\n" +
-        		"<SpecNear header-text-1>\n" +
-        		"<SpecInside header-text-1>\n" +
-        		"</o header-text-1>\n" +
-        		"<o header-text-2>\n" +
-        		"<SpecNear header-text-2>\n" +
-        		"<SpecInside header-text-2>\n" +
-        		"</o header-text-2>\n" +
-        		"<o menu>\n" +
-        		"<SpecNear menu>\n" +
-        		"<SpecNear menu>\n" +
-        		"</o menu>\n" +
-        		"<o menu-item-home>\n" +
-        		"<SpecHorizontally menu-item-home>\n" +
-        		"<SpecNear menu-item-home>\n" +
-        		"<SpecInside menu-item-home>\n" +
-        		"</o menu-item-home>\n" +
-        		"<o menu-item-categories>\n" +
-        		"<SpecInside menu-item-categories>\n" +
-        		"<SpecNear menu-item-categories>\n" + 
-        		"</o menu-item-categories>\n"));
+                "<o header-text-1>\n" +
+                "<SpecNear header-text-1>\n" +
+                "<SpecInside header-text-1>\n" +
+                "</o header-text-1>\n" +
+                "<o header-text-2>\n" +
+                "<SpecNear header-text-2>\n" +
+                "<SpecInside header-text-2>\n" +
+                "</o header-text-2>\n" +
+                "<o menu>\n" +
+                "<SpecNear menu>\n" +
+                "<SpecNear menu>\n" +
+                "</o menu>\n" +
+                "<o menu-item-home>\n" +
+                "<SpecHorizontally menu-item-home>\n" +
+                "<SpecNear menu-item-home>\n" +
+                "<SpecInside menu-item-home>\n" +
+                "</o menu-item-home>\n" +
+                "<o menu-item-categories>\n" +
+                "<SpecInside menu-item-categories>\n" +
+                "<SpecNear menu-item-categories>\n" + 
+                "</o menu-item-categories>\n"));
         assertThat("Errors should be empty", errors.size(), is(0));
     }
     
@@ -413,65 +416,65 @@ public class GalenSeleniumTest {
         SectionValidation sectionValidation = new SectionValidation(pageSections, new PageValidation(page, pageSpec, validationListener, null), validationListener);
         List<ValidationError> errors = sectionValidation.check();
         
-        assertThat("Invokations should", validationListener.getInvokations(), is(
-                "<o user-profile-1>\n" +
-                "<o user-pic>\n" +
-                "<SpecWidth user-pic>\n" +
-                "<SpecHeight user-pic>\n" +
-                "<SpecInside user-pic>\n" +
-                "</o user-pic>\n" +
-                "<o user-name>\n" +
-                "<SpecHeight user-name>\n" +
-                "<SpecInside user-name>\n" +
-                "<SpecNear user-name>\n" +
-                "</o user-name>\n" +
-                "<o user-age>\n" +
-                "<SpecHeight user-age>\n" +
-                "<SpecNear user-age>\n" +
-                "<SpecBelow user-age>\n" +
-                "</o user-age>\n" +
-                "<SpecComponent user-profile-1>\n" +
-                "</o user-profile-1>\n" +
+        assertLines(validationListener.getInvokations(), lines(
+                "<o user-profile-1>",
+                "<o user-pic>",
+                "<SpecWidth user-pic>",
+                "<SpecHeight user-pic>",
+                "<SpecInside user-pic>",
+                "</o user-pic>",
+                "<o user-name>",
+                "<SpecHeight user-name>",
+                "<SpecInside user-name>",
+                "<SpecNear user-name>",
+                "</o user-name>",
+                "<o user-age>",
+                "<SpecHeight user-age>",
+                "<SpecNear user-age>",
+                "<SpecBelow user-age>",
+                "</o user-age>",
+                "<SpecComponent user-profile-1>",
+                "</o user-profile-1>",
 
-                "<o user-profile-2>\n" +
-                "<o user-pic>\n" +
-                "<SpecWidth user-pic>\n" +
-                "<SpecHeight user-pic>\n" +
-                "<SpecInside user-pic>\n" +
-                "</o user-pic>\n" +
-                "<o user-name>\n" +
-                "<SpecHeight user-name>\n" +
-                "<SpecInside user-name>\n" +
-                "<SpecNear user-name>\n" +
-                "</o user-name>\n" +
-                "<o user-age>\n" +
-                "<SpecHeight user-age>\n" +
-                "<SpecNear user-age>\n" +
-                "<SpecBelow user-age>\n" +
-                "</o user-age>\n" +
-                "<SpecComponent user-profile-2>\n" +
-                "</o user-profile-2>\n" + 
+                "<o user-profile-2>",
+                "<o user-pic>",
+                "<SpecWidth user-pic>",
+                "<SpecHeight user-pic>",
+                "<SpecInside user-pic>",
+                "</o user-pic>",
+                "<o user-name>",
+                "<SpecHeight user-name>",
+                "<SpecInside user-name>",
+                "<SpecNear user-name>",
+                "</o user-name>",
+                "<o user-age>",
+                "<SpecHeight user-age>",
+                "<SpecNear user-age>",
+                "<SpecBelow user-age>",
+                "</o user-age>",
+                "<SpecComponent user-profile-2>",
+                "</o user-profile-2>", 
                 
-                "<o user-profile-3>\n" +
-                "<o user-pic>\n" +
-                "<SpecWidth user-pic>\n" +
-                "<SpecHeight user-pic>\n" +
-                "<SpecInside user-pic>\n" +
-                "</o user-pic>\n" +
-                "<o user-name>\n" +
-                "<SpecHeight user-name>\n" +
-                "<SpecInside user-name>\n" +
-                "<SpecNear user-name>\n" +
-                "</o user-name>\n" +
-                "<o user-age>\n" +
-                "<SpecHeight user-age>\n" +
-                "<SpecNear user-age>\n" +
-                "<e><msg>\"user-age\" is 204px right which is not in range of 8 to 12px</msg></e>\n" +
-                "<SpecBelow user-age>\n" +
-                "</o user-age>\n" +
-                "<SpecComponent user-profile-3>\n" +
-                "<e><msg>Child component spec contains 1 errors</msg></e>\n" +
-                "</o user-profile-3>\n"
+                "<o user-profile-3>",
+                "<o user-pic>",
+                "<SpecWidth user-pic>",
+                "<SpecHeight user-pic>",
+                "<SpecInside user-pic>",
+                "</o user-pic>",
+                "<o user-name>",
+                "<SpecHeight user-name>",
+                "<SpecInside user-name>",
+                "<SpecNear user-name>",
+                "</o user-name>",
+                "<o user-age>",
+                "<SpecHeight user-age>",
+                "<SpecNear user-age>",
+                regex("<e><msg>\"user-age\" is [0-9]{3}px right which is not in range of 8 to 12px</msg></e>"),
+                "<SpecBelow user-age>",
+                "</o user-age>",
+                "<SpecComponent user-profile-3>",
+                "<e><msg>Child component spec contains 1 errors</msg></e>",
+                "</o user-profile-3>"
                 ));
         assertThat("Errors amount should be", errors.size(), is(1));
     }
@@ -495,50 +498,50 @@ public class GalenSeleniumTest {
         SectionValidation sectionValidation = new SectionValidation(pageSections, new PageValidation(page, pageSpec, validationListener, sectionFilter), validationListener);
         List<ValidationError> errors = sectionValidation.check();
         
-        assertThat("Invokations should", validationListener.getInvokations(), is(
-                "<o user-profile-1>\n" +
-                "<o user-pic>\n" +
-                "<SpecWidth user-pic>\n" +
-                "<SpecHeight user-pic>\n" +
-                "<SpecInside user-pic>\n" +
-                "</o user-pic>\n" +
-                "<o user-age>\n" +
-                "<SpecHeight user-age>\n" +
-                "<SpecNear user-age>\n" +
-                "<SpecBelow user-age>\n" +
-                "</o user-age>\n" +
-                "<SpecComponent user-profile-1>\n" +
-                "</o user-profile-1>\n" +
+        assertLines(validationListener.getInvokations(), lines(
+                "<o user-profile-1>",
+                "<o user-pic>",
+                "<SpecWidth user-pic>",
+                "<SpecHeight user-pic>",
+                "<SpecInside user-pic>",
+                "</o user-pic>",
+                "<o user-age>",
+                "<SpecHeight user-age>",
+                "<SpecNear user-age>",
+                "<SpecBelow user-age>",
+                "</o user-age>",
+                "<SpecComponent user-profile-1>",
+                "</o user-profile-1>",
 
-                "<o user-profile-2>\n" +
-                "<o user-pic>\n" +
-                "<SpecWidth user-pic>\n" +
-                "<SpecHeight user-pic>\n" +
-                "<SpecInside user-pic>\n" +
-                "</o user-pic>\n" +
-                "<o user-age>\n" +
-                "<SpecHeight user-age>\n" +
-                "<SpecNear user-age>\n" +
-                "<SpecBelow user-age>\n" +
-                "</o user-age>\n" +
-                "<SpecComponent user-profile-2>\n" +
-                "</o user-profile-2>\n" + 
+                "<o user-profile-2>",
+                "<o user-pic>",
+                "<SpecWidth user-pic>",
+                "<SpecHeight user-pic>",
+                "<SpecInside user-pic>",
+                "</o user-pic>",
+                "<o user-age>",
+                "<SpecHeight user-age>",
+                "<SpecNear user-age>",
+                "<SpecBelow user-age>",
+                "</o user-age>",
+                "<SpecComponent user-profile-2>",
+                "</o user-profile-2>",
                 
-                "<o user-profile-3>\n" +
-                "<o user-pic>\n" +
-                "<SpecWidth user-pic>\n" +
-                "<SpecHeight user-pic>\n" +
-                "<SpecInside user-pic>\n" +
-                "</o user-pic>\n" +
-                "<o user-age>\n" +
-                "<SpecHeight user-age>\n" +
-                "<SpecNear user-age>\n" +
-                "<e><msg>\"user-age\" is 204px right which is not in range of 8 to 12px</msg></e>\n" +
-                "<SpecBelow user-age>\n" +
-                "</o user-age>\n" +
-                "<SpecComponent user-profile-3>\n" +
-                "<e><msg>Child component spec contains 1 errors</msg></e>\n" +
-                "</o user-profile-3>\n"
+                "<o user-profile-3>",
+                "<o user-pic>",
+                "<SpecWidth user-pic>",
+                "<SpecHeight user-pic>",
+                "<SpecInside user-pic>",
+                "</o user-pic>",
+                "<o user-age>",
+                "<SpecHeight user-age>",
+                "<SpecNear user-age>",
+                regex("<e><msg>\"user-age\" is [0-9]{3}px right which is not in range of 8 to 12px</msg></e>"),
+                "<SpecBelow user-age>",
+                "</o user-age>",
+                "<SpecComponent user-profile-3>",
+                "<e><msg>Child component spec contains 1 errors</msg></e>",
+                "</o user-profile-3>"
                 ));
         assertThat("Errors amount should be", errors.size(), is(1));
     }
