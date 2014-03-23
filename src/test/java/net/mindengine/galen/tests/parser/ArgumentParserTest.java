@@ -102,6 +102,16 @@ public class ArgumentParserTest {
                     .withIncludedTags(EMPTY_TAGS)
                     .withExcludedTags(EMPTY_TAGS)},
                     
+            {args("test", "mysuite", "mysuite2", 
+                            "--filter", "Some Test *"), 
+                new GalenArguments()
+                    .withAction("test")
+                    .withPaths(asList("mysuite", "mysuite2"))
+                    .withRecursive(false)
+                    .withFilter("Some Test *")
+                    .withIncludedTags(EMPTY_TAGS)
+                    .withExcludedTags(EMPTY_TAGS)},
+                    
             {args("check",  "some.spec",
                             "--url", "http://mindengine.net", 
                             "--javascript", "some.js", 

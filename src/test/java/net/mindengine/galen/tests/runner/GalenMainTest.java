@@ -18,6 +18,7 @@ package net.mindengine.galen.tests.runner;
 import static java.util.Arrays.asList;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsString;
+import static org.hamcrest.Matchers.hasItems;
 import static org.hamcrest.Matchers.is;
 
 import java.awt.Dimension;
@@ -25,17 +26,23 @@ import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.List;
 
 import net.mindengine.galen.GalenMain;
+import net.mindengine.galen.runner.CompleteListener;
 import net.mindengine.galen.runner.GalenArguments;
+import net.mindengine.galen.runner.GalenSuiteRunner;
+import net.mindengine.galen.suite.GalenSuite;
+import net.mindengine.galen.tests.SuiteNameOnlyListener;
 
 import org.apache.commons.io.FileUtils;
 import org.testng.annotations.Test;
 
 import com.google.common.io.Files;
 
-public class GalenMainTest {
 
+public class GalenMainTest {
 
     @Test public void shouldRun_singleTestSuccessfully() throws IOException, SecurityException, IllegalArgumentException, ClassNotFoundException, NoSuchMethodException, InstantiationException, IllegalAccessException, InvocationTargetException {
         String testUrl = "file://" + getClass().getResource("/html/page-nice.html").getFile();
@@ -180,6 +187,33 @@ public class GalenMainTest {
         assertThat(data, is("someTestDate = qwertyuiop"));
         
         file.delete();
+    }
+    
+    @Test public void shouldRun_filteredTestInSuite() throws Exception {
+        String testUrl = getClass().getResource("/suites/suite-for-filtering.txt").getFile();
+        GalenMain galen = new GalenMain();
+        
+        final List<String> executedSuites = new LinkedList<String>();
+        
+        CompleteListener listener = new SuiteNameOnlyListener() {
+            @Override
+            public void onSuiteStarted(GalenSuiteRunner galenSuiteRunner, GalenSuite suite) {
+                executedSuites.add(suite.getName());
+            }
+        };
+        galen.setListener(listener);
+        
+        galen.execute(new GalenArguments()
+            .withAction("test")
+            .withPaths(asList(testUrl))
+            .withFilter("*with filter*")
+        );
+        
+        assertThat("Amount of executed tests should be", executedSuites.size(), is(3));
+        assertThat(executedSuites, hasItems(
+                "Test 1 with filter one", 
+                "Test 1 with filter two",
+                "Test 2 with filter"));
     }
 }
 

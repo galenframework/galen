@@ -1,0 +1,11 @@
+
+@@ Parameterized 
+   | prefix          |
+   | with filter one |
+   | with            |
+   | with filter two |
+Test 1 ${prefix}
+
+Test 2 with filter
+
+Test 3

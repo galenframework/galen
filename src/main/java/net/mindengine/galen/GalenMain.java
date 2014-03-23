@@ -28,6 +28,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.regex.Pattern;
 
 import net.mindengine.galen.browser.SeleniumBrowserFactory;
 import net.mindengine.galen.config.GalenConfig;
@@ -50,7 +51,7 @@ import org.apache.commons.io.IOUtils;
 
 public class GalenMain {
     
-    List<CompleteListener> listeners;
+    private CompleteListener listener;
 
     public void execute(GalenArguments arguments) throws IOException, SecurityException, IllegalArgumentException, ClassNotFoundException, NoSuchMethodException, InstantiationException, IllegalAccessException, InvocationTargetException {
         if (arguments.getAction() != null) {
@@ -58,6 +59,9 @@ public class GalenMain {
             FailureListener failureListener = new FailureListener();
             CombinedListener combinedListener = createListeners(arguments);
             combinedListener.add(failureListener);
+            if (listener != null) {
+                combinedListener.add(listener);
+            }
             
             if ("test".equals(arguments.getAction())) {
                 runTests(arguments, combinedListener);
@@ -232,42 +236,63 @@ public class GalenMain {
     private void runSuites(GalenArguments arguments, List<GalenSuite> suites, CompleteListener listener) {
         
         if (arguments.getParallelSuites() > 1) {
-            runSuitesInThreads(suites, arguments.getParallelSuites(), listener);
+            runSuitesInThreads(suites, arguments, listener);
         }
         else {
-            runSuitesInSingleThread(suites, listener);
+            runSuitesInSingleThread(suites, arguments, listener);
         }
     }
 
-    private void runSuitesInSingleThread(List<GalenSuite> suites, CompleteListener listener) {
+    private void runSuitesInSingleThread(List<GalenSuite> suites, GalenArguments arguments, CompleteListener listener) {
         GalenSuiteRunner suiteRunner = new GalenSuiteRunner();
         suiteRunner.setSuiteListener(listener);
         suiteRunner.setValidationListener(listener);
         
+        Pattern filterPattern = createTestFilter(arguments.getFilter());
+        
         for (GalenSuite suite : suites) {
-            suiteRunner.runSuite(suite);
+            if (matchesPattern(suite.getName(), filterPattern)) {
+                suiteRunner.runSuite(suite);
+            }
         }
     }
 
-    private void runSuitesInThreads(List<GalenSuite> suites, int parallelSuites, final CompleteListener listener) {
-        ExecutorService executor = Executors.newFixedThreadPool(parallelSuites);
+
+    private void runSuitesInThreads(List<GalenSuite> suites, GalenArguments arguments, final CompleteListener listener) {
+        ExecutorService executor = Executors.newFixedThreadPool(arguments.getParallelSuites());
+        
+        Pattern filterPattern = createTestFilter(arguments.getFilter());
+        
         for (final GalenSuite suite : suites) {
-            Runnable thread = new Runnable() {
-                @Override
-                public void run() {
-                    GalenSuiteRunner suiteRunner = new GalenSuiteRunner();
-                    suiteRunner.setSuiteListener(listener);
-                    suiteRunner.setValidationListener(listener);
-                    suiteRunner.runSuite(suite);
-                }
-            };
-            
-            executor.execute(thread);
+            if (matchesPattern(suite.getName(), filterPattern)) {
+                Runnable thread = new Runnable() {
+                    @Override
+                    public void run() {
+                        GalenSuiteRunner suiteRunner = new GalenSuiteRunner();
+                        suiteRunner.setSuiteListener(listener);
+                        suiteRunner.setValidationListener(listener);
+                        suiteRunner.runSuite(suite);
+                    }
+                };
+                executor.execute(thread);
+            }
         }
         executor.shutdown();
         while (!executor.isTerminated()) {
         }
     }
+
+    private boolean matchesPattern(String name, Pattern filterPattern) {
+        if (filterPattern != null) {
+            return filterPattern.matcher(name).matches();
+        }
+        else return true;
+    }
+    
+    private Pattern createTestFilter(String filter) {
+        return filter != null ? Pattern.compile(filter.replace("*", ".*")) : null;
+    }
+
 
     private void searchForTests(File file, boolean recursive, List<File> files) {
         if (file.isFile() && file.getName().toLowerCase().endsWith(".test")) {
@@ -278,6 +303,14 @@ public class GalenMain {
                 searchForTests(childFile, recursive, files);
             }
         }
+    }
+
+    public CompleteListener getListener() {
+        return listener;
+    }
+
+    public void setListener(CompleteListener listener) {
+        this.listener = listener;
     }
 
 }

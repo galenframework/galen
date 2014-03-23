@@ -49,6 +49,7 @@ public class GalenArguments {
     private String url;
     private String original;
     private Boolean printVersion;
+    private String filter;
 
     public GalenArguments withAction(String action) {
         this.setAction(action);
@@ -150,6 +151,7 @@ public class GalenArguments {
         options.addOption("r", "recursive", false, "Flag for recursive tests scan");
         options.addOption("p", "parallel-suites", true, "Amount of suites to be run in parallel");
         options.addOption("v", "version", false, "Current version");
+        options.addOption("f", "filter", true, "Test filter");
         
         CommandLineParser parser = new PosixParser();
         
@@ -192,6 +194,7 @@ public class GalenArguments {
         galen.setHtmlReport(cmd.getOptionValue("H"));
         galen.setParallelSuites(Integer.parseInt(cmd.getOptionValue("p", "0")));
         galen.setPrintVersion(cmd.hasOption("v"));
+        galen.setFilter(cmd.getOptionValue("f"));
         
         
         verifyArguments(galen);
@@ -310,6 +313,7 @@ public class GalenArguments {
         .append(testngReport)
         .append(url)
         .append(parallelSuites)
+        .append(filter)
         .toHashCode();
     }
     
@@ -336,6 +340,7 @@ public class GalenArguments {
             .append(htmlReport, rhs.htmlReport)
             .append(testngReport, rhs.testngReport)
             .append(url, rhs.url)
+            .append(filter, rhs.filter)
             .append(parallelSuites, rhs.parallelSuites)
             .isEquals();
     }
@@ -353,6 +358,7 @@ public class GalenArguments {
             .append("htmlReport", htmlReport)
             .append("testngReport", testngReport)
             .append("url", url)
+            .append("filter", filter)
             .append("parallelSuites", parallelSuites)
             .toString();
     }
@@ -428,5 +434,18 @@ public class GalenArguments {
 
     public void setPrintVersion(Boolean printVersion) {
         this.printVersion = printVersion;
+    }
+
+    public GalenArguments withFilter(String filter) {
+        this.setFilter(filter);
+        return this;
+    }
+
+    public String getFilter() {
+        return filter;
+    }
+
+    public void setFilter(String filter) {
+        this.filter = filter;
     }
 }
