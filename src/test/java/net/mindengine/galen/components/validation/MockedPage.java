@@ -18,6 +18,7 @@ package net.mindengine.galen.components.validation;
 import java.awt.image.BufferedImage;
 import java.util.HashMap;
 
+import net.mindengine.galen.page.AbsentPageElement;
 import net.mindengine.galen.page.Page;
 import net.mindengine.galen.page.PageElement;
 import net.mindengine.galen.specs.page.Locator;
@@ -26,6 +27,8 @@ public class MockedPage implements Page {
 
     private HashMap<String, PageElement> elements;
     private BufferedImage screenshotImage;
+    
+    private HashMap<String, PageElement> locatorElements;
 
     public MockedPage(HashMap<String, PageElement> elements) {
         this.setElements(elements);
@@ -34,6 +37,20 @@ public class MockedPage implements Page {
     public MockedPage(HashMap<String, PageElement> elements, BufferedImage screenshotImage) {
         this.setElements(elements);
         this.screenshotImage = screenshotImage;
+    }
+    
+    public MockedPage() {
+    }
+
+    @Override
+    public PageElement getObject(Locator objectLocator) {
+        if (locatorElements != null) {
+            PageElement pageElement = locatorElements.get(objectLocator.prettyString());
+            if (pageElement != null) {
+                return pageElement;
+            }
+        }
+        return new AbsentPageElement();
     }
 
     @Override
@@ -73,6 +90,14 @@ public class MockedPage implements Page {
 
     public void setScreenshotImage(BufferedImage screenshotImage) {
         this.screenshotImage = screenshotImage;
+    }
+
+    public HashMap<String, PageElement> getLocatorElements() {
+        return locatorElements;
+    }
+
+    public void setLocatorElements(HashMap<String, PageElement> locatorElements) {
+        this.locatorElements = locatorElements;
     }
 
 }

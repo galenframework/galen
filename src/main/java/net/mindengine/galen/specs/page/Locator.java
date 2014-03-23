@@ -79,6 +79,10 @@ public class Locator {
             .toString();
     }
 
+    public String prettyString() {
+        return locatorType + ": " + locatorValue;
+    }
+    
     public Locator withCorrections(CorrectionsRect corrections) {
         this.setCorrections(corrections);
         return this;
@@ -96,6 +100,35 @@ public class Locator {
     }
     public void setCorrections(CorrectionsRect corrections) {
         this.corrections = corrections;
+    }
+    
+    public static Locator css(String cssText) {
+        return new Locator("css", cssText, 0);
+    }
+    
+    public static Locator xpath(String xpathText) {
+        return new Locator("xpath", xpathText, 0);
+    }
+    public static Locator id(String idText) {
+        return new Locator("id", idText);
+    }
+    
+    
+    public static Locator parse(String text) {
+        int index = text.indexOf(":");
+        if (index > 0) {
+            String type = text.substring(0, index);
+            if (type.equals("id")) {
+                return id(text.substring(index + 1).trim());
+            }
+            else if(type.equals("xpath")) {
+                return xpath(text.substring(index + 1).trim());
+            }
+            else if (type.equals("css")) {
+                return css(text.substring(index + 1).trim());
+            }
+        }
+        return css(text);
     }
 
 }

@@ -21,6 +21,8 @@ import net.mindengine.galen.specs.page.Locator;
 
 public interface Page {
 
+    PageElement getObject(Locator objectLocator);
+    
     PageElement getObject(String objectName, Locator objectLocator);
 
     PageElement getSpecialObject(String objectName);

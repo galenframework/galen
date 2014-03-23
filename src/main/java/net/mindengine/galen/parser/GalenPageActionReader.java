@@ -21,6 +21,7 @@ import java.awt.Dimension;
 import java.util.LinkedList;
 import java.util.List;
 
+import net.mindengine.galen.specs.page.Locator;
 import net.mindengine.galen.suite.GalenPageAction;
 import net.mindengine.galen.suite.actions.GalenPageActionCheck;
 import net.mindengine.galen.suite.actions.GalenPageActionCookie;
@@ -28,6 +29,8 @@ import net.mindengine.galen.suite.actions.GalenPageActionInjectJavascript;
 import net.mindengine.galen.suite.actions.GalenPageActionOpen;
 import net.mindengine.galen.suite.actions.GalenPageActionResize;
 import net.mindengine.galen.suite.actions.GalenPageActionRunJavascript;
+import net.mindengine.galen.suite.actions.GalenPageActionWait;
+import net.mindengine.galen.suite.actions.GalenPageActionWait.UntilType;
 import net.mindengine.galen.utils.GalenUtils;
 
 import org.apache.commons.cli.CommandLine;
@@ -61,9 +64,13 @@ public class GalenPageActionReader {
         else if (args[0].equals("resize")) {
             return resizeActionFrom(args);
         }
+        else if (args[0].equals("wait")) {
+            return waitActionFrom(args);
+        }
         else throw new SyntaxException(UNKNOWN_LINE, "Unknown action: " + args[0]);
     }
 
+    
     private static GalenPageAction resizeActionFrom(String[] args) {
         Dimension size = GalenUtils.readSize(args[1]);
         return new GalenPageActionResize(size.width, size.height);
@@ -138,6 +145,81 @@ public class GalenPageActionReader {
         return new GalenPageActionRunJavascript(args[1])
             .withJsonArguments(jsonArguments);
     }
+    
+    private static GalenPageAction waitActionFrom(String[] args) {
+        if (args.length < 2) {
+            throw new SyntaxException("the timeout is not specified");
+        }
+        
+        
+        GalenPageActionWait wait = new GalenPageActionWait();
+        wait.setTimeout(parseTimeout(args[1]));
+        
+        if (args.length > 2) {
+            parseUntilConditions(wait, args);
+        }
+        return wait;
+    }
+
+    private static void parseUntilConditions(GalenPageActionWait wait, String[] args) {
+        if (args[2].equals("until")) {
+            if (args.length > 3) {
+                List<GalenPageActionWait.Until> untilElements = new LinkedList<GalenPageActionWait.Until>();
+                
+                UntilType currentType = null;
+                
+                for (int i = 3; i < args.length; i++) {
+                    UntilType type = UntilType.parseNonStrict(args[i]);
+                    
+                    if (type != null) {
+                        currentType = type;
+                    }
+                    else {
+                        if (currentType == null) {
+                            throw new SyntaxException("You have to specify one of the following checks: visible, hidden, exist, gone");
+                        }
+                        
+                        untilElements.add(new GalenPageActionWait.Until(currentType, Locator.parse(args[i])));
+                    }
+                }
+                
+                wait.setUntilElements(untilElements);
+            }
+            else throw new SyntaxException("You have to provide locators");
+        }
+        else throw new SyntaxException(String.format("Expected \"until\" but got \"%s\"", args[2]));
+    }
+
+
+
+
+    private static int parseTimeout(String timeoutText) {
+        for (int i = 0; i < timeoutText.length(); i++) {
+            if (!isNumber(timeoutText.charAt(i))) {
+                int number = Integer.parseInt(timeoutText.substring(0, i));
+                String unitPart = timeoutText.substring(i);
+                if (unitPart.equals("s")) {
+                    return 1000 * number;
+                }
+                else if (unitPart.equals("ms")) {
+                    return number;
+                }
+                else if (unitPart.equals("m")) {
+                    return 60000 * number;
+                }
+                else throw new SyntaxException("Unkown time unit: " + unitPart);
+                
+            }
+        }
+        return Integer.parseInt(timeoutText);
+    }
+
+
+    private static boolean isNumber(char symbol) {
+        int code = (int)symbol;
+        return code > 47 && code < 58;
+    }
+
 
     private static GalenPageActionInjectJavascript injectActionFrom(String[] args) {
         return new GalenPageActionInjectJavascript(args[1]);

@@ -82,6 +82,10 @@ public class SeleniumPage implements Page {
     }
 
 
+    @Override
+    public PageElement getObject(Locator objectLocator) {
+        return locatorToElement("unnamed", objectLocator);
+    }
     
     @Override
     public PageElement getObject(String objectName, Locator objectLocator) {
@@ -145,18 +149,7 @@ public class SeleniumPage implements Page {
         PageElement pageElement = cachedPageElements.get(objectName);
         
         if (pageElement == null) {
-            By by = by(objectLocator);
-            if (by == null) {
-                return null;
-            }
-            
-            try {
-                WebElement webElement = driverFindElement(by);
-                pageElement = new WebPageElement(objectName, webElement, objectLocator);
-            }
-            catch (NoSuchElementException e) {
-                pageElement = new AbsentPageElement();
-            }
+            pageElement = locatorToElement(objectName, objectLocator);
             
             cachedPageElements.put(objectName, pageElement);
             return pageElement;
@@ -164,6 +157,23 @@ public class SeleniumPage implements Page {
         else {
             return pageElement;
         }
+    }
+
+    private PageElement locatorToElement(String objectName, Locator objectLocator) {
+        PageElement pageElement;
+        By by = by(objectLocator);
+        if (by == null) {
+            return null;
+        }
+        
+        try {
+            WebElement webElement = driverFindElement(by);
+            pageElement = new WebPageElement(objectName, webElement, objectLocator);
+        }
+        catch (NoSuchElementException e) {
+            pageElement = new AbsentPageElement();
+        }
+        return pageElement;
     }
 
     private By by(Locator locator) {
