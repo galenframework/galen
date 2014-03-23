@@ -62,8 +62,6 @@ import net.mindengine.galen.specs.SpecVertically;
 import net.mindengine.galen.specs.SpecVisible;
 import net.mindengine.galen.specs.SpecWidth;
 import net.mindengine.galen.specs.colors.ColorRange;
-import net.mindengine.galen.specs.reader.page.PageSpec;
-import net.mindengine.galen.specs.reader.page.PageSpecReader;
 
 public class SpecReader {
     
@@ -323,22 +321,13 @@ public class SpecReader {
                     throw new SyntaxException("File path to component spec is not specified");
                 }
                 
-                
-                PageSpecReader pageSpecReader = new PageSpecReader(getBrowser());
-                
-                String filePath = childFilePath;
+                String fullFilePath = childFilePath;
                 if (contextPath != null) {
-                    filePath = contextPath + File.separator + childFilePath;
+                    fullFilePath = contextPath + File.separator + childFilePath;
                 }
-                
-                File file = new File(filePath);
-                if (!file.exists()) {
-                    throw new SyntaxException("Component spec file not found: " + filePath);
-                }
-                PageSpec childPageSpec = pageSpecReader.read(file);
                 
                 SpecComponent spec = new SpecComponent();
-                spec.setPageSpec(childPageSpec);
+                spec.setSpecPath(fullFilePath);
                 return spec;
             }
         });

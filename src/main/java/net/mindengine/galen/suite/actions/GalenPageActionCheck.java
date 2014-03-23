@@ -57,7 +57,7 @@ public class GalenPageActionCheck extends GalenPageAction {
             SectionFilter sectionFilter = new SectionFilter(includedTags, excludedTags);
             List<PageSection> pageSections = spec.findSections(includedTags, excludedTags);
             
-            SectionValidation sectionValidation = new SectionValidation(pageSections, new PageValidation(page, spec, validationListener, sectionFilter), validationListener);
+            SectionValidation sectionValidation = new SectionValidation(pageSections, new PageValidation(browser, page, spec, validationListener, sectionFilter), validationListener);
             
             List<ValidationError> errors = sectionValidation.check();
             if (errors != null) {

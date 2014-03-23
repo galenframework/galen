@@ -15,17 +15,16 @@
 ******************************************************************************/
 package net.mindengine.galen.specs;
 
-import net.mindengine.galen.specs.reader.page.PageSpec;
 
 public class SpecComponent extends Spec {
 
-    private PageSpec pageSpec;
+    private String specPath;
 
-    public PageSpec getPageSpec() {
-        return pageSpec;
+    public String getSpecPath() {
+        return specPath;
     }
 
-    public void setPageSpec(PageSpec pageSpec) {
-        this.pageSpec = pageSpec;
+    public void setSpecPath(String specPath) {
+        this.specPath = specPath;
     }
 }

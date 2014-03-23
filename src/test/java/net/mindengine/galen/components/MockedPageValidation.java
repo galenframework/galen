@@ -25,7 +25,7 @@ public class MockedPageValidation extends PageValidation{
     public Map<String, PageElement> pageElements;
     
     public MockedPageValidation(Map<String, PageElement> pageElements) {
-        super(null, null, null, null);
+        super(null, null, null, null, null);
         this.pageElements = pageElements;
     }
     

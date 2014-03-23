@@ -336,17 +336,6 @@ public class PageSpecsReaderTest {
     }
     
     @Test
-    public void givesError_ifComponentSpecFile_notFound() throws Exception {
-        FileSyntaxException exception = expectExceptionFromReading("/negative-specs/component-spec-not-found.spec");
-        
-        String fullSpecPath = getClass().getResource("/negative-specs/component-spec-not-found.spec").getFile();
-        
-        assertThat(exception.getMessage(), is("Component spec file not found: ./blablaalba.spec\n    in " + fullSpecPath +":10"));
-        assertThat(exception.getFilePath(), endsWith("/component-spec-not-found.spec"));
-        assertThat(exception.getLine(), is(10));
-    }
-    
-    @Test
     public void shouldImport_otherSpecs_fromOtherFiles() throws Exception {
     	PageSpec pageSpec = pageSpecReader.read(new File(getClass().getResource("/spec-import-test/main.spec").getFile()));
     	
@@ -581,35 +570,8 @@ public class PageSpecsReaderTest {
         SpecComponent spec = (SpecComponent) specs.get(0);
         assertThat(spec.getOriginalText(), is("component: spec-for-component-test-component.spec"));
         
-        PageSpec pageSpec = spec.getPageSpec();
-        List<PageSection> childSections = pageSpec.getSections();
-        
-        assertThat(childSections.size(), is(3));
-        
-        
-        
-        {
-            List<ObjectSpecs> objects = childSections.get(0).getObjects();
-            assertThat(objects.size(), is(1));
-            assertThat(objects.get(0).getObjectName(), is("user-pic"));
-            List<Spec> childSpecs = objects.get(0).getSpecs();
-            assertThat(childSpecs.size(), is(3));
-        }
-        {
-            List<ObjectSpecs> objects = childSections.get(1).getObjects();
-            assertThat(objects.size(), is(1));
-            assertThat(objects.get(0).getObjectName(), is("user-name"));
-            List<Spec> childSpecs = objects.get(0).getSpecs();
-            assertThat(childSpecs.size(), is(3));
-        }
-        {
-            List<ObjectSpecs> objects = childSections.get(2).getObjects();
-            assertThat(objects.size(), is(1));
-            assertThat(objects.get(0).getObjectName(), is("user-age"));
-            List<Spec> childSpecs = objects.get(0).getSpecs();
-            assertThat(childSpecs.size(), is(3));
-        }
-        
+        assertThat(spec.getSpecPath(), endsWith("spec-for-component-test-component.spec"));
+             
     }
 
     private FileSyntaxException expectExceptionFromReading(String file) throws IOException {

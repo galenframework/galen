@@ -82,7 +82,7 @@ public class ValidationTest {
     @Test(dataProvider="provideGoodSamples")
     public void shouldPassValidation(Spec spec, MockedPage page) {
         PageSpec pageSpec = createMockedPageSpec(page);
-        PageValidation validation = new PageValidation(page, pageSpec, null, null);
+        PageValidation validation = new PageValidation(null, page, pageSpec, null, null);
         ValidationError error = validation.check("object", spec);
         
         assertThat(error, is(nullValue()));
@@ -99,7 +99,7 @@ public class ValidationTest {
     @Test(dataProvider="provideBadSamples")
     public void shouldGiveError(ValidationError expectedError, Spec spec, MockedPage page) {
         PageSpec pageSpec = createMockedPageSpec(page);
-        PageValidation validation = new PageValidation(page, pageSpec, null, null);
+        PageValidation validation = new PageValidation(null, page, pageSpec, null, null);
         ValidationError error = validation.check("object", spec);
         
         assertThat(error, is(notNullValue()));

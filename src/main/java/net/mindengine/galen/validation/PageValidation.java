@@ -20,6 +20,7 @@ import static net.mindengine.galen.suite.reader.Line.UNKNOWN_LINE;
 
 import java.lang.reflect.Method;
 
+import net.mindengine.galen.browser.Browser;
 import net.mindengine.galen.page.Page;
 import net.mindengine.galen.page.PageElement;
 import net.mindengine.galen.parser.SyntaxException;
@@ -31,12 +32,14 @@ import net.mindengine.galen.specs.reader.page.SectionFilter;
 
 public class PageValidation {
 
+    private Browser browser;
     private Page page;
     private PageSpec pageSpec;
     private ValidationListener validationListener;
     private SectionFilter sectionFilter;
 
-    public PageValidation(Page page, PageSpec pageSpec, ValidationListener validationListener, SectionFilter sectionFilter) {
+    public PageValidation(Browser browser, Page page, PageSpec pageSpec, ValidationListener validationListener, SectionFilter sectionFilter) {
+        this.setBrowser(browser);
         this.setPage(page);
         this.setPageSpec(pageSpec);
         this.setValidationListener(validationListener);
@@ -195,6 +198,14 @@ public class PageValidation {
 
     public void setSectionFilter(SectionFilter sectionFilter) {
         this.sectionFilter = sectionFilter;
+    }
+
+    public Browser getBrowser() {
+        return browser;
+    }
+
+    public void setBrowser(Browser browser) {
+        this.browser = browser;
     }
 
 }

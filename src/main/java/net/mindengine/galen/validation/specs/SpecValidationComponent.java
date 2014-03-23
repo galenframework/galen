@@ -15,12 +15,17 @@
 ******************************************************************************/
 package net.mindengine.galen.validation.specs;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.List;
 
 import net.mindengine.galen.page.Page;
 import net.mindengine.galen.page.selenium.SeleniumPage;
+import net.mindengine.galen.parser.SyntaxException;
 import net.mindengine.galen.specs.SpecComponent;
 import net.mindengine.galen.specs.page.Locator;
+import net.mindengine.galen.specs.reader.page.PageSpec;
+import net.mindengine.galen.specs.reader.page.PageSpecReader;
 import net.mindengine.galen.validation.PageValidation;
 import net.mindengine.galen.validation.SectionValidation;
 import net.mindengine.galen.validation.SpecValidation;
@@ -43,8 +48,21 @@ public class SpecValidationComponent extends SpecValidation<SpecComponent> {
         
         ValidationListener validationListener = pageValidation.getValidationListener();
         
-        SectionValidation sectionValidation = new SectionValidation(spec.getPageSpec().findSections(pageValidation.getSectionFilter()), 
-                new PageValidation(objectContextPage, spec.getPageSpec(), validationListener, pageValidation.getSectionFilter()), 
+        File file = new File(spec.getSpecPath());
+        if (!file.exists()) {
+            throw new SyntaxException("Component spec file not found: " + file.getAbsolutePath());
+        }
+        
+        PageSpecReader pageSpecReader = new PageSpecReader(pageValidation.getBrowser());
+        PageSpec componentPageSpec;
+        try {
+            componentPageSpec = pageSpecReader.read(file);
+        } catch (IOException e) {
+            throw new RuntimeException(e.getMessage(), e);
+        }
+        
+        SectionValidation sectionValidation = new SectionValidation(componentPageSpec.findSections(pageValidation.getSectionFilter()), 
+                new PageValidation(pageValidation.getBrowser(), objectContextPage, componentPageSpec, validationListener, pageValidation.getSectionFilter()), 
                 validationListener);
         
         List<ValidationError> errors = sectionValidation.check();
