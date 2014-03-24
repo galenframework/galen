@@ -2,4 +2,4 @@
 
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 set -e
-java -cp "$DIR/galen.jar:lib/*:libs/*" net.mindengine.galen.GalenMain $@
+java -cp "$DIR/galen.jar:lib/*:libs/*" net.mindengine.galen.GalenMain "$@"
