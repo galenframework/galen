@@ -27,6 +27,7 @@ import net.mindengine.galen.suite.GalenPageAction;
 import net.mindengine.galen.suite.actions.GalenPageActionCheck;
 import net.mindengine.galen.suite.actions.GalenPageActionCookie;
 import net.mindengine.galen.suite.actions.GalenPageActionInjectJavascript;
+import net.mindengine.galen.suite.actions.GalenPageActionProperties;
 import net.mindengine.galen.suite.actions.GalenPageActionRunJavascript;
 import net.mindengine.galen.suite.actions.GalenPageActionWait;
 import net.mindengine.galen.suite.actions.GalenPageActionWait.UntilType;
@@ -82,6 +83,9 @@ public class GalenPageActionReaderTest {
             {"wait 10s until exist \"id: login\" gone \"xpath: //div[@id='qwe']\"", new GalenPageActionWait()
                 .withTimeout(10000)
                 .withUntilElements(asList(exist(id("login")), gone(xpath("//div[@id='qwe']"))))},
+            {"properties \"some-path-1/file.properties\" file2.properties", new GalenPageActionProperties()
+                .withFiles(asList("some-path-1/file.properties", "file2.properties"))
+            }
         };
     }
     

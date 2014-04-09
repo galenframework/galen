@@ -27,6 +27,7 @@ import net.mindengine.galen.suite.actions.GalenPageActionCheck;
 import net.mindengine.galen.suite.actions.GalenPageActionCookie;
 import net.mindengine.galen.suite.actions.GalenPageActionInjectJavascript;
 import net.mindengine.galen.suite.actions.GalenPageActionOpen;
+import net.mindengine.galen.suite.actions.GalenPageActionProperties;
 import net.mindengine.galen.suite.actions.GalenPageActionResize;
 import net.mindengine.galen.suite.actions.GalenPageActionRunJavascript;
 import net.mindengine.galen.suite.actions.GalenPageActionWait;
@@ -67,14 +68,29 @@ public class GalenPageActionReader {
         else if (args[0].equals("wait")) {
             return waitActionFrom(args);
         }
+        else if (args[0].equals("properties")) {
+            return propertiesActionFrom(args);
+        }
         else throw new SyntaxException(UNKNOWN_LINE, "Unknown action: " + args[0]);
     }
 
     
+    
+
     private static GalenPageAction resizeActionFrom(String[] args) {
         Dimension size = GalenUtils.readSize(args[1]);
         return new GalenPageActionResize(size.width, size.height);
     }
+    
+    
+    private static GalenPageAction propertiesActionFrom(String[] args) {
+        List<String> files = new LinkedList<String>();
+        for (int i = 1; i < args.length; i++) {
+            files.add(args[i]);
+        }
+        return new GalenPageActionProperties().withFiles(files);
+    }
+
 
     private static GalenPageAction openActionFrom(String[] args) {
         return new GalenPageActionOpen(args[1]);
