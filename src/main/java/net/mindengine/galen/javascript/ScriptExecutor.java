@@ -69,7 +69,10 @@ public class ScriptExecutor extends BaseFunction {
             
             if (!loadedFiles.contains(absolutePath)) {
                 
-                contextPathStack.push(file.getParent());
+                String parentPath = new File(absolutePath).getParent();
+                if (parentPath != null) {
+                    contextPathStack.push(file.getParent());
+                }
                 
                 cx.evaluateReader(scope, new FileReader(file), file.getAbsolutePath(), 1, null);
                 loadedFiles.add(absolutePath);
@@ -93,7 +96,9 @@ public class ScriptExecutor extends BaseFunction {
     }
 
     public void putContextPath(String contextPath) {
-        contextPathStack.push(contextPath);   
+        if (contextPath != null) {
+            contextPathStack.push(contextPath);
+        }
     }
 
 }
