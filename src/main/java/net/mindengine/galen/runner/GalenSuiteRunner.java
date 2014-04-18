@@ -61,13 +61,18 @@ public class GalenSuiteRunner {
         pageRunner.setValidationListener(validationListener);
         
         for (GalenPageTest pageTest : pageTests) {
-            Browser browser = pageTest.getBrowserFactory().openBrowser();
+            try {
+                Browser browser = pageTest.getBrowserFactory().openBrowser();
             
-            tellBeforePage(pageRunner, pageTest, browser);
-            List<ValidationError> errors = runPageTest(pageRunner, pageTest, browser);
-            tellAfterPage(pageRunner, pageTest, browser, errors);
-            
-            browser.quit();
+                tellBeforePage(pageRunner, pageTest, browser);
+                List<ValidationError> errors = runPageTest(pageRunner, pageTest, browser);
+                tellAfterPage(pageRunner, pageTest, browser, errors);
+                
+                browser.quit();
+            }
+            catch (Exception ex) {
+                ex.printStackTrace();
+            }
         }
         
         tellSuiteFinished(suite);
