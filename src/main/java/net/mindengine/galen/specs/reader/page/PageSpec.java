@@ -70,7 +70,7 @@ public class PageSpec {
         
         for (PageSection section : sections) {
             
-            if (section.hasAnyTag(includedTags)) {
+            if (section.appliesToTags(includedTags)) {
                 if ( !(excludedTags != null && excludedTags.size() > 0 && section.hasAnyTag(excludedTags))) {
                     filteredSections.add(section);
                 }

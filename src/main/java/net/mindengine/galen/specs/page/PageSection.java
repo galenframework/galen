@@ -41,6 +41,11 @@ public class PageSection {
         this.objects = objects;
     }
 
+
+    public boolean appliesToTags(List<String> includedTags) {
+        return tags.contains("*") || hasAnyTag(includedTags);
+    }
+    
     public boolean hasAnyTag(List<String> includedTags) {
         if (includedTags != null && includedTags.size() > 0) {
             if (tags != null) {
@@ -77,5 +82,6 @@ public class PageSection {
     public void setName(String name) {
         this.name = name;
     }
+
 
 }

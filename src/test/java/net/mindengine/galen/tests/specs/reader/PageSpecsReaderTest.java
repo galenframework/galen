@@ -52,6 +52,7 @@ import net.mindengine.galen.specs.page.ObjectSpecs;
 import net.mindengine.galen.specs.page.PageSection;
 import net.mindengine.galen.specs.reader.page.PageSpec;
 import net.mindengine.galen.specs.reader.page.PageSpecReader;
+import net.mindengine.galen.utils.GalenUtils;
 
 import org.testng.annotations.Test;
 
@@ -116,6 +117,19 @@ public class PageSpecsReaderTest {
         assertThat(sections.get(5).getTags(), hasSize(1));
         assertThat(sections.get(5).getTags(), contains("parameterized2"));
     }
+    
+    @Test
+    public void shouldAlways_provideAsteriskTags_whenFiltering_byIncludedTags() throws IOException {
+        PageSpec pageSpec = pageSpecReader.read(new File(getClass().getResource("/specs/spec-asterisk-tags.spec").getFile()));
+        
+        assertThat("Total amount of sections should be", pageSpec.getSections().size(), is(3));
+        
+        List<PageSection> filteredSections = pageSpec.findSections(asList("tag2"));
+        assertThat("Amount of filtered sections should be", filteredSections.size(), is(2));
+        assertThat("Tag for first filtered section should be", filteredSections.get(0).getTags(), contains("*"));
+        assertThat("Tag for second filtered section should be", filteredSections.get(1).getTags(), contains("tag2"));
+    }
+    
     
     @Test(dependsOnMethods = BASE_TEST)
     public void shouldRead_parameterizedSpecs() {
