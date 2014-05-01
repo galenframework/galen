@@ -23,9 +23,9 @@ import java.util.Map;
 
 import net.mindengine.galen.parser.BashTemplateContext;
 import net.mindengine.galen.parser.SyntaxException;
-import net.mindengine.galen.suite.GalenSuite;
+import net.mindengine.galen.tests.GalenBasicTest;
 
-public class ParameterizedNode extends Node<List<GalenSuite>>{
+public class ParameterizedNode extends Node<List<GalenBasicTest>>{
 
     private Node<?> toParameterize;
     
@@ -36,12 +36,12 @@ public class ParameterizedNode extends Node<List<GalenSuite>>{
     }
 
     @Override
-    public List<GalenSuite> build(BashTemplateContext context) {
+    public List<GalenBasicTest> build(BashTemplateContext context) {
         
         Table table = createTable(context);
         
         final BashTemplateContext parameterizedContext = new BashTemplateContext(context);
-        final List<GalenSuite> suites = new LinkedList<GalenSuite>();
+        final List<GalenBasicTest> suites = new LinkedList<GalenBasicTest>();
         
         table.forEach(new RowVisitor() {
             @Override

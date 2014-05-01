@@ -19,6 +19,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import net.mindengine.galen.browser.Browser;
 import net.mindengine.galen.browser.SeleniumBrowser;
+import net.mindengine.galen.reports.TestReport;
 import net.mindengine.galen.suite.GalenPageTest;
 import net.mindengine.galen.suite.actions.GalenPageActionRunJavascript;
 
@@ -42,7 +43,7 @@ public class GalenPageActionRunJavascriptTest {
         GalenPageActionRunJavascript action = new GalenPageActionRunJavascript(getClass().getResource("/scripts/to-run-1.js").getFile());
         action.setJsonArguments("{prefix: 'This was'}");
         
-        action.execute(browser, new GalenPageTest(), null);
+        action.execute(new TestReport(), browser, new GalenPageTest(), null);
         
         assertThat("Search input should contain text", element.getAttribute("value"), is("This was typed by a selenium from javascript text from imported script"));
         browser.quit();

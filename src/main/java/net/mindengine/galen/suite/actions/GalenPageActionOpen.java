@@ -15,21 +15,17 @@
 ******************************************************************************/
 package net.mindengine.galen.suite.actions;
 
-import java.util.LinkedList;
-import java.util.List;
+import net.mindengine.galen.browser.Browser;
+import net.mindengine.galen.reports.TestReport;
+import net.mindengine.galen.suite.GalenPageAction;
+import net.mindengine.galen.suite.GalenPageTest;
+import net.mindengine.galen.validation.ValidationListener;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
-import net.mindengine.galen.browser.Browser;
-import net.mindengine.galen.suite.GalenPageAction;
-import net.mindengine.galen.suite.GalenPageTest;
-import net.mindengine.galen.validation.ValidationError;
-import net.mindengine.galen.validation.ValidationListener;
-
 public class GalenPageActionOpen extends GalenPageAction {
-    private static final List<ValidationError> NO_ERRORS = new LinkedList<ValidationError>();
     private String url;
 
     public GalenPageActionOpen(String url) {
@@ -37,9 +33,8 @@ public class GalenPageActionOpen extends GalenPageAction {
     }
 
     @Override
-    public List<ValidationError> execute(Browser browser, GalenPageTest pageTest, ValidationListener validationListener) throws Exception {
+    public void execute(TestReport report, Browser browser, GalenPageTest pageTest, ValidationListener validationListener) throws Exception {
         browser.load(url);
-        return NO_ERRORS;
     }
 
     public String getUrl() {

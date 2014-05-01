@@ -15,16 +15,14 @@
 ******************************************************************************/
 package net.mindengine.galen.suite;
 
-import java.util.List;
-
 import net.mindengine.galen.browser.Browser;
-import net.mindengine.galen.validation.ValidationError;
+import net.mindengine.galen.reports.TestReport;
 import net.mindengine.galen.validation.ValidationListener;
 
 public abstract class GalenPageAction {
     private String originalCommand;
     
-    public abstract List<ValidationError> execute(Browser browser, GalenPageTest pageTest, ValidationListener validationListener) throws Exception;
+    public abstract void execute(TestReport report, Browser browser, GalenPageTest pageTest, ValidationListener validationListener) throws Exception;
 
     public String getOriginalCommand() {
         return originalCommand;

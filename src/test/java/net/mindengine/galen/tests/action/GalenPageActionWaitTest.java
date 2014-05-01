@@ -31,6 +31,7 @@ import net.mindengine.galen.components.validation.MockedInvisiblePageElement;
 import net.mindengine.galen.components.validation.MockedPage;
 import net.mindengine.galen.components.validation.MockedPageElement;
 import net.mindengine.galen.page.PageElement;
+import net.mindengine.galen.reports.TestReport;
 import net.mindengine.galen.specs.page.Locator;
 import net.mindengine.galen.suite.actions.GalenPageActionWait;
 import net.mindengine.galen.suite.actions.GalenPageActionWait.UntilType;
@@ -53,7 +54,7 @@ public class GalenPageActionWaitTest {
                 ));
         MockedBrowser browser = new MockedBrowser(null, null);
         browser.setMockedPage(mockedPage);
-        wait.execute(browser, null, null);
+        wait.execute(new TestReport(), browser, null, null);
     }
     
     @Test
@@ -72,7 +73,7 @@ public class GalenPageActionWaitTest {
         
         TimeoutException exception = null;
         try {
-            wait.execute(browser, null, null);
+            wait.execute(new TestReport(), browser, null, null);
         }
         catch(TimeoutException e) {
             exception = e;

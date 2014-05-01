@@ -23,19 +23,19 @@ import java.util.List;
 
 import net.mindengine.galen.parser.FileSyntaxException;
 import net.mindengine.galen.parser.SyntaxException;
-import net.mindengine.galen.suite.GalenSuite;
+import net.mindengine.galen.tests.GalenBasicTest;
 
 
 public class GalenSuiteReader {
 
-    public List<GalenSuite> read(File file) throws IOException {
+    public List<GalenBasicTest> read(File file) throws IOException {
         return read(new FileInputStream(file), file.getAbsolutePath());
     }
-    public List<GalenSuite> read(InputStream inputStream) throws IOException {
+    public List<GalenBasicTest> read(InputStream inputStream) throws IOException {
         return read(inputStream, "< unknown file >");
     }
     
-    private List<GalenSuite> read(InputStream inputStream, String filePath) throws IOException {
+    private List<GalenBasicTest> read(InputStream inputStream, String filePath) throws IOException {
         try {
             GalenSuiteLineProcessor lineProcessor = new GalenSuiteLineProcessor(getContextPath(filePath));
             lineProcessor.readLines(inputStream);

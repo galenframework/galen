@@ -33,17 +33,19 @@ import java.util.regex.Pattern;
 import net.mindengine.galen.browser.SeleniumBrowserFactory;
 import net.mindengine.galen.config.GalenConfig;
 import net.mindengine.galen.reports.ConsoleReportingListener;
+import net.mindengine.galen.reports.GalenTestInfo;
 import net.mindengine.galen.reports.HtmlReportingListener;
+import net.mindengine.galen.reports.TestReport;
 import net.mindengine.galen.reports.TestngReportingListener;
 import net.mindengine.galen.runner.CombinedListener;
 import net.mindengine.galen.runner.CompleteListener;
 import net.mindengine.galen.runner.GalenArguments;
-import net.mindengine.galen.runner.GalenSuiteRunner;
 import net.mindengine.galen.suite.GalenPageAction;
 import net.mindengine.galen.suite.GalenPageTest;
-import net.mindengine.galen.suite.GalenSuite;
 import net.mindengine.galen.suite.actions.GalenPageActionCheck;
 import net.mindengine.galen.suite.reader.GalenSuiteReader;
+import net.mindengine.galen.tests.GalenBasicTest;
+import net.mindengine.galen.tests.GalenTest;
 import net.mindengine.galen.validation.FailureListener;
 
 import org.apache.commons.cli.ParseException;
@@ -120,19 +122,11 @@ public class GalenMain {
         CombinedListener combinedListener = new CombinedListener();
         combinedListener.add(new ConsoleReportingListener(System.out, System.out));
         
-        if (arguments.getHtmlReport() != null) {
-            combinedListener.add(new HtmlReportingListener(arguments.getHtmlReport()));
-        }
-        if (arguments.getTestngReport() != null) {
-            combinedListener.add(new TestngReportingListener(arguments.getTestngReport()));
-        }
-        
         //Adding all user defined listeners
         List<CompleteListener> configuredListeners = getConfiguredListeners();
         for (CompleteListener configuredListener : configuredListeners) {
             combinedListener.add(configuredListener);
         }
-        
         return combinedListener;
     }
     
@@ -151,16 +145,12 @@ public class GalenMain {
     private void performCheck(GalenArguments arguments, CombinedListener listener) throws IOException {
         verifyArgumentsForPageCheck(arguments);
         
-        List<GalenSuite> galenSuites = new LinkedList<GalenSuite>();
-        
+        List<GalenTest> galenTests = new LinkedList<GalenTest>();
         
         for (String pageSpecPath : arguments.getPaths()) {
-            GalenSuite suite = new GalenSuite();
-            
-            suite.setName(pageSpecPath);
-            
-            
-            suite.setPageTests(asList(new GalenPageTest()
+            GalenBasicTest test = new GalenBasicTest();
+            test.setName(pageSpecPath);
+            test.setPageTests(asList(new GalenPageTest()
                 .withUrl(arguments.getUrl())
                 .withSize(arguments.getScreenSize())
                 .withBrowserFactory(new SeleniumBrowserFactory(SeleniumBrowserFactory.FIREFOX))
@@ -170,11 +160,10 @@ public class GalenMain {
                     .withExcludedTags(arguments.getExcludedTags())
                     .withOriginalCommand(arguments.getOriginal()))
                 )));
-                        
-            galenSuites.add(suite);
+            galenTests.add(test);
         }
         
-        runSuites(arguments, galenSuites, listener);
+        runTests(arguments, galenTests, listener);
     }
 
     private void verifyArgumentsForPageCheck(GalenArguments arguments) {
@@ -225,53 +214,45 @@ public class GalenMain {
     private void runTestFiles(List<File> testFiles, CompleteListener listener, GalenArguments arguments) throws IOException {
         GalenSuiteReader reader = new GalenSuiteReader();
         
-        List<GalenSuite> suites = new LinkedList<GalenSuite>();
+        List<GalenTest> tests = new LinkedList<GalenTest>();
         for (File file : testFiles) {
-            suites.addAll(reader.read(file));
+            tests.addAll(reader.read(file));
         }
         
-        runSuites(arguments, suites, listener);
+        runTests(arguments, tests, listener);
     }
 
-    private void runSuites(GalenArguments arguments, List<GalenSuite> suites, CompleteListener listener) {
+    private void runTests(GalenArguments arguments, List<GalenTest> tests, CompleteListener listener) {
         
         if (arguments.getParallelSuites() > 1) {
-            runSuitesInThreads(suites, arguments, listener);
+            runTestsInThreads(tests, arguments, listener, arguments.getParallelSuites());
         }
         else {
-            runSuitesInSingleThread(suites, arguments, listener);
+            runTestsInThreads(tests, arguments, listener, 1);
         }
     }
 
-    private void runSuitesInSingleThread(List<GalenSuite> suites, GalenArguments arguments, CompleteListener listener) {
-        GalenSuiteRunner suiteRunner = new GalenSuiteRunner();
-        suiteRunner.setSuiteListener(listener);
-        suiteRunner.setValidationListener(listener);
+    private void runTestsInThreads(List<GalenTest> tests, GalenArguments arguments, final CompleteListener listener, int amountOfThreads) {
+        ExecutorService executor = Executors.newFixedThreadPool(amountOfThreads);
         
         Pattern filterPattern = createTestFilter(arguments.getFilter());
+        final List<GalenTestInfo> testInfos = new LinkedList<GalenTestInfo>();
         
-        for (GalenSuite suite : suites) {
-            if (matchesPattern(suite.getName(), filterPattern)) {
-                suiteRunner.runSuite(suite);
-            }
-        }
-    }
-
-
-    private void runSuitesInThreads(List<GalenSuite> suites, GalenArguments arguments, final CompleteListener listener) {
-        ExecutorService executor = Executors.newFixedThreadPool(arguments.getParallelSuites());
-        
-        Pattern filterPattern = createTestFilter(arguments.getFilter());
-        
-        for (final GalenSuite suite : suites) {
-            if (matchesPattern(suite.getName(), filterPattern)) {
+        for (final GalenTest test : tests) {
+            if (matchesPattern(test.getName(), filterPattern)) {
                 Runnable thread = new Runnable() {
                     @Override
                     public void run() {
-                        GalenSuiteRunner suiteRunner = new GalenSuiteRunner();
-                        suiteRunner.setSuiteListener(listener);
-                        suiteRunner.setValidationListener(listener);
-                        suiteRunner.runSuite(suite);
+                        
+                        GalenTestInfo info = new GalenTestInfo();
+                        try {
+                            TestReport report = test.execute(listener);
+                            info.setReport(report);
+                        }
+                        catch(Throwable ex) {
+                            info.setName(test.getName());
+                            info.getReport().error(ex);
+                        }
                     }
                 };
                 executor.execute(thread);
@@ -280,6 +261,8 @@ public class GalenMain {
         executor.shutdown();
         while (!executor.isTerminated()) {
         }
+        
+        //TODO export reports
     }
 
     private boolean matchesPattern(String name, Pattern filterPattern) {

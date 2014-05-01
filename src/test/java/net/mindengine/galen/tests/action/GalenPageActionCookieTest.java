@@ -23,6 +23,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import net.mindengine.galen.components.MockedBrowser;
+import net.mindengine.galen.reports.TestReport;
 import net.mindengine.galen.suite.GalenPageTest;
 import net.mindengine.galen.suite.actions.GalenPageActionCookie;
 
@@ -36,7 +37,7 @@ public class GalenPageActionCookieTest {
         GalenPageActionCookie action = new GalenPageActionCookie();
         
         action.setCookies(Arrays.asList("cookieName1=cookieValue1; expires=Fri, 31 Dec 9999 23:59:59 GMT; path=/", "cookieName2=cookieValue2; expires=Fri, 31 Dec 9999 23:59:59 GMT; path=/"));
-        action.execute(browser, new GalenPageTest(), null);
+        action.execute(new TestReport(), browser, new GalenPageTest(), null);
         
         List<String> recordedActions = browser.getRecordedActions();
         

@@ -37,13 +37,13 @@ import net.mindengine.galen.reports.model.PageTestSection;
 import net.mindengine.galen.reports.model.PageTestSpec;
 import net.mindengine.galen.runner.CompleteListener;
 import net.mindengine.galen.runner.GalenPageRunner;
-import net.mindengine.galen.runner.GalenSuiteRunner;
+import net.mindengine.galen.runner.GalenBasicTestRunner;
 import net.mindengine.galen.specs.Spec;
 import net.mindengine.galen.specs.page.PageSection;
 import net.mindengine.galen.suite.GalenPageAction;
 import net.mindengine.galen.suite.GalenPageTest;
-import net.mindengine.galen.suite.GalenSuite;
 import net.mindengine.galen.suite.actions.GalenPageActionCheck;
+import net.mindengine.galen.tests.GalenBasicTest;
 import net.mindengine.galen.validation.PageValidation;
 import net.mindengine.galen.validation.ValidationError;
 
@@ -172,7 +172,7 @@ public class HtmlSuiteReportingListener implements CompleteListener {
     }
 
     @Override
-    public void onAfterPage(GalenSuiteRunner galenSuiteRunner, GalenPageRunner pageRunner, GalenPageTest pageTest, Browser browser, List<ValidationError> errors) {
+    public void onAfterPage(GalenBasicTestRunner galenSuiteRunner, GalenPageRunner pageRunner, GalenPageTest pageTest, Browser browser) {
         if (GalenConfig.getConfig().getBooleanProperty("galen.reporting.html.useLastPageUrls", false)) {
             String url = browser.getUrl();
             Dimension size = browser.getScreenSize();
@@ -181,7 +181,7 @@ public class HtmlSuiteReportingListener implements CompleteListener {
     }
 
     @Override
-    public void onBeforePage(GalenSuiteRunner galenSuiteRunner, GalenPageRunner pageRunner, GalenPageTest pageTest, Browser browser) {
+    public void onBeforePage(GalenBasicTestRunner galenSuiteRunner, GalenPageRunner pageRunner, GalenPageTest pageTest, Browser browser) {
         currentBrowser = browser;
         
         currentPageTest = new PageTest();
@@ -200,11 +200,11 @@ public class HtmlSuiteReportingListener implements CompleteListener {
     }
 
     @Override
-    public void onSuiteFinished(GalenSuiteRunner galenSuiteRunner, GalenSuite suite) {
+    public void onSuiteFinished(GalenBasicTestRunner galenSuiteRunner, GalenBasicTest suite) {
     }
 
     @Override
-    public void onSuiteStarted(GalenSuiteRunner galenSuiteRunner, GalenSuite suite) {
+    public void onSuiteStarted(GalenBasicTestRunner galenSuiteRunner, GalenBasicTest suite) {
         this.suiteName = suite.getName();
     }
 

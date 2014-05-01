@@ -25,6 +25,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import net.mindengine.galen.browser.Browser;
 import net.mindengine.galen.page.Page;
+import net.mindengine.galen.reports.TestReport;
 import net.mindengine.galen.specs.page.PageSection;
 import net.mindengine.galen.specs.reader.page.PageSpec;
 import net.mindengine.galen.specs.reader.page.PageSpecReader;
@@ -45,7 +46,7 @@ public class GalenPageActionCheck extends GalenPageAction {
 
     
     @Override
-    public List<ValidationError> execute(Browser browser, GalenPageTest pageTest, ValidationListener validationListener) throws IOException {
+    public void execute(TestReport report, Browser browser, GalenPageTest pageTest, ValidationListener validationListener) throws IOException {
         List<ValidationError> allErrors = new LinkedList<ValidationError>();
         
         Page page = browser.getPage();
@@ -64,8 +65,6 @@ public class GalenPageActionCheck extends GalenPageAction {
                 allErrors.addAll(errors);
             }
         }
-        
-        return allErrors;
     }
 
     public GalenPageActionCheck withSpecs(List<String> specFilePaths) {

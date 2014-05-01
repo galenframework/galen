@@ -26,7 +26,7 @@ import java.util.List;
 
 import net.mindengine.galen.parser.BashTemplateContext;
 import net.mindengine.galen.parser.SyntaxException;
-import net.mindengine.galen.suite.GalenSuite;
+import net.mindengine.galen.tests.GalenBasicTest;
 
 public class GalenSuiteLineProcessor {
 
@@ -149,7 +149,7 @@ public class GalenSuiteLineProcessor {
         return newNode;
     }
 
-    public List<GalenSuite> buildSuites() {
+    public List<GalenBasicTest> buildSuites() {
         return rootNode.build(new BashTemplateContext());
     }
 

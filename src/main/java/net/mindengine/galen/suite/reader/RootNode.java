@@ -21,9 +21,9 @@ import java.util.List;
 
 import net.mindengine.galen.parser.BashTemplateContext;
 import net.mindengine.galen.parser.SyntaxException;
-import net.mindengine.galen.suite.GalenSuite;
+import net.mindengine.galen.tests.GalenBasicTest;
 
-public class RootNode extends Node<List<GalenSuite>> {
+public class RootNode extends Node<List<GalenBasicTest>> {
 
     public RootNode() {
         super(null);
@@ -48,10 +48,10 @@ public class RootNode extends Node<List<GalenSuite>> {
 
 
     @Override
-    public List<GalenSuite> build(BashTemplateContext context) {
+    public List<GalenBasicTest> build(BashTemplateContext context) {
         rearrangeNodes();
         
-        List<GalenSuite> suites = new LinkedList<GalenSuite>();
+        List<GalenBasicTest> suites = new LinkedList<GalenBasicTest>();
         for (Node<?> childNode : getChildNodes()) {
             if (childNode instanceof SuiteNode) {
                 SuiteNode suiteNode = (SuiteNode)childNode;

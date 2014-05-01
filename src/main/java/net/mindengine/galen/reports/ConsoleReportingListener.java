@@ -17,19 +17,18 @@ package net.mindengine.galen.reports;
 
 import java.io.PrintStream;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 import net.mindengine.galen.browser.Browser;
 import net.mindengine.galen.config.GalenConfig;
 import net.mindengine.galen.runner.CompleteListener;
+import net.mindengine.galen.runner.GalenBasicTestRunner;
 import net.mindengine.galen.runner.GalenPageRunner;
-import net.mindengine.galen.runner.GalenSuiteRunner;
 import net.mindengine.galen.specs.Spec;
 import net.mindengine.galen.specs.page.PageSection;
 import net.mindengine.galen.suite.GalenPageAction;
 import net.mindengine.galen.suite.GalenPageTest;
-import net.mindengine.galen.suite.GalenSuite;
+import net.mindengine.galen.tests.GalenBasicTest;
 import net.mindengine.galen.utils.GalenUtils;
 import net.mindengine.galen.validation.PageValidation;
 import net.mindengine.galen.validation.ValidationError;
@@ -161,12 +160,11 @@ public class ConsoleReportingListener implements CompleteListener {
     }
 
     @Override
-    public void onAfterPage(GalenSuiteRunner galenSuiteRunner, GalenPageRunner pageRunner, GalenPageTest pageTest, Browser browser,
-            List<ValidationError> errors) {
+    public void onAfterPage(GalenBasicTestRunner galenSuiteRunner, GalenPageRunner pageRunner, GalenPageTest pageTest, Browser browser) {
     }
 
     @Override
-    public void onBeforePage(GalenSuiteRunner galenSuiteRunner, GalenPageRunner pageRunner, GalenPageTest pageTest, Browser browser) {
+    public void onBeforePage(GalenBasicTestRunner galenSuiteRunner, GalenPageRunner pageRunner, GalenPageTest pageTest, Browser browser) {
         if (logLevel >= PAGE_LEVEL) {
             out.println("----------------------------------------");
             out.print("Page: ");
@@ -188,11 +186,11 @@ public class ConsoleReportingListener implements CompleteListener {
     }
 
     @Override
-    public void onSuiteFinished(GalenSuiteRunner galenSuiteRunner, GalenSuite suite) {
+    public void onSuiteFinished(GalenBasicTestRunner galenSuiteRunner, GalenBasicTest suite) {
     }
 
     @Override
-    public void onSuiteStarted(GalenSuiteRunner galenSuiteRunner, GalenSuite suite) {
+    public void onSuiteStarted(GalenBasicTestRunner galenSuiteRunner, GalenBasicTest suite) {
         currentSuite = suite.getName();
         if (logLevel >= SUITE_LEVEL) {
             out.println("========================================");

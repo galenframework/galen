@@ -19,22 +19,23 @@ import java.util.LinkedList;
 import java.util.List;
 
 import net.mindengine.galen.browser.Browser;
+import net.mindengine.galen.reports.TestReport;
 import net.mindengine.galen.suite.GalenPageTest;
-import net.mindengine.galen.suite.GalenSuite;
+import net.mindengine.galen.tests.GalenBasicTest;
 import net.mindengine.galen.validation.ValidationError;
 import net.mindengine.galen.validation.ValidationListener;
 
 
-public class GalenSuiteRunner {
+public class GalenBasicTestRunner {
 
     private static final LinkedList<ValidationError> EMPTY_ERRORS = new LinkedList<ValidationError>();
     private SuiteListener suiteListener;
     private ValidationListener validationListener;
     
-    public GalenSuiteRunner() {
+    public GalenBasicTestRunner() {
     }
 
-    public GalenSuiteRunner withSuiteListener(SuiteListener suiteListener) {
+    public GalenBasicTestRunner withSuiteListener(SuiteListener suiteListener) {
         this.setSuiteListener(suiteListener);
         return this;
     }
@@ -48,40 +49,48 @@ public class GalenSuiteRunner {
     }
 
     
-    public void runSuite(GalenSuite suite) {
-        if (suite == null) {
-            throw new IllegalArgumentException("Suite can not be null");
+    public TestReport runTest(GalenBasicTest test) {
+        if (test == null) {
+            throw new IllegalArgumentException("Test can not be null");
         }
         
-        List<GalenPageTest> pageTests = suite.getPageTests();
+        List<GalenPageTest> pageTests = test.getPageTests();
         
-        tellSuiteStarted(suite);
+        tellSuiteStarted(test);
         
-        GalenPageRunner pageRunner = new GalenPageRunner();
+        TestReport report = new TestReport();
+        
+        GalenPageRunner pageRunner = new GalenPageRunner(report);
         pageRunner.setValidationListener(validationListener);
         
         for (GalenPageTest pageTest : pageTests) {
             try {
+                report.gotoRoot();
+                report.sectionStart(pageTest.getTitle());
+                
                 Browser browser = pageTest.getBrowserFactory().openBrowser();
             
                 tellBeforePage(pageRunner, pageTest, browser);
-                List<ValidationError> errors = runPageTest(pageRunner, pageTest, browser);
-                tellAfterPage(pageRunner, pageTest, browser, errors);
+                runPageTest(pageRunner, pageTest, browser);
+                tellAfterPage(pageRunner, pageTest, browser);
                 
                 browser.quit();
+                report.sectionEnd();
             }
             catch (Exception ex) {
                 ex.printStackTrace();
             }
         }
         
-        tellSuiteFinished(suite);
+        tellSuiteFinished(test);
+        
+        return report;
     }
 
-    private void tellAfterPage(GalenPageRunner pageRunner, GalenPageTest pageTest, Browser browser, List<ValidationError> errors) {
+    private void tellAfterPage(GalenPageRunner pageRunner, GalenPageTest pageTest, Browser browser) {
         try {
             if (suiteListener != null) {
-                suiteListener.onAfterPage(this, pageRunner, pageTest, browser, errors);
+                suiteListener.onAfterPage(this, pageRunner, pageTest, browser);
             }
         }
         catch (Exception e) {
@@ -100,17 +109,16 @@ public class GalenSuiteRunner {
         }
     }
 
-    private List<ValidationError> runPageTest(GalenPageRunner pageRunner, GalenPageTest pageTest, Browser browser) {
+    private void runPageTest(GalenPageRunner pageRunner, GalenPageTest pageTest, Browser browser) {
         try {
-            return pageRunner.run(browser, pageTest);
+            pageRunner.run(browser, pageTest);
         }
         catch (Exception e) {
             e.printStackTrace();
         }
-        return EMPTY_ERRORS;
     }
 
-    private void tellSuiteFinished(GalenSuite suite) {
+    private void tellSuiteFinished(GalenBasicTest suite) {
         try {
             if (suiteListener != null) {
                 suiteListener.onSuiteFinished(this, suite);
@@ -121,7 +129,7 @@ public class GalenSuiteRunner {
         }
     }
 
-    private void tellSuiteStarted(GalenSuite suite) {
+    private void tellSuiteStarted(GalenBasicTest suite) {
         try {
             if (suiteListener != null) {
                 suiteListener.onSuiteStarted(this, suite);

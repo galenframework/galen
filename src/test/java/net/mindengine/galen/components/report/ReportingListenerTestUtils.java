@@ -30,8 +30,9 @@ import net.mindengine.galen.components.MockedPageValidation;
 import net.mindengine.galen.components.validation.MockedPageElement;
 import net.mindengine.galen.page.PageElement;
 import net.mindengine.galen.page.Rect;
+import net.mindengine.galen.reports.TestReport;
 import net.mindengine.galen.runner.GalenPageRunner;
-import net.mindengine.galen.runner.GalenSuiteRunner;
+import net.mindengine.galen.runner.GalenBasicTestRunner;
 import net.mindengine.galen.runner.SuiteListener;
 import net.mindengine.galen.specs.Location;
 import net.mindengine.galen.specs.SpecHeight;
@@ -39,8 +40,8 @@ import net.mindengine.galen.specs.SpecInside;
 import net.mindengine.galen.specs.SpecWidth;
 import net.mindengine.galen.specs.page.PageSection;
 import net.mindengine.galen.suite.GalenPageTest;
-import net.mindengine.galen.suite.GalenSuite;
 import net.mindengine.galen.suite.actions.GalenPageActionCheck;
+import net.mindengine.galen.tests.GalenBasicTest;
 import net.mindengine.galen.validation.ErrorArea;
 import net.mindengine.galen.validation.ValidationError;
 import net.mindengine.galen.validation.ValidationListener;
@@ -49,14 +50,14 @@ public class ReportingListenerTestUtils {
 
     public static void performSampleReporting(String suiteName, SuiteListener suiteListener, ValidationListener validationListener) {
         
-        GalenSuiteRunner galenSuiteRunner = new GalenSuiteRunner();
-        GalenSuite suite = new GalenSuite();
+        GalenBasicTestRunner galenSuiteRunner = new GalenBasicTestRunner();
+        GalenBasicTest suite = new GalenBasicTest();
         suite.setName(suiteName);
         
         suiteListener.onSuiteStarted(galenSuiteRunner, suite);
         
         Browser browser = new MockedBrowser("http://example.com/page1", new Dimension(410, 610));
-        GalenPageRunner pageRunner = new GalenPageRunner();
+        GalenPageRunner pageRunner = new GalenPageRunner(new TestReport());
         
         Map<String, PageElement> pageElements = new HashMap<String, PageElement>();
 
@@ -125,7 +126,7 @@ public class ReportingListenerTestUtils {
         
         }
         validationListener.onAfterPageAction(pageRunner, action);
-        suiteListener.onAfterPage(galenSuiteRunner, pageRunner, pageTest, browser, asList(new ValidationError(asList(new ErrorArea(new Rect(10, 10, 100, 50), "objectA1")), asList("objectA1 is not inside other-object"))));
+        suiteListener.onAfterPage(galenSuiteRunner, pageRunner, pageTest, browser);
         
         
         Browser browser2 = new MockedBrowser("http://example.com/page2", new Dimension(610, 710));
@@ -157,7 +158,7 @@ public class ReportingListenerTestUtils {
             validationListener.onAfterSection(pageRunner, pageValidation, section1);
         }
         validationListener.onAfterPageAction(pageRunner, action);
-        suiteListener.onAfterPage(galenSuiteRunner, pageRunner, pageTest2, browser2, asList(new ValidationError(asList(new ErrorArea(new Rect(10, 10, 100, 50), "objectB1")), asList("objectA1 is not inside other-object", "second error message"))));
+        suiteListener.onAfterPage(galenSuiteRunner, pageRunner, pageTest2, browser2);
         
         suiteListener.onSuiteFinished(galenSuiteRunner, suite);
     }

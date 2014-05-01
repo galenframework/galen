@@ -20,22 +20,22 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.util.List;
 
+import net.mindengine.galen.browser.Browser;
+import net.mindengine.galen.reports.TestReport;
+import net.mindengine.galen.suite.GalenPageAction;
+import net.mindengine.galen.suite.GalenPageTest;
+import net.mindengine.galen.validation.ValidationListener;
+
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
-
-import net.mindengine.galen.browser.Browser;
-import net.mindengine.galen.suite.GalenPageAction;
-import net.mindengine.galen.suite.GalenPageTest;
-import net.mindengine.galen.validation.ValidationError;
-import net.mindengine.galen.validation.ValidationListener;
 
 public class GalenPageActionProperties extends GalenPageAction {
 
     private List<String> files;
 
     @Override
-    public List<ValidationError> execute(Browser browser, GalenPageTest pageTest, ValidationListener validationListener) throws Exception {
+    public void execute(TestReport report, Browser browser, GalenPageTest pageTest, ValidationListener validationListener) throws Exception {
         if (files != null) {
             for (String filePath: files) {
                 File file = new File(filePath);
@@ -49,7 +49,6 @@ public class GalenPageActionProperties extends GalenPageAction {
                 System.getProperties().load(new FileReader(file));
             }
         }
-        return null;
     }
 
     public void setFiles(List<String> files) {

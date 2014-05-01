@@ -21,6 +21,7 @@ import java.io.FileNotFoundException;
 import java.util.Arrays;
 
 import net.mindengine.galen.browser.Browser;
+import net.mindengine.galen.reports.TestReport;
 import net.mindengine.galen.suite.GalenPageTest;
 import net.mindengine.galen.suite.actions.GalenPageActionProperties;
 import net.mindengine.galen.validation.ValidationListener;
@@ -42,7 +43,7 @@ public class GalenPageActionPropertiesTest {
         action.setFiles(Arrays.asList(findResource("/properties/homepage-en.properties"), findResource("/properties/loginpage-en.properties")));
         
         
-        action.execute(NO_BROWSER, new GalenPageTest(), NO_LISTENER);
+        action.execute(new TestReport(), NO_BROWSER, new GalenPageTest(), NO_LISTENER);
         
         assertThat("System property page.title should be", System.getProperty("page.title"), Matchers.is("Home page"));
         assertThat("System property page.download.caption should be", System.getProperty("page.download.caption"), Matchers.is("Take it!"));
@@ -54,7 +55,7 @@ public class GalenPageActionPropertiesTest {
     public void shouldGiveError_whenFile_isNotFound() throws Exception {
         GalenPageActionProperties action = new GalenPageActionProperties();
         action.setFiles(Arrays.asList("some-unexistent-file.properties"));
-        action.execute(NO_BROWSER, new GalenPageTest(), NO_LISTENER);
+        action.execute(new TestReport(), NO_BROWSER, new GalenPageTest(), NO_LISTENER);
     }
 
     private String findResource(String resourceName) {

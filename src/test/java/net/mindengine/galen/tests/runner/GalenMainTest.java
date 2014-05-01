@@ -32,8 +32,8 @@ import java.util.List;
 import net.mindengine.galen.GalenMain;
 import net.mindengine.galen.runner.CompleteListener;
 import net.mindengine.galen.runner.GalenArguments;
-import net.mindengine.galen.runner.GalenSuiteRunner;
-import net.mindengine.galen.suite.GalenSuite;
+import net.mindengine.galen.runner.GalenBasicTestRunner;
+import net.mindengine.galen.tests.GalenBasicTest;
 import net.mindengine.galen.tests.SuiteNameOnlyListener;
 
 import org.apache.commons.io.FileUtils;
@@ -197,7 +197,7 @@ public class GalenMainTest {
         
         CompleteListener listener = new SuiteNameOnlyListener() {
             @Override
-            public void onSuiteStarted(GalenSuiteRunner galenSuiteRunner, GalenSuite suite) {
+            public void onSuiteStarted(GalenBasicTestRunner galenSuiteRunner, GalenBasicTest suite) {
                 executedSuites.add(suite.getName());
             }
         };

@@ -20,9 +20,9 @@ import java.util.List;
 
 import net.mindengine.galen.parser.BashTemplateContext;
 import net.mindengine.galen.suite.GalenPageTest;
-import net.mindengine.galen.suite.GalenSuite;
+import net.mindengine.galen.tests.GalenBasicTest;
 
-public class SuiteNode extends Node<GalenSuite> {
+public class SuiteNode extends Node<GalenBasicTest> {
 
     private boolean disabled = false;
 
@@ -38,8 +38,8 @@ public class SuiteNode extends Node<GalenSuite> {
     }
 
     @Override
-    public GalenSuite build(BashTemplateContext context) {
-        GalenSuite suite = new GalenSuite();
+    public GalenBasicTest build(BashTemplateContext context) {
+        GalenBasicTest suite = new GalenBasicTest();
         List<GalenPageTest> pageTests = new LinkedList<GalenPageTest>();
        
         suite.setName(context.process(getArguments()));

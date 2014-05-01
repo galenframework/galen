@@ -21,15 +21,14 @@ import static org.hamcrest.Matchers.is;
 
 import java.awt.Dimension;
 import java.io.IOException;
-import java.util.List;
 
 import net.mindengine.galen.browser.Browser;
 import net.mindengine.galen.browser.SeleniumBrowser;
 import net.mindengine.galen.components.TestGroups;
 import net.mindengine.galen.components.validation.TestValidationListener;
+import net.mindengine.galen.reports.TestReport;
 import net.mindengine.galen.suite.GalenPageTest;
 import net.mindengine.galen.suite.actions.GalenPageActionCheck;
-import net.mindengine.galen.validation.ValidationError;
 
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
@@ -55,7 +54,7 @@ public class GalenPageActionCheckTest {
         browser.load(TEST_URL);
         browser.changeWindowSize(new Dimension(400, 800));
         
-        List<ValidationError> errors = action.execute(browser, new GalenPageTest(), validationListener);
+        action.execute(new TestReport(), browser, new GalenPageTest(), validationListener);
         
         driver.quit();
         
@@ -71,7 +70,6 @@ public class GalenPageActionCheckTest {
                 "<SpecNear menu-item-rss>\n" +
                 "</o menu-item-rss>\n"
                 ));
-        assertThat("Errors should not be empty", errors.size(), is(1));
     }
     
     @Test public void runsTestSuccessfully_andExlcudesSpecifiedTags() throws IOException {
@@ -88,7 +86,7 @@ public class GalenPageActionCheckTest {
         browser.load(TEST_URL);
         browser.changeWindowSize(new Dimension(400, 800));
         
-        List<ValidationError> errors = action.execute(browser, new GalenPageTest(), validationListener);
+        action.execute(new TestReport(), browser, new GalenPageTest(), validationListener);
         driver.quit();
         
         assertThat("Invokations should be", validationListener.getInvokations(), is("<o header>\n" +
@@ -103,7 +101,6 @@ public class GalenPageActionCheckTest {
                 "<SpecNear menu-item-rss>\n" +
                 "</o menu-item-rss>\n"
                 ));
-        assertThat("Errors should be empty", errors.size(), is(1));
     }
     
 }

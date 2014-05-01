@@ -19,9 +19,9 @@ import java.util.Arrays;
 import java.util.List;
 
 import net.mindengine.galen.browser.Browser;
+import net.mindengine.galen.reports.TestReport;
 import net.mindengine.galen.suite.GalenPageAction;
 import net.mindengine.galen.suite.GalenPageTest;
-import net.mindengine.galen.validation.ValidationError;
 import net.mindengine.galen.validation.ValidationListener;
 
 import org.apache.commons.lang3.StringEscapeUtils;
@@ -34,7 +34,7 @@ public class GalenPageActionCookie extends GalenPageAction {
     private List<String> cookies;
     
     @Override
-    public List<ValidationError> execute(Browser browser, GalenPageTest pageTest, ValidationListener validationListener) throws Exception {
+    public void execute(TestReport report, Browser browser, GalenPageTest pageTest, ValidationListener validationListener) throws Exception {
         if (cookies != null && cookies.size() > 0) {
             StringBuilder js = new StringBuilder();
             
@@ -44,7 +44,6 @@ public class GalenPageActionCookie extends GalenPageAction {
             browser.executeJavascript(js.toString());
             browser.refresh();
         }
-        return null;
     }
 
     public List<String> getCookies() {

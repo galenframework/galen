@@ -22,6 +22,7 @@ import java.io.IOException;
 
 import net.mindengine.galen.browser.Browser;
 import net.mindengine.galen.browser.SeleniumBrowser;
+import net.mindengine.galen.reports.TestReport;
 import net.mindengine.galen.suite.GalenPageTest;
 import net.mindengine.galen.suite.actions.GalenPageActionInjectJavascript;
 
@@ -40,7 +41,7 @@ public class GalenPageActionInjectJavascriptTest {
         browser.load(TEST_URL);
         
         GalenPageActionInjectJavascript action = new GalenPageActionInjectJavascript("/scripts/to-inject-1.js"); 
-        action.execute(browser, new GalenPageTest(), null);
+        action.execute(new TestReport(), browser, new GalenPageTest(), null);
         
         WebElement element = driver.findElement(By.xpath("//body/injected-tag"));
         

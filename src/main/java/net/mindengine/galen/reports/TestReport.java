@@ -17,6 +17,8 @@ package net.mindengine.galen.reports;
 
 import java.util.List;
 
+import org.apache.commons.lang3.exception.ExceptionUtils;
+
 
 public class TestReport {
 
@@ -53,11 +55,20 @@ public class TestReport {
         this.currentNode = node;
         return node;
     }
+    public void gotoRoot() {
+        this.currentNode = rootNode;
+    }
 
     public void sectionEnd() {
         if (this.currentNode.getParent() != null) {
             this.currentNode = this.currentNode.getParent();
         }
+    }
+
+    public TestReportNode error(Throwable ex) {
+        TestReportNode node = TestReportNode.error(ex.getClass().getName() + ":" + ExceptionUtils.getMessage(ex) + "\n" + ExceptionUtils.getStackTrace(ex));
+        this.currentNode.addNode(node);
+        return node;
     }
 
 }

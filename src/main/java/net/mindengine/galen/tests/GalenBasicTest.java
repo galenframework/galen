@@ -13,11 +13,16 @@
 * See the License for the specific language governing permissions and
 * limitations under the License.
 ******************************************************************************/
-package net.mindengine.galen.suite;
+package net.mindengine.galen.tests;
 
 import java.util.List;
 
-public class GalenSuite {
+import net.mindengine.galen.reports.TestReport;
+import net.mindengine.galen.runner.CompleteListener;
+import net.mindengine.galen.runner.GalenBasicTestRunner;
+import net.mindengine.galen.suite.GalenPageTest;
+
+public class GalenBasicTest implements GalenTest {
     
     private String name;
     private List<GalenPageTest> pageTests;
@@ -37,6 +42,14 @@ public class GalenSuite {
 
     public void setPageTests(List<GalenPageTest> pageTests) {
         this.pageTests = pageTests;
+    }
+
+    @Override
+    public TestReport execute(CompleteListener listener) {
+        GalenBasicTestRunner suiteRunner = new GalenBasicTestRunner();
+        suiteRunner.setSuiteListener(listener);
+        suiteRunner.setValidationListener(listener);
+        return suiteRunner.runTest(this);
     }
     
 

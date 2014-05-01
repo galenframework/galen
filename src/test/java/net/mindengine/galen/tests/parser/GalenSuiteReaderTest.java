@@ -33,8 +33,8 @@ import net.mindengine.galen.parser.FileSyntaxException;
 import net.mindengine.galen.suite.GalenPageAction;
 import net.mindengine.galen.suite.GalenPageActions;
 import net.mindengine.galen.suite.GalenPageTest;
-import net.mindengine.galen.suite.GalenSuite;
 import net.mindengine.galen.suite.reader.GalenSuiteReader;
+import net.mindengine.galen.tests.GalenBasicTest;
 
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
@@ -46,12 +46,12 @@ public class GalenSuiteReaderTest {
     @Test public void shouldRead_simpleSuite_successfully() throws IOException {
         GalenSuiteReader reader = new GalenSuiteReader();
         
-        List<GalenSuite> galenSuites = reader.read(new File(getClass().getResource("/suites/suite-simple.test").getFile()));
+        List<GalenBasicTest> galenSuites = reader.read(new File(getClass().getResource("/suites/suite-simple.test").getFile()));
         
         assertThat("Amount of suites should be", galenSuites.size(), is(2));
         /* Checking suite 1*/
         {
-            GalenSuite suite = galenSuites.get(0);
+            GalenBasicTest suite = galenSuites.get(0);
             assertThat(suite.getName(), is("This is a name of suite"));
             assertThat("Amount of pages for 1st suite should be", suite.getPageTests().size(), is(2));
             // Checking page 1
@@ -83,7 +83,7 @@ public class GalenSuiteReaderTest {
         
         // Checking suite 2
         {
-            GalenSuite suite = galenSuites.get(1);
+            GalenBasicTest suite = galenSuites.get(1);
             assertThat(suite.getName(), is("This is another suite name"));
             assertThat("Amount of pages for 1st suite should be", suite.getPageTests().size(), is(1));
             
@@ -97,7 +97,7 @@ public class GalenSuiteReaderTest {
     
     @Test public void shouldRead_allPageActions() throws IOException {
         GalenSuiteReader reader = new GalenSuiteReader();
-        List<GalenSuite> galenSuites = reader.read(new File(getClass().getResource("/suites/suite-all-page-actions.test").getFile()));
+        List<GalenBasicTest> galenSuites = reader.read(new File(getClass().getResource("/suites/suite-all-page-actions.test").getFile()));
         assertThat(galenSuites.size(), is(1));
         
         List<GalenPageAction> pageActions = galenSuites.get(0).getPageTests().get(0).getActions();
@@ -119,13 +119,13 @@ public class GalenSuiteReaderTest {
         
         GalenSuiteReader reader = new GalenSuiteReader();
         
-        List<GalenSuite> galenSuites = reader.read(new File(getClass().getResource("/suites/suite-variables.txt").getFile()));
+        List<GalenBasicTest> galenSuites = reader.read(new File(getClass().getResource("/suites/suite-variables.txt").getFile()));
         
         assertThat("Amount of suites should be", galenSuites.size(), is(2));
         
         /* Checking suite 1*/
         {
-            GalenSuite suite = galenSuites.get(0);
+            GalenBasicTest suite = galenSuites.get(0);
             assertThat(suite.getName(), is("This is a name of suite"));
             assertThat("Amount of pages for 1st suite should be", suite.getPageTests().size(), is(1));
             // Checking page 1
@@ -142,7 +142,7 @@ public class GalenSuiteReaderTest {
         
         // Checking suite 2
         {
-            GalenSuite suite = galenSuites.get(1);
+            GalenBasicTest suite = galenSuites.get(1);
             assertThat(suite.getName(), is("This is a name of suite 2 and also custom property"));
             assertThat("Amount of pages for 1st suite should be", suite.getPageTests().size(), is(1));
             
@@ -161,7 +161,7 @@ public class GalenSuiteReaderTest {
     @Test public void shouldRead_suiteWithParameterizations_successfully() throws IOException {
         GalenSuiteReader reader = new GalenSuiteReader();
         
-        List<GalenSuite> galenSuites = reader.read(new File(getClass().getResource("/suites/suite-parameterized.test").getFile()));
+        List<GalenBasicTest> galenSuites = reader.read(new File(getClass().getResource("/suites/suite-parameterized.test").getFile()));
         
         assertThat("Amount of suites should be", galenSuites.size(), is(11));
         
@@ -172,7 +172,7 @@ public class GalenSuiteReaderTest {
                 {new Dimension(640, 480), asList("tablet"), "Tablet", EMPTY_TAGS}
             };
             for (int i=0; i<2; i++) {
-                GalenSuite suite = galenSuites.get(i);
+                GalenBasicTest suite = galenSuites.get(i);
                 assertThat(suite.getName(), is("Test for " + table[i][2]));
                 assertThat("Amount of pages for 1st suite should be", suite.getPageTests().size(), is(1));
                 // Checking page 1
@@ -196,7 +196,7 @@ public class GalenSuiteReaderTest {
             };
             for (int i=2; i<5; i++) {
                 int j = i - 2;
-                GalenSuite suite = galenSuites.get(i);
+                GalenBasicTest suite = galenSuites.get(i);
                 assertThat(suite.getName(), is("Test combining 2 tables for " + table[j][2]));
                 assertThat("Amount of pages for 1st suite should be", suite.getPageTests().size(), is(1));
                 // Checking page 1
@@ -228,7 +228,7 @@ public class GalenSuiteReaderTest {
             
             for (int i=5; i<11; i++) {
                 int j = i - 5;
-                GalenSuite suite = galenSuites.get(i);
+                GalenBasicTest suite = galenSuites.get(i);
                 assertThat(suite.getName(), is("Test using 2 layer tables in browser " + table[j][6] + " for type " + table[j][2]));
                 assertThat("Amount of pages for 1st suite should be", suite.getPageTests().size(), is(1));
                 // Checking page 1
@@ -253,7 +253,7 @@ public class GalenSuiteReaderTest {
     public void shouldParse_suitesWithEmptyUrls() throws IOException {
         GalenSuiteReader reader = new GalenSuiteReader();
         
-        List<GalenSuite> galenSuites = reader.read(new File(getClass().getResource("/suites/suite-empty-url.test").getFile()));
+        List<GalenBasicTest> galenSuites = reader.read(new File(getClass().getResource("/suites/suite-empty-url.test").getFile()));
         
         assertThat("Amount of suites should be", galenSuites.size(), is(4));
         
@@ -273,7 +273,7 @@ public class GalenSuiteReaderTest {
     public void shouldNotInclude_disabledSuites() throws IOException {
         GalenSuiteReader reader = new GalenSuiteReader();
         
-        List<GalenSuite> galenSuites = reader.read(new File(getClass().getResource("/suites/suite-disabled.test").getFile()));
+        List<GalenBasicTest> galenSuites = reader.read(new File(getClass().getResource("/suites/suite-disabled.test").getFile()));
         
         assertThat("Amount of suites should be", galenSuites.size(), is(3));
         assertThat(galenSuites.get(0).getName(), is("Suite 1"));
@@ -285,7 +285,7 @@ public class GalenSuiteReaderTest {
     public void shouldIncludeEverything_forImportedTestSuites() throws IOException {
         GalenSuiteReader reader = new GalenSuiteReader();
         
-        List<GalenSuite> galenSuites = reader.read(new File(getClass().getResource("/suites/suite-import.test").getFile()));
+        List<GalenBasicTest> galenSuites = reader.read(new File(getClass().getResource("/suites/suite-import.test").getFile()));
         
         assertThat("Amount of suites should be", galenSuites.size(), is(3));
         assertThat(galenSuites.get(0).getName(), is("Suite 1"));

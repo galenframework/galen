@@ -32,12 +32,12 @@ import org.apache.commons.io.IOUtils;
 import net.mindengine.galen.browser.Browser;
 import net.mindengine.galen.runner.CompleteListener;
 import net.mindengine.galen.runner.GalenPageRunner;
-import net.mindengine.galen.runner.GalenSuiteRunner;
+import net.mindengine.galen.runner.GalenBasicTestRunner;
 import net.mindengine.galen.specs.Spec;
 import net.mindengine.galen.specs.page.PageSection;
 import net.mindengine.galen.suite.GalenPageAction;
 import net.mindengine.galen.suite.GalenPageTest;
-import net.mindengine.galen.suite.GalenSuite;
+import net.mindengine.galen.tests.GalenBasicTest;
 import net.mindengine.galen.validation.PageValidation;
 import net.mindengine.galen.validation.ValidationError;
 import freemarker.template.Configuration;
@@ -60,8 +60,8 @@ public class HtmlReportingListener implements CompleteListener {
     
     private String reportFolderPath;
     
-    private Map<GalenSuiteRunner, SuiteRun> suiteRuns = new HashMap<GalenSuiteRunner, HtmlReportingListener.SuiteRun>();
-    private Map<GalenPageRunner, GalenSuiteRunner> pageRunnerLinks = new HashMap<GalenPageRunner, GalenSuiteRunner>();
+    private Map<GalenBasicTestRunner, SuiteRun> suiteRuns = new HashMap<GalenBasicTestRunner, HtmlReportingListener.SuiteRun>();
+    private Map<GalenPageRunner, GalenBasicTestRunner> pageRunnerLinks = new HashMap<GalenPageRunner, GalenBasicTestRunner>();
     private List<SuiteRun> suiteRunList = new LinkedList<SuiteRun>();
     
     private int reportCounter = 0;
@@ -175,16 +175,16 @@ public class HtmlReportingListener implements CompleteListener {
     }
 
     @Override
-    public synchronized void onAfterPage(GalenSuiteRunner galenSuiteRunner, GalenPageRunner pageRunner, 
-            GalenPageTest pageTest, Browser browser, List<ValidationError> errors) {
+    public synchronized void onAfterPage(GalenBasicTestRunner galenSuiteRunner, GalenPageRunner pageRunner, 
+            GalenPageTest pageTest, Browser browser) {
         if (hasListener(pageRunner)) {
-            findListener(pageRunner).onAfterPage(galenSuiteRunner, pageRunner, pageTest, browser, errors);
+            findListener(pageRunner).onAfterPage(galenSuiteRunner, pageRunner, pageTest, browser);
             removeLinkFor(pageRunner);
         }
     }
 
     @Override
-    public synchronized void onBeforePage(GalenSuiteRunner galenSuiteRunner, GalenPageRunner pageRunner, GalenPageTest pageTest, Browser browser) {
+    public synchronized void onBeforePage(GalenBasicTestRunner galenSuiteRunner, GalenPageRunner pageRunner, GalenPageTest pageTest, Browser browser) {
         linkPageRunnerToSuite(pageRunner, galenSuiteRunner);
         if (hasListener(pageRunner)) {
             findListener(pageRunner).onBeforePage(galenSuiteRunner, pageRunner, pageTest, browser);
@@ -192,7 +192,7 @@ public class HtmlReportingListener implements CompleteListener {
     }
 
     @Override
-    public void onSuiteFinished(GalenSuiteRunner galenSuiteRunner, GalenSuite suite) {
+    public void onSuiteFinished(GalenBasicTestRunner galenSuiteRunner, GalenBasicTest suite) {
         if (hasListener(galenSuiteRunner)) {
             findListener(galenSuiteRunner).onSuiteFinished(galenSuiteRunner, suite);
             findListener(galenSuiteRunner).done();
@@ -202,7 +202,7 @@ public class HtmlReportingListener implements CompleteListener {
     }
     
     @Override
-    public synchronized void onSuiteStarted(GalenSuiteRunner galenSuiteRunner, GalenSuite suite) {
+    public synchronized void onSuiteStarted(GalenBasicTestRunner galenSuiteRunner, GalenBasicTest suite) {
         //Registering a suite run with listener
         SuiteRun suiteRun = new SuiteRun();
         suiteRun.suiteReportFile = String.format("report-%d-%s", getUniqueReportId(), convertToFileName(suite.getName()));
@@ -279,19 +279,19 @@ public class HtmlReportingListener implements CompleteListener {
     }
 
     private boolean hasListener(GalenPageRunner pageRunner) {
-        GalenSuiteRunner galenSuiteRunner = pageRunnerLinks.get(pageRunner);
+        GalenBasicTestRunner galenSuiteRunner = pageRunnerLinks.get(pageRunner);
         return galenSuiteRunner != null && suiteRuns.containsKey(galenSuiteRunner);
     }
     
-    private boolean hasListener(GalenSuiteRunner suiteRunner) {
+    private boolean hasListener(GalenBasicTestRunner suiteRunner) {
         return suiteRuns.containsKey(suiteRunner);
     }
     
-    private CompleteListener findListener(GalenSuiteRunner suiteRunner) {
+    private CompleteListener findListener(GalenBasicTestRunner suiteRunner) {
         return suiteRuns.get(suiteRunner).listener;
     }
     
-    private void cleanSuiteListener(GalenSuiteRunner galenSuiteRunner) {
+    private void cleanSuiteListener(GalenBasicTestRunner galenSuiteRunner) {
         if (suiteRuns.containsKey(galenSuiteRunner)) {
             SuiteRun suiteRun = suiteRuns.get(galenSuiteRunner);
             suiteRun.listener = null;
@@ -315,7 +315,7 @@ public class HtmlReportingListener implements CompleteListener {
      * @param pageRunner
      * @param galenSuiteRunner
      */
-    private void linkPageRunnerToSuite(GalenPageRunner pageRunner, GalenSuiteRunner galenSuiteRunner) {
+    private void linkPageRunnerToSuite(GalenPageRunner pageRunner, GalenBasicTestRunner galenSuiteRunner) {
         pageRunnerLinks.put(pageRunner, galenSuiteRunner);
     }
     

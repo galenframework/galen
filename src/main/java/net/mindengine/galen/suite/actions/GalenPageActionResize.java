@@ -16,22 +16,19 @@
 package net.mindengine.galen.suite.actions;
 
 import java.awt.Dimension;
-import java.util.LinkedList;
-import java.util.List;
+
+import net.mindengine.galen.browser.Browser;
+import net.mindengine.galen.reports.TestReport;
+import net.mindengine.galen.suite.GalenPageAction;
+import net.mindengine.galen.suite.GalenPageTest;
+import net.mindengine.galen.validation.ValidationListener;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
-import net.mindengine.galen.browser.Browser;
-import net.mindengine.galen.suite.GalenPageAction;
-import net.mindengine.galen.suite.GalenPageTest;
-import net.mindengine.galen.validation.ValidationError;
-import net.mindengine.galen.validation.ValidationListener;
-
 public class GalenPageActionResize extends GalenPageAction {
 
-    private static final List<ValidationError> NO_ERRORS = new LinkedList<ValidationError>();
     private int width;
     private int height;
 
@@ -41,9 +38,8 @@ public class GalenPageActionResize extends GalenPageAction {
     }
 
     @Override
-    public List<ValidationError> execute(Browser browser, GalenPageTest pageTest, ValidationListener validationListener) throws Exception {
+    public void execute(TestReport report, Browser browser, GalenPageTest pageTest, ValidationListener validationListener) throws Exception {
         browser.changeWindowSize(new Dimension(width, height));
-        return NO_ERRORS;
     }
     
     @Override

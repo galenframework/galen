@@ -31,12 +31,12 @@ import java.util.Map;
 import net.mindengine.galen.browser.Browser;
 import net.mindengine.galen.runner.CompleteListener;
 import net.mindengine.galen.runner.GalenPageRunner;
-import net.mindengine.galen.runner.GalenSuiteRunner;
+import net.mindengine.galen.runner.GalenBasicTestRunner;
 import net.mindengine.galen.specs.Spec;
 import net.mindengine.galen.specs.page.PageSection;
 import net.mindengine.galen.suite.GalenPageAction;
 import net.mindengine.galen.suite.GalenPageTest;
-import net.mindengine.galen.suite.GalenSuite;
+import net.mindengine.galen.tests.GalenBasicTest;
 import net.mindengine.galen.utils.GalenUtils;
 import net.mindengine.galen.validation.PageValidation;
 import net.mindengine.galen.validation.ValidationError;
@@ -186,13 +186,12 @@ public class TestngReportingListener implements CompleteListener {
     }
 
     @Override
-    public void onAfterPage(GalenSuiteRunner galenSuiteRunner, GalenPageRunner pageRunner, GalenPageTest pageTest, Browser browser,
-            List<ValidationError> errors) {
+    public void onAfterPage(GalenBasicTestRunner galenSuiteRunner, GalenPageRunner pageRunner, GalenPageTest pageTest, Browser browser) {
         currentTestClass.remove();
     }
 
     @Override
-    public void onBeforePage(GalenSuiteRunner galenSuiteRunner, GalenPageRunner pageRunner, GalenPageTest pageTest, Browser browser) {
+    public void onBeforePage(GalenBasicTestRunner galenSuiteRunner, GalenPageRunner pageRunner, GalenPageTest pageTest, Browser browser) {
         String title = pageTest.getTitle();
         if (title == null) {
             title = pageTest.getUrl() + " " + GalenUtils.formatScreenSize(pageTest.getScreenSize());
@@ -204,13 +203,13 @@ public class TestngReportingListener implements CompleteListener {
 
 
     @Override
-    public void onSuiteFinished(GalenSuiteRunner galenSuiteRunner, GalenSuite suite) {
+    public void onSuiteFinished(GalenBasicTestRunner galenSuiteRunner, GalenBasicTest suite) {
         currentTestRun.remove();
     }
     
 
     @Override
-    public synchronized void onSuiteStarted(GalenSuiteRunner galenSuiteRunner, GalenSuite suite) {
+    public synchronized void onSuiteStarted(GalenBasicTestRunner galenSuiteRunner, GalenBasicTest suite) {
         TestRun testRun = new TestRun(suite.getName());
         currentTestRun.set(testRun);
         testRuns.add(testRun);

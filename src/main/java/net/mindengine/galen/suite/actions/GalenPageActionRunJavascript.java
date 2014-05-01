@@ -18,17 +18,15 @@ package net.mindengine.galen.suite.actions;
 import java.io.File;
 import java.io.FileReader;
 import java.io.Reader;
-import java.util.LinkedList;
-import java.util.List;
 
 import net.mindengine.galen.browser.Browser;
 import net.mindengine.galen.browser.SeleniumBrowser;
 import net.mindengine.galen.browser.WebDriverWrapper;
 import net.mindengine.galen.javascript.GalenJsExecutor;
+import net.mindengine.galen.reports.TestReport;
 import net.mindengine.galen.suite.GalenPageAction;
 import net.mindengine.galen.suite.GalenPageTest;
 import net.mindengine.galen.utils.GalenUtils;
-import net.mindengine.galen.validation.ValidationError;
 import net.mindengine.galen.validation.ValidationListener;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
@@ -37,7 +35,6 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 
 public class GalenPageActionRunJavascript extends GalenPageAction{
 
-    private static final List<ValidationError> NO_ERRORS = new LinkedList<ValidationError>();
     private String javascriptPath;
     private String jsonArguments;
 
@@ -47,11 +44,10 @@ public class GalenPageActionRunJavascript extends GalenPageAction{
     
     
     @Override
-    public List<ValidationError> execute(Browser browser, GalenPageTest pageTest, ValidationListener validationListener) throws Exception {
+    public void execute(TestReport report, Browser browser, GalenPageTest pageTest, ValidationListener validationListener) throws Exception {
         
         File file = GalenUtils.findFile(javascriptPath);
         Reader scriptFileReader = new FileReader(file);
-        
         
         GalenJsExecutor js = new GalenJsExecutor();
         js.putObject("browser", browser);
@@ -59,8 +55,6 @@ public class GalenPageActionRunJavascript extends GalenPageAction{
         
         js.eval("var arg = " + jsonArguments);
         js.eval(scriptFileReader, javascriptPath);
-               
-        return NO_ERRORS;
     }
     
     private void provideWrappedWebDriver(GalenJsExecutor jsExecutor, Browser browser) {

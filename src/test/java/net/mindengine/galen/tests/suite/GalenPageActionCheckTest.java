@@ -27,6 +27,7 @@ import net.mindengine.galen.components.validation.MockedPage;
 import net.mindengine.galen.components.validation.MockedPageElement;
 import net.mindengine.galen.components.validation.TestValidationListener;
 import net.mindengine.galen.page.PageElement;
+import net.mindengine.galen.reports.TestReport;
 import net.mindengine.galen.suite.GalenPageTest;
 import net.mindengine.galen.suite.actions.GalenPageActionCheck;
 
@@ -48,7 +49,9 @@ public class GalenPageActionCheckTest {
         }}));
         
         TestValidationListener validationListener = new TestValidationListener();
-        check.execute(mockedBrowser, new GalenPageTest(), validationListener);
+        
+        TestReport report = new TestReport();
+        check.execute(report, mockedBrowser, new GalenPageTest(), validationListener);
         
         Assert.assertEquals(
                 "<o textfield>\n" +
@@ -78,8 +81,9 @@ public class GalenPageActionCheckTest {
             put("button-2", new MockedPageElement(0, 100, 200, 10));
         }}));
         
+        
         TestValidationListener validationListener = new TestValidationListener();
-        check.execute(mockedBrowser, new GalenPageTest(), validationListener);
+        check.execute(new TestReport(), mockedBrowser, new GalenPageTest(), validationListener);
         
         Assert.assertEquals(
                 "<o textfield>\n" +
@@ -105,7 +109,7 @@ public class GalenPageActionCheckTest {
 
         
         TestValidationListener validationListener = new TestValidationListener();
-        check.execute(mockedBrowser, new GalenPageTest(), validationListener);
+        check.execute(new TestReport(), mockedBrowser, new GalenPageTest(), validationListener);
         
         Assert.assertEquals(
                 "<o textfield>\n" +
@@ -139,7 +143,7 @@ public class GalenPageActionCheckTest {
 
         
         TestValidationListener validationListener = new TestValidationListener();
-        check.execute(mockedBrowser, new GalenPageTest(), validationListener);
+        check.execute(new TestReport(), mockedBrowser, new GalenPageTest(), validationListener);
         
         Assert.assertEquals(
                 "<o textfield>\n" +
@@ -165,7 +169,7 @@ public class GalenPageActionCheckTest {
 
         
         TestValidationListener validationListener = new TestValidationListener();
-        check.execute(mockedBrowser, new GalenPageTest(), validationListener);
+        check.execute(new TestReport(), mockedBrowser, new GalenPageTest(), validationListener);
         
         Assert.assertEquals(
                 "<o textfield>\n" +

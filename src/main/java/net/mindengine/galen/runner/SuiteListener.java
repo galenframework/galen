@@ -15,23 +15,20 @@
 ******************************************************************************/
 package net.mindengine.galen.runner;
 
-import java.util.List;
-
 import net.mindengine.galen.browser.Browser;
 import net.mindengine.galen.suite.GalenPageTest;
-import net.mindengine.galen.suite.GalenSuite;
-import net.mindengine.galen.validation.ValidationError;
+import net.mindengine.galen.tests.GalenBasicTest;
 
 
 public interface SuiteListener {
 
-    void onAfterPage(GalenSuiteRunner galenSuiteRunner, GalenPageRunner pageRunner, GalenPageTest pageTest, Browser browser, List<ValidationError> errors);
+    void onAfterPage(GalenBasicTestRunner galenSuiteRunner, GalenPageRunner pageRunner, GalenPageTest pageTest, Browser browser);
 
-    void onBeforePage(GalenSuiteRunner galenSuiteRunner, GalenPageRunner pageRunner, GalenPageTest pageTest, Browser browser);
+    void onBeforePage(GalenBasicTestRunner galenSuiteRunner, GalenPageRunner pageRunner, GalenPageTest pageTest, Browser browser);
 
-    void onSuiteFinished(GalenSuiteRunner galenSuiteRunner, GalenSuite suite);
+    void onSuiteFinished(GalenBasicTestRunner galenSuiteRunner, GalenBasicTest suite);
 
-    void onSuiteStarted(GalenSuiteRunner galenSuiteRunner, GalenSuite suite);
+    void onSuiteStarted(GalenBasicTestRunner galenSuiteRunner, GalenBasicTest suite);
 
 
 }

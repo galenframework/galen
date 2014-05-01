@@ -15,15 +15,12 @@
 ******************************************************************************/
 package net.mindengine.galen.components;
 
-import java.util.List;
-
 import net.mindengine.galen.browser.Browser;
+import net.mindengine.galen.runner.GalenBasicTestRunner;
 import net.mindengine.galen.runner.GalenPageRunner;
-import net.mindengine.galen.runner.GalenSuiteRunner;
 import net.mindengine.galen.runner.SuiteListener;
 import net.mindengine.galen.suite.GalenPageTest;
-import net.mindengine.galen.suite.GalenSuite;
-import net.mindengine.galen.validation.ValidationError;
+import net.mindengine.galen.tests.GalenBasicTest;
 
 public class RecordingSuiteListener implements SuiteListener {
 
@@ -34,22 +31,22 @@ public class RecordingSuiteListener implements SuiteListener {
     }
 
     @Override
-    public void onAfterPage(GalenSuiteRunner galenSuiteRunner, GalenPageRunner pageRunner, GalenPageTest pageTest, Browser browser, List<ValidationError> errors) {
-        record("<after-page errors=" + errors.size() + ">");
+    public void onAfterPage(GalenBasicTestRunner galenSuiteRunner, GalenPageRunner pageRunner, GalenPageTest pageTest, Browser browser) {
+        record("<after-page>");
     }
 
     @Override
-    public void onBeforePage(GalenSuiteRunner galenSuiteRunner, GalenPageRunner pageRunner, GalenPageTest pageTest, Browser browser) {
+    public void onBeforePage(GalenBasicTestRunner galenSuiteRunner, GalenPageRunner pageRunner, GalenPageTest pageTest, Browser browser) {
         record("<before-page>");
     }
 
     @Override
-    public void onSuiteFinished(GalenSuiteRunner galenSuiteRunner, GalenSuite suite) {
+    public void onSuiteFinished(GalenBasicTestRunner galenSuiteRunner, GalenBasicTest suite) {
         record("<suite-finished>");
     }
 
     @Override
-    public void onSuiteStarted(GalenSuiteRunner galenSuiteRunner, GalenSuite suite) {
+    public void onSuiteStarted(GalenBasicTestRunner galenSuiteRunner, GalenBasicTest suite) {
         record("<suite-started>");
     }
 

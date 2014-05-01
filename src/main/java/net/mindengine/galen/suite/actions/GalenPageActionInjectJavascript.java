@@ -16,14 +16,12 @@
 package net.mindengine.galen.suite.actions;
 
 import java.io.IOException;
-import java.util.LinkedList;
-import java.util.List;
 
 import net.mindengine.galen.browser.Browser;
+import net.mindengine.galen.reports.TestReport;
 import net.mindengine.galen.suite.GalenPageAction;
 import net.mindengine.galen.suite.GalenPageTest;
 import net.mindengine.galen.utils.GalenUtils;
-import net.mindengine.galen.validation.ValidationError;
 import net.mindengine.galen.validation.ValidationListener;
 
 import org.apache.commons.io.FileUtils;
@@ -33,8 +31,6 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 
 public class GalenPageActionInjectJavascript extends GalenPageAction{
 
-    private static final List<ValidationError> NO_ERRORS = new LinkedList<ValidationError>();
-    
     private String javascriptFilePath;
 
     public GalenPageActionInjectJavascript(String javascriptFilePath) {
@@ -49,10 +45,9 @@ public class GalenPageActionInjectJavascript extends GalenPageAction{
     }
     
     @Override
-    public List<ValidationError> execute(Browser browser, GalenPageTest pageTest, ValidationListener validationListener) throws IOException {
+    public void execute(TestReport report, Browser browser, GalenPageTest pageTest, ValidationListener validationListener) throws IOException {
         String javascript = FileUtils.readFileToString(GalenUtils.findFile(javascriptFilePath));
         browser.executeJavascript(javascript);
-        return NO_ERRORS;
     }
     
     @Override

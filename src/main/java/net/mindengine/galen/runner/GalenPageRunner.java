@@ -15,10 +15,8 @@
 ******************************************************************************/
 package net.mindengine.galen.runner;
 
-import java.util.LinkedList;
-import java.util.List;
-
 import net.mindengine.galen.browser.Browser;
+import net.mindengine.galen.reports.TestReport;
 import net.mindengine.galen.specs.Spec;
 import net.mindengine.galen.specs.page.PageSection;
 import net.mindengine.galen.suite.GalenPageAction;
@@ -35,7 +33,12 @@ import net.mindengine.galen.validation.ValidationListener;
 public class GalenPageRunner implements ValidationListener {
 
     private ValidationListener validationListener;
+    private TestReport report;
     
+    public GalenPageRunner(TestReport report) {
+        this.setReport(report);
+    }
+
     public GalenPageRunner withValidationListener(ValidationListener validationListener) {
         this.setValidationListener(validationListener);
         return this;
@@ -49,7 +52,7 @@ public class GalenPageRunner implements ValidationListener {
         this.validationListener = validationListener;
     }
 
-    public List<ValidationError> run(Browser browser, GalenPageTest pageTest) {
+    public void run(Browser browser, GalenPageTest pageTest) {
         
         if (pageTest.getScreenSize() != null) {
             browser.changeWindowSize(pageTest.getScreenSize());
@@ -59,33 +62,27 @@ public class GalenPageRunner implements ValidationListener {
             browser.load(pageTest.getUrl());
         }
         
-        List<ValidationError> allErrors = new LinkedList<ValidationError>();
-        
         try {
             for (GalenPageAction action : pageTest.getActions()) {
                 tellBeforeAction(action);
                 
-                List<ValidationError> errors = executeAction(browser, pageTest, action);
-                    
-                if (errors != null) {
-                    allErrors.addAll(errors);
-                }
+                report.sectionStart(action.getOriginalCommand());
+                executeAction(browser, pageTest, action);
                 
+                report.sectionEnd();
                 tellAfterAction(action);
             }
         }
         catch (GalenPageActionException e) {
+            report.error(e.getReason());
             onGlobalError(this, e.getReason());
-            allErrors.add(ValidationError.fromException(e));
             tellAfterAction(e.getAction());
         }
-        
-        return allErrors;
     }
 
-    private List<ValidationError> executeAction(Browser browser, GalenPageTest pageTest, GalenPageAction action) throws GalenPageActionException {
+    private void executeAction(Browser browser, GalenPageTest pageTest, GalenPageAction action) throws GalenPageActionException {
         try {
-            return action.execute(browser, pageTest, this);
+            action.execute(report, browser, pageTest, this);
         }
         catch (Exception ex) {
             throw new GalenPageActionException(ex, action);
@@ -167,6 +164,14 @@ public class GalenPageRunner implements ValidationListener {
         if (validationListener != null) {
             validationListener.onAfterSection(this, pageValidation, pageSection);
         }
+    }
+
+    public TestReport getReport() {
+        return report;
+    }
+
+    public void setReport(TestReport report) {
+        this.report = report;
     }
 
 }

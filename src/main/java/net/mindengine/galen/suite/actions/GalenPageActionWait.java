@@ -22,10 +22,10 @@ import java.util.concurrent.TimeoutException;
 import net.mindengine.galen.browser.Browser;
 import net.mindengine.galen.page.Page;
 import net.mindengine.galen.page.PageElement;
+import net.mindengine.galen.reports.TestReport;
 import net.mindengine.galen.specs.page.Locator;
 import net.mindengine.galen.suite.GalenPageAction;
 import net.mindengine.galen.suite.GalenPageTest;
-import net.mindengine.galen.validation.ValidationError;
 import net.mindengine.galen.validation.ValidationListener;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
@@ -130,7 +130,7 @@ public class GalenPageActionWait extends GalenPageAction {
     }
 
     @Override
-    public List<ValidationError> execute(Browser browser, GalenPageTest pageTest, ValidationListener validationListener) throws Exception {
+    public void execute(TestReport report, Browser browser, GalenPageTest pageTest, ValidationListener validationListener) throws Exception {
         Page page = browser.getPage();
         
         if (untilElements == null || untilElements.isEmpty()) {
@@ -143,7 +143,7 @@ public class GalenPageActionWait extends GalenPageAction {
             while(tries-- > 0) {
                 Thread.sleep(period);
                 if (checkAllConditions(page, null)) {
-                    return null;
+                    return;
                 }
             }
             
@@ -152,7 +152,6 @@ public class GalenPageActionWait extends GalenPageAction {
                 throw new TimeoutException("Failed waiting for:\n" + results.toString());
             }
         }
-        return null;
     }
 
     private boolean checkAllConditions(Page page, StringBuffer result) {
