@@ -20,6 +20,7 @@ public class GalenTestInfo {
     private String name;
     private TestReport report = new TestReport();
 
+    
     public String getName() {
         return name;
     }
@@ -35,4 +36,6 @@ public class GalenTestInfo {
     public void setReport(TestReport report) {
         this.report = report;
     }
+
+    
 }

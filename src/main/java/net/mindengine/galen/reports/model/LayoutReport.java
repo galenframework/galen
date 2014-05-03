@@ -18,26 +18,36 @@ package net.mindengine.galen.reports.model;
 import java.util.LinkedList;
 import java.util.List;
 
-public class PageTestSection {
-
-    private String name;
+public class LayoutReport {
     
-    private List<PageTestObject> objects = new LinkedList<PageTestObject>();
+    private String title;
     
-    public List<PageTestObject> getObjects() {
-        return objects;
+    private List<LayoutSection> sections = new LinkedList<LayoutSection>();
+
+    private String screenshot;
+    
+    public String getTitle() {
+        return title;
     }
 
-    public void setObjects(List<PageTestObject> objects) {
-        this.objects = objects;
+    public void setTitle(String title) {
+        this.title = title;
     }
 
-    public String getName() {
-        return name;
+    public List<LayoutSection> getSections() {
+        return sections;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setSections(List<LayoutSection> sections) {
+        this.sections = sections;
+    }
+
+    public String getScreenshot() {
+        return screenshot;
+    }
+
+    public void setScreenshot(String screenshot) {
+        this.screenshot = screenshot;
     }
 
 }

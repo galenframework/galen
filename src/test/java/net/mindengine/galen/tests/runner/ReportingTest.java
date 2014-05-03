@@ -23,14 +23,18 @@ import java.io.File;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.io.UnsupportedEncodingException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.util.LinkedList;
+import java.util.List;
 
 import junit.framework.Assert;
 import net.mindengine.galen.components.report.ReportingListenerTestUtils;
 import net.mindengine.galen.reports.ConsoleReportingListener;
-import net.mindengine.galen.reports.HtmlReportingListener;
-import net.mindengine.galen.reports.TestngReportingListener;
+import net.mindengine.galen.reports.GalenTestInfo;
+import net.mindengine.galen.reports.HtmlReportBuilder;
+import net.mindengine.galen.reports.LayoutReportNode;
+import net.mindengine.galen.reports.TestReport;
+import net.mindengine.galen.reports.model.LayoutReport;
+import net.mindengine.galen.validation.LayoutReportListener;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
@@ -39,13 +43,16 @@ import org.testng.annotations.Test;
 
 import com.google.common.io.Files;
 
-public class ReportingListenerTest {
+import freemarker.template.TemplateException;
+
+public class ReportingTest {
     
     private static final String GALEN_LOG_LEVEL = "galen.log.level";
 
     @AfterMethod public void removeAllSystemProperties() {
         System.getProperties().remove(GALEN_LOG_LEVEL);
     }
+    /*
     
     @Test public void shouldReport_inTestNgFormat_successfully() throws IOException {
         String reportPath = Files.createTempDir().getAbsolutePath() + "/testng-report/report.xml";
@@ -65,16 +72,27 @@ public class ReportingListenerTest {
                 realXml
                     .replaceAll("T([0-9]{2}:){2}[0-9]{2}Z", "T00:00:00Z")
                     .replaceAll("duration-ms=\"[0-9]+\"", "duration-ms=\"0\""));
-    }
+    }*/
     
-    @Test public void shouldReport_inHtmlFormat_successfully_andSplitFiles_perTest() throws IOException {
+    @Test public void shouldReport_inHtmlFormat_successfully_andSplitFiles_perTest() throws IOException, TemplateException {
         String reportDirPath = Files.createTempDir().getAbsolutePath() + "/reports";
         
-        HtmlReportingListener listener = new HtmlReportingListener(reportDirPath);
-        ReportingListenerTestUtils.performSampleReporting("Some page test 1", listener, listener);
-        ReportingListenerTestUtils.performSampleReporting("Some page test 2", listener, listener);
         
-        listener.done();
+        
+        List<GalenTestInfo> testInfos = new LinkedList<GalenTestInfo>();
+        
+        GalenTestInfo testInfo = new GalenTestInfo();
+        testInfo.setName("Home page test");
+        TestReport report = new TestReport();
+        LayoutReport layoutReport = new LayoutReport();
+        ReportingListenerTestUtils.performSampleReporting("Home page test", null, new LayoutReportListener(layoutReport));
+        
+        report.addNode(new LayoutReportNode(layoutReport, "check layout"));
+        testInfo.setReport(report);
+        
+        testInfos.add(testInfo);
+        new HtmlReportBuilder().build(testInfos, reportDirPath);
+        
         
         String expectedGeneralHtml = IOUtils.toString(getClass().getResourceAsStream("/expected-reports/report.html"));
         String realGeneralHtml = FileUtils.readFileToString(new File(reportDirPath + "/report.html"));

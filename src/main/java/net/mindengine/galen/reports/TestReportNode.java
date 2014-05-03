@@ -119,5 +119,28 @@ public class TestReportNode {
         this.attachments = attachments;
     }
 
+    public TestStatistic fetchStatistic(TestStatistic testStatistic) {
+        
+        if (nodes != null && nodes.size() > 0) {
+            for (TestReportNode node : nodes) {
+                node.fetchStatistic(testStatistic);
+            }
+        }
+        else {
+            testStatistic.setTotal(testStatistic.getTotal() + 1);
+            if (status == TestReportNode.Status.INFO) {
+                testStatistic.setPassed(testStatistic.getPassed() + 1);
+            }
+            else if (status == TestReportNode.Status.ERROR) {
+                testStatistic.setErrors(testStatistic.getErrors() + 1);
+            } 
+            else {
+                testStatistic.setWarnings(testStatistic.getWarnings() + 1);
+            }
+        }
+        return testStatistic;
+    }
+
+
 
 }

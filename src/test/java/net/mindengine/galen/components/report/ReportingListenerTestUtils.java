@@ -54,7 +54,7 @@ public class ReportingListenerTestUtils {
         GalenBasicTest suite = new GalenBasicTest();
         suite.setName(suiteName);
         
-        suiteListener.onSuiteStarted(galenSuiteRunner, suite);
+        if (suiteListener != null) suiteListener.onSuiteStarted(galenSuiteRunner, suite);
         
         Browser browser = new MockedBrowser("http://example.com/page1", new Dimension(410, 610));
         GalenPageRunner pageRunner = new GalenPageRunner(new TestReport());
@@ -70,7 +70,7 @@ public class ReportingListenerTestUtils {
         MockedPageValidation pageValidation = new MockedPageValidation(pageElements);
         
         GalenPageTest pageTest = new GalenPageTest().withSize(400, 600).withUrl("http://example.com/page1");
-        suiteListener.onBeforePage(galenSuiteRunner, pageRunner, pageTest, browser);
+        if (suiteListener != null) suiteListener.onBeforePage(galenSuiteRunner, pageRunner, pageTest, browser);
         
         GalenPageActionCheck action = new GalenPageActionCheck();
         action.setOriginalCommand("check homepage.spec --include all,mobile");
@@ -126,12 +126,12 @@ public class ReportingListenerTestUtils {
         
         }
         validationListener.onAfterPageAction(pageRunner, action);
-        suiteListener.onAfterPage(galenSuiteRunner, pageRunner, pageTest, browser);
+        if (suiteListener != null) suiteListener.onAfterPage(galenSuiteRunner, pageRunner, pageTest, browser);
         
         
         Browser browser2 = new MockedBrowser("http://example.com/page2", new Dimension(610, 710));
         GalenPageTest pageTest2 = new GalenPageTest().withSize(600, 700).withUrl("http://example.com/page2");
-        suiteListener.onBeforePage(galenSuiteRunner, pageRunner, pageTest2, browser2);
+        if (suiteListener != null) suiteListener.onBeforePage(galenSuiteRunner, pageRunner, pageTest2, browser2);
         
         validationListener.onBeforePageAction(pageRunner, action);
         {
@@ -158,9 +158,9 @@ public class ReportingListenerTestUtils {
             validationListener.onAfterSection(pageRunner, pageValidation, section1);
         }
         validationListener.onAfterPageAction(pageRunner, action);
-        suiteListener.onAfterPage(galenSuiteRunner, pageRunner, pageTest2, browser2);
+        if (suiteListener != null) suiteListener.onAfterPage(galenSuiteRunner, pageRunner, pageTest2, browser2);
         
-        suiteListener.onSuiteFinished(galenSuiteRunner, suite);
+        if (suiteListener != null) suiteListener.onSuiteFinished(galenSuiteRunner, suite);
     }
 
     private static PageSection sectionWithName(String name) {

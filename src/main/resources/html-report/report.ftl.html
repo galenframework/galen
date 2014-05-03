@@ -13,18 +13,18 @@
                 <div class="status-header">
                     <div>Passed</div>
                     <div>Failed</div>
+                    <div>Warnings</div>
                     <div>Total</div>
-                    <div>Objects</div>
                     <div>Test</div>
                 </div>
-                <#list suiteRuns as suiteRun>
+                <#list tests as testData>
                 <div class="suite">
-                    <div class="status passed">${suiteRun.passed?c}</div>
-                    <div class="status failed">${suiteRun.failed?c}</div>
-                    <div class="status total">${suiteRun.total?c}</div>
-                    <div class="status objects">${suiteRun.objectsCount?c}</div>
+                    <div class="status passed">${testData.statistic.passed?c}</div>
+                    <div class="status failed">${testData.statistic.errors?c}</div>
+                    <div class="status warnings">${testData.statistic.warnings?c}</div>
+                    <div class="status total">${testData.statistic.total?c}</div>
                     <div class="suite-link">
-                        <a href="${suiteRun.suiteReportFile}.html">${suiteRun.name}</a>
+                        <a href="${testData.testId}.html">${testData.testInfo.name}</a>
                     </div>
                 </div>
                 </#list>

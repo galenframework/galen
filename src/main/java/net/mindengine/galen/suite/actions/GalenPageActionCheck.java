@@ -16,16 +16,13 @@
 package net.mindengine.galen.suite.actions;
 
 import java.io.IOException;
-import java.util.LinkedList;
 import java.util.List;
-
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import net.mindengine.galen.browser.Browser;
 import net.mindengine.galen.page.Page;
+import net.mindengine.galen.reports.LayoutReportNode;
 import net.mindengine.galen.reports.TestReport;
+import net.mindengine.galen.reports.model.LayoutReport;
 import net.mindengine.galen.specs.page.PageSection;
 import net.mindengine.galen.specs.reader.page.PageSpec;
 import net.mindengine.galen.specs.reader.page.PageSpecReader;
@@ -33,10 +30,15 @@ import net.mindengine.galen.specs.reader.page.SectionFilter;
 import net.mindengine.galen.suite.GalenPageAction;
 import net.mindengine.galen.suite.GalenPageTest;
 import net.mindengine.galen.utils.GalenUtils;
+import net.mindengine.galen.validation.CombinedValidationListener;
 import net.mindengine.galen.validation.PageValidation;
 import net.mindengine.galen.validation.SectionValidation;
-import net.mindengine.galen.validation.ValidationError;
+import net.mindengine.galen.validation.LayoutReportListener;
 import net.mindengine.galen.validation.ValidationListener;
+
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.lang3.builder.ToStringBuilder;
 
 public class GalenPageActionCheck extends GalenPageAction {
 
@@ -47,7 +49,19 @@ public class GalenPageActionCheck extends GalenPageAction {
     
     @Override
     public void execute(TestReport report, Browser browser, GalenPageTest pageTest, ValidationListener validationListener) throws IOException {
-        List<ValidationError> allErrors = new LinkedList<ValidationError>();
+        
+        CombinedValidationListener listener = new CombinedValidationListener();
+        listener.add(validationListener);
+
+        
+        LayoutReport layoutReport = new LayoutReport();
+        
+        
+        listener.add(new LayoutReportListener(layoutReport));
+        
+        report.addNode(new LayoutReportNode(layoutReport, pageTest.getTitle()));
+        
+        
         
         Page page = browser.getPage();
         PageSpecReader pageSpecReader = new PageSpecReader(browser);
@@ -56,14 +70,10 @@ public class GalenPageActionCheck extends GalenPageAction {
             PageSpec spec = pageSpecReader.read(GalenUtils.findFile(specFile));
             
             SectionFilter sectionFilter = new SectionFilter(includedTags, excludedTags);
-            List<PageSection> pageSections = spec.findSections(includedTags, excludedTags);
+            List<PageSection> pageSections = spec.findSections(sectionFilter);
+            SectionValidation sectionValidation = new SectionValidation(pageSections, new PageValidation(browser, page, spec, listener, sectionFilter), listener);
             
-            SectionValidation sectionValidation = new SectionValidation(pageSections, new PageValidation(browser, page, spec, validationListener, sectionFilter), validationListener);
-            
-            List<ValidationError> errors = sectionValidation.check();
-            if (errors != null) {
-                allErrors.addAll(errors);
-            }
+            sectionValidation.check();
         }
     }
 

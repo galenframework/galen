@@ -20,30 +20,30 @@ import java.util.List;
 
 import net.mindengine.galen.page.Rect;
 
-public class PageTestObject {
+public class LayoutObject {
     
     private String name;
-    private List<PageTestSpec> specs = new LinkedList<PageTestSpec>();
-    private PageTestObject parent;
+    private List<LayoutSpec> specs = new LinkedList<LayoutSpec>();
+    private LayoutObject parent;
     
     // Here it will temporarily store sub objects that will be later picked up by spec
-    private List<PageTestObject> subObjects = null;
+    private List<LayoutObject> subObjects = null;
     private Rect area;
 
-    public PageTestObject() {
+    public LayoutObject() {
         
     }
     
-    public PageTestObject(PageTestObject parent) {
+    public LayoutObject(LayoutObject parent) {
         this.setParent(parent);
         if (parent != null) {
             parent.appendChildObject(this);
         }
     }
 
-    private void appendChildObject(PageTestObject pageTestObject) {
+    private void appendChildObject(LayoutObject pageTestObject) {
         if (getSubObjects() == null) {
-            setSubObjects(new LinkedList<PageTestObject>());
+            setSubObjects(new LinkedList<LayoutObject>());
         }
         getSubObjects().add(pageTestObject);
     }
@@ -56,27 +56,27 @@ public class PageTestObject {
         this.name = name;
     }
 
-    public List<PageTestSpec> getSpecs() {
+    public List<LayoutSpec> getSpecs() {
         return specs;
     }
 
-    public void setSpecs(List<PageTestSpec> specs) {
+    public void setSpecs(List<LayoutSpec> specs) {
         this.specs = specs;
     }
 
-    public PageTestObject getParent() {
+    public LayoutObject getParent() {
         return parent;
     }
 
-    public void setParent(PageTestObject parent) {
+    public void setParent(LayoutObject parent) {
         this.parent = parent;
     }
 
-    public List<PageTestObject> getSubObjects() {
+    public List<LayoutObject> getSubObjects() {
         return subObjects;
     }
 
-    public void setSubObjects(List<PageTestObject> subObjects) {
+    public void setSubObjects(List<LayoutObject> subObjects) {
         this.subObjects = subObjects;
     }
 

@@ -20,13 +20,13 @@ import java.util.List;
 
 import net.mindengine.galen.validation.ErrorArea;
 
-public class PageTestSpec {
+public class LayoutSpec {
     
     private String text;
     private Boolean failed = false;
     private List<String> errorMessages = new LinkedList<String>();
     private List<ErrorArea> errorAreas = new LinkedList<ErrorArea>();
-    private List<PageTestObject> subObjects;
+    private List<LayoutObject> subObjects;
 
     public String getText() {
         return text;
@@ -59,11 +59,11 @@ public class PageTestSpec {
         return this.errorAreas;
     }
 
-    public List<PageTestObject> getSubObjects() {
+    public List<LayoutObject> getSubObjects() {
         return subObjects;
     }
 
-    public void setSubObjects(List<PageTestObject> subObjects) {
+    public void setSubObjects(List<LayoutObject> subObjects) {
         this.subObjects = subObjects;
     }
 }

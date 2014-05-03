@@ -71,4 +71,15 @@ public class TestReport {
         return node;
     }
 
+    public TestReportNode addNode(TestReportNode node) {
+        this.currentNode.addNode(node);
+        return node;
+    }
+
+    public TestStatistic fetchStatistic() {
+        return rootNode.fetchStatistic(new TestStatistic());
+    }
+    
+    
+
 }

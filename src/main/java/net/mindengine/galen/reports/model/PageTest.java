@@ -39,7 +39,7 @@ public class PageTest {
     }
     
     private String title = "";
-    private List<PageAction> pageActions = new LinkedList<PageAction>();
+    private List<LayoutReport> pageActions = new LinkedList<LayoutReport>();
     private List<GlobalError> globalErrors = new LinkedList<GlobalError>();
 
     public String getTitle() {
@@ -54,11 +54,11 @@ public class PageTest {
         return this.globalErrors;
     }
 
-    public List<PageAction> getPageActions() {
+    public List<LayoutReport> getPageActions() {
         return pageActions;
     }
 
-    public void setPageActions(List<PageAction> pageActions) {
+    public void setPageActions(List<LayoutReport> pageActions) {
         this.pageActions = pageActions;
     }
 }
