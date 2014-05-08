@@ -93,12 +93,12 @@ public class ReportingTest {
         new HtmlReportBuilder().build(testInfos, reportDirPath);
         
         
-        String expectedGeneralHtml = IOUtils.toString(getClass().getResourceAsStream("/expected-reports/report.html"));
-        String realGeneralHtml = FileUtils.readFileToString(new File(reportDirPath + "/report.html"));
+        String expectedGeneralHtml = trimEveryLine(IOUtils.toString(getClass().getResourceAsStream("/expected-reports/report.html")));
+        String realGeneralHtml = trimEveryLine(FileUtils.readFileToString(new File(reportDirPath + "/report.html")));
         Assert.assertEquals(expectedGeneralHtml, realGeneralHtml);
         
-        String expectedSuite1Html = IOUtils.toString(getClass().getResourceAsStream("/expected-reports/test-1.html"));
-        String realSuite1Html = FileUtils.readFileToString(new File(reportDirPath + "/report-1-home-page-test.html"));
+        String expectedSuite1Html = trimEveryLine(IOUtils.toString(getClass().getResourceAsStream("/expected-reports/test-1.html")));
+        String realSuite1Html = trimEveryLine(FileUtils.readFileToString(new File(reportDirPath + "/report-1-home-page-test.html")));
         
         Assert.assertEquals(expectedSuite1Html, realSuite1Html);
         
@@ -107,6 +107,18 @@ public class ReportingTest {
         assertThat("Should place css same folder", new File(reportDirPath + "/galen-report.css").exists(), is(true));
         assertThat("Should place js same folder", new File(reportDirPath + "/galen-report.js").exists(), is(true));
         assertThat("Should place jquery same folder", new File(reportDirPath + "/jquery-1.10.2.min.js").exists(), is(true));
+    }
+
+    private String trimEveryLine(String text) {
+        String lines[] = text.split("\\r?\\n");
+        StringBuilder builder = new StringBuilder();
+        
+        for (String line: lines) {
+            builder.append(line.trim());
+            builder.append("\n");
+        }
+        
+        return builder.toString();
     }
 
     @Test public void shouldReport_toConsole_successfully() throws IOException {
