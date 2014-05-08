@@ -77,14 +77,13 @@ public class ReportingTest {
     @Test public void shouldReport_inHtmlFormat_successfully_andSplitFiles_perTest() throws IOException, TemplateException {
         String reportDirPath = Files.createTempDir().getAbsolutePath() + "/reports";
         
-        
-        
         List<GalenTestInfo> testInfos = new LinkedList<GalenTestInfo>();
         
         GalenTestInfo testInfo = new GalenTestInfo();
         testInfo.setName("Home page test");
         TestReport report = new TestReport();
         LayoutReport layoutReport = new LayoutReport();
+        layoutReport.setScreenshotFullPath(File.createTempFile("screenshot", ".png").getAbsolutePath());
         ReportingListenerTestUtils.performSampleReporting("Home page test", null, new LayoutReportListener(layoutReport));
         
         report.addNode(new LayoutReportNode(layoutReport, "check layout"));
@@ -98,19 +97,13 @@ public class ReportingTest {
         String realGeneralHtml = FileUtils.readFileToString(new File(reportDirPath + "/report.html"));
         Assert.assertEquals(expectedGeneralHtml, realGeneralHtml);
         
-        String expectedSuite1Html = IOUtils.toString(getClass().getResourceAsStream("/expected-reports/suite-1.html"));
-        String realSuite1Html = FileUtils.readFileToString(new File(reportDirPath + "/report-1-some-page-test-1.html"));
+        String expectedSuite1Html = IOUtils.toString(getClass().getResourceAsStream("/expected-reports/test-1.html"));
+        String realSuite1Html = FileUtils.readFileToString(new File(reportDirPath + "/report-1-home-page-test.html"));
         
         Assert.assertEquals(expectedSuite1Html, realSuite1Html);
         
-        String expectedSuite2Html = IOUtils.toString(getClass().getResourceAsStream("/expected-reports/suite-2.html"));
-        String realSuite2Html = FileUtils.readFileToString(new File(reportDirPath + "/report-2-some-page-test-2.html"));
-        Assert.assertEquals(expectedSuite2Html, realSuite2Html);
-        
         assertThat("Should place screenshot 1 in same folder", new File(reportDirPath + "/report-1-some-page-test-1-screenshot-1.png").exists(), is(true));
         assertThat("Should place screenshot 2 in same folder", new File(reportDirPath + "/report-1-some-page-test-1-screenshot-2.png").exists(), is(true));
-        assertThat("Should place screenshot 1 in same folder", new File(reportDirPath + "/report-2-some-page-test-2-screenshot-1.png").exists(), is(true));
-        assertThat("Should place screenshot 2 in same folder", new File(reportDirPath + "/report-2-some-page-test-2-screenshot-2.png").exists(), is(true));
         
         assertThat("Should place css same folder", new File(reportDirPath + "/galen-report.css").exists(), is(true));
         assertThat("Should place js same folder", new File(reportDirPath + "/galen-report.js").exists(), is(true));

@@ -25,6 +25,7 @@ public class LayoutReport {
     private List<LayoutSection> sections = new LinkedList<LayoutSection>();
 
     private String screenshot;
+    private String screenshotFullPath;
     
     public String getTitle() {
         return title;
@@ -48,6 +49,14 @@ public class LayoutReport {
 
     public void setScreenshot(String screenshot) {
         this.screenshot = screenshot;
+    }
+
+    public String getScreenshotFullPath() {
+        return screenshotFullPath;
+    }
+
+    public void setScreenshotFullPath(String screenshotFullPath) {
+        this.screenshotFullPath = screenshotFullPath;
     }
 
 }

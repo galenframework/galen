@@ -55,13 +55,17 @@ public class GalenPageActionCheck extends GalenPageAction {
 
         
         LayoutReport layoutReport = new LayoutReport();
+        try {
+            layoutReport.setScreenshot(browser.createScreenshot());
+        }
+        catch (Exception ex) {
+            ex.printStackTrace();
+        }
         
         
         listener.add(new LayoutReportListener(layoutReport));
         
         report.addNode(new LayoutReportNode(layoutReport, pageTest.getTitle()));
-        
-        
         
         Page page = browser.getPage();
         PageSpecReader pageSpecReader = new PageSpecReader(browser);

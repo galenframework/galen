@@ -1,18 +1,18 @@
 <html>
     <head>
-        <title>Galen Report | Some page test 1</title>
+        <title>Galen Report | Home page test</title>
         <link rel="stylesheet" type="text/css" href="galen-report.css"/>
         <script src="jquery-1.10.2.min.js"></script>
         <script src="galen-report.js"></script>
     </head>
     <body>
         <script>$(function() {Galen.formatSuiteReport();});</script>
-        <h1>Some page test 1</h1>
-        <div class="suite">
-            <h2 class="test">http://example.com/page1 400x600</h2>
-            <div class="test">
-                <h2 class="page-action">check homepage.spec --include all,mobile</h2>
-                <div class="page-action" data-screenshot="report-1-some-page-test-1-screenshot-1.png">
+        <h1>Home page test</h1>
+        <ul class="report">
+    <li class="report-status-info">
+        <a id="report-link-4" href="#">check layout</a>
+        <div id="report-nodes-4" class="report-container">
+                <div class="layout-report" data-screenshot="report-1-home-page-test-screenshot-1.png">
                     <h2 class="page-section">Unnamed</h2>
                     <div class="page-section">
 <h3 class="object">objectA1</h3>
@@ -99,12 +99,6 @@
     </ul>
 </div>
                     </div>
-                </div>
-            </div>
-            <h2 class="test">http://example.com/page2 600x700</h2>
-            <div class="test">
-                <h2 class="page-action">check homepage.spec --include all,mobile</h2>
-                <div class="page-action" data-screenshot="report-1-some-page-test-1-screenshot-2.png">
                     <h2 class="page-section">some section 1</h2>
                     <div class="page-section">
 <h3 class="object">objectB1</h3>
@@ -141,16 +135,8 @@
 </div>
                     </div>
                 </div>
-                <div class="global-error">
-                    <span>net.mindengine.galen.components.report.FakeException: Some exception here</span>
-                    <ul>
-                        <li>at net.mindengine.someclass.SomeClass.method1(SomeClass.java:4)</li>
-                        <li>at net.mindengine.someclass.SomeClass2.method2(SomeClass2.java:5)</li>
-                        <li>at net.mindengine.someclass.SomeClass3.method3(SomeClass3.java:6)</li>
-                    </ul>
-                    <a href="report-1-some-page-test-1-screenshot-3.png">Screenshot</a>
-                </div>
-            </div>
         </div>
+    </li>
+        </ul>
     </body>
 </html>

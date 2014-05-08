@@ -10,6 +10,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 
 import freemarker.template.Configuration;
@@ -20,15 +21,82 @@ public class HtmlReportBuilder {
     private Configuration freemarkerConfiguration = new Configuration();
     
     public void build(List<GalenTestInfo> tests, String reportFolderPath) throws IOException, TemplateException {
-        Template testTemplate = new Template("suite-report", new InputStreamReader(getClass().getResourceAsStream("/html-report/report-suite.ftl.html")), freemarkerConfiguration);
-        
-        
         List<GalenTestAggregatedInfo> aggregatedTests = new LinkedList<GalenTestAggregatedInfo>();
         
         for (GalenTestInfo test : tests) {
-            aggregatedTests.add(new GalenTestAggregatedInfo(test));
+            GalenTestAggregatedInfo aggregatedInfo = new GalenTestAggregatedInfo(test);
+            aggregatedTests.add(aggregatedInfo);
+            
+            exportTestReport(aggregatedInfo, reportFolderPath);
         }
         exportMainReport(reportFolderPath, aggregatedTests);
+    }
+
+    private void exportTestReport(GalenTestAggregatedInfo aggregatedInfo, String reportFolderPath) throws IOException, TemplateException {
+        makeSureReportFolderExists(reportFolderPath);
+        
+        File file = createTestReportFile(aggregatedInfo, reportFolderPath);
+        moveAllAttachmentsInReport(aggregatedInfo, reportFolderPath);
+        
+        
+        FileWriter fileWriter = new FileWriter(file);
+        Map<String, Object> model = new HashMap<String, Object>();
+        model.put("test", aggregatedInfo);
+        
+        Template template = new Template("report-main", new InputStreamReader(getClass().getResourceAsStream("/html-report/report-test.ftl.html")), freemarkerConfiguration);
+        template.process(model, fileWriter);
+        fileWriter.flush();
+        fileWriter.close();
+    }
+
+    private void moveAllAttachmentsInReport(GalenTestAggregatedInfo aggregatedInfo, String reportFolderPath) {
+        TestReport report = aggregatedInfo.getTestInfo().getReport();
+        for (TestReportNode node: report.getNodes()) {
+            moveAttachmentsInReportNode(node, reportFolderPath, aggregatedInfo.getTestId());
+        }
+    }
+
+    
+    private void moveAttachmentsInReportNode(TestReportNode node, String reportFolderPath, String filePrefix) {
+        // TODO Move attachments
+        if (node instanceof LayoutReportNode) {
+            moveScreenshotFile((LayoutReportNode)node, reportFolderPath, filePrefix);
+        }
+        
+        if (node.getNodes() != null) {
+            for (TestReportNode subNode : node.getNodes()) {
+                moveAttachmentsInReportNode(subNode, reportFolderPath, filePrefix);
+            }
+        }
+    }
+
+    private void moveScreenshotFile(LayoutReportNode node, String reportFolderPath, String filePrefix) {
+        if (node.getLayoutReport() != null && node.getLayoutReport().getScreenshotFullPath() != null) {
+            String fileName = createUniqueFileName(filePrefix + "-screenshot", ".png");
+            
+            node.getLayoutReport().setScreenshot(fileName);
+            try {
+                FileUtils.copyFile(new File(node.getLayoutReport().getScreenshotFullPath()), new File(reportFolderPath + File.separator + fileName));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private Long _uniqueId = 0L;
+    private synchronized String createUniqueFileName(String prefix, String suffix) {
+        _uniqueId++;
+        return String.format("%s-%d%s", prefix, _uniqueId, suffix);
+    }
+
+    private File createTestReportFile(GalenTestAggregatedInfo aggregatedInfo, String reportFolderPath) throws IOException {
+        File file = new File(reportFolderPath + File.separator + String.format("%s.html", aggregatedInfo.getTestId()));
+        if (!file.exists()) {
+            if (!file.createNewFile()) {
+                throw new RuntimeException("Cannot create file: " + file.getAbsolutePath());
+            }
+        }
+        return file;
     }
 
     private void exportMainReport(String reportFolderPath, List<GalenTestAggregatedInfo> tests) throws IOException, TemplateException {

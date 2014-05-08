@@ -20,7 +20,10 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class TestReportNode {
+    
+    private static Long _uniqueId = 0L;
 
+    private Long id = generateUniqueId();
     private String name;
     private Status status = Status.INFO;
     private List<TestReportNode> nodes;
@@ -28,9 +31,20 @@ public class TestReportNode {
     private List<TestAttachment> attachments;
     
     public static enum Status {
-        INFO,
-        WARN,
-        ERROR
+        INFO("info"),
+        WARN("warn"),
+        ERROR("error");
+        
+        Status(String name) {
+            this.name = name;
+        }
+        
+        private final String name;
+        
+        @Override
+        public String toString() {
+            return name;
+        }
     }
     
     public static TestReportNode info(String name) {
@@ -40,6 +54,11 @@ public class TestReportNode {
         return node;
     }
     
+    private synchronized Long generateUniqueId() {
+        _uniqueId++;
+        return _uniqueId;
+    }
+
     public static TestReportNode warn(String name) {
         TestReportNode node = new TestReportNode();
         node.setName(name);
@@ -139,6 +158,10 @@ public class TestReportNode {
             }
         }
         return testStatistic;
+    }
+    
+    public Long getId() {
+        return this.id;
     }
 
 
