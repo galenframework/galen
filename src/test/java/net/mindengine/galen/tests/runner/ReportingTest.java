@@ -102,8 +102,7 @@ public class ReportingTest {
         
         Assert.assertEquals(expectedSuite1Html, realSuite1Html);
         
-        assertThat("Should place screenshot 1 in same folder", new File(reportDirPath + "/report-1-some-page-test-1-screenshot-1.png").exists(), is(true));
-        assertThat("Should place screenshot 2 in same folder", new File(reportDirPath + "/report-1-some-page-test-1-screenshot-2.png").exists(), is(true));
+        assertThat("Should place screenshot 1 in same folder", new File(reportDirPath + "/report-1-home-page-test-screenshot-1.png").exists(), is(true));
         
         assertThat("Should place css same folder", new File(reportDirPath + "/galen-report.css").exists(), is(true));
         assertThat("Should place js same folder", new File(reportDirPath + "/galen-report.js").exists(), is(true));
