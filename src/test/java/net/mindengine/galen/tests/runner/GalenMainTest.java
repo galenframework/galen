@@ -63,7 +63,7 @@ public class GalenMainTest {
             );
         
         assertThat("Should create screenshot 1 and place it in same folder as report", new File(reportsDir.getAbsolutePath() + "/report-1-home-page-test-screenshot-1.png").exists(), is(true));
-        assertThat("Should create screenshot 2 and place it in same folder as report", new File(reportsDir.getAbsolutePath() + "/report-2-home-page-test-2-screenshot-1.png").exists(), is(true));
+        assertThat("Should create screenshot 2 and place it in same folder as report", new File(reportsDir.getAbsolutePath() + "/report-2-home-page-test-2-screenshot-2.png").exists(), is(true));
         
         String htmlReportContent = FileUtils.readFileToString(new File(htmlReportPath + File.separator + "report.html"));
         String testngReportContent = FileUtils.readFileToString(new File(testngReportPath));
@@ -73,10 +73,10 @@ public class GalenMainTest {
         assertThat(htmlReportContent, containsString("<a href=\"report-2-home-page-test-2.html\">Home page test 2</a>"));
         
         assertThat(testngReportContent, containsString("<test name=\"Home page test\">"));
-        assertThat(testngReportContent, containsString("<class name=\"" + testUrl + " 640x480\">"));
+        assertThat(testngReportContent, containsString("<class name=\"Home page test\">"));
         
         assertThat(testngReportContent, containsString("<test name=\"Home page test 2\">"));
-        assertThat(testngReportContent, containsString("<class name=\"" + testUrl + " 320x600\">"));
+        assertThat(testngReportContent, containsString("<class name=\"Home page test 2\">"));
     }
     
     
@@ -88,7 +88,7 @@ public class GalenMainTest {
         GalenMain galen = new GalenMain();
         
         File reportsDir = Files.createTempDir();
-        String testngReportPath = reportsDir.getAbsolutePath() + "/testng-report.html";
+        String testngReportPath = reportsDir.getAbsolutePath() + "/testng-report.xml";
         
         galen.execute(new GalenArguments()
             .withAction("test")
@@ -100,13 +100,13 @@ public class GalenMainTest {
         String testngReportContent = FileUtils.readFileToString(new File(testngReportPath));
         
         assertThat(testngReportContent, containsString("<test name=\"Recursion check 1\">"));
-        assertThat(testngReportContent, containsString("<class name=\"" + testUrl + " 640x480\">"));
+        assertThat(testngReportContent, containsString("<class name=\"Recursion check 1\">"));
         
         assertThat(testngReportContent, containsString("<test name=\"Recursion check 2\">"));
-        assertThat(testngReportContent, containsString("<class name=\"" + testUrl + " 320x480\">"));
+        assertThat(testngReportContent, containsString("<class name=\"Recursion check 2\">"));
         
         assertThat(testngReportContent, containsString("<test name=\"Recursion check 3\">"));
-        assertThat(testngReportContent, containsString("<class name=\"" + testUrl + " 640x480\">"));
+        assertThat(testngReportContent, containsString("<class name=\"Recursion check 3\">"));
     }
     
     @Test public void shouldFindAndRun_allTestsRecursivelly_inParallel() throws IOException, SecurityException, IllegalArgumentException, ClassNotFoundException, NoSuchMethodException, InstantiationException, IllegalAccessException, InvocationTargetException {
@@ -147,7 +147,7 @@ public class GalenMainTest {
         String testngReportContent = FileUtils.readFileToString(new File(testngReportPath));
         
         assertThat(testngReportContent, containsString("<test name=\"" + pageSpec + "\">"));
-        assertThat(testngReportContent, containsString("<class name=\"" + testUrl + " 450x500\">"));
+        assertThat(testngReportContent, containsString("<class name=\"" + pageSpec + "\">"));
     }
     
     @Test public void shouldGiveError_whenPageSpecIsIncorrect() throws IOException, SecurityException, IllegalArgumentException, ClassNotFoundException, NoSuchMethodException, InstantiationException, IllegalAccessException, InvocationTargetException {

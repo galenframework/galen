@@ -52,7 +52,7 @@ public class GalenPageRunner implements ValidationListener {
         this.validationListener = validationListener;
     }
 
-    public void run(Browser browser, GalenPageTest pageTest) {
+    public void run(Browser browser, GalenPageTest pageTest) throws Exception {
         
         if (pageTest.getScreenSize() != null) {
             browser.changeWindowSize(pageTest.getScreenSize());
@@ -62,31 +62,19 @@ public class GalenPageRunner implements ValidationListener {
             browser.load(pageTest.getUrl());
         }
         
-        try {
-            for (GalenPageAction action : pageTest.getActions()) {
-                tellBeforeAction(action);
-                
-                report.sectionStart(action.getOriginalCommand());
-                executeAction(browser, pageTest, action);
-                
-                report.sectionEnd();
-                tellAfterAction(action);
-            }
-        }
-        catch (GalenPageActionException e) {
-            report.error(e.getReason());
-            onGlobalError(this, e.getReason());
-            tellAfterAction(e.getAction());
+        for (GalenPageAction action : pageTest.getActions()) {
+            tellBeforeAction(action);
+            
+            report.sectionStart(action.getOriginalCommand());
+            executeAction(browser, pageTest, action);
+            
+            report.sectionEnd();
+            tellAfterAction(action);
         }
     }
 
-    private void executeAction(Browser browser, GalenPageTest pageTest, GalenPageAction action) throws GalenPageActionException {
-        try {
-            action.execute(report, browser, pageTest, this);
-        }
-        catch (Exception ex) {
-            throw new GalenPageActionException(ex, action);
-        }
+    private void executeAction(Browser browser, GalenPageTest pageTest, GalenPageAction action) throws Exception {
+        action.execute(report, browser, pageTest, this);
     }
 
     

@@ -56,7 +56,7 @@ public class GalenPageActionCheck extends GalenPageAction {
         
         LayoutReport layoutReport = new LayoutReport();
         try {
-            layoutReport.setScreenshot(browser.createScreenshot());
+            layoutReport.setScreenshotFullPath(browser.createScreenshot());
         }
         catch (Exception ex) {
             ex.printStackTrace();

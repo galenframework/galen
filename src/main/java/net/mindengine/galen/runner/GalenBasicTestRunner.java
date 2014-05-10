@@ -15,20 +15,17 @@
 ******************************************************************************/
 package net.mindengine.galen.runner;
 
-import java.util.LinkedList;
 import java.util.List;
 
 import net.mindengine.galen.browser.Browser;
 import net.mindengine.galen.reports.TestReport;
 import net.mindengine.galen.suite.GalenPageTest;
 import net.mindengine.galen.tests.GalenBasicTest;
-import net.mindengine.galen.validation.ValidationError;
 import net.mindengine.galen.validation.ValidationListener;
 
 
 public class GalenBasicTestRunner {
 
-    private static final LinkedList<ValidationError> EMPTY_ERRORS = new LinkedList<ValidationError>();
     private SuiteListener suiteListener;
     private ValidationListener validationListener;
     
@@ -49,7 +46,7 @@ public class GalenBasicTestRunner {
     }
 
     
-    public TestReport runTest(GalenBasicTest test) {
+    public TestReport runTest(GalenBasicTest test) throws Exception {
         if (test == null) {
             throw new IllegalArgumentException("Test can not be null");
         }
@@ -64,22 +61,17 @@ public class GalenBasicTestRunner {
         pageRunner.setValidationListener(validationListener);
         
         for (GalenPageTest pageTest : pageTests) {
-            try {
-                report.gotoRoot();
-                report.sectionStart(pageTest.getTitle());
-                
-                Browser browser = pageTest.getBrowserFactory().openBrowser();
+            report.gotoRoot();
+            report.sectionStart(pageTest.getTitle());
             
-                tellBeforePage(pageRunner, pageTest, browser);
-                runPageTest(pageRunner, pageTest, browser);
-                tellAfterPage(pageRunner, pageTest, browser);
-                
-                browser.quit();
-                report.sectionEnd();
-            }
-            catch (Exception ex) {
-                ex.printStackTrace();
-            }
+            Browser browser = pageTest.getBrowserFactory().openBrowser();
+        
+            tellBeforePage(pageRunner, pageTest, browser);
+            pageRunner.run(browser, pageTest);
+            tellAfterPage(pageRunner, pageTest, browser);
+            
+            browser.quit();
+            report.sectionEnd();
         }
         
         tellSuiteFinished(test);
@@ -109,14 +101,6 @@ public class GalenBasicTestRunner {
         }
     }
 
-    private void runPageTest(GalenPageRunner pageRunner, GalenPageTest pageTest, Browser browser) {
-        try {
-            pageRunner.run(browser, pageTest);
-        }
-        catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
 
     private void tellSuiteFinished(GalenBasicTest suite) {
         try {

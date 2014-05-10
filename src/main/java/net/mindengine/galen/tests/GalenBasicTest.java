@@ -45,7 +45,7 @@ public class GalenBasicTest implements GalenTest {
     }
 
     @Override
-    public TestReport execute(CompleteListener listener) {
+    public TestReport execute(CompleteListener listener) throws Exception {
         GalenBasicTestRunner suiteRunner = new GalenBasicTestRunner();
         suiteRunner.setSuiteListener(listener);
         suiteRunner.setValidationListener(listener);

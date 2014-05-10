@@ -24,6 +24,7 @@ import java.io.IOException;
 import java.io.StringWriter;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
@@ -34,6 +35,8 @@ import net.mindengine.galen.browser.SeleniumBrowserFactory;
 import net.mindengine.galen.config.GalenConfig;
 import net.mindengine.galen.reports.ConsoleReportingListener;
 import net.mindengine.galen.reports.GalenTestInfo;
+import net.mindengine.galen.reports.HtmlReportBuilder;
+import net.mindengine.galen.reports.TestNgReportBuilder;
 import net.mindengine.galen.reports.TestReport;
 import net.mindengine.galen.runner.CombinedListener;
 import net.mindengine.galen.runner.CompleteListener;
@@ -243,14 +246,19 @@ public class GalenMain {
                     public void run() {
                         
                         GalenTestInfo info = new GalenTestInfo();
+                        testInfos.add(info);
+                        info.setName(test.getName());
+                        
+                        info.setStartedAt(new Date());
                         try {
                             TestReport report = test.execute(listener);
                             info.setReport(report);
                         }
                         catch(Throwable ex) {
-                            info.setName(test.getName());
+                            info.setException(ex);
                             info.getReport().error(ex);
                         }
+                        info.setEndedAt(new Date());
                     }
                 };
                 executor.execute(thread);
@@ -260,8 +268,37 @@ public class GalenMain {
         while (!executor.isTerminated()) {
         }
         
-        //TODO export reports
+        createAllReports(testInfos, arguments);
     }
+
+    private void createAllReports(List<GalenTestInfo> testInfos, GalenArguments arguments) {
+        if (arguments.getTestngReport() != null) {
+            createTestngReport(arguments.getTestngReport(), testInfos);
+        }
+        if (arguments.getHtmlReport() != null) {
+            createHtmlReport(arguments.getHtmlReport(), testInfos);
+        }
+    }
+
+    private void createHtmlReport(String htmlReportPath, List<GalenTestInfo> testInfos) {
+        try {
+            new HtmlReportBuilder().build(testInfos, htmlReportPath);
+        }
+        catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    private void createTestngReport(String testngReport, List<GalenTestInfo> testInfos) {
+        try {
+            new TestNgReportBuilder().build(testInfos, testngReport);
+        }
+        catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
+    
+    
 
     private boolean matchesPattern(String name, Pattern filterPattern) {
         if (filterPattern != null) {

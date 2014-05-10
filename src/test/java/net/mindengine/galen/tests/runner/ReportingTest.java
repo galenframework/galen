@@ -24,15 +24,18 @@ import java.io.IOException;
 import java.io.PrintStream;
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Field;
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
 import junit.framework.Assert;
+import net.mindengine.galen.components.report.FakeException;
 import net.mindengine.galen.components.report.ReportingListenerTestUtils;
 import net.mindengine.galen.reports.ConsoleReportingListener;
 import net.mindengine.galen.reports.GalenTestInfo;
 import net.mindengine.galen.reports.HtmlReportBuilder;
 import net.mindengine.galen.reports.LayoutReportNode;
+import net.mindengine.galen.reports.TestNgReportBuilder;
 import net.mindengine.galen.reports.TestReport;
 import net.mindengine.galen.reports.TestReportNode;
 import net.mindengine.galen.reports.model.LayoutReport;
@@ -63,27 +66,37 @@ public class ReportingTest {
         field.setAccessible(true);
         field.set(null, 0L);
     }
-    /*
     
-    @Test public void shouldReport_inTestNgFormat_successfully() throws IOException {
+    
+    @Test public void shouldReport_inTestNgFormat_successfully() throws IOException, TemplateException {
         String reportPath = Files.createTempDir().getAbsolutePath() + "/testng-report/report.xml";
         
-        String expectedDate = new SimpleDateFormat("yyyy-MM-dd").format(new Date()) + "T00:00:00Z";
+        List<GalenTestInfo> testInfos = new LinkedList<GalenTestInfo>();
         
-        TestngReportingListener listener = new TestngReportingListener(reportPath);
-        ReportingListenerTestUtils.performSampleReporting("Home page on mobile", listener, listener);
+        GalenTestInfo testInfo = new GalenTestInfo();
+        testInfo.setName("Home page test");
+        testInfo.setReport(new TestReport());
+        testInfo.setStartedAt(new Date(1399741000000L));
+        testInfo.setEndedAt(new Date(1399746930000L));
+        testInfo.setException(new FakeException("Some exception here"));
+        testInfos.add(testInfo);
+        
+        testInfo = new GalenTestInfo();
+        testInfo.setName("Login page test");
+        testInfo.setReport(new TestReport());
+        testInfo.setStartedAt(new Date(1399741000000L));
+        testInfo.setEndedAt(new Date(1399746930000L));
+        testInfos.add(testInfo);
+        
+        
+        new TestNgReportBuilder().build(testInfos, reportPath);
         
         String expectedXml = IOUtils.toString(getClass().getResourceAsStream("/expected-reports/testng-report.xml"));
-        
-        listener.done();
-        
+       
         String realXml = FileUtils.readFileToString(new File(reportPath));
         
-        Assert.assertEquals(expectedXml.replace("{expected-date}", expectedDate).replace("\\t    ", "\t"),
-                realXml
-                    .replaceAll("T([0-9]{2}:){2}[0-9]{2}Z", "T00:00:00Z")
-                    .replaceAll("duration-ms=\"[0-9]+\"", "duration-ms=\"0\""));
-    }*/
+        Assert.assertEquals(trimEveryLine(expectedXml), trimEveryLine(realXml));
+    }
     
     @Test public void shouldReport_inHtmlFormat_withException_andAttachments() throws IOException, TemplateException {
         String reportDirPath = Files.createTempDir().getAbsolutePath() + "/reports";
@@ -95,7 +108,7 @@ public class ReportingTest {
         File attachmentFile = new File(Files.createTempDir().getAbsolutePath() + File.separator + "custom.txt");
         attachmentFile.createNewFile();
         
-        testInfo.getReport().addNode(TestReportNode.error(new Exception("Failed instantiate browser")).withAttachment("custom.txt", attachmentFile));
+        testInfo.getReport().addNode(TestReportNode.error(new FakeException("Some exception here")).withAttachment("custom.txt", attachmentFile));
         
         testInfos.add(testInfo);
         new HtmlReportBuilder().build(testInfos, reportDirPath);

@@ -26,7 +26,7 @@ public class HtmlReportBuilder {
         List<GalenTestAggregatedInfo> aggregatedTests = new LinkedList<GalenTestAggregatedInfo>();
         
         for (GalenTestInfo test : tests) {
-            GalenTestAggregatedInfo aggregatedInfo = new GalenTestAggregatedInfo(testIdGenerator.generateTestId(test.getName()), test);
+            GalenTestAggregatedInfo aggregatedInfo = new GalenTestAggregatedInfo("report-" + testIdGenerator.generateTestId(test.getName()), test);
             aggregatedTests.add(aggregatedInfo);
             
             exportTestReport(aggregatedInfo, reportFolderPath);

@@ -15,11 +15,16 @@
 ******************************************************************************/
 package net.mindengine.galen.reports;
 
+import java.util.Date;
+
 public class GalenTestInfo {
 
     private String name;
     private TestReport report = new TestReport();
-
+    private Throwable exception;
+    private Date startedAt;
+    private Date endedAt;
+    
     
     public String getName() {
         return name;
@@ -37,5 +42,28 @@ public class GalenTestInfo {
         this.report = report;
     }
 
+    public void setException(Throwable ex) {
+        this.exception = ex;
+    }
+
+    public Throwable getException() {
+        return this.exception;
+    }
+
+    public Date getStartedAt() {
+        return startedAt;
+    }
+
+    public void setStartedAt(Date startedAt) {
+        this.startedAt = startedAt;
+    }
+
+    public Date getEndedAt() {
+        return endedAt;
+    }
+
+    public void setEndedAt(Date endedAt) {
+        this.endedAt = endedAt;
+    }
     
 }

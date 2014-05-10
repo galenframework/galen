@@ -6,7 +6,7 @@ public class TestIdGenerator {
     private int _uniqueId = 0;
     public synchronized String generateTestId(String name) {
         _uniqueId++;
-        return String.format("report-%d-%s", _uniqueId, GalenUtils.convertToFileName(name));
+        return String.format("%d-%s", _uniqueId, GalenUtils.convertToFileName(name));
     }
     
 }
