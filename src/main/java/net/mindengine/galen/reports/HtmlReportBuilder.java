@@ -18,13 +18,15 @@ import freemarker.template.Template;
 import freemarker.template.TemplateException;
 
 public class HtmlReportBuilder {
+    
+    private TestIdGenerator testIdGenerator = new TestIdGenerator();
     private Configuration freemarkerConfiguration = new Configuration();
     
     public void build(List<GalenTestInfo> tests, String reportFolderPath) throws IOException, TemplateException {
         List<GalenTestAggregatedInfo> aggregatedTests = new LinkedList<GalenTestAggregatedInfo>();
         
         for (GalenTestInfo test : tests) {
-            GalenTestAggregatedInfo aggregatedInfo = new GalenTestAggregatedInfo(test);
+            GalenTestAggregatedInfo aggregatedInfo = new GalenTestAggregatedInfo(testIdGenerator.generateTestId(test.getName()), test);
             aggregatedTests.add(aggregatedInfo);
             
             exportTestReport(aggregatedInfo, reportFolderPath);
@@ -58,7 +60,13 @@ public class HtmlReportBuilder {
 
     
     private void moveAttachmentsInReportNode(TestReportNode node, String reportFolderPath, String filePrefix) {
-        // TODO Move attachments
+        
+        if (node.getAttachments() != null) {
+            for (TestAttachment attachment : node.getAttachments()) {
+                moveAttachmentFile(attachment, reportFolderPath, filePrefix);
+            }
+        }
+        
         if (node instanceof LayoutReportNode) {
             moveScreenshotFile((LayoutReportNode)node, reportFolderPath, filePrefix);
         }
@@ -66,6 +74,18 @@ public class HtmlReportBuilder {
         if (node.getNodes() != null) {
             for (TestReportNode subNode : node.getNodes()) {
                 moveAttachmentsInReportNode(subNode, reportFolderPath, filePrefix);
+            }
+        }
+    }
+
+    private void moveAttachmentFile(TestAttachment attachment, String reportFolderPath, String filePrefix) {
+        if (attachment.getFile() != null) {
+            String fileName = createUniqueFileName(filePrefix + "-attachment", "-" + attachment.getFile().getName());
+            try {
+                FileUtils.copyFile(attachment.getFile(), new File(reportFolderPath + File.separator + fileName));
+                attachment.setPathInReport(fileName);
+            } catch (IOException e) {
+                e.printStackTrace();
             }
         }
     }

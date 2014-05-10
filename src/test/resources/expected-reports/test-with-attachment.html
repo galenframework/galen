@@ -1,0 +1,49 @@
+<html>
+    <head>
+        <title>Galen Report | Home page test</title>
+        <link rel="stylesheet" type="text/css" href="galen-report.css"/>
+        <script src="jquery-1.10.2.min.js"></script>
+        <script src="galen-report.js"></script>
+    </head>
+    <body>
+        <script>$(function() {Galen.formatSuiteReport();});</script>
+        <h1>Home page test</h1>
+        <ul class="report">
+            <li class="report-status-error">
+                <a id="report-link-2" href="#">Exception: Failed instantiate browser</a>
+                <ul class="attachments">
+                    <li><a href="report-1-home-page-test-attachment-1-custom.txt">custom.txt</a></li>
+                </ul>
+                <div id="report-nodes-2" class="report-container">
+                    <div class="stacktrace">java.lang.Exception: Failed instantiate browser
+                    at net.mindengine.galen.tests.runner.ReportingTest.shouldReport_inHtmlFormat_withException_andAttachments(ReportingTest.java:98)
+                    at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+                    at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:57)
+                    at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+                    at java.lang.reflect.Method.invoke(Method.java:606)
+                    at org.testng.internal.MethodInvocationHelper.invokeMethod(MethodInvocationHelper.java:84)
+                    at org.testng.internal.Invoker.invokeMethod(Invoker.java:714)
+                    at org.testng.internal.Invoker.invokeTestMethod(Invoker.java:901)
+                    at org.testng.internal.Invoker.invokeTestMethods(Invoker.java:1231)
+                    at org.testng.internal.TestMethodWorker.invokeTestMethods(TestMethodWorker.java:127)
+                    at org.testng.internal.TestMethodWorker.run(TestMethodWorker.java:111)
+                    at org.testng.TestRunner.privateRun(TestRunner.java:767)
+                    at org.testng.TestRunner.run(TestRunner.java:617)
+                    at org.testng.SuiteRunner.runTest(SuiteRunner.java:334)
+                    at org.testng.SuiteRunner.runSequentially(SuiteRunner.java:329)
+                    at org.testng.SuiteRunner.privateRun(SuiteRunner.java:291)
+                    at org.testng.SuiteRunner.run(SuiteRunner.java:240)
+                    at org.testng.SuiteRunnerWorker.runSuite(SuiteRunnerWorker.java:52)
+                    at org.testng.SuiteRunnerWorker.run(SuiteRunnerWorker.java:86)
+                    at org.testng.TestNG.runSuitesSequentially(TestNG.java:1224)
+                    at org.testng.TestNG.runSuitesLocally(TestNG.java:1149)
+                    at org.testng.TestNG.run(TestNG.java:1057)
+                    at org.testng.remote.RemoteTestNG.run(RemoteTestNG.java:111)
+                    at org.testng.remote.RemoteTestNG.initAndRun(RemoteTestNG.java:204)
+                    at org.testng.remote.RemoteTestNG.main(RemoteTestNG.java:175)
+                    </div>
+                </div>
+            </li>                    
+        </ul>
+    </body>
+</html>

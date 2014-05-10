@@ -21,6 +21,7 @@ public class TestAttachment {
 
     private String name;
     private File file;
+    private String pathInReport;
 
     public TestAttachment(String name, File file) {
         this.name = name;
@@ -41,6 +42,14 @@ public class TestAttachment {
 
     public void setFile(File file) {
         this.file = file;
+    }
+
+    public String getPathInReport() {
+        return pathInReport;
+    }
+
+    public void setPathInReport(String pathInReport) {
+        this.pathInReport = pathInReport;
     }
 
 }

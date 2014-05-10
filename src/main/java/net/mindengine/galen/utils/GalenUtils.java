@@ -128,4 +128,9 @@ public class GalenUtils {
         ((JavascriptExecutor)driver).executeScript("window.scrollTo(0, " + scroll + ");");
     }
     
+    public static String convertToFileName(String name) {
+        return name.toLowerCase().replaceAll("[^\\dA-Za-z\\.\\-]", " ").replaceAll("\\s+", "-");
+    }
+
+    
 }

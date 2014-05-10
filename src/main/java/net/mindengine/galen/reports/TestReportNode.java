@@ -19,6 +19,8 @@ import java.io.File;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.apache.commons.lang3.exception.ExceptionUtils;
+
 public class TestReportNode {
     
     private static Long _uniqueId = 0L;
@@ -71,6 +73,10 @@ public class TestReportNode {
         node.setName(name);
         node.setStatus(Status.ERROR);
         return node;
+    }
+    
+    public static ExceptionReportNode error(Throwable exception) {
+        return new ExceptionReportNode(exception);
     }
 
     

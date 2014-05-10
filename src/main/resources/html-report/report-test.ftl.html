@@ -1,27 +1,47 @@
+<#macro report_attachments node>
+    <#if node.attachments?has_content>
+        <ul class="attachments">
+        <#list node.attachments as attachment>
+            <#if attachment.pathInReport?has_content>
+                <li><a href="${attachment.pathInReport}">${attachment.name}</a></li>
+            </#if>
+        </#list>
+        </ul>
+    </#if>
+</#macro>
 <#macro report_node node>
     <li class="report-status-${node.status}">
-        <a id="report-link-${node.id}" href="#"><#if node?has_content>${node.name}</#if></a>
-        <div id="report-nodes-${node.id}" class="report-container">
-            <#if node.nodes?has_content>
-            <ul class="report">
-                <#list node.nodes as subNode>
-                    <@report_node node=subNode/>
-                </#list>
-            </ul>            
-            </#if>
-            <#if node.class.simpleName = "LayoutReportNode" && node.layoutReport?has_content && node.layoutReport.sections?has_content>
-                <div class="layout-report" data-screenshot="${node.layoutReport.screenshot}">
-                <#list node.layoutReport.sections as section>
-                    <h2 class="page-section">${section.name}</h2>
-                    <div class="page-section">
-                        <#list section.objects as obj>
-                        <@object_node object=obj/>
-                        </#list>
+        <#if node.class.simpleName = "ExceptionReportNode">
+            <a id="report-link-${node.id}" href="#"><#if node?has_content>${node.name}</#if></a>
+            <@report_attachments node/>
+            <div id="report-nodes-${node.id}" class="report-container">
+                <div class="stacktrace">${node.stacktrace}</div>
+            </div>
+        <#else>
+            <a id="report-link-${node.id}" href="#"><#if node?has_content>${node.name}</#if></a>
+            <@report_attachments node/>
+            <div id="report-nodes-${node.id}" class="report-container">
+                <#if node.nodes?has_content>
+                <ul class="report">
+                    <#list node.nodes as subNode>
+                        <@report_node node=subNode/>
+                    </#list>
+                </ul>            
+                </#if>
+                <#if node.class.simpleName = "LayoutReportNode" && node.layoutReport?has_content && node.layoutReport.sections?has_content>
+                    <div class="layout-report" data-screenshot="${node.layoutReport.screenshot}">
+                    <#list node.layoutReport.sections as section>
+                        <h2 class="page-section">${section.name}</h2>
+                        <div class="page-section">
+                            <#list section.objects as obj>
+                            <@object_node object=obj/>
+                            </#list>
+                        </div>
+                    </#list>
                     </div>
-                </#list>
-                </div>
-            </#if>
-        </div>
+                </#if>
+            </div>
+        </#if>
     </li>
 </#macro>
 <#macro object_node object>

@@ -1,29 +1,20 @@
 package net.mindengine.galen.reports;
 
+
 public class GalenTestAggregatedInfo {
 
     private GalenTestInfo testInfo;
     private TestStatistic statistic;
     private String testId;
     
-    private static int _uniqueId = 0;
 
-    public GalenTestAggregatedInfo(GalenTestInfo test) {
+    public GalenTestAggregatedInfo(String testId, GalenTestInfo test) {
         this.setTestInfo(test);
         this.setStatistic(test.getReport().fetchStatistic());
-        this.setTestId(createTestId(test.getName()));
+        this.setTestId(testId);
     }
 
-    private static synchronized String createTestId(String name) {
-        _uniqueId++;
-        return String.format("report-%d-%s", _uniqueId, convertToFileName(name));
-    }
     
-    private static String convertToFileName(String name) {
-        return name.toLowerCase().replaceAll("[^\\dA-Za-z\\.\\-]", " ").replaceAll("\\s+", "-");
-    }
-
-
     public GalenTestInfo getTestInfo() {
         return testInfo;
     }

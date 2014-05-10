@@ -23,6 +23,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.io.UnsupportedEncodingException;
+import java.lang.reflect.Field;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -33,12 +34,14 @@ import net.mindengine.galen.reports.GalenTestInfo;
 import net.mindengine.galen.reports.HtmlReportBuilder;
 import net.mindengine.galen.reports.LayoutReportNode;
 import net.mindengine.galen.reports.TestReport;
+import net.mindengine.galen.reports.TestReportNode;
 import net.mindengine.galen.reports.model.LayoutReport;
 import net.mindengine.galen.validation.LayoutReportListener;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.testng.annotations.AfterMethod;
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import com.google.common.io.Files;
@@ -51,6 +54,14 @@ public class ReportingTest {
 
     @AfterMethod public void removeAllSystemProperties() {
         System.getProperties().remove(GALEN_LOG_LEVEL);
+    }
+    
+    
+    @BeforeMethod
+    public void cleanupUniqueIds() throws NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException {
+        Field field = TestReportNode.class.getDeclaredField("_uniqueId");
+        field.setAccessible(true);
+        field.set(null, 0L);
     }
     /*
     
@@ -73,6 +84,28 @@ public class ReportingTest {
                     .replaceAll("T([0-9]{2}:){2}[0-9]{2}Z", "T00:00:00Z")
                     .replaceAll("duration-ms=\"[0-9]+\"", "duration-ms=\"0\""));
     }*/
+    
+    @Test public void shouldReport_inHtmlFormat_withException_andAttachments() throws IOException, TemplateException {
+        String reportDirPath = Files.createTempDir().getAbsolutePath() + "/reports";
+        
+        List<GalenTestInfo> testInfos = new LinkedList<GalenTestInfo>();
+        
+        GalenTestInfo testInfo = new GalenTestInfo();
+        testInfo.setName("Home page test");
+        File attachmentFile = new File(Files.createTempDir().getAbsolutePath() + File.separator + "custom.txt");
+        attachmentFile.createNewFile();
+        
+        testInfo.getReport().addNode(TestReportNode.error(new Exception("Failed instantiate browser")).withAttachment("custom.txt", attachmentFile));
+        
+        testInfos.add(testInfo);
+        new HtmlReportBuilder().build(testInfos, reportDirPath);
+        
+        String expectedSuite1Html = trimEveryLine(IOUtils.toString(getClass().getResourceAsStream("/expected-reports/test-with-attachment.html")));
+        String realSuite1Html = trimEveryLine(FileUtils.readFileToString(new File(reportDirPath + "/report-1-home-page-test.html")));
+        Assert.assertEquals(expectedSuite1Html, realSuite1Html);
+        
+        assertThat("Should place attachment file in same folder", new File(reportDirPath + "/report-1-home-page-test-attachment-1-custom.txt").exists(), is(true));
+    }
     
     @Test public void shouldReport_inHtmlFormat_successfully_andSplitFiles_perTest() throws IOException, TemplateException {
         String reportDirPath = Files.createTempDir().getAbsolutePath() + "/reports";
@@ -99,7 +132,6 @@ public class ReportingTest {
         
         String expectedSuite1Html = trimEveryLine(IOUtils.toString(getClass().getResourceAsStream("/expected-reports/test-1.html")));
         String realSuite1Html = trimEveryLine(FileUtils.readFileToString(new File(reportDirPath + "/report-1-home-page-test.html")));
-        
         Assert.assertEquals(expectedSuite1Html, realSuite1Html);
         
         assertThat("Should place screenshot 1 in same folder", new File(reportDirPath + "/report-1-home-page-test-screenshot-1.png").exists(), is(true));
