@@ -46,7 +46,7 @@ public class GalenBasicTestRunner {
     }
 
     
-    public TestReport runTest(GalenBasicTest test) throws Exception {
+    public TestReport runTest(TestReport report, GalenBasicTest test) throws Exception {
         if (test == null) {
             throw new IllegalArgumentException("Test can not be null");
         }
@@ -55,7 +55,6 @@ public class GalenBasicTestRunner {
         
         tellSuiteStarted(test);
         
-        TestReport report = new TestReport();
         
         GalenPageRunner pageRunner = new GalenPageRunner(report);
         pageRunner.setValidationListener(validationListener);

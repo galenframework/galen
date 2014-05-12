@@ -21,5 +21,5 @@ import net.mindengine.galen.runner.CompleteListener;
 public interface GalenTest {
 
     public String getName();
-    public TestReport execute(CompleteListener listener) throws Exception;
+    public void execute(TestReport report, CompleteListener listener) throws Exception;
 }

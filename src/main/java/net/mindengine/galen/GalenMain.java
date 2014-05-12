@@ -250,13 +250,15 @@ public class GalenMain {
                         info.setName(test.getName());
                         
                         info.setStartedAt(new Date());
+                        TestReport report = new TestReport();
+                        info.setReport(report);
+                        
                         try {
-                            TestReport report = test.execute(listener);
-                            info.setReport(report);
+                            test.execute(report, listener);
                         }
                         catch(Throwable ex) {
                             info.setException(ex);
-                            info.getReport().error(ex);
+                            report.error(ex);
                         }
                         info.setEndedAt(new Date());
                     }
