@@ -47,6 +47,7 @@ import net.mindengine.galen.suite.actions.GalenPageActionCheck;
 import net.mindengine.galen.suite.reader.GalenSuiteReader;
 import net.mindengine.galen.tests.GalenBasicTest;
 import net.mindengine.galen.tests.GalenTest;
+import net.mindengine.galen.tests.TestSession;
 import net.mindengine.galen.validation.FailureListener;
 
 import org.apache.commons.cli.ParseException;
@@ -253,6 +254,7 @@ public class GalenMain {
                         TestReport report = new TestReport();
                         info.setReport(report);
                         
+                        TestSession.register(info);
                         try {
                             test.execute(report, listener);
                         }
@@ -261,6 +263,8 @@ public class GalenMain {
                             report.error(ex);
                         }
                         info.setEndedAt(new Date());
+                        
+                        TestSession.clear();
                     }
                 };
                 executor.execute(thread);

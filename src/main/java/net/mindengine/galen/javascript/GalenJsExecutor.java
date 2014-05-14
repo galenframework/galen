@@ -20,6 +20,7 @@ import java.io.IOException;
 import java.io.Reader;
 
 import net.mindengine.galen.browser.WebDriverWrapper;
+import net.mindengine.galen.tests.GalenTest;
 
 import org.mozilla.javascript.Context;
 import org.mozilla.javascript.ImporterTopLevel;
@@ -53,7 +54,8 @@ public class GalenJsExecutor {
                 WebElement.class,
                 WebDriver.class,
                 System.class,
-                Actions.class
+                Actions.class,
+                GalenTest.class
         });
     }
     
