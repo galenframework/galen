@@ -3,7 +3,7 @@
         <ul class="attachments">
         <#list node.attachments as attachment>
             <#if attachment.pathInReport?has_content>
-                <li><a href="${attachment.pathInReport}">${attachment.name}</a></li>
+                <li><a href="${attachment.pathInReport?html}">${attachment.name?html}</a></li>
             </#if>
         </#list>
         </ul>
@@ -12,13 +12,13 @@
 <#macro report_node node>
     <li class="report-status-${node.status}">
         <#if node.class.simpleName = "ExceptionReportNode">
-            <a id="report-link-${node.id}" href="#"><#if node?has_content>${node.name}</#if></a>
+            <a id="report-link-${node.id}" href="#"><#if node?has_content>${node.name?html}</#if></a>
             <@report_attachments node/>
             <div id="report-nodes-${node.id}" class="report-container">
-                <div class="stacktrace">${node.stacktrace}</div>
+                <div class="stacktrace">${node.stacktrace?html}</div>
             </div>
         <#else>
-            <a id="report-link-${node.id}" href="#"><#if node?has_content>${node.name}</#if></a>
+            <a id="report-link-${node.id}" href="#"><#if node?has_content>${node.name?html}</#if></a>
             <@report_attachments node/>
             <div id="report-nodes-${node.id}" class="report-container">
                 <#if node.nodes?has_content>
@@ -29,9 +29,9 @@
                 </ul>            
                 </#if>
                 <#if node.class.simpleName = "LayoutReportNode" && node.layoutReport?has_content && node.layoutReport.sections?has_content>
-                    <div class="layout-report" data-screenshot="${node.layoutReport.screenshot}">
+                    <div class="layout-report" data-screenshot="${node.layoutReport.screenshot?html}">
                     <#list node.layoutReport.sections as section>
-                        <h2 class="page-section">${section.name}</h2>
+                        <h2 class="page-section">${section.name?html}</h2>
                         <div class="page-section">
                             <#list section.objects as obj>
                             <@object_node object=obj/>
@@ -105,9 +105,11 @@
         <script>$(function() {Galen.formatSuiteReport();});</script>
         <h1>${test.testInfo.name?html}</h1>
         <ul class="report">
-        <#list test.testInfo.report.nodes as node>
-            <@report_node node=node/>
-        </#list>
+        <#if test.testInfo.report.nodes?has_content>
+            <#list test.testInfo.report.nodes as node>
+                <@report_node node=node/>
+            </#list>
+        </#if>
         </ul>
     </body>
 </html>

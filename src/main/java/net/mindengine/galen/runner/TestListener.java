@@ -15,20 +15,14 @@
 ******************************************************************************/
 package net.mindengine.galen.runner;
 
-import net.mindengine.galen.browser.Browser;
-import net.mindengine.galen.suite.GalenPageTest;
-import net.mindengine.galen.tests.GalenBasicTest;
+import net.mindengine.galen.tests.GalenTest;
 
 
-public interface SuiteListener {
+public interface TestListener {
 
-    void onAfterPage(GalenBasicTestRunner galenSuiteRunner, GalenPageRunner pageRunner, GalenPageTest pageTest, Browser browser);
+    void onTestFinished(GalenTest test);
 
-    void onBeforePage(GalenBasicTestRunner galenSuiteRunner, GalenPageRunner pageRunner, GalenPageTest pageTest, Browser browser);
-
-    void onSuiteFinished(GalenBasicTestRunner galenSuiteRunner, GalenBasicTest suite);
-
-    void onSuiteStarted(GalenBasicTestRunner galenSuiteRunner, GalenBasicTest suite);
+    void onTestStarted(GalenTest test);
 
 
 }

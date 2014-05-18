@@ -14,6 +14,13 @@ public class JsTestCollector {
 
     private List<GalenTest> collectedTests = new LinkedList<GalenTest>();
 
+    public JsTestCollector(List<GalenTest> tests) {
+        this.collectedTests = tests;
+    }
+
+    public JsTestCollector() {
+    }
+
     public void execute(File file) throws IOException {
         GalenJsExecutor js = new GalenJsExecutor();
         js.putObject("_galenCore", this);

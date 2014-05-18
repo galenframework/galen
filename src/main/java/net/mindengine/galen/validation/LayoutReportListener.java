@@ -19,10 +19,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import net.mindengine.galen.page.PageElement;
-import net.mindengine.galen.reports.LayoutReportNode;
-import net.mindengine.galen.reports.TestReport;
-import net.mindengine.galen.reports.model.LayoutReport;
 import net.mindengine.galen.reports.model.LayoutObject;
+import net.mindengine.galen.reports.model.LayoutReport;
 import net.mindengine.galen.reports.model.LayoutSection;
 import net.mindengine.galen.reports.model.LayoutSpec;
 import net.mindengine.galen.runner.GalenPageRunner;

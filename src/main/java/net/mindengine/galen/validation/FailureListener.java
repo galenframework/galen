@@ -15,15 +15,12 @@
 ******************************************************************************/
 package net.mindengine.galen.validation;
 
-import net.mindengine.galen.browser.Browser;
 import net.mindengine.galen.runner.CompleteListener;
-import net.mindengine.galen.runner.GalenBasicTestRunner;
 import net.mindengine.galen.runner.GalenPageRunner;
 import net.mindengine.galen.specs.Spec;
 import net.mindengine.galen.specs.page.PageSection;
 import net.mindengine.galen.suite.GalenPageAction;
-import net.mindengine.galen.suite.GalenPageTest;
-import net.mindengine.galen.tests.GalenBasicTest;
+import net.mindengine.galen.tests.GalenTest;
 
 public class FailureListener implements CompleteListener {
 
@@ -75,22 +72,12 @@ public class FailureListener implements CompleteListener {
     }
 
     @Override
-    public void onAfterPage(GalenBasicTestRunner galenSuiteRunner, GalenPageRunner pageRunner, GalenPageTest pageTest, Browser browser) {
+    public void onTestFinished(GalenTest test) {
         
     }
 
     @Override
-    public void onBeforePage(GalenBasicTestRunner galenSuiteRunner, GalenPageRunner pageRunner, GalenPageTest pageTest, Browser browser) {
-        
-    }
-
-    @Override
-    public void onSuiteFinished(GalenBasicTestRunner galenSuiteRunner, GalenBasicTest suite) {
-        
-    }
-
-    @Override
-    public void onSuiteStarted(GalenBasicTestRunner galenSuiteRunner, GalenBasicTest suite) {
+    public void onTestStarted(GalenTest test) {
         
     }
 

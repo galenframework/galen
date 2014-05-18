@@ -26,23 +26,23 @@ import net.mindengine.galen.validation.ValidationListener;
 
 public class GalenBasicTestRunner {
 
-    private SuiteListener suiteListener;
+    private TestListener testListener;
     private ValidationListener validationListener;
     
     public GalenBasicTestRunner() {
     }
 
-    public GalenBasicTestRunner withSuiteListener(SuiteListener suiteListener) {
+    public GalenBasicTestRunner withSuiteListener(TestListener suiteListener) {
         this.setSuiteListener(suiteListener);
         return this;
     }
 
-    public SuiteListener getSuiteListener() {
-        return suiteListener;
+    public TestListener getSuiteListener() {
+        return testListener;
     }
 
-    public void setSuiteListener(SuiteListener suiteListener) {
-        this.suiteListener = suiteListener;
+    public void setSuiteListener(TestListener suiteListener) {
+        this.testListener = suiteListener;
     }
 
     
@@ -53,9 +53,6 @@ public class GalenBasicTestRunner {
         
         List<GalenPageTest> pageTests = test.getPageTests();
         
-        tellSuiteStarted(test);
-        
-        
         GalenPageRunner pageRunner = new GalenPageRunner(report);
         pageRunner.setValidationListener(validationListener);
         
@@ -65,62 +62,13 @@ public class GalenBasicTestRunner {
             
             Browser browser = pageTest.getBrowserFactory().openBrowser();
         
-            tellBeforePage(pageRunner, pageTest, browser);
             pageRunner.run(browser, pageTest);
-            tellAfterPage(pageRunner, pageTest, browser);
             
             browser.quit();
             report.sectionEnd();
         }
         
-        tellSuiteFinished(test);
-        
         return report;
-    }
-
-    private void tellAfterPage(GalenPageRunner pageRunner, GalenPageTest pageTest, Browser browser) {
-        try {
-            if (suiteListener != null) {
-                suiteListener.onAfterPage(this, pageRunner, pageTest, browser);
-            }
-        }
-        catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    private void tellBeforePage(GalenPageRunner pageRunner, GalenPageTest pageTest, Browser browser) {
-        try {
-            if (suiteListener != null) {
-                suiteListener.onBeforePage(this, pageRunner, pageTest, browser);
-            }
-        }
-        catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-
-    private void tellSuiteFinished(GalenBasicTest suite) {
-        try {
-            if (suiteListener != null) {
-                suiteListener.onSuiteFinished(this, suite);
-            }
-        }
-        catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    private void tellSuiteStarted(GalenBasicTest suite) {
-        try {
-            if (suiteListener != null) {
-                suiteListener.onSuiteStarted(this, suite);
-            }
-        }
-        catch (Exception e) {
-            e.printStackTrace();
-        }
     }
 
     public ValidationListener getValidationListener() {

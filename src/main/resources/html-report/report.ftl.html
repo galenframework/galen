@@ -24,7 +24,7 @@
                     <div class="status warnings">${testData.statistic.warnings?c}</div>
                     <div class="status total">${testData.statistic.total?c}</div>
                     <div class="suite-link">
-                        <a href="${testData.testId}.html">${testData.testInfo.name}</a>
+                        <a href="${testData.testId?html}.html">${testData.testInfo.name?html}</a>
                     </div>
                 </div>
                 </#list>

@@ -1,5 +1,5 @@
 ========================================
-Suite: page1.test
+Test: page1.test
 ========================================
 net.mindengine.galen.components.report.FakeException: Some exception here
 \t    at net.mindengine.someclass.SomeClass.method1(SomeClass.java:4)

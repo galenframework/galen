@@ -21,4 +21,8 @@ public class JsTestRegistry {
         return this.events;
     }
     
+    public void clear() {
+        events.clear();
+    }
+    
 }

@@ -65,7 +65,7 @@ public class GalenPageActionCheck extends GalenPageAction {
         
         listener.add(new LayoutReportListener(layoutReport));
         
-        report.addNode(new LayoutReportNode(layoutReport, pageTest.getTitle()));
+        report.addNode(new LayoutReportNode(layoutReport, "Layout report"));
         
         Page page = browser.getPage();
         PageSpecReader pageSpecReader = new PageSpecReader(browser);

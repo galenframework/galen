@@ -20,26 +20,21 @@ import static net.mindengine.galen.specs.Range.between;
 import static net.mindengine.galen.specs.Range.exact;
 import static net.mindengine.galen.specs.Side.LEFT;
 
-import java.awt.Dimension;
 import java.util.HashMap;
 import java.util.Map;
 
-import net.mindengine.galen.browser.Browser;
-import net.mindengine.galen.components.MockedBrowser;
 import net.mindengine.galen.components.MockedPageValidation;
 import net.mindengine.galen.components.validation.MockedPageElement;
 import net.mindengine.galen.page.PageElement;
 import net.mindengine.galen.page.Rect;
 import net.mindengine.galen.reports.TestReport;
 import net.mindengine.galen.runner.GalenPageRunner;
-import net.mindengine.galen.runner.GalenBasicTestRunner;
-import net.mindengine.galen.runner.SuiteListener;
+import net.mindengine.galen.runner.TestListener;
 import net.mindengine.galen.specs.Location;
 import net.mindengine.galen.specs.SpecHeight;
 import net.mindengine.galen.specs.SpecInside;
 import net.mindengine.galen.specs.SpecWidth;
 import net.mindengine.galen.specs.page.PageSection;
-import net.mindengine.galen.suite.GalenPageTest;
 import net.mindengine.galen.suite.actions.GalenPageActionCheck;
 import net.mindengine.galen.tests.GalenBasicTest;
 import net.mindengine.galen.validation.ErrorArea;
@@ -48,15 +43,13 @@ import net.mindengine.galen.validation.ValidationListener;
 
 public class ReportingListenerTestUtils {
 
-    public static void performSampleReporting(String suiteName, SuiteListener suiteListener, ValidationListener validationListener) {
+    public static void performSampleReporting(String suiteName, TestListener suiteListener, ValidationListener validationListener) {
         
-        GalenBasicTestRunner galenSuiteRunner = new GalenBasicTestRunner();
         GalenBasicTest suite = new GalenBasicTest();
         suite.setName(suiteName);
         
-        if (suiteListener != null) suiteListener.onSuiteStarted(galenSuiteRunner, suite);
+        if (suiteListener != null) suiteListener.onTestStarted(suite);
         
-        Browser browser = new MockedBrowser("http://example.com/page1", new Dimension(410, 610));
         GalenPageRunner pageRunner = new GalenPageRunner(new TestReport());
         
         Map<String, PageElement> pageElements = new HashMap<String, PageElement>();
@@ -69,8 +62,6 @@ public class ReportingListenerTestUtils {
         
         MockedPageValidation pageValidation = new MockedPageValidation(pageElements);
         
-        GalenPageTest pageTest = new GalenPageTest().withSize(400, 600).withUrl("http://example.com/page1");
-        if (suiteListener != null) suiteListener.onBeforePage(galenSuiteRunner, pageRunner, pageTest, browser);
         
         GalenPageActionCheck action = new GalenPageActionCheck();
         action.setOriginalCommand("check homepage.spec --include all,mobile");
@@ -126,12 +117,8 @@ public class ReportingListenerTestUtils {
         
         }
         validationListener.onAfterPageAction(pageRunner, action);
-        if (suiteListener != null) suiteListener.onAfterPage(galenSuiteRunner, pageRunner, pageTest, browser);
         
         
-        Browser browser2 = new MockedBrowser("http://example.com/page2", new Dimension(610, 710));
-        GalenPageTest pageTest2 = new GalenPageTest().withSize(600, 700).withUrl("http://example.com/page2");
-        if (suiteListener != null) suiteListener.onBeforePage(galenSuiteRunner, pageRunner, pageTest2, browser2);
         
         validationListener.onBeforePageAction(pageRunner, action);
         {
@@ -158,9 +145,7 @@ public class ReportingListenerTestUtils {
             validationListener.onAfterSection(pageRunner, pageValidation, section1);
         }
         validationListener.onAfterPageAction(pageRunner, action);
-        if (suiteListener != null) suiteListener.onAfterPage(galenSuiteRunner, pageRunner, pageTest2, browser2);
         
-        if (suiteListener != null) suiteListener.onSuiteFinished(galenSuiteRunner, suite);
     }
 
     private static PageSection sectionWithName(String name) {

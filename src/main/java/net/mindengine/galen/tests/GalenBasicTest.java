@@ -46,10 +46,10 @@ public class GalenBasicTest implements GalenTest {
 
     @Override
     public void execute(TestReport report, CompleteListener listener) throws Exception {
-        GalenBasicTestRunner suiteRunner = new GalenBasicTestRunner();
-        suiteRunner.setSuiteListener(listener);
-        suiteRunner.setValidationListener(listener);
-        suiteRunner.runTest(report, this);
+        GalenBasicTestRunner testRunner = new GalenBasicTestRunner();
+        testRunner.setSuiteListener(listener);
+        testRunner.setValidationListener(listener);
+        testRunner.runTest(report, this);
     }
     
 

@@ -41,6 +41,8 @@ import net.mindengine.galen.reports.TestReport;
 import net.mindengine.galen.runner.CombinedListener;
 import net.mindengine.galen.runner.CompleteListener;
 import net.mindengine.galen.runner.GalenArguments;
+import net.mindengine.galen.runner.JsTestCollector;
+import net.mindengine.galen.runner.TestListener;
 import net.mindengine.galen.suite.GalenPageAction;
 import net.mindengine.galen.suite.GalenPageTest;
 import net.mindengine.galen.suite.actions.GalenPageActionCheck;
@@ -188,16 +190,23 @@ public class GalenMain {
     }
 
     private void runTests(GalenArguments arguments, CompleteListener listener) throws IOException {
-        List<File> testFiles = new LinkedList<File>();
+        List<File> basicTestFiles = new LinkedList<File>();
+        List<File> jsTestFiles = new LinkedList<File>();
         
         for (String path : arguments.getPaths()) {
             File file = new File(path);
             if (file.exists()) {
                 if (file.isDirectory()) {
-                    searchForTests(file, arguments.getRecursive(), testFiles);
+                    searchForTests(file, arguments.getRecursive(), basicTestFiles, jsTestFiles);
                 }
                 else if (file.isFile()) {
-                    testFiles.add(file);
+                    String name = file.getName().toLowerCase();
+                    if (name.endsWith(".test")) {
+                        basicTestFiles.add(file);
+                    }
+                    else if (name.endsWith(".test.js")) {
+                        jsTestFiles.add(file);
+                    } 
                 }
             }
             else {
@@ -205,21 +214,27 @@ public class GalenMain {
             }
         }
         
-        if (testFiles.size() > 0) {
-            runTestFiles(testFiles, listener, arguments);
+        if (basicTestFiles.size() > 0 || jsTestFiles.size() > 0) {
+            runTestFiles(basicTestFiles, jsTestFiles, listener, arguments);
         }
         else {
             throw new RuntimeException("Couldn't find any test files");
         }
     }
 
-    private void runTestFiles(List<File> testFiles, CompleteListener listener, GalenArguments arguments) throws IOException {
+    private void runTestFiles(List<File> basicTestFiles, List<File> jsTestFiles, CompleteListener listener, GalenArguments arguments) throws IOException {
         GalenSuiteReader reader = new GalenSuiteReader();
         
         List<GalenTest> tests = new LinkedList<GalenTest>();
-        for (File file : testFiles) {
+        for (File file : basicTestFiles) {
             tests.addAll(reader.read(file));
         }
+        
+        JsTestCollector testCollector = new JsTestCollector(tests);
+        for (File jsFile: jsTestFiles) {
+            testCollector.execute(jsFile);
+        }
+        
         
         runTests(arguments, tests, listener);
     }
@@ -255,6 +270,9 @@ public class GalenMain {
                         info.setReport(report);
                         
                         TestSession.register(info);
+                        
+                        tellTestStarted(listener, test);
+                        
                         try {
                             test.execute(report, listener);
                         }
@@ -263,6 +281,8 @@ public class GalenMain {
                             report.error(ex);
                         }
                         info.setEndedAt(new Date());
+                        
+                        tellTestFinished(listener, test);
                         
                         TestSession.clear();
                     }
@@ -275,6 +295,28 @@ public class GalenMain {
         }
         
         createAllReports(testInfos, arguments);
+    }
+    
+    private void tellTestFinished(TestListener testListener, GalenTest test) {
+        try {
+            if (testListener != null) {
+                testListener.onTestFinished(test);
+            }
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void tellTestStarted(TestListener testListener, GalenTest test) {
+        try {
+            if (testListener != null) {
+                testListener.onTestStarted(test);
+            }
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private void createAllReports(List<GalenTestInfo> testInfos, GalenArguments arguments) {
@@ -318,13 +360,20 @@ public class GalenMain {
     }
 
 
-    private void searchForTests(File file, boolean recursive, List<File> files) {
-        if (file.isFile() && file.getName().toLowerCase().endsWith(".test")) {
-            files.add(file);
+    private void searchForTests(File file, boolean recursive, List<File> files, List<File> jsFiles) {
+        
+        String fileName = file.getName().toLowerCase();
+        if (file.isFile()) {
+            if (fileName.endsWith(".test")) {
+                files.add(file);
+            }
+            else if (fileName.endsWith(".test.js")) {
+                jsFiles.add(file);
+            }
         }
         else if (file.isDirectory()) {
             for (File childFile : file.listFiles()) {
-                searchForTests(childFile, recursive, files);
+                searchForTests(childFile, recursive, files, jsFiles);
             }
         }
     }

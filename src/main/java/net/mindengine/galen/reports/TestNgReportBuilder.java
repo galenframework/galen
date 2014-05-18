@@ -62,9 +62,11 @@ public class TestNgReportBuilder {
     
     private void makeSurePathExists(File file) throws IOException {
         File parentDir = file.getParentFile();
-        if (!parentDir.exists()) {
-            if (!parentDir.mkdirs()) {
-                throw new IOException("Could not create path: " + parentDir.getAbsolutePath());
+        if (parentDir != null) {
+            if (!parentDir.exists()) {
+                if (!parentDir.mkdirs()) {
+                    throw new IOException("Could not create path: " + parentDir.getAbsolutePath());
+                }
             }
         }
     }

@@ -23,16 +23,12 @@ public class ExceptionReportNode extends TestReportNode {
 
     public ExceptionReportNode(Throwable exception) {
         this.exception = exception;
+        this.setStatus(TestReportNode.Status.ERROR);
     }
     
     @Override
     public String getName() {
         return ExceptionUtils.getMessage(exception);
-    }
-    
-    @Override
-    public Status getStatus() {
-        return TestReportNode.Status.ERROR;
     }
     
     public String getStacktrace() {

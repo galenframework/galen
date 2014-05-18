@@ -47,7 +47,7 @@ var Galen = {
                 subObjects.slideToggle();
             }
             else {
-                var screenshot = $(this).closest("div.page-action").attr("data-screenshot");
+                var screenshot = $(this).closest("div.layout-report").attr("data-screenshot");
                 var img = new Image();
 
                 var areas = [];
@@ -68,9 +68,9 @@ var Galen = {
 
         $("h3.object").click(function (){
             var container = $(this).next();
-            var screenshot = $(this).closest("div.page-action").attr("data-screenshot");
+            var screenshot = $(this).closest("div.layout-report").attr("data-screenshot");
 
-            var areaText = container.attr("data-area"); 
+            var areaText = container.attr("data-area");
             if (areaText != null) {
                 var areas = [{
                     area: eval("[" + areaText + "]"),
@@ -83,20 +83,20 @@ var Galen = {
                 };
                 img.src = screenshot;
             }
-        }); 
+        });
 
-
+        this.makeSliding("ul.report  li  a");
         this.makeSliding(".global-error span");
-        this.makeSliding(".suite h2");
+        this.makeSliding(".layout-report h2");
 
         $("h2").each(function (){
             var next = $(this).next();
 
-            if (next.find("ul.test-specs li.fail").length > 0 || 
+            if (next.find("ul.test-specs li.fail").length > 0 ||
                 next.find(".global-error").length > 0) {
                 $(this).addClass("has-failures");
             }
-        }); 
+        });
     },
     makeSliding: function (selector) {
         $(selector).click(Galen.onSlidingElementClicked);
@@ -110,7 +110,7 @@ var Galen = {
         var delta = 2;
         Galen.palette.start();
         for (var i=0; i<areas.length; i++) {
-            var area = [areas[i].area[0] - delta, 
+            var area = [areas[i].area[0] - delta,
                 areas[i].area[1] - delta,
                 areas[i].area[2] + delta,
                 areas[i].area[3] + delta
@@ -121,15 +121,12 @@ var Galen = {
                 + area[1] + "px; width:"
                 + area[2] + "px; height:"
                 + area[3] + "px;"
-                + "border: 1px solid " + color + ";'>" 
+                + "border: 1px solid " + color + ";'>"
                 + "<span style='background:" + color + ";'>"
                 + areas[i].text + "</span></div>");
         }
 
         $("#tooltip").center();
         $("#tooltip").show();
-    } 
+    }
 };
-    
-
-

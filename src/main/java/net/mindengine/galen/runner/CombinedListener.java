@@ -18,12 +18,10 @@ package net.mindengine.galen.runner;
 import java.util.LinkedList;
 import java.util.List;
 
-import net.mindengine.galen.browser.Browser;
 import net.mindengine.galen.specs.Spec;
 import net.mindengine.galen.specs.page.PageSection;
 import net.mindengine.galen.suite.GalenPageAction;
-import net.mindengine.galen.suite.GalenPageTest;
-import net.mindengine.galen.tests.GalenBasicTest;
+import net.mindengine.galen.tests.GalenTest;
 import net.mindengine.galen.validation.PageValidation;
 import net.mindengine.galen.validation.ValidationError;
 
@@ -36,30 +34,16 @@ public class CombinedListener implements CompleteListener {
     }
     
     @Override
-    public void onAfterPage(GalenBasicTestRunner galenSuiteRunner, GalenPageRunner pageRunner, GalenPageTest pageTest, Browser browser) {
+    public void onTestFinished(GalenTest test) {
         for (CompleteListener listener : listeners) {
-            listener.onAfterPage(galenSuiteRunner, pageRunner, pageTest, browser);
+            listener.onTestFinished(test);
         }
     }
 
     @Override
-    public void onBeforePage(GalenBasicTestRunner galenSuiteRunner, GalenPageRunner pageRunner, GalenPageTest pageTest, Browser browser) {
+    public void onTestStarted(GalenTest test) {
         for (CompleteListener listener : listeners) {
-            listener.onBeforePage(galenSuiteRunner, pageRunner, pageTest, browser);
-        }
-    }
-
-    @Override
-    public void onSuiteFinished(GalenBasicTestRunner galenSuiteRunner, GalenBasicTest suite) {
-        for (CompleteListener listener : listeners) {
-            listener.onSuiteFinished(galenSuiteRunner, suite);
-        }
-    }
-
-    @Override
-    public void onSuiteStarted(GalenBasicTestRunner galenSuiteRunner, GalenBasicTest suite) {
-        for (CompleteListener listener : listeners) {
-            listener.onSuiteStarted(galenSuiteRunner, suite);
+            listener.onTestStarted(test);
         }
     }
 

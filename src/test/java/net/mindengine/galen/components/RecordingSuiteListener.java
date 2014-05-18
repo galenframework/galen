@@ -15,14 +15,10 @@
 ******************************************************************************/
 package net.mindengine.galen.components;
 
-import net.mindengine.galen.browser.Browser;
-import net.mindengine.galen.runner.GalenBasicTestRunner;
-import net.mindengine.galen.runner.GalenPageRunner;
-import net.mindengine.galen.runner.SuiteListener;
-import net.mindengine.galen.suite.GalenPageTest;
-import net.mindengine.galen.tests.GalenBasicTest;
+import net.mindengine.galen.runner.TestListener;
+import net.mindengine.galen.tests.GalenTest;
 
-public class RecordingSuiteListener implements SuiteListener {
+public class RecordingSuiteListener implements TestListener {
 
     StringBuffer recorded = new StringBuffer();
     
@@ -31,22 +27,12 @@ public class RecordingSuiteListener implements SuiteListener {
     }
 
     @Override
-    public void onAfterPage(GalenBasicTestRunner galenSuiteRunner, GalenPageRunner pageRunner, GalenPageTest pageTest, Browser browser) {
-        record("<after-page>");
-    }
-
-    @Override
-    public void onBeforePage(GalenBasicTestRunner galenSuiteRunner, GalenPageRunner pageRunner, GalenPageTest pageTest, Browser browser) {
-        record("<before-page>");
-    }
-
-    @Override
-    public void onSuiteFinished(GalenBasicTestRunner galenSuiteRunner, GalenBasicTest suite) {
+    public void onTestFinished(GalenTest test) {
         record("<suite-finished>");
     }
 
     @Override
-    public void onSuiteStarted(GalenBasicTestRunner galenSuiteRunner, GalenBasicTest suite) {
+    public void onTestStarted(GalenTest test) {
         record("<suite-started>");
     }
 

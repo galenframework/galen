@@ -108,7 +108,7 @@ public class ReportingTest {
         File attachmentFile = new File(Files.createTempDir().getAbsolutePath() + File.separator + "custom.txt");
         attachmentFile.createNewFile();
         
-        testInfo.getReport().addNode(TestReportNode.error(new FakeException("Some exception here")).withAttachment("custom.txt", attachmentFile));
+        testInfo.getReport().error(new FakeException("Some exception here")).withAttachment("custom.txt", attachmentFile);
         
         testInfos.add(testInfo);
         new HtmlReportBuilder().build(testInfos, reportDirPath);

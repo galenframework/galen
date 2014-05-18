@@ -16,20 +16,14 @@
 package net.mindengine.galen.reports;
 
 import java.io.PrintStream;
-import java.util.HashSet;
-import java.util.Set;
 
-import net.mindengine.galen.browser.Browser;
 import net.mindengine.galen.config.GalenConfig;
 import net.mindengine.galen.runner.CompleteListener;
-import net.mindengine.galen.runner.GalenBasicTestRunner;
 import net.mindengine.galen.runner.GalenPageRunner;
 import net.mindengine.galen.specs.Spec;
 import net.mindengine.galen.specs.page.PageSection;
 import net.mindengine.galen.suite.GalenPageAction;
-import net.mindengine.galen.suite.GalenPageTest;
-import net.mindengine.galen.tests.GalenBasicTest;
-import net.mindengine.galen.utils.GalenUtils;
+import net.mindengine.galen.tests.GalenTest;
 import net.mindengine.galen.validation.PageValidation;
 import net.mindengine.galen.validation.ValidationError;
 
@@ -38,7 +32,7 @@ public class ConsoleReportingListener implements CompleteListener {
     private static final String SPEC_ERROR_MESSAGE_INDENTATION_SUFFIX   = ":   ";
     private static final String SPEC_ERROR_INDENTATION_HEADER           = "->  ";
     private static final String NORMAL_INDETATION                       = "    ";
-    private static final int SUITE_LEVEL = 1;
+    private static final int TEST_LEVEL = 1;
     private static final int PAGE_LEVEL = 2;
     private static final int SECTION_LEVEL = 3;
     private static final int OBJECT_LEVEL = 4;
@@ -47,11 +41,6 @@ public class ConsoleReportingListener implements CompleteListener {
     private PrintStream out;
     private PrintStream err;
     
-    private int totalCount = 0;
-    private int errorCount = 0;
-    private Set<String> suitesWithError = new HashSet<String>();
-    private String currentSuite;
-
     private ThreadLocal<Integer> currentObjectLevel = new ThreadLocal<Integer>();
     
     private int logLevel = getLogLevel();
@@ -122,9 +111,6 @@ public class ConsoleReportingListener implements CompleteListener {
 
     @Override
     public void onSpecError(GalenPageRunner pageRunner, PageValidation pageValidation, String objectName, Spec spec, ValidationError error) {
-        errorCount++;
-        totalCount++;
-        suitesWithError.add(currentSuite);
         if (logLevel >= OBJECT_SPEC_LEVEL) {
             err.print(getSpecErrorIndentation());
             err.println(spec.toText());
@@ -150,8 +136,6 @@ public class ConsoleReportingListener implements CompleteListener {
 
     @Override
     public void onSpecSuccess(GalenPageRunner pageRunner, PageValidation pageValidation, String objectName, Spec spec) {
-        totalCount++;
-        
         if (logLevel >= OBJECT_SPEC_LEVEL) {
             out.print(getObjectIndentation());
             out.print(NORMAL_INDETATION);
@@ -159,43 +143,17 @@ public class ConsoleReportingListener implements CompleteListener {
         }
     }
 
+    
     @Override
-    public void onAfterPage(GalenBasicTestRunner galenSuiteRunner, GalenPageRunner pageRunner, GalenPageTest pageTest, Browser browser) {
+    public void onTestFinished(GalenTest test) {
     }
 
     @Override
-    public void onBeforePage(GalenBasicTestRunner galenSuiteRunner, GalenPageRunner pageRunner, GalenPageTest pageTest, Browser browser) {
-        if (logLevel >= PAGE_LEVEL) {
-            out.println("----------------------------------------");
-            out.print("Page: ");
-            
-            if (pageTest.getTitle() != null) {
-                out.println(pageTest.getTitle());
-            }
-            else {
-                out.print(pageTest.getUrl());
-                if (pageTest.getScreenSize() != null) {
-                    out.print(" ");
-                    out.println(GalenUtils.formatScreenSize(pageTest.getScreenSize()));
-                }
-                else {
-                    out.println();
-                }
-            }
-        }
-    }
-
-    @Override
-    public void onSuiteFinished(GalenBasicTestRunner galenSuiteRunner, GalenBasicTest suite) {
-    }
-
-    @Override
-    public void onSuiteStarted(GalenBasicTestRunner galenSuiteRunner, GalenBasicTest suite) {
-        currentSuite = suite.getName();
-        if (logLevel >= SUITE_LEVEL) {
+    public void onTestStarted(GalenTest test) {
+        if (logLevel >= TEST_LEVEL) {
             out.println("========================================");
-            out.print("Suite: ");
-            out.println(suite.getName());
+            out.print("Test: ");
+            out.println(test.getName());
             out.println("========================================");
         }
     }
@@ -203,32 +161,10 @@ public class ConsoleReportingListener implements CompleteListener {
     
     @Override
     public void done() {
-        out.println();
-        out.println("========================================");
-        out.println("----------------------------------------");
-        out.println("========================================");
-        if (suitesWithError.size() > 0) {
-            out.println("Failed suites:");
-            for (String name: suitesWithError) {
-                out.println("    " + name);
-            }
-            out.println();
-        }
-        
-        out.print("Status: ");
-        if (errorCount > 0) {
-            out.println("FAIL");
-            out.println("Total failures: " + errorCount);
-        }
-        else {
-            out.println("PASS");
-        }
-        out.println("Total tests: " + totalCount);
     }
 
     @Override
     public void onGlobalError(GalenPageRunner pageRunner, Exception e) {
-        errorCount++;
         e.printStackTrace(err);
     }
 

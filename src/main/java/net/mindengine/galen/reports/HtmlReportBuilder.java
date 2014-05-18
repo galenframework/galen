@@ -44,7 +44,12 @@ public class HtmlReportBuilder {
             GalenTestAggregatedInfo aggregatedInfo = new GalenTestAggregatedInfo("report-" + testIdGenerator.generateTestId(test.getName()), test);
             aggregatedTests.add(aggregatedInfo);
             
-            exportTestReport(aggregatedInfo, reportFolderPath);
+            try {
+                exportTestReport(aggregatedInfo, reportFolderPath);
+            }
+            catch (Exception ex) {
+                ex.printStackTrace();
+            }
         }
         exportMainReport(reportFolderPath, aggregatedTests);
     }
@@ -68,8 +73,10 @@ public class HtmlReportBuilder {
 
     private void moveAllAttachmentsInReport(GalenTestAggregatedInfo aggregatedInfo, String reportFolderPath) {
         TestReport report = aggregatedInfo.getTestInfo().getReport();
-        for (TestReportNode node: report.getNodes()) {
-            moveAttachmentsInReportNode(node, reportFolderPath, aggregatedInfo.getTestId());
+        if (report.getNodes() != null) {
+            for (TestReportNode node: report.getNodes()) {
+                moveAttachmentsInReportNode(node, reportFolderPath, aggregatedInfo.getTestId());
+            }
         }
     }
 

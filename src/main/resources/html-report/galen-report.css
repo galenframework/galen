@@ -1,4 +1,3 @@
-
 * {
     margin: 0;
     padding: 0;
@@ -99,18 +98,28 @@ a {
 
 
 
-.suite h2, .suite h3 {
+ul.report {
+    margin-left: 40px;
+    list-style: none;
+}
+
+ul.report li a {
+    text-decoration: none;
+    font-size: 1.3em;
+}
+
+.layout-report h2, .layout-report h3 {
     cursor: pointer;
 }
-.suite h2:hover, .suite h3:hover {
+.layout-report h2:hover, .layout-report h3:hover {
     color: #555;
 }
 
-.suite h2.page-action, .suite h2.page-section { 
+.layout-report h2.page-action, .layout-report h2.page-section {
     font-size: 1.2em;
 }
 
-.suite h3 {
+.layout-report h3 {
     font-size: 1.0em;
 }
 div.suite, div.test, div.page-action, div.page-section, div.object, div.sub-objects {
@@ -235,21 +244,18 @@ ul.error-message li:before {
     z-index: 9;
 }
 
-.global-error {
-    position: relative;
-    color: #E32F0B;
-    margin-left: 60px;
-    font-weight: bold;
-    cursor: pointer;
-    margin-bottom:20px;
+li.report-status-passed,  li.report-status-passed > a {
+    color: #000;
 }
-.global-error span {
-    position: relative;
+
+li.report-status-error, li.report-status-error > a{
+    color: #AD1B0A;
 }
-.global-error ul {
-    display: none;
-    list-style: none;
+
+li.report-status-warn, li.report-status-warn > a {
+    color: #C99400;
 }
-.global-error ul li{
-    margin-left: 20px;
+
+.stacktrace {
+    white-space: pre;
 }

@@ -19,8 +19,6 @@ import java.io.File;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.apache.commons.lang3.exception.ExceptionUtils;
-
 public class TestReportNode {
     
     private static Long _uniqueId = 0L;

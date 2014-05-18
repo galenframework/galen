@@ -30,11 +30,11 @@ import java.util.LinkedList;
 import java.util.List;
 
 import net.mindengine.galen.GalenMain;
+import net.mindengine.galen.components.DummyCompleteListener;
+import net.mindengine.galen.components.JsTestRegistry;
 import net.mindengine.galen.runner.CompleteListener;
 import net.mindengine.galen.runner.GalenArguments;
-import net.mindengine.galen.runner.GalenBasicTestRunner;
-import net.mindengine.galen.tests.GalenBasicTest;
-import net.mindengine.galen.tests.SuiteNameOnlyListener;
+import net.mindengine.galen.tests.GalenTest;
 
 import org.apache.commons.io.FileUtils;
 import org.testng.annotations.Test;
@@ -79,7 +79,6 @@ public class GalenMainTest {
         assertThat(testngReportContent, containsString("<class name=\"Home page test 2\">"));
     }
     
-    
     @Test public void shouldFindAndRun_allTestsRecursivelly() throws IOException, SecurityException, IllegalArgumentException, ClassNotFoundException, NoSuchMethodException, InstantiationException, IllegalAccessException, InvocationTargetException {
         String testUrl = "file://" + getClass().getResource("/html/page-nice.html").getFile();
         System.setProperty("url", testUrl);
@@ -107,6 +106,46 @@ public class GalenMainTest {
         
         assertThat(testngReportContent, containsString("<test name=\"Recursion check 3\">"));
         assertThat(testngReportContent, containsString("<class name=\"Recursion check 3\">"));
+    }
+    
+    @Test public void shouldRun_javascriptTest() throws Exception {
+        File reportsDir = Files.createTempDir();
+        String htmlReportPath = reportsDir.getAbsolutePath();
+        String testngReportPath = reportsDir.getAbsolutePath() + "/testng-report.html";
+        
+        JsTestRegistry.get().clear();
+        
+        new GalenMain().execute(new GalenArguments()
+            .withAction("test")
+            .withPaths(asList(getClass().getResource("/js-tests/simple-with-error.test.js").getFile()))
+            .withHtmlReport(htmlReportPath)
+            .withTestngReport(testngReportPath)
+        );
+        
+        assertThat(JsTestRegistry.get().getEvents().size(), is(3));
+        assertThat(JsTestRegistry.get().getEvents().get(0), is("Test #1 was invoked"));
+        assertThat(JsTestRegistry.get().getEvents().get(1), is("Test #2 was invoked"));
+        assertThat(JsTestRegistry.get().getEvents().get(2), is("Test #3 was invoked"));
+        
+        
+        String testngReportContent = FileUtils.readFileToString(new File(testngReportPath));
+        
+        assertThat(testngReportContent, containsString("<test name=\"Test number 1\">"));
+        assertThat(testngReportContent, containsString("<class name=\"Test number 1\">"));
+        
+        assertThat(testngReportContent, containsString("<test name=\"Test number 2\">"));
+        assertThat(testngReportContent, containsString("<class name=\"Test number 2\">"));
+        
+        assertThat(testngReportContent, containsString("<test name=\"Test number 3\">"));
+        assertThat(testngReportContent, containsString("<class name=\"Test number 3\">"));
+        
+        
+        String htmlReportContent = FileUtils.readFileToString(new File(htmlReportPath + File.separator + "report.html"));
+        
+        assertThat(htmlReportContent, containsString("<a href=\"report-1-test-number-1.html\">Test number 1</a>"));
+        assertThat(htmlReportContent, containsString("<a href=\"report-2-test-number-2.html\">Test number 2</a>"));
+        assertThat(htmlReportContent, containsString("<a href=\"report-3-test-number-3.html\">Test number 3</a>"));
+        assertThat(htmlReportContent, containsString("<div class=\"status failed\">1</div>"));
     }
     
     @Test public void shouldFindAndRun_allTestsRecursivelly_inParallel() throws IOException, SecurityException, IllegalArgumentException, ClassNotFoundException, NoSuchMethodException, InstantiationException, IllegalAccessException, InvocationTargetException {
@@ -190,15 +229,15 @@ public class GalenMainTest {
     }
     
     @Test public void shouldRun_filteredTestInSuite() throws Exception {
-        String testUrl = getClass().getResource("/suites/suite-for-filtering.txt").getFile();
+        String testUrl = getClass().getResource("/suites/suite-for-filtering.test").getFile();
         GalenMain galen = new GalenMain();
         
         final List<String> executedSuites = new LinkedList<String>();
         
-        CompleteListener listener = new SuiteNameOnlyListener() {
+        CompleteListener listener = new DummyCompleteListener() {
             @Override
-            public void onSuiteStarted(GalenBasicTestRunner galenSuiteRunner, GalenBasicTest suite) {
-                executedSuites.add(suite.getName());
+            public void onTestStarted(GalenTest test) {
+                executedSuites.add(test.getName());
             }
         };
         galen.setListener(listener);
