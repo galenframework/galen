@@ -46,4 +46,10 @@ public class TestStatistic {
     public void setTotal(int total) {
         this.total = total;
     }
+    public void add(TestStatistic statistic) {
+        this.total += statistic.getTotal();
+        this.passed += statistic.getPassed();
+        this.errors += statistic.getErrors();
+        this.warnings += statistic.getWarnings();
+    }
 }

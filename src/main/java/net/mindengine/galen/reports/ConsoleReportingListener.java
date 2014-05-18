@@ -16,6 +16,8 @@
 package net.mindengine.galen.reports;
 
 import java.io.PrintStream;
+import java.util.LinkedList;
+import java.util.List;
 
 import net.mindengine.galen.config.GalenConfig;
 import net.mindengine.galen.runner.CompleteListener;
@@ -196,5 +198,46 @@ public class ConsoleReportingListener implements CompleteListener {
 
     @Override
     public void onAfterSection(GalenPageRunner pageRunner, PageValidation pageValidation, PageSection pageSection) {
+    }
+
+    @Override
+    public void beforeTestSuite(List<GalenTest> tests) {
+    }
+
+    @Override
+    public void afterTestSuite(List<GalenTestInfo> tests) {
+        out.println();
+        out.println("========================================");
+        out.println("----------------------------------------");
+        out.println("========================================");
+        
+        List<String> failedTests = new LinkedList<String>();
+        
+        TestStatistic allStatistic = new TestStatistic();
+        
+        for (GalenTestInfo test : tests) {
+            TestStatistic statistic = test.getReport().fetchStatistic();
+            allStatistic.add(statistic);
+            if (test.getException() != null || statistic.getErrors() > 0) {
+                failedTests.add(test.getName());
+            }
+        }
+        
+        if (failedTests.size() > 0) {
+            out.println("Failed suites:");
+            for (String name: failedTests) {
+                out.println("    " + name);
+            }
+            out.println();
+        }
+        
+        out.print("Status: ");
+        if (failedTests.size() > 0) {
+            out.println("FAIL");
+            out.println("Total failures: " + allStatistic.getErrors());
+        }
+        else {
+            out.println("PASS");
+        }
     }
 }

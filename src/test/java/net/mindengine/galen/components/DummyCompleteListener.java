@@ -15,6 +15,9 @@
 ******************************************************************************/
 package net.mindengine.galen.components;
 
+import java.util.List;
+
+import net.mindengine.galen.reports.GalenTestInfo;
 import net.mindengine.galen.runner.CompleteListener;
 import net.mindengine.galen.runner.GalenPageRunner;
 import net.mindengine.galen.specs.Spec;
@@ -72,6 +75,14 @@ public class DummyCompleteListener implements CompleteListener {
 
     @Override
     public void onTestStarted(GalenTest test) {
+    }
+
+    @Override
+    public void beforeTestSuite(List<GalenTest> tests) {
+    }
+
+    @Override
+    public void afterTestSuite(List<GalenTestInfo> tests) {
     }
 
     

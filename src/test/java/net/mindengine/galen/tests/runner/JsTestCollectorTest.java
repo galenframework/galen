@@ -19,6 +19,7 @@ public class JsTestCollectorTest {
     @Test public void shouldExecuteJavascript_andCollectTests() throws Exception {
         JsTestCollector testCollector = new JsTestCollector();
         
+        JsTestRegistry.get().clear();
         testCollector.execute(new File(getClass().getResource("/js-tests/simple.test.js").getFile()));
         
         List<GalenTest> tests = testCollector.getCollectedTests();

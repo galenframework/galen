@@ -15,6 +15,9 @@
 ******************************************************************************/
 package net.mindengine.galen.validation;
 
+import java.util.List;
+
+import net.mindengine.galen.reports.GalenTestInfo;
 import net.mindengine.galen.runner.CompleteListener;
 import net.mindengine.galen.runner.GalenPageRunner;
 import net.mindengine.galen.specs.Spec;
@@ -88,6 +91,20 @@ public class FailureListener implements CompleteListener {
 
     public boolean hasFailures() {
         return this.hasFailures;
+    }
+
+    @Override
+    public void beforeTestSuite(List<GalenTest> tests) {
+    }
+
+    @Override
+    public void afterTestSuite(List<GalenTestInfo> tests) {
+        for (GalenTestInfo test : tests) {
+            if (test.getException() != null ||test.getReport().fetchStatistic().getErrors() > 0) {
+                this.hasFailures = true;
+                return;
+            }
+        }
     }
 
 }

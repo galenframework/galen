@@ -18,6 +18,7 @@ package net.mindengine.galen.runner;
 import java.util.LinkedList;
 import java.util.List;
 
+import net.mindengine.galen.reports.GalenTestInfo;
 import net.mindengine.galen.specs.Spec;
 import net.mindengine.galen.specs.page.PageSection;
 import net.mindengine.galen.suite.GalenPageAction;
@@ -36,84 +37,168 @@ public class CombinedListener implements CompleteListener {
     @Override
     public void onTestFinished(GalenTest test) {
         for (CompleteListener listener : listeners) {
-            listener.onTestFinished(test);
+            try {
+                listener.onTestFinished(test);
+            }
+            catch (Exception ex) {
+                ex.printStackTrace();
+            }
         }
     }
 
     @Override
     public void onTestStarted(GalenTest test) {
         for (CompleteListener listener : listeners) {
-            listener.onTestStarted(test);
+            try {
+                listener.onTestStarted(test);
+            }
+            catch (Exception ex) {
+                ex.printStackTrace();
+            }
         }
     }
 
     @Override
     public void onObject(GalenPageRunner pageRunner, PageValidation pageValidation, String objectName) {
         for (CompleteListener listener : listeners) {
-            listener.onObject(pageRunner, pageValidation, objectName);
+            try {
+                listener.onObject(pageRunner, pageValidation, objectName);
+            }
+            catch (Exception ex) {
+                ex.printStackTrace();
+            }
         }
     }
 
     @Override
     public void onAfterObject(GalenPageRunner pageRunner, PageValidation pageValidation, String objectName) {
         for (CompleteListener listener : listeners) {
-            listener.onAfterObject(pageRunner, pageValidation, objectName);
+            try {
+                listener.onAfterObject(pageRunner, pageValidation, objectName);
+            }
+            catch (Exception ex) {
+                ex.printStackTrace();
+            }
         }
     }
 
     @Override
     public void onSpecError(GalenPageRunner pageRunner, PageValidation pageValidation, String objectName, Spec spec, ValidationError error) {
         for (CompleteListener listener : listeners) {
-            listener.onSpecError(pageRunner, pageValidation, objectName, spec, error);
+            try {
+                listener.onSpecError(pageRunner, pageValidation, objectName, spec, error);
+            }
+            catch (Exception ex) {
+                ex.printStackTrace();
+            }
         }
     }
 
     @Override
     public void onSpecSuccess(GalenPageRunner pageRunner, PageValidation pageValidation, String objectName, Spec spec) {
         for (CompleteListener listener : listeners) {
-            listener.onSpecSuccess(pageRunner, pageValidation, objectName, spec);
+            try {
+                listener.onSpecSuccess(pageRunner, pageValidation, objectName, spec);
+            }
+            catch (Exception ex) {
+                ex.printStackTrace();
+            }
         }
     }
 
     @Override
     public void done() {
         for (CompleteListener listener : listeners) {
-            listener.done();
+            try {
+                listener.done();
+            }
+            catch (Exception ex) {
+                ex.printStackTrace();
+            }
         } 
     }
 
     @Override
     public void onGlobalError(GalenPageRunner pageRunner, Exception e) {
         for (CompleteListener listener : listeners) {
-            listener.onGlobalError(pageRunner, e);
+            try {
+                listener.onGlobalError(pageRunner, e);
+            }
+            catch (Exception ex) {
+                ex.printStackTrace();
+            }
         }
     }
 
     @Override
     public void onBeforePageAction(GalenPageRunner pageRunner, GalenPageAction action) {
         for (CompleteListener listener : listeners) {
-            listener.onBeforePageAction(pageRunner, action);
+            try {
+                listener.onBeforePageAction(pageRunner, action);
+            }
+            catch (Exception ex) {
+                ex.printStackTrace();
+            }
         }
     }
 
     @Override
     public void onAfterPageAction(GalenPageRunner pageRunner, GalenPageAction action) {
         for (CompleteListener listener : listeners) {
-            listener.onAfterPageAction(pageRunner, action);
+            try {
+                listener.onAfterPageAction(pageRunner, action);
+            }
+            catch (Exception ex) {
+                ex.printStackTrace();
+            }
         }
     }
 
     @Override
     public void onBeforeSection(GalenPageRunner pageRunner, PageValidation pageValidation, PageSection pageSection) {
         for (CompleteListener listener : listeners) {
-            listener.onBeforeSection(pageRunner, pageValidation, pageSection);
+            try {
+                listener.onBeforeSection(pageRunner, pageValidation, pageSection);
+            }
+            catch (Exception ex) {
+                ex.printStackTrace();
+            }
         }
     }
 
     @Override
     public void onAfterSection(GalenPageRunner pageRunner, PageValidation pageValidation, PageSection pageSection) {
         for (CompleteListener listener : listeners) {
-            listener.onAfterSection(pageRunner, pageValidation, pageSection);
+            try {
+                listener.onAfterSection(pageRunner, pageValidation, pageSection);
+            }
+            catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        }
+    }
+
+    @Override
+    public void beforeTestSuite(List<GalenTest> tests) {
+        for (CompleteListener listener : listeners) {
+            try {
+                listener.beforeTestSuite(tests);
+            }
+            catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        }
+    }
+
+    @Override
+    public void afterTestSuite(List<GalenTestInfo> tests) {
+        for (CompleteListener listener : listeners) {
+            try {
+                listener.afterTestSuite(tests);
+            }
+            catch (Exception ex) {
+                ex.printStackTrace();
+            }
         }
     }
 }

@@ -130,7 +130,7 @@ public class ReportingTest {
         TestReport report = new TestReport();
         LayoutReport layoutReport = new LayoutReport();
         layoutReport.setScreenshotFullPath(File.createTempFile("screenshot", ".png").getAbsolutePath());
-        ReportingListenerTestUtils.performSampleReporting("Home page test", null, new LayoutReportListener(layoutReport));
+        ReportingListenerTestUtils.performSampleReporting("Home page test", null, new LayoutReportListener(layoutReport), null);
         
         report.addNode(new LayoutReportNode(layoutReport, "check layout"));
         testInfo.setReport(report);
@@ -184,7 +184,7 @@ public class ReportingTest {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         PrintStream ps = new PrintStream(baos);
         ConsoleReportingListener listener = new ConsoleReportingListener(ps, ps);
-        ReportingListenerTestUtils.performSampleReporting("page1.test", listener, listener);
+        ReportingListenerTestUtils.performSampleReporting("page1.test", listener, listener, listener);
         
         listener.done();
         String expectedText = IOUtils.toString(getClass().getResourceAsStream(expectedReport)).replace("\\t    ", "\t");

@@ -14,4 +14,3 @@ Failed suites:
 
 Status: FAIL
 Total failures: 5
-Total tests: 11

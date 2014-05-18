@@ -42,6 +42,7 @@ import net.mindengine.galen.runner.CombinedListener;
 import net.mindengine.galen.runner.CompleteListener;
 import net.mindengine.galen.runner.GalenArguments;
 import net.mindengine.galen.runner.JsTestCollector;
+import net.mindengine.galen.runner.SuiteListener;
 import net.mindengine.galen.runner.TestListener;
 import net.mindengine.galen.suite.GalenPageAction;
 import net.mindengine.galen.suite.GalenPageTest;
@@ -255,6 +256,8 @@ public class GalenMain {
         Pattern filterPattern = createTestFilter(arguments.getFilter());
         final List<GalenTestInfo> testInfos = new LinkedList<GalenTestInfo>();
         
+        tellBeforeTestSuite(listener, tests);
+        
         for (final GalenTest test : tests) {
             if (matchesPattern(test.getName(), filterPattern)) {
                 Runnable thread = new Runnable() {
@@ -294,9 +297,33 @@ public class GalenMain {
         while (!executor.isTerminated()) {
         }
         
+        tellAfterTestSuite(listener, testInfos);
+        
         createAllReports(testInfos, arguments);
     }
     
+    private void tellBeforeTestSuite(CompleteListener listener, List<GalenTest> tests) {
+        if (listener != null) {
+            try {
+                listener.beforeTestSuite(tests);
+            }
+            catch(Exception ex) {
+                ex.printStackTrace();
+            }
+        }
+    }
+
+    private void tellAfterTestSuite(SuiteListener listener, List<GalenTestInfo> testInfos) {
+        if (listener != null) {
+            try {
+                listener.afterTestSuite(testInfos);
+            }
+            catch(Exception ex) {
+                ex.printStackTrace();
+            }
+        }
+    }
+
     private void tellTestFinished(TestListener testListener, GalenTest test) {
         try {
             if (testListener != null) {

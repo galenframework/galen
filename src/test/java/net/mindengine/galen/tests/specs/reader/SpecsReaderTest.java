@@ -56,6 +56,8 @@ import net.mindengine.galen.specs.colors.ColorRange;
 import net.mindengine.galen.specs.reader.SpecReader;
 
 import org.hamcrest.Matchers;
+import org.testng.annotations.AfterMethod;
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 @Test
@@ -64,6 +66,16 @@ public class SpecsReaderTest {
     
     private static final Browser NO_BROWSER = null;
 
+    @BeforeMethod
+    public void configureApproximation() {
+        System.setProperty("galen.range.approximation", "2");
+    }
+    
+    @AfterMethod
+    public void clearApproximation() {
+        System.getProperties().remove("galen.range.approximation");
+    }
+    
     @Test
     public void shouldReadSpec_inside_object_10px_right() throws IOException {
         Spec spec = readSpec("inside: object 10px right");

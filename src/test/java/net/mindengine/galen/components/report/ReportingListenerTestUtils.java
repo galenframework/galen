@@ -27,8 +27,10 @@ import net.mindengine.galen.components.MockedPageValidation;
 import net.mindengine.galen.components.validation.MockedPageElement;
 import net.mindengine.galen.page.PageElement;
 import net.mindengine.galen.page.Rect;
+import net.mindengine.galen.reports.GalenTestInfo;
 import net.mindengine.galen.reports.TestReport;
 import net.mindengine.galen.runner.GalenPageRunner;
+import net.mindengine.galen.runner.SuiteListener;
 import net.mindengine.galen.runner.TestListener;
 import net.mindengine.galen.specs.Location;
 import net.mindengine.galen.specs.SpecHeight;
@@ -43,12 +45,12 @@ import net.mindengine.galen.validation.ValidationListener;
 
 public class ReportingListenerTestUtils {
 
-    public static void performSampleReporting(String suiteName, TestListener suiteListener, ValidationListener validationListener) {
+    public static void performSampleReporting(String suiteName, TestListener testListener, ValidationListener validationListener, SuiteListener suiteListener) {
         
         GalenBasicTest suite = new GalenBasicTest();
         suite.setName(suiteName);
         
-        if (suiteListener != null) suiteListener.onTestStarted(suite);
+        if (testListener != null) testListener.onTestStarted(suite);
         
         GalenPageRunner pageRunner = new GalenPageRunner(new TestReport());
         
@@ -61,6 +63,7 @@ public class ReportingListenerTestUtils {
         pageElements.put("sub-objectA1", new MockedPageElement(200, 300, 50, 30));
         
         MockedPageValidation pageValidation = new MockedPageValidation(pageElements);
+        
         
         
         GalenPageActionCheck action = new GalenPageActionCheck();
@@ -145,7 +148,25 @@ public class ReportingListenerTestUtils {
             validationListener.onAfterSection(pageRunner, pageValidation, section1);
         }
         validationListener.onAfterPageAction(pageRunner, action);
+
+        if (suiteListener != null) {
+            tellAfterSuite(suiteListener);
+        }
         
+    }
+
+    private static void tellAfterSuite(SuiteListener suiteListener) {
+        GalenTestInfo test = new GalenTestInfo();
+        test.setName("page1.test");
+        TestReport report = new TestReport();
+        for (int i=0; i< 6; i++) {
+            report.info("info" + i);
+        }
+        for (int i=0; i< 5; i++) {
+            report.error("error" + i);
+        }
+        test.setReport(report);
+        suiteListener.afterTestSuite(asList(test));
     }
 
     private static PageSection sectionWithName(String name) {
