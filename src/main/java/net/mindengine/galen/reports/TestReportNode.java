@@ -29,6 +29,7 @@ public class TestReportNode {
     private List<TestReportNode> nodes;
     private TestReportNode parent;
     private List<TestAttachment> attachments;
+    private String details;
     
     public static enum Status {
         INFO("info"),
@@ -47,6 +48,10 @@ public class TestReportNode {
         }
     }
     
+    public TestReportNode withDetails(String details) {
+        setDetails(details);
+        return this;
+    }
     public static TestReportNode info(String name) {
         TestReportNode node = new TestReportNode();
         node.setName(name);
@@ -166,6 +171,14 @@ public class TestReportNode {
     
     public Long getId() {
         return this.id;
+    }
+
+    public String getDetails() {
+        return details;
+    }
+
+    public void setDetails(String details) {
+        this.details = details;
     }
 
 

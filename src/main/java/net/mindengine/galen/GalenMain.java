@@ -272,8 +272,9 @@ public class GalenMain {
                         TestReport report = new TestReport();
                         info.setReport(report);
                         
-                        TestSession.register(info);
-                        
+                        TestSession session = TestSession.register(info);
+                        session.setReport(report);
+                        session.setListener(listener);
                         tellTestStarted(listener, test);
                         
                         try {

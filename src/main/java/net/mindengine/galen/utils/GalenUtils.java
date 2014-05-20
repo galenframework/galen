@@ -22,8 +22,17 @@ import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.util.Arrays;
 
 import javax.imageio.ImageIO;
+
+import net.mindengine.galen.browser.SeleniumBrowser;
+import net.mindengine.galen.browser.SeleniumBrowserFactory;
+import net.mindengine.galen.config.GalenConfig;
+import net.mindengine.galen.reports.TestReport;
+import net.mindengine.galen.runner.CompleteListener;
+import net.mindengine.galen.suite.actions.GalenPageActionCheck;
+import net.mindengine.galen.tests.TestSession;
 
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.OutputType;
@@ -133,4 +142,39 @@ public class GalenUtils {
     }
 
     
+    /**
+     * Needed for Javascript based tests
+     * @param browserType
+     * @return
+     */
+    public static WebDriver createDriver(String browserType) {
+        if (browserType == null) { 
+            browserType = GalenConfig.getConfig().getDefaultBrowser();
+        }
+        
+        SeleniumBrowser browser = (SeleniumBrowser) new SeleniumBrowserFactory(browserType).openBrowser();
+        return browser.getDriver();
+    }
+    
+    /**
+     * Needed for Javascript based tests
+     * @param driver
+     * @param fileName
+     * @param includedTags
+     * @param excludedTags
+     * @throws IOException 
+     */
+    public static void checkLayout(WebDriver driver, String fileName, String[]includedTags, String[]excludedTags) throws IOException {
+        GalenPageActionCheck action = new GalenPageActionCheck();
+        action.setSpecs(Arrays.asList(fileName));
+        if (includedTags != null) {
+            action.setIncludedTags(Arrays.asList(includedTags));
+        }
+        if (excludedTags != null) {
+            action.setExcludedTags(Arrays.asList(excludedTags));
+        }
+        TestReport report = TestSession.current().getReport();
+        CompleteListener listener = TestSession.current().getListener();
+        action.execute(report, new SeleniumBrowser(driver), null, listener);
+    }
 }

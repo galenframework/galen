@@ -109,6 +109,7 @@ public class ReportingTest {
         attachmentFile.createNewFile();
         
         testInfo.getReport().error(new FakeException("Some exception here")).withAttachment("custom.txt", attachmentFile);
+        testInfo.getReport().info("Some detailed report").withDetails("Some details");
         
         testInfos.add(testInfo);
         new HtmlReportBuilder().build(testInfos, reportDirPath);

@@ -65,7 +65,9 @@ public class GalenPageActionCheck extends GalenPageAction {
         
         listener.add(new LayoutReportListener(layoutReport));
         
-        report.addNode(new LayoutReportNode(layoutReport, "Layout report"));
+        
+        String reportTitle = "Check layout: " + toCommaSeparated(getSpecs()) + " included tags: " + toCommaSeparated(getIncludedTags());
+        report.addNode(new LayoutReportNode(layoutReport, reportTitle));
         
         Page page = browser.getPage();
         PageSpecReader pageSpecReader = new PageSpecReader(browser);
@@ -79,6 +81,22 @@ public class GalenPageActionCheck extends GalenPageAction {
             
             sectionValidation.check();
         }
+    }
+
+    private String toCommaSeparated(List<String> list) {
+        if (list != null) {
+            StringBuffer buff = new StringBuffer();
+            boolean comma = false;
+            for (String item : list) {
+                if (comma) {
+                    buff.append(',');
+                }
+                comma = true;
+                buff.append(item);
+            }
+            return buff.toString();
+        }
+        return "";
     }
 
     public GalenPageActionCheck withSpecs(List<String> specFilePaths) {

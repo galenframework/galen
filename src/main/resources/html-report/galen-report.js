@@ -25,11 +25,13 @@ var Galen = {
         $(".suites .suite").each(function (){
             var passed = parseInt($(this).find(".passed").text());
             var failed = parseInt($(this).find(".failed").text());
-            var total = passed + failed;
+            var warnings = parseInt($(this).find(".warnings").text());
+            var total = passed + failed + warnings;
             if (total > 0) {
                 var passedPercent = Math.round(passed * 100 / total);
                 var failedPercent = Math.round(failed * 100 / total);
-                $(this).append("<table class='progress'><tr><td class='passed' style='width:" + passedPercent + "%;'></td><td style='width:" + failedPercent + "%;' class='failed'></td></tr></tablet>");
+                var warningPercent = Math.round(warnings * 100 / total);
+                $(this).append("<table class='progress'><tr><td class='passed' style='width:" + passedPercent + "%;'></td><td style='width:" + failedPercent + "%;' class='failed'></td><td style='width:" + warningPercent + "%;' class='warning'></td></tr></tablet>");
             }
         });
     },
@@ -85,7 +87,18 @@ var Galen = {
             }
         });
 
-        this.makeSliding("ul.report  li  a");
+        $("ul.report  li  a.report-link").click(function () {
+            var id = $(this).attr("data-report-id");
+
+            $("#report-nodes-" + id).slideToggle(function () {
+                var isCollapsed = !$(this).is(":visible");
+
+                $(this).toggleClass("collapsed", isCollapsed);
+                $("#report-link-" + id).toggleClass("collapsed", isCollapsed);
+            });
+
+            return false;
+        });
         this.makeSliding(".global-error span");
         this.makeSliding(".layout-report h2");
 

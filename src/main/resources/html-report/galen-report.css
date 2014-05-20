@@ -17,6 +17,7 @@ h1, h2, h3 {
 
 h1 {
     margin-top: 20px;
+    margin-left: 20px;
     font-size: 2em;
 }
 
@@ -75,6 +76,9 @@ a {
 .suites-overview .suites .passed {
     color: #229605;
 }
+.suites-overview .suites .warnings {
+    color: #D6A502;
+}
 .suites-overview .suites .progress {
     border: none;
     border-collapse: collapse;
@@ -94,6 +98,9 @@ a {
 .suites-overview .suites .progress td.passed {
     background: #71E854;
 }
+.suites-overview .suites .progress td.warning {
+    background: #FFC400;
+}
 
 
 
@@ -103,9 +110,67 @@ ul.report {
     list-style: none;
 }
 
-ul.report li a {
+ul.report li {
+    margin: 0 0 5px 0;
+}
+
+ul.report li a.report-link {
     text-decoration: none;
-    font-size: 1.3em;
+    position: relative;
+    display: inline-block;
+    padding: 5px;
+    font-size: 0.8em;
+    border-radius: 10px;
+}
+ul.report li a.report-link.report-status-info {
+    color: #555;
+    background: #f0f0f0;
+}
+
+ul.report li a.report-link.report-status-warn {
+    color: #FF9500;
+    background: #FFED8A;
+    font-weight: bold;
+}
+ul.report li a.report-link.report-status-error {
+    color: #E33900;
+    background: #FCD3CA;
+    font-weight: bold;
+}
+
+ul.report li .report-caption {
+    display: inline;
+}
+
+ul.report li a.report-link:before {
+    display: block;
+    position: absolute;
+    left: -20px;
+    top: 3px;
+    font-size: 1.2em;
+    content: "-";
+    color: #777;
+    background: #fff;
+    width: 16px;
+    height: 14px;
+    padding-top: 0px;
+    padding-bottom: 3px;
+    text-align: center;
+    border:1px solid #f0f0f0;
+    border-radius: 20px;
+}
+
+ul.report li a.report-link.collapsed:before  {
+    content: "+";
+}
+
+ul.report li.report-status-info > div.report-container {
+    display: none;
+}
+
+
+.layout-report {
+    margin-left: 40px;
 }
 
 .layout-report h2, .layout-report h3 {

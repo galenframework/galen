@@ -11,16 +11,16 @@
 </#macro>
 <#macro report_node node>
     <li class="report-status-${node.status}">
-        <#if node.class.simpleName = "ExceptionReportNode">
-            <a id="report-link-${node.id}" href="#"><#if node?has_content>${node.name?html}</#if></a>
-            <@report_attachments node/>
-            <div id="report-nodes-${node.id}" class="report-container">
+        <a class="report-link report-status-${node.status}" id="report-link-${node.id}" href="#" data-report-id="${node.id}">${node.status?upper_case}</a>
+        <div class="report-caption"><#if node?has_content>${node.name?html}</#if></div>
+        <@report_attachments node/>
+        <div id="report-nodes-${node.id}" class="report-container">
+            <#if node.details?has_content>
+                <div class="details">${node.details?html}</div>
+            </#if>
+            <#if node.class.simpleName = "ExceptionReportNode">
                 <div class="stacktrace">${node.stacktrace?html}</div>
-            </div>
-        <#else>
-            <a id="report-link-${node.id}" href="#"><#if node?has_content>${node.name?html}</#if></a>
-            <@report_attachments node/>
-            <div id="report-nodes-${node.id}" class="report-container">
+            <#else>
                 <#if node.nodes?has_content>
                 <ul class="report">
                     <#list node.nodes as subNode>
@@ -40,8 +40,8 @@
                     </#list>
                     </div>
                 </#if>
-            </div>
-        </#if>
+            </#if>
+        </div>
     </li>
 </#macro>
 <#macro object_node object>
@@ -89,7 +89,7 @@
                 </div>
                 </#if>
             </li>
-            </#if>                            
+            </#if>
         </#list>
     </ul>
 </div>
