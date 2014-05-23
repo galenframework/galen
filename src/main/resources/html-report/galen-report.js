@@ -87,7 +87,7 @@ var Galen = {
             }
         });
 
-        $("ul.report  li  a.report-link").click(function () {
+        $("ul.report  li a.report-link").click(function () {
             var id = $(this).attr("data-report-id");
 
             $("#report-nodes-" + id).slideToggle(function () {
@@ -99,7 +99,7 @@ var Galen = {
 
             return false;
         });
-        this.makeSliding(".global-error span");
+
         this.makeSliding(".layout-report h2");
 
         $("h2").each(function (){
@@ -109,6 +109,15 @@ var Galen = {
                 next.find(".global-error").length > 0) {
                 $(this).addClass("has-failures");
             }
+        });
+
+
+        $("ul.report li.report-status-info > a.report-link").addClass("collapsed");
+        $("ul.report li.report-status-info > div.report-container").addClass("collapsed").hide();
+
+        $("ul.report li.report-status-error").each(function () {
+            $(this).parents("div.report-container").removeClass("collapsed").show();
+            $(this).parents("a.report-link").removeClass("collapsed");
         });
     },
     makeSliding: function (selector) {

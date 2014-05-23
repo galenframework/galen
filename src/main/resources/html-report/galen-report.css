@@ -128,7 +128,7 @@ ul.report li a.report-link.report-status-info {
 }
 
 ul.report li a.report-link.report-status-warn {
-    color: #FF9500;
+    color: #C97600;
     background: #FFED8A;
     font-weight: bold;
 }
@@ -159,14 +159,19 @@ ul.report li a.report-link:before {
     border:1px solid #f0f0f0;
     border-radius: 20px;
 }
-
 ul.report li a.report-link.collapsed:before  {
     content: "+";
 }
-
-ul.report li.report-status-info > div.report-container {
-    display: none;
+ul.report li a.report-status-error:before {
+    color: #E33900;
+    border:1px solid #FABCA7;
 }
+ul.report li a.report-status-warn:before {
+    color: #C97600;
+    border:1px solid #FFCC85;
+}
+
+
 
 
 .layout-report {
@@ -213,7 +218,7 @@ ul.test-specs li.fail > div > span:hover {
     color: #FA7F05;
 }
 
-ul.test-specs li.fail:before, .global-error span:before, h2.has-failures:before {
+ul.test-specs li.fail:before, h2.has-failures:before {
     display: block;
     position: absolute;
     left: -30px;
