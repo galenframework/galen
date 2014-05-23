@@ -147,12 +147,21 @@ public class GalenUtils {
      * @param browserType
      * @return
      */
-    public static WebDriver createDriver(String browserType) {
+    public static WebDriver createDriver(String browserType, String url, String size) {
         if (browserType == null) { 
             browserType = GalenConfig.getConfig().getDefaultBrowser();
         }
         
         SeleniumBrowser browser = (SeleniumBrowser) new SeleniumBrowserFactory(browserType).openBrowser();
+        
+        if (url != null && !url.trim().isEmpty()) {
+            browser.load(url);    
+        }
+        
+        if (size != null && !size.trim().isEmpty()) {
+            browser.changeWindowSize(GalenUtils.readSize(size));
+        }
+        
         return browser.getDriver();
     }
     
