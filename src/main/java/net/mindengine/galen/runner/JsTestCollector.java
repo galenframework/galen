@@ -18,9 +18,12 @@ package net.mindengine.galen.runner;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.Reader;
 import java.util.LinkedList;
 import java.util.List;
+
+import org.apache.commons.io.IOUtils;
 
 import net.mindengine.galen.javascript.GalenJsExecutor;
 import net.mindengine.galen.runner.events.TestEvent;
@@ -42,14 +45,27 @@ public class JsTestCollector {
     private GalenJsExecutor createExecutor() {
         GalenJsExecutor jsExector = new GalenJsExecutor();
         jsExector.putObject("_galenCore", this);
+        
+        jsExector.eval(loadJsFromLibrary("GalenCore.js"));
+        jsExector.eval(loadJsFromLibrary("GalenApi.js"));
+        jsExector.eval(loadJsFromLibrary("GalenPages.js"));
         return jsExector;
+    }
+
+    private String loadJsFromLibrary(String path) {
+        try {
+            InputStream is = getClass().getResourceAsStream("/js/" + path);
+            return  IOUtils.toString(is);
+        }
+        catch (Exception ex) {
+            throw new RuntimeException(ex);
+        }
     }
 
     public JsTestCollector() {
     }
 
     public void execute(File file) throws IOException {
-        
         Reader scriptFileReader = new FileReader(file);
         js.eval(scriptFileReader, file.getAbsolutePath());
     }
