@@ -16,17 +16,24 @@ public class JsTestCollector {
 
     private List<GalenTest> collectedTests = new LinkedList<GalenTest>();
     private EventHandler eventHandler = new EventHandler();
+    
+    private GalenJsExecutor js = createExecutor();
+    
 
     public JsTestCollector(List<GalenTest> tests) {
         this.collectedTests = tests;
+    }
+
+    private GalenJsExecutor createExecutor() {
+        GalenJsExecutor jsExector = new GalenJsExecutor();
+        jsExector.putObject("_galenCore", this);
+        return jsExector;
     }
 
     public JsTestCollector() {
     }
 
     public void execute(File file) throws IOException {
-        GalenJsExecutor js = new GalenJsExecutor();
-        js.putObject("_galenCore", this);
         
         Reader scriptFileReader = new FileReader(file);
         js.eval(scriptFileReader, file.getAbsolutePath());
