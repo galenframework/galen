@@ -128,13 +128,13 @@ ul.report li a.report-link.report-status-info {
 }
 
 ul.report li a.report-link.report-status-warn {
-    color: #C97600;
-    background: #FFED8A;
+    color: #fff;
+    background: #C97600;
     font-weight: bold;
 }
 ul.report li a.report-link.report-status-error {
-    color: #E33900;
-    background: #FCD3CA;
+    color: #fff;
+    background: #E33900;
     font-weight: bold;
 }
 
