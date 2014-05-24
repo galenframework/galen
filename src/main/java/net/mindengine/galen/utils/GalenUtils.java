@@ -23,11 +23,13 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.Arrays;
+import java.util.Map;
 
 import javax.imageio.ImageIO;
 
 import net.mindengine.galen.browser.SeleniumBrowser;
 import net.mindengine.galen.browser.SeleniumBrowserFactory;
+import net.mindengine.galen.browser.SeleniumGridBrowserFactory;
 import net.mindengine.galen.config.GalenConfig;
 import net.mindengine.galen.reports.TestReport;
 import net.mindengine.galen.runner.CompleteListener;
@@ -36,6 +38,7 @@ import net.mindengine.galen.tests.TestSession;
 
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.OutputType;
+import org.openqa.selenium.Platform;
 import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
 
@@ -163,6 +166,22 @@ public class GalenUtils {
         }
         
         return browser.getDriver();
+    }
+    
+    public static WebDriver createGridDriver(String gridUrl, String browserName, String browserVersion, String platform, Map<String, String> desiredCapabilities) {
+        SeleniumGridBrowserFactory factory = new SeleniumGridBrowserFactory(gridUrl);
+        factory.setBrowser(browserName);
+        factory.setBrowserVersion(browserVersion);
+        
+        if (platform != null) {
+            factory.setPlatform(Platform.valueOf(platform));
+        }
+        
+        if (desiredCapabilities != null) {
+            factory.setDesiredCapabilites(desiredCapabilities);
+        }
+        
+        return ((SeleniumBrowser)factory.openBrowser()).getDriver();
     }
     
     /**

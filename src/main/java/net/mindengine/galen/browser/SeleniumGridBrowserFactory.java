@@ -166,5 +166,9 @@ public class SeleniumGridBrowserFactory implements BrowserFactory {
         desiredCapabilities.put(name, value);
         return this;
     }
+    
+    public void setDesiredCapabilites(Map<String, String> desiredCapabilities) {
+        this.desiredCapabilities = desiredCapabilities;
+    }
 
 }
