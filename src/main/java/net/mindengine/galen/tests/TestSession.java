@@ -11,17 +11,20 @@ public class TestSession {
     
     private static final ThreadLocal<TestSession> _sessions = new ThreadLocal<TestSession>();
     private GalenTestInfo testInfo;
+    private GalenTest test;
     private Map<String, Object> data = new HashMap<String, Object>();
     private TestReport report;
     private CompleteListener listener;
     
-    private TestSession(GalenTestInfo testInfo) {
+    private TestSession(GalenTestInfo testInfo, GalenTest test) {
         this.setTestInfo(testInfo);
+        this.setTest(test);
     }
 
-    public static TestSession register(GalenTestInfo info) {
-        TestSession session = new TestSession(info);
+    public static TestSession register(GalenTestInfo info, GalenTest test) {
+        TestSession session = new TestSession(info, test);
         _sessions.set(session);
+        
         return session;
     }
 
@@ -62,5 +65,13 @@ public class TestSession {
     }
     public CompleteListener getListener() {
         return this.listener;
+    }
+
+    public GalenTest getTest() {
+        return test;
+    }
+
+    public void setTest(GalenTest test) {
+        this.test = test;
     }
 }

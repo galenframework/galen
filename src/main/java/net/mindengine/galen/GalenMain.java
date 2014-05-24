@@ -277,7 +277,7 @@ public class GalenMain {
                         TestReport report = new TestReport();
                         info.setReport(report);
                         
-                        TestSession session = TestSession.register(info);
+                        TestSession session = TestSession.register(info, test);
                         session.setReport(report);
                         session.setListener(listener);
                         
