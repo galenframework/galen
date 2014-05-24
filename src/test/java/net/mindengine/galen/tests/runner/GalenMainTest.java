@@ -17,6 +17,7 @@ package net.mindengine.galen.tests.runner;
 
 import static java.util.Arrays.asList;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.hasItems;
 import static org.hamcrest.Matchers.is;
@@ -37,6 +38,7 @@ import net.mindengine.galen.runner.GalenArguments;
 import net.mindengine.galen.tests.GalenTest;
 
 import org.apache.commons.io.FileUtils;
+import org.hamcrest.Matchers;
 import org.testng.annotations.Test;
 
 import com.google.common.io.Files;
@@ -146,6 +148,25 @@ public class GalenMainTest {
         assertThat(htmlReportContent, containsString("<a href=\"report-2-test-number-2.html\">Test number 2</a>"));
         assertThat(htmlReportContent, containsString("<a href=\"report-3-test-number-3.html\">Test number 3</a>"));
         assertThat(htmlReportContent, containsString("<div class=\"status failed\">1</div>"));
+    }
+    
+    @Test public void shouldRun_javascriptTestWithEvents() throws Exception {
+        JsTestRegistry.get().clear();
+        
+        new GalenMain().execute(new GalenArguments()
+            .withAction("test")
+            .withPaths(asList(getClass().getResource("/js-tests/with-events.test.js").getFile()))
+        );
+        
+        assertThat(JsTestRegistry.get().getEvents(), contains(
+                "Before test suite",
+                "Before test: Test number 1",
+                "Test #1 was invoked",
+                "After test: Test number 1",
+                "Before test: Test number 2",
+                "Test #2 was invoked",
+                "After test: Test number 2",
+                "After test suite"));     
     }
     
     @Test public void shouldFindAndRun_allTestsRecursivelly_inParallel() throws IOException, SecurityException, IllegalArgumentException, ClassNotFoundException, NoSuchMethodException, InstantiationException, IllegalAccessException, InvocationTargetException {

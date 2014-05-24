@@ -14,6 +14,7 @@ public class JsTestRegistry {
     private List<String> events = new LinkedList<String>();
     
     public void registerEvent(String name) {
+        System.out.println(name);
         this.events.add(name);
     }
     

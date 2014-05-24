@@ -40,6 +40,7 @@ import net.mindengine.galen.reports.TestNgReportBuilder;
 import net.mindengine.galen.reports.TestReport;
 import net.mindengine.galen.runner.CombinedListener;
 import net.mindengine.galen.runner.CompleteListener;
+import net.mindengine.galen.runner.EventHandler;
 import net.mindengine.galen.runner.GalenArguments;
 import net.mindengine.galen.runner.JsTestCollector;
 import net.mindengine.galen.runner.SuiteListener;
@@ -55,6 +56,7 @@ import net.mindengine.galen.validation.FailureListener;
 
 import org.apache.commons.cli.ParseException;
 import org.apache.commons.io.IOUtils;
+
 
 public class GalenMain {
     
@@ -168,7 +170,7 @@ public class GalenMain {
             galenTests.add(test);
         }
         
-        runTests(arguments, galenTests, listener);
+        runTests(new EventHandler(), arguments, galenTests, listener);
     }
 
     private void verifyArgumentsForPageCheck(GalenArguments arguments) {
@@ -236,21 +238,24 @@ public class GalenMain {
             testCollector.execute(jsFile);
         }
         
+        testCollector.getEventHandler().invokeBeforeTestSuiteEvents();
         
-        runTests(arguments, tests, listener);
+        runTests(testCollector.getEventHandler(), arguments, tests, listener);
+        
+        testCollector.getEventHandler().invokeAfterTestSuiteEvents();
     }
 
-    private void runTests(GalenArguments arguments, List<GalenTest> tests, CompleteListener listener) {
+    private void runTests(EventHandler eventHandler, GalenArguments arguments, List<GalenTest> tests, CompleteListener listener) {
         
         if (arguments.getParallelSuites() > 1) {
-            runTestsInThreads(tests, arguments, listener, arguments.getParallelSuites());
+            runTestsInThreads(eventHandler, tests, arguments, listener, arguments.getParallelSuites());
         }
         else {
-            runTestsInThreads(tests, arguments, listener, 1);
+            runTestsInThreads(eventHandler, tests, arguments, listener, 1);
         }
     }
 
-    private void runTestsInThreads(List<GalenTest> tests, GalenArguments arguments, final CompleteListener listener, int amountOfThreads) {
+    private void runTestsInThreads(final EventHandler eventHandler, List<GalenTest> tests, GalenArguments arguments, final CompleteListener listener, int amountOfThreads) {
         ExecutorService executor = Executors.newFixedThreadPool(amountOfThreads);
         
         Pattern filterPattern = createTestFilter(arguments.getFilter());
@@ -275,8 +280,11 @@ public class GalenMain {
                         TestSession session = TestSession.register(info);
                         session.setReport(report);
                         session.setListener(listener);
-                        tellTestStarted(listener, test);
                         
+                        
+                        eventHandler.invokeBeforeTestEvents(info);
+                        
+                        tellTestStarted(listener, test);
                         try {
                             test.execute(report, listener);
                         }
@@ -286,7 +294,10 @@ public class GalenMain {
                         }
                         info.setEndedAt(new Date());
                         
+                        eventHandler.invokeAfterTestEvents(info);
                         tellTestFinished(listener, test);
+                        
+                        
                         
                         TestSession.clear();
                     }

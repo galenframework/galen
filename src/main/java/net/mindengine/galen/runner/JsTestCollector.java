@@ -13,6 +13,7 @@ import net.mindengine.galen.tests.GalenTest;
 public class JsTestCollector {
 
     private List<GalenTest> collectedTests = new LinkedList<GalenTest>();
+    private EventHandler eventHandler = new EventHandler();
 
     public JsTestCollector(List<GalenTest> tests) {
         this.collectedTests = tests;
@@ -35,6 +36,14 @@ public class JsTestCollector {
     
     public List<GalenTest> getCollectedTests() {
         return this.collectedTests;
+    }
+
+    public EventHandler getEventHandler() {
+        return eventHandler;
+    }
+
+    public void setEventHandler(EventHandler eventHandler) {
+        this.eventHandler = eventHandler;
     }
 
 }
