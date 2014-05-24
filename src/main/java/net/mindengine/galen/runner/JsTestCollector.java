@@ -8,6 +8,8 @@ import java.util.LinkedList;
 import java.util.List;
 
 import net.mindengine.galen.javascript.GalenJsExecutor;
+import net.mindengine.galen.runner.events.TestEvent;
+import net.mindengine.galen.runner.events.TestSuiteEvent;
 import net.mindengine.galen.tests.GalenTest;
 
 public class JsTestCollector {
@@ -44,6 +46,23 @@ public class JsTestCollector {
 
     public void setEventHandler(EventHandler eventHandler) {
         this.eventHandler = eventHandler;
+    }
+    
+    
+    public void addBeforeTestSuiteEvent(TestSuiteEvent event) {
+        eventHandler.getBeforeTestSuiteEvents().add(event);
+    }
+    
+    public void addAfterTestSuiteEvent(TestSuiteEvent event) {
+        eventHandler.getAfterTestSuiteEvents().add(event);
+    }
+    
+    public void addBeforeTestEvent(TestEvent event) {
+        eventHandler.getBeforeTestEvents().add(event);
+    }
+    
+    public void addAfterTestEvent(TestEvent event) {
+        eventHandler.getAfterTestEvents().add(event);
     }
 
 }

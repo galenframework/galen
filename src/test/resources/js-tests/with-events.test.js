@@ -23,25 +23,25 @@ _galenCore.addTest(new GalenTest({
 
 
 
-_galenCore.getEventHandler().getBeforeTestEvents().add(new TestEvent({
+_galenCore.addBeforeTestEvent(new TestEvent({
     execute: function (test) {
         JsTestRegistry.get().registerEvent("Before test: " + test.getName());
     }
 }));
 
-_galenCore.getEventHandler().getAfterTestEvents().add(new TestEvent({
+_galenCore.addAfterTestEvent(new TestEvent({
     execute: function (test) {
         JsTestRegistry.get().registerEvent("After test: " + test.getName());
     }
 }));
 
-_galenCore.getEventHandler().getBeforeTestSuiteEvents().add(new TestSuiteEvent({
+_galenCore.addBeforeTestSuiteEvent(new TestSuiteEvent({
     execute: function () {
         JsTestRegistry.get().registerEvent("Before test suite");
     }
 }));
 
-_galenCore.getEventHandler().getAfterTestSuiteEvents().add(new TestSuiteEvent({
+_galenCore.addAfterTestSuiteEvent(new TestSuiteEvent({
     execute: function () {
         JsTestRegistry.get().registerEvent("After test suite");
     }
