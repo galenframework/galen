@@ -24,6 +24,7 @@ import net.mindengine.galen.browser.Browser;
 import net.mindengine.galen.reports.TestReport;
 import net.mindengine.galen.suite.GalenPageTest;
 import net.mindengine.galen.suite.actions.GalenPageActionProperties;
+import net.mindengine.galen.tests.TestSession;
 import net.mindengine.galen.validation.ValidationListener;
 
 import org.hamcrest.Matchers;
@@ -35,6 +36,7 @@ public class GalenPageActionPropertiesTest {
     private static final ValidationListener NO_LISTENER = null;
 
     @Test public void shouldLoadProperties_fromSpecifiedFiles() throws Exception {
+        TestSession.register(null, null);
         
         System.getProperties().remove("page.title");
         System.getProperties().remove("page.download.caption");
@@ -45,9 +47,11 @@ public class GalenPageActionPropertiesTest {
         
         action.execute(new TestReport(), NO_BROWSER, new GalenPageTest(), NO_LISTENER);
         
-        assertThat("System property page.title should be", System.getProperty("page.title"), Matchers.is("Home page"));
-        assertThat("System property page.download.caption should be", System.getProperty("page.download.caption"), Matchers.is("Take it!"));
-        assertThat("System property login.link should be", System.getProperty("login.link"), Matchers.is("Sign in"));
+        assertThat("System property page.title should be", TestSession.current().getProperties().get("page.title"), Matchers.is("Home page"));
+        assertThat("System property page.download.caption should be", TestSession.current().getProperties().get("page.download.caption"), Matchers.is("Take it!"));
+        assertThat("System property login.link should be", TestSession.current().getProperties().get("login.link"), Matchers.is("Sign in"));
+        
+        TestSession.clear();
     }
     
     @Test(expectedExceptions=FileNotFoundException.class,

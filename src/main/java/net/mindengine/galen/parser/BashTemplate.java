@@ -19,6 +19,7 @@ import java.util.Map;
 
 import net.mindengine.galen.specs.reader.StringCharReader;
 import net.mindengine.galen.suite.reader.Context;
+import net.mindengine.galen.tests.TestSession;
 
 import org.mozilla.javascript.BaseFunction;
 import org.mozilla.javascript.ImporterTopLevel;
@@ -89,8 +90,12 @@ public class BashTemplate {
         if (expression.matches("[a-zA-Z0-9..._]*")) {
             Object value = context.getValue(expression);
             if (value == null) {
-                //Looking for value in system properties
-                value = System.getProperty(expression, "");
+                //Looking for value in test session galen properties
+                
+                if (TestSession.current() != null) {
+                    return TestSession.current().getProperties().get(expression, "");
+                }
+                else return System.getProperty(expression, "");
             }
             return value;
         }

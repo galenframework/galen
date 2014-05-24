@@ -30,6 +30,7 @@ public class TestSession {
     private Map<String, Object> data = new HashMap<String, Object>();
     private TestReport report;
     private CompleteListener listener;
+    private GalenProperties properties = new GalenProperties();
     
     private TestSession(GalenTestInfo testInfo, GalenTest test) {
         this.setTestInfo(testInfo);
@@ -88,5 +89,13 @@ public class TestSession {
 
     public void setTest(GalenTest test) {
         this.test = test;
+    }
+
+    public GalenProperties getProperties() {
+        return properties;
+    }
+
+    public void setProperties(GalenProperties properties) {
+        this.properties = properties;
     }
 }

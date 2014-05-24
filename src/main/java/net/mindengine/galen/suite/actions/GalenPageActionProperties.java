@@ -24,6 +24,7 @@ import net.mindengine.galen.browser.Browser;
 import net.mindengine.galen.reports.TestReport;
 import net.mindengine.galen.suite.GalenPageAction;
 import net.mindengine.galen.suite.GalenPageTest;
+import net.mindengine.galen.tests.TestSession;
 import net.mindengine.galen.validation.ValidationListener;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
@@ -45,8 +46,7 @@ public class GalenPageActionProperties extends GalenPageAction {
                 else if (!file.isFile()) {
                     throw new FileNotFoundException("Not a file: " + filePath);
                 }
-                
-                System.getProperties().load(new FileReader(file));
+                TestSession.current().getProperties().load(new FileReader(file));
             }
         }
     }
