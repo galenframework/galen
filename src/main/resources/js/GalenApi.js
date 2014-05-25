@@ -60,6 +60,9 @@ function logged(title, callback) {
     return result;
 }
 
+function takeScreenshot(driver) {
+    return GalenUtils.takeScreenshot(driver);
+}
 
 var session = {
     put: function (name, value) {
@@ -86,4 +89,5 @@ var session = {
     exports.logged = logged;
     exports.checkLayout = checkLayout;
     exports.session = session;
+    exports.takeScreenshot = takeScreenshot;
 })(this);
