@@ -329,3 +329,41 @@ li.report-status-warn, li.report-status-warn > a {
 .stacktrace {
     white-space: pre;
 }
+
+
+ul.report ul.attachments {
+    list-style: none;
+    margin: 10px;
+}
+
+ul.report ul.attachments li {
+    display: inline-block;
+
+}
+ul.report ul.attachments li a {
+    position: relative;
+    display: inline-block;
+    color: white;
+    background: #1271C4;
+    text-decoration: none;
+    padding: 8px 8px 8px 42px;
+    height: 30px;
+    border-radius: 5px;
+}
+ul.report ul.attachments li a:hover {
+    background: #DE5900;
+}
+ul.report ul.attachments li a svg {
+    position: absolute;
+    left: 8px;
+}
+ul.report ul.attachments li a span {
+    display: inline-block;
+    padding-top: 6px;
+    vertical-align: center;
+    white-space: nowrap;
+}
+
+iconset {
+    display: none;
+}

@@ -119,6 +119,17 @@ var Galen = {
             $(this).parents("div.report-container").removeClass("collapsed").show();
             $(this).parents("a.report-link").removeClass("collapsed");
         });
+
+
+        var svgDownload = $("iconset .icon-download");
+
+        $("ul.report ul.attachments a").each(function () {
+            var el = $(this);
+            var html = el.html();
+            el.html("");
+            svgDownload.clone().appendTo(el);
+            el.append("<span>" + html + "</span>");
+        });
     },
     makeSliding: function (selector) {
         $(selector).click(Galen.onSlidingElementClicked);
