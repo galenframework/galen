@@ -205,4 +205,8 @@ public class GalenUtils {
         CompleteListener listener = TestSession.current().getListener();
         action.execute(report, new SeleniumBrowser(driver), null, listener);
     }
+    
+    public static File takeScreenshot(WebDriver driver) {
+        return ((TakesScreenshot)driver).getScreenshotAs(OutputType.FILE);
+    }
 }
