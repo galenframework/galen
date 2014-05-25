@@ -269,7 +269,7 @@ public class GalenMain {
                     @Override
                     public void run() {
                         
-                        GalenTestInfo info = new GalenTestInfo();
+                        GalenTestInfo info = new GalenTestInfo(test);
                         testInfos.add(info);
                         info.setName(test.getName());
                         

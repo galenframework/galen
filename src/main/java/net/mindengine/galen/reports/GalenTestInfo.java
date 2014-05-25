@@ -17,6 +17,8 @@ package net.mindengine.galen.reports;
 
 import java.util.Date;
 
+import net.mindengine.galen.tests.GalenTest;
+
 public class GalenTestInfo {
 
     private String name;
@@ -24,8 +26,17 @@ public class GalenTestInfo {
     private Throwable exception;
     private Date startedAt;
     private Date endedAt;
+    private GalenTest testInstance;
     
     
+    public GalenTestInfo(GalenTest test) {
+        setTestInstance(test);
+    }
+    
+    public boolean isFailed() {
+        return exception != null || report.fetchStatistic().getErrors() > 0;
+    }
+
     public String getName() {
         return name;
     }
@@ -64,6 +75,14 @@ public class GalenTestInfo {
 
     public void setEndedAt(Date endedAt) {
         this.endedAt = endedAt;
+    }
+
+    public GalenTest getTestInstance() {
+        return testInstance;
+    }
+
+    public void setTestInstance(GalenTest testInstance) {
+        this.testInstance = testInstance;
     }
     
 }
