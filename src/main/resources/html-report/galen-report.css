@@ -318,7 +318,7 @@ li.report-status-passed,  li.report-status-passed > a {
     color: #000;
 }
 
-li.report-status-error, li.report-status-error > a{
+li.report-status-error > div.report-caption, li.report-status-error > a{
     color: #AD1B0A;
 }
 
