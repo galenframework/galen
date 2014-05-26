@@ -22,6 +22,7 @@ import net.mindengine.galen.browser.Browser;
 import net.mindengine.galen.page.Page;
 import net.mindengine.galen.reports.LayoutReportNode;
 import net.mindengine.galen.reports.TestReport;
+import net.mindengine.galen.reports.TestReportNode;
 import net.mindengine.galen.reports.model.LayoutReport;
 import net.mindengine.galen.specs.page.PageSection;
 import net.mindengine.galen.specs.reader.page.PageSpec;
@@ -34,6 +35,7 @@ import net.mindengine.galen.validation.CombinedValidationListener;
 import net.mindengine.galen.validation.PageValidation;
 import net.mindengine.galen.validation.SectionValidation;
 import net.mindengine.galen.validation.LayoutReportListener;
+import net.mindengine.galen.validation.ValidationError;
 import net.mindengine.galen.validation.ValidationListener;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
@@ -67,11 +69,13 @@ public class GalenPageActionCheck extends GalenPageAction {
         
         
         String reportTitle = "Check layout: " + toCommaSeparated(getSpecs()) + " included tags: " + toCommaSeparated(getIncludedTags());
-        report.addNode(new LayoutReportNode(layoutReport, reportTitle));
+        TestReportNode layoutReportNode = report.addNode(new LayoutReportNode(layoutReport, reportTitle));
         
         Page page = browser.getPage();
         PageSpecReader pageSpecReader = new PageSpecReader(browser);
         
+        
+        boolean isFailed = false;
         for (String specFile : specs) {
             PageSpec spec = pageSpecReader.read(GalenUtils.findFile(specFile));
             
@@ -79,8 +83,16 @@ public class GalenPageActionCheck extends GalenPageAction {
             List<PageSection> pageSections = spec.findSections(sectionFilter);
             SectionValidation sectionValidation = new SectionValidation(pageSections, new PageValidation(browser, page, spec, listener, sectionFilter), listener);
             
-            sectionValidation.check();
+            List<ValidationError> errors = sectionValidation.check();
+            if (errors != null && errors.size() > 0) {
+                isFailed = true;
+            }
         }
+        
+        if (isFailed) {
+            layoutReportNode.setStatus(TestReportNode.Status.ERROR);
+        }
+        
     }
 
     private String toCommaSeparated(List<String> list) {

@@ -73,7 +73,7 @@ public class ReportingTest {
         
         List<GalenTestInfo> testInfos = new LinkedList<GalenTestInfo>();
         
-        GalenTestInfo testInfo = new GalenTestInfo();
+        GalenTestInfo testInfo = new GalenTestInfo(null);
         testInfo.setName("Home page test");
         testInfo.setReport(new TestReport());
         testInfo.setStartedAt(new Date(1399741000000L));
@@ -81,7 +81,7 @@ public class ReportingTest {
         testInfo.setException(new FakeException("Some exception here"));
         testInfos.add(testInfo);
         
-        testInfo = new GalenTestInfo();
+        testInfo = new GalenTestInfo(null);
         testInfo.setName("Login page test");
         testInfo.setReport(new TestReport());
         testInfo.setStartedAt(new Date(1399741000000L));
@@ -103,7 +103,7 @@ public class ReportingTest {
         
         List<GalenTestInfo> testInfos = new LinkedList<GalenTestInfo>();
         
-        GalenTestInfo testInfo = new GalenTestInfo();
+        GalenTestInfo testInfo = new GalenTestInfo(null);
         testInfo.setName("Home page test");
         File attachmentFile = new File(Files.createTempDir().getAbsolutePath() + File.separator + "custom.txt");
         attachmentFile.createNewFile();
@@ -126,7 +126,7 @@ public class ReportingTest {
         
         List<GalenTestInfo> testInfos = new LinkedList<GalenTestInfo>();
         
-        GalenTestInfo testInfo = new GalenTestInfo();
+        GalenTestInfo testInfo = new GalenTestInfo(null);
         testInfo.setName("Home page test");
         TestReport report = new TestReport();
         LayoutReport layoutReport = new LayoutReport();

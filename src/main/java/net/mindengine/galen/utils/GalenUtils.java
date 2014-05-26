@@ -34,8 +34,11 @@ import net.mindengine.galen.config.GalenConfig;
 import net.mindengine.galen.reports.TestReport;
 import net.mindengine.galen.runner.CompleteListener;
 import net.mindengine.galen.suite.actions.GalenPageActionCheck;
+import net.mindengine.galen.tests.GalenProperties;
 import net.mindengine.galen.tests.TestSession;
 
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang3.StringEscapeUtils;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.Platform;
@@ -208,5 +211,30 @@ public class GalenUtils {
     
     public static File takeScreenshot(WebDriver driver) {
         return ((TakesScreenshot)driver).getScreenshotAs(OutputType.FILE);
+    }
+    
+    public static GalenProperties loadProperties(String fileName) throws IOException {
+        
+        GalenProperties properties = null;
+        if (TestSession.current() != null) {
+            properties = TestSession.current().getProperties();
+        }
+        else properties = new GalenProperties();
+        
+        properties.load(new File(fileName));
+        return properties;
+    }
+    
+    public static void cookie(WebDriver driver, String cookie) {
+        String script = "document.cookie=\"" + StringEscapeUtils.escapeJava(cookie) + "\";";
+        injectJavascript(driver, script);
+    }
+    
+    public static Object injectJavascript(WebDriver driver, String script) {
+        return ((JavascriptExecutor)driver).executeScript(script);
+    }
+    
+    public static String readFile(String fileName) throws IOException {
+        return FileUtils.readFileToString(new File(fileName));
     }
 }

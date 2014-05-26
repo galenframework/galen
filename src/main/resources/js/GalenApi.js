@@ -64,6 +64,26 @@ function takeScreenshot(driver) {
     return GalenUtils.takeScreenshot(driver);
 }
 
+
+function loadProperties(fileName) {
+    return GalenUtils.loadProperties(fileName);
+}
+
+function cookie(driver, cookie) {
+    logged("Setting cookie: " + cookie, function () {
+        GalenUtils.cookie(driver, cookie);
+    });
+}
+
+function inject(driver, script) {
+    return GalenUtils.injectJavascript(driver, script);
+}
+
+function readFile(fileName) {
+    return GalenUtils.readFile(fileName);
+}
+
+
 var session = {
     put: function (name, value) {
         TestSession.current().put(name, value);
@@ -90,4 +110,8 @@ var session = {
     exports.checkLayout = checkLayout;
     exports.session = session;
     exports.takeScreenshot = takeScreenshot;
+    exports.loadProperties = loadProperties;
+    exports.cookie = cookie;
+    exports.inject = inject;
+    exports.readFile = readFile;
 })(this);

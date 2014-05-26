@@ -156,7 +156,7 @@ public class ReportingListenerTestUtils {
     }
 
     private static void tellAfterSuite(SuiteListener suiteListener) {
-        GalenTestInfo test = new GalenTestInfo();
+        GalenTestInfo test = new GalenTestInfo(null);
         test.setName("page1.test");
         TestReport report = new TestReport();
         for (int i=0; i< 6; i++) {

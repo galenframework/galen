@@ -14,6 +14,84 @@
  * limitations under the License.
  * ******************************************************************************/
 
+var GalenCore = {
+    parametersStack: {
+        stack: [],
+        add: function (parameters) {
+            this.stack.push(parameters);
+        },
+        pop: function () {
+            if (this.stack.length > 0) {
+                this.stack.pop();
+            }
+        },
+        last: function() {
+            if (this.stack.length > 0) {
+                return this.stack[this.stack.length - 1];
+            }
+            else return null;
+        }
+    },
+    processVariable: function (varName) {
+        var args = GalenCore.parametersStack.last();
+
+        if (args != null) {
+            if (args.length == 1) {
+                if (args[0] != null && typeof args[0] == "object") {
+                    var argObject = args[0];
+
+                    var value = eval("argObject." + varName);
+                    return value;
+                }
+            }
+        }
+        return "";
+    },
+    processTestName: function (name) {
+        var parameters = this.parametersStack.last();
+        if (parameters != null) {
+
+            var text = "";
+
+            var processing = true;
+
+            var id = 0;
+
+            var varName = "";
+            // 0 - appending to text, 1 - appending to varName
+            var state = 0;
+            while(processing) {
+                var sym = name.charAt(id);
+                if (sym == "$" && id < name.length - 1 && name.charAt(id + 1) == "{") {
+                    varName = "";
+                    id++;
+                    state = 1;
+                }
+                else if (state == 1 && name.charAt(id) == "}") {
+                    state = 0;
+                    if (varName.length > 0) {
+                        text = text + GalenCore.processVariable(varName);
+                    }
+                }
+                else {
+                    if (state == 0) {
+                        text = text + sym;
+                    }
+                    else {
+                        varName = varName + sym;
+                    }
+
+                }
+
+                id++;
+                processing = (id < name.length);
+            }
+
+            return text;
+        }
+        else return name;
+    }
+};
 
 function test(name, callback) {
     var callbacks = [];
@@ -21,9 +99,9 @@ function test(name, callback) {
         callbacks = [callback];
     }
     var aTest = {
-        testName: name,
+        testName: GalenCore.processTestName(name),
         callbacks: callbacks,
-        arguments: null,
+        arguments: GalenCore.parametersStack.last(),
         on: function (arguments, callback) {
             if (Array.isArray(arguments)){
                 this.arguments = arguments;
@@ -51,8 +129,8 @@ function test(name, callback) {
             return _galenCore.checkLayout(this.report, driver, includedTags, excludedTags);
         },
         execute: function (report, listener) {
-            this.report = report;
-            this.listener = listener;
+            this.report = report || null;
+            this.listener = listener || null;
             if (this.callbacks != null) {
                 for (var i = 0; i < this.callbacks.length; i++) {
                     invokeFunc(this.arguments, this.callbacks[i]);
@@ -68,14 +146,19 @@ function test(name, callback) {
 
 function parameterizeByArray(rows, callback) {
     for (var i = 0; i<rows.length; i++) {
+        GalenCore.parametersStack.add(rows[i]);
         invokeFunc(rows[i], callback);
+        GalenCore.parametersStack.pop();
     }
 };
 
 function parameterizeByMap(map, callback) {
     for (key in map) {
         if (map.hasOwnProperty(key)) {
-            callback(key, map[key]);
+
+            GalenCore.parametersStack.add([map[key]]);
+            callback(map[key]);
+            GalenCore.parametersStack.pop();
         }
     }
 }
@@ -170,6 +253,7 @@ function retry(times, callback) {
     }
     else return callback();
 }
+
 
 
 (function (exports) {
