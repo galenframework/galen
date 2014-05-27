@@ -171,7 +171,7 @@ public class GalenUtils {
         return browser.getDriver();
     }
     
-    public static WebDriver createGridDriver(String gridUrl, String browserName, String browserVersion, String platform, Map<String, String> desiredCapabilities) {
+    public static WebDriver createGridDriver(String gridUrl, String browserName, String browserVersion, String platform, Map<String, String> desiredCapabilities, String size) {
         SeleniumGridBrowserFactory factory = new SeleniumGridBrowserFactory(gridUrl);
         factory.setBrowser(browserName);
         factory.setBrowserVersion(browserVersion);
@@ -184,9 +184,19 @@ public class GalenUtils {
             factory.setDesiredCapabilites(desiredCapabilities);
         }
         
-        return ((SeleniumBrowser)factory.openBrowser()).getDriver();
+        WebDriver driver = ((SeleniumBrowser)factory.openBrowser()).getDriver();
+        
+        GalenUtils.resizeDriver(driver, size);
+        return driver;
     }
     
+    private static void resizeDriver(WebDriver driver, String sizeText) {
+        if (sizeText != null && !sizeText.trim().isEmpty()) {
+            Dimension size = GalenUtils.readSize(sizeText);
+            driver.manage().window().setSize(new org.openqa.selenium.Dimension(size.width, size.height));
+        }
+    }
+
     /**
      * Needed for Javascript based tests
      * @param driver
