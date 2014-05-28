@@ -14,7 +14,8 @@
  * limitations under the License.
  * ******************************************************************************/
 
-function createDriver(url, size) {
+
+function createDriver(url, size, browserType) {
 
     if (url == undefined) {
         url = null;
@@ -24,7 +25,11 @@ function createDriver(url, size) {
         size = null;
     }
 
-    var driver = GalenUtils.createDriver("firefox", url, size);
+    if (browserType == undefined || browserType == null) {
+        browserType = "firefox";
+    }
+
+    var driver = GalenUtils.createDriver(browserType, url, size);
     return driver;
 }
 
