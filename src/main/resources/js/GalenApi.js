@@ -41,9 +41,10 @@ function createGridDriver(url, attrs) {
     var browser = attr("browser");
     var browserVersion = attr("browserVersion");
     var platform = attr("platform");
+    var size = attr("size");
     var dc = attr("desiredCapabilities");
 
-    return GalenUtils.createGridDriver(url, browser, browserVersion, platform, dc);
+    return GalenUtils.createGridDriver(url, browser, browserVersion, platform, dc, size);
 }
 
 
