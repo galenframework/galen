@@ -15,6 +15,41 @@
  * ******************************************************************************/
 
 var GalenCore = {
+    settings: {
+        parameterization: {
+            stackBackwards: false
+        }
+    },
+    futureData: {
+        stack: [],
+        push: function (name, value) {
+            this.stack.push({
+                name: name,
+                value: value
+            });
+        },
+        pop: function () {
+            if (this.stack.length > 0) {
+                this.stack.pop();
+            }
+        },
+        fetchAll: function () {
+            var data = {};
+            for (var i = 0; i < this.stack.length; i++) {
+                var name = this.stack[i].name;
+                var value = this.stack[i].value;
+
+
+                if (data[name] == null || data[name] == undefined) {
+                    data[name] = [value];
+                }
+                else {
+                    data[name].push(value);
+                }
+            }
+            return data;
+        }
+    },
     parametersStack: {
         stack: [],
         add: function (parameters) {
@@ -30,6 +65,25 @@ var GalenCore = {
                 return this.stack[this.stack.length - 1];
             }
             else return null;
+        },
+        fetchAll: function () {
+            var args = [];
+
+            if (GalenCore.settings.parameterization.stackBackwards) {
+                for (var i = this.stack.length - 1; i >= 0; i--) {
+                    for (var j = 0; j < this.stack[i].length; j++) {
+                        args.push(this.stack[i][j]);
+                    }
+                }
+            }
+            else {
+                for (var i = 0; i < this.stack.length; i++) {
+                    for (var j = 0; j < this.stack[i].length; j++) {
+                        args.push(this.stack[i][j]);
+                    }
+                }
+            }
+            return args;
         }
     },
     processVariable: function (varName) {
@@ -101,7 +155,8 @@ function test(name, callback) {
     var aTest = {
         testName: GalenCore.processTestName(name),
         callbacks: callbacks,
-        arguments: GalenCore.parametersStack.last(),
+        arguments: GalenCore.parametersStack.fetchAll(),
+        data: GalenCore.futureData.fetchAll(),
         on: function (arguments, callback) {
             if (Array.isArray(arguments)){
                 this.arguments = arguments;
@@ -133,7 +188,7 @@ function test(name, callback) {
             this.listener = listener || null;
             if (this.callbacks != null) {
                 for (var i = 0; i < this.callbacks.length; i++) {
-                    invokeFunc(this.arguments, this.callbacks[i]);
+                    invokeFunc(this, this.arguments, this.callbacks[i]);
                 }
             }
         }
@@ -147,7 +202,7 @@ function test(name, callback) {
 function parameterizeByArray(rows, callback) {
     for (var i = 0; i<rows.length; i++) {
         GalenCore.parametersStack.add(rows[i]);
-        invokeFunc(rows[i], callback);
+        invokeFunc(this, rows[i], callback);
         GalenCore.parametersStack.pop();
     }
 };
@@ -163,29 +218,29 @@ function parameterizeByMap(map, callback) {
     }
 }
 
-function invokeFunc(args, callback) {
+function invokeFunc(object, args, callback) {
     if (args == undefined || args == null) {
-        return callback();
+        return callback.call(object);
     }
 
     switch(args.length) {
-    case 0: return callback();
-    case 1: return callback(args[0]);
-    case 2: return callback(args[0], args[1]);
-    case 3: return callback(args[0], args[1], args[2]);
-    case 4: return callback(args[0], args[1], args[2], args[3]);
-    case 5: return callback(args[0], args[1], args[2], args[3], args[4]);
-    case 6: return callback(args[0], args[1], args[2], args[3], args[4], args[5]);
-    case 7: return callback(args[0], args[1], args[2], args[3], args[4], args[5], args[6]);
-    case 8: return callback(args[0], args[1], args[2], args[3], args[4], args[5], args[6], args[7]);
-    case 9: return callback(args[0], args[1], args[2], args[3], args[4], args[5], args[6], args[7], args[8]);
-    case 10: return callback(args[0], args[1], args[2], args[3], args[4], args[5], args[6], args[7], args[8], args[9]);
-    case 11: return callback(args[0], args[1], args[2], args[3], args[4], args[5], args[6], args[7], args[8], args[9], args[10]);
-    case 12: return callback(args[0], args[1], args[2], args[3], args[4], args[5], args[6], args[7], args[8], args[9], args[10], args[11]);
-    case 13: return callback(args[0], args[1], args[2], args[3], args[4], args[5], args[6], args[7], args[8], args[9], args[10], args[11], args[12]);
-    case 14: return callback(args[0], args[1], args[2], args[3], args[4], args[5], args[6], args[7], args[8], args[9], args[10], args[11], args[12], args[13]);
-    case 15: return callback(args[0], args[1], args[2], args[3], args[4], args[5], args[6], args[7], args[8], args[9], args[10], args[11], args[12], args[13], args[14]);
-    case 16: return callback(args[0], args[1], args[2], args[3], args[4], args[5], args[6], args[7], args[8], args[9], args[10], args[11], args[12], args[13], args[14], args[15]);
+    case 0: return callback.call(object);
+    case 1: return callback.call(object, args[0]);
+    case 2: return callback.call(object, args[0], args[1]);
+    case 3: return callback.call(object, args[0], args[1], args[2]);
+    case 4: return callback.call(object, args[0], args[1], args[2], args[3]);
+    case 5: return callback.call(object, args[0], args[1], args[2], args[3], args[4]);
+    case 6: return callback.call(object, args[0], args[1], args[2], args[3], args[4], args[5]);
+    case 7: return callback.call(object, args[0], args[1], args[2], args[3], args[4], args[5], args[6]);
+    case 8: return callback.call(object, args[0], args[1], args[2], args[3], args[4], args[5], args[6], args[7]);
+    case 9: return callback.call(object, args[0], args[1], args[2], args[3], args[4], args[5], args[6], args[7], args[8]);
+    case 10: return callback.call(object, args[0], args[1], args[2], args[3], args[4], args[5], args[6], args[7], args[8], args[9]);
+    case 11: return callback.call(object, args[0], args[1], args[2], args[3], args[4], args[5], args[6], args[7], args[8], args[9], args[10]);
+    case 12: return callback.call(object, args[0], args[1], args[2], args[3], args[4], args[5], args[6], args[7], args[8], args[9], args[10], args[11]);
+    case 13: return callback.call(object, args[0], args[1], args[2], args[3], args[4], args[5], args[6], args[7], args[8], args[9], args[10], args[11], args[12]);
+    case 14: return callback.call(object, args[0], args[1], args[2], args[3], args[4], args[5], args[6], args[7], args[8], args[9], args[10], args[11], args[12], args[13]);
+    case 15: return callback.call(object, args[0], args[1], args[2], args[3], args[4], args[5], args[6], args[7], args[8], args[9], args[10], args[11], args[12], args[13], args[14]);
+    case 16: return callback.call(object, args[0], args[1], args[2], args[3], args[4], args[5], args[6], args[7], args[8], args[9], args[10], args[11], args[12], args[13], args[14], args[15]);
     }
 }
 
@@ -197,6 +252,15 @@ function forAll (data, callback) {
         return parameterizeByMap(data, callback);
     }
 };
+
+function forOnly(data, callback) {
+    if (Array.isArray(data)) {
+        return parameterizeByArray([data], callback);
+    }
+    else {
+        return parameterizeByArray([[data]], callback);
+    }
+}
 
 function beforeTestSuite(callback) {
     _galenCore.addBeforeTestSuiteEvent(new TestSuiteEvent({
@@ -254,14 +318,26 @@ function retry(times, callback) {
     else return callback();
 }
 
+function createTestDataProvider(varName) {
+    return function (varValue, callback) {
+
+        GalenCore.futureData.push(varName, varValue);
+        callback();
+        GalenCore.futureData.pop();
+    };
+}
+
 
 
 (function (exports) {
     exports.test = test;
     exports.forAll = forAll;
+    exports.forOnly = forOnly;
     exports.beforeTestSuite = beforeTestSuite;
     exports.afterTestSuite = afterTestSuite;
     exports.beforeTest = beforeTest;
     exports.afterTest = afterTest;
     exports.retry = retry;
+    exports.createTestDataProvider = createTestDataProvider;
+    exports.GalenCore = GalenCore;
 })(this);

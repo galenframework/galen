@@ -66,6 +66,18 @@ var GalenPages = {
         this.driver = driver;
         this.waitTimeout = "10s";
         this.waitPeriod = "1s";
+        this._report = function (name) {
+            try {
+                GalenPages.report(name);
+            }
+            catch (err) {
+
+            }
+        },
+        this.open = function (url) {
+            this._report("Open " + url);
+            this.driver.get(url);
+        },
         this.findChild = function (locator) {
             if (typeof locator == "string") {
                 locator = GalenPages.parseLocator(locator);
