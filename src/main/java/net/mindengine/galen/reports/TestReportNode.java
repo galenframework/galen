@@ -131,6 +131,11 @@ public class TestReportNode {
         this.addAttachment(new TestAttachment(name, file));
         return this;
     }
+    
+    public TestReportNode withAttachment(String name, String filePath) {
+        this.addAttachment(new TestAttachment(name, new File(filePath)));
+        return this;
+    }
 
     private synchronized void addAttachment(TestAttachment testAttachment) {
         if (attachments == null) {
