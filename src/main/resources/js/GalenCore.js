@@ -41,10 +41,22 @@ var GalenCore = {
 
 
                 if (data[name] == null || data[name] == undefined) {
-                    data[name] = [value];
+                    if (Array.isArray(value)) {
+                        data[name] = value;
+                    }
+                    else {
+                        data[name] = [value];
+                    }
                 }
                 else {
-                    data[name].push(value);
+                    if (Array.isArray(value)) {
+                        for (var k = 0; k < value.length; k++) {
+                            data[name].push(value[k]);
+                        }
+                    }
+                    else {
+                        data[name].push(value);
+                    }
                 }
             }
             return data;
