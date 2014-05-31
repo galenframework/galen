@@ -32,7 +32,9 @@ public class GalenProperties {
         this.load(new FileReader(file));
     }
 
-    
+    public Properties getProperties() {
+        return properties;
+    }
     public String get(String name) {
         String value = properties.getProperty(name);
         
