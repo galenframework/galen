@@ -321,13 +321,13 @@ function afterTest(callback) {
 function retry(times, callback) {
     if (times > 0) {
         try {
-            return callback();
+            return callback(times);
         }
         catch (ex) {
             return retry(times - 1, callback);
         }
     }
-    else return callback();
+    else return callback(times);
 }
 
 function createTestDataProvider(varName) {

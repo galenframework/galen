@@ -108,6 +108,14 @@ var session = {
     }
 };
 
+var galenConsole = {
+    log: function (object) {
+        if (typeof object == "string") {
+            System.out.println(object);
+        }
+        else System.out.println(JSON.stringify(object));
+    }
+};
 
 (function (exports) {
     exports.createDriver = createDriver;
@@ -120,4 +128,5 @@ var session = {
     exports.cookie = cookie;
     exports.inject = inject;
     exports.readFile = readFile;
+    exports.console = galenConsole;
 })(this);

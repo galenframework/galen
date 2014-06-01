@@ -17,11 +17,17 @@
 
 String.prototype.trim=function(){return this.replace(/^\s+|\s+$/g, '');};
 
+function listToArray(list) {
+    return GalenUtils.listToArray(list);
+}
 
 var GalenPages = {
-    allowReporting: true,
+    settings: {
+        cacheWebElements: true,
+        allowReporting: true,
+    },
     report: function (name, details) {
-        if (GalenPages.allowReporting) {
+        if (GalenPages.settings.allowReporting) {
             var testSession = TestSession.current();
             if (testSession != null) {
                 var node = testSession.getReport().info(name);
@@ -108,7 +114,8 @@ var GalenPages = {
                 return this.parent.findChildren(locator);
             }
             else {
-                return this.driver.findElements(GalenPages.convertLocator(locator));
+                var list = this.driver.findElements(GalenPages.convertLocator(locator));
+                return listToArray(list);
             }
         };
         this.set = function (props) {
@@ -205,7 +212,7 @@ var GalenPages = {
             this.getWebElement().clear();
         };
         this.getWebElement = function () {
-            if (this.cachedWebElement == null) {
+            if (GalenPages.settings.cacheWebElements && this.cachedWebElement == null) {
                 this.cachedWebElement = this.parent.findChild(this.locator);
             }
             return this.cachedWebElement;
@@ -268,6 +275,40 @@ var GalenPages = {
                 return false;
             }
             return true;
+        };
+        this.findChild = function (locator) {
+            if (typeof locator == "string") {
+                locator = GalenPages.parseLocator(locator);
+            }
+
+            if (this.parent != undefined ) {
+                return this.parent.findChild(locator);
+            }
+            else {
+                try {
+                    var element = this.driver.findElement(GalenPages.convertLocator(locator));
+                    if (element == null) {
+                        throw new Error("No such element: " + locator.type + " " + locator.value);
+                    }
+                    return element;
+                }
+                catch(error) {
+                    throw new Error("No such element: " + locator.type + " " + locator.value);
+                }
+            }
+        };
+        this.findChildren = function (locator) {
+            if (typeof locator == "string") {
+                locator = GalenPages.parseLocator(locator);
+            }
+
+            if (this.parent != undefined ) {
+                return this.parent.findChildren(locator);
+            }
+            else {
+                var list = this.driver.findElements(GalenPages.convertLocator(locator));
+                return listToArray(list);
+            }
         };
     },
     create: function (driver) {
