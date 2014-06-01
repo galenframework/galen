@@ -23,7 +23,9 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 
 import javax.imageio.ImageIO;
 
@@ -223,7 +225,7 @@ public class GalenUtils {
         return ((TakesScreenshot)driver).getScreenshotAs(OutputType.FILE);
     }
     
-    public static GalenProperties loadProperties(String fileName) throws IOException {
+    public static Properties loadProperties(String fileName) throws IOException {
         
         GalenProperties properties = null;
         if (TestSession.current() != null) {
@@ -232,7 +234,7 @@ public class GalenUtils {
         else properties = new GalenProperties();
         
         properties.load(new File(fileName));
-        return properties;
+        return properties.getProperties();
     }
     
     public static void cookie(WebDriver driver, String cookie) {
@@ -246,5 +248,13 @@ public class GalenUtils {
     
     public static String readFile(String fileName) throws IOException {
         return FileUtils.readFileToString(new File(fileName));
+    }
+    
+    public static Object[] listToArray(List<?> list) {
+        if (list == null) {
+            return new Object[]{};
+        }
+        Object[] arr = new Object[list.size()];
+        return list.toArray(arr);
     }
 }
