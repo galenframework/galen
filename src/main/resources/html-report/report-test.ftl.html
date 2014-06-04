@@ -12,7 +12,7 @@
 <#macro report_node node>
     <li class="report-status-${node.status}">
         <a class="report-link report-status-${node.status}" id="report-link-${node.id}" href="#" data-report-id="${node.id}">${node.status?upper_case}</a>
-        <div class="report-caption"><#if node?has_content>${node.name?html}</#if></div>
+        <div class="report-caption"><#if node.name?has_content>${node.name?html}</#if></div>
         <@report_attachments node/>
         <div id="report-nodes-${node.id}" class="report-container">
             <#if node.details?has_content>

@@ -158,6 +158,7 @@ public class GalenMain {
             GalenBasicTest test = new GalenBasicTest();
             test.setName(pageSpecPath);
             test.setPageTests(asList(new GalenPageTest()
+                .withTitle("Simple check")
                 .withUrl(arguments.getUrl())
                 .withSize(arguments.getScreenSize())
                 .withBrowserFactory(new SeleniumBrowserFactory(SeleniumBrowserFactory.FIREFOX))
