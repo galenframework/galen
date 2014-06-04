@@ -99,15 +99,17 @@ var GalenCore = {
         }
     },
     processVariable: function (varName) {
-        var args = GalenCore.parametersStack.last();
+        var args = GalenCore.parametersStack.fetchAll();
 
         if (args != null) {
-            if (args.length == 1) {
-                if (args[0] != null && typeof args[0] == "object") {
-                    var argObject = args[0];
+            for (var i = 0; i < args.length; i++) {
+                if (args[i] != null && typeof args[i] == "object") {
+                    var argObject = args[i];
 
                     var value = eval("argObject." + varName);
-                    return value;
+                    if (value != undefined) {
+                        return value;
+                    }
                 }
             }
         }
