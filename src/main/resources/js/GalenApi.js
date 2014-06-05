@@ -54,6 +54,13 @@ function createGridDriver(url, attrs) {
 
 
 function checkLayout(driver, pageSpecFile, includedTags, excludedTags) {
+
+    if (includedTags == undefined) {
+        includedTags = null;
+    }
+    if (excludedTags == undefined) {
+        excludedTags = null;
+    }
     GalenUtils.checkLayout(driver, pageSpecFile, includedTags, excludedTags);
 }
 
