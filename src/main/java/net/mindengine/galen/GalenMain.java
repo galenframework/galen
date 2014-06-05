@@ -29,6 +29,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.locks.ReentrantLock;
 import java.util.regex.Pattern;
 
 import net.mindengine.galen.browser.SeleniumBrowserFactory;
@@ -262,7 +263,9 @@ public class GalenMain {
         Pattern filterPattern = createTestFilter(arguments.getFilter());
         final List<GalenTestInfo> testInfos = new LinkedList<GalenTestInfo>();
         
-        tellBeforeTestSuite(listener, tests);
+        tellBeforeTestSuite(listener, tests);        
+        
+        final ReentrantLock testInfoLock = new ReentrantLock();
         
         for (final GalenTest test : tests) {
             if (matchesPattern(test.getName(), filterPattern)) {
@@ -271,17 +274,26 @@ public class GalenMain {
                     public void run() {
                         
                         GalenTestInfo info = new GalenTestInfo(test);
-                        testInfos.add(info);
+                        TestReport report = new TestReport();
                         info.setName(test.getName());
                         
                         info.setStartedAt(new Date());
-                        TestReport report = new TestReport();
                         info.setReport(report);
                         
-                        TestSession session = TestSession.register(info, test);
-                        session.setReport(report);
-                        session.setListener(listener);
                         
+                        testInfoLock.lock();
+                        try {
+                            testInfos.add(info);
+                            TestSession session = TestSession.register(info, test);
+                            session.setReport(report);
+                            session.setListener(listener);
+                        }
+                        catch (Exception ex) {
+                            ex.printStackTrace();
+                        }
+                        finally {
+                            testInfoLock.unlock();
+                        }
                         
                         eventHandler.invokeBeforeTestEvents(info);
                         
@@ -292,13 +304,12 @@ public class GalenMain {
                         catch(Throwable ex) {
                             info.setException(ex);
                             report.error(ex);
+                            ex.printStackTrace();
                         }
                         info.setEndedAt(new Date());
                         
                         eventHandler.invokeAfterTestEvents(info);
                         tellTestFinished(listener, test);
-                        
-                        
                         
                         TestSession.clear();
                     }
