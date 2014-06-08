@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Properties;
 import java.util.regex.Pattern;
 
 import net.mindengine.galen.parser.ExpectWord;
@@ -47,8 +48,10 @@ public class PageSpecLineProcessor {
     
     private String contextPath = ".";
     private PageSpec pageSpec;
+    private Properties properties;
     
-    public PageSpecLineProcessor(String contextPath, PageSpecReader pageSpecReader, PageSpec pageSpec) {
+    public PageSpecLineProcessor(Properties properties, String contextPath, PageSpecReader pageSpecReader, PageSpec pageSpec) {
+        this.properties = properties;
         this.pageSpec = pageSpec;
     	this.pageSpecReader = pageSpecReader;
     	this.contextPath = contextPath;
@@ -87,15 +90,36 @@ public class PageSpecLineProcessor {
 		
 		String firstWord = new ExpectWord().read(reader);
 		
-		if (firstWord.equals("import")) {
+		if (firstWord.toLowerCase().equals("import")) {
 			importPageSpec(reader.getTheRest());
+		}
+		else if (firstWord.toLowerCase().equals("set")) {
+		    setVariables(reader.getTheRest().trim());
 		}
 		else if (isPartOfConditionalBlock(firstWord)) {
 		    doConditionalBlock(firstWord.toLowerCase(), reader.getTheRest().trim().toLowerCase());
 		}
 	}
 
-	private void doConditionalBlock(String firstWord, String theRest) {
+	private void setVariables(String text) {
+        if (!text.isEmpty()) {
+            readAndSetVariableFromText(text);
+        }
+    }
+	
+    public void readAndSetVariableFromText(String text) {
+        StringCharReader reader = new StringCharReader(text);
+        String varName = new ExpectWord().read(reader);
+        
+        String varValue = reader.getTheRest().trim();
+        
+        properties.setProperty(varName, varValue);
+    }
+
+
+    
+
+    private void doConditionalBlock(String firstWord, String theRest) {
 	    if (firstWord.equals("if")) {
 	        
 	        //Checking that it is not already doing a conditional block
@@ -104,7 +128,7 @@ public class PageSpecLineProcessor {
 	        }
 	        previousState = state;
 	        boolean inverted = theRest.equals("not");
-            state = new StateDoingConditionalBlocks(inverted, contextPath, pageSpecReader);
+            state = new StateDoingConditionalBlocks(properties, inverted, contextPath, pageSpecReader);
         }
 	    else {
 	        if (!(state instanceof StateDoingConditionalBlocks)) {
@@ -290,7 +314,7 @@ public class PageSpecLineProcessor {
         }
         currentSection.setName(name);
         pageSpec.addSection(currentSection);
-        state = State.startedSection(currentSection, contextPath, pageSpecReader);
+        state = State.startedSection(properties, currentSection, contextPath, pageSpecReader);
     }
 
     private List<String> readTags(String tagsText) {

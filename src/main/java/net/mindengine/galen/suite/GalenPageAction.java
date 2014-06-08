@@ -15,12 +15,15 @@
 ******************************************************************************/
 package net.mindengine.galen.suite;
 
+import java.util.Properties;
+
 import net.mindengine.galen.browser.Browser;
 import net.mindengine.galen.reports.TestReport;
 import net.mindengine.galen.validation.ValidationListener;
 
 public abstract class GalenPageAction {
     private String originalCommand;
+    private Properties properties;
     
     public abstract void execute(TestReport report, Browser browser, GalenPageTest pageTest, ValidationListener validationListener) throws Exception;
 
@@ -29,5 +32,13 @@ public abstract class GalenPageAction {
     }
     public void setOriginalCommand(String originalCommand) {
         this.originalCommand = originalCommand;
+    }
+
+    public Properties getProperties() {
+        return properties;
+    }
+
+    public void setProperties(Properties properties) {
+        this.properties = properties;
     }
 }

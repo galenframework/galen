@@ -72,7 +72,7 @@ public class GalenPageActionCheck extends GalenPageAction {
         TestReportNode layoutReportNode = report.addNode(new LayoutReportNode(layoutReport, reportTitle));
         
         Page page = browser.getPage();
-        PageSpecReader pageSpecReader = new PageSpecReader(browser);
+        PageSpecReader pageSpecReader = new PageSpecReader(getProperties(), browser);
         
         
         boolean isFailed = false;

@@ -53,7 +53,7 @@ public class SpecValidationComponent extends SpecValidation<SpecComponent> {
             throw new SyntaxException("Component spec file not found: " + file.getAbsolutePath());
         }
         
-        PageSpecReader pageSpecReader = new PageSpecReader(pageValidation.getBrowser());
+        PageSpecReader pageSpecReader = new PageSpecReader(spec.getProperties(), pageValidation.getBrowser());
         PageSpec componentPageSpec;
         try {
             componentPageSpec = pageSpecReader.read(file);

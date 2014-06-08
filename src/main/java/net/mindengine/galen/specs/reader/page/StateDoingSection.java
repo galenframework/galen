@@ -18,6 +18,7 @@ package net.mindengine.galen.specs.reader.page;
 import static net.mindengine.galen.suite.reader.Line.UNKNOWN_LINE;
 
 import java.io.IOException;
+import java.util.Properties;
 
 import net.mindengine.galen.parser.MathParser;
 import net.mindengine.galen.parser.SyntaxException;
@@ -54,11 +55,11 @@ public class StateDoingSection extends State {
         }
     }
     
-    public StateDoingSection(PageSection section, String contextPath, PageSpecReader pageSpecReader) {
+    public StateDoingSection(Properties properties, PageSection section, String contextPath, PageSpecReader pageSpecReader) {
         this.section = section;
         this.contextPath = contextPath;
         this.setPageSpecReader(pageSpecReader);
-        this.specReader = new SpecReader(pageSpecReader.getBrowser());
+        this.specReader = new SpecReader(properties, pageSpecReader.getBrowser());
     }
 
     @Override

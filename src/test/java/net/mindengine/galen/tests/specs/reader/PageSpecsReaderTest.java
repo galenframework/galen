@@ -34,6 +34,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 
 import net.mindengine.galen.browser.Browser;
 import net.mindengine.galen.parser.FileSyntaxException;
@@ -52,7 +53,6 @@ import net.mindengine.galen.specs.page.ObjectSpecs;
 import net.mindengine.galen.specs.page.PageSection;
 import net.mindengine.galen.specs.reader.page.PageSpec;
 import net.mindengine.galen.specs.reader.page.PageSpecReader;
-import net.mindengine.galen.utils.GalenUtils;
 
 import org.testng.annotations.Test;
 
@@ -60,18 +60,19 @@ public class PageSpecsReaderTest {
     
     private static final String BASE_TEST = "shouldLoadSpecSuccessfully";
     private static final Browser NO_BROWSER = null;
-    PageSpecReader pageSpecReader = new PageSpecReader(NO_BROWSER);
+    private static final Properties EMPTY_PROPERTIES = new Properties();
+    PageSpecReader pageSpecReader = new PageSpecReader(EMPTY_PROPERTIES, NO_BROWSER);
     PageSpec pageSpec;
     
     @Test
     public void shouldBePossible_toReadSpec_fromInputStream() throws IOException {
-        PageSpec pageSpec = new PageSpecReader(NO_BROWSER).read(getClass().getResourceAsStream("/specs.txt"));
+        PageSpec pageSpec = new PageSpecReader(EMPTY_PROPERTIES, NO_BROWSER).read(getClass().getResourceAsStream("/specs.txt"));
         assertThat(pageSpec, is(notNullValue()));
     }
     
     @Test
     public void shouldBePossible_toReadSpec_fromFile() throws IOException {
-        PageSpec pageSpec = new PageSpecReader(NO_BROWSER).read(new File(getClass().getResource("/specs.txt").getFile()));
+        PageSpec pageSpec = new PageSpecReader(EMPTY_PROPERTIES, NO_BROWSER).read(new File(getClass().getResource("/specs.txt").getFile()));
         assertThat(pageSpec, is(notNullValue()));
     }
     
@@ -239,7 +240,7 @@ public class PageSpecsReaderTest {
     
     @Test
     public void shouldRead_andProcess_bashTemplateExpressions() throws IOException {
-        PageSpec pageSpec = new PageSpecReader(NO_BROWSER).read(getClass().getResourceAsStream("/specs/spec-bash-template.spec"));
+        PageSpec pageSpec = new PageSpecReader(EMPTY_PROPERTIES, NO_BROWSER).read(getClass().getResourceAsStream("/specs/spec-bash-template.spec"));
         assertThat(pageSpec, is(notNullValue()));
         
         List<PageSection> sections = pageSpec.getSections();
@@ -255,7 +256,7 @@ public class PageSpecsReaderTest {
     
     @Test
     public void shouldRead_sectionsNames_withTags() throws IOException {
-        PageSpec pageSpec = new PageSpecReader(NO_BROWSER).read(getClass().getResourceAsStream("/specs/spec-sections-advanced.spec"));
+        PageSpec pageSpec = new PageSpecReader(EMPTY_PROPERTIES, NO_BROWSER).read(getClass().getResourceAsStream("/specs/spec-sections-advanced.spec"));
         assertThat(pageSpec, is(notNullValue()));
         
         List<PageSection> sections = pageSpec.getSections();
@@ -577,7 +578,28 @@ public class PageSpecsReaderTest {
     }
     
     
-    
+    @Test
+    public void shouldParse_variablesDefinitions() throws Exception {
+        
+        PageSpec pageSpec = pageSpecReader.read(new File(getClass().getResource("/specs/spec-variables.spec").getFile()));
+        List<PageSection> sections = pageSpec.getSections();
+        assertThat(sections.size(), is(1));
+        
+        PageSection pageSection = sections.get(0);
+        
+        List<ObjectSpecs> objects = pageSection.getObjects();
+        assertThat(objects.size(), is(2));
+        
+        
+        ObjectSpecs headerObject = objects.get(0);
+        ObjectSpecs containerObject = objects.get(1);
+        
+        
+        assertThat(headerObject.getSpecs().get(0).getOriginalText(), is("text is: Hi, welcome"));
+        assertThat(headerObject.getSpecs().get(1).getOriginalText(), is("inside: screen 10 to 20px top"));
+        assertThat(containerObject.getSpecs().get(0).getOriginalText(), is("below: header ~ 10px"));
+        
+    }
 
     private void assertChildComponentSpec(List<Spec> specs) {
         assertThat(specs.size(), is(1));
