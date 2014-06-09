@@ -227,7 +227,7 @@ public class GalenMainTest {
         
         String testngReportContent = FileUtils.readFileToString(new File(testngReportPath));
         
-        assertThat(testngReportContent, containsString("Error: There is no location defined\n    in " + pageSpec + ":10"));
+        assertThat(testngReportContent, containsString("There is no location defined\n    in " + pageSpec + ":10"));
     }
     
     @Test public void shouldGenerate_configFile() throws IOException {
