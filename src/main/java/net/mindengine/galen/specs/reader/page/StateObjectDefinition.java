@@ -22,6 +22,7 @@ import net.mindengine.galen.parser.Expectations;
 import net.mindengine.galen.parser.SyntaxException;
 import net.mindengine.galen.specs.page.CorrectionsRect;
 import net.mindengine.galen.specs.page.Locator;
+import net.mindengine.galen.specs.reader.Place;
 import net.mindengine.galen.specs.reader.StringCharReader;
 
 import org.apache.commons.lang3.StringUtils;
@@ -38,7 +39,7 @@ public class StateObjectDefinition extends State {
     }
 
     @Override
-    public void process(String line) {
+    public void process(String line, Place place) {
         StringCharReader reader = new StringCharReader(line);
         
         String objectName = expectWord(reader, "Object name is not defined correctly");

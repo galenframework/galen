@@ -30,6 +30,7 @@ import net.mindengine.galen.browser.Browser;
 import net.mindengine.galen.parser.BashTemplateContext;
 import net.mindengine.galen.parser.BashTemplateJsFunctions;
 import net.mindengine.galen.parser.FileSyntaxException;
+import net.mindengine.galen.specs.reader.Place;
 
 public class PageSpecReader implements BashTemplateJsFunctions {
     
@@ -85,7 +86,7 @@ public class PageSpecReader implements BashTemplateJsFunctions {
         int lineNumber = 1;
         try {
             while(line != null) {
-                lineProcessor.processLine(bashTemplateContext.process(line));
+                lineProcessor.processLine(bashTemplateContext.process(line), new Place(fileLocation, lineNumber));
                 line = bufferedReader.readLine();
                 lineNumber++;
             }

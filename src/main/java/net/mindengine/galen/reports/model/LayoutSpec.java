@@ -18,10 +18,12 @@ package net.mindengine.galen.reports.model;
 import java.util.LinkedList;
 import java.util.List;
 
+import net.mindengine.galen.specs.reader.Place;
 import net.mindengine.galen.validation.ErrorArea;
 
 public class LayoutSpec {
     
+    private Place place;
     private String text;
     private Boolean failed = false;
     private List<String> errorMessages = new LinkedList<String>();
@@ -65,5 +67,13 @@ public class LayoutSpec {
 
     public void setSubObjects(List<LayoutObject> subObjects) {
         this.subObjects = subObjects;
+    }
+
+    public Place getPlace() {
+        return place;
+    }
+
+    public void setPlace(Place place) {
+        this.place = place;
     }
 }

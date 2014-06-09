@@ -66,6 +66,7 @@ import net.mindengine.galen.specs.colors.ColorRange;
 
 public class SpecReader {
     
+    private static final Place NULL_PLACE = null;
     private Properties properties;
     private Map<Pattern, SpecProcessor> specsMap = new HashMap<Pattern, SpecProcessor>();
     private Browser browser;
@@ -355,10 +356,10 @@ public class SpecReader {
     }
 
     public Spec read(String specText) throws IOException {
-        return read(specText, ".");
+        return read(specText, ".", NULL_PLACE);
     }
     
-    public Spec read(String specText, String contextPath) throws IOException {
+    public Spec read(String specText, String contextPath, Place place) throws IOException {
         if (specText == null) {
             throw new NullPointerException("Spec text should not be null");
         }
@@ -384,6 +385,7 @@ public class SpecReader {
             spec.setOriginalText(specText);
             spec.setProperties(properties);
         }
+        spec.setPlace(place);
         return spec;
     }
 

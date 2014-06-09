@@ -30,6 +30,7 @@ import net.mindengine.galen.parser.ExpectWord;
 import net.mindengine.galen.parser.SyntaxException;
 import net.mindengine.galen.specs.page.ConditionalBlock;
 import net.mindengine.galen.specs.page.PageSection;
+import net.mindengine.galen.specs.reader.Place;
 import net.mindengine.galen.specs.reader.StringCharReader;
 
 
@@ -58,7 +59,7 @@ public class PageSpecLineProcessor {
         startNewSection("");
     }
 
-    public void processLine(String line) throws IOException {
+    public void processLine(String line, Place place) throws IOException {
         if (!isCommentedOut(line) && !isEmpty(line)) {
         	if (isSpecialInstruction(line)) {
         		doSpecialInstruction(line);
@@ -75,7 +76,7 @@ public class PageSpecLineProcessor {
             else if (line.startsWith(PARAMETERIZATION_SYMBOL)) {
                 startParameterization(line);
             }
-            else state.process(line);
+            else state.process(line, place);
         }
     }
     

@@ -19,10 +19,11 @@ import java.io.IOException;
 import java.util.Properties;
 
 import net.mindengine.galen.specs.page.PageSection;
+import net.mindengine.galen.specs.reader.Place;
 
 public abstract class State {
 
-    public abstract void process(String line) throws IOException;
+    public abstract void process(String line, Place place) throws IOException;
     private Properties properties;
 
     public boolean isObjectDefinition() {

@@ -23,6 +23,7 @@ import net.mindengine.galen.parser.SyntaxException;
 import net.mindengine.galen.specs.page.ConditionalBlock;
 import net.mindengine.galen.specs.page.ConditionalBlockStatement;
 import net.mindengine.galen.specs.page.PageSection;
+import net.mindengine.galen.specs.reader.Place;
 
 public class StateDoingConditionalBlocks extends State {
     
@@ -50,8 +51,8 @@ public class StateDoingConditionalBlocks extends State {
     }
 
     @Override
-    public void process(String line) throws IOException {
-        currentSectionState.process(line);
+    public void process(String line, Place place) throws IOException {
+        currentSectionState.process(line, place);
     }
 
     public void startNewStatement(boolean inverted) {

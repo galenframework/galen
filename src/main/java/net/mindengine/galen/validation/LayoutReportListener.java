@@ -90,6 +90,7 @@ public class LayoutReportListener implements ValidationListener {
     public void onSpecError(GalenPageRunner pageRunner, PageValidation pageValidation, String objectName, Spec originalSpec, ValidationError error) {
 
         LayoutSpec spec = new LayoutSpec();
+        spec.setPlace(originalSpec.getPlace());
         currentObject.getSpecs().add(spec);
         
         spec.setText(originalSpec.getOriginalText());
@@ -104,6 +105,7 @@ public class LayoutReportListener implements ValidationListener {
     @Override
     public void onSpecSuccess(GalenPageRunner pageRunner, PageValidation pageValidation, String objectName, Spec originalSpec) {
         LayoutSpec spec = new LayoutSpec();
+        spec.setPlace(originalSpec.getPlace());
         currentObject.getSpecs().add(spec);
         spec.setText(originalSpec.getOriginalText());
         spec.setFailed(false);

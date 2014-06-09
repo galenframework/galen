@@ -51,9 +51,11 @@ import net.mindengine.galen.specs.page.ConditionalBlockStatement;
 import net.mindengine.galen.specs.page.Locator;
 import net.mindengine.galen.specs.page.ObjectSpecs;
 import net.mindengine.galen.specs.page.PageSection;
+import net.mindengine.galen.specs.reader.Place;
 import net.mindengine.galen.specs.reader.page.PageSpec;
 import net.mindengine.galen.specs.reader.page.PageSpecReader;
 
+import org.hamcrest.Matchers;
 import org.testng.annotations.Test;
 
 public class PageSpecsReaderTest {
@@ -117,6 +119,18 @@ public class PageSpecsReaderTest {
         
         assertThat(sections.get(5).getTags(), hasSize(1));
         assertThat(sections.get(5).getTags(), contains("parameterized2"));
+    }
+    
+    @Test(dependsOnMethods = BASE_TEST) 
+    public void shouldStore_lineNumber_inSpecs() {
+        List<PageSection> sections = pageSpec.getSections();
+        Place place = sections.get(0).getObjects().get(0).getSpecs().get(0).getPlace();
+        assertThat(place.getFilePath(), endsWith("/specs.txt"));
+        assertThat(place.getLineNumber(), is(18));
+        
+        place = sections.get(1).getObjects().get(0).getSpecs().get(0).getPlace();
+        assertThat(place.getFilePath(), endsWith("/specs.txt"));
+        assertThat(place.getLineNumber(), is(24));
     }
     
     @Test
