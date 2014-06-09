@@ -90,7 +90,7 @@ public class StateDoingSection extends State {
         }
         else {
             try {
-                currentObjectSpecs.getSpecs().add(specReader.read(line.trim()));
+                currentObjectSpecs.getSpecs().add(specReader.read(line.trim(), contextPath));
             }
             catch (SyntaxException exception) {
                 throw exception;

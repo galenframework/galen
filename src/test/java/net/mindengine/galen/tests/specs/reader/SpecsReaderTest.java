@@ -719,7 +719,7 @@ public class SpecsReaderTest {
     }
     
     private Spec readSpec(String specText) throws IOException {
-        return new SpecReader(NO_BROWSER).read(specText);
+        return new SpecReader(NO_BROWSER).read(specText, ".");
     }
     
     private List<Side> sides(Side...sides) {

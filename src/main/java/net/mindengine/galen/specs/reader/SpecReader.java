@@ -351,9 +351,6 @@ public class SpecReader {
 
     }
 
-    public Spec read(String specText) throws IOException {
-        return read(specText, ".");
-    }
     
     public Spec read(String specText, String contextPath) throws IOException {
         if (specText == null) {
