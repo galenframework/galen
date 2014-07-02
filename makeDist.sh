@@ -24,6 +24,7 @@ mvn assembly:assembly -DskipTests=true
 
 cp target/galen-jar-with-dependencies.jar dist/$bin/galen.jar
 cp galen dist/$bin/.
+cp install.sh dist/$bin/.
 cp galen.bat dist/$bin/.
 cp LICENSE-2.0.txt dist/$bin/.
 cp .README dist/$bin/README
