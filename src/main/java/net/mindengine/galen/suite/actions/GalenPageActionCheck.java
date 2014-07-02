@@ -76,8 +76,8 @@ public class GalenPageActionCheck extends GalenPageAction {
         
         
         boolean isFailed = false;
-        for (String specFile : specs) {
-            PageSpec spec = pageSpecReader.read(GalenUtils.findFile(specFile));
+        for (String specFilePath : specs) {
+            PageSpec spec = pageSpecReader.read(specFilePath);
             
             SectionFilter sectionFilter = new SectionFilter(includedTags, excludedTags);
             List<PageSection> pageSections = spec.findSections(sectionFilter);

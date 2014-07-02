@@ -71,13 +71,13 @@ public class PageSpecsReaderTest {
     
     @Test
     public void shouldBePossible_toReadSpec_fromFile() throws IOException {
-        PageSpec pageSpec = new PageSpecReader(NO_BROWSER).read(new File(getClass().getResource("/specs.txt").getFile()));
+        PageSpec pageSpec = new PageSpecReader(NO_BROWSER).read(getClass().getResource("/specs.txt").getFile());
         assertThat(pageSpec, is(notNullValue()));
     }
     
     @Test
     public void shouldLoadSpecSuccessfully() throws IOException {
-        pageSpec = pageSpecReader.read(new File(getClass().getResource("/specs.txt").getFile()));
+        pageSpec = pageSpecReader.read(getClass().getResource("/specs.txt").getFile());
         assertThat(pageSpec, is(notNullValue()));
     }
     
@@ -120,7 +120,7 @@ public class PageSpecsReaderTest {
     
     @Test
     public void shouldAlways_provideAsteriskTags_whenFiltering_byIncludedTags() throws IOException {
-        PageSpec pageSpec = pageSpecReader.read(new File(getClass().getResource("/specs/spec-asterisk-tags.spec").getFile()));
+        PageSpec pageSpec = pageSpecReader.read(getClass().getResource("/specs/spec-asterisk-tags.spec").getFile());
         
         assertThat("Total amount of sections should be", pageSpec.getSections().size(), is(3));
         
@@ -351,7 +351,7 @@ public class PageSpecsReaderTest {
     
     @Test
     public void shouldImport_otherSpecs_fromOtherFiles() throws Exception {
-    	PageSpec pageSpec = pageSpecReader.read(new File(getClass().getResource("/spec-import-test/main.spec").getFile()));
+    	PageSpec pageSpec = pageSpecReader.read("/spec-import-test/main.spec");
     	
     	assertThat(pageSpec.getObjects(), hasKey("content"));
     	assertThat(pageSpec.getObjects(), hasKey("header"));
@@ -378,7 +378,7 @@ public class PageSpecsReaderTest {
     
     @Test
     public void shouldProcess_simpleMathOperations_inParameterizedSpecs() throws IOException {
-    	PageSpec pageSpec = pageSpecReader.read(new File(getClass().getResource("/spec-math.spec").getFile()));
+    	PageSpec pageSpec = pageSpecReader.read(getClass().getResource("/spec-math.spec").getFile());
     	
         List<Spec> specs = pageSpec.getSections().get(0).getObjects().get(0).getSpecs();
     	
@@ -390,7 +390,7 @@ public class PageSpecsReaderTest {
     
     @Test 
     public void shouldParse_conditionalSpecBlocks() throws Exception {
-        PageSpec pageSpec = pageSpecReader.read(new File(getClass().getResource("/specs/spec-conditional-simple.spec").getFile()));
+        PageSpec pageSpec = pageSpecReader.read(getClass().getResource("/specs/spec-conditional-simple.spec").getFile());
         
         List<PageSection> sections = pageSpec.getSections();
         assertThat(sections.size(), is(1));
@@ -429,7 +429,7 @@ public class PageSpecsReaderTest {
     
     @Test 
     public void shouldParse_conditionalSpecBlocks_withOrStatement() throws Exception {
-        PageSpec pageSpec = pageSpecReader.read(new File(getClass().getResource("/specs/spec-conditional-or.spec").getFile()));
+        PageSpec pageSpec = pageSpecReader.read(getClass().getResource("/specs/spec-conditional-or.spec").getFile());
         
         List<PageSection> sections = pageSpec.getSections();
         assertThat(sections.size(), is(1));
@@ -479,7 +479,7 @@ public class PageSpecsReaderTest {
     
     @Test 
     public void shouldParse_conditionalSpecBlocks_inverted() throws Exception {
-        PageSpec pageSpec = pageSpecReader.read(new File(getClass().getResource("/specs/spec-conditional-inverted.spec").getFile()));
+        PageSpec pageSpec = pageSpecReader.read(getClass().getResource("/specs/spec-conditional-inverted.spec").getFile());
         
         List<PageSection> sections = pageSpec.getSections();
         assertThat(sections.size(), is(1));
@@ -521,7 +521,7 @@ public class PageSpecsReaderTest {
     
     @Test 
     public void shouldParse_conditionalSpecBlocks_withOtherwise() throws Exception {
-        PageSpec pageSpec = pageSpecReader.read(new File(getClass().getResource("/specs/spec-conditional-otherwise.spec").getFile()));
+        PageSpec pageSpec = pageSpecReader.read(getClass().getResource("/specs/spec-conditional-otherwise.spec").getFile());
         
         List<PageSection> sections = pageSpec.getSections();
         assertThat(sections.size(), is(1));
@@ -558,7 +558,7 @@ public class PageSpecsReaderTest {
     
     @Test
     public void shouldParse_componentSpecs() throws Exception {
-        PageSpec pageSpec = pageSpecReader.read(new File(getClass().getResource("/specs/components/spec-for-component-test-main.spec").getFile()));
+        PageSpec pageSpec = pageSpecReader.read(getClass().getResource("/specs/components/spec-for-component-test-main.spec").getFile());
         List<PageSection> sections = pageSpec.getSections();
         assertThat(sections.size(), is(1));
         
@@ -590,7 +590,7 @@ public class PageSpecsReaderTest {
 
     private FileSyntaxException expectExceptionFromReading(String file) throws IOException {
         try {
-            pageSpecReader.read(new File(getClass().getResource(file).getFile()));
+            pageSpecReader.read(getClass().getResource(file).getFile());
         }
         catch(FileSyntaxException exception) {
             return exception;

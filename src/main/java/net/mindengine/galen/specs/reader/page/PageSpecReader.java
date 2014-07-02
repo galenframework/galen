@@ -29,6 +29,7 @@ import net.mindengine.galen.browser.Browser;
 import net.mindengine.galen.parser.BashTemplateContext;
 import net.mindengine.galen.parser.BashTemplateJsFunctions;
 import net.mindengine.galen.parser.FileSyntaxException;
+import net.mindengine.galen.utils.GalenUtils;
 
 public class PageSpecReader implements BashTemplateJsFunctions {
     
@@ -39,47 +40,45 @@ public class PageSpecReader implements BashTemplateJsFunctions {
      *  so they could be used within bash templates
      */
     private PageSpec pageSpec;
-    
+
     public PageSpecReader(Browser browser) {
         this.browser = browser;
         bashTemplateContext = new BashTemplateContext(this);
     }
-    
-    
-    // Browser is used in order to fetch multi object 
+
+
+    // Browser is used in order to fetch multi object
     // at earlier state so that it is possible to use dynamic ranges
     private Browser browser;
-    
-    
-	// Used to store information about spec files that were already loaded
-	private Set<String> processedFiles = new HashSet<String>();
-	
-    public PageSpec read(File file) throws IOException {
-        String absolutePath = file.getAbsolutePath();
 
-    	if (processedFiles.contains(absolutePath)) {
-    		return null;
-    	}
-    	else {
-    		processedFiles.add(absolutePath);
-    		return read(new FileInputStream(file), absolutePath, file.getParent());
-    	}
+	// Used to store information about spec files that were already loaded
+
+    private Set<String> processedFiles = new HashSet<String>();
+
+    public PageSpec read(String filePath) throws IOException {
+        if (processedFiles.contains(filePath)) {
+            return null;
+        }
+        else {
+            processedFiles.add(filePath);
+            return read(GalenUtils.findFileOrResourceAsStream(filePath), filePath, GalenUtils.getParentForFile(filePath));
+        }
     }
+
 
     public PageSpec read(InputStream inputStream) throws IOException {
         return read(inputStream, "<unknown location>", ".");
     }
-    
-    
+
     public PageSpec read(InputStream inputStream, String fileLocation, String contextPath) throws IOException {
-        
+
         pageSpec = new PageSpec();
         PageSpecLineProcessor lineProcessor = new PageSpecLineProcessor(contextPath, this, pageSpec);
-        
+
         BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream, System.getProperty("file.encoding")));
-        
+
         String line = bufferedReader.readLine();
-        
+
         int lineNumber = 1;
         try {
             while(line != null) {
@@ -102,21 +101,18 @@ public class PageSpecReader implements BashTemplateJsFunctions {
     public void setBrowser(Browser browser) {
         this.browser = browser;
     }
-
-    @Override
     public int count(String regex) {
         String jRegex = regex.replace("*", ".*");
         Pattern pattern = Pattern.compile(jRegex);
-        
+
         int count = 0;
         for (String name : pageSpec.getObjects().keySet()) {
             if (pattern.matcher(name).matches()) {
                 count ++;
             }
         }
-        return count;
+    return count;
     }
-    
-    
+
 
 }

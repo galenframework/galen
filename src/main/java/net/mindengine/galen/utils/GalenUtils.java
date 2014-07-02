@@ -18,9 +18,7 @@ package net.mindengine.galen.utils;
 import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
-import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.net.URL;
 import java.util.Arrays;
 import java.util.List;
@@ -256,5 +254,23 @@ public class GalenUtils {
         }
         Object[] arr = new Object[list.size()];
         return list.toArray(arr);
+    }
+
+    public static String getParentForFile(String filePath) {
+        if (filePath != null) {
+            return new File(filePath).getParent();
+        }
+        else return null;
+    }
+
+    public static InputStream findFileOrResourceAsStream(String filePath) throws FileNotFoundException {
+        File file = new File(filePath);
+
+        if (file.exists()) {
+            return new FileInputStream(file);
+        }
+        else {
+            return GalenUtils.class.getResourceAsStream(filePath);
+        }
     }
 }

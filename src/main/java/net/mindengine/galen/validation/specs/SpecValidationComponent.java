@@ -47,16 +47,11 @@ public class SpecValidationComponent extends SpecValidation<SpecComponent> {
         Page objectContextPage = page.createObjectContextPage(mainObjectLocator);
         
         ValidationListener validationListener = pageValidation.getValidationListener();
-        
-        File file = new File(spec.getSpecPath());
-        if (!file.exists()) {
-            throw new SyntaxException("Component spec file not found: " + file.getAbsolutePath());
-        }
-        
+
         PageSpecReader pageSpecReader = new PageSpecReader(pageValidation.getBrowser());
         PageSpec componentPageSpec;
         try {
-            componentPageSpec = pageSpecReader.read(file);
+            componentPageSpec = pageSpecReader.read(spec.getSpecPath());
         } catch (IOException e) {
             throw new RuntimeException(e.getMessage(), e);
         }

@@ -154,7 +154,7 @@ public class PageSpecLineProcessor {
         else {
             path = filePath;
         }
-		PageSpec spec = pageSpecReader.read(new File(path));
+		PageSpec spec = pageSpecReader.read(path);
 		if (spec != null) {
 			pageSpec.merge(spec);
 		}

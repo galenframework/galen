@@ -403,7 +403,8 @@ public class GalenSeleniumTest {
     @Test
     public void performsValidations_ofComponentSpecs() throws IOException {
         openDriverForPage("page-for-component-specs.html");
-        PageSpec pageSpec = new PageSpecReader(new SeleniumBrowser(driver)).read(new File(getClass().getResource("/specs/components/spec-for-component-test-main.spec").getFile()));
+        PageSpec pageSpec = new PageSpecReader(new SeleniumBrowser(driver))
+                .read(getClass().getResource("/specs/components/spec-for-component-test-main.spec").getFile());
         
         driver.manage().window().setSize(new Dimension(1000, 800));
         
@@ -483,7 +484,8 @@ public class GalenSeleniumTest {
     @Test
     public void performsValidations_ofComponentSpecs_withFilteredChildSections() throws IOException {
         openDriverForPage("page-for-component-specs.html");
-        PageSpec pageSpec = new PageSpecReader(new SeleniumBrowser(driver)).read(new File(getClass().getResource("/specs/components/spec-for-component-test-main.spec").getFile()));
+        PageSpec pageSpec = new PageSpecReader(new SeleniumBrowser(driver))
+                .read(getClass().getResource("/specs/components/spec-for-component-test-main.spec").getFile());
         
         driver.manage().window().setSize(new Dimension(1000, 800));
         
