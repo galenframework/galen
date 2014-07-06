@@ -134,9 +134,13 @@ public class ReportingTest {
         ReportingListenerTestUtils.performSampleReporting("Home page test", null, new LayoutReportListener(layoutReport), null);
         
         report.addNode(new LayoutReportNode(layoutReport, "check layout"));
+        report.getNodes().get(0).setTime(new Date(1404681346000L));
+
         testInfo.setReport(report);
-        
         testInfos.add(testInfo);
+        testInfo.setStartedAt(new Date(1404681346000L));
+        testInfo.setEndedAt(new Date(1404681416000L));
+
         new HtmlReportBuilder().build(testInfos, reportDirPath);
         
         

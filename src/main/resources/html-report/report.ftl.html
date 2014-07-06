@@ -15,6 +15,8 @@
                     <div>Failed</div>
                     <div>Warnings</div>
                     <div>Total</div>
+                    <div>Started</div>
+                    <div>Duration</div>
                     <div>Test</div>
                 </div>
                 <#list tests as testData>
@@ -23,6 +25,8 @@
                     <div class="status failed">${testData.statistic.errors?c}</div>
                     <div class="status warnings">${testData.statistic.warnings?c}</div>
                     <div class="status total">${testData.statistic.total?c}</div>
+                    <div class="time">${testData.testInfo.startedAt?string("yyyy-MM-dd HH:mm:ss")}</div>
+                    <div class="time">${testData.humanReadableDuration}</div>
                     <div class="suite-link">
                         <a href="${testData.testId?html}.html">${testData.testInfo.name?html}</a>
                     </div>

@@ -11,6 +11,9 @@
 </#macro>
 <#macro report_node node>
     <li class="report-status-${node.status}">
+        <#if node.time?has_content>
+            <span class="time">${node.time?string("HH:mm:ss")}</span>
+        </#if>
         <a class="report-link report-status-${node.status}" id="report-link-${node.id}" href="#" data-report-id="${node.id}">${node.status?upper_case}</a>
         <div class="report-caption"><#if node.name?has_content>${node.name?html}</#if></div>
         <@report_attachments node/>

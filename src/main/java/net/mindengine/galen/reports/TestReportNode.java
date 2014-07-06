@@ -16,6 +16,7 @@
 package net.mindengine.galen.reports;
 
 import java.io.File;
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -30,7 +31,17 @@ public class TestReportNode {
     private TestReportNode parent;
     private List<TestAttachment> attachments;
     private String details;
-    
+    private Date time = new Date();
+
+    public Date getTime() {
+        return time;
+    }
+
+    public void setTime(Date time) {
+        this.time = time;
+    }
+
+
     public static enum Status {
         INFO("info"),
         WARN("warn"),

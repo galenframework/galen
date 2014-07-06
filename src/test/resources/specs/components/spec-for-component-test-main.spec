@@ -9,7 +9,7 @@ user-profile-*   css   .users .user
 
 
 
-@ all, mobile
+@ Content | all, mobile
 ------------------
 [ 1 - 3 ]
 user-profile-@

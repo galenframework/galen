@@ -83,4 +83,40 @@ public class GalenTestAggregatedInfo {
         return sdf.format(testInfo.getEndedAt());
     }
 
+    public String getHumanReadableDuration() {
+        if (testInfo.getStartedAt() != null && testInfo.getEndedAt() != null) {
+            Long durationInSeconds = (testInfo.getEndedAt().getTime() - testInfo.getStartedAt().getTime())/1000;
+
+            if (durationInSeconds > 0) {
+                Long hours = durationInSeconds / 3600;
+                Long minutes = (durationInSeconds - hours * 3600) / 60;
+                Long seconds = durationInSeconds - hours * 3600 - minutes * 60;
+
+                StringBuilder builder = new StringBuilder();
+                if (hours > 0) {
+                    builder.append(Long.toString(hours));
+                    builder.append('h');
+                }
+
+                if (minutes > 0 || hours > 0) {
+                    if (hours > 0) {
+                        builder.append(' ');
+                    }
+                    builder.append(Long.toString(minutes));
+                    builder.append('m');
+                }
+
+                if (seconds > 0) {
+                    if (hours > 0 || minutes > 0) {
+                        builder.append(' ');
+                    }
+                    builder.append(Long.toString(seconds));
+                    builder.append('s');
+                }
+
+                return builder.toString();
+            }
+        }
+        return "-";
+    }
 }
