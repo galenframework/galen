@@ -8,7 +8,7 @@ fi
 
 DEST=/opt
 
-while getops "d:" OPT; do
+while getopts "d:" OPT; do
     case $OPT in
         d)
             DEST=$OPTARG
@@ -16,14 +16,18 @@ while getops "d:" OPT; do
     esac
 done
 
-exit 1
 
-
-mkdir  $DEST/galen
+mkdir -p  $DEST/galen
 cp galen.jar $DEST/galen/.
 cp galen $DEST/galen
+
+
+if [[ -f /usr/bin/galen ]]; then
+    rm /usr/bin/galen
+fi
 
 ln -s $DEST/galen/galen /usr/bin/galen
 
 echo "Galen is successfully installed"
+echo "You can now check it with the command: galen -v"
 
