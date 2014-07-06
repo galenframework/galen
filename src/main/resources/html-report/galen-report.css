@@ -58,7 +58,13 @@ a {
 .suites-overview .suites .suite > div.status {
     float: left;
     padding: 10px;
-    width: 70px;
+    width: 71px;
+}
+.suites-overview .suites .suite > div.time{
+    float: left;
+    padding: 10px;
+    width: 71px;
+    font-size: 0.8em;
 }
 .suites-overview .suites .suite > div.suite-link {
     float: left;
@@ -111,9 +117,20 @@ ul.report {
 }
 
 ul.report li {
-    margin: 0 0 5px 0;
+    margin: 0 0 5px 0px;
 }
 
+body > ul.report > li {
+    margin-left: 35px;
+}
+
+ul.report li span.time {
+    position: absolute;
+    font-size: 0.6em;
+    left: 0;
+    color: #aaa;
+    padding: 8px;
+}
 ul.report li a.report-link {
     text-decoration: none;
     position: relative;
@@ -192,7 +209,7 @@ ul.report li a.report-status-warn:before {
 .layout-report h3 {
     font-size: 1.0em;
 }
-div.suite, div.test, div.page-action, div.page-section, div.object, div.sub-objects {
+div.test, div.page-action, div.page-section, div.object, div.sub-objects {
     padding-left: 40px;
 }
 
