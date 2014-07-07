@@ -104,13 +104,17 @@ public class ReportingTest {
         List<GalenTestInfo> testInfos = new LinkedList<GalenTestInfo>();
         
         GalenTestInfo testInfo = new GalenTestInfo(null);
+        testInfo.setStartedAt(new Date(1399741000000L));
+        testInfo.setEndedAt(new Date(1399746930000L));
+
         testInfo.setName("Home page test");
         File attachmentFile = new File(Files.createTempDir().getAbsolutePath() + File.separator + "custom.txt");
         attachmentFile.createNewFile();
         
         testInfo.getReport().error(new FakeException("Some exception here")).withAttachment("custom.txt", attachmentFile);
         testInfo.getReport().info("Some detailed report").withDetails("Some details");
-        
+        testInfo.getReport().getNodes().get(0).setTime(new Date(1399741000000L));
+        testInfo.getReport().getNodes().get(1).setTime(new Date(1399741000000L));
         testInfos.add(testInfo);
         new HtmlReportBuilder().build(testInfos, reportDirPath);
         
