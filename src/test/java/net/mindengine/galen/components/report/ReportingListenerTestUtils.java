@@ -37,6 +37,7 @@ import net.mindengine.galen.specs.SpecHeight;
 import net.mindengine.galen.specs.SpecInside;
 import net.mindengine.galen.specs.SpecWidth;
 import net.mindengine.galen.specs.page.PageSection;
+import net.mindengine.galen.specs.reader.Place;
 import net.mindengine.galen.suite.actions.GalenPageActionCheck;
 import net.mindengine.galen.tests.GalenBasicTest;
 import net.mindengine.galen.validation.ErrorArea;
@@ -77,18 +78,20 @@ public class ReportingListenerTestUtils {
             validationListener.onObject(pageRunner, pageValidation, "objectA1"); {
                 validationListener.onSpecError(pageRunner, pageValidation, 
                         "objectA1", 
-                        new SpecInside("other-object", asList(new Location(exact(10), asList(LEFT)))).withOriginalText("inside: other-object 10px left"),
+                        new SpecInside("other-object", asList(new Location(exact(10), asList(LEFT)))).withOriginalText("inside: other-object 10px left")
+                            .withPlace(new Place("specs.spec", 12)),
                         new ValidationError(asList(new ErrorArea(new Rect(10, 10, 100, 50), "objectA1")), asList("objectA1 is not inside other-object")));
                 
-                validationListener.onSpecSuccess(pageRunner, pageValidation, "objectA1", new SpecWidth(between(10, 20)).withOriginalText("width: 10 to 20px"));
+                validationListener.onSpecSuccess(pageRunner, pageValidation, "objectA1", new SpecWidth(between(10, 20)).withOriginalText("width: 10 to 20px").withPlace(new Place("specs.spec", 12)));
             }
             validationListener.onAfterObject(pageRunner, pageValidation, "objectA1");
             
             validationListener.onObject(pageRunner, pageValidation, "objectA2"); {
-                validationListener.onSpecSuccess(pageRunner, pageValidation, "objectA2", new SpecWidth(between(10, 20)).withOriginalText("width: 10 to 20px"));
+                validationListener.onSpecSuccess(pageRunner, pageValidation, "objectA2", new SpecWidth(between(10, 20)).withOriginalText("width: 10 to 20px").withPlace(new Place("specs.spec", 12)));
                 validationListener.onSpecError(pageRunner, pageValidation, 
                         "objectA2", 
-                        new SpecWidth(exact(10)).withOriginalText("width: 10px"),
+                        new SpecWidth(exact(10)).withOriginalText("width: 10px")
+                            .withPlace(new Place("specs.spec", 12)),
                         new ValidationError(asList(new ErrorArea(new Rect(200, 300, 50, 30), "objectA2")), asList("objectA2 width is 20px instead of 10px")));
             }
             validationListener.onAfterObject(pageRunner, pageValidation, "objectA2");
@@ -99,20 +102,21 @@ public class ReportingListenerTestUtils {
             validationListener.onBeforeSection(pageRunner, pageValidation, section2);
             
             validationListener.onObject(pageRunner, pageValidation, "objectA1"); {
-                validationListener.onSpecSuccess(pageRunner, pageValidation, "objectA1", new SpecHeight(between(10, 20)).withOriginalText("height: 10 to 20px"));
+                validationListener.onSpecSuccess(pageRunner, pageValidation, "objectA1", new SpecHeight(between(10, 20)).withOriginalText("height: 10 to 20px").withPlace(new Place("specs.spec", 12)));
                 
                 //Doing sub-objects call
                 {
                     validationListener.onObject(pageRunner, pageValidation, "sub-objectA1"); {
-                        validationListener.onSpecSuccess(pageRunner, pageValidation, "sub-objectA1", new SpecHeight(between(10, 20)).withOriginalText("height: 10 to 20px"));
+                        validationListener.onSpecSuccess(pageRunner, pageValidation, "sub-objectA1", new SpecHeight(between(10, 20)).withOriginalText("height: 10 to 20px").withPlace(new Place("specs.spec", 12)));
                         validationListener.onSpecError(pageRunner, pageValidation, 
                                 "sub-objectA1", 
-                                new SpecWidth(exact(10)).withOriginalText("width: 10px"),
+                                new SpecWidth(exact(10)).withOriginalText("width: 10px")
+                                    .withPlace(new Place("specs.spec", 12)),
                                 new ValidationError(asList(new ErrorArea(new Rect(200, 300, 50, 30), "sub-objectA1")), asList("sub-objectA1 width is 20px instead of 10px")));
                     }
                     validationListener.onAfterObject(pageRunner, pageValidation, "sub-objectA1");
                 }
-                validationListener.onSpecSuccess(pageRunner, pageValidation, "objectA1", new SpecHeight(between(10, 20)).withOriginalText("component: some-component.spec"));
+                validationListener.onSpecSuccess(pageRunner, pageValidation, "objectA1", new SpecHeight(between(10, 20)).withOriginalText("component: some-component.spec").withPlace(new Place("specs.spec", 12)));
             }
             validationListener.onAfterObject(pageRunner, pageValidation, "objectA1");
             
@@ -129,17 +133,18 @@ public class ReportingListenerTestUtils {
             validationListener.onBeforeSection(pageRunner, pageValidation, section1);
             
             validationListener.onObject(pageRunner, pageValidation, "objectB1"); {
-                validationListener.onSpecSuccess(pageRunner, pageValidation, "objectB1", new SpecWidth(between(10, 20)).withOriginalText("width: 10 to 20px"));
+                validationListener.onSpecSuccess(pageRunner, pageValidation, "objectB1", new SpecWidth(between(10, 20)).withOriginalText("width: 10 to 20px").withPlace(new Place("specs.spec", 12)));
                 
                 validationListener.onSpecError(pageRunner, pageValidation, 
                         "objectB1", 
-                        new SpecInside("other-object", asList(new Location(exact(10), asList(LEFT)))).withOriginalText("inside: other-object 10px left"),
+                        new SpecInside("other-object", asList(new Location(exact(10), asList(LEFT)))).withOriginalText("inside: other-object 10px left")
+                            .withPlace(new Place("specs.spec", 12)),
                         new ValidationError(asList(new ErrorArea(new Rect(10, 10, 100, 50), "objectB1")), asList("objectB1 is not inside other-object", "second error message with <xml> &tags")));
             }
             validationListener.onAfterObject(pageRunner, pageValidation, "objectB1"); 
             
             validationListener.onObject(pageRunner, pageValidation, "objectB2"); {
-                validationListener.onSpecSuccess(pageRunner, pageValidation, "objectB2", new SpecHeight(exact(100)).withOriginalText("height: 100px"));
+                validationListener.onSpecSuccess(pageRunner, pageValidation, "objectB2", new SpecHeight(exact(100)).withOriginalText("height: 100px").withPlace(new Place("specs.spec", 12)));
             }
             validationListener.onAfterObject(pageRunner, pageValidation, "objectB2");
             

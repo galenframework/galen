@@ -24,6 +24,7 @@ import net.mindengine.galen.parser.MathParser;
 import net.mindengine.galen.parser.SyntaxException;
 import net.mindengine.galen.specs.page.ObjectSpecs;
 import net.mindengine.galen.specs.page.PageSection;
+import net.mindengine.galen.specs.reader.Place;
 import net.mindengine.galen.specs.reader.SpecReader;
 
 public class StateDoingSection extends State {
@@ -36,6 +37,7 @@ public class StateDoingSection extends State {
     private int currentIndentationLevel;
     private String contextPath = ".";
     private PageSpecReader pageSpecReader;
+    private Place place;
     
     private class Parameterization {
         private String[] parameters;
@@ -50,7 +52,7 @@ public class StateDoingSection extends State {
         public void processObject(String line) throws IOException {
             for (int i = 0; i < parameters.length; i++) {
                 String specText = convertParameterizedLine(line, parameters[i]);
-                objectSpecs[i].getSpecs().add(StateDoingSection.this.specReader.read(specText, getContextPath()));
+                objectSpecs[i].getSpecs().add(StateDoingSection.this.specReader.read(specText, getContextPath(), place));
             }
         }
     }
@@ -63,7 +65,8 @@ public class StateDoingSection extends State {
     }
 
     @Override
-    public void process(String line) throws IOException {
+    public void process(String line, Place place) throws IOException {
+        this.place = place;
         if (startsWithIndentation(line)) {
             if (currentParameterization != null) {
                 currentParameterization.processObject(line);
@@ -91,7 +94,7 @@ public class StateDoingSection extends State {
         }
         else {
             try {
-                currentObjectSpecs.getSpecs().add(specReader.read(line.trim(), contextPath));
+                currentObjectSpecs.getSpecs().add(specReader.read(line.trim(), ".", place));
             }
             catch (SyntaxException exception) {
                 throw exception;

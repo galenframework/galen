@@ -17,9 +17,12 @@ package net.mindengine.galen.specs;
 
 import java.util.Properties;
 
+import net.mindengine.galen.specs.reader.Place;
+
 public abstract class Spec {
     private String originalText;
     private Properties properties;
+    private Place place;
 
     public String getOriginalText() {
         return originalText;
@@ -44,6 +47,19 @@ public abstract class Spec {
 
     public void setProperties(Properties properties) {
         this.properties = properties;
+    }
+
+    public Place getPlace() {
+        return this.place;
+    }
+    
+    public void setPlace(Place place) {
+        this.place = place;
+    }
+    
+    public Spec withPlace(Place place) {
+        setPlace(place);
+        return this;
     }
 
 }

@@ -52,7 +52,7 @@
             <#if spec.failed = true>
             <li class="fail">
                 <div class="description">
-                    <span>${spec.text?html}</span>
+                    <span<#if spec.place?has_content> title="Location: ${spec.place.filePath!"unknown location"}#${spec.place.lineNumber!"?"}"</#if>>${spec.text?html}</span>
                     <ul class="error-message">
                         <#if spec.errorMessages?has_content>
                         <#list spec.errorMessages as errorMessage>
@@ -79,7 +79,7 @@
             <#else>
             <li class="success">
                 <div class="description">
-                    <span>${spec.text?html}</span>
+                    <span<#if spec.place?has_content> title="Location: ${spec.place.filePath!"unknown location"}#${spec.place.lineNumber!"?"}"</#if>>${spec.text?html}</span>
                 </div>
                 <#if spec.subObjects?has_content>
                 <div class="sub-objects">

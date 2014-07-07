@@ -226,7 +226,7 @@ public class GalenMainTest {
             .withOriginal("check invalid-spec.spec --include desktop"));
         
         String testngReportContent = FileUtils.readFileToString(new File(testngReportPath));
-        
+
         assertThat(testngReportContent, containsString("<test-method status=\"FAIL\""));
     }
     
