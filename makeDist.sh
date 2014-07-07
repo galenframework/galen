@@ -23,10 +23,7 @@ echo Assemblying new dist
 mvn assembly:assembly -DskipTests=true
 
 cp target/galen-jar-with-dependencies.jar dist/$bin/galen.jar
-cp galen dist/$bin/.
-cp galen.bat dist/$bin/.
-cp LICENSE-2.0.txt dist/$bin/.
-cp .README dist/$bin/README
+cp -r fordist/* dist/$bin/.
 
 cp LICENSE-2.0.txt dist/$src/.
 cp .README dist/$src/README
