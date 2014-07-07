@@ -16,12 +16,14 @@
 package net.mindengine.galen.specs.reader.page;
 
 import java.io.IOException;
+import java.util.Properties;
 
 import net.mindengine.galen.specs.page.PageSection;
 
 public abstract class State {
 
     public abstract void process(String line) throws IOException;
+    private Properties properties;
 
     public boolean isObjectDefinition() {
         return this instanceof StateObjectDefinition;
@@ -31,8 +33,16 @@ public abstract class State {
         return new StateObjectDefinition(pageSpec, pageSpecReader);
     }
 
-    public static State startedSection(PageSection section, String contextPath, PageSpecReader pageSpecReader) {
-        return new StateDoingSection(section, contextPath, pageSpecReader);
+    public static State startedSection(Properties properties, PageSection section, String contextPath, PageSpecReader pageSpecReader) {
+        return new StateDoingSection(properties, section, contextPath, pageSpecReader);
+    }
+
+    public Properties getProperties() {
+        return properties;
+    }
+
+    public void setProperties(Properties properties) {
+        this.properties = properties;
     }
 
 }

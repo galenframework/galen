@@ -61,8 +61,14 @@ public class GalenBasicTestRunner {
             report.sectionStart(pageTest.getTitle());
             
             Browser browser = pageTest.getBrowserFactory().openBrowser();
-        
-            pageRunner.run(browser, pageTest);
+
+            try {
+                pageRunner.run(browser, pageTest);
+            }
+            catch (Exception ex) {
+                ex.printStackTrace();
+                report.error(ex);
+            }
             
             browser.quit();
             report.sectionEnd();

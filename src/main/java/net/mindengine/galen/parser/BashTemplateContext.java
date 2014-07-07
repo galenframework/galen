@@ -15,27 +15,31 @@
 ******************************************************************************/
 package net.mindengine.galen.parser;
 
+import java.util.Properties;
+
 import net.mindengine.galen.suite.reader.Context;
 
 public class BashTemplateContext extends Context {
 
-    
+    private Properties properties;
     private BashTemplateContext parent;
     private BashTemplateJsFunctions jsFunctions;
 
-    public BashTemplateContext() {
-        
+    public BashTemplateContext(Properties properties) {
+        this.properties = properties;
     }
-    public BashTemplateContext(BashTemplateContext context) {
+    public BashTemplateContext(Properties properties, BashTemplateContext context) {
         this.parent = context;
+        this.properties = properties;
     }
 
-    public BashTemplateContext(BashTemplateJsFunctions jsFunctions) {
+    public BashTemplateContext(Properties properties, BashTemplateJsFunctions jsFunctions) {
         this.jsFunctions = jsFunctions;
+        this.properties = properties;
     }
 
     public String process(String arguments) {
-        return new BashTemplate(arguments, jsFunctions).process(this);
+        return new BashTemplate(properties, arguments, jsFunctions).process(this);
     }
 
 
@@ -50,6 +54,12 @@ public class BashTemplateContext extends Context {
         else {
             return null;
         }
+    }
+    public Properties getProperties() {
+        return properties;
+    }
+    public void setProperties(Properties properties) {
+        this.properties = properties;
     }
 
 }

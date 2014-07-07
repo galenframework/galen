@@ -33,6 +33,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -65,11 +66,13 @@ import net.mindengine.galen.specs.colors.ColorRange;
 
 public class SpecReader {
     
+    private Properties properties;
     private Map<Pattern, SpecProcessor> specsMap = new HashMap<Pattern, SpecProcessor>();
     private Browser browser;
-    
-    public SpecReader(Browser browser) {
+
+    public SpecReader(Properties properties, Browser browser) {
         initSpecs();
+        this.properties = properties;
         this.setBrowser(browser);
     }
     
@@ -376,6 +379,7 @@ public class SpecReader {
         Spec spec = readSpecWithParams(statement, paramsText, contextPath);
         if (spec != null) {
             spec.setOriginalText(specText);
+            spec.setProperties(properties);
         }
         return spec;
     }
@@ -405,5 +409,13 @@ public class SpecReader {
 
     public void setBrowser(Browser browser) {
         this.browser = browser;
+    }
+
+    public Properties getProperties() {
+        return properties;
+    }
+
+    public void setProperties(Properties properties) {
+        this.properties = properties;
     }
 }

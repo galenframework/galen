@@ -15,8 +15,11 @@
 ******************************************************************************/
 package net.mindengine.galen.specs;
 
+import java.util.Properties;
+
 public abstract class Spec {
     private String originalText;
+    private Properties properties;
 
     public String getOriginalText() {
         return originalText;
@@ -33,6 +36,14 @@ public abstract class Spec {
     public Spec withOriginalText(String originalText) {
         setOriginalText(originalText);
         return this;
+    }
+
+    public Properties getProperties() {
+        return properties;
+    }
+
+    public void setProperties(Properties properties) {
+        this.properties = properties;
     }
 
 }

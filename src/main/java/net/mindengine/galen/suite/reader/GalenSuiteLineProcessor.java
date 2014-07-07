@@ -23,6 +23,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.List;
+import java.util.Properties;
 
 import net.mindengine.galen.parser.BashTemplateContext;
 import net.mindengine.galen.parser.SyntaxException;
@@ -34,9 +35,11 @@ public class GalenSuiteLineProcessor {
     private Node<?> currentNode = rootNode;
     private boolean disableNextSuite = false;
     private String contextPath;
+    private Properties properties;
 
-    public GalenSuiteLineProcessor(String contextPath) {
+    public GalenSuiteLineProcessor(Properties properties, String contextPath) {
         this.contextPath = contextPath;
+        this.properties = properties;
     }
 
     public void processLine(String line, int number) throws FileNotFoundException, IOException {
@@ -111,7 +114,7 @@ public class GalenSuiteLineProcessor {
         
         String fullChildPath = contextPath + File.separator + path;
         String childContextPath = new File(fullChildPath).getParent();
-        GalenSuiteLineProcessor childProcessor = new GalenSuiteLineProcessor(childContextPath);
+        GalenSuiteLineProcessor childProcessor = new GalenSuiteLineProcessor(properties, childContextPath);
         
         File file = new File(fullChildPath);
         if (!file.exists()) {
@@ -150,7 +153,7 @@ public class GalenSuiteLineProcessor {
     }
 
     public List<GalenBasicTest> buildSuites() {
-        return rootNode.build(new BashTemplateContext());
+        return rootNode.build(new BashTemplateContext(properties));
     }
 
     private int indentationSpaces(String line) {

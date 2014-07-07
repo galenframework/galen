@@ -20,6 +20,9 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.hasKey;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
+
+import java.util.Properties;
+
 import net.mindengine.galen.browser.Browser;
 import net.mindengine.galen.parser.SyntaxException;
 import net.mindengine.galen.specs.page.CorrectionsRect;
@@ -34,12 +37,13 @@ import org.testng.annotations.Test;
 public class ObjectDefinitionReaderTest {
     
     private static final Browser NO_BROWSER = null;
+    private static final Properties EMPTY_PROPERTIES = new Properties();
 
 
     @Test(dataProvider = "provideGoodSamples")
     public void shouldParseCorrect_objectDefinition(String objectDefinitionText, String expectedName, Locator expectedLocator) {
         PageSpec pageSpec = new PageSpec();
-        new StateObjectDefinition(pageSpec, new PageSpecReader(NO_BROWSER)).process(objectDefinitionText);
+        new StateObjectDefinition(pageSpec, new PageSpecReader(EMPTY_PROPERTIES, NO_BROWSER)).process(objectDefinitionText);
         assertThat(pageSpec.getObjects(), hasKey(expectedName));
         assertThat(pageSpec.getObjectLocator(expectedName), is(expectedLocator));
     }
@@ -72,7 +76,7 @@ public class ObjectDefinitionReaderTest {
         SyntaxException exception = null;
         try {
             PageSpec pageSpec = new PageSpec();
-            new StateObjectDefinition(pageSpec, new PageSpecReader(NO_BROWSER)).process(objectDefinitionText);
+            new StateObjectDefinition(pageSpec, new PageSpecReader(EMPTY_PROPERTIES, NO_BROWSER)).process(objectDefinitionText);
         }
         catch (SyntaxException e) {
             exception = e;

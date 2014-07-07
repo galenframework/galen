@@ -22,6 +22,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.HashSet;
+import java.util.Properties;
 import java.util.Set;
 import java.util.regex.Pattern;
 
@@ -34,16 +35,17 @@ import net.mindengine.galen.utils.GalenUtils;
 public class PageSpecReader implements BashTemplateJsFunctions {
     
     private BashTemplateContext bashTemplateContext;
-    
+    private Properties properties;
     /*
      *  This field is need to look up early building of objects
      *  so they could be used within bash templates
      */
     private PageSpec pageSpec;
 
-    public PageSpecReader(Browser browser) {
+    public PageSpecReader(Properties properties, Browser browser) {
+        this.properties = properties;
         this.browser = browser;
-        bashTemplateContext = new BashTemplateContext(this);
+        bashTemplateContext = new BashTemplateContext(properties, this);
     }
 
 
@@ -73,8 +75,9 @@ public class PageSpecReader implements BashTemplateJsFunctions {
     public PageSpec read(InputStream inputStream, String fileLocation, String contextPath) throws IOException {
 
         pageSpec = new PageSpec();
-        PageSpecLineProcessor lineProcessor = new PageSpecLineProcessor(contextPath, this, pageSpec);
 
+        PageSpecLineProcessor lineProcessor = new PageSpecLineProcessor(properties, contextPath, this, pageSpec);
+        
         BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream, System.getProperty("file.encoding")));
 
         String line = bufferedReader.readLine();
@@ -114,5 +117,12 @@ public class PageSpecReader implements BashTemplateJsFunctions {
     return count;
     }
 
+    public Properties getProperties() {
+        return properties;
+    }
+
+    public void setProperties(Properties properties) {
+        this.properties = properties;
+    }
 
 }

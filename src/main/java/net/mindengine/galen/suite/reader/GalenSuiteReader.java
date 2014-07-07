@@ -20,6 +20,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
+import java.util.Properties;
 
 import net.mindengine.galen.parser.FileSyntaxException;
 import net.mindengine.galen.parser.SyntaxException;
@@ -37,7 +38,7 @@ public class GalenSuiteReader {
     
     private List<GalenBasicTest> read(InputStream inputStream, String filePath) throws IOException {
         try {
-            GalenSuiteLineProcessor lineProcessor = new GalenSuiteLineProcessor(getContextPath(filePath));
+            GalenSuiteLineProcessor lineProcessor = new GalenSuiteLineProcessor(new Properties(), getContextPath(filePath));
             lineProcessor.readLines(inputStream);
             return lineProcessor.buildSuites();
         }

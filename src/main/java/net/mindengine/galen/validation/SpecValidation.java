@@ -40,7 +40,6 @@ public abstract class SpecValidation<T extends Spec> {
     public abstract void check(PageValidation pageValidation, String objectName, T spec) throws ValidationErrorException;
     
     
-    
     protected void checkAvailability(PageElement object, String objectName) throws ValidationErrorException {
         if (object == null) {
             throw new ValidationErrorException(format(OBJECT_WITH_NAME_S_IS_NOT_DEFINED_IN_PAGE_SPEC, objectName));
@@ -89,4 +88,5 @@ public abstract class SpecValidation<T extends Spec> {
             throw new ValidationErrorException(format("Cannot convert range: " + ex.getMessage()));
         }
     }
+
 }

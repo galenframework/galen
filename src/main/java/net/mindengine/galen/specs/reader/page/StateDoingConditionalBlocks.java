@@ -17,6 +17,7 @@ package net.mindengine.galen.specs.reader.page;
 
 import java.io.IOException;
 import java.util.LinkedList;
+import java.util.Properties;
 
 import net.mindengine.galen.parser.SyntaxException;
 import net.mindengine.galen.specs.page.ConditionalBlock;
@@ -38,7 +39,8 @@ public class StateDoingConditionalBlocks extends State {
     
     
     
-    public StateDoingConditionalBlocks(boolean inverted, String contextPath, PageSpecReader pageSpecReader) {
+    public StateDoingConditionalBlocks(Properties properties, boolean inverted, String contextPath, PageSpecReader pageSpecReader) {
+        setProperties(properties);
         conditionalBlock = new ConditionalBlock();
         conditionalBlock.setStatements(new LinkedList<ConditionalBlockStatement>());
         this.setPageSpecReader(pageSpecReader);
@@ -62,7 +64,7 @@ public class StateDoingConditionalBlocks extends State {
         conditionalBlock.getStatements().add(currentStatement);
         
         PageSection currentSection = new PageSection();
-        currentSectionState = new StateDoingSection(currentSection, getContextPath(), getPageSpecReader());
+        currentSectionState = new StateDoingSection(getProperties(), currentSection, getContextPath(), getPageSpecReader());
         
         currentStatement.setObjects(currentSection.getObjects());
     }
@@ -73,7 +75,7 @@ public class StateDoingConditionalBlocks extends State {
         }
         
         PageSection currentSection = new PageSection();
-        currentSectionState = new StateDoingSection(currentSection, getContextPath(), getPageSpecReader());
+        currentSectionState = new StateDoingSection(getProperties(), currentSection, getContextPath(), getPageSpecReader());
         
         conditionalBlock.setBodyObjects(currentSection.getObjects());
         state = STATE.BODY;
@@ -85,7 +87,7 @@ public class StateDoingConditionalBlocks extends State {
         }
         
         PageSection currentSection = new PageSection();
-        currentSectionState = new StateDoingSection(currentSection, contextPath, getPageSpecReader());
+        currentSectionState = new StateDoingSection(getProperties(), currentSection, contextPath, getPageSpecReader());
         state = STATE.BODY;
         
         conditionalBlock.setOtherwiseObjects(currentSection.getObjects());

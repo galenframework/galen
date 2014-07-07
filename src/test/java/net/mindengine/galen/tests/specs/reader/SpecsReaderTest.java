@@ -28,6 +28,7 @@ import java.awt.Color;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Properties;
 
 import junit.framework.Assert;
 import net.mindengine.galen.browser.Browser;
@@ -65,6 +66,7 @@ public class SpecsReaderTest {
 
     
     private static final Browser NO_BROWSER = null;
+    private static final Properties EMPTY_PROPERTIES = new Properties();
 
     @BeforeMethod
     public void configureApproximation() {
@@ -719,7 +721,7 @@ public class SpecsReaderTest {
     }
     
     private Spec readSpec(String specText) throws IOException {
-        return new SpecReader(NO_BROWSER).read(specText, ".");
+        return new SpecReader(EMPTY_PROPERTIES, NO_BROWSER).read(specText, ".");
     }
     
     private List<Side> sides(Side...sides) {

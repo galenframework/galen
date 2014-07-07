@@ -16,10 +16,10 @@
 package net.mindengine.galen.parser;
 
 import java.util.Map;
+import java.util.Properties;
 
 import net.mindengine.galen.specs.reader.StringCharReader;
 import net.mindengine.galen.suite.reader.Context;
-import net.mindengine.galen.tests.TestSession;
 
 import org.mozilla.javascript.BaseFunction;
 import org.mozilla.javascript.ImporterTopLevel;
@@ -35,10 +35,11 @@ public class BashTemplate {
     
     private int state = PARSING_TEXT;
     private BashTemplateJsFunctions jsFunctions;
-    
+    private Properties properties;
    
 
-    public BashTemplate(String templateText, BashTemplateJsFunctions jsFunctions) {
+    public BashTemplate(Properties properties, String templateText, BashTemplateJsFunctions jsFunctions) {
+        this.properties = properties;
         this.templateText = templateText;
         this.setJsFunctions(jsFunctions);
     }
@@ -90,10 +91,14 @@ public class BashTemplate {
         if (expression.matches("[a-zA-Z0-9..._]*")) {
             Object value = context.getValue(expression);
             if (value == null) {
-                //Looking for value in test session galen properties
+                //Looking for value in properties
                 
-                if (TestSession.current() != null) {
-                    return TestSession.current().getProperties().get(expression, "");
+                if (properties != null) {
+                    value = properties.getProperty(expression);
+                }
+                
+                if (value != null) {
+                    return value;
                 }
                 else return System.getProperty(expression, "");
             }
@@ -150,6 +155,14 @@ public class BashTemplate {
 
     public void setJsFunctions(BashTemplateJsFunctions jsFunctions) {
         this.jsFunctions = jsFunctions;
+    }
+
+    public Properties getProperties() {
+        return properties;
+    }
+
+    public void setProperties(Properties properties) {
+        this.properties = properties;
     }
 
 }

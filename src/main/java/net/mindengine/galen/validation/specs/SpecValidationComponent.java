@@ -48,7 +48,8 @@ public class SpecValidationComponent extends SpecValidation<SpecComponent> {
         
         ValidationListener validationListener = pageValidation.getValidationListener();
 
-        PageSpecReader pageSpecReader = new PageSpecReader(pageValidation.getBrowser());
+        PageSpecReader pageSpecReader = new PageSpecReader(spec.getProperties(), pageValidation.getBrowser());
+
         PageSpec componentPageSpec;
         try {
             componentPageSpec = pageSpecReader.read(spec.getSpecPath());

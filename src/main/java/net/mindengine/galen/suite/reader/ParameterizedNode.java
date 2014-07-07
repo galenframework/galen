@@ -20,6 +20,7 @@ import static java.lang.String.format;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 
 import net.mindengine.galen.parser.BashTemplateContext;
 import net.mindengine.galen.parser.SyntaxException;
@@ -40,7 +41,7 @@ public class ParameterizedNode extends Node<List<GalenBasicTest>>{
         
         Table table = createTable(context);
         
-        final BashTemplateContext parameterizedContext = new BashTemplateContext(context);
+        final BashTemplateContext parameterizedContext = new BashTemplateContext(new Properties(), context);
         final List<GalenBasicTest> suites = new LinkedList<GalenBasicTest>();
         
         table.forEach(new RowVisitor() {

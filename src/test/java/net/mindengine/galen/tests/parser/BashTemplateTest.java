@@ -17,6 +17,9 @@ package net.mindengine.galen.tests.parser;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
+
+import java.util.Properties;
+
 import net.mindengine.galen.parser.BashTemplate;
 import net.mindengine.galen.parser.BashTemplateJsFunctions;
 import net.mindengine.galen.suite.reader.Context;
@@ -26,6 +29,9 @@ import org.testng.annotations.Test;
 
 public class BashTemplateTest {
     
+    private static final Properties EMPTY_PROPERTIES = new Properties();
+
+
     @Test(dataProvider="provideGoodSamples") public void shouldProcessTemplate_successfully(Context context, String templateText, String expectedText) {
         BashTemplateJsFunctions jsFunctions = new BashTemplateJsFunctions() {
             @Override
@@ -36,7 +42,7 @@ public class BashTemplateTest {
                 else return 15;
             }
         };
-        BashTemplate template = new BashTemplate(templateText, jsFunctions);
+        BashTemplate template = new BashTemplate(EMPTY_PROPERTIES, templateText, jsFunctions);
         String realText = template.process(context);
         
         assertThat(realText, is(expectedText));
