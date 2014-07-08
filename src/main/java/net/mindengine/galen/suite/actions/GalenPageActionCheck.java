@@ -74,7 +74,7 @@ public class GalenPageActionCheck extends GalenPageAction {
         TestReportNode layoutReportNode = report.addNode(new LayoutReportNode(layoutReport, reportTitle));
         
         Page page = browser.getPage();
-        PageSpecReader pageSpecReader = new PageSpecReader(TestSession.current().getProperties().getProperties(), browser);
+        PageSpecReader pageSpecReader = new PageSpecReader(getCurrentProperties(), browser);
         
         
         boolean isFailed = false;
@@ -95,6 +95,16 @@ public class GalenPageActionCheck extends GalenPageAction {
             layoutReportNode.setStatus(TestReportNode.Status.ERROR);
         }
         
+    }
+
+    private Properties getCurrentProperties() {
+        TestSession session = TestSession.current();
+        if (session != null) {
+            if (session.getProperties() != null && session.getProperties().getProperties() != null) {
+                return session.getProperties().getProperties();
+            }
+        }
+        return new Properties();
     }
 
     private String toCommaSeparated(List<String> list) {
