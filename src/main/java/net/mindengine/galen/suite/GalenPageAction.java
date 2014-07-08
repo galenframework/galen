@@ -23,8 +23,7 @@ import net.mindengine.galen.validation.ValidationListener;
 
 public abstract class GalenPageAction {
     private String originalCommand;
-    private Properties properties;
-    
+
     public abstract void execute(TestReport report, Browser browser, GalenPageTest pageTest, ValidationListener validationListener) throws Exception;
 
     public String getOriginalCommand() {
@@ -34,11 +33,4 @@ public abstract class GalenPageAction {
         this.originalCommand = originalCommand;
     }
 
-    public Properties getProperties() {
-        return properties;
-    }
-
-    public void setProperties(Properties properties) {
-        this.properties = properties;
-    }
 }

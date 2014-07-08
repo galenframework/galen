@@ -17,6 +17,7 @@ package net.mindengine.galen.suite.actions;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Properties;
 
 import net.mindengine.galen.browser.Browser;
 import net.mindengine.galen.page.Page;
@@ -30,6 +31,7 @@ import net.mindengine.galen.specs.reader.page.PageSpecReader;
 import net.mindengine.galen.specs.reader.page.SectionFilter;
 import net.mindengine.galen.suite.GalenPageAction;
 import net.mindengine.galen.suite.GalenPageTest;
+import net.mindengine.galen.tests.TestSession;
 import net.mindengine.galen.utils.GalenUtils;
 import net.mindengine.galen.validation.CombinedValidationListener;
 import net.mindengine.galen.validation.PageValidation;
@@ -72,7 +74,7 @@ public class GalenPageActionCheck extends GalenPageAction {
         TestReportNode layoutReportNode = report.addNode(new LayoutReportNode(layoutReport, reportTitle));
         
         Page page = browser.getPage();
-        PageSpecReader pageSpecReader = new PageSpecReader(getProperties(), browser);
+        PageSpecReader pageSpecReader = new PageSpecReader(TestSession.current().getProperties().getProperties(), browser);
         
         
         boolean isFailed = false;
