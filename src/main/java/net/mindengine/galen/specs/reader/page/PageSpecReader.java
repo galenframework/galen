@@ -15,10 +15,7 @@
 ******************************************************************************/
 package net.mindengine.galen.specs.reader.page;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.util.HashSet;
 import java.util.Properties;
 import java.util.Set;
@@ -63,7 +60,12 @@ public class PageSpecReader implements BashTemplateJsFunctions {
         }
         else {
             processedFiles.add(filePath);
-            return read(GalenUtils.findFileOrResourceAsStream(filePath), filePath, GalenUtils.getParentForFile(filePath));
+
+            InputStream is = GalenUtils.findFileOrResourceAsStream(filePath);
+            if (is == null) {
+                throw new FileNotFoundException("Can't find file or resource: " + filePath);
+            }
+            return read(is, filePath, GalenUtils.getParentForFile(filePath));
         }
     }
 
