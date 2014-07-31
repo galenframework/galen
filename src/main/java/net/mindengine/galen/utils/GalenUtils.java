@@ -27,6 +27,7 @@ import java.util.Properties;
 
 import javax.imageio.ImageIO;
 
+import net.mindengine.galen.api.UnregisteredTestSession;
 import net.mindengine.galen.browser.SeleniumBrowser;
 import net.mindengine.galen.browser.SeleniumBrowserFactory;
 import net.mindengine.galen.browser.SeleniumGridBrowserFactory;
@@ -214,8 +215,14 @@ public class GalenUtils {
         if (excludedTags != null) {
             action.setExcludedTags(Arrays.asList(excludedTags));
         }
-        TestReport report = TestSession.current().getReport();
-        CompleteListener listener = TestSession.current().getListener();
+
+        TestSession session = TestSession.current();
+        if (session == null) {
+            throw new UnregisteredTestSession("Cannot check layout as there was no TestSession created");
+        }
+
+        TestReport report = session.getReport();
+        CompleteListener listener = session.getListener();
         action.execute(report, new SeleniumBrowser(driver), null, listener);
     }
     

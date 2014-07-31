@@ -15,6 +15,8 @@
 ******************************************************************************/
 package net.mindengine.galen.reports.model;
 
+import net.mindengine.galen.validation.ValidationError;
+
 import java.util.LinkedList;
 import java.util.List;
 
@@ -26,7 +28,8 @@ public class LayoutReport {
 
     private String screenshot;
     private String screenshotFullPath;
-    
+    private List<ValidationError> validationErrors;
+
     public String getTitle() {
         return title;
     }
@@ -59,4 +62,11 @@ public class LayoutReport {
         this.screenshotFullPath = screenshotFullPath;
     }
 
+    public void setValidationErrors(List<ValidationError> validationErrors) {
+        this.validationErrors = validationErrors;
+    }
+
+    public List<ValidationError> getValidationErrors() {
+        return validationErrors;
+    }
 }

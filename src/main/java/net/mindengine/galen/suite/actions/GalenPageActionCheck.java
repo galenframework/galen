@@ -19,6 +19,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Properties;
 
+import net.mindengine.galen.api.Galen4J;
 import net.mindengine.galen.browser.Browser;
 import net.mindengine.galen.page.Page;
 import net.mindengine.galen.reports.LayoutReportNode;
@@ -53,48 +54,14 @@ public class GalenPageActionCheck extends GalenPageAction {
     
     @Override
     public void execute(TestReport report, Browser browser, GalenPageTest pageTest, ValidationListener validationListener) throws IOException {
-        
-        CombinedValidationListener listener = new CombinedValidationListener();
-        listener.add(validationListener);
+        LayoutReport layoutReport = Galen4J.checkLayout(browser, getSpecs(), getIncludedTags(), getExcludedTags(), getCurrentProperties(), validationListener);
 
-        
-        LayoutReport layoutReport = new LayoutReport();
-        try {
-            layoutReport.setScreenshotFullPath(browser.createScreenshot());
-        }
-        catch (Exception ex) {
-            ex.printStackTrace();
-        }
-        
-        
-        listener.add(new LayoutReportListener(layoutReport));
-        
-        
-        String reportTitle = "Check layout: " + toCommaSeparated(getSpecs()) + " included tags: " + toCommaSeparated(getIncludedTags());
+        String reportTitle = "Check layout: " + toCommaSeparated(getSpecs()) + " included tags: " + toCommaSeparated(includedTags);
         TestReportNode layoutReportNode = report.addNode(new LayoutReportNode(layoutReport, reportTitle));
-        
-        Page page = browser.getPage();
-        PageSpecReader pageSpecReader = new PageSpecReader(getCurrentProperties(), browser);
-        
-        
-        boolean isFailed = false;
-        for (String specFilePath : specs) {
-            PageSpec spec = pageSpecReader.read(specFilePath);
-            
-            SectionFilter sectionFilter = new SectionFilter(includedTags, excludedTags);
-            List<PageSection> pageSections = spec.findSections(sectionFilter);
-            SectionValidation sectionValidation = new SectionValidation(pageSections, new PageValidation(browser, page, spec, listener, sectionFilter), listener);
-            
-            List<ValidationError> errors = sectionValidation.check();
-            if (errors != null && errors.size() > 0) {
-                isFailed = true;
-            }
-        }
-        
-        if (isFailed) {
+
+        if (layoutReport.getValidationErrors().size() > 0) {
             layoutReportNode.setStatus(TestReportNode.Status.ERROR);
         }
-        
     }
 
     private Properties getCurrentProperties() {

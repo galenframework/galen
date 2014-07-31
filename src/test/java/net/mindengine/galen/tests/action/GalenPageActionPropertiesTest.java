@@ -36,7 +36,7 @@ public class GalenPageActionPropertiesTest {
     private static final ValidationListener NO_LISTENER = null;
 
     @Test public void shouldLoadProperties_fromSpecifiedFiles() throws Exception {
-        TestSession.register(null, null);
+        TestSession.register(null);
         
         System.getProperties().remove("page.title");
         System.getProperties().remove("page.download.caption");

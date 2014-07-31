@@ -284,7 +284,7 @@ public class GalenMain {
                         testInfoLock.lock();
                         try {
                             testInfos.add(info);
-                            TestSession session = TestSession.register(info, test);
+                            TestSession session = TestSession.register(info);
                             session.setReport(report);
                             session.setListener(listener);
                         }
