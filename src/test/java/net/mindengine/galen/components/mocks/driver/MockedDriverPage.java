@@ -13,10 +13,28 @@
 * See the License for the specific language governing permissions and
 * limitations under the License.
 ******************************************************************************/
-package net.mindengine.galen.api;
+package net.mindengine.galen.components.mocks.driver;
 
-public class UnregisteredTestSession extends RuntimeException {
-    public UnregisteredTestSession(String message) {
-        super(message);
+import java.util.List;
+
+public class MockedDriverPage {
+
+    private String title;
+    private List<MockedPageItem> items;
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public List<MockedPageItem> getItems() {
+        return items;
+    }
+
+    public void setItems(List<MockedPageItem> items) {
+        this.items = items;
     }
 }

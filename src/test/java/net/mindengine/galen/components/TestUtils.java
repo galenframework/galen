@@ -20,6 +20,7 @@ import static org.hamcrest.Matchers.is;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Properties;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -53,4 +54,10 @@ public class TestUtils {
         return Arrays.asList(lines);
     }
 
+    public static void deleteSystemProperty(String key) {
+        Properties properties = System.getProperties();
+        if (properties.containsKey(key)) {
+            properties.remove(key);
+        }
+    }
 }

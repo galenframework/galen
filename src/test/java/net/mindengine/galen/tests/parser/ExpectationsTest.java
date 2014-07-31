@@ -15,6 +15,7 @@
 ******************************************************************************/
 package net.mindengine.galen.tests.parser;
 
+import static net.mindengine.galen.components.TestUtils.deleteSystemProperty;
 import static net.mindengine.galen.specs.Side.BOTTOM;
 import static net.mindengine.galen.specs.Side.LEFT;
 import static net.mindengine.galen.specs.Side.RIGHT;
@@ -24,9 +25,12 @@ import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
 
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Properties;
 
+import net.mindengine.galen.config.GalenConfig;
 import net.mindengine.galen.parser.ExpectLocations;
 import net.mindengine.galen.parser.ExpectRange;
 import net.mindengine.galen.parser.ExpectSides;
@@ -39,10 +43,21 @@ import net.mindengine.galen.specs.reader.StringCharReader;
 
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.hamcrest.MatcherAssert;
+import org.junit.BeforeClass;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.BeforeTest;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
 public class ExpectationsTest {
+
+
+    @BeforeClass
+    public void init() throws IOException {
+        deleteSystemProperty("galen.range.approximation");
+        deleteSystemProperty("galen.reporting.listeners");
+        GalenConfig.getConfig().reset();
+    }
 
     @Test(dataProvider = "rangeTestData")
     public void expectRangeTest(String textForParsing, Range expected) {

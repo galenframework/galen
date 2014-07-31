@@ -16,6 +16,7 @@
 package net.mindengine.galen.tests.specs.reader;
 
 
+import static net.mindengine.galen.components.TestUtils.deleteSystemProperty;
 import static net.mindengine.galen.specs.Side.BOTTOM;
 import static net.mindengine.galen.specs.Side.LEFT;
 import static net.mindengine.galen.specs.Side.RIGHT;
@@ -32,6 +33,7 @@ import java.util.Properties;
 
 import junit.framework.Assert;
 import net.mindengine.galen.browser.Browser;
+import net.mindengine.galen.config.GalenConfig;
 import net.mindengine.galen.parser.SyntaxException;
 import net.mindengine.galen.specs.Alignment;
 import net.mindengine.galen.specs.Location;
@@ -57,6 +59,7 @@ import net.mindengine.galen.specs.colors.ColorRange;
 import net.mindengine.galen.specs.reader.SpecReader;
 
 import org.hamcrest.Matchers;
+import org.junit.BeforeClass;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
@@ -67,6 +70,13 @@ public class SpecsReaderTest {
     
     private static final Browser NO_BROWSER = null;
     private static final Properties EMPTY_PROPERTIES = new Properties();
+
+    @BeforeClass
+    public void init() throws IOException {
+        deleteSystemProperty("galen.range.approximation");
+        deleteSystemProperty("galen.reporting.listeners");
+        GalenConfig.getConfig().reset();
+    }
 
     @BeforeMethod
     public void configureApproximation() {
