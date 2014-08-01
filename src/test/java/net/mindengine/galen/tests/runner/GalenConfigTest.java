@@ -15,6 +15,7 @@
 ******************************************************************************/
 package net.mindengine.galen.tests.runner;
 
+import static net.mindengine.galen.components.TestUtils.deleteSystemProperty;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.instanceOf;
 import static org.hamcrest.Matchers.is;
@@ -37,10 +38,17 @@ import net.mindengine.galen.specs.reader.StringCharReader;
 import org.apache.commons.io.FileUtils;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
+import org.testng.annotations.AfterClass;
 import org.testng.annotations.Test;
 
 public class GalenConfigTest {
 
+    @AfterClass
+    public void resetConfigToDefault() throws IOException {
+        deleteSystemProperty("galen.range.approximation");
+        deleteSystemProperty("galen.reporting.listeners");
+        GalenConfig.getConfig().reset();
+    }
     
     @Test public void shouldRead_configForLocalProject_fromFile() throws IOException {
         //copying file from resources to local folder
