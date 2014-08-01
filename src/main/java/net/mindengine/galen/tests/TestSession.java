@@ -16,7 +16,10 @@
 package net.mindengine.galen.tests;
 
 import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
+import java.util.concurrent.locks.ReentrantLock;
 
 import net.mindengine.galen.reports.GalenTestInfo;
 import net.mindengine.galen.reports.TestReport;
@@ -25,9 +28,12 @@ import net.mindengine.galen.runner.CompleteListener;
 public class TestSession {
     
     private static final ThreadLocal<TestSession> _sessions = new ThreadLocal<TestSession>();
+    private static final List<TestSession> _sessionsList = new LinkedList<TestSession>();
+    private static final ReentrantLock lock = new ReentrantLock();
+
     private GalenTestInfo testInfo;
     private Map<String, Object> data = new HashMap<String, Object>();
-    private TestReport report;
+    private TestReport report = new TestReport();
     private CompleteListener listener;
     private GalenProperties properties = new GalenProperties();
     
@@ -36,9 +42,19 @@ public class TestSession {
     }
 
     public static TestSession register(GalenTestInfo info) {
-        TestSession session = new TestSession(info);
-        _sessions.set(session);
-        return session;
+        lock.lock();
+        try {
+            TestSession session = new TestSession(info);
+            _sessions.set(session);
+            _sessionsList.add(session);
+            return session;
+        }
+        catch (Exception ex) {
+            throw new RuntimeException(ex);
+        }
+        finally {
+            lock.unlock();
+        }
     }
 
 
@@ -93,5 +109,18 @@ public class TestSession {
 
     public void setProperties(GalenProperties properties) {
         this.properties = properties;
+    }
+
+    public static List<TestSession> getAllSessions() {
+        lock.lock();
+        try {
+            return new LinkedList<TestSession>(_sessionsList);
+        }
+        catch (Exception ex) {
+            throw new RuntimeException(ex);
+        }
+        finally {
+            lock.unlock();
+        }
     }
 }

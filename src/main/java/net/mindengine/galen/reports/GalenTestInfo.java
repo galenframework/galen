@@ -24,8 +24,8 @@ public class GalenTestInfo {
     private String name;
     private TestReport report = new TestReport();
     private Throwable exception;
-    private Date startedAt;
-    private Date endedAt;
+    private Date startedAt = new Date();
+    private Date endedAt = new Date();
     private GalenTest testInstance;
     
     

@@ -54,14 +54,7 @@ public class GalenPageActionCheck extends GalenPageAction {
     
     @Override
     public void execute(TestReport report, Browser browser, GalenPageTest pageTest, ValidationListener validationListener) throws IOException {
-        LayoutReport layoutReport = Galen4J.checkLayout(browser, getSpecs(), getIncludedTags(), getExcludedTags(), getCurrentProperties(), validationListener);
-
-        String reportTitle = "Check layout: " + toCommaSeparated(getSpecs()) + " included tags: " + toCommaSeparated(includedTags);
-        TestReportNode layoutReportNode = report.addNode(new LayoutReportNode(layoutReport, reportTitle));
-
-        if (layoutReport.getValidationErrors().size() > 0) {
-            layoutReportNode.setStatus(TestReportNode.Status.ERROR);
-        }
+        Galen4J.checkLayout(browser, getSpecs(), getIncludedTags(), getExcludedTags(), getCurrentProperties(), validationListener);
     }
 
     private Properties getCurrentProperties() {
@@ -72,22 +65,6 @@ public class GalenPageActionCheck extends GalenPageAction {
             }
         }
         return new Properties();
-    }
-
-    private String toCommaSeparated(List<String> list) {
-        if (list != null) {
-            StringBuffer buff = new StringBuffer();
-            boolean comma = false;
-            for (String item : list) {
-                if (comma) {
-                    buff.append(',');
-                }
-                comma = true;
-                buff.append(item);
-            }
-            return buff.toString();
-        }
-        return "";
     }
 
     public GalenPageActionCheck withSpecs(List<String> specFilePaths) {
