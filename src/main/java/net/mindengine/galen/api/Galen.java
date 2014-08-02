@@ -45,9 +45,7 @@ import java.util.Properties;
 
 import static java.util.Arrays.asList;
 
-public class Galen4J {
-
-
+public class Galen {
 
     public static LayoutReport checkLayout(Browser browser, List<String> specPaths,
                                    List<String> includedTags, List<String> excludedTags,
@@ -86,17 +84,6 @@ public class Galen4J {
 
         layoutReport.setValidationErrors(allValidationErrors);
 
-        TestSession session = TestSession.current();
-
-        if (session != null) {
-            String reportTitle = "Check layout: " + toCommaSeparated(specPaths) + " included tags: " + toCommaSeparated(includedTags);
-            TestReportNode layoutReportNode = new LayoutReportNode(layoutReport, reportTitle);
-            if (layoutReport.getValidationErrors().size() > 0) {
-                layoutReportNode.setStatus(TestReportNode.Status.ERROR);
-            }
-            session.getReport().addNode(layoutReportNode);
-        }
-
         return layoutReport;
     }
 
@@ -118,22 +105,5 @@ public class Galen4J {
 
         TestSession.clear();
         TestSession.register(testInfo);
-    }
-
-
-    private static String toCommaSeparated(List<String> list) {
-        if (list != null) {
-            StringBuffer buff = new StringBuffer();
-            boolean comma = false;
-            for (String item : list) {
-                if (comma) {
-                    buff.append(',');
-                }
-                comma = true;
-                buff.append(item);
-            }
-            return buff.toString();
-        }
-        return "";
     }
 }

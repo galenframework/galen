@@ -19,26 +19,15 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Properties;
 
-import net.mindengine.galen.api.Galen4J;
+import net.mindengine.galen.api.Galen;
 import net.mindengine.galen.browser.Browser;
-import net.mindengine.galen.page.Page;
 import net.mindengine.galen.reports.LayoutReportNode;
 import net.mindengine.galen.reports.TestReport;
 import net.mindengine.galen.reports.TestReportNode;
 import net.mindengine.galen.reports.model.LayoutReport;
-import net.mindengine.galen.specs.page.PageSection;
-import net.mindengine.galen.specs.reader.page.PageSpec;
-import net.mindengine.galen.specs.reader.page.PageSpecReader;
-import net.mindengine.galen.specs.reader.page.SectionFilter;
 import net.mindengine.galen.suite.GalenPageAction;
 import net.mindengine.galen.suite.GalenPageTest;
 import net.mindengine.galen.tests.TestSession;
-import net.mindengine.galen.utils.GalenUtils;
-import net.mindengine.galen.validation.CombinedValidationListener;
-import net.mindengine.galen.validation.PageValidation;
-import net.mindengine.galen.validation.SectionValidation;
-import net.mindengine.galen.validation.LayoutReportListener;
-import net.mindengine.galen.validation.ValidationError;
 import net.mindengine.galen.validation.ValidationListener;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
@@ -54,7 +43,16 @@ public class GalenPageActionCheck extends GalenPageAction {
     
     @Override
     public void execute(TestReport report, Browser browser, GalenPageTest pageTest, ValidationListener validationListener) throws IOException {
-        Galen4J.checkLayout(browser, getSpecs(), getIncludedTags(), getExcludedTags(), getCurrentProperties(), validationListener);
+        LayoutReport layoutReport = Galen.checkLayout(browser, getSpecs(), getIncludedTags(), getExcludedTags(), getCurrentProperties(), validationListener);
+
+        if (report != null) {
+            String reportTitle = "Check layout: " + toCommaSeparated(getSpecs()) + " included tags: " + toCommaSeparated(includedTags);
+            TestReportNode layoutReportNode = new LayoutReportNode(layoutReport, reportTitle);
+            if (layoutReport.getValidationErrors().size() > 0) {
+                layoutReportNode.setStatus(TestReportNode.Status.ERROR);
+            }
+            report.addNode(layoutReportNode);
+        }
     }
 
     private Properties getCurrentProperties() {
@@ -146,6 +144,23 @@ public class GalenPageActionCheck extends GalenPageAction {
     public GalenPageAction withOriginalCommand(String originalCommand) {
         setOriginalCommand(originalCommand);
         return this;
+    }
+
+
+    private static String toCommaSeparated(List<String> list) {
+        if (list != null) {
+            StringBuffer buff = new StringBuffer();
+            boolean comma = false;
+            for (String item : list) {
+                if (comma) {
+                    buff.append(',');
+                }
+                comma = true;
+                buff.append(item);
+            }
+            return buff.toString();
+        }
+        return "";
     }
    
 }
