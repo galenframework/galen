@@ -273,10 +273,9 @@ public class GalenMain {
                     @Override
                     public void run() {
                         
-                        GalenTestInfo info = new GalenTestInfo(test);
+                        GalenTestInfo info = new GalenTestInfo(test.getName(), test);
                         TestReport report = new TestReport();
-                        info.setName(test.getName());
-                        
+
                         info.setStartedAt(new Date());
                         info.setReport(report);
                         

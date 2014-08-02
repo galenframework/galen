@@ -98,7 +98,7 @@ public class TestSession {
 
     public GalenTest getTest() {
         if (this.testInfo != null) {
-            return this.testInfo.getTestInstance();
+            return this.testInfo.getTest();
         }
         else return null;
     }

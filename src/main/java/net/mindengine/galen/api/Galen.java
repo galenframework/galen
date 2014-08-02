@@ -47,9 +47,24 @@ import static java.util.Arrays.asList;
 
 public class Galen {
 
+
     public static LayoutReport checkLayout(Browser browser, List<String> specPaths,
+                                           List<String> includedTags, List<String> excludedTags,
+                                           Properties properties, ValidationListener validationListener) throws IOException {
+        PageSpecReader reader = new PageSpecReader(properties, browser);
+
+        List<PageSpec> specs = new LinkedList<PageSpec>();
+
+        for (String specPath : specPaths) {
+            specs.add(reader.read(specPath));
+        }
+
+        return checkLayout(browser, specs, includedTags, excludedTags, validationListener);
+    }
+
+    public static LayoutReport checkLayout(Browser browser, List<PageSpec> specs,
                                    List<String> includedTags, List<String> excludedTags,
-                                   Properties properties, ValidationListener validationListener) throws IOException {
+                                   ValidationListener validationListener) throws IOException {
 
         CombinedValidationListener listener = new CombinedValidationListener();
         listener.add(validationListener);
@@ -64,13 +79,10 @@ public class Galen {
         listener.add(new LayoutReportListener(layoutReport));
 
         Page page = browser.getPage();
-        PageSpecReader pageSpecReader = new PageSpecReader(properties, browser);
-
 
         List<ValidationError> allValidationErrors = new LinkedList<ValidationError>();
 
-        for (String specFilePath : specPaths) {
-            PageSpec spec = pageSpecReader.read(specFilePath);
+        for (PageSpec spec : specs) {
 
             SectionFilter sectionFilter = new SectionFilter(includedTags, excludedTags);
             List<PageSection> pageSections = spec.findSections(sectionFilter);
@@ -99,11 +111,4 @@ public class Galen {
         return checkLayout(new SeleniumBrowser(driver), asList(specPath), includedTags, excludedTags, properties, validationListener);
     }
 
-    public static void registerTest(final String testName) {
-        GalenTestInfo testInfo = new GalenTestInfo(new GalenEmptyTest(testName));
-        testInfo.setName(testName);
-
-        TestSession.clear();
-        TestSession.register(testInfo);
-    }
 }

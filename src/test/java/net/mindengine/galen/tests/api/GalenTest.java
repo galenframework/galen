@@ -18,10 +18,8 @@ package net.mindengine.galen.tests.api;
 import net.mindengine.galen.api.Galen;
 import net.mindengine.galen.components.mocks.driver.MockedDriver;
 import net.mindengine.galen.page.Rect;
-import net.mindengine.galen.reports.LayoutReportNode;
-import net.mindengine.galen.reports.TestReportNode;
+import net.mindengine.galen.reports.GalenTestInfo;
 import net.mindengine.galen.reports.model.LayoutReport;
-import net.mindengine.galen.tests.TestSession;
 import net.mindengine.galen.validation.ErrorArea;
 import net.mindengine.galen.validation.ValidationError;
 import org.openqa.selenium.WebDriver;
@@ -53,37 +51,4 @@ public class GalenTest {
                         .withArea(new ErrorArea(new Rect(10, 10, 100, 50), "save-button"))));
     }
 
-
-    @Test
-    public void registerTest_shouldCreate_newTestSession() {
-        Galen.registerTest("Test_1");
-        Galen.registerTest("Test_2");
-
-        List<String> testNames = new LinkedList<String>();
-
-        List<TestSession> sessions = TestSession.getAllSessions();
-        for (TestSession session : sessions) {
-            if (session.getTestInfo() != null) {
-                testNames.add(session.getTestInfo().getName());
-            }
-        }
-
-        assertThat(testNames, hasItems("Test_1", "Test_2"));
-        TestSession.clear();
-    }
-
-    @Test
-    public void checkLayout_shouldCreateReport() throws IOException {
-        Galen.registerTest("checkLayout_shouldCreateReport");
-        WebDriver driver = new MockedDriver();
-        driver.get("/mocks/pages/galen4j-sample-page.json");
-        Galen.checkLayout(driver, "/specs/galen4j/sample-spec-with-error.spec", asList("mobile"), null, new Properties(), null);
-
-        TestSession session = TestSession.current();
-
-        TestReportNode reportNode = session.getReport().getNodes().get(0);
-
-        assertThat(reportNode, instanceOf(LayoutReportNode.class));
-        assertThat(reportNode.getName(), is("Check layout: /specs/galen4j/sample-spec-with-error.spec included tags: mobile"));
-    }
 }

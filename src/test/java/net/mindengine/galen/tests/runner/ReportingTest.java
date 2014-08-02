@@ -73,16 +73,15 @@ public class ReportingTest {
         
         List<GalenTestInfo> testInfos = new LinkedList<GalenTestInfo>();
         
-        GalenTestInfo testInfo = new GalenTestInfo(null);
-        testInfo.setName("Home page test");
+        GalenTestInfo testInfo = new GalenTestInfo("Home page test", null);
+
         testInfo.setReport(new TestReport());
         testInfo.setStartedAt(new Date(1399741000000L));
         testInfo.setEndedAt(new Date(1399746930000L));
         testInfo.setException(new FakeException("Some exception here"));
         testInfos.add(testInfo);
         
-        testInfo = new GalenTestInfo(null);
-        testInfo.setName("Login page test");
+        testInfo = new GalenTestInfo("Login page test", null);
         testInfo.setReport(new TestReport());
         testInfo.setStartedAt(new Date(1399741000000L));
         testInfo.setEndedAt(new Date(1399746930000L));
@@ -103,11 +102,10 @@ public class ReportingTest {
         
         List<GalenTestInfo> testInfos = new LinkedList<GalenTestInfo>();
         
-        GalenTestInfo testInfo = new GalenTestInfo(null);
+        GalenTestInfo testInfo = new GalenTestInfo("Home page test", null);
         testInfo.setStartedAt(new Date(1399741000000L));
         testInfo.setEndedAt(new Date(1399746930000L));
 
-        testInfo.setName("Home page test");
         File attachmentFile = new File(Files.createTempDir().getAbsolutePath() + File.separator + "custom.txt");
         attachmentFile.createNewFile();
         
@@ -130,8 +128,8 @@ public class ReportingTest {
         
         List<GalenTestInfo> testInfos = new LinkedList<GalenTestInfo>();
         
-        GalenTestInfo testInfo = new GalenTestInfo(null);
-        testInfo.setName("Home page test");
+        GalenTestInfo testInfo = new GalenTestInfo("Home page test", null);
+
         TestReport report = new TestReport();
         LayoutReport layoutReport = new LayoutReport();
         layoutReport.setScreenshotFullPath(File.createTempFile("screenshot", ".png").getAbsolutePath());

@@ -15,8 +15,10 @@
 ******************************************************************************/
 package net.mindengine.galen.reports;
 
+import java.lang.reflect.Method;
 import java.util.Date;
 
+import net.mindengine.galen.tests.GalenEmptyTest;
 import net.mindengine.galen.tests.GalenTest;
 
 public class GalenTestInfo {
@@ -26,11 +28,12 @@ public class GalenTestInfo {
     private Throwable exception;
     private Date startedAt = new Date();
     private Date endedAt = new Date();
-    private GalenTest testInstance;
+    private GalenTest test;
     
     
-    public GalenTestInfo(GalenTest test) {
-        setTestInstance(test);
+    public GalenTestInfo(String name, GalenTest test) {
+        setName(name);
+        setTest(test);
     }
     
     public boolean isFailed() {
@@ -77,12 +80,21 @@ public class GalenTestInfo {
         this.endedAt = endedAt;
     }
 
-    public GalenTest getTestInstance() {
-        return testInstance;
+    public GalenTest getTest() {
+        return test;
     }
 
-    public void setTestInstance(GalenTest testInstance) {
-        this.testInstance = testInstance;
+    public void setTest(GalenTest test) {
+        this.test = test;
     }
-    
+
+    public static GalenTestInfo fromString(String name) {
+        return new GalenTestInfo(name, new GalenEmptyTest(name));
+    }
+
+    public static GalenTestInfo fromMethod(Method method) {
+        String name = method.getDeclaringClass().getName() + "#" + method.getName();
+        return GalenTestInfo.fromString(name);
+    }
+
 }
