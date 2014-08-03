@@ -15,6 +15,8 @@
 ******************************************************************************/
 package net.mindengine.galen.reports;
 
+import net.mindengine.galen.reports.model.LayoutReport;
+
 import java.util.List;
 
 
@@ -72,6 +74,12 @@ public class TestReport {
     public TestReportNode addNode(TestReportNode node) {
         this.currentNode.addNode(node);
         return node;
+    }
+
+    public LayoutReportNode layout(LayoutReport layoutReport, String title) {
+        LayoutReportNode layoutReportNode = new LayoutReportNode(layoutReport, title);
+        this.currentNode.addNode(layoutReportNode);
+        return layoutReportNode;
     }
 
     public TestStatistic fetchStatistic() {
