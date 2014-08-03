@@ -37,7 +37,7 @@ import static org.hamcrest.Matchers.*;
 public class GalenTest {
 
     @Test
-    public void checkLayout_shouldThrowException() throws IOException {
+    public void checkLayout_shouldTestLayout_andReturnLayoutReport() throws IOException {
         WebDriver driver = new MockedDriver();
         driver.get("/mocks/pages/galen4j-sample-page.json");
 
