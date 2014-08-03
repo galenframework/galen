@@ -78,6 +78,9 @@ public class TestReport {
 
     public LayoutReportNode layout(LayoutReport layoutReport, String title) {
         LayoutReportNode layoutReportNode = new LayoutReportNode(layoutReport, title);
+        if (layoutReport.getValidationErrors() != null && layoutReport.getValidationErrors().size() > 0) {
+            layoutReportNode.setStatus(TestReportNode.Status.ERROR);
+        }
         this.currentNode.addNode(layoutReportNode);
         return layoutReportNode;
     }
