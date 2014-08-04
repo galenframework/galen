@@ -95,6 +95,8 @@ public class LayoutReportListener implements ValidationListener {
         
         spec.setText(originalSpec.getOriginalText());
         spec.setFailed(true);
+
+        spec.setOnlyWarn(originalSpec.isOnlyWarn());
         
         spec.setErrorMessages(error.getMessages());
         spec.setErrorAreas(error.getErrorAreas());

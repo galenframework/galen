@@ -206,7 +206,7 @@ public class SectionValidation {
             ValidationError error = pageValidation.check(objectName, spec);
             if (error != null) {
                 errors.add(error);
-                if (shouldReport && !error.isOnlyWarn()) {
+                if (shouldReport) {
                     tellOnSpecError(pageValidation, objectName, spec, error);
                 }
             }

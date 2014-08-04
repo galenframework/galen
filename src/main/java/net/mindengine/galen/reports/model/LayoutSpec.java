@@ -29,6 +29,7 @@ public class LayoutSpec {
     private List<String> errorMessages = new LinkedList<String>();
     private List<ErrorArea> errorAreas = new LinkedList<ErrorArea>();
     private List<LayoutObject> subObjects;
+    private boolean onlyWarn;
 
     public String getText() {
         return text;
@@ -75,5 +76,13 @@ public class LayoutSpec {
 
     public void setPlace(Place place) {
         this.place = place;
+    }
+
+    public void setOnlyWarn(boolean onlyWarn) {
+        this.onlyWarn = onlyWarn;
+    }
+
+    public boolean isOnlyWarn() {
+        return onlyWarn;
     }
 }

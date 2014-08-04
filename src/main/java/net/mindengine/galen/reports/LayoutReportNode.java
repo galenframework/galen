@@ -59,7 +59,12 @@ public class LayoutReportNode extends TestReportNode {
                 testStatistic.setTotal(testStatistic.getTotal() + 1);
                 
                 if (spec.getFailed()) {
-                    testStatistic.setErrors(testStatistic.getErrors() + 1);
+                    if (spec.isOnlyWarn()) {
+                        testStatistic.setWarnings(testStatistic.getWarnings() + 1);
+                    }
+                    else {
+                        testStatistic.setErrors(testStatistic.getErrors() + 1);
+                    }
                 }
                 else testStatistic.setPassed(testStatistic.getPassed() + 1);
                 

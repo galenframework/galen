@@ -111,4 +111,9 @@ public class ValidationError {
     public boolean isOnlyWarn() {
         return onlyWarn;
     }
+
+    public ValidationError withOnlyWarn(boolean onlyWarn) {
+        setOnlyWarn(onlyWarn);
+        return this;
+    }
 }
