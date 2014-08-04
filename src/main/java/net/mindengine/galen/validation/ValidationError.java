@@ -28,6 +28,7 @@ public class ValidationError {
 
     private List<ErrorArea> errorAreas;
     private List<String> messages;
+    private boolean onlyWarn;
 
     public ValidationError(List<ErrorArea> errorAreas, List<String> messages) {
         this.setErrorAreas(errorAreas);
@@ -103,4 +104,11 @@ public class ValidationError {
         return new ValidationError().withMessage(ExceptionUtils.getMessage(e));
     }
 
+    public void setOnlyWarn(boolean onlyWarn) {
+        this.onlyWarn = onlyWarn;
+    }
+
+    public boolean isOnlyWarn() {
+        return onlyWarn;
+    }
 }

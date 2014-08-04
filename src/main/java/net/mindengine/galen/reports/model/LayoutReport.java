@@ -66,6 +66,30 @@ public class LayoutReport {
         this.validationErrors = validationErrors;
     }
 
+    public int errors() {
+        int errors = 0;
+        if (validationErrors != null) {
+            for (ValidationError validationError : validationErrors) {
+                if (!validationError.isOnlyWarn()) {
+                    errors++;
+                }
+            }
+        }
+        return errors;
+    }
+
+    public int warnings() {
+        int warnings = 0;
+        if (validationErrors != null) {
+            for (ValidationError validationError : validationErrors) {
+                if (!validationError.isOnlyWarn()) {
+                    warnings ++;
+                }
+            }
+        }
+        return warnings;
+    }
+
     public List<ValidationError> getValidationErrors() {
         return validationErrors;
     }

@@ -78,8 +78,11 @@ public class TestReport {
 
     public LayoutReportNode layout(LayoutReport layoutReport, String title) {
         LayoutReportNode layoutReportNode = new LayoutReportNode(layoutReport, title);
-        if (layoutReport.getValidationErrors() != null && layoutReport.getValidationErrors().size() > 0) {
+        if (layoutReport.errors() > 0) {
             layoutReportNode.setStatus(TestReportNode.Status.ERROR);
+        }
+        else if (layoutReport.warnings() > 0) {
+            layoutReportNode.setStatus(TestReportNode.Status.WARN);
         }
         this.currentNode.addNode(layoutReportNode);
         return layoutReportNode;

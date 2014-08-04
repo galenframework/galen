@@ -62,7 +62,11 @@ public class PageValidation {
             return null;
         }
         catch (ValidationErrorException ex) {
-            return new ValidationError(ex.getErrorAreas(), ex.getErrorMessages());
+            ValidationError validationError = new ValidationError(ex.getErrorAreas(), ex.getErrorMessages());
+            if (spec.isOnlyWarn()) {
+                validationError.setOnlyWarn(true);
+            }
+            return validationError;
         }
     }
 

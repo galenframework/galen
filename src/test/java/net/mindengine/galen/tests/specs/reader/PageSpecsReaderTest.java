@@ -30,7 +30,6 @@ import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
@@ -55,7 +54,6 @@ import net.mindengine.galen.specs.reader.Place;
 import net.mindengine.galen.specs.reader.page.PageSpec;
 import net.mindengine.galen.specs.reader.page.PageSpecReader;
 
-import org.hamcrest.Matchers;
 import org.testng.annotations.Test;
 
 public class PageSpecsReaderTest {
@@ -634,10 +632,10 @@ public class PageSpecsReaderTest {
             Spec spec2 = specs.get(1);
 
             assertThat(spec1.getOriginalText(), is("text is: Login"));
-            assertThat(spec1.getOnlyWarn(), is(true));
+            assertThat(spec1.isOnlyWarn(), is(true));
 
             assertThat(spec2.getOriginalText(), is("width: 100px"));
-            assertThat(spec2.getOnlyWarn(), is(false));
+            assertThat(spec2.isOnlyWarn(), is(false));
         }
 
         {
@@ -648,10 +646,10 @@ public class PageSpecsReaderTest {
             Spec spec2 = specs.get(1);
 
             assertThat(spec1.getOriginalText(), is("width: 150px"));
-            assertThat(spec1.getOnlyWarn(), is(true));
+            assertThat(spec1.isOnlyWarn(), is(true));
 
             assertThat(spec2.getOriginalText(), is("height: 50px"));
-            assertThat(spec2.getOnlyWarn(), is(false));
+            assertThat(spec2.isOnlyWarn(), is(false));
         }
     }
 
