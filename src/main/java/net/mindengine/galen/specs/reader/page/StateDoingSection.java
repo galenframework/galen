@@ -22,6 +22,7 @@ import java.util.Properties;
 
 import net.mindengine.galen.parser.MathParser;
 import net.mindengine.galen.parser.SyntaxException;
+import net.mindengine.galen.specs.Spec;
 import net.mindengine.galen.specs.page.ObjectSpecs;
 import net.mindengine.galen.specs.page.PageSection;
 import net.mindengine.galen.specs.reader.Place;
@@ -29,6 +30,7 @@ import net.mindengine.galen.specs.reader.SpecReader;
 
 public class StateDoingSection extends State {
 
+    public static final String ONLY_WARN_SYMBOL = "%";
     private PageSection section;
     private ObjectSpecs currentObjectSpecs;
     private SpecReader specReader;
@@ -51,12 +53,25 @@ public class StateDoingSection extends State {
 
         public void processObject(String line) throws IOException {
             for (int i = 0; i < parameters.length; i++) {
-                String specText = convertParameterizedLine(line, parameters[i]);
-                objectSpecs[i].getSpecs().add(StateDoingSection.this.specReader.read(specText, getContextPath(), place));
+                String specText = convertParameterizedLine(line, parameters[i]).trim();
+                objectSpecs[i].getSpecs().add(StateDoingSection.this.readSpec(specText, getContextPath(), place));
             }
         }
     }
-    
+
+    private Spec readSpec(String specText, String contextPath, Place place) throws IOException {
+
+        boolean onlyWarn = false;
+        if (specText.startsWith(ONLY_WARN_SYMBOL)) {
+            specText = specText.substring(1);
+            onlyWarn = true;
+        }
+        Spec spec = specReader.read(specText, contextPath, place);
+        spec.setOnlyWarn(onlyWarn);
+
+        return spec;
+    }
+
     public StateDoingSection(Properties properties, PageSection section, String contextPath, PageSpecReader pageSpecReader) {
         this.section = section;
         this.contextPath = contextPath;
@@ -94,7 +109,7 @@ public class StateDoingSection extends State {
         }
         else {
             try {
-                currentObjectSpecs.getSpecs().add(specReader.read(line.trim(), getContextPath(), place));
+                currentObjectSpecs.getSpecs().add(readSpec(line.trim(), getContextPath(), place));
             }
             catch (SyntaxException exception) {
                 throw exception;

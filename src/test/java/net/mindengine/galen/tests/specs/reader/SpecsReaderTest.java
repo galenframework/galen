@@ -699,7 +699,7 @@ public class SpecsReaderTest {
         assertThat(colors.get(0).getRange(), is(Range.between(40, 50)));
         assertThat(colors.get(0).getColor(), is(new Color(255, 0, 0)));
     }
-    
+
     @Test(expectedExceptions={SyntaxException.class}, expectedExceptionsMessageRegExp="Unknown color: orrrrraangeee") 
     public void givesError_withUnknownColor() throws IOException {
         readSpec("color scheme: 40% orrrrraangeee");

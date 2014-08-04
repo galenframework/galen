@@ -616,6 +616,45 @@ public class PageSpecsReaderTest {
         
     }
 
+    @Test
+    public void shouldParse_warningLevels_forSpecs() throws IOException {
+        PageSpec pageSpec = pageSpecReader.read(getClass().getResource("/specs/spec-warning-level.spec").getFile());
+        List<PageSection> sections = pageSpec.getSections();
+        assertThat(sections.size(), is(1));
+        PageSection pageSection = sections.get(0);
+
+        List<ObjectSpecs> objects = pageSection.getObjects();
+        assertThat(objects.size(), is(3));
+
+        {
+            List<Spec> specs = objects.get(0).getSpecs();
+            assertThat(specs.size(), is(2));
+
+            Spec spec1 = specs.get(0);
+            Spec spec2 = specs.get(1);
+
+            assertThat(spec1.getOriginalText(), is("text is: Login"));
+            assertThat(spec1.getOnlyWarn(), is(true));
+
+            assertThat(spec2.getOriginalText(), is("width: 100px"));
+            assertThat(spec2.getOnlyWarn(), is(false));
+        }
+
+        {
+            List<Spec> specs = objects.get(1).getSpecs();
+            assertThat(specs.size(), is(2));
+
+            Spec spec1 = specs.get(0);
+            Spec spec2 = specs.get(1);
+
+            assertThat(spec1.getOriginalText(), is("width: 150px"));
+            assertThat(spec1.getOnlyWarn(), is(true));
+
+            assertThat(spec2.getOriginalText(), is("height: 50px"));
+            assertThat(spec2.getOnlyWarn(), is(false));
+        }
+    }
+
     private void assertChildComponentSpec(List<Spec> specs) {
         assertThat(specs.size(), is(1));
         SpecComponent spec = (SpecComponent) specs.get(0);

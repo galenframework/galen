@@ -23,6 +23,7 @@ public abstract class Spec {
     private String originalText;
     private Properties properties;
     private Place place;
+    private Boolean onlyWarn;
 
     public String getOriginalText() {
         return originalText;
@@ -62,4 +63,11 @@ public abstract class Spec {
         return this;
     }
 
+    public Boolean getOnlyWarn() {
+        return onlyWarn;
+    }
+
+    public void setOnlyWarn(Boolean onlyWarn) {
+        this.onlyWarn = onlyWarn;
+    }
 }
