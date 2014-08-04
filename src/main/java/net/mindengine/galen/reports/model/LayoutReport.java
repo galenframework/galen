@@ -82,7 +82,7 @@ public class LayoutReport {
         int warnings = 0;
         if (validationErrors != null) {
             for (ValidationError validationError : validationErrors) {
-                if (!validationError.isOnlyWarn()) {
+                if (validationError.isOnlyWarn()) {
                     warnings ++;
                 }
             }

@@ -28,6 +28,14 @@ public class LayoutReportNodeTest {
         assertThat(statistics.getWarnings(), is(2));
     }
 
+    @Test
+    public void shouldReturn_errorsAndWarnings_properly() {
+        LayoutReport report = createSampleLayoutReport();
+
+        assertThat(report.errors(), is(3));
+        assertThat(report.warnings(), is(2));
+    }
+
     private LayoutReport createSampleLayoutReport() {
         LayoutReport report = new LayoutReport();
         List<ValidationError> list = new LinkedList<ValidationError>();
