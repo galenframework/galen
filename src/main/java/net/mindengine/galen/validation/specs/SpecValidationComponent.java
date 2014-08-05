@@ -20,6 +20,7 @@ import java.io.IOException;
 import java.util.List;
 
 import net.mindengine.galen.page.Page;
+import net.mindengine.galen.page.PageElement;
 import net.mindengine.galen.page.selenium.SeleniumPage;
 import net.mindengine.galen.parser.SyntaxException;
 import net.mindengine.galen.specs.SpecComponent;
@@ -37,12 +38,10 @@ public class SpecValidationComponent extends SpecValidation<SpecComponent> {
 
     @Override
     public void check(PageValidation pageValidation, String objectName, SpecComponent spec) throws ValidationErrorException {
-        
+        PageElement mainObject = pageValidation.findPageElement(objectName);
+        checkAvailability(mainObject, objectName);
+
         Page page = pageValidation.getPage();
-        if (!(page instanceof SeleniumPage)) {
-            throw new ValidationErrorException("Cannot perform component validations. Needs to be run in Selenium Browser");
-        }
-        
         Locator mainObjectLocator = pageValidation.getPageSpec().getObjectLocator(objectName);
         Page objectContextPage = page.createObjectContextPage(mainObjectLocator);
         
