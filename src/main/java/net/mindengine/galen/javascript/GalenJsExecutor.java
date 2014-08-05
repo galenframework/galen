@@ -21,6 +21,7 @@ import java.io.Reader;
 
 import net.mindengine.galen.browser.WebDriverWrapper;
 import net.mindengine.galen.runner.events.TestEvent;
+import net.mindengine.galen.runner.events.TestFilterEvent;
 import net.mindengine.galen.runner.events.TestSuiteEvent;
 import net.mindengine.galen.tests.GalenTest;
 import net.mindengine.galen.tests.TestSession;
@@ -63,7 +64,8 @@ public class GalenJsExecutor {
                 TestSession.class,
                 GalenUtils.class,
                 TestEvent.class,
-                TestSuiteEvent.class
+                TestSuiteEvent.class,
+                TestFilterEvent.class
         });
     }
     

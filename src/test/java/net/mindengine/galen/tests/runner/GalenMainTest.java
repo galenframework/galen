@@ -166,7 +166,22 @@ public class GalenMainTest {
                 "Before test: Test number 2",
                 "Test #2 was invoked",
                 "After test: Test number 2",
-                "After test suite"));     
+                "After test suite"));
+    }
+
+    @Test public void shouldRunJavascriptTests_andFilterThem() throws NoSuchMethodException, IOException, InstantiationException, IllegalAccessException, InvocationTargetException, ClassNotFoundException {
+        JsTestRegistry.get().clear();
+
+        new GalenMain().execute(new GalenArguments()
+                        .withAction("test")
+                        .withPaths(asList(getClass().getResource("/js-tests/testfilter.test.js").getFile()))
+        );
+
+        assertThat(JsTestRegistry.get().getEvents(), contains(
+                "Test D invoked",
+                "Test C invoked",
+                "Test A invoked"
+                ));
     }
     
     @Test public void shouldFindAndRun_allTestsRecursivelly_inParallel() throws IOException, SecurityException, IllegalArgumentException, ClassNotFoundException, NoSuchMethodException, InstantiationException, IllegalAccessException, InvocationTargetException {

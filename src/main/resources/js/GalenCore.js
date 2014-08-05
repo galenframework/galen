@@ -341,7 +341,16 @@ function createTestDataProvider(varName) {
     };
 }
 
-
+function testFilter(callback) {
+    _galenCore.addTestFilterEvent(new TestFilterEvent({
+        callback: {
+            func: callback
+        },
+        execute: function (tests) {
+            return this.callback.func(tests);
+        }
+    }));
+}
 
 (function (exports) {
     exports.test = test;
@@ -354,4 +363,5 @@ function createTestDataProvider(varName) {
     exports.retry = retry;
     exports.createTestDataProvider = createTestDataProvider;
     exports.GalenCore = GalenCore;
+    exports.testFilter = testFilter;
 })(this);

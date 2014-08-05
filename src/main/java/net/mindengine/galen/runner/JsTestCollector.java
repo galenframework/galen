@@ -23,6 +23,7 @@ import java.io.Reader;
 import java.util.LinkedList;
 import java.util.List;
 
+import net.mindengine.galen.runner.events.TestFilterEvent;
 import org.apache.commons.io.IOUtils;
 
 import net.mindengine.galen.javascript.GalenJsExecutor;
@@ -101,6 +102,10 @@ public class JsTestCollector {
     
     public void addAfterTestEvent(TestEvent event) {
         eventHandler.getAfterTestEvents().add(event);
+    }
+
+    public void addTestFilterEvent(TestFilterEvent event) {
+        eventHandler.getTestFilterEvents().add(event);
     }
 
 }

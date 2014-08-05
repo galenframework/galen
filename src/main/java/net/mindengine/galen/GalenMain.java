@@ -24,6 +24,7 @@ import java.io.IOException;
 import java.io.StringWriter;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
@@ -46,6 +47,7 @@ import net.mindengine.galen.runner.GalenArguments;
 import net.mindengine.galen.runner.JsTestCollector;
 import net.mindengine.galen.runner.SuiteListener;
 import net.mindengine.galen.runner.TestListener;
+import net.mindengine.galen.runner.events.TestFilterEvent;
 import net.mindengine.galen.suite.GalenPageAction;
 import net.mindengine.galen.suite.GalenPageTest;
 import net.mindengine.galen.suite.actions.GalenPageActionCheck;
@@ -262,8 +264,11 @@ public class GalenMain {
         
         Pattern filterPattern = createTestFilter(arguments.getFilter());
         final List<GalenTestInfo> testInfos = new LinkedList<GalenTestInfo>();
-        
-        tellBeforeTestSuite(listener, tests);        
+
+
+        tests = filterTests(tests, eventHandler);
+
+        tellBeforeTestSuite(listener, tests);
         
         final ReentrantLock testInfoLock = new ReentrantLock();
         
@@ -324,7 +329,25 @@ public class GalenMain {
         
         createAllReports(testInfos, arguments);
     }
-    
+
+    private List<GalenTest> filterTests(List<GalenTest> tests, EventHandler eventHandler) {
+        List<TestFilterEvent> filters = eventHandler.getTestFilterEvents();
+        if (filters != null && filters.size() > 0) {
+            GalenTest[] arrTests = tests.toArray(new GalenTest[]{});
+
+            for (TestFilterEvent filter : filters) {
+                arrTests = filter.execute(arrTests);
+            }
+
+            if (arrTests == null) {
+                arrTests = new GalenTest[]{};
+            }
+
+            return asList(arrTests);
+        }
+        return tests;
+    }
+
     private void tellBeforeTestSuite(CompleteListener listener, List<GalenTest> tests) {
         if (listener != null) {
             try {

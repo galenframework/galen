@@ -20,9 +20,12 @@ import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.is;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.List;
 
+import net.mindengine.galen.GalenMain;
 import net.mindengine.galen.components.JsTestRegistry;
+import net.mindengine.galen.runner.GalenArguments;
 import net.mindengine.galen.runner.JsTestCollector;
 import net.mindengine.galen.tests.GalenTest;
 
@@ -31,7 +34,8 @@ import org.testng.annotations.Test;
 public class JsTestCollectorTest {
 
     
-    @Test public void shouldExecuteJavascript_andCollectTests() throws Exception {
+    @Test
+    public void shouldExecuteJavascript_andCollectTests() throws Exception {
         JsTestCollector testCollector = new JsTestCollector();
         
         JsTestRegistry.get().clear();
@@ -43,12 +47,24 @@ public class JsTestCollectorTest {
         assertThat("Name of #1 test should be", tests.get(0).getName(), is("Test number 1"));
         assertThat("Name of #1 test should be", tests.get(1).getName(), is("Test number 2"));
         assertThat("Name of #1 test should be", tests.get(2).getName(), is("Test number 3"));
-        
-        
+
         tests.get(0).execute(null, null);
         tests.get(2).execute(null, null);
         
-        
         assertThat("Events should be", JsTestRegistry.get().getEvents(), contains("Test #1 was invoked", "Test #3 was invoked"));
+    }
+
+
+    @Test
+    public void shouldAllow_toUse_testFilter() throws IOException {
+        JsTestCollector testCollector = new JsTestCollector();
+        JsTestRegistry.get().clear();
+        testCollector.execute(new File(getClass().getResource("/js-tests/testfilter.test.js").getFile()));
+
+        List<GalenTest> tests = testCollector.getCollectedTests();
+        assertThat(tests.get(0).getName(), is("Test A"));
+        assertThat(tests.get(1).getName(), is("Test B"));
+        assertThat(tests.get(2).getName(), is("Test C"));
+        assertThat(tests.get(3).getName(), is("Test D"));
     }
 }
