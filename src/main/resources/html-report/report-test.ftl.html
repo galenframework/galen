@@ -53,7 +53,7 @@
     <ul class="test-specs">
         <#list object.specs as spec>
             <#if spec.failed = true>
-            <li class="fail">
+            <li class="<#if spec.onlyWarn = true>warn<#else>fail</#if>">
                 <div class="description">
                     <span<#if spec.place?has_content> title="Location: ${spec.place.filePath!"unknown location"}#${spec.place.lineNumber!"?"}"</#if>>${spec.text?html}</span>
                     <ul class="error-message">

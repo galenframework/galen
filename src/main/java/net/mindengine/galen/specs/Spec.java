@@ -70,4 +70,9 @@ public abstract class Spec {
     public void setOnlyWarn(boolean onlyWarn) {
         this.onlyWarn = onlyWarn;
     }
+
+    public Spec withOnlyWarn(boolean onlyWarn) {
+        setOnlyWarn(onlyWarn);
+        return this;
+    }
 }

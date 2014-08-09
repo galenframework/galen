@@ -234,15 +234,18 @@ ul.test-specs li.fail > div > span {
 ul.test-specs li.fail > div > span:hover {
     color: #FA7F05;
 }
+ul.test-specs li.warn > div > span {
+    color: #BF7900;
+    cursor:pointer;
+}
 
-ul.test-specs li.fail:before, h2.has-failures:before {
+
+ul.test-specs li.fail:before, ul.test-specs li.warn:before, h2.has-failures:before {
     display: block;
     position: absolute;
     left: -30px;
     font-size: 0.8em;
     content: "!";
-    color: #fff;
-    background: #F53711;
     width: 16px;
     height: 14px;
     padding-top: 2px;
@@ -255,6 +258,14 @@ ul.test-specs li.fail:before, h2.has-failures:before {
 h2.has-failures:before {
     left: 10px;
     font-size: 0.6em;
+}
+ul.test-specs li.fail:before, h2.has-failures:before {
+    color: #fff;
+    background: #F53711;
+}
+ul.test-specs li.warn:before {
+    color: #F53711;
+    background: #FFE100;
 }
 
 ul.areas {

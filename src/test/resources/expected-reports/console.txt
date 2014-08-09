@@ -13,6 +13,8 @@ check homepage.spec --include all,mobile
         width: 10 to 20px
 ->      width: 10px
 ->      :   objectA2 width is 20px instead of 10px
+->      text is: Login
+->      :   objectA2 text is "Logout" instead of "Login"
 
 @ some section 2
 -------------------------

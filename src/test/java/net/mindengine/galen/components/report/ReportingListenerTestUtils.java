@@ -32,10 +32,7 @@ import net.mindengine.galen.reports.TestReport;
 import net.mindengine.galen.runner.GalenPageRunner;
 import net.mindengine.galen.runner.SuiteListener;
 import net.mindengine.galen.runner.TestListener;
-import net.mindengine.galen.specs.Location;
-import net.mindengine.galen.specs.SpecHeight;
-import net.mindengine.galen.specs.SpecInside;
-import net.mindengine.galen.specs.SpecWidth;
+import net.mindengine.galen.specs.*;
 import net.mindengine.galen.specs.page.PageSection;
 import net.mindengine.galen.specs.reader.Place;
 import net.mindengine.galen.suite.actions.GalenPageActionCheck;
@@ -93,6 +90,13 @@ public class ReportingListenerTestUtils {
                         new SpecWidth(exact(10)).withOriginalText("width: 10px")
                             .withPlace(new Place("specs.spec", 12)),
                         new ValidationError(asList(new ErrorArea(new Rect(200, 300, 50, 30), "objectA2")), asList("objectA2 width is 20px instead of 10px")));
+
+                validationListener.onSpecError(pageRunner, pageValidation,
+                        "objectA2",
+                        new SpecText(SpecText.Type.IS, "Login").withOriginalText("text is: Login")
+                                .withPlace(new Place("specs.spec", 12))
+                                .withOnlyWarn(true),
+                        new ValidationError(asList(new ErrorArea(new Rect(200, 300, 50, 30), "objectA2")), asList("objectA2 text is \"Logout\" instead of \"Login\"")));
             }
             validationListener.onAfterObject(pageRunner, pageValidation, "objectA2");
             
