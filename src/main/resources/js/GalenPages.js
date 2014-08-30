@@ -173,144 +173,7 @@ var GalenPages = {
         });
 
         iterateOverFields(secondaryFields, function (property) {});
-    },
-    PageElement: function (name, locator, parent) {
-        this.name = name;
-        if (typeof parent === "undefined") {
-            parent = null;
-        }
-        this.cachedWebElement = null;
-        this.locator = locator,
-        this.parent = parent,
-        this.isEnabled = function () {
-            return this.getWebElement().isEnabled();
-        };
-        this.attribute = function(attrName) {
-            return this.getWebElement().getAttribute(attrName);
-        };
-        this._report = function (name) {
-            try {
-                GalenPages.report(name, this.locator.type + ": " + this.locator.value);
-            }
-            catch (err) {
-
-            }
-        },
-        this.cssValue = function (cssProperty) {
-            return this.getWebElement().getCssValue(cssProperty);
-        };
-        this.click = function () {
-            this._report("Click " + this.name);
-            this.getWebElement().click();
-        };
-        this.typeText = function (text) {
-            this._report("Type text \"" + text + "\" to " + this.name);
-            this.getWebElement().sendKeys(text);
-        };
-        this.clear = function () {
-            this._report("Clear " + this.name);
-            this.getWebElement().clear();
-        };
-        this.getWebElement = function () {
-            if (GalenPages.settings.cacheWebElements && this.cachedWebElement == null) {
-                this.cachedWebElement = this.parent.findChild(this.locator);
-            }
-            return this.cachedWebElement;
-        };
-        this.isDisplayed = function () {
-            return this.getWebElement().isDisplayed();
-        };
-        this.selectByValue = function (value) {
-            this._report("Select by value \"" + value + "\" in " + this.name);
-            var option = this.getWebElement().findElement(By.xpath(".//option[@value=\"" + value + "\"]"));
-            if (option != null) {
-                option.click();
-            }
-            else throw  new Error("Cannot find option with value \"" + value + "\"");
-        };
-        this.selectByText = function (text) {
-            this._report("Select by text \"" + text + "\" in " + this.name);
-            var option = this.getWebElement().findElement(By.xpath(".//option[normalize-space(.)=\"" + text + "\"]"));
-            if (option != null) {
-                option.click();
-            }
-            else throw  new Error("Cannot find option with text \"" + value + "\"");
-        };
-        this.waitFor = function(func, messageSuffix, time) {
-            time = typeof time !== 'undefined' ? time : "10s";
-            var name = typeof this.name !== 'undefined' ? this.name : "";
-            var msg =  name + " " + messageSuffix;
-            var thisElement = this;
-            var conditions = {};
-            conditions[msg] = function (){
-                return func(thisElement);
-            };
-            GalenPages.wait({time: time, period: 200}).untilAll(conditions);
-        };
-        this.waitToBeShown = function (time) {
-            this.waitFor(function (thisElement){
-                return thisElement.exists() && thisElement.isDisplayed();
-            }, "should be shown", time);
-        };
-        this.waitToBeHidden = function (time) {
-            this.waitFor(function (thisElement){
-                return !thisElement.exists() || !thisElement.isDisplayed();
-            }, "should be hidden", time);
-        },
-        this.waitUntilExists = function (time) {
-            this.waitFor(function (thisElement){
-                return thisElement.exists();
-            }, "should exist", time);
-        };
-        this.waitUntilGone = function (time) {
-            this.waitFor(function (thisElement){
-                return !thisElement.exists();
-            }, "should not exist", time);
-        };
-        this.exists = function () {
-            try {
-                this.getWebElement();
-            }
-            catch(error) {
-                return false;
-            }
-            return true;
-        };
-        this.findChild = function (locator) {
-            if (typeof locator == "string") {
-                locator = GalenPages.parseLocator(locator);
-            }
-
-            if (this.parent != undefined ) {
-                return this.parent.findChild(locator);
-            }
-            else {
-                try {
-                    var element = this.driver.findElement(GalenPages.convertLocator(locator));
-                    if (element == null) {
-                        throw new Error("No such element: " + locator.type + " " + locator.value);
-                    }
-                    return element;
-                }
-                catch(error) {
-                    throw new Error("No such element: " + locator.type + " " + locator.value);
-                }
-            }
-        };
-        this.findChildren = function (locator) {
-            if (typeof locator == "string") {
-                locator = GalenPages.parseLocator(locator);
-            }
-
-            if (this.parent != undefined ) {
-                return this.parent.findChildren(locator);
-            }
-            else {
-                var list = this.driver.findElements(GalenPages.convertLocator(locator));
-                return listToArray(list);
-            }
-        };
-    },
+    }, 
     create: function (driver) {
         return new GalenPages.Driver(driver);
     },
@@ -469,6 +332,143 @@ var GalenPages = {
     },
     sleep: function (timeInMillis) {
         Thread.sleep(timeInMillis);
+    }
+};
+GalenPages.PageElement = function (name, locator, parent) {
+        this.name = name;
+        if (typeof parent === "undefined") {
+            parent = null;
+        }
+        this.cachedWebElement = null;
+        this.locator = locator;
+        this.parent = parent;
+
+};
+GalenPages.PageElement.prototype.isEnabled = function () {
+    return this.getWebElement().isEnabled();
+};
+GalenPages.PageElement.prototype.attribute = function(attrName) {
+    return this.getWebElement().getAttribute(attrName);
+};
+GalenPages.PageElement.prototype._report = function (name) {
+    try {
+        GalenPages.report(name, this.locator.type + ": " + this.locator.value);
+    }
+    catch (err) {
+    }
+};
+GalenPages.PageElement.prototype.cssValue = function (cssProperty) {
+    return this.getWebElement().getCssValue(cssProperty);
+};
+GalenPages.PageElement.prototype.click = function () {
+    this._report("Click " + this.name);
+    this.getWebElement().click();
+};
+GalenPages.PageElement.prototype.typeText = function (text) {
+    this._report("Type text \"" + text + "\" to " + this.name);
+    this.getWebElement().sendKeys(text);
+};
+GalenPages.PageElement.prototype.clear = function () {
+    this._report("Clear " + this.name);
+    this.getWebElement().clear();
+};
+GalenPages.PageElement.prototype.getWebElement = function () {
+    if (GalenPages.settings.cacheWebElements && this.cachedWebElement == null) {
+        this.cachedWebElement = this.parent.findChild(this.locator);
+    }
+    return this.cachedWebElement;
+};
+GalenPages.PageElement.prototype.isDisplayed = function () {
+    return this.getWebElement().isDisplayed();
+};
+GalenPages.PageElement.prototype.selectByValue = function (value) {
+    this._report("Select by value \"" + value + "\" in " + this.name);
+    var option = this.getWebElement().findElement(By.xpath(".//option[@value=\"" + value + "\"]"));
+    if (option != null) {
+        option.click();
+    }
+    else throw  new Error("Cannot find option with value \"" + value + "\"");
+};
+GalenPages.PageElement.prototype.selectByText = function (text) {
+    this._report("Select by text \"" + text + "\" in " + this.name);
+    var option = this.getWebElement().findElement(By.xpath(".//option[normalize-space(.)=\"" + text + "\"]"));
+    if (option != null) {
+        option.click();
+    }
+    else throw  new Error("Cannot find option with text \"" + value + "\"");
+};
+GalenPages.PageElement.prototype.waitFor = function(func, messageSuffix, time) {
+    time = typeof time !== 'undefined' ? time : "10s";
+    var name = typeof this.name !== 'undefined' ? this.name : "";
+    var msg =  name + " " + messageSuffix;
+    var thisElement = this;
+    var conditions = {};
+    conditions[msg] = function (){
+        return func(thisElement);
+    };
+    GalenPages.wait({time: time, period: 200}).untilAll(conditions);
+};
+GalenPages.PageElement.prototype.waitToBeShown = function (time) {
+    this.waitFor(function (thisElement){
+        return thisElement.exists() && thisElement.isDisplayed();
+    }, "should be shown", time);
+};
+GalenPages.PageElement.prototype.waitToBeHidden = function (time) {
+    this.waitFor(function (thisElement){
+        return !thisElement.exists() || !thisElement.isDisplayed();
+    }, "should be hidden", time);
+},
+GalenPages.PageElement.prototype.waitUntilExists = function (time) {
+    this.waitFor(function (thisElement){
+        return thisElement.exists();
+    }, "should exist", time);
+};
+GalenPages.PageElement.prototype.waitUntilGone = function (time) {
+    this.waitFor(function (thisElement){
+        return !thisElement.exists();
+    }, "should not exist", time);
+};
+GalenPages.PageElement.prototype.exists = function () {
+    try {
+        this.getWebElement();
+    }
+    catch(error) {
+        return false;
+    }
+    return true;
+};
+GalenPages.PageElement.prototype.findChild = function (locator) {
+    if (typeof locator == "string") {
+        locator = GalenPages.parseLocator(locator);
+    }
+
+    if (this.parent != undefined ) {
+        return this.parent.findChild(locator);
+    }
+    else {
+        try {
+            var element = this.driver.findElement(GalenPages.convertLocator(locator));
+            if (element == null) {
+                throw new Error("No such element: " + locator.type + " " + locator.value);
+            }
+            return element;
+        }
+        catch(error) {
+            throw new Error("No such element: " + locator.type + " " + locator.value);
+        }
+    }
+};
+GalenPages.PageElement.prototype.findChildren = function (locator) {
+    if (typeof locator == "string") {
+        locator = GalenPages.parseLocator(locator);
+    }
+
+    if (this.parent != undefined ) {
+        return this.parent.findChildren(locator);
+    }
+    else {
+        var list = this.driver.findElements(GalenPages.convertLocator(locator));
+        return listToArray(list);
     }
 };
 
