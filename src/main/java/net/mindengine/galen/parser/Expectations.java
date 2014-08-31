@@ -17,6 +17,7 @@ package net.mindengine.galen.parser;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 import net.mindengine.galen.specs.Location;
 import net.mindengine.galen.specs.Range;
@@ -40,6 +41,18 @@ public class Expectations {
     }
 
     public static Expectation<String> objectName() {
+        return new ExpectWord();
+    }
+
+    public static Expectation<String> filePath() {
+        return new ExpectWord();
+    }
+
+    public static Expectation<Double>number() {
+        return new ExpectNumber();
+    }
+
+    public static Expectation<String> word() {
         return new ExpectWord();
     }
     
@@ -71,5 +84,8 @@ public class Expectations {
         return new ExpectColorRanges();
     }
 
-    
+
+    public static Expectation<Map<String, String>> commaSeparatedKeyValue() {
+        return new ExpectCommaSeparatedKeyValue();
+    }
 }

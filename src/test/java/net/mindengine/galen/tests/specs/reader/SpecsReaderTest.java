@@ -24,6 +24,7 @@ import static net.mindengine.galen.specs.Side.TOP;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.nullValue;
 
 import java.awt.Color;
 import java.io.IOException;
@@ -34,27 +35,9 @@ import java.util.Properties;
 import junit.framework.Assert;
 import net.mindengine.galen.browser.Browser;
 import net.mindengine.galen.config.GalenConfig;
+import net.mindengine.galen.page.Rect;
 import net.mindengine.galen.parser.SyntaxException;
-import net.mindengine.galen.specs.Alignment;
-import net.mindengine.galen.specs.Location;
-import net.mindengine.galen.specs.Range;
-import net.mindengine.galen.specs.Side;
-import net.mindengine.galen.specs.Spec;
-import net.mindengine.galen.specs.SpecAbove;
-import net.mindengine.galen.specs.SpecAbsent;
-import net.mindengine.galen.specs.SpecBelow;
-import net.mindengine.galen.specs.SpecCentered;
-import net.mindengine.galen.specs.SpecColorScheme;
-import net.mindengine.galen.specs.SpecContains;
-import net.mindengine.galen.specs.SpecHeight;
-import net.mindengine.galen.specs.SpecHorizontally;
-import net.mindengine.galen.specs.SpecInside;
-import net.mindengine.galen.specs.SpecNear;
-import net.mindengine.galen.specs.SpecOn;
-import net.mindengine.galen.specs.SpecText;
-import net.mindengine.galen.specs.SpecVertically;
-import net.mindengine.galen.specs.SpecVisible;
-import net.mindengine.galen.specs.SpecWidth;
+import net.mindengine.galen.specs.*;
 import net.mindengine.galen.specs.colors.ColorRange;
 import net.mindengine.galen.specs.reader.SpecReader;
 
@@ -700,11 +683,77 @@ public class SpecsReaderTest {
         assertThat(colors.get(0).getColor(), is(new Color(255, 0, 0)));
     }
 
-    @Test(expectedExceptions={SyntaxException.class}, expectedExceptionsMessageRegExp="Unknown color: orrrrraangeee") 
+    @Test
+    public void shouldReadSpec_image_withMaxPercentageError() throws IOException {
+        SpecImage spec = (SpecImage)readSpec("image: file imgs/image.png, error 2.4%");
+        assertThat(spec.getImagePath(), is("imgs/image.png"));
+        assertThat(spec.getMaxPercentage(), is(2.4));
+        assertThat(spec.getMaxPixels(), is(nullValue()));
+        assertThat(spec.getTolerance(), is(10));
+        assertThat(spec.getSmooth(), is(0));
+    }
+
+    @Test
+    public void shouldReadSpec_image_withMaxPixelsError() throws IOException {
+        SpecImage spec = (SpecImage)readSpec("image: file imgs/image.png, error 112 px");
+        assertThat(spec.getImagePath(), is("imgs/image.png"));
+        assertThat(spec.getMaxPercentage(), is(nullValue()));
+        assertThat(spec.getMaxPixels(), is(112));
+        assertThat(spec.getTolerance(), is(10));
+        assertThat(spec.getSmooth(), is(0));
+    }
+
+    @Test
+    public void shouldReadSpec_image_withMaxPixelsError_tolerance5() throws IOException {
+        SpecImage spec = (SpecImage)readSpec("image: file imgs/image.png, error 112 px, tolerance 5");
+        assertThat(spec.getImagePath(), is("imgs/image.png"));
+        assertThat(spec.getMaxPercentage(), is(nullValue()));
+        assertThat(spec.getMaxPixels(), is(112));
+        assertThat(spec.getTolerance(), is(5));
+        assertThat(spec.getSmooth(), is(0));
+    }
+
+    @Test
+    public void shouldReadSpec_image_withMaxPixelsError_tolerance5_smooth2() throws IOException {
+        SpecImage spec = (SpecImage)readSpec("image: file imgs/image.png, error 112 px, tolerance 5, smooth 2");
+        assertThat(spec.getImagePath(), is("imgs/image.png"));
+        assertThat(spec.getMaxPercentage(), is(nullValue()));
+        assertThat(spec.getMaxPixels(), is(112));
+        assertThat(spec.getTolerance(), is(5));
+        assertThat(spec.getSmooth(), is(2));
+    }
+
+    @Test
+    public void shouldReadSpec_image_withMaxPixelsError_smooth2_tolerance5() throws IOException {
+        SpecImage spec = (SpecImage)readSpec("image: file imgs/image.png, error 112 px, smooth 2, tolerance 5");
+        assertThat(spec.getImagePath(), is("imgs/image.png"));
+        assertThat(spec.getMaxPercentage(), is(nullValue()));
+        assertThat(spec.getMaxPixels(), is(112));
+        assertThat(spec.getTolerance(), is(5));
+        assertThat(spec.getSmooth(), is(2));
+    }
+
+    @Test
+    public void shouldReadSpec_image_withMaxPixelsError_andArea() throws IOException {
+        SpecImage spec = (SpecImage)readSpec("image: file imgs/image.png, error 112 px, area 10 10 100 20");
+        assertThat(spec.getImagePath(), is("imgs/image.png"));
+        assertThat(spec.getMaxPercentage(), is(nullValue()));
+        assertThat(spec.getMaxPixels(), is(112));
+        assertThat(spec.getTolerance(), is(10));
+        assertThat(spec.getSmooth(), is(0));
+        assertThat(spec.getSelectedArea(), is(new Rect(10,10,100,20)));
+    }
+
+    @Test(expectedExceptions={SyntaxException.class}, expectedExceptionsMessageRegExp="Cannot parse number: \"\"")
+    public void givesError_specImage_withIncorrectArea() throws IOException {
+        readSpec("image: file /imgs/path, area 10 10");
+    }
+
+    @Test(expectedExceptions={SyntaxException.class}, expectedExceptionsMessageRegExp="Unknown color: orrrrraangeee")
     public void givesError_withUnknownColor() throws IOException {
         readSpec("color scheme: 40% orrrrraangeee");
     }
-    
+
     @Test(expectedExceptions={SyntaxException.class}, expectedExceptionsMessageRegExp="Cannot use theses sides: top bottom") 
     public void givesError_withIncorrect_sides_for_spec_on() throws IOException {
         readSpec("on top bottom: object 10px top");

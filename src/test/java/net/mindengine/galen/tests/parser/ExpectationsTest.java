@@ -28,14 +28,11 @@ import static org.hamcrest.Matchers.notNullValue;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 
 import net.mindengine.galen.config.GalenConfig;
-import net.mindengine.galen.parser.ExpectLocations;
-import net.mindengine.galen.parser.ExpectRange;
-import net.mindengine.galen.parser.ExpectSides;
-import net.mindengine.galen.parser.ExpectWord;
-import net.mindengine.galen.parser.SyntaxException;
+import net.mindengine.galen.parser.*;
 import net.mindengine.galen.specs.Location;
 import net.mindengine.galen.specs.Range;
 import net.mindengine.galen.specs.Side;
@@ -245,6 +242,29 @@ public class ExpectationsTest {
             {"10px left, 20px left qwe", "Unknown side: \"qwe\""},
             {"10px left, right, top", "Cannot parse range value: \"\""},
         };
+    }
+
+
+    @Test
+    public void shouldParse_commaSeparatedKeyValue() {
+        String text = ",param1 1, param2 v a l u e 2, booleanParam, param3 2.3";
+        Map<String, String> params = new ExpectCommaSeparatedKeyValue().read(new StringCharReader(text));
+
+        assertThat(params.size(), is(4));
+        assertThat(params.get("param1"), is("1"));
+        assertThat(params.get("param2"), is("v a l u e 2"));
+        assertThat(params.get("booleanParam"), is(""));
+        assertThat(params.get("param3"), is("2.3"));
+    }
+
+    @Test
+    public void shouldParse_commaSeparatedKeyValue_2() {
+        String text = "param1 1, param2 2";
+        Map<String, String> params = new ExpectCommaSeparatedKeyValue().read(new StringCharReader(text));
+
+        assertThat(params.size(), is(2));
+        assertThat(params.get("param1"), is("1"));
+        assertThat(params.get("param2"), is("2"));
     }
     
     

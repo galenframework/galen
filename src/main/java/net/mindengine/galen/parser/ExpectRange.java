@@ -47,7 +47,7 @@ public class ExpectRange implements Expectation<Range>{
         	rangeType = RangeType.LESS_THAN;
         }
         
-        Double firstValue = expectDouble(reader);
+        Double firstValue = new ExpectNumber().read(reader);
         
         String text = expectNonNumeric(reader);
         if (text.equals(endingWord)) {
@@ -57,7 +57,7 @@ public class ExpectRange implements Expectation<Range>{
             return createRange(firstValue, rangeType).withPercentOf(readPercentageOf(reader));
         }
         else if (rangeType == RangeType.NOTHING){
-            Double secondValue = expectDouble(reader);
+            Double secondValue =  new ExpectNumber().read(reader);
             
             Range range = null;
             if (text.equals("to")) {
@@ -153,41 +153,6 @@ public class ExpectRange implements Expectation<Range>{
         return buffer.toString();
     }
 
-    private Double expectDouble(StringCharReader reader) {
-        boolean started = false;
-        char symbol;
-        boolean hadPointAlready = false;
-        StringBuffer buffer = new StringBuffer();
-        while(reader.hasMore()) {
-            symbol = reader.next();
-            if (started && isDelimeter(symbol)) {
-                break;
-            }
-            else if (symbol == '.') {
-                if (hadPointAlready) {
-                    throw new SyntaxException(UNKNOWN_LINE, msgFor("" + symbol)); 
-                }
-                hadPointAlready = true;
-                buffer.append(symbol);
-            }
-            else if (isNumeric(symbol)) {
-                buffer.append(symbol);
-                started = true;
-            }
-            else if (started) {
-                reader.back();
-                break;
-            }
-        }
-        String doubleText = buffer.toString();
-        
-        try {
-            return Double.parseDouble(doubleText);
-        }
-        catch (Exception e) {
-            throw new SyntaxException(UNKNOWN_LINE, format("Cannot parse range value: \"%s\"", doubleText), e);
-        }
-    }
 
     private String msgFor(String text) {
         return String.format("Cannot parse range: \"%s\"", text);

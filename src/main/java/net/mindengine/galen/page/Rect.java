@@ -37,6 +37,16 @@ public class Rect {
         this.height = height;
     }
 
+    public Rect(Integer[] numbers) {
+        if (numbers.length != 4) {
+            throw new IndexOutOfBoundsException("Rect should take 4 arguments, got " +  numbers.length);
+        }
+        this.left = numbers[0];
+        this.top = numbers[1];
+        this.width = numbers[2];
+        this.height = numbers[3];
+    }
+
     public Point[] getPoints() {
         return new Point[]{new Point(left, top), 
                 new Point(left + width, top),

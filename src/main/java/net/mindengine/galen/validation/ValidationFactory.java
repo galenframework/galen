@@ -18,38 +18,8 @@ package net.mindengine.galen.validation;
 import java.util.HashMap;
 import java.util.Map;
 
-import net.mindengine.galen.specs.Spec;
-import net.mindengine.galen.specs.SpecAbove;
-import net.mindengine.galen.specs.SpecAbsent;
-import net.mindengine.galen.specs.SpecBelow;
-import net.mindengine.galen.specs.SpecCentered;
-import net.mindengine.galen.specs.SpecColorScheme;
-import net.mindengine.galen.specs.SpecComponent;
-import net.mindengine.galen.specs.SpecContains;
-import net.mindengine.galen.specs.SpecHeight;
-import net.mindengine.galen.specs.SpecHorizontally;
-import net.mindengine.galen.specs.SpecInside;
-import net.mindengine.galen.specs.SpecNear;
-import net.mindengine.galen.specs.SpecOn;
-import net.mindengine.galen.specs.SpecText;
-import net.mindengine.galen.specs.SpecVertically;
-import net.mindengine.galen.specs.SpecVisible;
-import net.mindengine.galen.specs.SpecWidth;
-import net.mindengine.galen.validation.specs.SpecValidationAbsent;
-import net.mindengine.galen.validation.specs.SpecValidationCentered;
-import net.mindengine.galen.validation.specs.SpecValidationColorScheme;
-import net.mindengine.galen.validation.specs.SpecValidationComponent;
-import net.mindengine.galen.validation.specs.SpecValidationContains;
-import net.mindengine.galen.validation.specs.SpecValidationDirectionPosition;
-import net.mindengine.galen.validation.specs.SpecValidationHeight;
-import net.mindengine.galen.validation.specs.SpecValidationHorizontally;
-import net.mindengine.galen.validation.specs.SpecValidationInside;
-import net.mindengine.galen.validation.specs.SpecValidationNear;
-import net.mindengine.galen.validation.specs.SpecValidationOn;
-import net.mindengine.galen.validation.specs.SpecValidationText;
-import net.mindengine.galen.validation.specs.SpecValidationVertically;
-import net.mindengine.galen.validation.specs.SpecValidationVisible;
-import net.mindengine.galen.validation.specs.SpecValidationWidth;
+import net.mindengine.galen.specs.*;
+import net.mindengine.galen.validation.specs.*;
 
 public class ValidationFactory {
     
@@ -86,6 +56,7 @@ public class ValidationFactory {
         validations.put(SpecOn.class, new SpecValidationOn());
         validations.put(SpecComponent.class, new SpecValidationComponent());
         validations.put(SpecColorScheme.class, new SpecValidationColorScheme());
+        validations.put(SpecImage.class, new SpecValidationImage());
     }
 
     @SuppressWarnings({ "unchecked", "rawtypes" })

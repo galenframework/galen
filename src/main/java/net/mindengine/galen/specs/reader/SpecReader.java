@@ -15,11 +15,7 @@
 ******************************************************************************/
 package net.mindengine.galen.specs.reader;
 
-import static net.mindengine.galen.parser.Expectations.colorRanges;
-import static net.mindengine.galen.parser.Expectations.expectThese;
-import static net.mindengine.galen.parser.Expectations.locations;
-import static net.mindengine.galen.parser.Expectations.objectName;
-import static net.mindengine.galen.parser.Expectations.range;
+import static net.mindengine.galen.parser.Expectations.*;
 import static net.mindengine.galen.specs.Alignment.ALL;
 import static net.mindengine.galen.specs.Alignment.BOTTOM;
 import static net.mindengine.galen.specs.Alignment.CENTERED;
@@ -38,31 +34,18 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import net.mindengine.galen.browser.Browser;
+import net.mindengine.galen.page.Rect;
+import net.mindengine.galen.parser.ExpectNumber;
 import net.mindengine.galen.parser.ExpectWord;
 import net.mindengine.galen.parser.Expectations;
 import net.mindengine.galen.parser.SyntaxException;
-import net.mindengine.galen.specs.Alignment;
-import net.mindengine.galen.specs.Location;
-import net.mindengine.galen.specs.Range;
-import net.mindengine.galen.specs.Side;
-import net.mindengine.galen.specs.Spec;
-import net.mindengine.galen.specs.SpecAbove;
-import net.mindengine.galen.specs.SpecAbsent;
-import net.mindengine.galen.specs.SpecBelow;
-import net.mindengine.galen.specs.SpecCentered;
-import net.mindengine.galen.specs.SpecColorScheme;
-import net.mindengine.galen.specs.SpecComponent;
-import net.mindengine.galen.specs.SpecContains;
-import net.mindengine.galen.specs.SpecHeight;
-import net.mindengine.galen.specs.SpecHorizontally;
-import net.mindengine.galen.specs.SpecInside;
-import net.mindengine.galen.specs.SpecNear;
-import net.mindengine.galen.specs.SpecOn;
-import net.mindengine.galen.specs.SpecText;
-import net.mindengine.galen.specs.SpecVertically;
-import net.mindengine.galen.specs.SpecVisible;
-import net.mindengine.galen.specs.SpecWidth;
+import net.mindengine.galen.specs.*;
 import net.mindengine.galen.specs.colors.ColorRange;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.tuple.ImmutablePair;
+import org.apache.commons.lang3.tuple.MutablePair;
+import org.apache.commons.lang3.tuple.Pair;
+import sun.org.mozilla.javascript.ast.ObjectProperty;
 
 public class SpecReader {
     
@@ -351,8 +334,74 @@ public class SpecReader {
                 return spec;
             }
         }));
+
+        putSpec("image", new SpecComplexProcessor(expectThese(commaSeparatedKeyValue()), new SpecComplexInit() {
+            @Override
+            public Spec init(String specName, Object[] args) {
+                Map<String, String> parameters = (Map<String, String>)args[0];
+
+                SpecImage spec = new SpecImage();
+
+                if (parameters.containsKey("file")) {
+                    spec.setImagePath(parameters.get("file"));
+                }
+                else throw new SyntaxException("You should specify a file");
+
+                if (parameters.containsKey("error")) {
+                    Pair<Double, String> error = parseError(parameters.get("error"));
+                    if (error.getRight().equals("%")) {
+                        spec.setMaxPercentage(error.getLeft());
+                    }
+                    else if (error.getRight().equals("px")) {
+                        spec.setMaxPixels(error.getLeft().intValue());
+                    }
+                    else throw new SyntaxException("Unknown error unit: " + error.getRight());
+                }
+
+                if (parameters.containsKey("smooth")) {
+                    spec.setSmooth(parseIntegerParameter("smooth", parameters.get("smooth")));
+                }
+
+                if (parameters.containsKey("tolerance")) {
+                    spec.setTolerance(parseIntegerParameter("tolerance", parameters.get("tolerance")));
+                }
+
+                if (parameters.containsKey("area")) {
+                    spec.setSelectedArea(parseRect(parameters.get("area")));
+                }
+
+                return spec;
+            }
+        }));
         
 
+    }
+
+    private Rect parseRect(String text) {
+        Integer[] numbers = new Integer[4];
+
+        StringCharReader reader = new StringCharReader(text);
+        for (int i=0;i<numbers.length; i++) {
+            numbers[i] = new ExpectNumber().read(reader).intValue();
+        }
+
+        return new Rect(numbers);
+    }
+
+    private Pair<Double, String> parseError(String text) {
+        StringCharReader reader = new StringCharReader(text);
+
+        Double number = Expectations.number().read(reader);
+        String unit = Expectations.word().read(reader);
+
+        return new ImmutablePair<Double, String>(number, unit);
+    }
+
+    private Integer parseIntegerParameter(String name, String value) {
+        if (StringUtils.isNumeric(value)) {
+            return Integer.parseInt(value);
+        }
+        else throw new SyntaxException(name + " parameter should be integer: " + value);
     }
 
     public Spec read(String specText) throws IOException {

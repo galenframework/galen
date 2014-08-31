@@ -39,26 +39,7 @@ import net.mindengine.galen.components.validation.MockedPage;
 import net.mindengine.galen.components.validation.MockedPageElement;
 import net.mindengine.galen.page.PageElement;
 import net.mindengine.galen.page.Rect;
-import net.mindengine.galen.specs.Alignment;
-import net.mindengine.galen.specs.Location;
-import net.mindengine.galen.specs.Range;
-import net.mindengine.galen.specs.Side;
-import net.mindengine.galen.specs.Spec;
-import net.mindengine.galen.specs.SpecAbove;
-import net.mindengine.galen.specs.SpecAbsent;
-import net.mindengine.galen.specs.SpecBelow;
-import net.mindengine.galen.specs.SpecCentered;
-import net.mindengine.galen.specs.SpecColorScheme;
-import net.mindengine.galen.specs.SpecContains;
-import net.mindengine.galen.specs.SpecHeight;
-import net.mindengine.galen.specs.SpecHorizontally;
-import net.mindengine.galen.specs.SpecInside;
-import net.mindengine.galen.specs.SpecNear;
-import net.mindengine.galen.specs.SpecOn;
-import net.mindengine.galen.specs.SpecText;
-import net.mindengine.galen.specs.SpecVertically;
-import net.mindengine.galen.specs.SpecVisible;
-import net.mindengine.galen.specs.SpecWidth;
+import net.mindengine.galen.specs.*;
 import net.mindengine.galen.specs.colors.ColorRange;
 import net.mindengine.galen.specs.page.Locator;
 import net.mindengine.galen.specs.reader.page.PageSpec;
@@ -75,9 +56,12 @@ public class ValidationTest {
     private static final boolean CONTAINS_FULLY = false;
     private static final boolean CONTAINS_PARTLY = true;
     private static final List<ErrorArea> NO_AREA = null;
+    private static final boolean PIXEL_UNIT = true;
+    private static final boolean PERCENTAGE_UNIT = false;
 
-    
-    private BufferedImage testImage = loadTestImage(); 
+
+    private BufferedImage testImage = loadTestImage("/color-scheme-image-1.png");
+    private BufferedImage imageComparisonTestScreenshot = loadTestImage("/imgs/page-screenshot.png");
     
     @Test(dataProvider="provideGoodSamples")
     public void shouldPassValidation(Spec spec, MockedPage page) {
@@ -88,9 +72,9 @@ public class ValidationTest {
         assertThat(error, is(nullValue()));
     }
     
-    private BufferedImage loadTestImage() {
+    private BufferedImage loadTestImage(String imagePath) {
         try {
-            return Rainbow4J.loadImage(getClass().getResource("/color-scheme-image-1.png").getFile());
+            return Rainbow4J.loadImage(getClass().getResource(imagePath).getFile());
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -484,47 +468,60 @@ public class ValidationTest {
           
           row(specColorScheme(new ColorRange(Color.white, exact(100))), page(new HashMap<String, PageElement>(){{
               put("object", element(10, 10, 50, 40));
-          }}, testImage))
+          }}, testImage)),
+
+
+
+
+          // Image comparison
+
+          row(specImage("/imgs/button-sample-correct.png", 1, PIXEL_UNIT, 0, 5), page(new HashMap<String, PageElement>(){{
+              put("object", element(100, 90, 100, 40));
+          }}, imageComparisonTestScreenshot)),
+
+          row(specImage("/imgs/page-sample-correct.png", 2, PIXEL_UNIT, 0, 5, new Rect(40, 40, 100, 40)), page(new HashMap<String, PageElement>(){{
+              put("object", element(100, 90, 100, 40));
+          }}, imageComparisonTestScreenshot)),
+
         };
     }
 
 
-    
-    
+
     @SuppressWarnings("serial")
     @DataProvider
     public Object[][] provideBadSamples() {
         return new Object[][] {
-          // Contains 
-                
+          // Contains
+
           row(new ValidationError(areas(new ErrorArea(new Rect(9, 11, 10, 10), "menu"), new ErrorArea(new Rect(10, 10, 100, 100), "object")), messages("\"menu\" is outside \"object\"")),
               specContains(false, "menu", "button"), page(new HashMap<String, PageElement>(){{
                   put("object", element(10, 10, 100, 100));
                   put("menu", element(9, 11, 10, 10));
                   put("button", element(60, 50, 40, 40));
           }})),
-          
+
           row(new ValidationError(areas(new ErrorArea(new Rect(50, 50, 110, 10), "menu"), new ErrorArea(new Rect(10, 10, 101, 40), "button"), new ErrorArea(new Rect(10, 10, 100, 100), "object")), messages("\"menu\" is outside \"object\"", "\"button\" is outside \"object\"")),
               specContains(false, "menu", "button"), page(new HashMap<String, PageElement>(){{
                   put("object", element(10, 10, 100, 100));
                   put("menu", element(50, 50, 110, 10));
                   put("button", element(10, 10, 101, 40));
           }})),
-          
+
           row(new ValidationError(NO_AREA, messages("\"menu\" is not visible on page")),
               specContains(CONTAINS_FULLY, "menu", "button"), page(new HashMap<String, PageElement>(){{
                   put("object", element(10, 10, 100, 100));
                   put("menu", invisibleElement(11, 11, 10, 10));
                   put("button", element(60, 50, 40, 40));
           }})),
-          
+
           row(new ValidationError(NO_AREA, messages("\"menu\" is absent on page")),
               specContains(CONTAINS_FULLY, "menu", "button"), page(new HashMap<String, PageElement>(){{
                   put("object", element(10, 10, 100, 100));
                   put("menu", absentElement(11, 11, 10, 10));
                   put("button", element(60, 50, 40, 40));
           }})),
-          
+
           row(new ValidationError(areas(new ErrorArea(new Rect(350, 10, 10, 10), "menu-item-3"), new ErrorArea(new Rect(0, 0, 200, 100), "object")), messages("\"menu-item-3\" is outside \"object\"")),
                   specContains(CONTAINS_FULLY, "menu-item-*", "button"), page(new HashMap<String, PageElement>(){{
                       put("object", element(0, 0, 200, 100));
@@ -538,37 +535,38 @@ public class ValidationTest {
                       put("object", element(0, 0, 200, 100));
                       put("button", element(70, 10, 10, 10));
           }})),
-          
-          // Absent 
-          
+
+          // Absent
+
           row(new ValidationError(singleArea(new Rect(10, 10, 100, 100), "object"), messages("\"object\" is not absent on page")),
               specAbsent(), page(new HashMap<String, PageElement>(){{
                   put("object", element(10, 10, 100, 100));
           }})),
-          
+
           row(new ValidationError(NO_AREA, messages("Cannot find locator for \"object\" in page spec")),
               specAbsent(), page(new HashMap<String, PageElement>(){{
                   put("blabla", absentElement(10, 10, 100, 100));
           }})),
-          
-          // Visible 
-          
+
+          // Visible
+
           row(new ValidationError(NO_AREA, messages("\"object\" is not visible on page")),
               specVisible(), page(new HashMap<String, PageElement>(){{
                   put("object", invisibleElement(10, 10, 100, 100));
           }})),
-          
+
           row(new ValidationError(NO_AREA, messages("Cannot find locator for \"object\" in page spec")),
               specVisible(), page(new HashMap<String, PageElement>(){{
                   put("blabla", absentElement(10, 10, 100, 100));
           }})),
-          
+
           row(new ValidationError(NO_AREA, messages("\"object\" is absent on page")),
                   specVisible(), page(new HashMap<String, PageElement>(){{
                   put("object", absentElement(10, 10, 100, 100));
               }})),
-          
-          
+
+
+
           // Inside
           
           row(new ValidationError(areas(new ErrorArea(new Rect(10, 10, 500, 50), "object"), new ErrorArea(new Rect(0, 0, 130, 120), "container")), 
@@ -1225,6 +1223,41 @@ public class ValidationTest {
                       specColorScheme(new ColorRange(Color.decode("#3A70D0"), exact(30))), page(new HashMap<String, PageElement>(){{
                           put("object", element(10, 10, 500, 300));
                   }}, testImage)),
+
+
+
+
+          // Image comparsion
+            row(new ValidationError(NO_AREA, messages("\"object\" is absent on page")),
+                  specImage("/imgs/button-sample-incorrect.png", 2.0, true, 0, 10), page(new HashMap<String, PageElement>(){{
+                    put("object", absentElement(10, 10, 400, 300));
+                }}, testImage)),
+
+            row(new ValidationError(NO_AREA, messages("\"object\" is not visible on page")),
+                specImage("/imgs/button-sample-incorrect.png", 2.0, true, 0, 10), page(new HashMap<String, PageElement>(){{
+                    put("object", invisibleElement(10, 10, 400, 300));
+                }}, testImage)),
+
+            row(new ValidationError(areas(new ErrorArea(new Rect(100, 90, 100, 40), "object")),
+                        messages("Element does not look like \"/imgs/button-sample-incorrect.png\". " +
+                                "There are 3821 mismatching pixels but max allowed is 600")),
+                specImage("/imgs/button-sample-incorrect.png", 600, PIXEL_UNIT, 0, 10), page(new HashMap<String, PageElement>(){{
+                    put("object", element(100, 90, 100, 40));
+                }}, imageComparisonTestScreenshot)),
+
+            row(new ValidationError(areas(new ErrorArea(new Rect(100, 90, 100, 40), "object")),
+                            messages("Element does not look like \"/imgs/button-sample-incorrect.png\". " +
+                                    "There are 95.525% mismatching pixels but max allowed is 2.0%")),
+                    specImage("/imgs/button-sample-incorrect.png", 2.0, PERCENTAGE_UNIT, 0, 10), page(new HashMap<String, PageElement>(){{
+                        put("object", element(100, 90, 100, 40));
+                    }}, imageComparisonTestScreenshot)),
+
+            row(new ValidationError(null,
+                        messages("Couldn't load image: /imgs/undefined-image.png")),
+                specImage("/imgs/undefined-image.png", 1.452, PERCENTAGE_UNIT, 0, 10), page(new HashMap<String, PageElement>(){{
+                    put("object", element(100, 90, 100, 40));
+                }}, imageComparisonTestScreenshot)),
+
         };
     }
     
@@ -1356,6 +1389,27 @@ public class ValidationTest {
     private SpecColorScheme specColorScheme(ColorRange...colorRanges) {
         SpecColorScheme spec = new SpecColorScheme();
         spec.setColorRanges(Arrays.asList(colorRanges));
+        return spec;
+    }
+
+    private SpecImage specImage(String imagePath, double errorValue, boolean isPixelUnit, int pixelSmooth, int tolerance) {
+        return specImage(imagePath, errorValue, isPixelUnit, pixelSmooth, tolerance, null);
+    }
+
+    private SpecImage specImage(String imagePath, double errorValue, boolean isPixelUnit, int pixelSmooth, int tolerance, Rect selectedArea) {
+        SpecImage spec = new SpecImage();
+
+        if (isPixelUnit) {
+            spec.setMaxPixels((int)errorValue);
+        }
+        else {
+            spec.setMaxPercentage(errorValue);
+        }
+
+        spec.setImagePath(imagePath);
+        spec.setSmooth(pixelSmooth);
+        spec.setTolerance(tolerance);
+        spec.setSelectedArea(selectedArea);
         return spec;
     }
 
