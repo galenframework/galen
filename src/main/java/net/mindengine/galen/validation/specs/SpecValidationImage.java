@@ -55,13 +55,17 @@ public class SpecValidationImage extends SpecValidation<SpecImage> {
         Rectangle sampleArea = spec.getSelectedArea() != null ? toRectangle(spec.getSelectedArea()) : new Rectangle(0, 0, sampleImage.getWidth(), sampleImage.getHeight());
         ImageCompareResult result = Rainbow4J.compare(pageImage, sampleImage, smooth, tolerance, toRectangle(pageElement.getArea()), sampleArea);
 
+
+
         try {
             if (spec.getMaxPercentage() != null) {
                 compareResultByPercentage(msgErrorPrefix(spec.getImagePath()), spec.getMaxPercentage(), result.getPercentage());
-            } else if (spec.getMaxPixels() != null) {
+            } else {
+                if (spec.getMaxPixels() == null) {
+                    spec.setMaxPixels(0);
+                }
                 compareResultByPixels(msgErrorPrefix(spec.getImagePath()), spec.getMaxPixels(), result.getTotalPixels());
-            } else
-                throw new ValidationErrorException("Can't verify this spec as neither max pixels or percentage is defined");
+            }
         }
         catch (ValidationErrorException validationErrorException) {
             validationErrorException.setErrorAreas(new LinkedList<ErrorArea>());
