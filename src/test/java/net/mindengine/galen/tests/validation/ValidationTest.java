@@ -358,6 +358,10 @@ public class ValidationTest {
           row(specTextMatches("Some text with [0-9]+ numbers"), page(new HashMap<String, PageElement>(){{
               put("object", element(10, 10, 10, 10).withText("Some text with 12412512512521 numbers"));
           }})),
+
+          row(specTextMatches(".* some.* multiline"), page(new HashMap<String, PageElement>(){{
+              put("object", element(10, 10, 10, 10).withText("A text with some \n more multiline"));
+          }})),
           
           
           // Above 
