@@ -43,9 +43,7 @@ import net.mindengine.galen.specs.*;
 import net.mindengine.galen.specs.colors.ColorRange;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.ImmutablePair;
-import org.apache.commons.lang3.tuple.MutablePair;
 import org.apache.commons.lang3.tuple.Pair;
-import sun.org.mozilla.javascript.ast.ObjectProperty;
 
 public class SpecReader {
     
@@ -84,13 +82,13 @@ public class SpecReader {
         }));
         
         putSpec("width", new SpecComplexProcessor(expectThese(range()), new SpecComplexInit() {
-            public Spec init(String specName, Object[] args) {
+            public Spec init(String specName, String paramsText, String contextPath, Object[] args) {
                 return new SpecWidth((Range) args[0]);
             }
         }));
         
         putSpec("height", new SpecComplexProcessor(expectThese(range()), new SpecComplexInit() {
-            public Spec init(String specName, Object[] args) {
+            public Spec init(String specName, String paramsText, String contextPath, Object[] args) {
                 return new SpecHeight((Range) args[0]);
             }
         }));
@@ -129,7 +127,7 @@ public class SpecReader {
         putSpec("inside.*", new SpecComplexProcessor(expectThese(objectName(), locations()), new SpecComplexInit() {
             @SuppressWarnings("unchecked")
             @Override
-            public Spec init(String specName, Object[] args) {
+            public Spec init(String specName, String paramsText, String contextPath, Object[] args) {
                 String leftoverName = specName.substring(6).trim();
                 
                 String objectName = (String) args[0];
@@ -147,7 +145,7 @@ public class SpecReader {
         putSpec("near", new SpecComplexProcessor(expectThese(objectName(), locations()), new SpecComplexInit() {
             @SuppressWarnings("unchecked")
             @Override
-            public Spec init(String specName, Object[] args) {
+            public Spec init(String specName, String paramsText, String contextPath, Object[] args) {
                 String objectName = (String) args[0];
                 List<Location> locations = (List<Location>) args[1];
                 
@@ -253,7 +251,7 @@ public class SpecReader {
         putSpec("(on\\s.*|on)", new SpecComplexProcessor(expectThese(objectName(), locations()), new SpecComplexInit() {
             @SuppressWarnings("unchecked")
             @Override
-            public Spec init(String specName, Object[] args) {
+            public Spec init(String specName, String paramsText, String contextPath, Object[] args) {
                 String objectName = (String) args[0];
                 
                 String[] words = ExpectWord.readAllWords(new StringCharReader(specName));
@@ -322,7 +320,7 @@ public class SpecReader {
         putSpec("color\\s+scheme", new SpecComplexProcessor(expectThese(colorRanges()), new SpecComplexInit() {
             @SuppressWarnings("unchecked")
             @Override
-            public Spec init(String specName, Object[] args) {
+            public Spec init(String specName, String paramsText, String contextPath, Object[] args) {
                 
                 List<ColorRange> colorRanges = (List<ColorRange>)args[0];
                 if (colorRanges == null || colorRanges.size() == 0) {
@@ -337,13 +335,19 @@ public class SpecReader {
 
         putSpec("image", new SpecComplexProcessor(expectThese(commaSeparatedKeyValue()), new SpecComplexInit() {
             @Override
-            public Spec init(String specName, Object[] args) {
+            public Spec init(String specName, String paramsText, String contextPath, Object[] args) {
                 Map<String, String> parameters = (Map<String, String>)args[0];
 
                 SpecImage spec = new SpecImage();
 
                 if (parameters.containsKey("file")) {
-                    spec.setImagePath(parameters.get("file"));
+
+                    String fullFilePath = parameters.get("file");
+                    if (contextPath != null) {
+                        fullFilePath = contextPath + File.separator + parameters.get("file");
+                    }
+
+                    spec.setImagePath(fullFilePath);
                 }
                 else throw new SyntaxException("You should specify a file");
 

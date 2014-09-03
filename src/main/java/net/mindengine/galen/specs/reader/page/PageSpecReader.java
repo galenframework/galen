@@ -71,7 +71,7 @@ public class PageSpecReader implements BashTemplateJsFunctions {
 
 
     public PageSpec read(InputStream inputStream) throws IOException {
-        return read(inputStream, "<unknown location>", ".");
+        return read(inputStream, "<unknown location>", null);
     }
 
     public PageSpec read(InputStream inputStream, String fileLocation, String contextPath) throws IOException {

@@ -20,6 +20,7 @@ import java.util.List;
 
 import net.mindengine.galen.specs.reader.Place;
 import net.mindengine.galen.validation.ErrorArea;
+import net.mindengine.galen.validation.ImageComparison;
 
 public class LayoutSpec {
     
@@ -30,6 +31,7 @@ public class LayoutSpec {
     private List<ErrorArea> errorAreas = new LinkedList<ErrorArea>();
     private List<LayoutObject> subObjects;
     private boolean onlyWarn;
+    private ImageComparison imageComparison;
 
     public String getText() {
         return text;
@@ -84,5 +86,13 @@ public class LayoutSpec {
 
     public boolean isOnlyWarn() {
         return onlyWarn;
+    }
+
+    public void setImageComparison(ImageComparison imageComparison) {
+        this.imageComparison = imageComparison;
+    }
+
+    public ImageComparison getImageComparison() {
+        return imageComparison;
     }
 }

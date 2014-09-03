@@ -47,15 +47,19 @@
         </div>
     </li>
 </#macro>
+<#macro area_rect area>${area.left?c},${area.top?c},${area.width?c},${area.height?c}</#macro>
 <#macro object_node object>
 <h3 class="object">${object.name?html}</h3>
-<div class="object"<#if object.area?has_content> data-area="${object.area.left?c},${object.area.top?c},${object.area.width?c},${object.area.height?c}"</#if> data-name="${object.name?html}">
+<div class="object"<#if object.area?has_content> data-area="<@area_rect area=object.area/>"</#if> data-name="${object.name?html}">
     <ul class="test-specs">
         <#list object.specs as spec>
             <#if spec.failed = true>
             <li class="<#if spec.onlyWarn = true>warn<#else>fail</#if>">
                 <div class="description">
                     <span<#if spec.place?has_content> title="Location: ${spec.place.filePath!"unknown location"}#${spec.place.lineNumber!"?"}"</#if>>${spec.text?html}</span>
+                    <#if spec.imageComparison?has_content>
+                        <a class="link-show-differences"<#if spec.imageComparison.area?has_content> data-area="<@area_rect area=spec.imageComparison.area/>"</#if> data-imagesource="${spec.imageComparison.imagePath}" href="#">Show differences</a>
+                    </#if>
                     <ul class="error-message">
                         <#if spec.errorMessages?has_content>
                         <#list spec.errorMessages as errorMessage>

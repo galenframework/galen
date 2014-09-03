@@ -20,6 +20,7 @@ import static java.lang.String.format;
 import java.util.LinkedList;
 import java.util.List;
 
+import net.mindengine.galen.page.Rect;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.exception.ExceptionUtils;
@@ -28,6 +29,7 @@ public class ValidationError {
 
     private List<ErrorArea> errorAreas;
     private List<String> messages;
+    private ImageComparison imageComparison;
     private boolean onlyWarn;
 
     public ValidationError(List<ErrorArea> errorAreas, List<String> messages) {
@@ -115,5 +117,19 @@ public class ValidationError {
     public ValidationError withOnlyWarn(boolean onlyWarn) {
         setOnlyWarn(onlyWarn);
         return this;
+    }
+
+
+    public ValidationError withImageComparison(Rect area, String imagePath) {
+        setImageComparison(new ImageComparison(area, imagePath));
+        return this;
+    }
+
+    public ImageComparison getImageComparison() {
+        return imageComparison;
+    }
+
+    public void setImageComparison(ImageComparison imageComparison) {
+        this.imageComparison = imageComparison;
     }
 }

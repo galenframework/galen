@@ -143,7 +143,8 @@ public class ReportingListenerTestUtils {
                         "objectB1", 
                         new SpecInside("other-object", asList(new Location(exact(10), asList(LEFT)))).withOriginalText("inside: other-object 10px left")
                             .withPlace(new Place("specs.spec", 12)),
-                        new ValidationError(asList(new ErrorArea(new Rect(10, 10, 100, 50), "objectB1")), asList("objectB1 is not inside other-object", "second error message with <xml> &tags")));
+                        new ValidationError(asList(new ErrorArea(new Rect(10, 10, 100, 50), "objectB1")), asList("objectB1 is not inside other-object", "second error message with <xml> &tags"))
+                            .withImageComparison(new Rect(20, 30, 100, 40), "imgs/button-sample-correct.png"));
             }
             validationListener.onAfterObject(pageRunner, pageValidation, "objectB1"); 
             

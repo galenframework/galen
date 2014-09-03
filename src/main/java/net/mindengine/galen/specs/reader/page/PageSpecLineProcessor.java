@@ -47,7 +47,7 @@ public class PageSpecLineProcessor {
     private State previousState;
     private PageSection currentSection;
     
-    private String contextPath = ".";
+    private String contextPath = null;
     private PageSpec pageSpec;
     private Properties properties;
     

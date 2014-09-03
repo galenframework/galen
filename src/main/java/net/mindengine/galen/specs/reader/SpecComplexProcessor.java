@@ -40,7 +40,7 @@ public class SpecComplexProcessor implements SpecProcessor {
             args[i] = expectation.read(reader);
             i++;
         }
-        return specInit.init(specName, args);
+        return specInit.init(specName, paramsText, contextPath, args);
     }
 
 }

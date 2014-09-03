@@ -686,27 +686,27 @@ public class SpecsReaderTest {
     @Test
     public void shouldReadSpec_image_withMaxPercentageError() throws IOException {
         SpecImage spec = (SpecImage)readSpec("image: file imgs/image.png, error 2.4%");
-        assertThat(spec.getImagePath(), is("imgs/image.png"));
+        assertThat(spec.getImagePath(), is("./imgs/image.png"));
         assertThat(spec.getMaxPercentage(), is(2.4));
         assertThat(spec.getMaxPixels(), is(nullValue()));
-        assertThat(spec.getTolerance(), is(10));
+        assertThat(spec.getTolerance(), is(25));
         assertThat(spec.getSmooth(), is(0));
     }
 
     @Test
     public void shouldReadSpec_image_withMaxPixelsError() throws IOException {
         SpecImage spec = (SpecImage)readSpec("image: file imgs/image.png, error 112 px");
-        assertThat(spec.getImagePath(), is("imgs/image.png"));
+        assertThat(spec.getImagePath(), is("./imgs/image.png"));
         assertThat(spec.getMaxPercentage(), is(nullValue()));
         assertThat(spec.getMaxPixels(), is(112));
-        assertThat(spec.getTolerance(), is(10));
+        assertThat(spec.getTolerance(), is(25));
         assertThat(spec.getSmooth(), is(0));
     }
 
     @Test
     public void shouldReadSpec_image_withMaxPixelsError_tolerance5() throws IOException {
         SpecImage spec = (SpecImage)readSpec("image: file imgs/image.png, error 112 px, tolerance 5");
-        assertThat(spec.getImagePath(), is("imgs/image.png"));
+        assertThat(spec.getImagePath(), is("./imgs/image.png"));
         assertThat(spec.getMaxPercentage(), is(nullValue()));
         assertThat(spec.getMaxPixels(), is(112));
         assertThat(spec.getTolerance(), is(5));
@@ -716,7 +716,7 @@ public class SpecsReaderTest {
     @Test
     public void shouldReadSpec_image_withMaxPixelsError_tolerance5_smooth2() throws IOException {
         SpecImage spec = (SpecImage)readSpec("image: file imgs/image.png, error 112 px, tolerance 5, smooth 2");
-        assertThat(spec.getImagePath(), is("imgs/image.png"));
+        assertThat(spec.getImagePath(), is("./imgs/image.png"));
         assertThat(spec.getMaxPercentage(), is(nullValue()));
         assertThat(spec.getMaxPixels(), is(112));
         assertThat(spec.getTolerance(), is(5));
@@ -726,7 +726,7 @@ public class SpecsReaderTest {
     @Test
     public void shouldReadSpec_image_withMaxPixelsError_smooth2_tolerance5() throws IOException {
         SpecImage spec = (SpecImage)readSpec("image: file imgs/image.png, error 112 px, smooth 2, tolerance 5");
-        assertThat(spec.getImagePath(), is("imgs/image.png"));
+        assertThat(spec.getImagePath(), is("./imgs/image.png"));
         assertThat(spec.getMaxPercentage(), is(nullValue()));
         assertThat(spec.getMaxPixels(), is(112));
         assertThat(spec.getTolerance(), is(5));
@@ -736,13 +736,24 @@ public class SpecsReaderTest {
     @Test
     public void shouldReadSpec_image_withMaxPixelsError_andArea() throws IOException {
         SpecImage spec = (SpecImage)readSpec("image: file imgs/image.png, error 112 px, area 10 10 100 20");
-        assertThat(spec.getImagePath(), is("imgs/image.png"));
+        assertThat(spec.getImagePath(), is("./imgs/image.png"));
         assertThat(spec.getMaxPercentage(), is(nullValue()));
         assertThat(spec.getMaxPixels(), is(112));
-        assertThat(spec.getTolerance(), is(10));
+        assertThat(spec.getTolerance(), is(25));
         assertThat(spec.getSmooth(), is(0));
         assertThat(spec.getSelectedArea(), is(new Rect(10,10,100,20)));
     }
+
+    @Test
+    public void shouldReadSpec_image_andBuildImagePath_withContextPath() throws IOException {
+        SpecImage spec = (SpecImage)readSpec("image: file image.png", "some-component/specs");
+        assertThat(spec.getImagePath(), is("some-component/specs/image.png"));
+        assertThat(spec.getMaxPercentage(), is(nullValue()));
+        assertThat(spec.getMaxPixels(), is(nullValue()));
+        assertThat(spec.getTolerance(), is(25));
+        assertThat(spec.getSmooth(), is(0));
+    }
+
 
     @Test(expectedExceptions={SyntaxException.class}, expectedExceptionsMessageRegExp="Cannot parse number: \"\"")
     public void givesError_specImage_withIncorrectArea() throws IOException {
@@ -780,7 +791,11 @@ public class SpecsReaderTest {
     }
     
     private Spec readSpec(String specText) throws IOException {
-        return new SpecReader(EMPTY_PROPERTIES, NO_BROWSER).read(specText, ".");
+        return new SpecReader(EMPTY_PROPERTIES, NO_BROWSER).read(specText);
+    }
+
+    private Spec readSpec(String specText, String contextPath) throws IOException {
+        return new SpecReader(EMPTY_PROPERTIES, NO_BROWSER).read(specText, contextPath);
     }
     
     private List<Side> sides(Side...sides) {

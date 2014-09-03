@@ -120,10 +120,10 @@ public class ExpectationsTest {
     @DataProvider
     public Object[][] provideBadRangeSamples() {
         return new Object[][] {
-            row("0", "Cannot parse range value: \"\""),
-            row("0p", "Cannot parse range value: \"\""),
-            row("0 p", "Cannot parse range value: \"\""),
-            row("0PX", "Cannot parse range value: \"\""),
+            row("0", "Cannot parse number: \"\""),
+            row("0p", "Cannot parse number: \"\""),
+            row("0 p", "Cannot parse number: \"\""),
+            row("0PX", "Cannot parse number: \"\""),
             row("10 to 20", "Missing ending: \"px\" or \"%\""),
             row("10 to 20p", "Missing ending: \"px\" or \"%\""),
             row("10 to 20%", "Missing value path for relative range"),
@@ -233,14 +233,14 @@ public class ExpectationsTest {
     @DataProvider
     public Object[][] provideBadLocations() {
         return new Object[][]{
-            {"left", "Cannot parse range value: \"\""},
+            {"left", "Cannot parse number: \"\""},
             {"10px qwe", "Unknown side: \"qwe\""},
             {"10 to 30px qwe", "Unknown side: \"qwe\""},
             {"10 to 30% of screen/width qwe", "Unknown side: \"qwe\""},
             {"10px left qwe", "Unknown side: \"qwe\""},
             {"10px left, 20px qwe", "Unknown side: \"qwe\""},
             {"10px left, 20px left qwe", "Unknown side: \"qwe\""},
-            {"10px left, right, top", "Cannot parse range value: \"\""},
+            {"10px left, right, top", "Cannot parse number: \"\""},
         };
     }
 

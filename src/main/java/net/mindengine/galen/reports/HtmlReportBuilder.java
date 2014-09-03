@@ -15,16 +15,17 @@
 ******************************************************************************/
 package net.mindengine.galen.reports;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import net.mindengine.galen.reports.model.LayoutObject;
+import net.mindengine.galen.reports.model.LayoutReport;
+import net.mindengine.galen.reports.model.LayoutSection;
+import net.mindengine.galen.reports.model.LayoutSpec;
+import net.mindengine.galen.utils.GalenUtils;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 
@@ -90,7 +91,7 @@ public class HtmlReportBuilder {
         }
         
         if (node instanceof LayoutReportNode) {
-            moveScreenshotFile((LayoutReportNode)node, reportFolderPath, filePrefix);
+            moveAllFilesForLayoutReport((LayoutReportNode) node, reportFolderPath, filePrefix);
         }
         
         if (node.getNodes() != null) {
@@ -112,7 +113,7 @@ public class HtmlReportBuilder {
         }
     }
 
-    private void moveScreenshotFile(LayoutReportNode node, String reportFolderPath, String filePrefix) {
+    private void moveAllFilesForLayoutReport(LayoutReportNode node, String reportFolderPath, String filePrefix) {
         if (node.getLayoutReport() != null && node.getLayoutReport().getScreenshotFullPath() != null) {
             String fileName = createUniqueFileName(filePrefix + "-screenshot", ".png");
             
@@ -122,6 +123,62 @@ public class HtmlReportBuilder {
             } catch (IOException e) {
                 e.printStackTrace();
             }
+
+            searchForLayoutAttachmentsAndMoveThem(node.getLayoutReport(), reportFolderPath, filePrefix);
+        }
+    }
+
+    private void searchForLayoutAttachmentsAndMoveThem(LayoutReport layoutReport, String reportFolderPath, String filePrefix) {
+        for (LayoutSection section : layoutReport.getSections()) {
+            for (LayoutObject layoutObject: section.getObjects()) {
+                searchForLayoutAttachmentsAndMoveThem(layoutObject, reportFolderPath, filePrefix);
+            }
+        }
+    }
+
+    private void searchForLayoutAttachmentsAndMoveThem(LayoutObject layoutObject, String reportFolderPath, String filePrefix) {
+
+        for (LayoutSpec spec : layoutObject.getSpecs()) {
+            if (spec.getImageComparison() != null) {
+
+                File reportFolder = new File(reportFolderPath + File.separator + filePrefix);
+                reportFolder.mkdirs();
+
+                String newName = moveFileOrResourceTo(spec.getImageComparison().getImagePath(), reportFolder);
+
+                spec.getImageComparison().setImagePath(filePrefix + "/" + newName);
+            }
+        }
+
+        if (layoutObject.getSubObjects() != null) {
+            for (LayoutObject subObject : layoutObject.getSubObjects()) {
+                searchForLayoutAttachmentsAndMoveThem(subObject, reportFolderPath, filePrefix);
+            }
+        }
+    }
+
+    private String moveFileOrResourceTo(String imagePath, File reportFolder) {
+        try {
+            InputStream stream = GalenUtils.findFileOrResourceAsStream(imagePath);
+
+            if (stream == null) {
+                throw new FileNotFoundException(imagePath);
+            }
+
+            String newName = GalenUtils.convertToFileName(imagePath);
+
+            File file = new File(reportFolder.getAbsolutePath() + File.separator + newName);
+            file.createNewFile();
+
+            FileOutputStream fos = new FileOutputStream(file);
+            IOUtils.copy(stream, fos);
+            fos.flush();
+            fos.close();
+            return newName;
+        }
+        catch(Exception ex) {
+            ex.printStackTrace();
+            return imagePath;
         }
     }
 

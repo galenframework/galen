@@ -134,9 +134,12 @@ public class ReportingTest {
         LayoutReport layoutReport = new LayoutReport();
         layoutReport.setScreenshotFullPath(File.createTempFile("screenshot", ".png").getAbsolutePath());
         ReportingListenerTestUtils.performSampleReporting("Home page test", null, new LayoutReportListener(layoutReport), null);
-        
+
+
+
         report.addNode(new LayoutReportNode(layoutReport, "check layout"));
         report.getNodes().get(0).setTime(new Date(1404681346000L));
+
 
         testInfo.setReport(report);
         testInfos.add(testInfo);
@@ -155,6 +158,9 @@ public class ReportingTest {
         Assert.assertEquals(expectedSuite1Html, realSuite1Html);
         
         assertThat("Should place screenshot 1 in same folder", new File(reportDirPath + "/report-1-home-page-test-screenshot-1.png").exists(), is(true));
+
+        assertThat("Should place image comparison image as an attachment to the report",
+                new File(reportDirPath + "/report-1-home-page-test/imgs-button-sample-correct.png").exists(), is(true));
         
         assertThat("Should place css same folder", new File(reportDirPath + "/galen-report.css").exists(), is(true));
         assertThat("Should place js same folder", new File(reportDirPath + "/galen-report.js").exists(), is(true));

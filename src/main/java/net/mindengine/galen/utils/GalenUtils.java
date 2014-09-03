@@ -277,6 +277,11 @@ public class GalenUtils {
             return new FileInputStream(file);
         }
         else {
+
+            if (!filePath.startsWith("/")) {
+                filePath = "/" + filePath;
+            }
+
             return GalenUtils.class.getResourceAsStream(filePath);
         }
     }
