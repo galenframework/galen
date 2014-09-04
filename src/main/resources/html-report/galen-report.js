@@ -130,12 +130,85 @@ var Galen = {
             svgDownload.clone().appendTo(el);
             el.append("<span>" + html + "</span>");
         });
+
+
+        $("a.link-show-differences").click(function () {
+            var sampleArea = $(this).attr("data-area");
+            var sampleImage = $(this).attr("data-imagesource");
+            var originalArea = $(this).closest("div.object").attr("data-area");
+            var originalImage = $(this).closest("div.layout-report").attr("data-screenshot");
+            
+            Galen.showImageComparison(originalImage, originalArea, sampleImage, sampleArea);
+            return false;
+        });
     },
     makeSliding: function (selector) {
         $(selector).click(Galen.onSlidingElementClicked);
     },
     onSlidingElementClicked: function () {
         $(this).next().slideToggle();
+    },
+    loadImage: function (path, callback) {
+        var img = new Image();
+        img.onload = function() {
+            callback(this);
+        };
+        img.src = path;
+    },
+    readAreaFromText: function (text, defaultWidth, defaultHeight) {
+        if (text != null && text.length > 0) {
+            var area = eval("[" + text + "]");
+            if (area.length == 4) {
+                return area;
+            }
+        }
+        return [0,0, defaultWidth, defaultHeight];
+    },
+
+    showImageComparison: function (originalImagePath, originalArea, sampleImagePath, sampleArea) {
+        Galen.loadImage(originalImagePath, function (originalImage) {
+            Galen.loadImage(sampleImagePath, function (sampleImage) {
+                $("#tooltip-body").html(
+                "<input id='image-comparison-toggle-state' type='checkbox'/> <label for='image-comparison-toggle-state'>Put images on top of each other</label>" 
+                + "<div class='image-comparison'>" 
+                + "<b>Actual Image</b>" 
+                + "<div class='image original'></div>"  
+                + "<b>Expected</b>" 
+                + "<div class='image sample'></div></div>");
+
+                originalArea = Galen.readAreaFromText(originalArea, originalImage.width, originalImage.height); 
+                sampleArea = Galen.readAreaFromText(sampleArea, sampleImage.width, sampleImage.height);
+
+                renderImage = function (locator, imagePath, area) {
+                    $(locator)
+                        .css("background-image", "url(" + imagePath + ")")
+                        .css("background-repeat", "no-repeat")
+                        .css("background-position", (-area[0]) + "px " + (-area[1]) + "px")
+                        .css("width", area[2] + "px")
+                        .css("height", area[3] + "px");
+                };
+
+                renderImage("#tooltip-body .image-comparison .image.original", originalImagePath, originalArea);
+                renderImage("#tooltip-body .image-comparison .image.sample", sampleImagePath, sampleArea);
+
+
+                $("#image-comparison-toggle-state").click(function () {
+                    if ($(this).is(":checked")) {
+                        $("#tooltip-body b").hide();
+
+                        $("#tooltip-body .image-comparison .image.sample").addClass("layed-on-top");
+                    }
+                    else {
+                        $("#tooltip-body b").show();
+                        $("#tooltip-body .image-comparison .image.sample").removeClass("layed-on-top");
+                    }
+                });
+
+
+                $("#tooltip").center();
+                $("#tooltip").show();
+            });
+        });
     },
     showScreenshot: function (img, width, height, areas) {
         $("#tooltip-body").html("<div class='canvas'></div>").append(img);
