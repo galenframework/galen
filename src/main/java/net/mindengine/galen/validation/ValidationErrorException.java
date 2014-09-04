@@ -22,8 +22,9 @@ public class ValidationErrorException extends Exception {
 
 	private List<ErrorArea> errorAreas;
 	private List<String> errorMessages;
-	
-	public ValidationErrorException() {
+    private ImageComparison imageComparison;
+
+    public ValidationErrorException() {
 		super();
 	}
 	
@@ -90,4 +91,15 @@ public class ValidationErrorException extends Exception {
         return this;
     }
 
+    public ValidationError asValidationError() {
+        return new ValidationError(this.getErrorAreas(), this.getErrorMessages(), this.getImageComparison());
+    }
+
+    public ImageComparison getImageComparison() {
+        return imageComparison;
+    }
+
+    public void setImageComparison(ImageComparison imageComparison) {
+        this.imageComparison = imageComparison;
+    }
 }

@@ -19,10 +19,7 @@ import net.mindengine.galen.page.PageElement;
 import net.mindengine.galen.page.Rect;
 import net.mindengine.galen.specs.SpecImage;
 import net.mindengine.galen.utils.GalenUtils;
-import net.mindengine.galen.validation.ErrorArea;
-import net.mindengine.galen.validation.PageValidation;
-import net.mindengine.galen.validation.SpecValidation;
-import net.mindengine.galen.validation.ValidationErrorException;
+import net.mindengine.galen.validation.*;
 import net.mindengine.rainbow4j.ImageCompareResult;
 import net.mindengine.rainbow4j.Rainbow4J;
 
@@ -56,7 +53,6 @@ public class SpecValidationImage extends SpecValidation<SpecImage> {
         ImageCompareResult result = Rainbow4J.compare(pageImage, sampleImage, smooth, tolerance, toRectangle(pageElement.getArea()), sampleArea);
 
 
-
         try {
             if (spec.getMaxPercentage() != null) {
                 compareResultByPercentage(msgErrorPrefix(spec.getImagePath()), spec.getMaxPercentage(), result.getPercentage());
@@ -70,6 +66,7 @@ public class SpecValidationImage extends SpecValidation<SpecImage> {
         catch (ValidationErrorException validationErrorException) {
             validationErrorException.setErrorAreas(new LinkedList<ErrorArea>());
             validationErrorException.getErrorAreas().add(new ErrorArea(pageElement.getArea(), objectName));
+            validationErrorException.setImageComparison(new ImageComparison(spec.getSelectedArea(), spec.getImagePath()));
             throw validationErrorException;
         }
     }

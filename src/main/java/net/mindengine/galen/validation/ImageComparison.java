@@ -16,6 +16,9 @@
 package net.mindengine.galen.validation;
 
 import net.mindengine.galen.page.Rect;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.lang3.builder.ToStringBuilder;
 
 public class ImageComparison {
     private Rect area;
@@ -40,5 +43,39 @@ public class ImageComparison {
 
     public void setImagePath(String imagePath) {
         this.imagePath = imagePath;
+    }
+
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null)
+            return false;
+        if (obj == this)
+            return true;
+        if (!(obj instanceof ImageComparison))
+            return false;
+
+        ImageComparison rhs = (ImageComparison)obj;
+
+        return new EqualsBuilder()
+                .append(area, rhs.area)
+                .append(imagePath, rhs.imagePath)
+                .isEquals();
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder()
+                .append(area)
+                .append(imagePath)
+                .toHashCode();
+    }
+
+    @Override
+    public String toString() {
+        return new ToStringBuilder(this)
+                .append("area", area)
+                .append("imagePath", imagePath)
+                .toString();
     }
 }

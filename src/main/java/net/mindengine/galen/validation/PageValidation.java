@@ -62,7 +62,7 @@ public class PageValidation {
             return null;
         }
         catch (ValidationErrorException ex) {
-            ValidationError validationError = new ValidationError(ex.getErrorAreas(), ex.getErrorMessages());
+            ValidationError validationError = ex.asValidationError();
             if (spec.isOnlyWarn()) {
                 validationError.setOnlyWarn(true);
             }

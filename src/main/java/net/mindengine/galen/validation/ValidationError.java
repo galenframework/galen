@@ -37,6 +37,12 @@ public class ValidationError {
         this.messages = messages;
     }
 
+    public ValidationError(List<ErrorArea> errorAreas, List<String> messages, ImageComparison imageComparison) {
+        this.setErrorAreas(errorAreas);
+        this.messages = messages;
+        this.imageComparison = imageComparison;
+    }
+
     public ValidationError() {
         
     }
@@ -44,7 +50,11 @@ public class ValidationError {
 
     @Override
     public int hashCode() {
-        return new HashCodeBuilder(17, 31).append(getErrorAreas()).append(messages).toHashCode();
+        return new HashCodeBuilder(17, 31)
+                .append(getErrorAreas())
+                .append(messages)
+                .append(imageComparison)
+                .toHashCode();
     }
     
     @Override
@@ -57,13 +67,19 @@ public class ValidationError {
             return false;
         
         ValidationError rhs = (ValidationError)obj;
-        return new EqualsBuilder().append(getErrorAreas(), rhs.getErrorAreas()).append(messages, rhs.messages).isEquals();
+        return new EqualsBuilder()
+                .append(getErrorAreas(), rhs.getErrorAreas())
+                .append(messages, rhs.messages)
+                .append(imageComparison, rhs.imageComparison)
+                .isEquals();
     }
     
     @Override
     public String toString() {
-        return format("Error{%s, areas=%s}", messages, getErrorAreas());
+        return format("Error{%s, areas=%s, imageComparison=%s}", messages, getErrorAreas(), imageComparison);
     }
+
+
 
     public ValidationError withArea(ErrorArea errorArea) {
         if (getErrorAreas() == null) {

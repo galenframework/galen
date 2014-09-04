@@ -1240,14 +1240,16 @@ public class ValidationTest {
 
             row(new ValidationError(areas(new ErrorArea(new Rect(100, 90, 100, 40), "object")),
                         messages("Element does not look like \"/imgs/button-sample-incorrect.png\". " +
-                                "There are 3821 mismatching pixels but max allowed is 600")),
+                                "There are 3821 mismatching pixels but max allowed is 600"))
+                            .withImageComparison(null, "/imgs/button-sample-incorrect.png"),
                 specImage("/imgs/button-sample-incorrect.png", 600, PIXEL_UNIT, 0, 10), page(new HashMap<String, PageElement>(){{
                     put("object", element(100, 90, 100, 40));
                 }}, imageComparisonTestScreenshot)),
 
             row(new ValidationError(areas(new ErrorArea(new Rect(100, 90, 100, 40), "object")),
                             messages("Element does not look like \"/imgs/button-sample-incorrect.png\". " +
-                                    "There are 95.525% mismatching pixels but max allowed is 2.0%")),
+                                    "There are 95.525% mismatching pixels but max allowed is 2.0%"))
+                            .withImageComparison(null, "/imgs/button-sample-incorrect.png"),
                     specImage("/imgs/button-sample-incorrect.png", 2.0, PERCENTAGE_UNIT, 0, 10), page(new HashMap<String, PageElement>(){{
                         put("object", element(100, 90, 100, 40));
                     }}, imageComparisonTestScreenshot)),
