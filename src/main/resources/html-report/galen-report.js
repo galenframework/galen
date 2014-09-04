@@ -42,6 +42,11 @@ var Galen = {
             $("#tooltip").hide();
             return false;
         });
+        $(document).keydown(function(e) {
+            if (e.keyCode == 27) {
+                $("#tooltip").hide();
+            }
+        });
 
         $("ul.test-specs li.fail span").click(function () {
             var subObjects = $(this).parent().parent().find(".sub-objects");
