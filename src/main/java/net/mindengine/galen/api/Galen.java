@@ -111,4 +111,11 @@ public class Galen {
         return checkLayout(new SeleniumBrowser(driver), asList(specPath), includedTags, excludedTags, properties, validationListener);
     }
 
+    public static void dumpPage(String specPath, String pageDumpPath) {
+        dumpPage(specPath, pageDumpPath, null, null);
+    }
+
+    public static void dumpPage(String specPath, String pageDumpPath, Integer maxWidth, Integer maxHeight) {
+
+    }
 }

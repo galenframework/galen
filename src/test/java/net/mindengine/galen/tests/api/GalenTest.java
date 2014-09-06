@@ -15,22 +15,23 @@
 ******************************************************************************/
 package net.mindengine.galen.tests.api;
 
+import com.google.common.io.Files;
 import net.mindengine.galen.api.Galen;
 import net.mindengine.galen.components.mocks.driver.MockedDriver;
 import net.mindengine.galen.page.Rect;
-import net.mindengine.galen.reports.GalenTestInfo;
 import net.mindengine.galen.reports.model.LayoutReport;
 import net.mindengine.galen.validation.ErrorArea;
 import net.mindengine.galen.validation.ValidationError;
+import org.apache.commons.io.FileUtils;
 import org.openqa.selenium.WebDriver;
 import org.testng.annotations.Test;
 
+import java.io.File;
 import java.io.IOException;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Properties;
 
 import static java.util.Arrays.asList;
+import static org.apache.commons.io.FileUtils.readFileToString;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 
@@ -49,6 +50,62 @@ public class GalenTest {
                         .withArea(new ErrorArea(new Rect(120, 10, 200, 50), "name-textfield")),
                 new ValidationError().withMessage("\"save-button\" text is \"Save\" but should be \"Store\"")
                         .withArea(new ErrorArea(new Rect(10, 10, 100, 50), "save-button"))));
+    }
+
+
+    @Test
+    public void dumpPage_shouldGenereate_htmlJsonReport_andStorePicturesOfElements() throws IOException {
+        String pageDumpPath = Files.createTempDir().getAbsolutePath() + "/pagedump";
+
+        WebDriver driver = new MockedDriver();
+        driver.get("/mocks/pages/galen4j-pagedump.json");
+        Galen.dumpPage("/specs/galen4j/pagedump.spec", pageDumpPath);
+
+        assertFileExists(pageDumpPath + "/galen-dump.js");
+        assertFileExists(pageDumpPath + "/galen-dump.css");
+        assertFileExists(pageDumpPath + "/page.html");
+        assertFileExists(pageDumpPath + "/page.json");
+        assertFileExists(pageDumpPath + "/page.png");
+        assertFileExists(pageDumpPath + "/objects/button-save.png");
+        assertFileExists(pageDumpPath + "/objects/name-textfield.png");
+        assertFileExists(pageDumpPath + "/objects/menu-item-1.png");
+        assertFileExists(pageDumpPath + "/objects/menu-item-2.png");
+        assertFileExists(pageDumpPath + "/objects/menu-item-3.png");
+        assertFileExists(pageDumpPath + "/objects/big-container.png");
+
+        assertFileContent(pageDumpPath + "/page.json", "/pagedump/expected.json");
+    }
+
+    private void assertFileContent(String pathForRealContent, String pathForExpectedContent) throws IOException {
+        assertThat(String.format("Content of \"%s\" should be the same as in \"%s\"", pathForRealContent, pathForExpectedContent),
+                readFileToString(new File(pathForRealContent)),
+                is(readFileToString(new File(getClass().getResource(pathForExpectedContent).getFile()))));
+    }
+
+    @Test
+    public void dumpPage_shouldOnlyStoreScreenshots_thatAreLessThan_theMaxAllowed() {
+        String pageDumpPath = Files.createTempDir().getAbsolutePath() + "/pagedump";
+
+        WebDriver driver = new MockedDriver();
+        driver.get("/mocks/pages/galen4j-pagedump.json");
+        Galen.dumpPage("/specs/galen4j/pagedump.spec", pageDumpPath, 80, 80);
+
+        assertFileExists(pageDumpPath + "/objects/button-save.png");
+        assertFileDoesNotExist(pageDumpPath + "/objects/name-textfield.png");
+        assertFileExists(pageDumpPath + "/objects/menu-item-1.png");
+        assertFileExists(pageDumpPath + "/objects/menu-item-2.png");
+        assertFileExists(pageDumpPath + "/objects/menu-item-3.png");
+        assertFileDoesNotExist(pageDumpPath + "/objects/big-container.png");
+    }
+
+
+
+    private void assertFileDoesNotExist(String path) {
+        assertThat("File " + path + " + should not exist", new File(path).exists(), is(false));
+    }
+
+    private void assertFileExists(String path) {
+        assertThat("File " + path + " + should exist", new File(path).exists(), is(true));
     }
 
 }

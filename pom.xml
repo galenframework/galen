@@ -65,7 +65,7 @@
     <dependency>
       <groupId>net.mindengine</groupId>
       <artifactId>rainbow4j</artifactId>
-      <version>0.2.7-SNAPSHOT</version>
+      <version>0.3.0</version>
     </dependency>
     <dependency>
       <groupId>org.mozilla</groupId>
@@ -100,6 +100,7 @@
           </descriptorRefs>
         </configuration>
       </plugin>
+      <!-- 
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-gpg-plugin</artifactId>
@@ -113,6 +114,7 @@
           </execution>
         </executions>
       </plugin>
+      -->
     </plugins>
   </build>
 

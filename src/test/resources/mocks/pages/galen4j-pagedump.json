@@ -1,0 +1,31 @@
+
+{
+    "title": "My page",
+    "items": [
+        {
+            "locator": "css: .save-button",
+            "text": "Save",
+            "area": [10, 10, 100, 50]
+        },
+        {
+            "locator": "id: name-textfield",
+            "area": [120, 10, 200, 50]
+        },
+        {
+            "locator": "css: .menu-item",
+            "area": [30, 10, 20, 10]
+        },
+        {
+            "locator": "css: .menu-item",
+            "area": [50, 10, 20, 10]
+        },
+        {
+            "locator": "css: .menu-item",
+            "area": [70, 10, 20, 10]
+        },
+        {
+            "locator": "css .container",
+            "area": [0, 0, 1000, 700]
+        }
+    ]
+}
