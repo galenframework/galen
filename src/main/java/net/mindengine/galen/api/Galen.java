@@ -38,6 +38,8 @@ import net.mindengine.galen.tests.GalenTest;
 import net.mindengine.galen.tests.TestSession;
 import net.mindengine.galen.utils.GalenUtils;
 import net.mindengine.galen.validation.*;
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
 import org.openqa.selenium.WebDriver;
 
 import java.io.File;
@@ -155,6 +157,16 @@ public class Galen {
         pageDump.exportAsJson(new File(reportFolder.getAbsoluteFile() + File.separator + "page.json"));
         pageDump.exportAsHtml(new File(reportFolder.getAbsoluteFile() + File.separator + "page.html"));
         pageDump.exportAllScreenshots(browser, reportFolder);
+
+
+        copyResource("/html-report/jquery-1.10.2.min.js", new File(reportFolder.getAbsolutePath() + File.separator + "jquery-1.10.2.min.js"));
+        copyResource("/pagedump/galen-pagedump.js", new File(reportFolder.getAbsolutePath() + File.separator + "galen-pagedump.js"));
+        copyResource("/pagedump/galen-pagedump.css", new File(reportFolder.getAbsolutePath() + File.separator + "galen-pagedump.css"));
+    }
+
+    private static void copyResource(String resourceName, File destFile) throws IOException {
+        String value = IOUtils.toString(Galen.class.getResourceAsStream(resourceName));
+        FileUtils.writeStringToFile(destFile, value);
     }
 
     private static boolean isWithinArea(PageElement element, Integer maxWidth, Integer maxHeight) {
