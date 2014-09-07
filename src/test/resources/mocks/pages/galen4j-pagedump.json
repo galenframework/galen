@@ -24,8 +24,8 @@
             "area": [70, 10, 20, 10]
         },
         {
-            "locator": "css .container",
-            "area": [0, 0, 1000, 700]
+            "locator": "css: .container",
+            "area": [0, 0, 500, 300]
         }
     ]
 }

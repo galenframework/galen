@@ -32,6 +32,7 @@ public interface Page {
     Page createObjectContextPage(Locator mainObjectLocator);
 
     BufferedImage getScreenshotImage();
-    
 
+
+    String getTitle();
 }

@@ -231,6 +231,10 @@ public class SeleniumPage implements Page {
         return this.cachedScreenshotImage;
     }
 
-    
-    
+    @Override
+    public String getTitle() {
+        return driver.getTitle();
+    }
+
+
 }

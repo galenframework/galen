@@ -88,6 +88,11 @@ public class MockedPage implements Page {
         return screenshotImage;
     }
 
+    @Override
+    public String getTitle() {
+        return "";
+    }
+
     public void setScreenshotImage(BufferedImage screenshotImage) {
         this.screenshotImage = screenshotImage;
     }

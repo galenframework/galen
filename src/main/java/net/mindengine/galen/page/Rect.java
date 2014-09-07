@@ -118,5 +118,8 @@ public class Rect {
         };
     }
 
+    public int[] toIntArray() {
+        return new int[]{getLeft(), getTop(), getWidth(), getHeight()};
+    }
 }
 

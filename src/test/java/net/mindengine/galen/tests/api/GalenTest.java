@@ -23,6 +23,7 @@ import net.mindengine.galen.reports.model.LayoutReport;
 import net.mindengine.galen.validation.ErrorArea;
 import net.mindengine.galen.validation.ValidationError;
 import org.apache.commons.io.FileUtils;
+import org.junit.Assert;
 import org.openqa.selenium.WebDriver;
 import org.testng.annotations.Test;
 
@@ -59,12 +60,12 @@ public class GalenTest {
 
         WebDriver driver = new MockedDriver();
         driver.get("/mocks/pages/galen4j-pagedump.json");
-        Galen.dumpPage("/specs/galen4j/pagedump.spec", pageDumpPath);
+        Galen.dumpPage(driver, "/specs/galen4j/pagedump.spec", pageDumpPath);
 
-        assertFileExists(pageDumpPath + "/galen-dump.js");
-        assertFileExists(pageDumpPath + "/galen-dump.css");
-        assertFileExists(pageDumpPath + "/page.html");
         assertFileExists(pageDumpPath + "/page.json");
+        assertFileContent(pageDumpPath + "/page.json", "/pagedump/expected.json");
+        assertFileExists(pageDumpPath + "/page.html");
+
         assertFileExists(pageDumpPath + "/page.png");
         assertFileExists(pageDumpPath + "/objects/button-save.png");
         assertFileExists(pageDumpPath + "/objects/name-textfield.png");
@@ -73,22 +74,19 @@ public class GalenTest {
         assertFileExists(pageDumpPath + "/objects/menu-item-3.png");
         assertFileExists(pageDumpPath + "/objects/big-container.png");
 
-        assertFileContent(pageDumpPath + "/page.json", "/pagedump/expected.json");
+
+        assertFileExists(pageDumpPath + "/galen-pagedump.js");
+        assertFileExists(pageDumpPath + "/galen-pagedump.css");
     }
 
-    private void assertFileContent(String pathForRealContent, String pathForExpectedContent) throws IOException {
-        assertThat(String.format("Content of \"%s\" should be the same as in \"%s\"", pathForRealContent, pathForExpectedContent),
-                readFileToString(new File(pathForRealContent)),
-                is(readFileToString(new File(getClass().getResource(pathForExpectedContent).getFile()))));
-    }
 
     @Test
-    public void dumpPage_shouldOnlyStoreScreenshots_thatAreLessThan_theMaxAllowed() {
+    public void dumpPage_shouldOnlyStoreScreenshots_thatAreLessThan_theMaxAllowed() throws IOException {
         String pageDumpPath = Files.createTempDir().getAbsolutePath() + "/pagedump";
 
         WebDriver driver = new MockedDriver();
         driver.get("/mocks/pages/galen4j-pagedump.json");
-        Galen.dumpPage("/specs/galen4j/pagedump.spec", pageDumpPath, 80, 80);
+        Galen.dumpPage(driver, "/specs/galen4j/pagedump.spec", pageDumpPath, 80, 80);
 
         assertFileExists(pageDumpPath + "/objects/button-save.png");
         assertFileDoesNotExist(pageDumpPath + "/objects/name-textfield.png");
@@ -99,13 +97,18 @@ public class GalenTest {
     }
 
 
+    private void assertFileContent(String pathForRealContent, String pathForExpectedContent) throws IOException {
+        Assert.assertEquals(String.format("Content of \"%s\" should be the same as in \"%s\"", pathForRealContent, pathForExpectedContent),
+                readFileToString(new File(pathForRealContent)).replaceAll("\\s+", ""),
+                readFileToString(new File(getClass().getResource(pathForExpectedContent).getFile())).replaceAll("\\s+", ""));
+    }
 
     private void assertFileDoesNotExist(String path) {
         assertThat("File " + path + " + should not exist", new File(path).exists(), is(false));
     }
 
     private void assertFileExists(String path) {
-        assertThat("File " + path + " + should exist", new File(path).exists(), is(true));
+        assertThat("File " + path + " should exist", new File(path).exists(), is(true));
     }
 
 }
