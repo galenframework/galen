@@ -9,18 +9,18 @@ var pageData =  {
     title: "Some page",
     items:{
         "login-button": {
-            area:[100,100,100,50],
+            area:[100,90,100,40],
             text: "Login",
             hasImage: true
         },
         "logout-button": {
-            area:[100,170,100,50],
+            area:[100,150,100,40],
             text: "Logout",
             hasImage: true
         },
         "container": {
             area:[10,10,300,300],
-            text: "Logout"
+            text: ""
         }
     }
 };
@@ -38,6 +38,35 @@ var pageData =  {
             <div class="canvas">
             </div>
             <img src="page.png">
+        </div>
+        <div id="sidebar">
+            <div class="wrapper">
+                <div id="object-list">
+                    <h2>All objects:</h2>
+                    <ul>
+                    </ul>
+                </div>
+                <div id="object-details" style="display: none;">
+                    <h2>Details</h2>
+                    <span class="field-name">Name:</span>
+                    <span class="field-value xf-object-name"></span>
+
+                    <span class="field-name">Area:</span>
+                    <span class="field-value xf-object-area"></span>
+
+                    <span class="field-name">Text:</span>
+                    <span class="field-value xf-object-text"></span>
+                    
+                    <span class="field-name">Image:</span>
+                    <div class="image"></div>
+
+                </div>
+                <div id="object-suggestions" style="display: none;">
+                    <h2>Spec Suggestions</h2>
+                    <div class="spec-list">
+                    </div>
+                </div>
+            </div>
         </div>
     </body>
 </html>
