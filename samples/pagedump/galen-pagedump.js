@@ -1,3 +1,11 @@
+function forEachIn(obj, callback) {
+    for (key in obj) {
+        if (obj.hasOwnProperty(key)) {
+            callback(key, obj[key]);
+        }
+    }
+}
+
 
 var _pageItems = [];
 var _selectedIds = [];
@@ -116,55 +124,222 @@ function Spec(objectName, specText) {
     this.objectName = objectName;
     this.specText = specText;
 }
+
+function __galen_textForLocationsOfInsideSpec(itemA, itemB) {
+    var sides = {
+        top: itemA.area[1] - itemB.area[1],
+        left: itemA.area[0] - itemB.area[0],
+        right: itemB.area[0] + itemB.area[2] - itemA.area[0] - itemA.area[2],
+        bottom: itemB.area[1] + itemB.area[3] - itemA.area[1] - itemA.area[3]
+    }
+    
+    var text = "";
+    var haveFirst = false;
+    forEachIn(sides, function (sideName, value) {
+        if (value > 0) {
+            if (haveFirst) {
+                text = text + ",";
+            }
+            haveFirst = true;
+
+            text = text + " " + value + "px " + sideName;
+        }
+    });
+
+    return text;
+}
 function Suggest() {
-    this.specs = [];
+    this.specs = {};
 }
-Suggest.prototype.addSpec = function (objectName, specText) {
-    this.specs.push(new Spec(objectName, specText));
-}
-Suggest.prototype.inside = function (itemA, itemB){
+Suggest.prototype.addSpec = function (spec) {
+    if (this.specs[spec.objectName] == undefined) {
+        this.specs[spec.objectName] = [spec];   
+    }
+    else this.specs[spec.objectName].push(spec);
+};
+Suggest.prototype.generateSuggestions = function (itemA, itemB) {
+    var thisSuggest = this;
+    var propose = function(spec) {
+        if (spec != null) {
+            thisSuggest.addSpec(spec);
+        }
+    };
+    forEachIn(this._suggestions, function (name, suggestion) {
+        propose(suggestion(itemA, itemB));
+        propose(suggestion(itemB, itemA));
+    });
+
+    var html = "";
+
+    for (var objectName in this.specs) {
+        if (this.specs.hasOwnProperty(objectName)) {
+            html += "\n<b>" + objectName + "</b>\n";
+            var specs = this.specs[objectName];
+            for (var i = 0; i < specs.length; i++) {
+                html += "    " + specs[i].specText + "\n";
+            }
+        }
+    }
+
+    return "<pre>" + html + "</pre>";
+};
+Suggest.prototype._suggestions = {};
+Suggest.prototype._suggestions.inside = function (itemA, itemB){
     var points = areaToPoints(itemA.area); 
     for (var i = 0; i<points.length; i++) {
         if (!points[i].isInsideArea(itemB.area)) {
-            return;
+            return null;
         }
     }
-    var top = itemA.area[1] - itemB.area[1];
-    var left = itemA.area[0] - itemB.area[0];
-    var right = itemB.area[0] + itemB.area[2] - itemA.area[0] - itemA.area[2];
-    var bottom = itemB.area[1] + itemB.area[3] - itemA.area[1] - itemA.area[3];
-
-    this.addSpec(itemA.name, "inside: " + itemB.name + " " + top + "px top, " + left + "px left, " + right + "px right ", + bottom + "px bottom");
+    return new Spec(itemA.name, "inside: " + itemB.name + " " + __galen_textForLocationsOfInsideSpec(itemA, itemB));
 };
-Suggest.prototype.generateSuggestions = function () {
-    var html = "";
+Suggest.prototype._suggestions.insidePartly = function (itemA, itemB){
+    var points = areaToPoints(itemA.area); 
 
-    for (var i = 0; i < this.specs.length; i++) {
-        html += "<b>" + this.specs[i].objectName + "</b>";
-        html += "<br/>" + this.specs[i].specText;
+    var amountOfInsidePoints = 0;
+    for (var i = 0; i<points.length; i++) {
+        if (points[i].isInsideArea(itemB.area)) {
+            amountOfInsidePoints++;
+        }
     }
 
-    return html;
-}
+    if (amountOfInsidePoints > 0 && amountOfInsidePoints < 4) {
+        return new Spec(itemA.name, "inside partly: " + itemB.name + " " + __galen_textForLocationsOfInsideSpec(itemA, itemB));
+    }
+    return null;
+};
+Suggest.prototype._suggestions.alignedHorizontally = function (itemA, itemB) {
+    var dTop = Math.abs(itemA.area[1] - itemB.area[1]); 
+    var dBottom = Math.abs(itemA.area[1] + itemA.area[3] - itemB.area[1] - itemB.area[3]); 
+
+    if (dTop < 5 && dBottom < 5) {
+        var errorRate = "";
+        if (dTop > 0 || dBottom > 0) {
+            errorRate = " " + Math.max(dTop, dBottom) + "px";
+        }
+        return new Spec(itemA.name, "aligned horizontally all: " + itemB.name + errorRate);
+    }
+    else if (dTop < 5) {
+        var errorRate = "";
+        if (dTop > 0) {
+            errorRate = " " + dTop + "px";
+        }
+        return new Spec(itemA.name, "aligned horizontally top: " + itemB.name + errorRate);
+    }
+    else if (dBottom < 5) {
+        var errorRate = "";
+        if (dBottom > 0) {
+            errorRate = " " + dBottom + "px";
+        }
+        return new Spec(itemA.name, "aligned horizontally bottom: " + itemB.name + errorRate);
+    }
+    return null;
+};
+Suggest.prototype._suggestions.alignedVertically = function (itemA, itemB) {
+    var dLeft = Math.abs(itemA.area[0] - itemB.area[0]); 
+    var dRight = Math.abs(itemA.area[0] + itemA.area[2] - itemB.area[0] - itemB.area[2]); 
+
+    if (dLeft < 5 && dRight < 5) {
+        var errorRate = "";
+        if (dLeft > 0 || dRight > 0) {
+            errorRate = " " + Math.max(dLeft, dRight) + "px";
+        }
+        return new Spec(itemA.name, "aligned vertically all: " + itemB.name + errorRate);
+    }
+    else if (dLeft < 5) {
+        var errorRate = "";
+        if (dLeft > 0) {
+            errorRate = " " + dLeft + "px";
+        }
+        return new Spec(itemA.name, "aligned vertically left: " + itemB.name + errorRate);
+    }
+    else if (dRight < 5) {
+        var errorRate = "";
+        if (dRight > 0) {
+            errorRate = " " + dRight + "px";
+        }
+        return new Spec(itemA.name, "aligned vertically right: " + itemB.name + errorRate);
+    }
+    return null;
+};
+Suggest.prototype._suggestions.nearLeft = function (a, b) {
+    var diff = b.area[0] - a.area[0] - a.area[2];
+    if (diff >= 0) {
+        return new Spec(a.name, "near: " + b.name + " " + diff + "px left");
+    }
+    return null;
+};
+Suggest.prototype._suggestions.nearRight = function (a, b) {
+    var diff = a.area[0] - b.area[0] - b.area[2];
+    if (diff >= 0) {
+        return new Spec(a.name, "near: " + b.name + " " + diff + "px right");
+    }
+    return null;
+};
+Suggest.prototype._suggestions.above = function (a, b) {
+    var diff = b.area[1] - a.area[1] - a.area[3];
+    if (diff >= 0) {
+        return new Spec(a.name, "above: " + b.name + " " + diff + "px");
+    }
+    return null;
+};
+Suggest.prototype._suggestions.below = function (a, b) {
+    var diff = a.area[1] - b.area[1] - b.area[3];
+    if (diff >= 0) {
+        return new Spec(a.name, "below: " + b.name + " " + diff + "px");
+    }
+    return null;
+};
+
+Suggest.prototype._suggestions.centered = function (a, b) {
+    //centered all inside
+    //centered hor in
+    //cent v in
+    //cent hor on
+    //cent v on
+    var dt = a.area[1] - b.area[1];
+    var db = b.area[1] + b.area[3] - a.area[1] - a.area[3];
+
+    var dl = a.area[0] - b.area[0];
+    var dr = b.area[0] + b.area[2] - a.area[0] - a.area[2];
+
+    var similar = function (value1, value2) {
+        return Math.abs(value1 - value2) < 5;
+    };
+
+    var errorRate = function (diff) {
+        var absDiff = Math.abs(diff);
+        if (absDiff > 0) {
+            return " " + absDiff + "px";
+        }
+        return "";
+    };
+
+    if (similar(dt, db) && dt > 0 ) {
+        if (similar(dl, dr) && dr > 0) {
+            return new Spec(a.name, "centered all inside: " + b.name + errorRate(Math.max(Math.abs(dt - db), Math.abs(dl - dr))));
+        }
+        else {
+            return new Spec(a.name, "centered vertically inside: " + b.name + errorRate(dt - db));
+        }
+    }
+    else if (similar(dr, dl) && dr > 0) {
+        return new Spec(a.name, "centered horizontally inside: " + b.name + errorRate(dl - dr));
+    }
+    else if (similar(dt, db) && dt < 0) {
+        return new Spec(a.name, "centered vertically on: " + b.name + errorRate(dt - db));
+    }
+    else if (similar(dr, dl) && dr < 0) {
+        return new Spec(a.name, "centered horizontally on: " + b.name + errorRate(dr - dl));
+    }
+    return null;
+};
 
 function showSpecSuggestions(itemA, itemB) {
 
     var suggest = new Suggest();
-    suggest.inside(itemA, itemB);
-    suggest.inside(itemB, itemA);
-    /*suggest.insidePartly(itemA, itemB);
-    suggest.insidePartly(itemB, itemA);
-    suggest.aligned(itemA, itemB);
-    suggest.nearLeft(itemA, itemB);
-    suggest.nearRight(itemA, itemB);
-    suggest.above(itemA, itemB);
-    suggest.below(itemA, itemB);
-    suggest.centeredInside(itemA, itemB);
-    suggest.centeredInside(itemB, itemA);
-    suggest.centeredOn(itemA, itemB);
-    suggest.centeredOn(itemB, itemA);*/
 
-    $("#object-suggestions .spec-list").html(suggest.generateSuggestions());
+    $("#object-suggestions .spec-list").html(suggest.generateSuggestions(itemA, itemB));
     $("#object-suggestions").show();
 }
 
