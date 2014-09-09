@@ -116,21 +116,21 @@ public class Galen {
         return checkLayout(new SeleniumBrowser(driver), asList(specPath), includedTags, excludedTags, properties, validationListener);
     }
 
-    public static void dumpPage(WebDriver driver, String specPath, String pageDumpPath) throws IOException {
-        dumpPage(driver, specPath, pageDumpPath, null, null);
+    public static void dumpPage(String pageName, WebDriver driver, String specPath, String pageDumpPath) throws IOException {
+        dumpPage(pageName, driver, specPath, pageDumpPath, null, null);
     }
 
-    public static void dumpPage(WebDriver driver, String specPath, String pageDumpPath, Integer maxWidth, Integer maxHeight) throws IOException {
-        dumpPage(new SeleniumBrowser(driver), specPath, pageDumpPath, maxWidth, maxHeight);
+    public static void dumpPage(String pageName, WebDriver driver, String specPath, String pageDumpPath, Integer maxWidth, Integer maxHeight) throws IOException {
+        dumpPage(pageName, new SeleniumBrowser(driver), specPath, pageDumpPath, maxWidth, maxHeight);
     }
 
-    public static void dumpPage(Browser browser, String specPath, String pageDumpPath, Integer maxWidth, Integer maxHeight) throws IOException {
+    public static void dumpPage(String pageName, Browser browser, String specPath, String pageDumpPath, Integer maxWidth, Integer maxHeight) throws IOException {
         PageSpecReader reader = new PageSpecReader(null, browser);
         PageSpec pageSpec = reader.read(specPath);
-        dumpPage(browser, pageSpec, new File(pageDumpPath), maxWidth, maxHeight);
+        dumpPage(pageName, browser, pageSpec, new File(pageDumpPath), maxWidth, maxHeight);
     }
 
-    public static void dumpPage(Browser browser, PageSpec pageSpec, File reportFolder, Integer maxWidth, Integer maxHeight) throws IOException {
+    public static void dumpPage(String pageName, Browser browser, PageSpec pageSpec, File reportFolder, Integer maxWidth, Integer maxHeight) throws IOException {
         if (!reportFolder.exists()) {
             if (!reportFolder.mkdirs()) {
                 throw new RuntimeException("Cannot create dir: " + reportFolder.getAbsolutePath());
@@ -154,8 +154,9 @@ public class Galen {
             pageDump.addElement(element);
         }
 
+        pageDump.setPageName(pageName);
         pageDump.exportAsJson(new File(reportFolder.getAbsoluteFile() + File.separator + "page.json"));
-        pageDump.exportAsHtml(new File(reportFolder.getAbsoluteFile() + File.separator + "page.html"));
+        pageDump.exportAsHtml(pageName, new File(reportFolder.getAbsoluteFile() + File.separator + "page.html"));
         pageDump.exportAllScreenshots(browser, reportFolder);
 
 

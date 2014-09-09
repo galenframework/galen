@@ -5,11 +5,50 @@
         <script src="jquery-1.10.2.min.js"></script>
         <script src="galen-pagedump.js"></script>
         <script>
-            var pageData = ${json};
+var pageData = ${json};
         </script>
     </head>
 
     <body>
-        <script></script>
+        <script>
+            $(function () {
+                initGalenPageDump(pageData);
+            });
+        </script>
+        <h1>${title} - Galen page dump</h1>
+        <div class="image">
+            <div class="canvas">
+            </div>
+            <img src="page.png">
+        </div>
+        <div id="sidebar">
+            <div class="wrapper">
+                <div id="object-list">
+                    <h2>All objects:</h2>
+                    <ul>
+                    </ul>
+                </div>
+                <div id="object-details" style="display: none;">
+                    <h2>Details</h2>
+                    <span class="field-name">Name:</span>
+                    <span class="field-value xf-object-name"></span>
+
+                    <span class="field-name">Area:</span>
+                    <span class="field-value xf-object-area"></span>
+
+                    <span class="field-name">Text:</span>
+                    <span class="field-value xf-object-text"></span>
+                    
+                    <span class="field-name">Image:</span>
+                    <div class="image"></div>
+
+                </div>
+                <div id="object-suggestions" style="display: none;">
+                    <h2>Spec Suggestions</h2>
+                    <div class="spec-list">
+                    </div>
+                </div>
+            </div>
+        </div>
     </body>
 </html>

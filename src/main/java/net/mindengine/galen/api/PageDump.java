@@ -30,6 +30,7 @@ import java.util.Map;
 
 public class PageDump {
 
+    private String pageName;
     private String title;
     private Map<String, Element> items = new HashMap<String, Element>();
 
@@ -59,14 +60,16 @@ public class PageDump {
         objectMapper.writeValue(file, this);
     }
 
-    public void exportAsHtml(File file) throws IOException {
+    public void exportAsHtml(String title, File file) throws IOException {
         makeSureFileExists(file);
         ObjectMapper objectMapper = new ObjectMapper();
         String jsonText = objectMapper.writeValueAsString(this);
 
         String template = IOUtils.toString(getClass().getResourceAsStream("/pagedump/page.html"));
 
-        String htmlText = template.replace("${json}", jsonText);
+        String htmlText = template.replace("${title}", title);
+        htmlText = htmlText.replace("${json}", jsonText);
+
 
         FileUtils.writeStringToFile(file, htmlText);
     }
@@ -105,6 +108,14 @@ public class PageDump {
                 }
             }
         }
+    }
+
+    public String getPageName() {
+        return pageName;
+    }
+
+    public void setPageName(String pageName) {
+        this.pageName = pageName;
     }
 
     public static class Element {

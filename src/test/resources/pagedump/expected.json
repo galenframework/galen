@@ -1,4 +1,5 @@
 {
+    "pageName": "test page",
     "title": "My page",
     "items": {
         "big-container": {
