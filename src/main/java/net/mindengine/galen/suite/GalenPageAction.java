@@ -33,4 +33,5 @@ public abstract class GalenPageAction {
         this.originalCommand = originalCommand;
     }
 
+
 }

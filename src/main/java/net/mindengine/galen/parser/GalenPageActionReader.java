@@ -23,14 +23,7 @@ import java.util.List;
 
 import net.mindengine.galen.specs.page.Locator;
 import net.mindengine.galen.suite.GalenPageAction;
-import net.mindengine.galen.suite.actions.GalenPageActionCheck;
-import net.mindengine.galen.suite.actions.GalenPageActionCookie;
-import net.mindengine.galen.suite.actions.GalenPageActionInjectJavascript;
-import net.mindengine.galen.suite.actions.GalenPageActionOpen;
-import net.mindengine.galen.suite.actions.GalenPageActionProperties;
-import net.mindengine.galen.suite.actions.GalenPageActionResize;
-import net.mindengine.galen.suite.actions.GalenPageActionRunJavascript;
-import net.mindengine.galen.suite.actions.GalenPageActionWait;
+import net.mindengine.galen.suite.actions.*;
 import net.mindengine.galen.suite.actions.GalenPageActionWait.UntilType;
 import net.mindengine.galen.utils.GalenUtils;
 
@@ -71,11 +64,13 @@ public class GalenPageActionReader {
         else if (args[0].equals("properties")) {
             return propertiesActionFrom(args);
         }
+        else if (args[0].equals("dump")) {
+            return dumpPageActionFrom(args, actionText);
+        }
         else throw new SyntaxException(UNKNOWN_LINE, "Unknown action: " + args[0]);
     }
 
-    
-    
+
 
     private static GalenPageAction resizeActionFrom(String[] args) {
         Dimension size = GalenUtils.readSize(args[1]);
@@ -130,6 +125,51 @@ public class GalenPageActionReader {
                 .withSpecs(specs)
                 .withIncludedTags(readTags(cmd.getOptionValue("i")))
                 .withExcludedTags(readTags(cmd.getOptionValue("e")));
+        }
+        catch (Exception e) {
+            throw new SyntaxException(UNKNOWN_LINE, "Couldn't parse: " + originalText, e);
+        }
+    }
+
+
+    private static GalenPageAction dumpPageActionFrom(String[] args, String originalText) {
+        Options options = new Options();
+        options.addOption("n", "name", true, "Page name");
+        options.addOption("e", "export", true, "Export dir");
+        options.addOption("w", "max-width", true, "Maximal width of elements in croppped screenshots");
+        options.addOption("h", "max-height", true, "Maximal height of elements in cropped screenshots");
+
+        org.apache.commons.cli.CommandLineParser parser = new PosixParser();
+
+        try {
+            CommandLine cmd = parser.parse(options, args);
+            String[] leftoverArgs = cmd.getArgs();
+
+            if (leftoverArgs == null || leftoverArgs.length < 2) {
+                throw new SyntaxException(UNKNOWN_LINE, "There are no page specs: " + originalText);
+            }
+
+            Integer maxWidth = null;
+            Integer maxHeight = null;
+
+            String maxWidthText = cmd.getOptionValue("w");
+            String maxHeightText = cmd.getOptionValue("h");
+
+            if (maxWidthText != null && !maxWidthText.isEmpty()) {
+                maxWidth = Integer.parseInt(maxWidthText);
+            }
+
+            if (maxHeightText != null && !maxHeightText.isEmpty()) {
+                maxHeight = Integer.parseInt(maxHeightText);
+            }
+
+
+            return new GalenPageActionDumpPage()
+                    .withSpecPath(leftoverArgs[1])
+                    .withPageName(cmd.getOptionValue("n"))
+                    .withPageDumpPath(cmd.getOptionValue("e"))
+                    .withMaxWidth(maxWidth)
+                    .withMaxHeight(maxHeight);
         }
         catch (Exception e) {
             throw new SyntaxException(UNKNOWN_LINE, "Couldn't parse: " + originalText, e);

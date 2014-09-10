@@ -24,12 +24,7 @@ import static org.hamcrest.Matchers.is;
 import net.mindengine.galen.parser.GalenPageActionReader;
 import net.mindengine.galen.specs.page.Locator;
 import net.mindengine.galen.suite.GalenPageAction;
-import net.mindengine.galen.suite.actions.GalenPageActionCheck;
-import net.mindengine.galen.suite.actions.GalenPageActionCookie;
-import net.mindengine.galen.suite.actions.GalenPageActionInjectJavascript;
-import net.mindengine.galen.suite.actions.GalenPageActionProperties;
-import net.mindengine.galen.suite.actions.GalenPageActionRunJavascript;
-import net.mindengine.galen.suite.actions.GalenPageActionWait;
+import net.mindengine.galen.suite.actions.*;
 import net.mindengine.galen.suite.actions.GalenPageActionWait.UntilType;
 
 import org.testng.annotations.DataProvider;
@@ -85,6 +80,12 @@ public class GalenPageActionReaderTest {
                 .withUntilElements(asList(exist(id("login")), gone(xpath("//div[@id='qwe']"))))},
             {"properties \"some-path-1/file.properties\" file2.properties", new GalenPageActionProperties()
                 .withFiles(asList("some-path-1/file.properties", "file2.properties"))
+            },
+            {"dump page1.spec --name \"Home page dump\" --export /export/dir/path", new GalenPageActionDumpPage()
+                .withSpecPath("page1.spec").withPageName("Home page dump").withPageDumpPath("/export/dir/path")
+            },
+            {"dump page1.spec --name \"Home page dump\" --export /export/dir/path --max-width 120 --max-height 240", new GalenPageActionDumpPage()
+                .withSpecPath("page1.spec").withPageName("Home page dump").withPageDumpPath("/export/dir/path").withMaxWidth(120).withMaxHeight(240)
             }
         };
     }
