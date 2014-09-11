@@ -27,9 +27,22 @@ function distanceInsideRect(area, x, y) {
     }
     else return -1;
 }
+function sortItemsByName(items) {
+    for (var i=0; i<items.length - 1; i++) {
+        for(var j = i+1; j<items.length; j++) {
+            if (items[i].name  > items[j].name) {
+                var temp = items[i];
+                items[i] = items[j];
+                items[j] = temp;
+            }
+        }
+    }
+    return items;
+}
 function initGalenPageDump(pageData) {
 
     var canvas = $(".image .canvas");
+
     for (objectName in pageData.items) {
         if (pageData.items.hasOwnProperty(objectName)) {
             var item = pageData.items[objectName];
@@ -37,8 +50,14 @@ function initGalenPageDump(pageData) {
             item.id = _pageItems.length;
             item.selected = false;
             _pageItems.push(item);
-            renderPageItem(canvas, item); 
         }
+    }
+
+    //sorting items by name
+    var sortedItems = sortItemsByName(_pageItems);
+    for (var i = 0; i<sortedItems.length; i++) {
+        sortedItems[i].id = i;
+        renderPageItem(canvas, sortedItems[i]); 
     }
 
     canvas.click(function (event) {
