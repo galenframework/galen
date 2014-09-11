@@ -17,6 +17,7 @@ package net.mindengine.galen.validation;
 
 import static java.lang.String.format;
 
+import java.awt.image.BufferedImage;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -76,7 +77,7 @@ public class ValidationError {
     
     @Override
     public String toString() {
-        return format("Error{%s, areas=%s, imageComparison=%s}", messages, getErrorAreas(), imageComparison);
+        return format("Error{%s, areas=%s, imageComparisonSample=%s}", messages, getErrorAreas(), imageComparison);
     }
 
 
@@ -136,8 +137,8 @@ public class ValidationError {
     }
 
 
-    public ValidationError withImageComparison(Rect area, String imagePath) {
-        setImageComparison(new ImageComparison(area, imagePath));
+    public ValidationError withImageComparisonSample(Rect area, String imagePath, BufferedImage bufferedImage) {
+        setImageComparisonSample(new ImageComparison(area, imagePath, bufferedImage));
         return this;
     }
 
@@ -145,7 +146,8 @@ public class ValidationError {
         return imageComparison;
     }
 
-    public void setImageComparison(ImageComparison imageComparison) {
+    public void setImageComparisonSample(ImageComparison imageComparison) {
         this.imageComparison = imageComparison;
     }
+
 }

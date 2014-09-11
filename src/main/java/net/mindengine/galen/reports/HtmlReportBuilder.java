@@ -26,6 +26,7 @@ import net.mindengine.galen.reports.model.LayoutReport;
 import net.mindengine.galen.reports.model.LayoutSection;
 import net.mindengine.galen.reports.model.LayoutSpec;
 import net.mindengine.galen.utils.GalenUtils;
+import net.mindengine.rainbow4j.Rainbow4J;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 
@@ -144,9 +145,19 @@ public class HtmlReportBuilder {
                 File reportFolder = new File(reportFolderPath + File.separator + filePrefix);
                 reportFolder.mkdirs();
 
-                String newName = moveFileOrResourceTo(spec.getImageComparison().getImagePath(), reportFolder);
+                String newName = moveFileOrResourceTo(spec.getImageComparison().getImageSamplePath(), reportFolder);
 
-                spec.getImageComparison().setImagePath(filePrefix + "/" + newName);
+                spec.getImageComparison().setImageSamplePath(filePrefix + "/" + newName);
+
+                if (spec.getImageComparison().getComparisonMap() != null) {
+                    try {
+                        File mapFile = new File(reportFolder.getAbsoluteFile() + File.separator + newName + ".map.png");
+                        Rainbow4J.saveImage(spec.getImageComparison().getComparisonMap(), mapFile);
+                    }
+                    catch (Throwable ex) {
+                        ex.printStackTrace();
+                    }
+                }
             }
         }
 

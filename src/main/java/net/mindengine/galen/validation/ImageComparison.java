@@ -20,13 +20,18 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
+import java.awt.image.BufferedImage;
+
 public class ImageComparison {
     private Rect area;
-    private String imagePath;
+    private String imageSamplePath;
+    private BufferedImage comparisonMap;
 
-    public ImageComparison(Rect area, String imagePath) {
+
+    public ImageComparison(Rect area, String imageSamplePath, BufferedImage comparisonMap) {
         this.area = area;
-        this.imagePath = imagePath;
+        this.imageSamplePath = imageSamplePath;
+        this.comparisonMap = comparisonMap;
     }
 
     public Rect getArea() {
@@ -37,12 +42,12 @@ public class ImageComparison {
         this.area = area;
     }
 
-    public String getImagePath() {
-        return imagePath;
+    public String getImageSamplePath() {
+        return imageSamplePath;
     }
 
-    public void setImagePath(String imagePath) {
-        this.imagePath = imagePath;
+    public void setImageSamplePath(String imageSamplePath) {
+        this.imageSamplePath = imageSamplePath;
     }
 
 
@@ -59,7 +64,7 @@ public class ImageComparison {
 
         return new EqualsBuilder()
                 .append(area, rhs.area)
-                .append(imagePath, rhs.imagePath)
+                .append(imageSamplePath, rhs.imageSamplePath)
                 .isEquals();
     }
 
@@ -67,7 +72,7 @@ public class ImageComparison {
     public int hashCode() {
         return new HashCodeBuilder()
                 .append(area)
-                .append(imagePath)
+                .append(imageSamplePath)
                 .toHashCode();
     }
 
@@ -75,7 +80,20 @@ public class ImageComparison {
     public String toString() {
         return new ToStringBuilder(this)
                 .append("area", area)
-                .append("imagePath", imagePath)
+                .append("imageSamplePath", imageSamplePath)
                 .toString();
+    }
+
+    public String getComparisonMapPath() {
+        return imageSamplePath + ".map.png";
+    }
+
+
+    public BufferedImage getComparisonMap() {
+        return comparisonMap;
+    }
+
+    public void setComparisonMap(BufferedImage comparisonMap) {
+        this.comparisonMap = comparisonMap;
     }
 }

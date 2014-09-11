@@ -20,6 +20,7 @@ import static net.mindengine.galen.specs.Range.between;
 import static net.mindengine.galen.specs.Range.exact;
 import static net.mindengine.galen.specs.Side.LEFT;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -40,10 +41,13 @@ import net.mindengine.galen.tests.GalenBasicTest;
 import net.mindengine.galen.validation.ErrorArea;
 import net.mindengine.galen.validation.ValidationError;
 import net.mindengine.galen.validation.ValidationListener;
+import net.mindengine.rainbow4j.Rainbow4J;
 
 public class ReportingListenerTestUtils {
 
-    public static void performSampleReporting(String suiteName, TestListener testListener, ValidationListener validationListener, SuiteListener suiteListener) {
+    private static String comparisonMapImagePath = ReportingListenerTestUtils.class.getResource("/imgs/page-sample-correct.png").getFile();
+
+    public static void performSampleReporting(String suiteName, TestListener testListener, ValidationListener validationListener, SuiteListener suiteListener) throws IOException {
         
         GalenBasicTest suite = new GalenBasicTest();
         suite.setName(suiteName);
@@ -144,7 +148,7 @@ public class ReportingListenerTestUtils {
                         new SpecInside("other-object", asList(new Location(exact(10), asList(LEFT)))).withOriginalText("inside: other-object 10px left")
                             .withPlace(new Place("specs.spec", 12)),
                         new ValidationError(asList(new ErrorArea(new Rect(10, 10, 100, 50), "objectB1")), asList("objectB1 is not inside other-object", "second error message with <xml> &tags"))
-                            .withImageComparison(new Rect(20, 30, 100, 40), "imgs/button-sample-correct.png"));
+                            .withImageComparisonSample(new Rect(20, 30, 100, 40), "imgs/button-sample-correct.png", Rainbow4J.loadImage(comparisonMapImagePath)));
             }
             validationListener.onAfterObject(pageRunner, pageValidation, "objectB1"); 
             

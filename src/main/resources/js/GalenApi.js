@@ -124,6 +124,17 @@ var galenConsole = {
     }
 };
 
+function dumpPage(driver, pageName, specPath, exportPath, maxWidth, maxHeight) {
+    if (maxWidth == undefined) {
+        maxWidth = null;
+    }
+
+    if (maxHeight == undefined) {
+        maxHeight = null;
+    }
+    Galen.dumpPage(pageName, driver, specPath, exportPath, maxWidth, maxHeight);
+}
+
 (function (exports) {
     exports.createDriver = createDriver;
     exports.createGridDriver = createGridDriver;
@@ -136,4 +147,5 @@ var galenConsole = {
     exports.inject = inject;
     exports.readFile = readFile;
     exports.console = galenConsole;
+    exports.dumpPage = dumpPage;
 })(this);

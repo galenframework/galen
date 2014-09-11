@@ -58,7 +58,7 @@
                 <div class="description">
                     <span<#if spec.place?has_content> title="Location: ${spec.place.filePath!"unknown location"}#${spec.place.lineNumber!"?"}"</#if>>${spec.text?html}</span>
                     <#if spec.imageComparison?has_content>
-                        <a class="link-show-differences"<#if spec.imageComparison.area?has_content> data-area="<@area_rect area=spec.imageComparison.area/>"</#if> data-imagesource="${spec.imageComparison.imagePath}" href="#">Show differences</a>
+                        <a class="link-show-differences"<#if spec.imageComparison.area?has_content> data-area="<@area_rect area=spec.imageComparison.area/>"</#if> data-imagesource="${spec.imageComparison.imageSamplePath}" data-comparisonmap="${spec.imageComparison.comparisonMapPath}" href="#">Show differences</a>
                     </#if>
                     <ul class="error-message">
                         <#if spec.errorMessages?has_content>

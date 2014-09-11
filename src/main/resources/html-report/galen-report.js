@@ -142,8 +142,9 @@ var Galen = {
             var sampleImage = $(this).attr("data-imagesource");
             var originalArea = $(this).closest("div.object").attr("data-area");
             var originalImage = $(this).closest("div.layout-report").attr("data-screenshot");
+            var comparisonMapPath = $(this).attr("data-comparisonmap");
             
-            Galen.showImageComparison(originalImage, originalArea, sampleImage, sampleArea);
+            Galen.showImageComparison(originalImage, originalArea, sampleImage, sampleArea, comparisonMapPath);
             return false;
         });
     },
@@ -170,7 +171,7 @@ var Galen = {
         return [0,0, defaultWidth, defaultHeight];
     },
 
-    showImageComparison: function (originalImagePath, originalArea, sampleImagePath, sampleArea) {
+    showImageComparison: function (originalImagePath, originalArea, sampleImagePath, sampleArea, comparisonMapPath) {
         Galen.loadImage(originalImagePath, function (originalImage) {
             Galen.loadImage(sampleImagePath, function (sampleImage) {
                 $("#tooltip-body").html(
@@ -179,22 +180,27 @@ var Galen = {
                 + "<b>Actual Image</b>" 
                 + "<div class='image original'></div>"  
                 + "<b>Expected</b>" 
-                + "<div class='image sample'></div></div>");
+                + "<div class='image sample'></div>"
+                + "<b>Comparison Map</b>" 
+                + "<div class='image comparisonmap'><img src='" + comparisonMapPath + "'/></div>"
+                + "</div>");
 
                 originalArea = Galen.readAreaFromText(originalArea, originalImage.width, originalImage.height); 
                 sampleArea = Galen.readAreaFromText(sampleArea, sampleImage.width, sampleImage.height);
 
                 renderImage = function (locator, imagePath, area) {
                     $(locator)
-                        .css("background-image", "url(" + imagePath + ")")
-                        .css("background-repeat", "no-repeat")
-                        .css("background-position", (-area[0]) + "px " + (-area[1]) + "px")
-                        .css("width", area[2] + "px")
-                        .css("height", area[3] + "px");
+                    .css("background-image", "url(" + imagePath + ")")
+                    .css("background-repeat", "no-repeat")
+                    .css("background-position", (-area[0]) + "px " + (-area[1]) + "px")
+                    .css("width", area[2] + "px")
+                    .css("height", area[3] + "px");
                 };
 
                 renderImage("#tooltip-body .image-comparison .image.original", originalImagePath, originalArea);
                 renderImage("#tooltip-body .image-comparison .image.sample", sampleImagePath, sampleArea);
+
+                $("#tooltip-body .image-comparison .image.comparisonmap").css("width", originalArea[2]);
 
 
                 $("#image-comparison-toggle-state").click(function () {

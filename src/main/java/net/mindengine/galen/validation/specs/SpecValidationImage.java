@@ -66,7 +66,8 @@ public class SpecValidationImage extends SpecValidation<SpecImage> {
         catch (ValidationErrorException validationErrorException) {
             validationErrorException.setErrorAreas(new LinkedList<ErrorArea>());
             validationErrorException.getErrorAreas().add(new ErrorArea(pageElement.getArea(), objectName));
-            validationErrorException.setImageComparison(new ImageComparison(spec.getSelectedArea(), spec.getImagePath()));
+            validationErrorException.setImageComparison(new ImageComparison(spec.getSelectedArea(), spec.getImagePath(), result.getComparisonMap()));
+
             throw validationErrorException;
         }
     }

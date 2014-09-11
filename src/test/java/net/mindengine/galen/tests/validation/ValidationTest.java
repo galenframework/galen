@@ -1241,7 +1241,7 @@ public class ValidationTest {
             row(new ValidationError(areas(new ErrorArea(new Rect(100, 90, 100, 40), "object")),
                         messages("Element does not look like \"/imgs/button-sample-incorrect.png\". " +
                                 "There are 3821 mismatching pixels but max allowed is 600"))
-                            .withImageComparison(null, "/imgs/button-sample-incorrect.png"),
+                            .withImageComparisonSample(null, "/imgs/button-sample-incorrect.png", null),
                 specImage("/imgs/button-sample-incorrect.png", 600, PIXEL_UNIT, 0, 10), page(new HashMap<String, PageElement>(){{
                     put("object", element(100, 90, 100, 40));
                 }}, imageComparisonTestScreenshot)),
@@ -1249,7 +1249,7 @@ public class ValidationTest {
             row(new ValidationError(areas(new ErrorArea(new Rect(100, 90, 100, 40), "object")),
                             messages("Element does not look like \"/imgs/button-sample-incorrect.png\". " +
                                     "There are 95.525% mismatching pixels but max allowed is 2.0%"))
-                            .withImageComparison(null, "/imgs/button-sample-incorrect.png"),
+                            .withImageComparisonSample(null, "/imgs/button-sample-incorrect.png", null),
                     specImage("/imgs/button-sample-incorrect.png", 2.0, PERCENTAGE_UNIT, 0, 10), page(new HashMap<String, PageElement>(){{
                         put("object", element(100, 90, 100, 40));
                     }}, imageComparisonTestScreenshot)),
@@ -1262,7 +1262,21 @@ public class ValidationTest {
 
         };
     }
-    
+
+
+    @Test
+    public void imageSpec_shouldAlsoGenerate_imageComparisonMap() {
+        MockedPage page = page(new HashMap<String, PageElement>() {{
+            put("object", element(100, 90, 100, 40));
+        }}, imageComparisonTestScreenshot);
+
+        PageSpec pageSpec = createMockedPageSpec(page);
+        PageValidation validation = new PageValidation(null, page, pageSpec, null, null);
+        ValidationError error = validation.check("object", specImage("/imgs/button-sample-incorrect.png", 600, PIXEL_UNIT, 0, 10));
+
+
+        assertThat("Comparison map should not be null", error.getImageComparison().getComparisonMap(), is(notNullValue()));
+    }
     
     private List<ErrorArea> areas(ErrorArea...errorAreas) {
         return Arrays.asList(errorAreas);
