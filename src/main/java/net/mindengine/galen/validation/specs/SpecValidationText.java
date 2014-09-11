@@ -25,6 +25,8 @@ import net.mindengine.galen.validation.PageValidation;
 import net.mindengine.galen.validation.SpecValidation;
 import net.mindengine.galen.validation.ValidationErrorException;
 
+import java.util.regex.Pattern;
+
 public class SpecValidationText extends SpecValidation<SpecText> {
 
     @Override
@@ -71,7 +73,8 @@ public class SpecValidationText extends SpecValidation<SpecText> {
     }
     
     private void checkMatches(String objectName, Rect area, String realText, String text) throws ValidationErrorException {
-        if (!realText.matches(text)) {
+        Pattern regex = Pattern.compile(text, Pattern.DOTALL);
+        if (!regex.matcher(realText).matches()) {
         	throw new ValidationErrorException(asList(new ErrorArea(area, objectName)), asList(format("\"%s\" text is \"%s\" but should match \"%s\"", objectName, realText, text)));
         }
     }
