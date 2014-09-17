@@ -16,22 +16,20 @@
 package net.mindengine.galen.specs;
 
 import net.mindengine.galen.page.Rect;
+import net.mindengine.rainbow4j.filters.ImageFilter;
+
+import java.util.List;
 
 public class SpecImage extends Spec {
-    private String imagePath;
+    private List<String> imagePaths;
     private Double maxPercentage;
     private Integer maxPixels;
     private Integer tolerance = 25;
-    private Integer smooth = 0;
+    private List<ImageFilter> filters;
+    private List<ImageFilter> mapFilters;
     private Rect selectedArea;
+    private boolean stretch;
 
-    public String getImagePath() {
-        return imagePath;
-    }
-
-    public void setImagePath(String imagePath) {
-        this.imagePath = imagePath;
-    }
 
     public Double getMaxPercentage() {
         return maxPercentage;
@@ -58,19 +56,43 @@ public class SpecImage extends Spec {
         this.tolerance = tolerance;
     }
 
-    public Integer getSmooth() {
-        return smooth;
-    }
-
-    public void setSmooth(Integer smooth) {
-        this.smooth = smooth;
-    }
-
     public Rect getSelectedArea() {
         return selectedArea;
     }
 
     public void setSelectedArea(Rect selectedArea) {
         this.selectedArea = selectedArea;
+    }
+
+    public List<ImageFilter> getMapFilters() {
+        return mapFilters;
+    }
+
+    public void setMapFilters(List<ImageFilter> mapFilters) {
+        this.mapFilters = mapFilters;
+    }
+
+    public List<ImageFilter> getFilters() {
+        return filters;
+    }
+
+    public void setFilters(List<ImageFilter> filters) {
+        this.filters = filters;
+    }
+
+    public boolean isStretch() {
+        return stretch;
+    }
+
+    public void setStretch(boolean stretch) {
+        this.stretch = stretch;
+    }
+
+    public List<String> getImagePaths() {
+        return imagePaths;
+    }
+
+    public void setImagePaths(List<String> imagePaths) {
+        this.imagePaths = imagePaths;
     }
 }

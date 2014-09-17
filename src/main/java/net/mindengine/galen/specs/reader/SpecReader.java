@@ -26,21 +26,19 @@ import static net.mindengine.galen.suite.reader.Line.UNKNOWN_LINE;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import net.mindengine.galen.browser.Browser;
 import net.mindengine.galen.page.Rect;
-import net.mindengine.galen.parser.ExpectNumber;
-import net.mindengine.galen.parser.ExpectWord;
-import net.mindengine.galen.parser.Expectations;
-import net.mindengine.galen.parser.SyntaxException;
+import net.mindengine.galen.parser.*;
 import net.mindengine.galen.specs.*;
 import net.mindengine.galen.specs.colors.ColorRange;
+import net.mindengine.rainbow4j.filters.BlurFilter;
+import net.mindengine.rainbow4j.filters.ContrastFilter;
+import net.mindengine.rainbow4j.filters.DenoiseFilter;
+import net.mindengine.rainbow4j.filters.ImageFilter;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
@@ -333,26 +331,38 @@ public class SpecReader {
             }
         }));
 
-        putSpec("image", new SpecComplexProcessor(expectThese(commaSeparatedKeyValue()), new SpecComplexInit() {
+        putSpec("image", new SpecComplexProcessor(expectThese(commaSeparatedRepeatedKeyValues()), new SpecComplexInit() {
             @Override
             public Spec init(String specName, String paramsText, String contextPath, Object[] args) {
-                Map<String, String> parameters = (Map<String, String>)args[0];
+                Map<String, List<String>> parameters = (Map<String, List<String>>)args[0];
 
                 SpecImage spec = new SpecImage();
 
                 if (parameters.containsKey("file")) {
 
-                    String fullFilePath = parameters.get("file");
-                    if (contextPath != null) {
-                        fullFilePath = contextPath + File.separator + parameters.get("file");
+                    List<String> filePaths = parameters.get("file");
+
+                    if (filePaths == null || filePaths.size() == 0) {
+                        throw new SyntaxException("You should provide 'file' parameter");
                     }
 
-                    spec.setImagePath(fullFilePath);
+                    if (contextPath != null) {
+
+                        List<String> fullFilePaths = new LinkedList<String>();
+                        for (String path : filePaths) {
+                            fullFilePaths.add(contextPath + File.separator + path);
+                        }
+                        spec.setImagePaths(fullFilePaths);
+                    }
+                    else {
+                        spec.setImagePaths(filePaths);
+                    }
                 }
                 else throw new SyntaxException("You should specify a file");
 
+
                 if (parameters.containsKey("error")) {
-                    Pair<Double, String> error = parseError(parameters.get("error"));
+                    Pair<Double, String> error = parseError(parameters.get("error").get(0));
                     if (error.getRight().equals("%")) {
                         spec.setMaxPercentage(error.getLeft());
                     }
@@ -362,16 +372,37 @@ public class SpecReader {
                     else throw new SyntaxException("Unknown error unit: " + error.getRight());
                 }
 
-                if (parameters.containsKey("smooth")) {
-                    spec.setSmooth(parseIntegerParameter("smooth", parameters.get("smooth")));
+                if (parameters.containsKey("tolerance")) {
+                    spec.setTolerance(parseIntegerParameter("tolerance", parameters.get("tolerance").get(0)));
                 }
 
-                if (parameters.containsKey("tolerance")) {
-                    spec.setTolerance(parseIntegerParameter("tolerance", parameters.get("tolerance")));
+                if (parameters.containsKey("stretch")) {
+                    spec.setStretch(true);
+                }
+                else {
+                    spec.setStretch(false);
                 }
 
                 if (parameters.containsKey("area")) {
-                    spec.setSelectedArea(parseRect(parameters.get("area")));
+                    spec.setSelectedArea(parseRect(parameters.get("area").get(0)));
+                }
+
+                if (parameters.containsKey("filter")) {
+                    List<ImageFilter> filters = new LinkedList<ImageFilter>();
+
+                    for (String filterText : parameters.get("filter")) {
+                        filters.add(parseImageFilter(filterText));
+                    }
+                    spec.setFilters(filters);
+                }
+
+                if (parameters.containsKey("map-filter")) {
+                    List<ImageFilter> filters = new LinkedList<ImageFilter>();
+
+                    for (String filterText : parameters.get("map-filter")) {
+                        filters.add(parseImageFilter(filterText));
+                    }
+                    spec.setMapFilters(filters);
                 }
 
                 return spec;
@@ -379,6 +410,24 @@ public class SpecReader {
         }));
         
 
+    }
+
+    private ImageFilter parseImageFilter(String filterText) {
+        StringCharReader reader = new StringCharReader(filterText);
+
+        String filterName = new ExpectWord().read(reader);
+        Double value = new ExpectNumber().read(reader);
+
+        if ("contrast".equals(filterName)) {
+            return new ContrastFilter(value.intValue());
+        }
+        else if ("blur".equals(filterName)) {
+            return new BlurFilter(value.intValue());
+        }
+        else if ("denoise".equals(filterName)) {
+            return new DenoiseFilter(value.intValue());
+        }
+        else throw new SyntaxException("Unknown image filter: " + filterName);
     }
 
     private Rect parseRect(String text) {

@@ -20,6 +20,7 @@ import net.mindengine.galen.page.Rect;
 import net.mindengine.galen.specs.SpecImage;
 import net.mindengine.galen.utils.GalenUtils;
 import net.mindengine.galen.validation.*;
+import net.mindengine.rainbow4j.ComparisonOptions;
 import net.mindengine.rainbow4j.ImageCompareResult;
 import net.mindengine.rainbow4j.Rainbow4J;
 
@@ -39,34 +40,41 @@ public class SpecValidationImage extends SpecValidation<SpecImage> {
         final BufferedImage pageImage = pageValidation.getPage().getScreenshotImage();
         final BufferedImage sampleImage;
         try {
-            InputStream stream = GalenUtils.findFileOrResourceAsStream(spec.getImagePath());
+            //TODO implement multiple image comparison
+            InputStream stream = GalenUtils.findFileOrResourceAsStream(spec.getImagePaths().get(0));
             sampleImage = Rainbow4J.loadImage(stream);
         } catch (Throwable e) {
-            throw new ValidationErrorException("Couldn't load image: " + spec.getImagePath());
+            throw new ValidationErrorException("Couldn't load image: " + spec.getImagePaths().get(0));
         }
 
 
-        int smooth = spec.getSmooth() != null ? Math.abs(spec.getSmooth()) : 0;
         int tolerance = spec.getTolerance() != null ? Math.abs(spec.getTolerance()) : 25;
 
         Rectangle sampleArea = spec.getSelectedArea() != null ? toRectangle(spec.getSelectedArea()) : new Rectangle(0, 0, sampleImage.getWidth(), sampleImage.getHeight());
-        ImageCompareResult result = Rainbow4J.compare(pageImage, sampleImage, smooth, tolerance, toRectangle(pageElement.getArea()), sampleArea);
 
+
+        ComparisonOptions options = new ComparisonOptions();
+        options.setStretchToFit(spec.isStretch());
+        options.setFilters(spec.getFilters());
+        options.setMapFilters(spec.getMapFilters());
+        options.setTolerance(tolerance);
+ 
+        ImageCompareResult result = Rainbow4J.compare(pageImage, sampleImage, toRectangle(pageElement.getArea()), sampleArea, options);
 
         try {
             if (spec.getMaxPercentage() != null) {
-                compareResultByPercentage(msgErrorPrefix(spec.getImagePath()), spec.getMaxPercentage(), result.getPercentage());
+                compareResultByPercentage(msgErrorPrefix(spec.getImagePaths().get(0)), spec.getMaxPercentage(), result.getPercentage());
             } else {
                 if (spec.getMaxPixels() == null) {
                     spec.setMaxPixels(0);
                 }
-                compareResultByPixels(msgErrorPrefix(spec.getImagePath()), spec.getMaxPixels(), result.getTotalPixels());
+                compareResultByPixels(msgErrorPrefix(spec.getImagePaths().get(0)), spec.getMaxPixels(), result.getTotalPixels());
             }
         }
         catch (ValidationErrorException validationErrorException) {
             validationErrorException.setErrorAreas(new LinkedList<ErrorArea>());
             validationErrorException.getErrorAreas().add(new ErrorArea(pageElement.getArea(), objectName));
-            validationErrorException.setImageComparison(new ImageComparison(spec.getSelectedArea(), spec.getImagePath(), result.getComparisonMap()));
+            validationErrorException.setImageComparison(new ImageComparison(spec.getSelectedArea(), spec.getImagePaths().get(0), result.getComparisonMap()));
 
             throw validationErrorException;
         }

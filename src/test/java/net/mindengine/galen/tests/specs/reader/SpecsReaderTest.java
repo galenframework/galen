@@ -41,6 +41,8 @@ import net.mindengine.galen.specs.*;
 import net.mindengine.galen.specs.colors.ColorRange;
 import net.mindengine.galen.specs.reader.SpecReader;
 
+import net.mindengine.rainbow4j.filters.BlurFilter;
+import net.mindengine.rainbow4j.filters.DenoiseFilter;
 import org.hamcrest.Matchers;
 import org.junit.BeforeClass;
 import org.testng.annotations.AfterMethod;
@@ -686,73 +688,112 @@ public class SpecsReaderTest {
     @Test
     public void shouldReadSpec_image_withMaxPercentageError() throws IOException {
         SpecImage spec = (SpecImage)readSpec("image: file imgs/image.png, error 2.4%");
-        assertThat(spec.getImagePath(), is("./imgs/image.png"));
+        assertThat(spec.getImagePaths(), contains("./imgs/image.png"));
         assertThat(spec.getMaxPercentage(), is(2.4));
         assertThat(spec.getMaxPixels(), is(nullValue()));
         assertThat(spec.getTolerance(), is(25));
-        assertThat(spec.getSmooth(), is(0));
     }
 
     @Test
     public void shouldReadSpec_image_withMaxPixelsError() throws IOException {
         SpecImage spec = (SpecImage)readSpec("image: file imgs/image.png, error 112 px");
-        assertThat(spec.getImagePath(), is("./imgs/image.png"));
+        assertThat(spec.getImagePaths(), contains("./imgs/image.png"));
         assertThat(spec.getMaxPercentage(), is(nullValue()));
         assertThat(spec.getMaxPixels(), is(112));
         assertThat(spec.getTolerance(), is(25));
-        assertThat(spec.getSmooth(), is(0));
     }
 
     @Test
     public void shouldReadSpec_image_withMaxPixelsError_tolerance5() throws IOException {
         SpecImage spec = (SpecImage)readSpec("image: file imgs/image.png, error 112 px, tolerance 5");
-        assertThat(spec.getImagePath(), is("./imgs/image.png"));
+        assertThat(spec.getImagePaths(), contains("./imgs/image.png"));
         assertThat(spec.getMaxPercentage(), is(nullValue()));
         assertThat(spec.getMaxPixels(), is(112));
         assertThat(spec.getTolerance(), is(5));
-        assertThat(spec.getSmooth(), is(0));
+        assertThat(spec.isStretch(), is(false));
     }
 
     @Test
-    public void shouldReadSpec_image_withMaxPixelsError_tolerance5_smooth2() throws IOException {
-        SpecImage spec = (SpecImage)readSpec("image: file imgs/image.png, error 112 px, tolerance 5, smooth 2");
-        assertThat(spec.getImagePath(), is("./imgs/image.png"));
+    public void shouldReadSpec_image_withMaxPixelsError_tolerance5_stretch() throws IOException {
+        SpecImage spec = (SpecImage)readSpec("image: file imgs/image.png, error 112 px, tolerance 5, stretch");
+        assertThat(spec.getImagePaths(), contains("./imgs/image.png"));
         assertThat(spec.getMaxPercentage(), is(nullValue()));
         assertThat(spec.getMaxPixels(), is(112));
         assertThat(spec.getTolerance(), is(5));
-        assertThat(spec.getSmooth(), is(2));
+        assertThat(spec.isStretch(), is(true));
     }
 
     @Test
-    public void shouldReadSpec_image_withMaxPixelsError_smooth2_tolerance5() throws IOException {
-        SpecImage spec = (SpecImage)readSpec("image: file imgs/image.png, error 112 px, smooth 2, tolerance 5");
-        assertThat(spec.getImagePath(), is("./imgs/image.png"));
+    public void shouldReadSpec_image_withMaxPixelsError_tolerance5_filterSmooth2() throws IOException {
+        SpecImage spec = (SpecImage)readSpec("image: file imgs/image.png, error 112 px, tolerance 5, filter blur 2");
+        assertThat(spec.getImagePaths(), contains("./imgs/image.png"));
         assertThat(spec.getMaxPercentage(), is(nullValue()));
         assertThat(spec.getMaxPixels(), is(112));
         assertThat(spec.getTolerance(), is(5));
-        assertThat(spec.getSmooth(), is(2));
+        assertThat(spec.getFilters().size(), is(1));
+
+        BlurFilter filter = (BlurFilter) spec.getFilters().get(0);
+        assertThat(filter.getRadius(), is(2));
+    }
+
+    @Test
+    public void shouldReadSpec_image_withMaxPixelsError_tolerance5_filterBlur2_filterDenoise1() throws IOException {
+        SpecImage spec = (SpecImage)readSpec("image: file imgs/image.png, error 112 px, filter blur 2, filter denoise 4, tolerance 5");
+        assertThat(spec.getImagePaths(), contains("./imgs/image.png"));
+        assertThat(spec.getMaxPercentage(), is(nullValue()));
+        assertThat(spec.getMaxPixels(), is(112));
+        assertThat(spec.getTolerance(), is(5));
+
+        assertThat(spec.getFilters().size(), is(2));
+
+        BlurFilter filter1 = (BlurFilter) spec.getFilters().get(0);
+        assertThat(filter1.getRadius(), is(2));
+
+        DenoiseFilter filter2 = (DenoiseFilter) spec.getFilters().get(1);
+        assertThat(filter2.getRadius(), is(4));
+    }
+
+    @Test
+    public void shouldReadSpec_image_withMaxPixelsError_tolerance5_filterBlur2_mapFilterDenoise1() throws IOException {
+        SpecImage spec = (SpecImage)readSpec("image: file imgs/image.png, error 112 px, filter blur 2, map-filter denoise 4, tolerance 5");
+        assertThat(spec.getImagePaths(), contains("./imgs/image.png"));
+        assertThat(spec.getMaxPercentage(), is(nullValue()));
+        assertThat(spec.getMaxPixels(), is(112));
+        assertThat(spec.getTolerance(), is(5));
+
+        assertThat(spec.getFilters().size(), is(1));
+        assertThat(spec.getMapFilters().size(), is(1));
+
+        BlurFilter filter = (BlurFilter) spec.getFilters().get(0);
+        assertThat(filter.getRadius(), is(2));
+
+        DenoiseFilter filter2 = (DenoiseFilter) spec.getMapFilters().get(0);
+        assertThat(filter2.getRadius(), is(4));
+
+
+
     }
 
     @Test
     public void shouldReadSpec_image_withMaxPixelsError_andArea() throws IOException {
         SpecImage spec = (SpecImage)readSpec("image: file imgs/image.png, error 112 px, area 10 10 100 20");
-        assertThat(spec.getImagePath(), is("./imgs/image.png"));
+        assertThat(spec.getImagePaths(), contains("./imgs/image.png"));
         assertThat(spec.getMaxPercentage(), is(nullValue()));
         assertThat(spec.getMaxPixels(), is(112));
         assertThat(spec.getTolerance(), is(25));
-        assertThat(spec.getSmooth(), is(0));
         assertThat(spec.getSelectedArea(), is(new Rect(10,10,100,20)));
     }
 
     @Test
     public void shouldReadSpec_image_andBuildImagePath_withContextPath() throws IOException {
         SpecImage spec = (SpecImage)readSpec("image: file image.png", "some-component/specs");
-        assertThat(spec.getImagePath(), is("some-component/specs/image.png"));
+        assertThat(spec.getImagePaths(), contains("some-component/specs/image.png"));
         assertThat(spec.getMaxPercentage(), is(nullValue()));
         assertThat(spec.getMaxPixels(), is(nullValue()));
         assertThat(spec.getTolerance(), is(25));
-        assertThat(spec.getSmooth(), is(0));
     }
+
+
 
 
     @Test(expectedExceptions={SyntaxException.class}, expectedExceptionsMessageRegExp="Cannot parse number: \"\"")

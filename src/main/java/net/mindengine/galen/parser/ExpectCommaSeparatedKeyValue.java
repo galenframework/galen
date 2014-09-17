@@ -18,14 +18,16 @@ package net.mindengine.galen.parser;
 import net.mindengine.galen.specs.reader.StringCharReader;
 
 import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 
 
-public class ExpectCommaSeparatedKeyValue implements Expectation<Map<String, String>> {
+public class ExpectCommaSeparatedKeyValue implements Expectation<Map<String, List<String>>> {
 
     @Override
-    public Map<String, String> read(StringCharReader charReader) {
-        Map<String, String> data = new HashMap<String, String>();
+    public Map<String, List<String>> read(StringCharReader charReader) {
+        Map<String, List<String>> data = new HashMap<String, List<String>>();
 
 
         String currentParamName = null;
@@ -34,11 +36,15 @@ public class ExpectCommaSeparatedKeyValue implements Expectation<Map<String, Str
                 String word = new ExpectWord().read(charReader);
                 if (!word.isEmpty()) {
                     currentParamName = word;
+                    if (!data.containsKey(currentParamName)) {
+                        data.put(currentParamName, new LinkedList<String>());
+                    }
                 }
             }
             else {
-                String value = charReader.readUntilSymbol(',').trim();
-                data.put(currentParamName, value);
+                final String value = charReader.readUntilSymbol(',').trim();
+                data.get(currentParamName).add(value);
+
                 currentParamName = null;
             }
         }

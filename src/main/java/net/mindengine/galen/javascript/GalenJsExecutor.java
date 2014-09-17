@@ -19,6 +19,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.Reader;
 
+import net.mindengine.galen.api.Galen;
 import net.mindengine.galen.browser.WebDriverWrapper;
 import net.mindengine.galen.runner.events.TestEvent;
 import net.mindengine.galen.runner.events.TestFilterEvent;
@@ -65,7 +66,8 @@ public class GalenJsExecutor {
                 GalenUtils.class,
                 TestEvent.class,
                 TestSuiteEvent.class,
-                TestFilterEvent.class
+                TestFilterEvent.class,
+                Galen.class
         });
     }
     

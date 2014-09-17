@@ -85,7 +85,7 @@ public class Expectations {
     }
 
 
-    public static Expectation<Map<String, String>> commaSeparatedKeyValue() {
+    public static Expectation<Map<String, List<String>>> commaSeparatedRepeatedKeyValues() {
         return new ExpectCommaSeparatedKeyValue();
     }
 }

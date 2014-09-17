@@ -15,6 +15,7 @@
 ******************************************************************************/
 package net.mindengine.galen.tests.validation;
 
+import static java.util.Arrays.asList;
 import static net.mindengine.galen.specs.Range.between;
 import static net.mindengine.galen.specs.Range.exact;
 import static net.mindengine.galen.specs.Side.BOTTOM;
@@ -31,6 +32,7 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 
 import net.mindengine.galen.components.validation.MockedAbsentPageElement;
@@ -48,6 +50,8 @@ import net.mindengine.galen.validation.PageValidation;
 import net.mindengine.galen.validation.ValidationError;
 import net.mindengine.rainbow4j.Rainbow4J;
 
+import net.mindengine.rainbow4j.filters.BlurFilter;
+import net.mindengine.rainbow4j.filters.ImageFilter;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
@@ -1244,7 +1248,7 @@ public class ValidationTest {
 
             row(new ValidationError(areas(new ErrorArea(new Rect(100, 90, 100, 40), "object")),
                         messages("Element does not look like \"/imgs/button-sample-incorrect.png\". " +
-                                "There are 3821 mismatching pixels but max allowed is 600"))
+                                "There are 3820 mismatching pixels but max allowed is 600"))
                             .withImageComparisonSample(null, "/imgs/button-sample-incorrect.png", null),
                 specImage("/imgs/button-sample-incorrect.png", 600, PIXEL_UNIT, 0, 10), page(new HashMap<String, PageElement>(){{
                     put("object", element(100, 90, 100, 40));
@@ -1252,7 +1256,7 @@ public class ValidationTest {
 
             row(new ValidationError(areas(new ErrorArea(new Rect(100, 90, 100, 40), "object")),
                             messages("Element does not look like \"/imgs/button-sample-incorrect.png\". " +
-                                    "There are 95.525% mismatching pixels but max allowed is 2.0%"))
+                                    "There are 95.5% mismatching pixels but max allowed is 2.0%"))
                             .withImageComparisonSample(null, "/imgs/button-sample-incorrect.png", null),
                     specImage("/imgs/button-sample-incorrect.png", 2.0, PERCENTAGE_UNIT, 0, 10), page(new HashMap<String, PageElement>(){{
                         put("object", element(100, 90, 100, 40));
@@ -1283,15 +1287,15 @@ public class ValidationTest {
     }
     
     private List<ErrorArea> areas(ErrorArea...errorAreas) {
-        return Arrays.asList(errorAreas);
+        return asList(errorAreas);
     }
 
     private List<String> messages(String...messages) {
-        return Arrays.asList(messages);
+        return asList(messages);
     }
 
     private List<ErrorArea> singleArea(Rect rect, String tooltip) {
-        return Arrays.asList(new ErrorArea(rect, tooltip));
+        return asList(new ErrorArea(rect, tooltip));
     }
 
     private SpecText specTextIs(String text) {
@@ -1335,23 +1339,23 @@ public class ValidationTest {
     }
 
     private SpecNear specNear(String secondObjectName, Location...locations) {
-        return new SpecNear(secondObjectName, Arrays.asList(locations));
+        return new SpecNear(secondObjectName, asList(locations));
     }
 
     private SpecInside specInside(String parentObjectName, Location...locations) {
-        return new SpecInside(parentObjectName, Arrays.asList(locations));
+        return new SpecInside(parentObjectName, asList(locations));
     }
 
     private SpecInside specInsidePartly(String parentObjectName, Location...locations) {
-        return new SpecInside(parentObjectName, Arrays.asList(locations)).withPartlyCheck();
+        return new SpecInside(parentObjectName, asList(locations)).withPartlyCheck();
     }
 
     private SpecOn specOn(Side sideHorizontal, Side sideVertical, String parentObjectName, Location...locations) {
-        return new SpecOn(parentObjectName, sideHorizontal, sideVertical, Arrays.asList(locations));
+        return new SpecOn(parentObjectName, sideHorizontal, sideVertical, asList(locations));
     }
 
     private Location location(Range exact, Side...sides) {
-        return new Location(exact, Arrays.asList(sides));
+        return new Location(exact, asList(sides));
     }
 
     private MockedPage page(HashMap<String, PageElement> elements) {
@@ -1375,7 +1379,7 @@ public class ValidationTest {
     }
     
     private SpecContains specContains(boolean isPartly, String...objects) {
-        return new SpecContains(Arrays.asList(objects), isPartly);
+        return new SpecContains(asList(objects), isPartly);
     }
     
     private SpecAbsent specAbsent() {
@@ -1408,7 +1412,7 @@ public class ValidationTest {
 
     private SpecColorScheme specColorScheme(ColorRange...colorRanges) {
         SpecColorScheme spec = new SpecColorScheme();
-        spec.setColorRanges(Arrays.asList(colorRanges));
+        spec.setColorRanges(asList(colorRanges));
         return spec;
     }
 
@@ -1416,7 +1420,7 @@ public class ValidationTest {
         return specImage(imagePath, errorValue, isPixelUnit, pixelSmooth, tolerance, null);
     }
 
-    private SpecImage specImage(String imagePath, double errorValue, boolean isPixelUnit, int pixelSmooth, int tolerance, Rect selectedArea) {
+    private SpecImage specImage(String imagePath, double errorValue, boolean isPixelUnit, int blur, int tolerance, Rect selectedArea) {
         SpecImage spec = new SpecImage();
 
         if (isPixelUnit) {
@@ -1426,8 +1430,14 @@ public class ValidationTest {
             spec.setMaxPercentage(errorValue);
         }
 
-        spec.setImagePath(imagePath);
-        spec.setSmooth(pixelSmooth);
+        spec.setImagePaths(asList(imagePath));
+
+        List<ImageFilter> filters = new LinkedList<ImageFilter>();
+        spec.setFilters(filters);
+
+        if (blur > 0) {
+            filters.add(new BlurFilter(blur));
+        }
         spec.setTolerance(tolerance);
         spec.setSelectedArea(selectedArea);
         return spec;

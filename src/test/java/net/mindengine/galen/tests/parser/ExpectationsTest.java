@@ -247,24 +247,24 @@ public class ExpectationsTest {
 
     @Test
     public void shouldParse_commaSeparatedKeyValue() {
-        String text = ",param1 1, param2 v a l u e 2, booleanParam, param3 2.3";
-        Map<String, String> params = new ExpectCommaSeparatedKeyValue().read(new StringCharReader(text));
+        String text = ",param1 1, param2 v a l u e 2, booleanParam, param3 2.3, param1 2";
+        Map<String, List<String>> params = new ExpectCommaSeparatedKeyValue().read(new StringCharReader(text));
 
         assertThat(params.size(), is(4));
-        assertThat(params.get("param1"), is("1"));
-        assertThat(params.get("param2"), is("v a l u e 2"));
-        assertThat(params.get("booleanParam"), is(""));
-        assertThat(params.get("param3"), is("2.3"));
+        assertThat(params.get("param1"), contains("1", "2"));
+        assertThat(params.get("param2"), contains("v a l u e 2"));
+        assertThat(params.get("booleanParam"), contains(""));
+        assertThat(params.get("param3"), contains("2.3"));
     }
 
     @Test
     public void shouldParse_commaSeparatedKeyValue_2() {
         String text = "param1 1, param2 2";
-        Map<String, String> params = new ExpectCommaSeparatedKeyValue().read(new StringCharReader(text));
+        Map<String, List<String>> params = new ExpectCommaSeparatedKeyValue().read(new StringCharReader(text));
 
         assertThat(params.size(), is(2));
-        assertThat(params.get("param1"), is("1"));
-        assertThat(params.get("param2"), is("2"));
+        assertThat(params.get("param1"), contains("1"));
+        assertThat(params.get("param2"), contains("2"));
     }
     
     
