@@ -136,7 +136,7 @@ public class ArgumentParserTest {
                             "-i", "mobile,all", 
                             "-e", "nomobile,testTag", 
                             "-s", "400x700", 
-                            "-H", "some.html",
+                            "-h", "some.html",
                             "-g", "testng.xml"), 
                new GalenArguments()
                     .withAction("check")
@@ -175,6 +175,15 @@ public class ArgumentParserTest {
             {args("config"), 
                 new GalenArguments()
                     .withAction("config")},
+
+            {args("dump", "my-page.spec", "--url", "http://mindengine.net", "--export", "export-page-dir", "--max-width", "100", "--max-height", "150"),
+                new GalenArguments()
+                    .withAction("dump")
+                    .withPaths(asList("my-page.spec"))
+                    .withUrl("http://mindengine.net")
+                    .withExport("export-page-dir")
+                    .withMaxWidth(100)
+                    .withMaxHeight(150)}
         };
     }
     

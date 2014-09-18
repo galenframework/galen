@@ -105,8 +105,8 @@ function selectItem(id) {
         $listItem.removeClass("selected");
     }
 
-    if (_selectedIds.length == 2) {
-        showSpecSuggestions(_pageItems[_selectedIds[0]], _pageItems[_selectedIds[1]]);
+    if (_selectedIds.length >= 2) {
+        showSpecSuggestions(_selectedIds);
     }
     else if (_selectedIds.length == 1) {
         showObjectDetails(_pageItems[_selectedIds[0]]);
@@ -176,7 +176,7 @@ Suggest.prototype.addSpec = function (spec) {
     }
     else this.specs[spec.objectName].push(spec);
 };
-Suggest.prototype.generateSuggestions = function (itemA, itemB) {
+Suggest.prototype.generateSuggestions = function (items) {
     var thisSuggest = this;
     var propose = function(spec) {
         if (spec != null) {
@@ -184,8 +184,12 @@ Suggest.prototype.generateSuggestions = function (itemA, itemB) {
         }
     };
     forEachIn(this._suggestions, function (name, suggestion) {
-        propose(suggestion(itemA, itemB));
-        propose(suggestion(itemB, itemA));
+        for ( var i =0; i < items.length - 1; i++) {
+            for (var j = i + 1; j < items.length; j++) {
+                propose(suggestion(items[i], items[j]));
+                propose(suggestion(items[j], items[i]));
+            }
+        }
     });
 
     var html = "";
@@ -354,11 +358,17 @@ Suggest.prototype._suggestions.centered = function (a, b) {
     return null;
 };
 
-function showSpecSuggestions(itemA, itemB) {
+function showSpecSuggestions(selectedIds) {
 
     var suggest = new Suggest();
 
-    $("#object-suggestions .spec-list").html(suggest.generateSuggestions(itemA, itemB));
+    var items = [];
+
+    for (var i=0; i<selectedIds.length; i++) {
+        items.push(_pageItems[selectedIds[i]]);
+    }
+
+    $("#object-suggestions .spec-list").html(suggest.generateSuggestions(items));
     $("#object-suggestions").show();
 }
 

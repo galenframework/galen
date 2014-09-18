@@ -24,6 +24,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.regex.Pattern;
 
+import net.mindengine.galen.suite.actions.GalenPageActionDumpPage;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.MissingArgumentException;
@@ -50,6 +51,9 @@ public class GalenArguments {
     private String original;
     private Boolean printVersion;
     private String filter;
+    private String export;
+    private Integer maxWidth;
+    private Integer maxHeight;
 
     public GalenArguments withAction(String action) {
         this.setAction(action);
@@ -146,12 +150,16 @@ public class GalenArguments {
         options.addOption("i", "include", true, "Tags for sections that should be included in test run");
         options.addOption("e", "exclude", true, "Tags for sections that should be excluded from test run");
         options.addOption("s", "size", true, "Browser screen size");
-        options.addOption("H", "htmlreport", true, "Path for html output report");
+        options.addOption("h", "htmlreport", true, "Path for html output report");
         options.addOption("g", "testngreport", true, "Path for testng xml report");
         options.addOption("r", "recursive", false, "Flag for recursive tests scan");
         options.addOption("p", "parallel-suites", true, "Amount of suites to be run in parallel");
         options.addOption("v", "version", false, "Current version");
         options.addOption("f", "filter", true, "Test filter");
+        options.addOption("E", "export", true, "Export path for page dump");
+        options.addOption("W", "max-width", true, "Maximum width for page dump");
+        options.addOption("H", "max-height", true, "Maximum height for page dump");
+
         
         CommandLineParser parser = new PosixParser();
         
@@ -191,14 +199,23 @@ public class GalenArguments {
         galen.setJavascript(cmd.getOptionValue("javascript"));
         galen.setTestngReport(cmd.getOptionValue("g"));
         galen.setRecursive(cmd.hasOption("r"));
-        galen.setHtmlReport(cmd.getOptionValue("H"));
+        galen.setHtmlReport(cmd.getOptionValue("h"));
         galen.setParallelSuites(Integer.parseInt(cmd.getOptionValue("p", "0")));
         galen.setPrintVersion(cmd.hasOption("v"));
         galen.setFilter(cmd.getOptionValue("f"));
-        
+        galen.setExport(cmd.getOptionValue("E"));
+        galen.setMaxWidth(parseOptionalInt(cmd.getOptionValue("W")));
+        galen.setMaxHeight(parseOptionalInt(cmd.getOptionValue("H")));
         
         verifyArguments(galen);
         return galen;
+    }
+
+    private static Integer parseOptionalInt(String valueText) {
+        if (valueText != null && !valueText.trim().isEmpty()) {
+            return Integer.parseInt(valueText);
+        }
+        else return null;
     }
 
     private static String[] processSystemProperties(String[] args) {
@@ -234,6 +251,9 @@ public class GalenArguments {
                 verifyCheckAction(galen);
             }
             else if ("config".equals(galen.getAction())) {
+                return;
+            }
+            else if ("dump".equals(galen.getAction())) {
                 return;
             }
             else throw new IllegalArgumentException("Unknown action: " + galen.getAction());
@@ -314,6 +334,9 @@ public class GalenArguments {
         .append(url)
         .append(parallelSuites)
         .append(filter)
+        .append(export)
+        .append(maxWidth)
+        .append(maxHeight)
         .toHashCode();
     }
     
@@ -342,6 +365,10 @@ public class GalenArguments {
             .append(url, rhs.url)
             .append(filter, rhs.filter)
             .append(parallelSuites, rhs.parallelSuites)
+            .append(excludedTags, rhs.excludedTags)
+            .append(export, rhs.export)
+            .append(maxWidth, rhs.maxWidth)
+            .append(maxHeight, rhs.maxHeight)
             .isEquals();
     }
     
@@ -360,6 +387,9 @@ public class GalenArguments {
             .append("url", url)
             .append("filter", filter)
             .append("parallelSuites", parallelSuites)
+            .append("export", export)
+            .append("maxWidth", maxWidth)
+            .append("maxHeight", maxHeight)
             .toString();
     }
 
@@ -447,5 +477,44 @@ public class GalenArguments {
 
     public void setFilter(String filter) {
         this.filter = filter;
+    }
+
+    public GalenArguments withExport(String export) {
+        setExport(export);
+        return this;
+    }
+
+    public void setExport(String export) {
+        this.export = export;
+    }
+
+    public String getExport() {
+        return export;
+    }
+
+    public GalenArguments withMaxWidth(Integer maxWidth) {
+        setMaxWidth(maxWidth);
+        return this;
+    }
+
+    public void setMaxWidth(Integer maxWidth) {
+        this.maxWidth = maxWidth;
+    }
+
+    public Integer getMaxWidth() {
+        return maxWidth;
+    }
+
+    public GalenArguments withMaxHeight(Integer maxHeight) {
+        setMaxHeight(maxHeight);
+        return this;
+    }
+
+    public void setMaxHeight(Integer maxHeight) {
+        this.maxHeight = maxHeight;
+    }
+
+    public Integer getMaxHeight() {
+        return maxHeight;
     }
 }

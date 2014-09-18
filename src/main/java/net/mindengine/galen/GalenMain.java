@@ -17,6 +17,7 @@ package net.mindengine.galen;
 
 import static java.util.Arrays.asList;
 
+import java.awt.*;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -33,8 +34,11 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.regex.Pattern;
 
+import net.mindengine.galen.api.Galen;
+import net.mindengine.galen.browser.Browser;
 import net.mindengine.galen.browser.SeleniumBrowserFactory;
 import net.mindengine.galen.config.GalenConfig;
+import net.mindengine.galen.parser.SyntaxException;
 import net.mindengine.galen.reports.ConsoleReportingListener;
 import net.mindengine.galen.reports.GalenTestInfo;
 import net.mindengine.galen.reports.HtmlReportBuilder;
@@ -59,13 +63,15 @@ import net.mindengine.galen.validation.FailureListener;
 
 import org.apache.commons.cli.ParseException;
 import org.apache.commons.io.IOUtils;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.firefox.FirefoxDriver;
 
 
 public class GalenMain {
     
     private CompleteListener listener;
 
-    public void execute(GalenArguments arguments) throws IOException, SecurityException, IllegalArgumentException, ClassNotFoundException, NoSuchMethodException, InstantiationException, IllegalAccessException, InvocationTargetException {
+    public void execute(GalenArguments arguments) throws Exception {
         if (arguments.getAction() != null) {
             
             FailureListener failureListener = new FailureListener();
@@ -83,6 +89,9 @@ public class GalenMain {
             }
             else if ("config".equals(arguments.getAction())) {
                 performConfig();
+            }
+            else if ("dump".equals(arguments.getAction())) {
+                performPageDump(arguments);
             }
             combinedListener.done();
             
@@ -106,6 +115,40 @@ public class GalenMain {
                 }
                 System.out.println("Version: " + version);
             }
+        }
+    }
+
+    private void performPageDump(GalenArguments arguments) throws Exception {
+        SeleniumBrowserFactory browserFactory = new SeleniumBrowserFactory();
+        Browser browser = browserFactory.openBrowser();
+
+        try {
+
+            if (arguments.getUrl() == null || arguments.getUrl().isEmpty()) {
+                throw new SyntaxException("--url parameter is not defined");
+            }
+            if (arguments.getPaths() == null || arguments.getPaths().size() == 0) {
+                throw new SyntaxException("You should specify a spec file with which you want to make a page dump");
+            }
+            if (arguments.getExport() == null || arguments.getExport().isEmpty()) {
+                throw new SyntaxException("--export parameter is not defined");
+            }
+
+
+            if (arguments.getScreenSize() != null) {
+                browser.changeWindowSize(arguments.getScreenSize());
+            }
+
+            browser.load(arguments.getUrl());
+
+            Galen.dumpPage(arguments.getUrl(), browser, arguments.getPaths().get(0), arguments.getExport(), arguments.getMaxWidth(), arguments.getMaxHeight());
+            System.out.println("Done!");
+        }
+        catch (Exception ex) {
+            throw ex;
+        }
+        finally {
+            browser.quit();
         }
     }
 
@@ -192,7 +235,7 @@ public class GalenMain {
         
     }
 
-    public static void main(String[] args) throws ParseException, IOException, SecurityException, IllegalArgumentException, ClassNotFoundException, NoSuchMethodException, InstantiationException, IllegalAccessException, InvocationTargetException {
+    public static void main(String[] args) throws Exception {
         new GalenMain().execute(GalenArguments.parse(args));
     }
 

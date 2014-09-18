@@ -43,6 +43,7 @@ import net.mindengine.galen.specs.reader.SpecReader;
 
 import net.mindengine.rainbow4j.filters.BlurFilter;
 import net.mindengine.rainbow4j.filters.DenoiseFilter;
+import net.mindengine.rainbow4j.filters.SaturationFilter;
 import org.hamcrest.Matchers;
 import org.junit.BeforeClass;
 import org.testng.annotations.AfterMethod;
@@ -754,23 +755,24 @@ public class SpecsReaderTest {
     }
 
     @Test
-    public void shouldReadSpec_image_withMaxPixelsError_tolerance5_filterBlur2_mapFilterDenoise1() throws IOException {
-        SpecImage spec = (SpecImage)readSpec("image: file imgs/image.png, error 112 px, filter blur 2, map-filter denoise 4, tolerance 5");
+    public void shouldReadSpec_image_withMaxPixelsError_tolerance5_filterBlur2_filterSaturation10_mapFilterDenoise1() throws IOException {
+        SpecImage spec = (SpecImage)readSpec("image: file imgs/image.png, error 112 px, filter blur 2, filter saturation 10 map-filter denoise 4, tolerance 5");
         assertThat(spec.getImagePaths(), contains("./imgs/image.png"));
         assertThat(spec.getMaxPercentage(), is(nullValue()));
         assertThat(spec.getMaxPixels(), is(112));
         assertThat(spec.getTolerance(), is(5));
 
-        assertThat(spec.getFilters().size(), is(1));
+        assertThat(spec.getFilters().size(), is(2));
         assertThat(spec.getMapFilters().size(), is(1));
 
         BlurFilter filter = (BlurFilter) spec.getFilters().get(0);
         assertThat(filter.getRadius(), is(2));
 
+        SaturationFilter saturationFilter = (SaturationFilter) spec.getFilters().get(1);
+        assertThat(saturationFilter.getLevel(), is(10));
+
         DenoiseFilter filter2 = (DenoiseFilter) spec.getMapFilters().get(0);
         assertThat(filter2.getRadius(), is(4));
-
-
 
     }
 
