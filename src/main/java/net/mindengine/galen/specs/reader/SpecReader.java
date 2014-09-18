@@ -35,10 +35,7 @@ import net.mindengine.galen.page.Rect;
 import net.mindengine.galen.parser.*;
 import net.mindengine.galen.specs.*;
 import net.mindengine.galen.specs.colors.ColorRange;
-import net.mindengine.rainbow4j.filters.BlurFilter;
-import net.mindengine.rainbow4j.filters.ContrastFilter;
-import net.mindengine.rainbow4j.filters.DenoiseFilter;
-import net.mindengine.rainbow4j.filters.ImageFilter;
+import net.mindengine.rainbow4j.filters.*;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
@@ -426,6 +423,9 @@ public class SpecReader {
         }
         else if ("denoise".equals(filterName)) {
             return new DenoiseFilter(value.intValue());
+        }
+        else if ("saturation".equals(filterName)) {
+            return new SaturationFilter(value.intValue());
         }
         else throw new SyntaxException("Unknown image filter: " + filterName);
     }
