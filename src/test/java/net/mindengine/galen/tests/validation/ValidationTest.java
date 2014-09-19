@@ -1433,7 +1433,8 @@ public class ValidationTest {
         spec.setImagePaths(asList(imagePath));
 
         List<ImageFilter> filters = new LinkedList<ImageFilter>();
-        spec.setFilters(filters);
+        spec.setOriginalFilters(filters);
+        spec.setSampleFilters(filters);
 
         if (blur > 0) {
             filters.add(new BlurFilter(blur));

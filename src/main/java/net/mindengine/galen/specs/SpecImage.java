@@ -18,6 +18,7 @@ package net.mindengine.galen.specs;
 import net.mindengine.galen.page.Rect;
 import net.mindengine.rainbow4j.filters.ImageFilter;
 
+import java.util.LinkedList;
 import java.util.List;
 
 public class SpecImage extends Spec {
@@ -25,8 +26,9 @@ public class SpecImage extends Spec {
     private Double maxPercentage;
     private Integer maxPixels;
     private Integer tolerance = 25;
-    private List<ImageFilter> filters;
-    private List<ImageFilter> mapFilters;
+    private List<ImageFilter> originalFilters = new LinkedList<ImageFilter>();
+    private List<ImageFilter> sampleFilters = new LinkedList<ImageFilter>();
+    private List<ImageFilter> mapFilters = new LinkedList<ImageFilter>();
     private Rect selectedArea;
     private boolean stretch;
 
@@ -72,14 +74,6 @@ public class SpecImage extends Spec {
         this.mapFilters = mapFilters;
     }
 
-    public List<ImageFilter> getFilters() {
-        return filters;
-    }
-
-    public void setFilters(List<ImageFilter> filters) {
-        this.filters = filters;
-    }
-
     public boolean isStretch() {
         return stretch;
     }
@@ -94,5 +88,21 @@ public class SpecImage extends Spec {
 
     public void setImagePaths(List<String> imagePaths) {
         this.imagePaths = imagePaths;
+    }
+
+    public List<ImageFilter> getOriginalFilters() {
+        return originalFilters;
+    }
+
+    public void setOriginalFilters(List<ImageFilter> originalFilters) {
+        this.originalFilters = originalFilters;
+    }
+
+    public List<ImageFilter> getSampleFilters() {
+        return sampleFilters;
+    }
+
+    public void setSampleFilters(List<ImageFilter> sampleFilters) {
+        this.sampleFilters = sampleFilters;
     }
 }

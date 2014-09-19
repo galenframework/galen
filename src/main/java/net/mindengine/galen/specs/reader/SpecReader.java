@@ -331,75 +331,57 @@ public class SpecReader {
         putSpec("image", new SpecComplexProcessor(expectThese(commaSeparatedRepeatedKeyValues()), new SpecComplexInit() {
             @Override
             public Spec init(String specName, String paramsText, String contextPath, Object[] args) {
-                Map<String, List<String>> parameters = (Map<String, List<String>>)args[0];
+                List<Pair<String, String>> parameters = (List<Pair<String, String>>) args[0];
 
                 SpecImage spec = new SpecImage();
+                spec.setImagePaths(new LinkedList<String>());
+                spec.setStretch(false);
 
-                if (parameters.containsKey("file")) {
-
-                    List<String> filePaths = parameters.get("file");
-
-                    if (filePaths == null || filePaths.size() == 0) {
-                        throw new SyntaxException("You should provide 'file' parameter");
-                    }
-
-                    if (contextPath != null) {
-
-                        List<String> fullFilePaths = new LinkedList<String>();
-                        for (String path : filePaths) {
-                            fullFilePaths.add(contextPath + File.separator + path);
+                for (Pair<String, String> parameter : parameters) {
+                    if ("file".equals(parameter.getKey())) {
+                        if (contextPath != null) {
+                            spec.getImagePaths().add(contextPath + File.separator + parameter.getValue());
                         }
-                        spec.setImagePaths(fullFilePaths);
+                        else {
+                            spec.getImagePaths().add(parameter.getValue());
+                        }
                     }
-                    else {
-                        spec.setImagePaths(filePaths);
+                    else if ("error".equals(parameter.getKey())) {
+                        Pair<Double, String> error = parseError(parameter.getValue());
+                        if (error.getRight().equals("%")) {
+                            spec.setMaxPercentage(error.getLeft());
+                        }
+                        else if (error.getRight().equals("px")) {
+                            spec.setMaxPixels(error.getLeft().intValue());
+                        }
+                        else throw new SyntaxException("Unknown error unit: " + error.getRight());
                     }
-                }
-                else throw new SyntaxException("You should specify a file");
-
-
-                if (parameters.containsKey("error")) {
-                    Pair<Double, String> error = parseError(parameters.get("error").get(0));
-                    if (error.getRight().equals("%")) {
-                        spec.setMaxPercentage(error.getLeft());
+                    else if ("tolerance".equals(parameter.getKey())) {
+                        spec.setTolerance(parseIntegerParameter("tolerance", parameter.getValue()));
                     }
-                    else if (error.getRight().equals("px")) {
-                        spec.setMaxPixels(error.getLeft().intValue());
+                    else if ("stretch".equals(parameter.getKey())) {
+                        spec.setStretch(true);
                     }
-                    else throw new SyntaxException("Unknown error unit: " + error.getRight());
-                }
-
-                if (parameters.containsKey("tolerance")) {
-                    spec.setTolerance(parseIntegerParameter("tolerance", parameters.get("tolerance").get(0)));
-                }
-
-                if (parameters.containsKey("stretch")) {
-                    spec.setStretch(true);
-                }
-                else {
-                    spec.setStretch(false);
-                }
-
-                if (parameters.containsKey("area")) {
-                    spec.setSelectedArea(parseRect(parameters.get("area").get(0)));
-                }
-
-                if (parameters.containsKey("filter")) {
-                    List<ImageFilter> filters = new LinkedList<ImageFilter>();
-
-                    for (String filterText : parameters.get("filter")) {
-                        filters.add(parseImageFilter(filterText));
+                    else if ("area".equals(parameter.getKey())) {
+                        spec.setSelectedArea(parseRect(parameter.getValue()));
                     }
-                    spec.setFilters(filters);
-                }
-
-                if (parameters.containsKey("map-filter")) {
-                    List<ImageFilter> filters = new LinkedList<ImageFilter>();
-
-                    for (String filterText : parameters.get("map-filter")) {
-                        filters.add(parseImageFilter(filterText));
+                    else if ("filter".equals(parameter.getKey())) {
+                        ImageFilter filter = parseImageFilter(parameter.getValue());
+                        spec.getOriginalFilters().add(filter);
+                        spec.getSampleFilters().add(filter);
                     }
-                    spec.setMapFilters(filters);
+                    else if ("filter-a".equals(parameter.getKey())) {
+                        ImageFilter filter = parseImageFilter(parameter.getValue());
+                        spec.getOriginalFilters().add(filter);
+                    }
+                    else if ("filter-b".equals(parameter.getKey())) {
+                        ImageFilter filter = parseImageFilter(parameter.getValue());
+                        spec.getSampleFilters().add(filter);
+                    }
+                    else if ("map-filter".equals(parameter.getKey())) {
+                        ImageFilter filter = parseImageFilter(parameter.getValue());
+                        spec.getMapFilters().add(filter);
+                    }
                 }
 
                 return spec;

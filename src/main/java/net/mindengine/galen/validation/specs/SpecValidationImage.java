@@ -55,7 +55,8 @@ public class SpecValidationImage extends SpecValidation<SpecImage> {
 
         ComparisonOptions options = new ComparisonOptions();
         options.setStretchToFit(spec.isStretch());
-        options.setFilters(spec.getFilters());
+        options.setOriginalFilters(spec.getOriginalFilters());
+        options.setSampleFilters(spec.getSampleFilters());
         options.setMapFilters(spec.getMapFilters());
         options.setTolerance(tolerance);
  

@@ -16,6 +16,8 @@
 package net.mindengine.galen.parser;
 
 import net.mindengine.galen.specs.reader.StringCharReader;
+import org.apache.commons.lang3.tuple.MutablePair;
+import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -23,29 +25,26 @@ import java.util.List;
 import java.util.Map;
 
 
-public class ExpectCommaSeparatedKeyValue implements Expectation<Map<String, List<String>>> {
+public class ExpectCommaSeparatedKeyValue implements Expectation<List<Pair<String, String>>> {
 
     @Override
-    public Map<String, List<String>> read(StringCharReader charReader) {
-        Map<String, List<String>> data = new HashMap<String, List<String>>();
+    public List<Pair<String, String>> read(StringCharReader charReader) {
+        List<Pair<String, String>> data = new LinkedList<Pair<String, String>>();
 
+        Pair<String, String> currentParam = null;
 
-        String currentParamName = null;
         while(charReader.hasMore()) {
-            if (currentParamName == null) {
+            if (currentParam == null) {
                 String word = new ExpectWord().read(charReader);
                 if (!word.isEmpty()) {
-                    currentParamName = word;
-                    if (!data.containsKey(currentParamName)) {
-                        data.put(currentParamName, new LinkedList<String>());
-                    }
+                    currentParam = new MutablePair<String, String>(word, "");
+                    data.add(currentParam);
                 }
             }
             else {
                 final String value = charReader.readUntilSymbol(',').trim();
-                data.get(currentParamName).add(value);
-
-                currentParamName = null;
+                currentParam.setValue(value);
+                currentParam = null;
             }
         }
 

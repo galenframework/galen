@@ -725,16 +725,43 @@ public class SpecsReaderTest {
     }
 
     @Test
-    public void shouldReadSpec_image_withMaxPixelsError_tolerance5_filterSmooth2() throws IOException {
+    public void shouldReadSpec_image_withMaxPixelsError_tolerance5_filterBlur2() throws IOException {
         SpecImage spec = (SpecImage)readSpec("image: file imgs/image.png, error 112 px, tolerance 5, filter blur 2");
         assertThat(spec.getImagePaths(), contains("./imgs/image.png"));
         assertThat(spec.getMaxPercentage(), is(nullValue()));
         assertThat(spec.getMaxPixels(), is(112));
         assertThat(spec.getTolerance(), is(5));
-        assertThat(spec.getFilters().size(), is(1));
+        assertThat(spec.getOriginalFilters().size(), is(1));
+        assertThat(spec.getSampleFilters().size(), is(1));
 
-        BlurFilter filter = (BlurFilter) spec.getFilters().get(0);
-        assertThat(filter.getRadius(), is(2));
+        assertThat(((BlurFilter)spec.getOriginalFilters().get(0)).getRadius(), is(2));
+        assertThat(((BlurFilter)spec.getSampleFilters().get(0)).getRadius(), is(2));
+    }
+
+    @Test
+    public void shouldReadSpec_image_withMaxPixelsError_tolerance5_filterABlur2() throws IOException {
+        SpecImage spec = (SpecImage)readSpec("image: file imgs/image.png, error 112 px, tolerance 5, filter-a blur 2");
+        assertThat(spec.getImagePaths(), contains("./imgs/image.png"));
+        assertThat(spec.getMaxPercentage(), is(nullValue()));
+        assertThat(spec.getMaxPixels(), is(112));
+        assertThat(spec.getTolerance(), is(5));
+        assertThat(spec.getOriginalFilters().size(), is(1));
+        assertThat(spec.getSampleFilters().size(), is(0));
+
+        assertThat(((BlurFilter)spec.getOriginalFilters().get(0)).getRadius(), is(2));
+    }
+
+    @Test
+    public void shouldReadSpec_image_withMaxPixelsError_tolerance5_filterBBlur2() throws IOException {
+        SpecImage spec = (SpecImage)readSpec("image: file imgs/image.png, error 112 px, tolerance 5, filter-b blur 2");
+        assertThat(spec.getImagePaths(), contains("./imgs/image.png"));
+        assertThat(spec.getMaxPercentage(), is(nullValue()));
+        assertThat(spec.getMaxPixels(), is(112));
+        assertThat(spec.getTolerance(), is(5));
+        assertThat(spec.getOriginalFilters().size(), is(0));
+        assertThat(spec.getSampleFilters().size(), is(1));
+
+        assertThat(((BlurFilter)spec.getSampleFilters().get(0)).getRadius(), is(2));
     }
 
     @Test
@@ -745,31 +772,32 @@ public class SpecsReaderTest {
         assertThat(spec.getMaxPixels(), is(112));
         assertThat(spec.getTolerance(), is(5));
 
-        assertThat(spec.getFilters().size(), is(2));
+        assertThat(spec.getOriginalFilters().size(), is(2));
 
-        BlurFilter filter1 = (BlurFilter) spec.getFilters().get(0);
+        BlurFilter filter1 = (BlurFilter) spec.getOriginalFilters().get(0);
         assertThat(filter1.getRadius(), is(2));
 
-        DenoiseFilter filter2 = (DenoiseFilter) spec.getFilters().get(1);
+        DenoiseFilter filter2 = (DenoiseFilter) spec.getOriginalFilters().get(1);
         assertThat(filter2.getRadius(), is(4));
     }
 
     @Test
     public void shouldReadSpec_image_withMaxPixelsError_tolerance5_filterBlur2_filterSaturation10_mapFilterDenoise1() throws IOException {
-        SpecImage spec = (SpecImage)readSpec("image: file imgs/image.png, error 112 px, filter blur 2, filter saturation 10 map-filter denoise 4, tolerance 5");
+        SpecImage spec = (SpecImage)readSpec("image: file imgs/image.png, error 112 px, filter blur 2, filter saturation 10, map-filter denoise 4, tolerance 5");
         assertThat(spec.getImagePaths(), contains("./imgs/image.png"));
         assertThat(spec.getMaxPercentage(), is(nullValue()));
         assertThat(spec.getMaxPixels(), is(112));
         assertThat(spec.getTolerance(), is(5));
 
-        assertThat(spec.getFilters().size(), is(2));
+        assertThat(spec.getOriginalFilters().size(), is(2));
+        assertThat(spec.getSampleFilters().size(), is(2));
         assertThat(spec.getMapFilters().size(), is(1));
 
-        BlurFilter filter = (BlurFilter) spec.getFilters().get(0);
-        assertThat(filter.getRadius(), is(2));
+        assertThat(((BlurFilter)spec.getOriginalFilters().get(0)).getRadius(), is(2));
+        assertThat(((BlurFilter)spec.getSampleFilters().get(0)).getRadius(), is(2));
 
-        SaturationFilter saturationFilter = (SaturationFilter) spec.getFilters().get(1);
-        assertThat(saturationFilter.getLevel(), is(10));
+        assertThat(((SaturationFilter)spec.getOriginalFilters().get(1)).getLevel(), is(10));
+        assertThat(((SaturationFilter)spec.getSampleFilters().get(1)).getLevel(), is(10));
 
         DenoiseFilter filter2 = (DenoiseFilter) spec.getMapFilters().get(0);
         assertThat(filter2.getRadius(), is(4));

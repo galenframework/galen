@@ -39,6 +39,7 @@ import net.mindengine.galen.specs.Side;
 import net.mindengine.galen.specs.reader.StringCharReader;
 
 import org.apache.commons.lang3.StringEscapeUtils;
+import org.apache.commons.lang3.tuple.Pair;
 import org.hamcrest.MatcherAssert;
 import org.junit.BeforeClass;
 import org.testng.annotations.BeforeMethod;
@@ -248,23 +249,39 @@ public class ExpectationsTest {
     @Test
     public void shouldParse_commaSeparatedKeyValue() {
         String text = ",param1 1, param2 v a l u e 2, booleanParam, param3 2.3, param1 2";
-        Map<String, List<String>> params = new ExpectCommaSeparatedKeyValue().read(new StringCharReader(text));
+        List<Pair<String, String>> params = new ExpectCommaSeparatedKeyValue().read(new StringCharReader(text));
 
-        assertThat(params.size(), is(4));
-        assertThat(params.get("param1"), contains("1", "2"));
-        assertThat(params.get("param2"), contains("v a l u e 2"));
-        assertThat(params.get("booleanParam"), contains(""));
-        assertThat(params.get("param3"), contains("2.3"));
+        assertThat(params.size(), is(5));
+        assertThat(params.get(0).getKey(), is("param1"));
+        assertThat(params.get(0).getValue(), is("1"));
+
+        assertThat(params.get(1).getKey(), is("param2"));
+        assertThat(params.get(1).getValue(), is("v a l u e 2"));
+
+        assertThat(params.get(2).getKey(), is("booleanParam"));
+        assertThat(params.get(2).getValue(), is(""));
+
+        assertThat(params.get(3).getKey(), is("param3"));
+        assertThat(params.get(3).getValue(), is("2.3"));
+
+        assertThat(params.get(4).getKey(), is("param1"));
+        assertThat(params.get(4).getValue(), is("2"));
+
+
     }
 
     @Test
     public void shouldParse_commaSeparatedKeyValue_2() {
         String text = "param1 1, param2 2";
-        Map<String, List<String>> params = new ExpectCommaSeparatedKeyValue().read(new StringCharReader(text));
+        List<Pair<String, String>> params = new ExpectCommaSeparatedKeyValue().read(new StringCharReader(text));
 
         assertThat(params.size(), is(2));
-        assertThat(params.get("param1"), contains("1"));
-        assertThat(params.get("param2"), contains("2"));
+        assertThat(params.get(0).getKey(), is("param1"));
+        assertThat(params.get(0).getValue(), is("1"));
+
+        assertThat(params.get(1).getKey(), is("param2"));
+        assertThat(params.get(1).getValue(), is("2"));
+
     }
     
     

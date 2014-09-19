@@ -24,6 +24,7 @@ import net.mindengine.galen.specs.Range;
 import net.mindengine.galen.specs.Side;
 import net.mindengine.galen.specs.colors.ColorRange;
 import net.mindengine.galen.specs.page.CorrectionsRect;
+import org.apache.commons.lang3.tuple.Pair;
 
 public class Expectations {
 
@@ -85,7 +86,7 @@ public class Expectations {
     }
 
 
-    public static Expectation<Map<String, List<String>>> commaSeparatedRepeatedKeyValues() {
+    public static Expectation<List<Pair<String, String>>> commaSeparatedRepeatedKeyValues() {
         return new ExpectCommaSeparatedKeyValue();
     }
 }

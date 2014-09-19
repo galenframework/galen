@@ -46,7 +46,7 @@ import com.google.common.io.Files;
 
 public class GalenMainTest {
 
-    @Test public void shouldRun_singleTestSuccessfully() throws IOException, SecurityException, IllegalArgumentException, ClassNotFoundException, NoSuchMethodException, InstantiationException, IllegalAccessException, InvocationTargetException {
+    @Test public void shouldRun_singleTestSuccessfully() throws Exception {
         String testUrl = "file://" + getClass().getResource("/html/page-nice.html").getFile();
         System.setProperty("url", testUrl);
         System.setProperty("spec.path", getClass().getResource("/html/page.spec").getFile());
@@ -81,7 +81,7 @@ public class GalenMainTest {
         assertThat(testngReportContent, containsString("<class name=\"Home page test 2\">"));
     }
     
-    @Test public void shouldFindAndRun_allTestsRecursivelly() throws IOException, SecurityException, IllegalArgumentException, ClassNotFoundException, NoSuchMethodException, InstantiationException, IllegalAccessException, InvocationTargetException {
+    @Test public void shouldFindAndRun_allTestsRecursivelly() throws Exception {
         String testUrl = "file://" + getClass().getResource("/html/page-nice.html").getFile();
         System.setProperty("url", testUrl);
         System.setProperty("spec.path", getClass().getResource("/html/page.spec").getFile());
@@ -169,7 +169,7 @@ public class GalenMainTest {
                 "After test suite"));
     }
 
-    @Test public void shouldRunJavascriptTests_andFilterThem() throws NoSuchMethodException, IOException, InstantiationException, IllegalAccessException, InvocationTargetException, ClassNotFoundException {
+    @Test public void shouldRunJavascriptTests_andFilterThem() throws Exception {
         JsTestRegistry.get().clear();
 
         new GalenMain().execute(new GalenArguments()
@@ -184,7 +184,7 @@ public class GalenMainTest {
                 ));
     }
     
-    @Test public void shouldFindAndRun_allTestsRecursivelly_inParallel() throws IOException, SecurityException, IllegalArgumentException, ClassNotFoundException, NoSuchMethodException, InstantiationException, IllegalAccessException, InvocationTargetException {
+    @Test public void shouldFindAndRun_allTestsRecursivelly_inParallel() throws Exception {
         String testUrl = "file://" + getClass().getResource("/html/page-nice.html").getFile();
         System.setProperty("url", testUrl);
         System.setProperty("spec.path", getClass().getResource("/html/page.spec").getFile());
@@ -203,7 +203,7 @@ public class GalenMainTest {
             );
     }
     
-    @Test public void shouldRun_simplePageCheck() throws IOException, SecurityException, IllegalArgumentException, ClassNotFoundException, NoSuchMethodException, InstantiationException, IllegalAccessException, InvocationTargetException {
+    @Test public void shouldRun_simplePageCheck() throws Exception {
         String testUrl = "file://" + getClass().getResource("/html/page-nice.html").getFile();
         String pageSpec = getClass().getResource("/html/page.spec").getFile();
         File reportsDir = Files.createTempDir();
@@ -225,7 +225,7 @@ public class GalenMainTest {
         assertThat(testngReportContent, containsString("<class name=\"" + pageSpec + "\">"));
     }
     
-    @Test public void shouldGiveError_whenPageSpecIsIncorrect() throws IOException, SecurityException, IllegalArgumentException, ClassNotFoundException, NoSuchMethodException, InstantiationException, IllegalAccessException, InvocationTargetException {
+    @Test public void shouldGiveError_whenPageSpecIsIncorrect() throws Exception {
         String testUrl = "file://" + getClass().getResource("/html/page-nice.html").getFile();
         String pageSpec = getClass().getResource("/negative-specs/invalid-spec.spec").getFile();
         File reportsDir = Files.createTempDir();
