@@ -163,7 +163,7 @@ public class ReportingTest {
                 new File(reportDirPath + "/report-1-home-page-test/imgs-button-sample-correct.png").exists(), is(true));
 
         assertThat("Should place image comparison map image as an attachment to the report",
-                new File(reportDirPath + "/report-1-home-page-test/imgs-button-sample-correct.png.map.png").exists(), is(true));
+                new File(reportDirPath + "/report-1-home-page-test/objectB1-1.map.png").exists(), is(true));
         
         assertThat("Should place css same folder", new File(reportDirPath + "/galen-report.css").exists(), is(true));
         assertThat("Should place js same folder", new File(reportDirPath + "/galen-report.js").exists(), is(true));

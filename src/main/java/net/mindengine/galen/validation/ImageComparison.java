@@ -26,6 +26,7 @@ public class ImageComparison {
     private Rect area;
     private String imageSamplePath;
     private BufferedImage comparisonMap;
+    private String comparisonMapPath;
 
 
     public ImageComparison(Rect area, String imageSamplePath, BufferedImage comparisonMap) {
@@ -85,7 +86,7 @@ public class ImageComparison {
     }
 
     public String getComparisonMapPath() {
-        return imageSamplePath + ".map.png";
+        return comparisonMapPath;
     }
 
 
@@ -95,5 +96,9 @@ public class ImageComparison {
 
     public void setComparisonMap(BufferedImage comparisonMap) {
         this.comparisonMap = comparisonMap;
+    }
+
+    public void setComparisonMapPath(String comparisonMapPath) {
+        this.comparisonMapPath = comparisonMapPath;
     }
 }

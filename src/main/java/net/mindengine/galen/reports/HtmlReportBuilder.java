@@ -36,7 +36,8 @@ import freemarker.template.TemplateException;
 
 public class HtmlReportBuilder {
     
-    private TestIdGenerator testIdGenerator = new TestIdGenerator();
+    private final TestIdGenerator testIdGenerator = new TestIdGenerator();
+    private final UniqueIdGenerator comparisonMapUniqueIdGenerator = new UniqueIdGenerator();
     private Configuration freemarkerConfiguration = new Configuration();
     
     public void build(List<GalenTestInfo> tests, String reportFolderPath) throws IOException, TemplateException {
@@ -151,7 +152,9 @@ public class HtmlReportBuilder {
 
                 if (spec.getImageComparison().getComparisonMap() != null) {
                     try {
-                        File mapFile = new File(reportFolder.getAbsoluteFile() + File.separator + newName + ".map.png");
+                        String comparisonMapPath = layoutObject.getName() + "-" + comparisonMapUniqueIdGenerator.uniqueId() + ".map.png";
+                        File mapFile = new File(reportFolder.getAbsoluteFile() + File.separator + comparisonMapPath);
+                        spec.getImageComparison().setComparisonMapPath(filePrefix + "/" + comparisonMapPath);
                         Rainbow4J.saveImage(spec.getImageComparison().getComparisonMap(), mapFile);
                     }
                     catch (Throwable ex) {

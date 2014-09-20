@@ -409,6 +409,9 @@ public class SpecReader {
         else if ("saturation".equals(filterName)) {
             return new SaturationFilter(value.intValue());
         }
+        else if ("quantinize".equals(filterName)) {
+            return new QuantinizeFilter(value.intValue());
+        }
         else throw new SyntaxException("Unknown image filter: " + filterName);
     }
 
