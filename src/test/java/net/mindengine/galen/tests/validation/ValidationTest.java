@@ -483,11 +483,15 @@ public class ValidationTest {
 
           // Image comparison
 
-          row(specImage("/imgs/button-sample-correct.png", 1, PIXEL_UNIT, 0, 5), page(new HashMap<String, PageElement>(){{
+          row(specImage(asList("/imgs/button-sample-correct.png"), 1, PIXEL_UNIT, 0, 5), page(new HashMap<String, PageElement>(){{
               put("object", element(100, 90, 100, 40));
           }}, imageComparisonTestScreenshot)),
 
-          row(specImage("/imgs/page-sample-correct.png", 2, PIXEL_UNIT, 0, 5, new Rect(40, 40, 100, 40)), page(new HashMap<String, PageElement>(){{
+          row(specImage(asList("/imgs/page-sample-correct.png"), 2, PIXEL_UNIT, 0, 5, new Rect(40, 40, 100, 40)), page(new HashMap<String, PageElement>() {{
+              put("object", element(100, 90, 100, 40));
+          }}, imageComparisonTestScreenshot)),
+
+          row(specImage(asList("/imgs/button-sample-incorrect.png", "/imgs/button-sample-correct.png"), 1, PIXEL_UNIT, 0, 5), page(new HashMap<String, PageElement>(){{
               put("object", element(100, 90, 100, 40));
           }}, imageComparisonTestScreenshot)),
 
@@ -1237,12 +1241,12 @@ public class ValidationTest {
 
           // Image comparsion
             row(new ValidationError(NO_AREA, messages("\"object\" is absent on page")),
-                  specImage("/imgs/button-sample-incorrect.png", 2.0, true, 0, 10), page(new HashMap<String, PageElement>(){{
+                  specImage(asList("/imgs/button-sample-incorrect.png"), 2.0, true, 0, 10), page(new HashMap<String, PageElement>(){{
                     put("object", absentElement(10, 10, 400, 300));
                 }}, testImage)),
 
             row(new ValidationError(NO_AREA, messages("\"object\" is not visible on page")),
-                specImage("/imgs/button-sample-incorrect.png", 2.0, true, 0, 10), page(new HashMap<String, PageElement>(){{
+                specImage(asList("/imgs/button-sample-incorrect.png"), 2.0, true, 0, 10), page(new HashMap<String, PageElement>(){{
                     put("object", invisibleElement(10, 10, 400, 300));
                 }}, testImage)),
 
@@ -1250,7 +1254,7 @@ public class ValidationTest {
                         messages("Element does not look like \"/imgs/button-sample-incorrect.png\". " +
                                 "There are 3820 mismatching pixels but max allowed is 600"))
                             .withImageComparisonSample(null, "/imgs/button-sample-incorrect.png", null),
-                specImage("/imgs/button-sample-incorrect.png", 600, PIXEL_UNIT, 0, 10), page(new HashMap<String, PageElement>(){{
+                specImage(asList("/imgs/button-sample-incorrect.png"), 600, PIXEL_UNIT, 0, 10), page(new HashMap<String, PageElement>(){{
                     put("object", element(100, 90, 100, 40));
                 }}, imageComparisonTestScreenshot)),
 
@@ -1258,13 +1262,13 @@ public class ValidationTest {
                             messages("Element does not look like \"/imgs/button-sample-incorrect.png\". " +
                                     "There are 95.5% mismatching pixels but max allowed is 2.0%"))
                             .withImageComparisonSample(null, "/imgs/button-sample-incorrect.png", null),
-                    specImage("/imgs/button-sample-incorrect.png", 2.0, PERCENTAGE_UNIT, 0, 10), page(new HashMap<String, PageElement>(){{
+                    specImage(asList("/imgs/button-sample-incorrect.png"), 2.0, PERCENTAGE_UNIT, 0, 10), page(new HashMap<String, PageElement>(){{
                         put("object", element(100, 90, 100, 40));
                     }}, imageComparisonTestScreenshot)),
 
             row(new ValidationError(null,
                         messages("Couldn't load image: /imgs/undefined-image.png")),
-                specImage("/imgs/undefined-image.png", 1.452, PERCENTAGE_UNIT, 0, 10), page(new HashMap<String, PageElement>(){{
+                specImage(asList("/imgs/undefined-image.png"), 1.452, PERCENTAGE_UNIT, 0, 10), page(new HashMap<String, PageElement>(){{
                     put("object", element(100, 90, 100, 40));
                 }}, imageComparisonTestScreenshot)),
 
@@ -1280,7 +1284,7 @@ public class ValidationTest {
 
         PageSpec pageSpec = createMockedPageSpec(page);
         PageValidation validation = new PageValidation(null, page, pageSpec, null, null);
-        ValidationError error = validation.check("object", specImage("/imgs/button-sample-incorrect.png", 600, PIXEL_UNIT, 0, 10));
+        ValidationError error = validation.check("object", specImage(asList("/imgs/button-sample-incorrect.png"), 600, PIXEL_UNIT, 0, 10));
 
 
         assertThat("Comparison map should not be null", error.getImageComparison().getComparisonMap(), is(notNullValue()));
@@ -1416,11 +1420,11 @@ public class ValidationTest {
         return spec;
     }
 
-    private SpecImage specImage(String imagePath, double errorValue, boolean isPixelUnit, int pixelSmooth, int tolerance) {
-        return specImage(imagePath, errorValue, isPixelUnit, pixelSmooth, tolerance, null);
+    private SpecImage specImage(List<String> imagePaths, double errorValue, boolean isPixelUnit, int pixelSmooth, int tolerance) {
+        return specImage(imagePaths, errorValue, isPixelUnit, pixelSmooth, tolerance, null);
     }
 
-    private SpecImage specImage(String imagePath, double errorValue, boolean isPixelUnit, int blur, int tolerance, Rect selectedArea) {
+    private SpecImage specImage(List<String> imagePaths, double errorValue, boolean isPixelUnit, int blur, int tolerance, Rect selectedArea) {
         SpecImage spec = new SpecImage();
 
         if (isPixelUnit) {
@@ -1430,7 +1434,7 @@ public class ValidationTest {
             spec.setMaxPercentage(errorValue);
         }
 
-        spec.setImagePaths(asList(imagePath));
+        spec.setImagePaths(imagePaths);
 
         List<ImageFilter> filters = new LinkedList<ImageFilter>();
         spec.setOriginalFilters(filters);

@@ -102,4 +102,9 @@ public class ValidationErrorException extends Exception {
     public void setImageComparison(ImageComparison imageComparison) {
         this.imageComparison = imageComparison;
     }
+
+    public ValidationErrorException withImageComparison(ImageComparison imageComparison) {
+        setImageComparison(imageComparison);
+        return this;
+    }
 }
