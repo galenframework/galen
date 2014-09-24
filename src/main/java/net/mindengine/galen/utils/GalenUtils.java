@@ -277,12 +277,17 @@ public class GalenUtils {
             return new FileInputStream(file);
         }
         else {
-
             if (!filePath.startsWith("/")) {
                 filePath = "/" + filePath;
             }
-
-            return GalenUtils.class.getResourceAsStream(filePath);
+            InputStream stream = GalenUtils.class.getResourceAsStream(filePath);
+            if (stream != null) {
+                return stream;
+            }
+            else {
+                String windowsFilePath = filePath.replace("\\", "/");
+                return GalenUtils.class.getResourceAsStream(windowsFilePath);
+            }
         }
     }
 }
