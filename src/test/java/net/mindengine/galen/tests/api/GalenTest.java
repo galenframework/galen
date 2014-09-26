@@ -60,7 +60,7 @@ public class GalenTest {
 
         WebDriver driver = new MockedDriver();
         driver.get("/mocks/pages/galen4j-pagedump.json");
-        Galen.dumpPage("test page", driver, "/specs/galen4j/pagedump.spec", pageDumpPath);
+        Galen.dumpPage(driver, "test page", "/specs/galen4j/pagedump.spec", pageDumpPath);
 
         assertFileExists(pageDumpPath + "/page.json");
         assertFileContent(pageDumpPath + "/page.json", "/pagedump/expected.json");
@@ -86,7 +86,7 @@ public class GalenTest {
 
         WebDriver driver = new MockedDriver();
         driver.get("/mocks/pages/galen4j-pagedump.json");
-        Galen.dumpPage("test page", driver, "/specs/galen4j/pagedump.spec", pageDumpPath, 80, 80);
+        Galen.dumpPage(driver, "test page", "/specs/galen4j/pagedump.spec", pageDumpPath, 80, 80);
 
         assertFileExists(pageDumpPath + "/objects/button-save.png");
         assertFileDoesNotExist(pageDumpPath + "/objects/name-textfield.png");

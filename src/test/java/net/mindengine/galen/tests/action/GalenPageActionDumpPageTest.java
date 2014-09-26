@@ -42,7 +42,7 @@ public class GalenPageActionDumpPageTest {
         GalenPageAction pageAction = new GalenPageActionDumpPage("Test page", "/specs/galen4j/pagedump.spec", pageDumpPath);
 
         pageAction.execute(null, new SeleniumBrowser(driver), null, null);
-        Galen.dumpPage("test page", driver, "/specs/galen4j/pagedump.spec", pageDumpPath);
+        Galen.dumpPage(driver, "test page", "/specs/galen4j/pagedump.spec", pageDumpPath);
 
         assertFileExists(pageDumpPath + "/page.json");
         assertFileExists(pageDumpPath + "/page.html");

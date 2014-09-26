@@ -141,7 +141,7 @@ public class GalenMain {
 
             browser.load(arguments.getUrl());
 
-            Galen.dumpPage(arguments.getUrl(), browser, arguments.getPaths().get(0), arguments.getExport(), arguments.getMaxWidth(), arguments.getMaxHeight());
+            Galen.dumpPage(browser, arguments.getUrl(), arguments.getPaths().get(0), arguments.getExport(), arguments.getMaxWidth(), arguments.getMaxHeight());
             System.out.println("Done!");
         }
         catch (Exception ex) {
