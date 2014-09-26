@@ -382,8 +382,14 @@ public class SpecReader {
                         ImageFilter filter = parseImageFilter(parameter.getValue());
                         spec.getMapFilters().add(filter);
                     }
+                    else {
+                        throw new SyntaxException("Unknown parameter: " + parameter.getKey());
+                    }
                 }
 
+                if (spec.getImagePaths() == null || spec.getImagePaths().size() == 0) {
+                    throw new SyntaxException("There are no images defined");
+                }
                 return spec;
             }
         }));

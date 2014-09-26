@@ -860,6 +860,17 @@ public class SpecsReaderTest {
     public void givesError_withIncorrect_errorRate_inSpec_centered() throws IOException {
         readSpec("centered horizontally inside: object 23 to 123px");
     }
+
+
+    @Test(expectedExceptions = {SyntaxException.class}, expectedExceptionsMessageRegExp = "There are no images defined")
+    public void givesSyntaxException_imageWithoutFile() throws IOException {
+        readSpec("image: stretch");
+    }
+
+    @Test(expectedExceptions = {SyntaxException.class}, expectedExceptionsMessageRegExp = "Unknown parameter: imgs/file.png")
+    public void givesSyntaxException_imageWithoutFileParameterName() throws IOException {
+        readSpec("image: imgs/file.png");
+    }
     
     private Spec readSpec(String specText) throws IOException {
         return new SpecReader(EMPTY_PROPERTIES, NO_BROWSER).read(specText);
