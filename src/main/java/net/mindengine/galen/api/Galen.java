@@ -116,21 +116,21 @@ public class Galen {
         return checkLayout(new SeleniumBrowser(driver), asList(specPath), includedTags, excludedTags, properties, validationListener);
     }
 
-    public static void dumpPage(String pageName, WebDriver driver, String specPath, String pageDumpPath) throws IOException {
-        dumpPage(pageName, driver, specPath, pageDumpPath, null, null);
+    public static void dumpPage(WebDriver driver, String pageName, String specPath, String pageDumpPath) throws IOException {
+        dumpPage(driver, pageName, specPath, pageDumpPath, null, null);
     }
 
-    public static void dumpPage(String pageName, WebDriver driver, String specPath, String pageDumpPath, Integer maxWidth, Integer maxHeight) throws IOException {
-        dumpPage(pageName, new SeleniumBrowser(driver), specPath, pageDumpPath, maxWidth, maxHeight);
+    public static void dumpPage(WebDriver driver, String pageName, String specPath, String pageDumpPath, Integer maxWidth, Integer maxHeight) throws IOException {
+        dumpPage(new SeleniumBrowser(driver), pageName, specPath, pageDumpPath, maxWidth, maxHeight);
     }
 
-    public static void dumpPage(String pageName, Browser browser, String specPath, String pageDumpPath, Integer maxWidth, Integer maxHeight) throws IOException {
+    public static void dumpPage(Browser browser, String pageName, String specPath, String pageDumpPath, Integer maxWidth, Integer maxHeight) throws IOException {
         PageSpecReader reader = new PageSpecReader(null, browser);
         PageSpec pageSpec = reader.read(specPath);
-        dumpPage(pageName, browser, pageSpec, new File(pageDumpPath), maxWidth, maxHeight);
+        dumpPage(browser, pageName, pageSpec, new File(pageDumpPath), maxWidth, maxHeight);
     }
 
-    public static void dumpPage(String pageName, Browser browser, PageSpec pageSpec, File reportFolder, Integer maxWidth, Integer maxHeight) throws IOException {
+    public static void dumpPage(Browser browser, String pageName, PageSpec pageSpec, File reportFolder, Integer maxWidth, Integer maxHeight) throws IOException {
         if (!reportFolder.exists()) {
             if (!reportFolder.mkdirs()) {
                 throw new RuntimeException("Cannot create dir: " + reportFolder.getAbsolutePath());

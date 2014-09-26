@@ -132,7 +132,7 @@ function dumpPage(driver, pageName, specPath, exportPath, maxWidth, maxHeight) {
     if (maxHeight == undefined) {
         maxHeight = null;
     }
-    Galen.dumpPage(pageName, driver, specPath, exportPath, maxWidth, maxHeight);
+    Galen.dumpPage(driver, pageName, specPath, exportPath, maxWidth, maxHeight);
 }
 
 (function (exports) {
