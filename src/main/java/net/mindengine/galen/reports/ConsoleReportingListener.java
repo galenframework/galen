@@ -116,10 +116,12 @@ public class ConsoleReportingListener implements CompleteListener {
         if (logLevel >= OBJECT_SPEC_LEVEL) {
             err.print(getSpecErrorIndentation());
             err.println(spec.toText());
-            for(String message : error.getMessages()) {
-                err.print(getSpecErrorIndentation());
-                err.print(SPEC_ERROR_MESSAGE_INDENTATION_SUFFIX);
-                err.println(message);
+            if (error.getMessages() != null) {
+                for (String message : error.getMessages()) {
+                    err.print(getSpecErrorIndentation());
+                    err.print(SPEC_ERROR_MESSAGE_INDENTATION_SUFFIX);
+                    err.println(message);
+                }
             }
         }
     }

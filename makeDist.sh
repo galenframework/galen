@@ -34,3 +34,5 @@ cd dist
 
 zip -r -9 $bin.zip $bin
 zip -r -9 $src.zip $src
+
+cd ..

@@ -18,6 +18,8 @@ package net.mindengine.galen.validation;
 import java.util.LinkedList;
 import java.util.List;
 
+import static java.util.Arrays.asList;
+
 public class ValidationErrorException extends Exception {
 
 	private List<ErrorArea> errorAreas;
@@ -63,6 +65,7 @@ public class ValidationErrorException extends Exception {
 
     public ValidationErrorException(Throwable paramThrowable) {
         super(paramThrowable);
+        setErrorMessages(asList(paramThrowable.getClass().getName() + ": " + paramThrowable.getMessage()));
     }
 
     public List<String> getErrorMessages() {

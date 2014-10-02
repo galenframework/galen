@@ -30,7 +30,8 @@ public class SpecImage extends Spec {
     private List<ImageFilter> sampleFilters = new LinkedList<ImageFilter>();
     private List<ImageFilter> mapFilters = new LinkedList<ImageFilter>();
     private Rect selectedArea;
-    private boolean stretch;
+    private boolean stretch = false;
+    private boolean cropIfOutside = false;
 
 
     public Double getMaxPercentage() {
@@ -104,5 +105,13 @@ public class SpecImage extends Spec {
 
     public void setSampleFilters(List<ImageFilter> sampleFilters) {
         this.sampleFilters = sampleFilters;
+    }
+
+    public boolean isCropIfOutside() {
+        return cropIfOutside;
+    }
+
+    public void setCropIfOutside(boolean cropIfOutside) {
+        this.cropIfOutside = cropIfOutside;
     }
 }

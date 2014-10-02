@@ -77,13 +77,18 @@ public class SpecValidationImage extends SpecValidation<SpecImage> {
                     .withErrorArea(new ErrorArea(pageElement.getArea(), objectName));
         }
 
-        while (minCheck.difference > 0 && it.hasNext()) {
-            String imagePath = it.next();
+        try {
+            while (minCheck.difference > 0 && it.hasNext()) {
+                String imagePath = it.next();
 
-            ImageCheck imageCheck = checkImages(spec, pageImage, options, elementArea, imagePath);
-            if (imageCheck.difference <= minCheck.difference) {
-                minCheck = imageCheck;
+                ImageCheck imageCheck = checkImages(spec, pageImage, options, elementArea, imagePath);
+                if (imageCheck.difference <= minCheck.difference) {
+                    minCheck = imageCheck;
+                }
             }
+        }
+        catch (Exception ex) {
+            throw new ValidationErrorException(ex).withErrorArea(new ErrorArea(pageElement.getArea(), objectName));
         }
 
         if (minCheck.difference > 0) {
@@ -103,6 +108,16 @@ public class SpecValidationImage extends SpecValidation<SpecImage> {
         }
 
         Rectangle sampleArea = spec.getSelectedArea() != null ? toRectangle(spec.getSelectedArea()) : new Rectangle(0, 0, sampleImage.getWidth(), sampleImage.getHeight());
+
+
+        if (elementArea.getLeft() >= pageImage.getWidth() || elementArea.getTop() >= pageImage.getHeight()) {
+            throw new RuntimeException("The page element is located outside of the screenshot");
+        }
+
+        if (spec.isCropIfOutside()) {
+            elementArea = cropElementAreaIfOutside(elementArea, pageImage.getWidth(), pageImage.getHeight());
+        }
+
         ImageCompareResult result = Rainbow4J.compare(pageImage, sampleImage, toRectangle(elementArea), sampleArea, options);
 
         double difference = 0.0;
@@ -124,6 +139,36 @@ public class SpecValidationImage extends SpecValidation<SpecImage> {
         }
 
         return new ImageCheck(imagePath, difference, result, errorMessage);
+    }
+
+    private Rect cropElementAreaIfOutside(Rect elementArea, int width, int height) {
+        int x2 = elementArea.getLeft() + elementArea.getWidth();
+        int y2 = elementArea.getTop() + elementArea.getHeight();
+
+        int originalWidth = elementArea.getWidth();
+        int originalHeight = elementArea.getHeight();
+
+        if (originalWidth > 0 && originalHeight > 0) {
+            int newWidth = originalWidth;
+            int newHeight = originalHeight;
+
+            if (x2 >= width) {
+                newWidth -= x2 - width + 1;
+            }
+            if (y2 >= height) {
+                newHeight -= y2 - height + 1;
+            }
+
+
+            if ((double)(newWidth * newHeight) / (double)(originalWidth * originalHeight) < 0.5) {
+                throw new RuntimeException(String.format("The cropped area is less than a half of element area (%d, %d)", newWidth, newHeight));
+            }
+
+
+            System.out.println(String.format("%d %d %d %d, %d",elementArea.getLeft(), elementArea.getTop(), newWidth, newHeight, width));
+            return new Rect(elementArea.getLeft(), elementArea.getTop(), newWidth, newHeight);
+        }
+        return elementArea;
     }
 
     private String msgErrorPrefix(String imagePath) {

@@ -382,6 +382,9 @@ public class SpecReader {
                         ImageFilter filter = parseImageFilter(parameter.getValue());
                         spec.getMapFilters().add(filter);
                     }
+                    else if ("crop-if-outside".equals(parameter.getKey())) {
+                        spec.setCropIfOutside(true);
+                    }
                     else {
                         throw new SyntaxException("Unknown parameter: " + parameter.getKey());
                     }

@@ -712,6 +712,7 @@ public class SpecsReaderTest {
         assertThat(spec.getMaxPixels(), is(112));
         assertThat(spec.getTolerance(), is(5));
         assertThat(spec.isStretch(), is(false));
+        assertThat(spec.isCropIfOutside(), is(false));
     }
 
     @Test
@@ -722,6 +723,13 @@ public class SpecsReaderTest {
         assertThat(spec.getMaxPixels(), is(112));
         assertThat(spec.getTolerance(), is(5));
         assertThat(spec.isStretch(), is(true));
+    }
+
+    @Test
+    public void shouldReadSpec_image_withCropIfOutside() throws IOException {
+        SpecImage spec = (SpecImage)readSpec("image: file imgs/image.png, crop-if-outside");
+        assertThat(spec.getImagePaths(), contains("./imgs/image.png"));
+        assertThat(spec.isCropIfOutside(), is(true));
     }
 
     @Test
@@ -763,6 +771,7 @@ public class SpecsReaderTest {
 
         assertThat(((BlurFilter)spec.getSampleFilters().get(0)).getRadius(), is(2));
     }
+
 
     @Test
     public void shouldReadSpec_image_withMaxPixelsError_tolerance5_filterBlur2_filterDenoise1() throws IOException {
