@@ -87,6 +87,10 @@ public class SpecValidationImage extends SpecValidation<SpecImage> {
                 }
             }
         }
+        catch (ValidationErrorException ex) {
+            ex.withErrorArea(new ErrorArea(pageElement.getArea(), objectName));
+            throw ex;
+        }
         catch (Exception ex) {
             throw new ValidationErrorException(ex).withErrorArea(new ErrorArea(pageElement.getArea(), objectName));
         }

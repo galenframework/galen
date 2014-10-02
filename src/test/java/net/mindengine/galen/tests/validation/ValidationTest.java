@@ -1267,7 +1267,8 @@ public class ValidationTest {
                     }}, imageComparisonTestScreenshot)),
 
             row(new ValidationError(null,
-                        messages("Couldn't load image: /imgs/undefined-image.png")),
+                        messages("Couldn't load image: /imgs/undefined-image.png"))
+                    .withArea(new ErrorArea(new Rect(100, 90, 100, 40), "object")),
                 specImage(asList("/imgs/undefined-image.png"), 1.452, PERCENTAGE_UNIT, 0, 10), page(new HashMap<String, PageElement>(){{
                     put("object", element(100, 90, 100, 40));
                 }}, imageComparisonTestScreenshot)),
