@@ -55,23 +55,26 @@ public class LayoutReportNode extends TestReportNode {
     private void fetchStatisticForObject(LayoutObject object, TestStatistic testStatistic) {
         if (object.getSpecs() != null) {
             for (LayoutSpec spec : object.getSpecs()) {
-                
-                testStatistic.setTotal(testStatistic.getTotal() + 1);
-                
-                if (spec.getFailed()) {
-                    if (spec.isOnlyWarn()) {
-                        testStatistic.setWarnings(testStatistic.getWarnings() + 1);
-                    }
-                    else {
-                        testStatistic.setErrors(testStatistic.getErrors() + 1);
-                    }
-                }
-                else testStatistic.setPassed(testStatistic.getPassed() + 1);
-                
-                if (spec.getSubObjects() != null) {
+
+                /*
+                 Checking if it was a component spec and if yes - than it will not take it into account
+                 but rather will go into its child spec list
+                  */
+                if (spec.getSubObjects() != null && spec.getSubObjects().size() > 0) {
                     for (LayoutObject subObject : spec.getSubObjects()) {
                         fetchStatisticForObject(subObject, testStatistic);
                     }
+                }
+                else {
+                    testStatistic.setTotal(testStatistic.getTotal() + 1);
+
+                    if (spec.getFailed()) {
+                        if (spec.isOnlyWarn()) {
+                            testStatistic.setWarnings(testStatistic.getWarnings() + 1);
+                        } else {
+                            testStatistic.setErrors(testStatistic.getErrors() + 1);
+                        }
+                    } else testStatistic.setPassed(testStatistic.getPassed() + 1);
                 }
             }
         }
