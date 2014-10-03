@@ -17,9 +17,13 @@ package net.mindengine.galen.components.mocks.driver;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import net.mindengine.galen.components.validation.MockedPage;
+import net.mindengine.galen.utils.GalenUtils;
+import net.mindengine.rainbow4j.Rainbow4J;
 import org.openqa.selenium.*;
 import org.openqa.selenium.logging.Logs;
 
+import java.awt.image.BufferedImage;
+import java.awt.image.DataBufferByte;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -200,12 +204,27 @@ public class MockedDriver implements WebDriver, TakesScreenshot, JavascriptExecu
         if (xOutputType.equals(OutputType.FILE)) {
             return (X) new File(getClass().getResource("/mocks/pages/screenshot.png").getFile());
         }
+        else if (xOutputType.equals(OutputType.BYTES)) {
+            File file = new File(getClass().getResource("/mocks/pages/screenshot.png").getFile());
+
+            BufferedImage image = null;
+            try {
+                image = Rainbow4J.loadImage(file.getAbsolutePath());
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+            return (X)((DataBufferByte) image.getData().getDataBuffer()).getData();
+
+        }
         else throw new RuntimeException("Cannot make screenshot");
     }
 
     @Override
     public Object executeScript(String s, Object... objects) {
-        return null;
+        if (s.equals(GalenUtils.JS_RETRIEVE_DEVICE_PIXEL_RATIO)) {
+            return 1L;
+        }
+        else return null;
     }
 
     @Override

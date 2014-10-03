@@ -283,18 +283,18 @@ public class GalenUtils {
     }
     
     public static File takeScreenshot(WebDriver driver) throws IOException {
-        byte[] bytes = ((TakesScreenshot)driver).getScreenshotAs(OutputType.BYTES);
-        BufferedImage image = ImageIO.read(new ByteArrayInputStream(bytes));
+        File file = ((TakesScreenshot)driver).getScreenshotAs(OutputType.FILE);
 
-        File file = File.createTempFile("screenshot", ".png");
 
         if (GalenConfig.getConfig().shouldAutoresizeScreenshots()) {
+            BufferedImage image = Rainbow4J.loadImage(file.getAbsolutePath());
+            File newFile = File.createTempFile("screenshot", ".png");
             image = GalenUtils.resizeScreenshotIfNeeded(driver, image);
+
+            Rainbow4J.saveImage(image, newFile);
+            return newFile;
         }
-
-        Rainbow4J.saveImage(image, file);
-
-        return file;
+        else return file;
     }
     
     public static Properties loadProperties(String fileName) throws IOException {
