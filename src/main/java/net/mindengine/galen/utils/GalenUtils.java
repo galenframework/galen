@@ -15,8 +15,7 @@
 ******************************************************************************/
 package net.mindengine.galen.utils;
 
-import java.awt.Dimension;
-import java.awt.Graphics2D;
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.*;
 import java.net.URL;
@@ -38,6 +37,7 @@ import net.mindengine.galen.suite.actions.GalenPageActionCheck;
 import net.mindengine.galen.tests.GalenProperties;
 import net.mindengine.galen.tests.TestSession;
 
+import net.mindengine.rainbow4j.Rainbow4J;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.openqa.selenium.JavascriptExecutor;
@@ -49,8 +49,9 @@ import org.openqa.selenium.WebDriver;
 public class GalenUtils {
 
     private static final String URL_REGEX = "[a-zA-Z0-9]+://.*";
-    
-    
+    public static final String JS_RETRIEVE_DEVICE_PIXEL_RATIO = "var pr = window.devicePixelRatio; if (pr != undefined && pr != null)return pr; else return 1.0;";
+
+
     public static boolean isUrl(String url) {
         if (url == null) {
             return false;
@@ -101,14 +102,15 @@ public class GalenUtils {
                 "document.body.clientHeight, document.documentElement.clientHeight);"
             );
 
-
-        Double devicePixelRatio = ((Number)((JavascriptExecutor)driver).executeScript("var pr = window.devicePixelRatio; if (pr != undefined && pr != null)return pr; else return 1.0;")).doubleValue();
+        Double devicePixelRatio = ((Number)((JavascriptExecutor)driver).executeScript(JS_RETRIEVE_DEVICE_PIXEL_RATIO)).doubleValue();
 
         int scrollHeight = (int)longScrollHeight;
 
         File file = File.createTempFile("screenshot", ".png");
 
         int adaptedCapturedHeight = (int)(((double)capturedHeight) / devicePixelRatio);
+
+        BufferedImage resultingImage;
 
         if (Math.abs(adaptedCapturedHeight - scrollHeight) > 40) {
             int scrollOffset = adaptedCapturedHeight;
@@ -141,13 +143,57 @@ public class GalenUtils {
             }
             
             scrollVerticallyTo(driver, 0);
-            
-            ImageIO.write(tiledImage, "png", file);
+
+            resultingImage = tiledImage;
         }
         else {
-            ImageIO.write(image, "png", file);
+            resultingImage = image;
         }
+
+        if (GalenConfig.getConfig().shouldAutoresizeScreenshots()) {
+            resultingImage = GalenUtils.resizeScreenshotIfNeeded(driver, resultingImage);
+        }
+
+        ImageIO.write(resultingImage, "png", file);
         return file;
+    }
+
+
+    /**
+     * Check the devicePixelRatio and adapts the size of the screenshot as if the ratio was 1.0
+     * @param driver
+     * @param screenshotImage
+     * @return
+     */
+    public static BufferedImage resizeScreenshotIfNeeded(WebDriver driver, BufferedImage screenshotImage) {
+        Double devicePixelRatio = ((Number)((JavascriptExecutor)driver).executeScript(JS_RETRIEVE_DEVICE_PIXEL_RATIO)).doubleValue();
+
+        if (devicePixelRatio > 1.0 && screenshotImage.getWidth() > 0) {
+            Long screenSize = (Long) ((JavascriptExecutor) driver).executeScript("return Math.max(" +
+                            "document.body.scrollWidth, document.documentElement.scrollWidth," +
+                            "document.body.offsetWidth, document.documentElement.offsetWidth," +
+                            "document.body.clientWidth, document.documentElement.clientWidth);"
+            );
+
+            Double estimatedPixelRatio = ((double)screenshotImage.getWidth()) / ((double)screenSize);
+
+            if (estimatedPixelRatio > 1.0) {
+
+                int newWidth = (int) (screenshotImage.getWidth() / estimatedPixelRatio);
+                int newHeight = (int) (screenshotImage.getHeight() / estimatedPixelRatio);
+
+                Image tmp = screenshotImage.getScaledInstance(newWidth, newHeight, Image.SCALE_SMOOTH);
+                BufferedImage scaledImage = new BufferedImage(newWidth, newHeight, BufferedImage.TYPE_INT_RGB);
+
+                Graphics2D g2d = scaledImage.createGraphics();
+                g2d.drawImage(tmp, 0, 0, null);
+                g2d.dispose();
+
+                return scaledImage;
+            }
+            else return screenshotImage;
+        }
+        else return screenshotImage;
     }
 
     public static void scrollVerticallyTo(WebDriver driver, int scroll) {
@@ -236,8 +282,19 @@ public class GalenUtils {
         action.execute(report, new SeleniumBrowser(driver), null, listener);
     }
     
-    public static File takeScreenshot(WebDriver driver) {
-        return ((TakesScreenshot)driver).getScreenshotAs(OutputType.FILE);
+    public static File takeScreenshot(WebDriver driver) throws IOException {
+        byte[] bytes = ((TakesScreenshot)driver).getScreenshotAs(OutputType.BYTES);
+        BufferedImage image = ImageIO.read(new ByteArrayInputStream(bytes));
+
+        File file = File.createTempFile("screenshot", ".png");
+
+        if (GalenConfig.getConfig().shouldAutoresizeScreenshots()) {
+            image = GalenUtils.resizeScreenshotIfNeeded(driver, image);
+        }
+
+        Rainbow4J.saveImage(image, file);
+
+        return file;
     }
     
     public static Properties loadProperties(String fileName) throws IOException {

@@ -17,6 +17,7 @@ package net.mindengine.galen.browser;
 
 import java.awt.Dimension;
 import java.io.File;
+import java.io.IOException;
 
 
 import net.mindengine.galen.config.GalenConfig;
@@ -79,18 +80,18 @@ public class SeleniumBrowser implements Browser {
 
     @Override
     public File createScreenshot() {
-        if (GalenConfig.getConfig().getBooleanProperty("galen.browser.screenshots.fullPage", false)) {
-            try {
+        try {
+            if (GalenConfig.getConfig().getBooleanProperty("galen.browser.screenshots.fullPage", false)) {
                 return GalenUtils.makeFullScreenshot(driver);
-            } catch (Exception e) {
-                throw new RuntimeException("Error making screenshot", e);
             }
+            else return makeSimpleScreenshot();
+        } catch (Exception e) {
+            throw new RuntimeException("Error making screenshot", e);
         }
-        else return makeSimpleScreenshot();
     }
     
-    private File makeSimpleScreenshot() {
-        return ((TakesScreenshot)driver).getScreenshotAs(OutputType.FILE);
+    private File makeSimpleScreenshot() throws IOException {
+        return GalenUtils.takeScreenshot(driver);
     }
     
     @Override

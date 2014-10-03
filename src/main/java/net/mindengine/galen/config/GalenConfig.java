@@ -28,6 +28,7 @@ import org.apache.commons.lang3.StringUtils;
 public class GalenConfig {
     
     private final static GalenConfig instance = new GalenConfig();
+    public static final String SCREENSHOT_AUTORESIZE = "galen.screenshot.autoresize";
     private int rangeApproximation;
     private List<String> reportingListeners;
     private String defaultBrowser;
@@ -159,4 +160,7 @@ public class GalenConfig {
         else return false;
     }
 
+    public boolean shouldAutoresizeScreenshots() {
+        return getBooleanProperty(GalenConfig.SCREENSHOT_AUTORESIZE, true);
+    }
 }
