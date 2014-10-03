@@ -87,29 +87,38 @@ public class GalenUtils {
     }
     
     
-    public static String makeFullScreenshot(WebDriver driver) throws IOException, InterruptedException {
+    public static File makeFullScreenshot(WebDriver driver) throws IOException, InterruptedException {
         byte[] bytes = ((TakesScreenshot)driver).getScreenshotAs(OutputType.BYTES);
         BufferedImage image = ImageIO.read(new ByteArrayInputStream(bytes));
         int capturedWidth = image.getWidth();
         int capturedHeight = image.getHeight();
-        
+
+        // TODO Chop of the header and footer for Safari on iOS.
+
         long longScrollHeight = (Long)((JavascriptExecutor)driver).executeScript("return Math.max(" + 
                 "document.body.scrollHeight, document.documentElement.scrollHeight," +
                 "document.body.offsetHeight, document.documentElement.offsetHeight," +
                 "document.body.clientHeight, document.documentElement.clientHeight);"
             );
-        
+
+
+        Double devicePixelRatio = ((Number)((JavascriptExecutor)driver).executeScript("var pr = window.devicePixelRatio; if (pr != undefined && pr != null)return pr; else return 1.0;")).doubleValue();
+
         int scrollHeight = (int)longScrollHeight;
-        
+
         File file = File.createTempFile("screenshot", ".png");
-        
-        if (Math.abs(capturedHeight - scrollHeight) > 40) {
-            int scrollOffset = capturedHeight;
+
+        int adaptedCapturedHeight = (int)(((double)capturedHeight) / devicePixelRatio);
+
+        if (Math.abs(adaptedCapturedHeight - scrollHeight) > 40) {
+            int scrollOffset = adaptedCapturedHeight;
             
-            int times = scrollHeight / capturedHeight;
-            int leftover = scrollHeight % capturedHeight;
-            
-            final BufferedImage tiledImage = new BufferedImage(capturedWidth, scrollHeight, BufferedImage.TYPE_INT_RGB);
+            int times = scrollHeight / adaptedCapturedHeight;
+            int leftover = scrollHeight % adaptedCapturedHeight;
+
+
+
+            final BufferedImage tiledImage = new BufferedImage(capturedWidth, (int)(((double)scrollHeight) * devicePixelRatio), BufferedImage.TYPE_INT_RGB);
             Graphics2D g2dTile = tiledImage.createGraphics();
             g2dTile.drawImage(image, 0,0, null);
 
@@ -125,9 +134,10 @@ public class GalenUtils {
             if (leftover > 0) {
                 scroll += scrollOffset;
                 scrollVerticallyTo(driver, scroll);
+                Thread.sleep(100);
                 BufferedImage nextImage = ImageIO.read(new ByteArrayInputStream(((TakesScreenshot)driver).getScreenshotAs(OutputType.BYTES)));
-                BufferedImage lastPart = nextImage.getSubimage(0, nextImage.getHeight() - leftover, nextImage.getWidth(), leftover);
-                g2dTile.drawImage(lastPart, 0, scrollHeight - leftover, null);
+                BufferedImage lastPart = nextImage.getSubimage(0, nextImage.getHeight() - (int)(((double)leftover) * devicePixelRatio), nextImage.getWidth(), leftover);
+                g2dTile.drawImage(lastPart, 0, times * capturedHeight, null);
             }
             
             scrollVerticallyTo(driver, 0);
@@ -137,7 +147,7 @@ public class GalenUtils {
         else {
             ImageIO.write(image, "png", file);
         }
-        return file.getAbsolutePath();
+        return file;
     }
 
     public static void scrollVerticallyTo(WebDriver driver, int scroll) {

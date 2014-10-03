@@ -16,6 +16,7 @@
 package net.mindengine.galen.browser;
 
 import java.awt.Dimension;
+import java.io.File;
 
 import net.mindengine.galen.page.Page;
 
@@ -27,7 +28,7 @@ public interface Browser {
 
     void load(String url);
 
-    void executeJavascript(String javascript);
+    Object executeJavascript(String javascript);
 
     Page getPage();
     
@@ -43,8 +44,8 @@ public interface Browser {
 
     /**
      * Makes a screenshot in a temporary folder
-     * @return Path to screenshot file
+     * @return File instance for the created screenshot
      */
-    String createScreenshot();
+    File createScreenshot();
 
 }

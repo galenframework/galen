@@ -54,7 +54,8 @@ public class SpecValidationImage extends SpecValidation<SpecImage> {
         checkAvailability(pageElement, objectName);
 
         final BufferedImage pageImage = pageValidation.getPage().getScreenshotImage();
-        BufferedImage sampleImage;
+
+        // TODO fix. should only take screenshot once per the same page if there are multiple image comparison checks
 
         int tolerance = spec.getTolerance() != null ? Math.abs(spec.getTolerance()) : 25;
 
@@ -115,7 +116,9 @@ public class SpecValidationImage extends SpecValidation<SpecImage> {
 
 
         if (elementArea.getLeft() >= pageImage.getWidth() || elementArea.getTop() >= pageImage.getHeight()) {
-            throw new RuntimeException("The page element is located outside of the screenshot");
+            throw new RuntimeException(String.format("The page element is located outside of the screenshot. (Element {x: %d, y: %d, w: %d, h: %d}, Screenshot {w: %d, h: %d})",
+                    elementArea.getLeft(), elementArea.getTop(), elementArea.getWidth(), elementArea.getHeight(),
+                    pageImage.getWidth(), pageImage.getHeight()));
         }
 
         if (spec.isCropIfOutside()) {
@@ -165,11 +168,11 @@ public class SpecValidationImage extends SpecValidation<SpecImage> {
 
 
             if ((double)(newWidth * newHeight) / (double)(originalWidth * originalHeight) < 0.5) {
-                throw new RuntimeException(String.format("The cropped area is less than a half of element area (%d, %d)", newWidth, newHeight));
+                throw new RuntimeException(String.format("The cropped area is less than a half of element area (Element {x: %d, y: %d, w: %d, h: %d}, Screenshot {w: %d, h: %d})",
+                        elementArea.getLeft(), elementArea.getTop(), newWidth, newHeight,
+                        width, height));
             }
 
-
-            System.out.println(String.format("%d %d %d %d, %d",elementArea.getLeft(), elementArea.getTop(), newWidth, newHeight, width));
             return new Rect(elementArea.getLeft(), elementArea.getTop(), newWidth, newHeight);
         }
         return elementArea;

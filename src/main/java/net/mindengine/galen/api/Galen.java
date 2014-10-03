@@ -71,19 +71,20 @@ public class Galen {
                                    List<String> includedTags, List<String> excludedTags,
                                    ValidationListener validationListener) throws IOException {
 
+        Page page = browser.getPage();
+
         CombinedValidationListener listener = new CombinedValidationListener();
         listener.add(validationListener);
 
         LayoutReport layoutReport = new LayoutReport();
         try {
-            layoutReport.setScreenshotFullPath(browser.createScreenshot());
+            layoutReport.setScreenshotFullPath(page.createScreenshot().getAbsolutePath());
         }
         catch (Exception ex) {
             ex.printStackTrace();
         }
         listener.add(new LayoutReportListener(layoutReport));
 
-        Page page = browser.getPage();
 
         List<ValidationError> allValidationErrors = new LinkedList<ValidationError>();
 

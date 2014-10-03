@@ -16,6 +16,7 @@
 package net.mindengine.galen.components.validation;
 
 import java.awt.image.BufferedImage;
+import java.io.File;
 import java.util.HashMap;
 
 import net.mindengine.galen.page.AbsentPageElement;
@@ -86,6 +87,11 @@ public class MockedPage implements Page {
     public BufferedImage getScreenshotImage() {
         // TODO Auto-generated method stub
         return screenshotImage;
+    }
+
+    @Override
+    public File createScreenshot() {
+        return null;
     }
 
     @Override

@@ -57,8 +57,8 @@ public class SeleniumBrowser implements Browser {
     }
 
     @Override
-    public void executeJavascript(String javascript) {
-        ((JavascriptExecutor)driver).executeScript(javascript);
+    public Object executeJavascript(String javascript) {
+        return ((JavascriptExecutor)driver).executeScript(javascript);
     }
 
     @Override
@@ -78,7 +78,7 @@ public class SeleniumBrowser implements Browser {
     }
 
     @Override
-    public String createScreenshot() {
+    public File createScreenshot() {
         if (GalenConfig.getConfig().getBooleanProperty("galen.browser.screenshots.fullPage", false)) {
             try {
                 return GalenUtils.makeFullScreenshot(driver);
@@ -89,9 +89,8 @@ public class SeleniumBrowser implements Browser {
         else return makeSimpleScreenshot();
     }
     
-    private String makeSimpleScreenshot() {
-        File file = ((TakesScreenshot)driver).getScreenshotAs(OutputType.FILE);
-        return file.getAbsolutePath();
+    private File makeSimpleScreenshot() {
+        return ((TakesScreenshot)driver).getScreenshotAs(OutputType.FILE);
     }
     
     @Override

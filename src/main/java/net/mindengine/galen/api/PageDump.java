@@ -83,13 +83,12 @@ public class PageDump {
     }
 
     public void exportAllScreenshots(Browser browser, File reportFolder) throws IOException {
-        String screenshotPath = browser.createScreenshot();
 
-        File screenshotOriginalFile = new File(screenshotPath);
+        File screenshotOriginalFile = browser.createScreenshot();
 
         FileUtils.copyFile(screenshotOriginalFile, new File(reportFolder.getAbsolutePath() + File.separator + "page.png"));
 
-        BufferedImage image = Rainbow4J.loadImage(screenshotPath);
+        BufferedImage image = Rainbow4J.loadImage(screenshotOriginalFile.getAbsolutePath());
 
 
         File objectsFolder = new File(reportFolder.getAbsolutePath() + File.separator + "objects");

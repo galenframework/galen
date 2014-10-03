@@ -16,6 +16,7 @@
 package net.mindengine.galen.page;
 
 import java.awt.image.BufferedImage;
+import java.io.File;
 
 import net.mindengine.galen.specs.page.Locator;
 
@@ -33,6 +34,7 @@ public interface Page {
 
     BufferedImage getScreenshotImage();
 
+    File createScreenshot();
 
     String getTitle();
 }

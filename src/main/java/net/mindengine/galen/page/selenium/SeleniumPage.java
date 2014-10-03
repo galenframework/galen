@@ -22,6 +22,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import net.mindengine.galen.browser.SeleniumBrowser;
 import net.mindengine.galen.page.AbsentPageElement;
 import net.mindengine.galen.page.Page;
 import net.mindengine.galen.page.PageElement;
@@ -46,6 +47,7 @@ public class SeleniumPage implements Page {
     private Locator objectContextLocator;
 
     private BufferedImage cachedScreenshotImage;
+    private File cachedScreenshotFile;
     
 
     public SeleniumPage(WebDriver driver) {
@@ -219,11 +221,19 @@ public class SeleniumPage implements Page {
     }
 
     @Override
+    public File createScreenshot() {
+        if (this.cachedScreenshotFile == null) {
+            cachedScreenshotFile = new SeleniumBrowser(driver).createScreenshot();
+        }
+
+        return this.cachedScreenshotFile;
+    }
+
+    @Override
     public BufferedImage getScreenshotImage() {
         if (this.cachedScreenshotImage == null) {
-            File file = ((TakesScreenshot)driver).getScreenshotAs(OutputType.FILE);
             try {
-                cachedScreenshotImage = Rainbow4J.loadImage(file.getAbsolutePath());
+                cachedScreenshotImage = Rainbow4J.loadImage(createScreenshot().getAbsolutePath());
             } catch (Exception e) {
                 throw new RuntimeException("Couldn't take screenshot for page", e);
             }

@@ -54,8 +54,9 @@ public class MockedBrowser implements Browser {
     }
 
     @Override
-    public void executeJavascript(String javascript) {
+    public Object executeJavascript(String javascript) {
         recordedActions.add("executeJavascript\n" + javascript);
+        return null;
     }
 
     @Override
@@ -74,7 +75,7 @@ public class MockedBrowser implements Browser {
     }
 
     @Override
-    public String createScreenshot() {
+    public File createScreenshot() {
         File tempDir = Files.createTempDir();
         
         File file = new File(tempDir.getAbsolutePath() + UUID.randomUUID().toString() + ".png");
@@ -83,7 +84,7 @@ public class MockedBrowser implements Browser {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return file.getAbsolutePath();
+        return file;
     }
 
     public Page getMockedPage() {
