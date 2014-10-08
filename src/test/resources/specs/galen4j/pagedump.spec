@@ -7,6 +7,9 @@ menu-item-*         css .menu-item
 
 big-container       css .container
 
+unexistent-element  css .i-do-not-exist
+
+invisible-element   id i-am-not-visible
 =================================
 
 

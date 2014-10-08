@@ -150,12 +150,14 @@ public class Galen {
         for (String objectName : objectNames) {
             PageElement pageElement = pageValidation.findPageElement(objectName);
 
-            PageDump.Element element = new PageDump.Element(objectName, pageElement.getArea().toIntArray(), pageElement.getText());
+            if (pageElement.isVisible() && pageElement.getArea() != null) {
+                PageDump.Element element = new PageDump.Element(objectName, pageElement.getArea().toIntArray(), pageElement.getText());
 
-            if (pageElement.isPresent() && pageElement.isVisible() && isWithinArea(pageElement, maxWidth, maxHeight)) {
-                element.setHasImage(true);
+                if (pageElement.isPresent() && pageElement.isVisible() && isWithinArea(pageElement, maxWidth, maxHeight)) {
+                    element.setHasImage(true);
+                }
+                pageDump.addElement(element);
             }
-            pageDump.addElement(element);
         }
 
         pageDump.setPageName(pageName);

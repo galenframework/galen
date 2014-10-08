@@ -89,7 +89,7 @@ public class MockedDriverElement implements WebElement {
 
     @Override
     public boolean isDisplayed() {
-        return true;
+        return item.isVisible();
     }
 
     @Override

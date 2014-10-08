@@ -27,6 +27,7 @@ public class MockedPageItem {
 
     private String locatorType;
     private String locatorValue;
+    private boolean visible = true;
 
     private String getLocatorType() {
         return locatorType;
@@ -103,5 +104,13 @@ public class MockedPageItem {
 
     public WebElement asWebElement() {
         return new MockedDriverElement(this);
+    }
+
+    public boolean isVisible() {
+        return visible;
+    }
+
+    public void setVisible(boolean visible) {
+        this.visible = visible;
     }
 }

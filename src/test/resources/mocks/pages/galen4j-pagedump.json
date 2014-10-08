@@ -26,6 +26,11 @@
         {
             "locator": "css: .container",
             "area": [0, 0, 500, 300]
+        },
+        {
+            "locator": "id: i-am-not-visible",
+            "area": [10, 10, 40, 50],
+            "visible": false
         }
     ]
 }
