@@ -126,7 +126,10 @@ public class Galen {
     }
 
     public static void dumpPage(Browser browser, String pageName, String specPath, String pageDumpPath, Integer maxWidth, Integer maxHeight) throws IOException {
-        PageSpecReader reader = new PageSpecReader(null, browser);
+        dumpPage(browser, pageName, specPath, pageDumpPath, maxWidth, maxHeight, new Properties());
+    }
+    public static void dumpPage(Browser browser, String pageName, String specPath, String pageDumpPath, Integer maxWidth, Integer maxHeight, Properties properties) throws IOException {
+        PageSpecReader reader = new PageSpecReader(properties, browser);
         PageSpec pageSpec = reader.read(specPath);
         dumpPage(browser, pageName, pageSpec, new File(pageDumpPath), maxWidth, maxHeight);
     }

@@ -55,15 +55,6 @@ public class GalenPageActionCheck extends GalenPageAction {
         }
     }
 
-    private Properties getCurrentProperties() {
-        TestSession session = TestSession.current();
-        if (session != null) {
-            if (session.getProperties() != null && session.getProperties().getProperties() != null) {
-                return session.getProperties().getProperties();
-            }
-        }
-        return new Properties();
-    }
 
     public GalenPageActionCheck withSpecs(List<String> specFilePaths) {
         this.setSpecs(specFilePaths);

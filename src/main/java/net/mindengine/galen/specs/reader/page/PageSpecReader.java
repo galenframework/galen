@@ -40,7 +40,13 @@ public class PageSpecReader implements BashTemplateJsFunctions {
     private PageSpec pageSpec;
 
     public PageSpecReader(Properties properties, Browser browser) {
-        this.properties = properties;
+        if (properties == null) {
+            this.properties = new Properties();
+        }
+        else {
+            this.properties = properties;
+        }
+
         this.browser = browser;
         bashTemplateContext = new BashTemplateContext(properties, this);
     }

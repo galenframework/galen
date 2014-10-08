@@ -44,7 +44,7 @@ public class GalenPageActionDumpPage extends GalenPageAction {
 
     @Override
     public void execute(TestReport report, Browser browser, GalenPageTest pageTest, ValidationListener validationListener) throws Exception {
-        Galen.dumpPage(browser, pageName, specPath, pageDumpPath, maxWidth, maxHeight);
+        Galen.dumpPage(browser, pageName, specPath, pageDumpPath, maxWidth, maxHeight, getCurrentProperties());
     }
 
     public String getPageDumpPath() {

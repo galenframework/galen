@@ -19,6 +19,7 @@ import java.util.Properties;
 
 import net.mindengine.galen.browser.Browser;
 import net.mindengine.galen.reports.TestReport;
+import net.mindengine.galen.tests.TestSession;
 import net.mindengine.galen.validation.ValidationListener;
 
 public abstract class GalenPageAction {
@@ -34,4 +35,13 @@ public abstract class GalenPageAction {
     }
 
 
+    protected Properties getCurrentProperties() {
+        TestSession session = TestSession.current();
+        if (session != null) {
+            if (session.getProperties() != null && session.getProperties().getProperties() != null) {
+                return session.getProperties().getProperties();
+            }
+        }
+        return new Properties();
+    }
 }
