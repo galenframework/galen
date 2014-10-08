@@ -22,6 +22,7 @@ import java.io.IOException;
 import java.util.*;
 import java.util.regex.Pattern;
 
+import net.mindengine.galen.parser.BashTemplateContext;
 import net.mindengine.galen.parser.ExpectWord;
 import net.mindengine.galen.parser.SyntaxException;
 import net.mindengine.galen.specs.page.ConditionalBlock;
@@ -55,8 +56,10 @@ public class PageSpecLineProcessor {
         startNewSection("");
     }
 
-    public void processLine(String line, Place place) throws IOException {
+    public void processLine(String line, BashTemplateContext bashTemplateContext, Place place) throws IOException {
         if (!isCommentedOut(line) && !isEmpty(line)) {
+            line = bashTemplateContext.process(line);
+            
         	if (isSpecialInstruction(line)) {
         		doSpecialInstruction(line);
         	}

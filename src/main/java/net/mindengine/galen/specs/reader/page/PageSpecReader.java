@@ -93,7 +93,7 @@ public class PageSpecReader implements BashTemplateJsFunctions {
         int lineNumber = 1;
         try {
             while(line != null) {
-                lineProcessor.processLine(bashTemplateContext.process(line), new Place(fileLocation, lineNumber));
+                lineProcessor.processLine(line, bashTemplateContext, new Place(fileLocation, lineNumber));
                 line = bufferedReader.readLine();
                 lineNumber++;
             }
@@ -112,6 +112,7 @@ public class PageSpecReader implements BashTemplateJsFunctions {
     public void setBrowser(Browser browser) {
         this.browser = browser;
     }
+
     public int count(String regex) {
         String jRegex = regex.replace("*", ".*");
         Pattern pattern = Pattern.compile(jRegex);
