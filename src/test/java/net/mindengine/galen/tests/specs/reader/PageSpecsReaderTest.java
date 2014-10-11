@@ -36,6 +36,8 @@ import java.util.Map;
 import java.util.Properties;
 
 import net.mindengine.galen.browser.Browser;
+import net.mindengine.galen.browser.SeleniumBrowser;
+import net.mindengine.galen.components.mocks.driver.MockedDriver;
 import net.mindengine.galen.parser.FileSyntaxException;
 import net.mindengine.galen.specs.Location;
 import net.mindengine.galen.specs.Range;
@@ -54,6 +56,7 @@ import net.mindengine.galen.specs.reader.Place;
 import net.mindengine.galen.specs.reader.page.PageSpec;
 import net.mindengine.galen.specs.reader.page.PageSpecReader;
 
+import org.openqa.selenium.WebDriver;
 import org.testng.annotations.Test;
 
 public class PageSpecsReaderTest {
@@ -142,6 +145,25 @@ public class PageSpecsReaderTest {
         assertThat("Amount of filtered sections should be", filteredSections.size(), is(2));
         assertThat("Tag for first filtered section should be", filteredSections.get(0).getTags(), contains("*"));
         assertThat("Tag for second filtered section should be", filteredSections.get(1).getTags(), contains("tag2"));
+    }
+
+    @Test
+    public void shouldAllow_toCountObject_byIvoking_JavascriptFunction() throws IOException {
+        WebDriver driver = new MockedDriver();
+        driver.get("/mocks/pages/count-via-js-page.json");
+        PageSpecReader pageSpecReader = new PageSpecReader(EMPTY_PROPERTIES, new SeleniumBrowser(driver));
+        PageSpec pageSpec = pageSpecReader.read(getClass().getResource("/specs/count-via-js.spec").getFile());
+
+        List<ObjectSpecs> objectSpecs = pageSpec.getSections().get(0).getObjects();
+
+        assertThat(objectSpecs.size(), is(3));
+        assertThat(objectSpecs.get(0).getObjectName(), is("menu-item-1"));
+        assertThat(objectSpecs.get(1).getObjectName(), is("menu-item-2"));
+        assertThat(objectSpecs.get(2).getObjectName(), is("menu-item-3"));
+
+        assertThat(objectSpecs.get(0).getSpecs().get(0).getOriginalText(), is("near: menu-item-2 0px left"));
+        assertThat(objectSpecs.get(1).getSpecs().get(0).getOriginalText(), is("near: menu-item-3 0px left"));
+        assertThat(objectSpecs.get(2).getSpecs().get(0).getOriginalText(), is("near: menu-item-4 0px left"));
     }
     
     

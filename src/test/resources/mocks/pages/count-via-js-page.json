@@ -1,0 +1,21 @@
+{
+    "title": "Page for count via js test",
+    "items": [
+        {
+            "locator": "css: #menu li",
+            "area": [10, 10, 100, 50]
+        },
+        {
+            "locator": "css: #menu li",
+            "area": [110, 10, 100, 50]
+        },
+        {
+            "locator": "css: #menu li",
+            "area": [210, 10, 100, 50]
+        },
+        {
+            "locator": "css: #menu li",
+            "area": [310, 10, 100, 50]
+        }
+    ]
+}
