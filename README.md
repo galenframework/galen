@@ -1,7 +1,7 @@
 [Galen Framework](http://galenframework.com)
 ==============
 
-Galen is an open-source tool for testing layout and responsive design of web applications.
+Galen is an open-source tool for testing layout and responsive design of web applications. It is also a powerfull functional testing framework.
 For more information visit http://galenframework.com
 
 How does it work?
@@ -55,6 +55,12 @@ side-panel
 
 
 For more information please read [Galen Framework Documentation](http://galenframework.com/docs/all/)
+
+Contributing
+------------
+If you want to contribute to this project just look for current open issues. Please let know in the comments of the issue that you are going to pick it up because somebody could already work on it. In the end just send the pull request. By the way the feature that you are going to work on should not just solve your particular problem. It should be extendable and configurable. The github issues is the best place to debate on the feature and discuss how it should be implemented.
+
+If you would like to make a change to the Galen Framework website (http://galenframework.com) you can do it here https://github.com/galenframework/galenframework.com
 
 
 License
