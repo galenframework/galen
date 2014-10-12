@@ -165,6 +165,13 @@ public class PageSpecsReaderTest {
         assertThat(objectSpecs.get(1).getSpecs().get(0).getOriginalText(), is("near: menu-item-3 0px left"));
         assertThat(objectSpecs.get(2).getSpecs().get(0).getOriginalText(), is("near: menu-item-4 0px left"));
     }
+
+
+    @Test
+    public void shouldNotParameterize_ifTemplateIsGiven_from_1_to_0_or_from_1_to_minus1() throws IOException {
+        PageSpec pageSpec = pageSpecReader.read("/specs/incorrect-parameterization.spec");
+        assertThat(pageSpec.getSections().size(), is(0));
+    }
     
     
     @Test(dependsOnMethods = BASE_TEST)

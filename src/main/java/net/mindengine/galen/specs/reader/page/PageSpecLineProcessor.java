@@ -19,11 +19,7 @@ import static net.mindengine.galen.suite.reader.Line.UNKNOWN_LINE;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Properties;
+import java.util.*;
 import java.util.regex.Pattern;
 
 import net.mindengine.galen.parser.ExpectWord;
@@ -188,7 +184,7 @@ public class PageSpecLineProcessor {
 	private void startParameterization(String line) {
         line = line.replace(" ", "");
         line = line.replace("\t", "");
-        Pattern sequencePattern = Pattern.compile("[0-9]+\\-[0-9]+");
+        Pattern sequencePattern = Pattern.compile(".*\\-.*");
         try {
             line = line.substring(1, line.length() - 1);
             String[] values = line.split(",");
@@ -218,17 +214,20 @@ public class PageSpecLineProcessor {
         int rangeA = Integer.parseInt(value.substring(0, dashIndex));
         int rangeB = Integer.parseInt(value.substring(dashIndex + 1));
         
-        int min = Math.min(rangeA, rangeB);
-        int max = Math.max(rangeA, rangeB);
-        return createSequence(min, max);
+        return createSequence(rangeA, rangeB);
     }
 
     private List<String> createSequence(int min, int max) {
-        List<String> parameters = new LinkedList<String>();
-        for (int i = min; i <= max; i++) {
-            parameters.add(Integer.toString(i));
+        if (max > min) {
+            List<String> parameters = new LinkedList<String>();
+            for (int i = min; i <= max; i++) {
+                parameters.add(Integer.toString(i));
+            }
+            return parameters;
         }
-        return parameters;
+        else {
+            return Collections.emptyList();
+        }
     }
 
     private void startParameterization(String[] parameters) {
