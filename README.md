@@ -62,6 +62,7 @@ If you want to contribute to this project just look for current open issues. Ple
 
 If you would like to make a change to the Galen Framework website (http://galenframework.com) you can do it here https://github.com/galenframework/galenframework.com
 
+If you want to improve the functionality related to image comparison or color scheme - you have to first make a pull request to [rainbow4j](https://github.com/galenframework/rainbow4j) as all the core code for comparing images, applying filters and calculating the color scheme is located in it. After this it will be released to sonatype central repository and will be available as maven dependency.
 
 License
 ------------
