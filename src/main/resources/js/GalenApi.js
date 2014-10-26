@@ -103,6 +103,10 @@ function readFile(fileName) {
     return GalenUtils.readFile(fileName);
 }
 
+function resize(driver, size) {
+    GalenUtils.resize(driver, size);
+}
+
 
 var session = {
     put: function (name, value) {
@@ -155,4 +159,5 @@ function dumpPage(driver, pageName, specPath, exportPath, maxWidth, maxHeight) {
     exports.readFile = readFile;
     exports.console = galenConsole;
     exports.dumpPage = dumpPage;
+    exports.resize = resize;
 })(this);

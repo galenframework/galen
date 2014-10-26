@@ -39,7 +39,8 @@ assertEvents = function (callback) {
 
 
 GalenUtils = {
-    checkLayout: registerFunction("GalenUtils.checkLayout", 4)
+    checkLayout: registerFunction("GalenUtils.checkLayout", 4),
+    resize: registerFunction("GalenUtils.resize", 2)
 };
 
 describe("GalenUtils", function () {
@@ -63,5 +64,16 @@ describe("GalenUtils", function () {
         });
 
     }); 
+
+    describe("#resize", function () {
+        it("should call GalenUtils.resize", function () {
+            assertEvents(function () {
+                _.resize({d: "driver"}, "1024x768");
+            }).shouldBe([{
+                name: "GalenUtils.resize",
+                args: [{d: "driver"}, "1024x768"]
+            }]);
+        });
+    });
 });
 

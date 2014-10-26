@@ -247,7 +247,7 @@ public class GalenUtils {
         return driver;
     }
     
-    private static void resizeDriver(WebDriver driver, String sizeText) {
+    public static void resizeDriver(WebDriver driver, String sizeText) {
         if (sizeText != null && !sizeText.trim().isEmpty()) {
             Dimension size = GalenUtils.readSize(sizeText);
             driver.manage().window().setSize(new org.openqa.selenium.Dimension(size.width, size.height));
