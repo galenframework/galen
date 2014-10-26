@@ -8,3 +8,4 @@ test-output/
 bin/
 dist/
 .release-notes
+*.swp

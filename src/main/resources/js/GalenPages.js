@@ -342,7 +342,6 @@ GalenPages.PageElement = function (name, locator, parent) {
         this.cachedWebElement = null;
         this.locator = locator;
         this.parent = parent;
-
 };
 GalenPages.PageElement.prototype.isEnabled = function () {
     return this.getWebElement().isEnabled();
@@ -356,6 +355,13 @@ GalenPages.PageElement.prototype._report = function (name) {
     }
     catch (err) {
     }
+};
+GalenPages.PageElement.prototype.getDriver = function() {
+    return this.parent.driver;
+};
+GalenPages.PageElement.prototype.hover = function () {
+    var actions = new Actions(this.getDriver());
+    actions.moveToElement(this.getWebElement()).perform();
 };
 GalenPages.PageElement.prototype.cssValue = function (cssProperty) {
     return this.getWebElement().getCssValue(cssProperty);
