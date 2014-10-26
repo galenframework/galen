@@ -52,5 +52,16 @@ describe("GalenUtils", function () {
                 args: ["driver", "page.spec", ["mobile", "desktop"], ["nomobile"]]
             }]);
         });
+
+        it("should convert tags single string to array", function () {
+            assertEvents(function () {
+                _.checkLayout("driver", "page.spec", "mobile", "nomobile");
+            }).shouldBe([{
+                name: "GalenUtils.checkLayout",
+                args: ["driver", "page.spec", ["mobile"], ["nomobile"]]
+            }]);
+        });
+
     }); 
 });
+

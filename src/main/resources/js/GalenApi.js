@@ -61,6 +61,13 @@ function checkLayout(driver, pageSpecFile, includedTags, excludedTags) {
     if (excludedTags == undefined) {
         excludedTags = null;
     }
+    if (!Array.isArray(includedTags) && includedTags != null) {
+        includedTags = [includedTags];
+    }
+    if (!Array.isArray(excludedTags) && excludedTags != null) {
+        excludedTags = [excludedTags];
+    }
+
     GalenUtils.checkLayout(driver, pageSpecFile, includedTags, excludedTags);
 }
 
