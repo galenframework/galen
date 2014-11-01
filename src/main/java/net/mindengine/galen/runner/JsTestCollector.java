@@ -47,20 +47,10 @@ public class JsTestCollector {
         GalenJsExecutor jsExector = new GalenJsExecutor();
         jsExector.putObject("_galenCore", this);
         
-        jsExector.eval(loadJsFromLibrary("GalenCore.js"));
-        jsExector.eval(loadJsFromLibrary("GalenApi.js"));
-        jsExector.eval(loadJsFromLibrary("GalenPages.js"));
+        jsExector.eval(GalenJsExecutor.loadJsFromLibrary("GalenCore.js"));
+        jsExector.eval(GalenJsExecutor.loadJsFromLibrary("GalenApi.js"));
+        jsExector.eval(GalenJsExecutor.loadJsFromLibrary("GalenPages.js"));
         return jsExector;
-    }
-
-    private String loadJsFromLibrary(String path) {
-        try {
-            InputStream is = getClass().getResourceAsStream("/js/" + path);
-            return  IOUtils.toString(is);
-        }
-        catch (Exception ex) {
-            throw new RuntimeException(ex);
-        }
     }
 
     public JsTestCollector() {

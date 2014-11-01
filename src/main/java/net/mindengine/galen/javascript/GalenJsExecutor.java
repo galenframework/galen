@@ -17,6 +17,7 @@ package net.mindengine.galen.javascript;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.Reader;
 
 import net.mindengine.galen.api.Galen;
@@ -28,6 +29,7 @@ import net.mindengine.galen.tests.GalenTest;
 import net.mindengine.galen.tests.TestSession;
 import net.mindengine.galen.utils.GalenUtils;
 
+import org.apache.commons.io.IOUtils;
 import org.mozilla.javascript.Context;
 import org.mozilla.javascript.ImporterTopLevel;
 import org.mozilla.javascript.ScriptableObject;
@@ -91,5 +93,16 @@ public class GalenJsExecutor {
         scriptExecutor.putContextPath(file.getParent());
         return context.evaluateReader(scope, scriptFileReader, javascriptPath, 1, null);
     }
+
+    public static String loadJsFromLibrary(String path) {
+        try {
+            InputStream is = GalenJsExecutor.class.getResourceAsStream("/js/" + path);
+            return  IOUtils.toString(is);
+        }
+        catch (Exception ex) {
+            throw new RuntimeException(ex);
+        }
+    }
+
 
 }
