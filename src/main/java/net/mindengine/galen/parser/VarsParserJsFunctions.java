@@ -24,4 +24,11 @@ public interface VarsParserJsFunctions {
      * @return
      */
     int count(String regex);
+
+    /**
+     * Finds page element with given name on page
+     * @param name
+     * @return
+     */
+    JsPageElement find(String name);
 }

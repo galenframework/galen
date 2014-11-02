@@ -689,6 +689,16 @@ public class PageSpecsReaderTest {
         assertThat(pageSpec.getSections().get(0).getObjects().get(0).getSpecs().get(0).getOriginalText(), is("text is: some value from-javascript function"));
     }
 
+    @Test
+    public void shouldAllowTo_usePageObjectValues_inJsExpressions() throws IOException {
+        WebDriver driver = new MockedDriver();
+        driver.get("/mocks/pages/object-values-in-js.json");
+        PageSpecReader specReader = new PageSpecReader(new Properties(), new SeleniumBrowser(driver));
+        PageSpec pageSpec = specReader.read(getClass().getResource("/specs/spec-with-object-values-in-js.spec").getFile());
+        assertThat(pageSpec.getSections().get(0).getObjects().get(0).getSpecs().get(0).getOriginalText(), is("near: menu-item-4 20px left"));
+        assertThat(pageSpec.getSections().get(0).getObjects().get(0).getSpecs().get(1).getOriginalText(), is("above: menu-item-4 30px"));
+    }
+
     private void assertChildComponentSpec(List<Spec> specs) {
         assertThat(specs.size(), is(1));
         SpecComponent spec = (SpecComponent) specs.get(0);

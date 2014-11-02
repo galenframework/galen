@@ -86,9 +86,9 @@ public class SeleniumPage implements Page {
 
     @Override
     public PageElement getObject(Locator objectLocator) {
-        return locatorToElement("unnamed", objectLocator);
+        return getObject("unnamed", objectLocator);
     }
-    
+
     @Override
     public PageElement getObject(String objectName, Locator objectLocator) {
         int index = objectLocator.getIndex() - 1;

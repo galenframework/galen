@@ -20,6 +20,7 @@ import static org.hamcrest.Matchers.is;
 
 import java.util.Properties;
 
+import net.mindengine.galen.parser.JsPageElement;
 import net.mindengine.galen.parser.VarsParser;
 import net.mindengine.galen.parser.VarsParserJsFunctions;
 import net.mindengine.galen.parser.VarsParserJsProcessor;
@@ -38,6 +39,11 @@ public class VarsParserTest {
                 return 12;
             }
             else return 15;
+        }
+
+        @Override
+        public JsPageElement find(String name) {
+            return null;
         }
     };
 

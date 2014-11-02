@@ -16,9 +16,13 @@
 package net.mindengine.galen.specs.reader.page;
 
 import net.mindengine.galen.browser.Browser;
+import net.mindengine.galen.page.Page;
+import net.mindengine.galen.page.PageElement;
 import net.mindengine.galen.parser.FileSyntaxException;
+import net.mindengine.galen.parser.JsPageElement;
 import net.mindengine.galen.parser.VarsContext;
 import net.mindengine.galen.parser.VarsParserJsFunctions;
+import net.mindengine.galen.specs.page.Locator;
 import net.mindengine.galen.specs.reader.Place;
 import net.mindengine.galen.utils.GalenUtils;
 
@@ -111,6 +115,7 @@ public class PageSpecReader implements VarsParserJsFunctions {
     public void setBrowser(Browser browser) {
         this.browser = browser;
     }
+
     public int count(String regex) {
         String jRegex = regex.replace("*", ".*");
         Pattern pattern = Pattern.compile(jRegex);
@@ -121,7 +126,22 @@ public class PageSpecReader implements VarsParserJsFunctions {
                 count ++;
             }
         }
-    return count;
+        return count;
+    }
+
+    public JsPageElement find(String objectName) {
+        if (browser != null && pageSpec.getObjects().containsKey(objectName)) {
+            Page page = browser.getPage();
+            Locator locator = pageSpec.getObjectLocator(objectName);
+            if (locator != null) {
+                PageElement pageElement = page.getObject(objectName, locator);
+                if (pageElement != null) {
+                    return new JsPageElement(pageElement);
+                }
+            }
+        }
+
+        return null;
     }
 
     public Properties getProperties() {

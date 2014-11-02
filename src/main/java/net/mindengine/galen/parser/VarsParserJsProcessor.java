@@ -39,6 +39,16 @@ public class VarsParserJsProcessor {
                 }
             }, ScriptableObject.DONTENUM);
 
+            scope.defineProperty("find", new BaseFunction() {
+                @Override
+                public Object call(org.mozilla.javascript.Context cx, Scriptable scope, Scriptable thisObj, Object[] args) {
+                    if (args.length == 0 || !(args[0] instanceof String)) {
+                        throw new IllegalArgumentException("Should take string argument");
+                    }
+                    return jsFunctions.find((String)args[0]);
+                }
+            }, ScriptableObject.DONTENUM);
+
             scope.defineProperty("load", new JsFunctionLoad(), ScriptableObject.DONTENUM);
         }
 
@@ -75,6 +85,12 @@ public class VarsParserJsProcessor {
 
     private boolean conflictsWithFunctionNames(String name) {
         if (name.equals("count")) {
+            return true;
+        }
+        else if (name.equals("find")) {
+            return true;
+        }
+        else if (name.equals("load")) {
             return true;
         }
         return false;
