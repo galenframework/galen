@@ -26,25 +26,24 @@ import org.mozilla.javascript.ImporterTopLevel;
 import org.mozilla.javascript.Scriptable;
 import org.mozilla.javascript.ScriptableObject;
 
-public class BashTemplate {
+public class VarsParser {
 
     private static final int PARSING_TEXT = 0;
     private static final int PARSING_PARAM = 1;
+    private Context context;
 
-    private String templateText;
-    
     private int state = PARSING_TEXT;
-    private BashTemplateJsFunctions jsFunctions;
+    private VarsParserJsFunctions jsFunctions;
     private Properties properties;
    
 
-    public BashTemplate(Properties properties, String templateText, BashTemplateJsFunctions jsFunctions) {
+    public VarsParser(Context context, Properties properties, VarsParserJsFunctions jsFunctions) {
+        this.context = context;
         this.properties = properties;
-        this.templateText = templateText;
         this.setJsFunctions(jsFunctions);
     }
 
-    public String process(Context context) {
+    public String parse(String templateText) {
         StringCharReader reader = new StringCharReader(templateText);
         
         StringBuffer buffer = new StringBuffer();
@@ -149,11 +148,11 @@ public class BashTemplate {
         return false;
     }
 
-    public BashTemplateJsFunctions getJsFunctions() {
+    public VarsParserJsFunctions getJsFunctions() {
         return jsFunctions;
     }
 
-    public void setJsFunctions(BashTemplateJsFunctions jsFunctions) {
+    public void setJsFunctions(VarsParserJsFunctions jsFunctions) {
         this.jsFunctions = jsFunctions;
     }
 

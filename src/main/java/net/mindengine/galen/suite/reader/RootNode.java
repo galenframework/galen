@@ -19,7 +19,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
-import net.mindengine.galen.parser.BashTemplateContext;
+import net.mindengine.galen.parser.VarsContext;
 import net.mindengine.galen.parser.SyntaxException;
 import net.mindengine.galen.tests.GalenBasicTest;
 
@@ -48,7 +48,7 @@ public class RootNode extends Node<List<GalenBasicTest>> {
 
 
     @Override
-    public List<GalenBasicTest> build(BashTemplateContext context) {
+    public List<GalenBasicTest> build(VarsContext context) {
         rearrangeNodes();
         
         List<GalenBasicTest> suites = new LinkedList<GalenBasicTest>();

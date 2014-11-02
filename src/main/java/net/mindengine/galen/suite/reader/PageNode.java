@@ -18,7 +18,7 @@ package net.mindengine.galen.suite.reader;
 import java.util.LinkedList;
 import java.util.List;
 
-import net.mindengine.galen.parser.BashTemplateContext;
+import net.mindengine.galen.parser.VarsContext;
 import net.mindengine.galen.parser.GalenPageTestReader;
 import net.mindengine.galen.parser.SyntaxException;
 import net.mindengine.galen.suite.GalenPageAction;
@@ -38,7 +38,7 @@ public class PageNode extends Node<GalenPageTest> {
     }
 
     @Override
-    public GalenPageTest build(BashTemplateContext context) {
+    public GalenPageTest build(VarsContext context) {
         GalenPageTest pageTest;
         try {
             pageTest = GalenPageTestReader.readFrom(context.process(getArguments()));

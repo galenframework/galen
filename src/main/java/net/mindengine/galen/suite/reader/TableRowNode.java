@@ -18,7 +18,7 @@ package net.mindengine.galen.suite.reader;
 import java.util.LinkedList;
 import java.util.List;
 
-import net.mindengine.galen.parser.BashTemplateContext;
+import net.mindengine.galen.parser.VarsContext;
 import net.mindengine.galen.parser.SyntaxException;
 
 public class TableRowNode extends Node<List<String>> {
@@ -28,7 +28,7 @@ public class TableRowNode extends Node<List<String>> {
     }
 
     @Override
-    public List<String> build(BashTemplateContext context) {
+    public List<String> build(VarsContext context) {
         String rowText = getArguments().trim();
         
         if (!rowText.startsWith("|")) {

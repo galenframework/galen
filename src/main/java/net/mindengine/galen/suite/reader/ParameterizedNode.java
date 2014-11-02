@@ -22,7 +22,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
-import net.mindengine.galen.parser.BashTemplateContext;
+import net.mindengine.galen.parser.VarsContext;
 import net.mindengine.galen.parser.SyntaxException;
 import net.mindengine.galen.tests.GalenBasicTest;
 
@@ -37,11 +37,11 @@ public class ParameterizedNode extends Node<List<GalenBasicTest>>{
     }
 
     @Override
-    public List<GalenBasicTest> build(BashTemplateContext context) {
+    public List<GalenBasicTest> build(VarsContext context) {
         
         Table table = createTable(context);
         
-        final BashTemplateContext parameterizedContext = new BashTemplateContext(new Properties(), context);
+        final VarsContext parameterizedContext = new VarsContext(new Properties(), context);
         final List<GalenBasicTest> suites = new LinkedList<GalenBasicTest>();
         
         table.forEach(new RowVisitor() {
@@ -63,7 +63,7 @@ public class ParameterizedNode extends Node<List<GalenBasicTest>>{
         return suites;
     }
 
-    private Table createTable(BashTemplateContext context) {
+    private Table createTable(VarsContext context) {
         String line = getArguments().trim();
         
         Table tableFromChild = buildFromChild(context);
@@ -120,7 +120,7 @@ public class ParameterizedNode extends Node<List<GalenBasicTest>>{
         return table;
     }
 
-    private Table buildFromChild(BashTemplateContext context) {
+    private Table buildFromChild(VarsContext context) {
         Table table = new Table();
         
         for (Node<?> childNode : getChildNodes()) {

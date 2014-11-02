@@ -16,7 +16,7 @@
 package net.mindengine.galen.parser;
 
 
-public interface BashTemplateJsFunctions {
+public interface VarsParserJsFunctions {
     
     /**
      * Counts the amount of object matching regex

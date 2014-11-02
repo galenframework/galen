@@ -16,7 +16,7 @@
 package net.mindengine.galen.suite.reader;
 
 
-import net.mindengine.galen.parser.BashTemplateContext;
+import net.mindengine.galen.parser.VarsContext;
 import net.mindengine.galen.parser.SyntaxException;
 
 public class TableNode extends Node<Void>{
@@ -26,7 +26,7 @@ public class TableNode extends Node<Void>{
     }
 
     @Override
-    public Void build(BashTemplateContext context) {
+    public Void build(VarsContext context) {
         
         String name = getArguments().trim();
         if (name.isEmpty()) {

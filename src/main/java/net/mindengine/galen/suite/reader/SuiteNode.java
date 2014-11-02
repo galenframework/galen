@@ -18,7 +18,7 @@ package net.mindengine.galen.suite.reader;
 import java.util.LinkedList;
 import java.util.List;
 
-import net.mindengine.galen.parser.BashTemplateContext;
+import net.mindengine.galen.parser.VarsContext;
 import net.mindengine.galen.suite.GalenPageTest;
 import net.mindengine.galen.tests.GalenBasicTest;
 
@@ -38,7 +38,7 @@ public class SuiteNode extends Node<GalenBasicTest> {
     }
 
     @Override
-    public GalenBasicTest build(BashTemplateContext context) {
+    public GalenBasicTest build(VarsContext context) {
         GalenBasicTest suite = new GalenBasicTest();
         List<GalenPageTest> pageTests = new LinkedList<GalenPageTest>();
        

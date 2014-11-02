@@ -18,7 +18,7 @@ package net.mindengine.galen.suite.reader;
 import java.util.LinkedList;
 import java.util.List;
 
-import net.mindengine.galen.parser.BashTemplateContext;
+import net.mindengine.galen.parser.VarsContext;
 import net.mindengine.galen.parser.SyntaxException;
 
 public abstract class Node<T> {
@@ -67,7 +67,7 @@ public abstract class Node<T> {
         getChildNodes().add(childNode);
     }
     
-    public abstract T build(BashTemplateContext context);
+    public abstract T build(VarsContext context);
 
     
     public Node<?> findProcessingNodeByIndentation(int spaces) {

@@ -19,27 +19,33 @@ import java.util.Properties;
 
 import net.mindengine.galen.suite.reader.Context;
 
-public class BashTemplateContext extends Context {
+public class VarsContext extends Context {
 
+    private VarsParser varsParser;
     private Properties properties;
-    private BashTemplateContext parent;
-    private BashTemplateJsFunctions jsFunctions;
+    private VarsContext parent;
+    private VarsParserJsFunctions jsFunctions;
 
-    public BashTemplateContext(Properties properties) {
+    public VarsContext(Properties properties) {
         this.properties = properties;
+        this.varsParser = new VarsParser(this, properties, jsFunctions);
     }
-    public BashTemplateContext(Properties properties, BashTemplateContext context) {
+
+    public VarsContext(Properties properties, VarsContext context) {
         this.parent = context;
         this.properties = properties;
+        this.jsFunctions = context.jsFunctions;
+        this.varsParser = new VarsParser(this, properties, jsFunctions);
     }
 
-    public BashTemplateContext(Properties properties, BashTemplateJsFunctions jsFunctions) {
+    public VarsContext(Properties properties, VarsParserJsFunctions jsFunctions) {
         this.jsFunctions = jsFunctions;
         this.properties = properties;
+        this.varsParser = new VarsParser(this, properties, jsFunctions);
     }
 
     public String process(String arguments) {
-        return new BashTemplate(properties, arguments, jsFunctions).process(this);
+        return varsParser.parse(arguments);
     }
 
 

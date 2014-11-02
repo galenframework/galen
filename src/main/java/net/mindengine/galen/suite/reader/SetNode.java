@@ -15,7 +15,7 @@
 ******************************************************************************/
 package net.mindengine.galen.suite.reader;
 
-import net.mindengine.galen.parser.BashTemplateContext;
+import net.mindengine.galen.parser.VarsContext;
 
 public class SetNode extends Node<Void> {
 
@@ -24,7 +24,7 @@ public class SetNode extends Node<Void> {
     }
 
     @Override
-    public Void build(BashTemplateContext context) {
+    public Void build(VarsContext context) {
         String line = context.process(getArguments());
         int indexOfFirstSpace = getArguments().indexOf(' ');
         

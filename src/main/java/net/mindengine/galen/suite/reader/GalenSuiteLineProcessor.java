@@ -25,7 +25,7 @@ import java.io.InputStreamReader;
 import java.util.List;
 import java.util.Properties;
 
-import net.mindengine.galen.parser.BashTemplateContext;
+import net.mindengine.galen.parser.VarsContext;
 import net.mindengine.galen.parser.SyntaxException;
 import net.mindengine.galen.tests.GalenBasicTest;
 
@@ -153,7 +153,7 @@ public class GalenSuiteLineProcessor {
     }
 
     public List<GalenBasicTest> buildSuites() {
-        return rootNode.build(new BashTemplateContext(properties));
+        return rootNode.build(new VarsContext(properties));
     }
 
     private int indentationSpaces(String line) {

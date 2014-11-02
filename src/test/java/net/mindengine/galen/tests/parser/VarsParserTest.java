@@ -20,20 +20,20 @@ import static org.hamcrest.Matchers.is;
 
 import java.util.Properties;
 
-import net.mindengine.galen.parser.BashTemplate;
-import net.mindengine.galen.parser.BashTemplateJsFunctions;
+import net.mindengine.galen.parser.VarsParser;
+import net.mindengine.galen.parser.VarsParserJsFunctions;
 import net.mindengine.galen.suite.reader.Context;
 
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
-public class BashTemplateTest {
+public class VarsParserTest {
     
     private static final Properties EMPTY_PROPERTIES = new Properties();
 
 
     @Test(dataProvider="provideGoodSamples") public void shouldProcessTemplate_successfully(Context context, String templateText, String expectedText) {
-        BashTemplateJsFunctions jsFunctions = new BashTemplateJsFunctions() {
+        VarsParserJsFunctions jsFunctions = new VarsParserJsFunctions() {
             @Override
             public int count(String regex) {
                 if (regex.equals("testval1")){
@@ -42,8 +42,8 @@ public class BashTemplateTest {
                 else return 15;
             }
         };
-        BashTemplate template = new BashTemplate(EMPTY_PROPERTIES, templateText, jsFunctions);
-        String realText = template.process(context);
+        VarsParser template = new VarsParser(context, EMPTY_PROPERTIES, jsFunctions);
+        String realText = template.parse(templateText);
         
         assertThat(realText, is(expectedText));
     }

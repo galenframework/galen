@@ -22,16 +22,16 @@ import java.util.Set;
 import java.util.regex.Pattern;
 
 import net.mindengine.galen.browser.Browser;
-import net.mindengine.galen.parser.BashTemplateContext;
-import net.mindengine.galen.parser.BashTemplateJsFunctions;
+import net.mindengine.galen.parser.VarsContext;
+import net.mindengine.galen.parser.VarsParserJsFunctions;
 import net.mindengine.galen.parser.FileSyntaxException;
 
 import net.mindengine.galen.utils.GalenUtils;
 import net.mindengine.galen.specs.reader.Place;
 
-public class PageSpecReader implements BashTemplateJsFunctions {
+public class PageSpecReader implements VarsParserJsFunctions {
     
-    private BashTemplateContext bashTemplateContext;
+    private VarsContext bashTemplateContext;
     private Properties properties;
     /*
      *  This field is need to look up early building of objects
@@ -48,7 +48,7 @@ public class PageSpecReader implements BashTemplateJsFunctions {
         }
 
         this.browser = browser;
-        bashTemplateContext = new BashTemplateContext(properties, this);
+        bashTemplateContext = new VarsContext(properties, this);
     }
 
 
