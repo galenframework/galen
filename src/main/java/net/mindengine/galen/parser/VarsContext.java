@@ -17,6 +17,7 @@ package net.mindengine.galen.parser;
 
 import java.util.Properties;
 
+import net.mindengine.galen.specs.reader.page.PageSpecReader;
 import net.mindengine.galen.suite.reader.Context;
 
 public class VarsContext extends Context {
@@ -24,24 +25,30 @@ public class VarsContext extends Context {
     private VarsParser varsParser;
     private Properties properties;
     private VarsContext parent;
-    private VarsParserJsFunctions jsFunctions;
+    private VarsParserJsProcessor jsProcessor;
 
     public VarsContext(Properties properties) {
         this.properties = properties;
-        this.varsParser = new VarsParser(this, properties, jsFunctions);
+        this.varsParser = new VarsParser(this, properties);
     }
 
-    public VarsContext(Properties properties, VarsContext context) {
-        this.parent = context;
+    public VarsContext(Properties properties, VarsContext parentContext) {
+        this.parent = parentContext;
         this.properties = properties;
-        this.jsFunctions = context.jsFunctions;
-        this.varsParser = new VarsParser(this, properties, jsFunctions);
+        this.jsProcessor = parentContext.jsProcessor;
+        this.varsParser = new VarsParser(this, properties, jsProcessor);
+    }
+
+    public VarsContext(Properties properties, VarsParserJsProcessor jsProcessor) {
+        this.jsProcessor = jsProcessor;
+        this.properties = properties;
+        this.varsParser = new VarsParser(this, properties, jsProcessor);
     }
 
     public VarsContext(Properties properties, VarsParserJsFunctions jsFunctions) {
-        this.jsFunctions = jsFunctions;
+        this.jsProcessor = new VarsParserJsProcessor(this, jsFunctions);
         this.properties = properties;
-        this.varsParser = new VarsParser(this, properties, jsFunctions);
+        this.varsParser = new VarsParser(this, properties, jsProcessor);
     }
 
     public String process(String arguments) {

@@ -26,6 +26,7 @@ import net.mindengine.galen.parser.VarsContext;
 import net.mindengine.galen.parser.VarsParserJsFunctions;
 import net.mindengine.galen.parser.FileSyntaxException;
 
+import net.mindengine.galen.parser.VarsParserJsProcessor;
 import net.mindengine.galen.utils.GalenUtils;
 import net.mindengine.galen.specs.reader.Place;
 

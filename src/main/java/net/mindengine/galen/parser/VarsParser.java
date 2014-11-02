@@ -15,32 +15,31 @@
 ******************************************************************************/
 package net.mindengine.galen.parser;
 
-import java.util.Map;
-import java.util.Properties;
-
 import net.mindengine.galen.specs.reader.StringCharReader;
 import net.mindengine.galen.suite.reader.Context;
 
-import org.mozilla.javascript.BaseFunction;
-import org.mozilla.javascript.ImporterTopLevel;
-import org.mozilla.javascript.Scriptable;
-import org.mozilla.javascript.ScriptableObject;
+import java.util.Properties;
 
 public class VarsParser {
 
     private static final int PARSING_TEXT = 0;
     private static final int PARSING_PARAM = 1;
+    private final VarsParserJsProcessor jsProcessor;
+
     private Context context;
 
     private int state = PARSING_TEXT;
-    private VarsParserJsFunctions jsFunctions;
     private Properties properties;
    
 
-    public VarsParser(Context context, Properties properties, VarsParserJsFunctions jsFunctions) {
+    public VarsParser(Context context, Properties properties, VarsParserJsProcessor jsProcessor) {
         this.context = context;
         this.properties = properties;
-        this.setJsFunctions(jsFunctions);
+        this.jsProcessor = jsProcessor;
+    }
+
+    public VarsParser(VarsContext varsContext, Properties properties) {
+        this(varsContext, properties, null);
     }
 
     public String parse(String templateText) {
@@ -87,59 +86,35 @@ public class VarsParser {
 
     
     private Object getExpressionValue(String expression, Context context) {
-        if (expression.matches("[a-zA-Z0-9..._]*")) {
-            Object value = context.getValue(expression);
-            if (value == null) {
-                //Looking for value in properties
-                
-                if (properties != null) {
-                    value = properties.getProperty(expression);
-                }
-                
-                if (value != null) {
-                    return value;
-                }
-                else return System.getProperty(expression, "");
+        Object value = context.getValue(expression);
+        if (value == null) {
+            //Looking for value in properties
+
+            if (properties != null) {
+                value = properties.getProperty(expression);
             }
-            return value;
+
+            if (value == null) {
+                value = System.getProperty(expression);
+            }
         }
-        else {
-            return readJsExpression(expression, context);
+        if (value == null){
+            value = readJsExpression(expression, context);
         }
+
+        if (value == null) {
+            return "";
+        }
+        else return value;
     }
 
-    @SuppressWarnings("serial")
-    private Object readJsExpression(String expression, Context context) {
-        org.mozilla.javascript.Context cx = org.mozilla.javascript.Context.enter();
-        ScriptableObject scope = new ImporterTopLevel(cx);
-        
-        for (Map.Entry<String, Object> parameter : context.getParameters().entrySet()) {
-            if (!conflictsWithFunctionNames(parameter.getKey())) {
-                ScriptableObject.putProperty(scope, parameter.getKey(), parameter.getValue());
-            }
+    private String readJsExpression(String expression, Context context) {
+        if (jsProcessor != null) {
+            return jsProcessor.process(expression);
         }
-        
-        if (jsFunctions != null) {
-            scope.defineProperty("count", new BaseFunction() {
-                @Override
-                public Object call(org.mozilla.javascript.Context cx, Scriptable scope, Scriptable thisObj, Object[] args) {
-                    if (args.length == 0 || !(args[0] instanceof String)) {
-                        throw new IllegalArgumentException("Should take string argument");
-                    }
-                    return jsFunctions.count((String)args[0]);
-                }
-            }, ScriptableObject.DONTENUM);
-        }
-        
-        Object returnedObject = cx.evaluateString(scope, expression, "<cmd>", 1, null);
-        if (returnedObject instanceof Double) {
-            return ((Double)returnedObject).intValue();
-        }
-        else if (returnedObject instanceof Float) {
-            return ((Float)returnedObject).intValue();
-        }
-        return returnedObject;
+        else return null;
     }
+
 
     private boolean conflictsWithFunctionNames(String name) {
         if (name.equals("count")) {
@@ -148,13 +123,6 @@ public class VarsParser {
         return false;
     }
 
-    public VarsParserJsFunctions getJsFunctions() {
-        return jsFunctions;
-    }
-
-    public void setJsFunctions(VarsParserJsFunctions jsFunctions) {
-        this.jsFunctions = jsFunctions;
-    }
 
     public Properties getProperties() {
         return properties;

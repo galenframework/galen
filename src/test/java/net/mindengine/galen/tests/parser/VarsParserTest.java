@@ -22,6 +22,7 @@ import java.util.Properties;
 
 import net.mindengine.galen.parser.VarsParser;
 import net.mindengine.galen.parser.VarsParserJsFunctions;
+import net.mindengine.galen.parser.VarsParserJsProcessor;
 import net.mindengine.galen.suite.reader.Context;
 
 import org.testng.annotations.DataProvider;
@@ -32,7 +33,7 @@ public class VarsParserTest {
     private static final Properties EMPTY_PROPERTIES = new Properties();
 
 
-    @Test(dataProvider="provideGoodSamples") public void shouldProcessTemplate_successfully(Context context, String templateText, String expectedText) {
+    @Test(dataProvider="provideGoodSamples") public void shouldProcessTemplate_successfully(Integer number, Context context, String templateText, String expectedText) {
         VarsParserJsFunctions jsFunctions = new VarsParserJsFunctions() {
             @Override
             public int count(String regex) {
@@ -42,7 +43,7 @@ public class VarsParserTest {
                 else return 15;
             }
         };
-        VarsParser template = new VarsParser(context, EMPTY_PROPERTIES, jsFunctions);
+        VarsParser template = new VarsParser(context, EMPTY_PROPERTIES, new VarsParserJsProcessor(context, jsFunctions));
         String realText = template.parse(templateText);
         
         assertThat(realText, is(expectedText));
@@ -51,19 +52,19 @@ public class VarsParserTest {
     
     @DataProvider public Object[][] provideGoodSamples() {
         return new Object[][] {
-            {new Context().withParameter("name", "John"), "Hi my name is ${name}", "Hi my name is John"},
-            {new Context().withParameter("name", "John"), "Hi my name is ${name} Connor", "Hi my name is John Connor"},
-            {new Context().withParameter("name", "John"), "Hi my name is \\${name} Connor", "Hi my name is ${name} Connor"},
-            {new Context().withParameter("name", "John"), "Hi my name is \\\\${name} Connor", "Hi my name is \\${name} Connor"},
-            {new Context().withParameter("name", "John"), "Hi my name is ${ name } Connor", "Hi my name is John Connor"},
-            {new Context(), "Hi my name is ${name} Connor", "Hi my name is  Connor"},
-            {new Context().withParameter("name", "John").withParameter("surname", "Connor"), "Hi my name is ${name} ${surname}", "Hi my name is John Connor"},
-            {new Context(), "I have some money $30", "I have some money $30"},
-            {new Context(), "I have some money $30$", "I have some money $30$"},
-            {new Context(), "I have some money ${ 30", "I have some money "},
-            {new Context(), "There are ${count('testval1')} objects", "There are 12 objects"},
-            {new Context(), "There are ${count(\"sdvdv\")*2 - 1} objects", "There are 29 objects"},
-            {new Context().withParameter("qwe", 123), "Hi my age is ${qwe - 1}", "Hi my age is 122"},
+            {1, new Context().withParameter("name", "John"), "Hi my name is ${name}", "Hi my name is John"},
+            {2, new Context().withParameter("name", "John"), "Hi my name is ${name} Connor", "Hi my name is John Connor"},
+            {3, new Context().withParameter("name", "John"), "Hi my name is \\${name} Connor", "Hi my name is ${name} Connor"},
+            {4, new Context().withParameter("name", "John"), "Hi my name is \\\\${name} Connor", "Hi my name is \\${name} Connor"},
+            {5, new Context().withParameter("name", "John"), "Hi my name is ${ name } Connor", "Hi my name is John Connor"},
+            {6, new Context(), "Hi my name is ${name} Connor", "Hi my name is  Connor"},
+            {7, new Context().withParameter("name", "John").withParameter("surname", "Connor"), "Hi my name is ${name} ${surname}", "Hi my name is John Connor"},
+            {8, new Context(), "I have some money $30", "I have some money $30"},
+            {9, new Context(), "I have some money $30$", "I have some money $30$"},
+            {10, new Context(), "I have some money ${ 30", "I have some money "},
+            {11, new Context(), "There are ${count('testval1')} objects", "There are 12 objects"},
+            {12, new Context(), "There are ${count(\"sdvdv\")*2 - 1} objects", "There are 29 objects"},
+            {13, new Context().withParameter("qwe", 123), "Hi my age is ${qwe - 1}", "Hi my age is 122"},
         };
     }
 }
