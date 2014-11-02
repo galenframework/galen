@@ -15,6 +15,7 @@
 ******************************************************************************/
 package net.mindengine.galen.parser;
 
+import net.mindengine.galen.javascript.GalenJsExecutor;
 import org.apache.commons.lang3.StringUtils;
 
 import net.mindengine.galen.specs.reader.StringCharReader;
@@ -64,38 +65,35 @@ public class MathParser {
 		return text.toString();
 	}
 
+    private static final char[] mathOperations = {'+', '-', '/', '*','%'};
+
 	private String convertExpression(String initialValue, String expression) {
-		String number = expression.substring(1);
-		if (!StringUtils.isNumeric(number)) {
-			throw new SyntaxException("Expected a number: " + number);
-		}
-		
-		if (StringUtils.isNumeric(initialValue)) {
-			char operationSymbol = expression.charAt(0);
-			
-			int initial = Integer.parseInt(initialValue);
-			int added = Integer.parseInt(number);
-			
-			if (operationSymbol == '+') {
-				return Integer.toString(initial + added);
-			}
-			else if (operationSymbol == '-') {
-				return Integer.toString(initial - added);
-			}
-			else if (operationSymbol == '*') {
-				return Integer.toString(initial * added);
-			}
-			else if (operationSymbol == '/') {
-				return Integer.toString(initial / added);
-			}
-			else if (operationSymbol == '%') {
-				return Integer.toString(initial % added);
-			}
-			else throw new SyntaxException("Unknown operation: " + operationSymbol);
-		}
-		else {
-			return initialValue;
-		}
+        int index = Integer.parseInt(initialValue);
+
+        if (startsWithOneOfTheseSymbols(expression, mathOperations)) {
+            expression = "index" + expression;
+        }
+
+        return Integer.toString(execJavascript(index, expression));
 	}
+
+    private int execJavascript(int index, String expression) {
+        GalenJsExecutor jsExecutor = new GalenJsExecutor();
+        jsExecutor.putObject("index", index);
+        Number number = (Number)jsExecutor.eval(expression);
+        return number.intValue();
+    }
+
+    private boolean startsWithOneOfTheseSymbols(String expression, char[] mathOperations) {
+        if (expression.length() > 0) {
+            char firstSymbol = expression.charAt(0);
+            for (char symbol: mathOperations) {
+                if (firstSymbol == symbol) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
 
 }

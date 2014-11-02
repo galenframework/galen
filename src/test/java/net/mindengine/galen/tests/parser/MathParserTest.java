@@ -46,6 +46,7 @@ public class MathParserTest {
 				{"inside: box-@{%3} 20px left", "10", "inside: box-1 20px left"},
 				{"centered horizontally inside: box-@", "10", "centered horizontally inside: box-10"},
 				{"text is: box-@@{*2} 20px left", "10", "text is: box-@{*2} 20px left"},
+                {"above: box-@{index*2 + 1}", "10", "above: box-21"}
 		};
 	}
 	
