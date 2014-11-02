@@ -682,6 +682,13 @@ public class PageSpecsReaderTest {
         }
     }
 
+    @Test
+    public void shouldAllowTo_importJavascriptFiles() throws IOException {
+        PageSpecReader specReader = new PageSpecReader(new Properties(), null);
+        PageSpec pageSpec = specReader.read(getClass().getResource("/specs/spec-with-javascript-import.spec").getFile());
+        assertThat(pageSpec.getSections().get(0).getObjects().get(0).getSpecs().get(0).getOriginalText(), is("text is: some value from-javascript function"));
+    }
+
     private void assertChildComponentSpec(List<Spec> specs) {
         assertThat(specs.size(), is(1));
         SpecComponent spec = (SpecComponent) specs.get(0);

@@ -75,4 +75,9 @@ public class VarsContext extends Context {
         this.properties = properties;
     }
 
+    public void runJavascriptFromFile(String filePath, String contextPath) {
+        if (jsProcessor != null) {
+            jsProcessor.runJavascriptFromFile(filePath, contextPath);
+        }
+    }
 }

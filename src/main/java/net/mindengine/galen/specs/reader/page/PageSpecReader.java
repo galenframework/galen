@@ -15,24 +15,22 @@
 ******************************************************************************/
 package net.mindengine.galen.specs.reader.page;
 
+import net.mindengine.galen.browser.Browser;
+import net.mindengine.galen.parser.FileSyntaxException;
+import net.mindengine.galen.parser.VarsContext;
+import net.mindengine.galen.parser.VarsParserJsFunctions;
+import net.mindengine.galen.specs.reader.Place;
+import net.mindengine.galen.utils.GalenUtils;
+
 import java.io.*;
 import java.util.HashSet;
 import java.util.Properties;
 import java.util.Set;
 import java.util.regex.Pattern;
 
-import net.mindengine.galen.browser.Browser;
-import net.mindengine.galen.parser.VarsContext;
-import net.mindengine.galen.parser.VarsParserJsFunctions;
-import net.mindengine.galen.parser.FileSyntaxException;
-
-import net.mindengine.galen.parser.VarsParserJsProcessor;
-import net.mindengine.galen.utils.GalenUtils;
-import net.mindengine.galen.specs.reader.Place;
-
 public class PageSpecReader implements VarsParserJsFunctions {
     
-    private VarsContext bashTemplateContext;
+    private VarsContext varsContext;
     private Properties properties;
     /*
      *  This field is need to look up early building of objects
@@ -49,7 +47,7 @@ public class PageSpecReader implements VarsParserJsFunctions {
         }
 
         this.browser = browser;
-        bashTemplateContext = new VarsContext(properties, this);
+        varsContext = new VarsContext(properties, this);
     }
 
 
@@ -94,7 +92,7 @@ public class PageSpecReader implements VarsParserJsFunctions {
         int lineNumber = 1;
         try {
             while(line != null) {
-                lineProcessor.processLine(bashTemplateContext.process(line), new Place(fileLocation, lineNumber));
+                lineProcessor.processLine(varsContext.process(line), new Place(fileLocation, lineNumber));
                 line = bufferedReader.readLine();
                 lineNumber++;
             }
@@ -134,4 +132,7 @@ public class PageSpecReader implements VarsParserJsFunctions {
         this.properties = properties;
     }
 
+    public void runJavascriptFromFile(String filePath, String contextPath) {
+        varsContext.runJavascriptFromFile(filePath, contextPath);
+    }
 }

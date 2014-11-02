@@ -2,11 +2,13 @@ package net.mindengine.galen.parser;
 
 import net.mindengine.galen.javascript.JsFunctionLoad;
 import net.mindengine.galen.suite.reader.Context;
+import net.mindengine.galen.utils.GalenUtils;
 import org.mozilla.javascript.BaseFunction;
 import org.mozilla.javascript.ImporterTopLevel;
 import org.mozilla.javascript.Scriptable;
 import org.mozilla.javascript.ScriptableObject;
 
+import java.io.File;
 import java.util.Map;
 
 public class VarsParserJsProcessor {
@@ -84,4 +86,11 @@ public class VarsParserJsProcessor {
         this.varsContext = varsContext;
     }
 
+    public void runJavascriptFromFile(String filePath, String contextPath) {
+        String fullPath = filePath;
+        if (!filePath.startsWith("/") && contextPath!= null && !contextPath.isEmpty()) {
+            fullPath = contextPath + File.separator + filePath;
+        }
+        new JsFunctionLoad().load(fullPath, this.cx, this.scope);
+    }
 }

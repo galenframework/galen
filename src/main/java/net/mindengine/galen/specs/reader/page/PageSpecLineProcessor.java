@@ -88,7 +88,7 @@ public class PageSpecLineProcessor {
 		String firstWord = new ExpectWord().read(reader);
 		
 		if (firstWord.toLowerCase().equals("import")) {
-			importPageSpec(reader.getTheRest());
+			importFile(reader.getTheRest().trim());
 		}
 		else if (firstWord.toLowerCase().equals("set")) {
 		    setVariables(reader.getTheRest().trim());
@@ -166,6 +166,19 @@ public class PageSpecLineProcessor {
         return firstWord.equals("if") || firstWord.equals("or") || firstWord.equals("do") || firstWord.equals("otherwise") || firstWord.equals("end");
     }
 
+    private void importFile(String filePath) throws IOException {
+        if (filePath.endsWith(".js")) {
+            importJavascript(filePath);
+        }
+        else {
+            importPageSpec(filePath);
+        }
+	}
+
+    private void importJavascript(String filePath) {
+        pageSpecReader.runJavascriptFromFile(filePath, contextPath);
+    }
+
     private void importPageSpec(String filePath) throws IOException {
         filePath = filePath.trim();
         String path;
@@ -175,13 +188,13 @@ public class PageSpecLineProcessor {
         else {
             path = filePath;
         }
-		PageSpec spec = pageSpecReader.read(path);
-		if (spec != null) {
-			pageSpec.merge(spec);
-		}
-	}
+        PageSpec spec = pageSpecReader.read(path);
+        if (spec != null) {
+            pageSpec.merge(spec);
+        }
+    }
 
-	private void startParameterization(String line) {
+    private void startParameterization(String line) {
         line = line.replace(" ", "");
         line = line.replace("\t", "");
         Pattern sequencePattern = Pattern.compile(".*\\-.*");
