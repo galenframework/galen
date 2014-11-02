@@ -31,22 +31,31 @@ import org.testng.annotations.Test;
 public class VarsParserTest {
     
     private static final Properties EMPTY_PROPERTIES = new Properties();
+    private VarsParserJsFunctions jsFunctions = new VarsParserJsFunctions() {
+        @Override
+        public int count(String regex) {
+            if (regex.equals("testval1")){
+                return 12;
+            }
+            else return 15;
+        }
+    };
 
 
     @Test(dataProvider="provideGoodSamples") public void shouldProcessTemplate_successfully(Integer number, Context context, String templateText, String expectedText) {
-        VarsParserJsFunctions jsFunctions = new VarsParserJsFunctions() {
-            @Override
-            public int count(String regex) {
-                if (regex.equals("testval1")){
-                    return 12;
-                }
-                else return 15;
-            }
-        };
         VarsParser template = new VarsParser(context, EMPTY_PROPERTIES, new VarsParserJsProcessor(context, jsFunctions));
         String realText = template.parse(templateText);
-        
+
         assertThat(realText, is(expectedText));
+    }
+
+    @Test
+    public void shouldAllowTo_loadCustomJavascript() {
+        Context context = new Context();
+        VarsParser template = new VarsParser(context, EMPTY_PROPERTIES, new VarsParserJsProcessor(context, jsFunctions));
+        String realText = template.parse("${load('/specs/customFunction.js')} got it from js: ${customFunction('qwe', 'ert')}");
+
+        assertThat(realText, is(" got it from js: qwe-ert"));
     }
     
     

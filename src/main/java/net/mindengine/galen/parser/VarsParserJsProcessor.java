@@ -1,5 +1,6 @@
 package net.mindengine.galen.parser;
 
+import net.mindengine.galen.javascript.JsFunctionLoad;
 import net.mindengine.galen.suite.reader.Context;
 import org.mozilla.javascript.BaseFunction;
 import org.mozilla.javascript.ImporterTopLevel;
@@ -35,6 +36,8 @@ public class VarsParserJsProcessor {
                     return jsFunctions.count((String)args[0]);
                 }
             }, ScriptableObject.DONTENUM);
+
+            scope.defineProperty("load", new JsFunctionLoad(), ScriptableObject.DONTENUM);
         }
 
     }

@@ -43,13 +43,13 @@ public class GalenJsExecutor {
     
     private Context context;
     private ImporterTopLevel scope;
-    private ScriptExecutor scriptExecutor;
+    private JsFunctionLoad scriptExecutor;
 
     public GalenJsExecutor() {
         this.context = Context.enter();
         this.scope = new ImporterTopLevel(context);
         
-        this.scriptExecutor = new ScriptExecutor();
+        this.scriptExecutor = new JsFunctionLoad();
         scope.defineProperty("load", scriptExecutor, ScriptableObject.DONTENUM);
         importAllMajorClasses();
     }

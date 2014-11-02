@@ -17,15 +17,18 @@ package net.mindengine.galen.javascript;
 
 import java.io.File;
 import java.io.FileReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.Stack;
 
+import net.mindengine.galen.utils.GalenUtils;
 import org.mozilla.javascript.BaseFunction;
 import org.mozilla.javascript.Context;
 import org.mozilla.javascript.Scriptable;
 
-public class ScriptExecutor extends BaseFunction {
+public class JsFunctionLoad extends BaseFunction {
     
     /**
      * 
@@ -36,7 +39,7 @@ public class ScriptExecutor extends BaseFunction {
     
     private Set<String> loadedFiles = new HashSet<String>();
 
-    public ScriptExecutor() {
+    public JsFunctionLoad() {
     }
     
     @Override
@@ -62,20 +65,26 @@ public class ScriptExecutor extends BaseFunction {
         if (!contextPathStack.isEmpty()) {
             contextPath = contextPathStack.peek();
         }
-        
+
+        String fullPath = filePath;
+
         try {
-            File file = new File(contextPath + File.separator + filePath);
-            String absolutePath = file.getAbsolutePath();
-            
-            if (!loadedFiles.contains(absolutePath)) {
-                
-                String parentPath = new File(absolutePath).getParent();
+            if (!filePath.startsWith("/")) {
+                fullPath = contextPath + File.separator + filePath;
+            }
+
+            if (!loadedFiles.contains(fullPath)) {
+
+                File file = new File(fullPath);
+                String parentPath = file.getParent();
                 if (parentPath != null) {
                     contextPathStack.push(file.getParent());
                 }
-                
-                cx.evaluateReader(scope, new FileReader(file), file.getAbsolutePath(), 1, null);
-                loadedFiles.add(absolutePath);
+
+                InputStream is = GalenUtils.findFileOrResourceAsStream(fullPath);
+
+                cx.evaluateReader(scope, new InputStreamReader(is), file.getAbsolutePath(), 1, null);
+                loadedFiles.add(fullPath);
                 
                 if (!contextPathStack.isEmpty()) {
                     contextPathStack.pop();
@@ -83,7 +92,7 @@ public class ScriptExecutor extends BaseFunction {
             }
         }
         catch (Exception ex) {
-            throw new RuntimeException("Could not load script: " + filePath, ex);
+            throw new RuntimeException("Could not load script: " + fullPath, ex);
         }
     }
     
