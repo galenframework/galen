@@ -167,6 +167,24 @@ public class PageSpecsReaderTest {
     }
 
 
+    /**
+     * Comes from a bug report #134
+     * The problem was that the count couldn't find all objects in case the page spec had an import of other spec
+     * @throws IOException
+     */
+    @Test
+    public void should_countObjects_evenWhenUsing_emptyImports() throws IOException {
+        WebDriver driver = new MockedDriver();
+        driver.get("/mocks/pages/count-via-js-page.json");
+        PageSpecReader pageSpecReader = new PageSpecReader(EMPTY_PROPERTIES, new SeleniumBrowser(driver));
+        PageSpec pageSpec = pageSpecReader.read(getClass().getResource("/specs/count-bug-134.spec").getFile());
+
+        List<ObjectSpecs> objectSpecs = pageSpec.getSections().get(0).getObjects();
+        assertThat(objectSpecs.get(0).getSpecs().get(0).getOriginalText(), is("text is: A count is 4"));
+
+    }
+
+
     @Test
     public void shouldNotParameterize_ifTemplateIsGiven_from_1_to_0_or_from_1_to_minus1() throws IOException {
         PageSpec pageSpec = pageSpecReader.read("/specs/incorrect-parameterization.spec");

@@ -47,7 +47,10 @@ public class PageSpecLineProcessor {
     private String contextPath = null;
     private PageSpec pageSpec;
     private Properties properties;
-    
+
+    // Used to store information about spec files that were already loaded
+    private Set<String> processedFiles = new HashSet<String>();
+
     public PageSpecLineProcessor(Properties properties, String contextPath, PageSpecReader pageSpecReader, PageSpec pageSpec) {
         this.properties = properties;
         this.pageSpec = pageSpec;
@@ -170,18 +173,21 @@ public class PageSpecLineProcessor {
     }
 
     private void importPageSpec(String filePath) throws IOException {
-        filePath = filePath.trim();
-        String path;
-        if (contextPath != null) {
-            path = contextPath + File.separator + filePath;
+        if (!processedFiles.contains(filePath)) {
+            processedFiles.add(filePath);
+            filePath = filePath.trim();
+            String path;
+            if (contextPath != null) {
+                path = contextPath + File.separator + filePath;
+            }
+            else {
+                path = filePath;
+            }
+            PageSpec spec = new PageSpecReader(pageSpecReader.getProperties(), pageSpecReader.getBrowser()).read(path);
+            if (spec != null) {
+                pageSpec.merge(spec);
+            }
         }
-        else {
-            path = filePath;
-        }
-		PageSpec spec = pageSpecReader.read(path);
-		if (spec != null) {
-			pageSpec.merge(spec);
-		}
 	}
 
 	private void startParameterization(String line) {
