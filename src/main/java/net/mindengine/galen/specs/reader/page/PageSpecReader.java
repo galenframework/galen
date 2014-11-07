@@ -37,7 +37,7 @@ public class PageSpecReader implements VarsParserJsFunctions {
     private VarsContext varsContext;
     private Properties properties;
     /*
-     *  This field is need to look up early building of objects
+     *  This field is needed to look up early building of objects
      *  so they could be used within bash templates
      */
     private PageSpec pageSpec;
@@ -59,23 +59,13 @@ public class PageSpecReader implements VarsParserJsFunctions {
     // at earlier state so that it is possible to use dynamic ranges
     private Browser browser;
 
-	// Used to store information about spec files that were already loaded
-
-    private Set<String> processedFiles = new HashSet<String>();
 
     public PageSpec read(String filePath) throws IOException {
-        if (processedFiles.contains(filePath)) {
-            return null;
+        InputStream is = GalenUtils.findFileOrResourceAsStream(filePath);
+        if (is == null) {
+            throw new FileNotFoundException("Can't find file or resource: " + filePath);
         }
-        else {
-            processedFiles.add(filePath);
-
-            InputStream is = GalenUtils.findFileOrResourceAsStream(filePath);
-            if (is == null) {
-                throw new FileNotFoundException("Can't find file or resource: " + filePath);
-            }
-            return read(is, filePath, GalenUtils.getParentForFile(filePath));
-        }
+        return read(is, filePath, GalenUtils.getParentForFile(filePath));
     }
 
 
@@ -84,8 +74,7 @@ public class PageSpecReader implements VarsParserJsFunctions {
     }
 
     public PageSpec read(InputStream inputStream, String fileLocation, String contextPath) throws IOException {
-
-        pageSpec = new PageSpec();
+        this.pageSpec = new PageSpec();
 
         PageSpecLineProcessor lineProcessor = new PageSpecLineProcessor(properties, contextPath, this, pageSpec);
         
@@ -96,7 +85,7 @@ public class PageSpecReader implements VarsParserJsFunctions {
         int lineNumber = 1;
         try {
             while(line != null) {
-                lineProcessor.processLine(varsContext.process(line), new Place(fileLocation, lineNumber));
+                lineProcessor.processLine(line, varsContext, new Place(fileLocation, lineNumber));
                 line = bufferedReader.readLine();
                 lineNumber++;
             }

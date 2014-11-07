@@ -22,7 +22,7 @@ footer                  id  footer
 =====================================
 
 
-@ all
+@ *
 -------------------------------
 header
     inside: screen 0px top, 0px left, 0px right

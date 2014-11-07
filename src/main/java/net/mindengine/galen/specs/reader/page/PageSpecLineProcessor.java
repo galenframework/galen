@@ -24,6 +24,7 @@ import java.util.regex.Pattern;
 
 import net.mindengine.galen.parser.ExpectWord;
 import net.mindengine.galen.parser.SyntaxException;
+import net.mindengine.galen.parser.VarsContext;
 import net.mindengine.galen.specs.page.ConditionalBlock;
 import net.mindengine.galen.specs.page.PageSection;
 import net.mindengine.galen.specs.reader.Place;
@@ -46,7 +47,10 @@ public class PageSpecLineProcessor {
     private String contextPath = null;
     private PageSpec pageSpec;
     private Properties properties;
-    
+
+    // Used to store information about spec files that were already loaded
+    private Set<String> processedFiles = new HashSet<String>();
+
     public PageSpecLineProcessor(Properties properties, String contextPath, PageSpecReader pageSpecReader, PageSpec pageSpec) {
         this.properties = properties;
         this.pageSpec = pageSpec;
@@ -55,8 +59,10 @@ public class PageSpecLineProcessor {
         startNewSection("");
     }
 
-    public void processLine(String line, Place place) throws IOException {
+    public void processLine(String line, VarsContext varsContext, Place place) throws IOException {
         if (!isCommentedOut(line) && !isEmpty(line)) {
+            line = varsContext.process(line);
+            
         	if (isSpecialInstruction(line)) {
         		doSpecialInstruction(line);
         	}
@@ -180,19 +186,22 @@ public class PageSpecLineProcessor {
     }
 
     private void importPageSpec(String filePath) throws IOException {
-        filePath = filePath.trim();
-        String path;
-        if (contextPath != null) {
-            path = contextPath + File.separator + filePath;
+        if (!processedFiles.contains(filePath)) {
+            processedFiles.add(filePath);
+            filePath = filePath.trim();
+            String path;
+            if (contextPath != null) {
+                path = contextPath + File.separator + filePath;
+            }
+            else {
+                path = filePath;
+            }
+            PageSpec spec = new PageSpecReader(pageSpecReader.getProperties(), pageSpecReader.getBrowser()).read(path);
+            if (spec != null) {
+                pageSpec.merge(spec);
+            }
         }
-        else {
-            path = filePath;
-        }
-        PageSpec spec = pageSpecReader.read(path);
-        if (spec != null) {
-            pageSpec.merge(spec);
-        }
-    }
+	}
 
     private void startParameterization(String line) {
         line = line.replace(" ", "");
