@@ -190,7 +190,7 @@ public class PageSpecLineProcessor {
             processedFiles.add(filePath);
             filePath = filePath.trim();
             String path;
-            if (contextPath != null) {
+            if (contextPath != null && !filePath.startsWith("/")) {
                 path = contextPath + File.separator + filePath;
             }
             else {

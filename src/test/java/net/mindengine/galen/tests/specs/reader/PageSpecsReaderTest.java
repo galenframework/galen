@@ -147,6 +147,16 @@ public class PageSpecsReaderTest {
         assertThat("Tag for second filtered section should be", filteredSections.get(1).getTags(), contains("tag2"));
     }
 
+    /**
+     * Comes from https://github.com/galenframework/galen/issues/95
+     * Incorrect imported spec file path resolution
+     * @throws Exception
+     */
+    @Test
+    public void shouldAvoidUsing_doubleSlashes_whenImporting_andNotGiveException() throws Exception {
+        pageSpecReader.read("/specs/spec-issue-double-slash.spec");
+    }
+
     @Test
     public void shouldAllow_toCountObject_byIvoking_JavascriptFunction() throws IOException {
         WebDriver driver = new MockedDriver();
@@ -165,7 +175,6 @@ public class PageSpecsReaderTest {
         assertThat(objectSpecs.get(1).getSpecs().get(0).getOriginalText(), is("near: menu-item-3 0px left"));
         assertThat(objectSpecs.get(2).getSpecs().get(0).getOriginalText(), is("near: menu-item-4 0px left"));
     }
-
 
     /**
      * Comes from a bug report #134
