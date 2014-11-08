@@ -81,7 +81,7 @@ public class SeleniumBrowser implements Browser {
     @Override
     public File createScreenshot() {
         try {
-            if (GalenConfig.getConfig().getBooleanProperty("galen.browser.screenshots.fullPage", false)) {
+            if (GalenConfig.getConfig().getBooleanProperty(GalenConfig.SCREENSHOT_FULLPAGE, false)) {
                 return GalenUtils.makeFullScreenshot(driver);
             }
             else return makeSimpleScreenshot();

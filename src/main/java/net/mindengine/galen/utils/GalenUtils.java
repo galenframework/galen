@@ -26,6 +26,8 @@ import java.util.Properties;
 
 import javax.imageio.ImageIO;
 
+import com.thoughtworks.selenium.Wait;
+import net.mindengine.galen.api.Galen;
 import net.mindengine.galen.api.UnregisteredTestSession;
 import net.mindengine.galen.browser.SeleniumBrowser;
 import net.mindengine.galen.browser.SeleniumBrowserFactory;
@@ -118,8 +120,6 @@ public class GalenUtils {
             int times = scrollHeight / adaptedCapturedHeight;
             int leftover = scrollHeight % adaptedCapturedHeight;
 
-
-
             final BufferedImage tiledImage = new BufferedImage(capturedWidth, (int)(((double)scrollHeight) * devicePixelRatio), BufferedImage.TYPE_INT_RGB);
             Graphics2D g2dTile = tiledImage.createGraphics();
             g2dTile.drawImage(image, 0,0, null);
@@ -198,8 +198,25 @@ public class GalenUtils {
 
     public static void scrollVerticallyTo(WebDriver driver, int scroll) {
         ((JavascriptExecutor)driver).executeScript("window.scrollTo(0, " + scroll + ");");
+        waitUntilItIsScrolledToPosition(driver, scroll);
     }
-    
+
+    private static void waitUntilItIsScrolledToPosition(WebDriver driver, int scrollPosition) {
+        System.out.println("Waiting for it to be scrolled to " + scrollPosition);
+        int time = GalenConfig.getConfig().getIntProperty(GalenConfig.SCREENSHOT_FULLPAGE_SCROLLWAIT, 5000);
+        boolean isScrolledToPosition = false;
+        while(time >= 0 && !isScrolledToPosition) {
+            time -= 1000;
+            isScrolledToPosition = Math.abs(obtainVerticalScrollPosition(driver) - scrollPosition) < 3;
+        }
+    }
+
+    private static int obtainVerticalScrollPosition(WebDriver driver) {
+        Long scrollLong = (Long) ((JavascriptExecutor)driver).executeScript("return (window.pageYOffset !== undefined) ? window.pageYOffset : (document.documentElement || document.body.parentNode || document.body).scrollTop;");
+        System.out.println("Obtained scroll position " + scrollLong);
+        return scrollLong.intValue();
+    }
+
     public static String convertToFileName(String name) {
         return name.toLowerCase().replaceAll("[^\\dA-Za-z\\.\\-]", " ").replaceAll("\\s+", "-");
     }

@@ -29,6 +29,8 @@ public class GalenConfig {
     
     private final static GalenConfig instance = new GalenConfig();
     public static final String SCREENSHOT_AUTORESIZE = "galen.screenshot.autoresize";
+    public static final String SCREENSHOT_FULLPAGE = "galen.browser.screenshots.fullPage";
+    public static final String SCREENSHOT_FULLPAGE_SCROLLWAIT = "galen.browser.screenshots.fullPage.scrollWait";
     private int rangeApproximation;
     private List<String> reportingListeners;
     private String defaultBrowser;
