@@ -42,9 +42,10 @@ public class ArgumentParserTest {
     
     @Test
     public void shouldParseSystemProperties() throws ParseException {
-        GalenArguments.parse(new String[]{"test", ".", "--htmlreport", "report", "-DsomeCustomVar=123", "-DsomeOtherVar=456"});
+        GalenArguments.parse(new String[]{"test", ".", "--htmlreport", "report", "-DsomeCustomVar=123", "-DsomeOtherVar=456", "-DpageUrl=http://example.com?q=1&w=2"});
         assertThat(System.getProperty("someCustomVar"), is("123"));
         assertThat(System.getProperty("someOtherVar"), is("456"));
+        assertThat(System.getProperty("pageUrl"), is("http://example.com?q=1&w=2"));
     }
     
     @DataProvider

@@ -233,13 +233,14 @@ public class GalenArguments {
     }
 
     private static void setSystemProperty(String systemPropertyDefinition) {
-        String string = systemPropertyDefinition.substring(2);
-        String values[] = string.split("=");
-        if (values.length != 2) {
+        String pairKeyAndValue = systemPropertyDefinition.substring(2);
+        int equalSignPosition = pairKeyAndValue.indexOf('=');
+        if (equalSignPosition > 0) {
+            System.setProperty(pairKeyAndValue.substring(0, equalSignPosition), pairKeyAndValue.substring(equalSignPosition+1));
+        }
+        else {
             throw new IllegalArgumentException("Cannot parse: " + systemPropertyDefinition);
         }
-        
-        System.setProperty(values[0].trim(), values[1].trim());
     }
 
     private static void verifyArguments(GalenArguments galen) {
