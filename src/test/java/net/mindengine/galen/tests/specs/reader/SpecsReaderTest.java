@@ -459,6 +459,63 @@ public class SpecsReaderTest {
         assertThat(spec.getText(), is("Some * text"));
         assertThat(spec.getType(), is(SpecText.Type.MATCHES));
     }
+
+    @Test
+    public void shouldReadSpec_css_fontsize_is_18px() throws IOException {
+        SpecCss spec = (SpecCss)readSpec("css font-size is: 18px");
+        assertThat(spec.getCssPropertyName(), is("font-size"));
+        assertThat(spec.getText(), is("18px"));
+        assertThat(spec.getType(), is(SpecText.Type.IS));
+    }
+
+    @Test
+    public void shouldReadSpec_css_fontsize_starts() throws IOException {
+        SpecCss spec = (SpecCss)readSpec("css font-size starts: 18px");
+        assertThat(spec.getCssPropertyName(), is("font-size"));
+        assertThat(spec.getText(), is("18px"));
+        assertThat(spec.getType(), is(SpecText.Type.STARTS));
+    }
+
+    @Test
+    public void shouldReadSpec_css_fontsize_ends() throws IOException {
+        SpecCss spec = (SpecCss)readSpec("css font-size ends: 18px");
+        assertThat(spec.getCssPropertyName(), is("font-size"));
+        assertThat(spec.getText(), is("18px"));
+        assertThat(spec.getType(), is(SpecText.Type.ENDS));
+    }
+
+    @Test
+    public void shouldReadSpec_css_fontsize_contains() throws IOException {
+        SpecCss spec = (SpecCss)readSpec("css font-size contains: 18px");
+        assertThat(spec.getCssPropertyName(), is("font-size"));
+        assertThat(spec.getText(), is("18px"));
+        assertThat(spec.getType(), is(SpecText.Type.CONTAINS));
+    }
+
+    @Test
+    public void shouldReadSpec_css_fontsize_matches() throws IOException {
+        SpecCss spec = (SpecCss)readSpec("css font-size matches: 18px");
+        assertThat(spec.getCssPropertyName(), is("font-size"));
+        assertThat(spec.getText(), is("18px"));
+        assertThat(spec.getType(), is(SpecText.Type.MATCHES));
+    }
+
+
+    @Test(expectedExceptions = {SyntaxException.class},
+            expectedExceptionsMessageRegExp = "Missing css property name"
+    )
+    public void shouldGiveException_empty_css_spec() throws IOException {
+        readSpec("css : 18px");
+    }
+
+    @Test(expectedExceptions = {SyntaxException.class},
+            expectedExceptionsMessageRegExp = "Missing validation type \\(is, contains, starts, ends, matches\\)"
+    )
+    public void shouldGiveException_css_without_type() throws IOException {
+        readSpec("css font-size: 18px");
+    }
+
+
     
     @Test 
     public void shouldReadSpec_above_object_20px()  throws IOException {
@@ -825,7 +882,7 @@ public class SpecsReaderTest {
 
     @Test
     public void shouldReadSpec_image_andBuildImagePath_withContextPath() throws IOException {
-        SpecImage spec = (SpecImage)readSpec("image: file image.png", "some-component/specs");
+        SpecImage spec = (SpecImage) readSpec("image: file image.png", "some-component/specs");
         assertThat(spec.getImagePaths(), contains("some-component/specs/image.png"));
         assertThat(spec.getMaxPercentage(), is(nullValue()));
         assertThat(spec.getMaxPixels(), is(nullValue()));

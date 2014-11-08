@@ -16,10 +16,30 @@
 package net.mindengine.galen.specs;
 
 
+import net.mindengine.galen.parser.SyntaxException;
 
 public class SpecText extends Spec {
     public enum Type {
-        IS, CONTAINS, STARTS, ENDS, MATCHES
+        IS, CONTAINS, STARTS, ENDS, MATCHES;
+
+        public static Type fromString(String typeString) {
+            if (typeString.equals("is")) {
+                return SpecText.Type.IS;
+            }
+            else if (typeString.equals("contains")) {
+                return SpecText.Type.CONTAINS;
+            }
+            else if (typeString.equals("starts")) {
+                return SpecText.Type.STARTS;
+            }
+            else if (typeString.equals("ends")) {
+                return SpecText.Type.ENDS;
+            }
+            else if (typeString.equals("matches")) {
+                return SpecText.Type.MATCHES;
+            }
+            else throw new SyntaxException("Unknown validation type: " + typeString);
+        }
     }
     
     private Type type;

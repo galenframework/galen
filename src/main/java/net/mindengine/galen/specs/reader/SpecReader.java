@@ -87,35 +87,37 @@ public class SpecReader {
                 return new SpecHeight((Range) args[0]);
             }
         }));
-        
+
         putSpec("text\\s+.*", new SpecProcessor() {
             @Override
             public Spec processSpec(String specName, String paramsText, String contextPath) {
                 String arguments = specName.substring("text".length()).trim();
-                
+
                 if (arguments.isEmpty()) {
                     throw new SyntaxException(UNKNOWN_LINE, "Text validation is not fully specified");
                 }
-                
-                SpecText.Type type = null;
-                if (arguments.equals("is")) {
-                    type = SpecText.Type.IS;
+
+                return new SpecText(SpecText.Type.fromString(arguments), paramsText.trim());
+            }
+        });
+
+        putSpec("css\\s+.*", new SpecProcessor() {
+            @Override
+            public Spec processSpec(String specName, String paramsText, String contextPath) {
+                String arguments = specName.substring("css".length()).trim();
+
+                StringCharReader reader = new StringCharReader(arguments);
+
+                String cssPropertyName = Expectations.word().read(reader);
+                String typeString = Expectations.word().read(reader);
+
+                if (cssPropertyName.isEmpty()) {
+                    throw new SyntaxException("Missing css property name");
                 }
-                else if (arguments.equals("contains")) {
-                    type = SpecText.Type.CONTAINS;
+                if (typeString.isEmpty()) {
+                    throw new SyntaxException("Missing validation type (is, contains, starts, ends, matches)");
                 }
-                else if (arguments.equals("starts")) {
-                    type = SpecText.Type.STARTS;
-                }
-                else if (arguments.equals("ends")) {
-                    type = SpecText.Type.ENDS;
-                }
-                else if (arguments.equals("matches")) {
-                    type = SpecText.Type.MATCHES;
-                }
-                else throw new SyntaxException(UNKNOWN_LINE, "Unknown text validation: " + arguments); 
-                
-                return new SpecText(type, paramsText.trim());
+                return new SpecCss(cssPropertyName, SpecText.Type.fromString(typeString), paramsText.trim());
             }
         });
         
