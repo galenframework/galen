@@ -129,14 +129,12 @@ public class GalenUtils {
             for (int i = 0; i < times - 1; i++) {
                 scroll += scrollOffset;
                 scrollVerticallyTo(driver, scroll);
-                Thread.sleep(100);
                 BufferedImage nextImage = ImageIO.read(new ByteArrayInputStream(((TakesScreenshot)driver).getScreenshotAs(OutputType.BYTES)));
                 g2dTile.drawImage(nextImage, 0, (i+1) * capturedHeight, null);
             }
             if (leftover > 0) {
                 scroll += scrollOffset;
                 scrollVerticallyTo(driver, scroll);
-                Thread.sleep(100);
                 BufferedImage nextImage = ImageIO.read(new ByteArrayInputStream(((TakesScreenshot)driver).getScreenshotAs(OutputType.BYTES)));
                 BufferedImage lastPart = nextImage.getSubimage(0, nextImage.getHeight() - (int)(((double)leftover) * devicePixelRatio), nextImage.getWidth(), leftover);
                 g2dTile.drawImage(lastPart, 0, times * capturedHeight, null);
@@ -206,7 +204,12 @@ public class GalenUtils {
         int time = GalenConfig.getConfig().getIntProperty(GalenConfig.SCREENSHOT_FULLPAGE_SCROLLWAIT, 5000);
         boolean isScrolledToPosition = false;
         while(time >= 0 && !isScrolledToPosition) {
-            time -= 1000;
+            try {
+                Thread.sleep(500);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            time -= 500;
             isScrolledToPosition = Math.abs(obtainVerticalScrollPosition(driver) - scrollPosition) < 3;
         }
     }
