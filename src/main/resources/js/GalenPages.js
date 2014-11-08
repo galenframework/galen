@@ -323,7 +323,7 @@ GalenPages.Page = function (driver, mainFields, secondaryFields) {
                 conditions[this.primaryFields[i] + " to be displayed"] = {
                     field: this[this.primaryFields[i]],
                     apply: function () {
-                        return this.field.exists();
+                        return this.field.exists() && this.field.isDisplayed();
                     }
                 };
             }
