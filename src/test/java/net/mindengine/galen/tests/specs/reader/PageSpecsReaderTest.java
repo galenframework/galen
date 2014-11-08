@@ -403,7 +403,7 @@ public class PageSpecsReaderTest {
         
         String fullSpecPath = getClass().getResource("/negative-specs/incorrect-indentation-2.spec").getFile();
         
-        assertThat(exception.getMessage(), is("Incorrect indentation. You should use same indentation within one spec\n    in " + fullSpecPath +":10"));
+        assertThat(exception.getMessage(), is("Incorrect indentation. You should use same indentation within one spec\n    in " + fullSpecPath + ":10"));
         assertThat(exception.getFilePath(), endsWith("/incorrect-indentation-2.spec"));
         assertThat(exception.getLine(), is(10));
     }
@@ -414,7 +414,7 @@ public class PageSpecsReaderTest {
         
         String fullSpecPath = getClass().getResource("/negative-specs/incorrect-indentation-3.spec").getFile();
         
-        assertThat(exception.getMessage(), is("Incorrect indentation. Should not use tabs. Use spaces\n    in " + fullSpecPath +":9"));
+        assertThat(exception.getMessage(), is("Incorrect indentation. Should not use tabs. Use spaces\n    in " + fullSpecPath + ":9"));
         assertThat(exception.getFilePath(), endsWith("/incorrect-indentation-3.spec"));
         assertThat(exception.getLine(), is(9));
     }
@@ -733,6 +733,17 @@ public class PageSpecsReaderTest {
         assertThat(pageSpec.getSections().get(0).getObjects().get(0).getSpecs().get(0).getOriginalText(), is("above: menu-item-3"));
         assertThat(pageSpec.getSections().get(0).getObjects().get(1).getSpecs().get(0).getOriginalText(), is("above: menu-item-5"));
         assertThat(pageSpec.getSections().get(0).getObjects().get(2).getSpecs().get(0).getOriginalText(), is("above: menu-item-7"));
+    }
+
+    @Test
+    public void shouldAllowTo_mixConditionalStatements_withParameterizations() throws IOException {
+        PageSpecReader specReader = new PageSpecReader(new Properties(), null);
+        PageSpec pageSpec = specReader.read(getClass().getResource("/specs/mix-conditions-with-parameterizations.spec").getFile());
+        ConditionalBlock conditionalBlock = pageSpec.getSections().get(0).getConditionalBlocks().get(0);
+        assertThat(conditionalBlock.getBodyObjects().size(), is(3));
+        assertThat(conditionalBlock.getBodyObjects().get(0).getObjectName(), is("banner-1"));
+        assertThat(conditionalBlock.getBodyObjects().get(1).getObjectName(), is("banner-2"));
+        assertThat(conditionalBlock.getBodyObjects().get(2).getObjectName(), is("banner-3"));
     }
 
     private void assertChildComponentSpec(List<Spec> specs) {

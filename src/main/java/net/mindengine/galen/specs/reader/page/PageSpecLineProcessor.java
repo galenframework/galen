@@ -253,12 +253,18 @@ public class PageSpecLineProcessor {
     }
 
     private void startParameterization(String[] parameters) {
-        if (!(state instanceof StateDoingSection)) {
-            startNewSection("");
+        StateDoingSection sectionState;
+        if (state instanceof StateDoingConditionalBlocks) {
+            sectionState = ((StateDoingConditionalBlocks)state).getCurrentSectionState();
         }
-        
-        StateDoingSection doingSection = (StateDoingSection)state;
-        doingSection.parameterizeNextObject(parameters);
+        else if (state instanceof StateDoingSection) {
+            sectionState = (StateDoingSection) state;
+        }
+        else {
+            startNewSection("");
+            sectionState = (StateDoingSection) state;
+        }
+        sectionState.parameterizeNextObject(parameters);
     }
 
     public PageSpec buildPageSpec() {

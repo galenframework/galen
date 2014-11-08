@@ -29,7 +29,11 @@ public class StateDoingConditionalBlocks extends State {
     
     private ConditionalBlock conditionalBlock;
     private StateDoingSection currentSectionState;
-    
+
+    public StateDoingSection getCurrentSectionState() {
+        return currentSectionState;
+    }
+
     private enum STATE {
         STATEMENT, BODY, OTHERWISE
     }
