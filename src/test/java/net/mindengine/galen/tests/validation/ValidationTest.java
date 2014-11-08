@@ -495,6 +495,22 @@ public class ValidationTest {
               put("object", element(100, 90, 100, 40));
           }}, imageComparisonTestScreenshot)),
 
+
+            row(new SpecCss("font-size", SpecText.Type.IS, "18px"), page(new HashMap<String, PageElement>(){{
+                put("object", elementWithCss("font-size", "18px"));
+            }})),
+            row(new SpecCss("font-size", SpecText.Type.ENDS, "px"), page(new HashMap<String, PageElement>(){{
+                put("object", elementWithCss("font-size", "18px"));
+            }})),
+            row(new SpecCss("font-size", SpecText.Type.STARTS, "18"), page(new HashMap<String, PageElement>(){{
+                put("object", elementWithCss("font-size", "18px"));
+            }})),
+            row(new SpecCss("font-size", SpecText.Type.CONTAINS, "8p"), page(new HashMap<String, PageElement>(){{
+                put("object", elementWithCss("font-size", "18px"));
+            }})),
+            row(new SpecCss("font-size", SpecText.Type.MATCHES, "[0-9]+px"), page(new HashMap<String, PageElement>(){{
+                put("object", elementWithCss("font-size", "18px"));
+            }}))
         };
     }
 
@@ -1030,9 +1046,56 @@ public class ValidationTest {
                   page(new HashMap<String, PageElement>(){{
                       put("object", element(10, 10, 10, 10).withText("Some text"));
           }})),
-          
-          
-          // Above 
+
+
+          // Css
+            row(new ValidationError(NO_AREA, messages("Cannot find locator for \"object\" in page spec")),
+                    new SpecCss("font-size", SpecText.Type.IS, "some wrong text"),
+                    page(new HashMap<String, PageElement>())),
+
+            row(new ValidationError(NO_AREA, messages("\"object\" is not visible on page")),
+                    new SpecCss("font-size", SpecText.Type.IS, "some wrong text"),
+                    page(new HashMap<String, PageElement>(){{
+                        put("object", invisibleElement(10, 10, 10, 10));
+                    }})),
+
+            row(new ValidationError(NO_AREA, messages("\"object\" is absent on page")),
+                    new SpecCss("font-size", SpecText.Type.IS, "some wrong text"),
+                    page(new HashMap<String, PageElement>(){{
+                        put("object", absentElement(10, 10, 10, 10));
+                    }})),
+
+            row(new ValidationError(singleArea(new Rect(10, 10, 10, 10), "object"), messages("\"object\" css property \"font-size\" is \"18px\" but should be \"19px\"")),
+                    new SpecCss("font-size", SpecText.Type.IS, "19px"),
+                    page(new HashMap<String, PageElement>(){{
+                        put("object", elementWithCss("font-size", "18px"));
+                    }})),
+
+            row(new ValidationError(singleArea(new Rect(10, 10, 10, 10), "object"), messages("\"object\" css property \"font-size\" is \"18px\" but should start with \"19\"")),
+                    new SpecCss("font-size", SpecText.Type.STARTS, "19"),
+                    page(new HashMap<String, PageElement>(){{
+                        put("object", elementWithCss("font-size", "18px"));
+                    }})),
+
+            row(new ValidationError(singleArea(new Rect(10, 10, 10, 10), "object"), messages("\"object\" css property \"font-size\" is \"18px\" but should end with \"em\"")),
+                    new SpecCss("font-size", SpecText.Type.ENDS, "em"),
+                    page(new HashMap<String, PageElement>(){{
+                        put("object", elementWithCss("font-size", "18px"));
+                    }})),
+
+            row(new ValidationError(singleArea(new Rect(10, 10, 10, 10), "object"), messages("\"object\" css property \"font-size\" is \"18px\" but should contain \"9\"")),
+                    new SpecCss("font-size", SpecText.Type.CONTAINS, "9"),
+                    page(new HashMap<String, PageElement>(){{
+                        put("object", elementWithCss("font-size", "18px"));
+                    }})),
+
+            row(new ValidationError(singleArea(new Rect(10, 10, 10, 10), "object"), messages("\"object\" css property \"font-size\" is \"18px\" but should match \"[0-9]+em\"")),
+                    new SpecCss("font-size", SpecText.Type.MATCHES, "[0-9]+em"),
+                    page(new HashMap<String, PageElement>(){{
+                        put("object", elementWithCss("font-size", "18px"));
+                    }})),
+
+          // Above
           
           row(new ValidationError(NO_AREA, messages("\"object\" is not visible on page")),
                   specAbove("button", exact(20)), page(new HashMap<String, PageElement>(){{
@@ -1374,7 +1437,11 @@ public class ValidationTest {
     private MockedPageElement element(int left, int top, int width, int height) {
         return new MockedPageElement(left, top, width, height);
     }
-    
+
+    private PageElement elementWithCss(String cssPropertyName, String value) {
+        return new MockedPageElement(10,10,10,10).withCssProperty(cssPropertyName, value);
+    }
+
     protected PageElement invisibleElement(int left, int top, int width, int height) {
         return new MockedInvisiblePageElement(left, top, width, height);
     }

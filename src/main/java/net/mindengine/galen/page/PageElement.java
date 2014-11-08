@@ -29,4 +29,12 @@ public interface PageElement {
     int getTop();
 
     String getText();
+
+    /**
+     * Should be implemented only for WEB page element
+     * @param cssPropertyName
+     * @return
+     */
+    String getCssProperty(String cssPropertyName);
+
 }

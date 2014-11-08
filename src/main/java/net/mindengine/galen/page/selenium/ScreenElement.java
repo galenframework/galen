@@ -81,4 +81,9 @@ public class ScreenElement implements PageElement {
         return "";
     }
 
+    @Override
+    public String getCssProperty(String cssPropertyName) {
+        return "";
+    }
+
 }

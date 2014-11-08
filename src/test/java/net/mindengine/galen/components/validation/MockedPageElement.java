@@ -18,10 +18,14 @@ package net.mindengine.galen.components.validation;
 import net.mindengine.galen.page.PageElement;
 import net.mindengine.galen.page.Rect;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class MockedPageElement implements PageElement {
 
     private Rect rect;
     private String innerText;
+    private Map<String, String> cssProperties = new HashMap<String, String>();
 
     public MockedPageElement(int left, int top, int width, int height) {
         this.rect = new Rect(left, top, width, height);
@@ -72,4 +76,13 @@ public class MockedPageElement implements PageElement {
         return this.innerText;
     }
 
+    @Override
+    public String getCssProperty(String cssPropertyName) {
+        return this.cssProperties.get(cssPropertyName);
+    }
+
+    public PageElement withCssProperty(String cssPropertyName, String value) {
+        this.cssProperties.put(cssPropertyName, value);
+        return this;
+    }
 }

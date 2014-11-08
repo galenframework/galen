@@ -133,4 +133,9 @@ public class WebPageElement implements PageElement {
         else return getWebElement().getText().trim();
     }
 
+    @Override
+    public String getCssProperty(String cssPropertyName) {
+        return getWebElement().getCssValue(cssPropertyName);
+    }
+
 }

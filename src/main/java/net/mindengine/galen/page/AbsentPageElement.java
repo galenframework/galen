@@ -57,4 +57,9 @@ public class AbsentPageElement implements PageElement {
         return "";
     }
 
+    @Override
+    public String getCssProperty(String cssPropertyName) {
+        return null;
+    }
+
 }
