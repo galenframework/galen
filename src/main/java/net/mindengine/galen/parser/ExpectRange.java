@@ -57,14 +57,14 @@ public class ExpectRange implements Expectation<Range>{
             return createRange(firstValue, rangeType).withPercentOf(readPercentageOf(reader));
         }
         else if (rangeType == RangeType.NOTHING){
-            Double secondValue =  new ExpectNumber().read(reader);
-            
-            Range range = null;
+            Range range;
+
             if (text.equals("to")) {
+                Double secondValue =  new ExpectNumber().read(reader);
                 range = Range.between(firstValue, secondValue);
             }
             else {
-                throw new SyntaxException(UNKNOWN_LINE, msgFor(text));
+                throw new SyntaxException(UNKNOWN_LINE, "Expecting \"px\", \"to\" or \"%\", got \"" + text + "\"");
             }
             
             String end = expectNonNumeric(reader);

@@ -121,10 +121,10 @@ public class ExpectationsTest {
     @DataProvider
     public Object[][] provideBadRangeSamples() {
         return new Object[][] {
-            row("0", "Cannot parse number: \"\""),
-            row("0p", "Cannot parse number: \"\""),
-            row("0 p", "Cannot parse number: \"\""),
-            row("0PX", "Cannot parse number: \"\""),
+            row("0", "Expecting \"px\", \"to\" or \"%\", got \"\""),
+            row("0p", "Expecting \"px\", \"to\" or \"%\", got \"p\""),
+            row("0 p", "Expecting \"px\", \"to\" or \"%\", got \"p\""),
+            row("0PX", "Expecting \"px\", \"to\" or \"%\", got \"PX\""),
             row("10 to 20", "Missing ending: \"px\" or \"%\""),
             row("10 to 20p", "Missing ending: \"px\" or \"%\""),
             row("10 to 20%", "Missing value path for relative range"),
