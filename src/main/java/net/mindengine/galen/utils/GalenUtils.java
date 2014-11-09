@@ -200,7 +200,6 @@ public class GalenUtils {
     }
 
     private static void waitUntilItIsScrolledToPosition(WebDriver driver, int scrollPosition) {
-        System.out.println("Waiting for it to be scrolled to " + scrollPosition);
         int time = GalenConfig.getConfig().getIntProperty(GalenConfig.SCREENSHOT_FULLPAGE_SCROLLWAIT, 5000);
         boolean isScrolledToPosition = false;
         while(time >= 0 && !isScrolledToPosition) {
@@ -216,7 +215,6 @@ public class GalenUtils {
 
     private static int obtainVerticalScrollPosition(WebDriver driver) {
         Long scrollLong = (Long) ((JavascriptExecutor)driver).executeScript("return (window.pageYOffset !== undefined) ? window.pageYOffset : (document.documentElement || document.body.parentNode || document.body).scrollTop;");
-        System.out.println("Obtained scroll position " + scrollLong);
         return scrollLong.intValue();
     }
 
