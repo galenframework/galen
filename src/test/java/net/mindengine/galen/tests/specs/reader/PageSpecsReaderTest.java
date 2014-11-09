@@ -191,7 +191,19 @@ public class PageSpecsReaderTest {
 
         List<ObjectSpecs> objectSpecs = pageSpec.getSections().get(0).getObjects();
         assertThat(objectSpecs.get(0).getSpecs().get(0).getOriginalText(), is("text is: A count is 4"));
+    }
 
+    /** Comes from a bug in version 1.4.0
+     */
+    @Test
+    public void should_countObject_insideSecondarySpec() throws IOException {
+        WebDriver driver = new MockedDriver();
+        driver.get("/mocks/pages/count-via-js-page.json");
+        PageSpecReader pageSpecReader = new PageSpecReader(EMPTY_PROPERTIES, new SeleniumBrowser(driver));
+        PageSpec pageSpec = pageSpecReader.read(getClass().getResource("/specs/count/main.spec").getFile());
+
+        List<ObjectSpecs> objectSpecs = pageSpec.getSections().get(0).getObjects();
+        assertThat(objectSpecs.get(0).getSpecs().get(0).getOriginalText(), is("text is: A count is 4"));
     }
 
 

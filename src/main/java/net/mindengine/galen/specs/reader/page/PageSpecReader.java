@@ -28,9 +28,7 @@ import net.mindengine.galen.utils.GalenUtils;
 
 import java.io.*;
 import java.security.NoSuchAlgorithmException;
-import java.util.HashSet;
-import java.util.Properties;
-import java.util.Set;
+import java.util.*;
 import java.util.regex.Pattern;
 
 public class PageSpecReader implements VarsParserJsFunctions {
@@ -44,7 +42,7 @@ public class PageSpecReader implements VarsParserJsFunctions {
 
     /*
      *  This field is needed to look up early building of objects
-     *  so they could be used within bash templates
+     *  so they could be used within js functions
      */
     private PageSpec pageSpec;
 
@@ -76,7 +74,14 @@ public class PageSpecReader implements VarsParserJsFunctions {
         this.browser = pageSpecReader.browser;
         this.parent = pageSpecReader;
         this.varsContext = pageSpecReader.varsContext;
+        pageSpecReader.addChild(this);
         this.processedFileIds = pageSpecReader.processedFileIds;
+    }
+
+    // Needed to look up object created within child readers
+    private List<PageSpecReader> childReaders = new LinkedList<PageSpecReader>();
+    private void addChild(PageSpecReader pageSpecReader) {
+        childReaders.add(pageSpecReader);
     }
 
 
@@ -129,13 +134,23 @@ public class PageSpecReader implements VarsParserJsFunctions {
         String jRegex = regex.replace("*", ".*");
         Pattern pattern = Pattern.compile(jRegex);
 
-        int count = 0;
+        Set<String> collectedNames = new HashSet<String>();
+
         for (String name : pageSpec.getObjects().keySet()) {
             if (pattern.matcher(name).matches()) {
-                count ++;
+               collectedNames.add(name);
             }
         }
-        return count;
+
+        for (PageSpecReader childReader : childReaders) {
+            for (String name : childReader.pageSpec.getObjects().keySet()) {
+                if (pattern.matcher(name).matches()) {
+                    collectedNames.add(name);
+                }
+            }
+        }
+
+        return collectedNames.size();
     }
 
     public JsPageElement find(String objectName) {
