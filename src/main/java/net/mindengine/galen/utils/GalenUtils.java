@@ -200,18 +200,23 @@ public class GalenUtils {
 
     public static void scrollVerticallyTo(WebDriver driver, int scroll) {
         ((JavascriptExecutor)driver).executeScript("window.scrollTo(0, " + scroll + ");");
-        waitUntilItIsScrolledToPosition(driver, scroll);
+        try {
+            waitUntilItIsScrolledToPosition(driver, scroll);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
-    private static void waitUntilItIsScrolledToPosition(WebDriver driver, int scrollPosition) {
-        int time = GalenConfig.getConfig().getIntProperty(GalenConfig.SCREENSHOT_FULLPAGE_SCROLLWAIT, 5000);
+    private static void waitUntilItIsScrolledToPosition(WebDriver driver, int scrollPosition) throws InterruptedException {
+        int hardTime = GalenConfig.getConfig().getIntProperty(GalenConfig.SCREENSHOT_FULLPAGE_SCROLLWAIT, 0);
+        if (hardTime > 0) {
+            Thread.sleep(hardTime);
+        }
+
+        int time = 5000;
         boolean isScrolledToPosition = false;
         while(time >= 0 && !isScrolledToPosition) {
-            try {
-                Thread.sleep(500);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
+            Thread.sleep(500);
             time -= 500;
             isScrolledToPosition = Math.abs(obtainVerticalScrollPosition(driver) - scrollPosition) < 3;
         }
