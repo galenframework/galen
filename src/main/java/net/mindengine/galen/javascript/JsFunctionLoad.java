@@ -16,14 +16,19 @@
 package net.mindengine.galen.javascript;
 
 import java.io.File;
-import java.io.FileReader;
+import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.security.DigestInputStream;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.Stack;
 
 import net.mindengine.galen.utils.GalenUtils;
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
 import org.mozilla.javascript.BaseFunction;
 import org.mozilla.javascript.Context;
 import org.mozilla.javascript.Scriptable;
@@ -37,7 +42,7 @@ public class JsFunctionLoad extends BaseFunction {
     
     private Stack<String> contextPathStack = new Stack<String>();
     
-    private Set<String> loadedFiles = new HashSet<String>();
+    private Set<String> loadedFileIds = new HashSet<String>();
 
     public JsFunctionLoad() {
     }
@@ -73,7 +78,9 @@ public class JsFunctionLoad extends BaseFunction {
                 fullPath = contextPath + File.separator + filePath;
             }
 
-            if (!loadedFiles.contains(fullPath)) {
+            String fileId = calculateFileId(fullPath);
+
+            if (!loadedFileIds.contains(fileId)) {
 
                 File file = new File(fullPath);
                 String parentPath = file.getParent();
@@ -84,7 +91,7 @@ public class JsFunctionLoad extends BaseFunction {
                 InputStream is = GalenUtils.findFileOrResourceAsStream(fullPath);
 
                 cx.evaluateReader(scope, new InputStreamReader(is), file.getAbsolutePath(), 1, null);
-                loadedFiles.add(fullPath);
+                loadedFileIds.add(fileId);
                 
                 if (!contextPathStack.isEmpty()) {
                     contextPathStack.pop();
@@ -95,7 +102,17 @@ public class JsFunctionLoad extends BaseFunction {
             throw new RuntimeException("Could not load script: " + fullPath, ex);
         }
     }
-    
+
+    private String calculateFileId(String fullPath) throws NoSuchAlgorithmException, FileNotFoundException {
+        String fileName = new File(fullPath).getName();
+        MessageDigest md = MessageDigest.getInstance("MD5");
+        InputStream is = GalenUtils.findFileOrResourceAsStream(fullPath);
+        DigestInputStream dis = new DigestInputStream(is, md);
+        byte [] hashBytes = md.digest();
+
+        return fileName + new String(hashBytes);
+    }
+
     public void print(String message) {
         System.out.print(message);
     }

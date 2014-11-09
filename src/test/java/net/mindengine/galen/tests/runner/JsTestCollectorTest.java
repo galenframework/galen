@@ -67,4 +67,19 @@ public class JsTestCollectorTest {
         assertThat(tests.get(2).getName(), is("Test C"));
         assertThat(tests.get(3).getName(), is("Test D"));
     }
+
+
+    @Test
+    public void shouldLoadOtherScripts_onlyOnce() throws IOException {
+        JsTestCollector testCollector = new JsTestCollector();
+        JsTestRegistry.get().clear();
+        testCollector.execute(new File(getClass().getResource("/js-tests/multilevel/main.test.js").getFile()));
+        testCollector.execute(new File(getClass().getResource("/js-tests/multilevel/folder/second.test.js").getFile()));
+
+
+        List<String> events = JsTestRegistry.get().getEvents();
+        assertThat("Events amount should be", events.size(), is(3));
+
+        assertThat("Events should be", events, contains("included.js was loaded", "From main name is visible as Included object", "From second name is visible as Included object"));
+    }
 }
