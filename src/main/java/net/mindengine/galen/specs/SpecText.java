@@ -18,7 +18,24 @@ package net.mindengine.galen.specs;
 
 import net.mindengine.galen.parser.SyntaxException;
 
+import java.util.List;
+
 public class SpecText extends Spec {
+    private List<String> operations;
+
+    public List<String> getOperations() {
+        return operations;
+    }
+
+    public void setOperations(List<String> operations) {
+        this.operations = operations;
+    }
+
+    public Spec withOperations(List<String> operations) {
+        setOperations(operations);
+        return this;
+    }
+
     public enum Type {
         IS, CONTAINS, STARTS, ENDS, MATCHES;
 

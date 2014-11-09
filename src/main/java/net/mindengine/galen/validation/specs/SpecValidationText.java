@@ -25,6 +25,7 @@ import net.mindengine.galen.validation.PageValidation;
 import net.mindengine.galen.validation.SpecValidation;
 import net.mindengine.galen.validation.ValidationErrorException;
 
+import java.util.List;
 import java.util.regex.Pattern;
 
 public class SpecValidationText<T extends SpecText> extends SpecValidation<T> {
@@ -41,7 +42,17 @@ public class SpecValidationText<T extends SpecText> extends SpecValidation<T> {
             realText = "";
         }
 
+        realText = applyOperationsTo(realText, spec.getOperations());
         checkValue(spec, objectName, realText, "text", area);
+    }
+
+    private String applyOperationsTo(String text, List<String> operations) {
+        if (operations != null) {
+            for (String operation : operations) {
+                text = TextOperation.find(operation).apply(text);
+            }
+        }
+        return text;
     }
 
     protected void checkValue(SpecText spec, String objectName, String realText, String checkEntity, Rect area) throws ValidationErrorException {

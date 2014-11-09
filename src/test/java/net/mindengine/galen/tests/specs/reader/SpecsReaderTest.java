@@ -461,6 +461,22 @@ public class SpecsReaderTest {
     }
 
     @Test
+    public void shouldReadSpec_text_lowercase_is() throws IOException {
+        SpecText spec = (SpecText)readSpec("text lowercase is: some text");
+        assertThat(spec.getText(), is("some text"));
+        assertThat(spec.getType(), is(SpecText.Type.IS));
+        assertThat(spec.getOperations(), contains("lowercase"));
+    }
+
+    @Test
+    public void shouldReadSpec_text_lowercase_uppercase_is() throws IOException {
+        SpecText spec = (SpecText)readSpec("text lowercase uppercase is: SOME TEXT");
+        assertThat(spec.getText(), is("SOME TEXT"));
+        assertThat(spec.getType(), is(SpecText.Type.IS));
+        assertThat(spec.getOperations(), contains("lowercase", "uppercase"));
+    }
+
+    @Test
     public void shouldReadSpec_css_fontsize_is_18px() throws IOException {
         SpecCss spec = (SpecCss)readSpec("css font-size is: 18px");
         assertThat(spec.getCssPropertyName(), is("font-size"));

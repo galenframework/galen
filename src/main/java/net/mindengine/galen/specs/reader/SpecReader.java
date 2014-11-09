@@ -93,11 +93,15 @@ public class SpecReader {
             public Spec processSpec(String specName, String paramsText, String contextPath) {
                 String arguments = specName.substring("text".length()).trim();
 
-                if (arguments.isEmpty()) {
-                    throw new SyntaxException(UNKNOWN_LINE, "Text validation is not fully specified");
-                }
+                List<String> allWords = Expectations.readAllWords(arguments);
 
-                return new SpecText(SpecText.Type.fromString(arguments), paramsText.trim());
+                if (allWords.size() > 0) {
+                    String type = allWords.get(allWords.size() - 1);
+
+                    allWords.remove(allWords.size() - 1);
+                    return new SpecText(SpecText.Type.fromString(type), paramsText.trim()).withOperations(allWords);
+                }
+                else throw new SyntaxException("Missing validation type (is, starts, ends, contains, matches)");
             }
         });
 

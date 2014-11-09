@@ -87,4 +87,7 @@ public class StringCharReader {
 		return buffer.toString();
 	}
 
+    public boolean hasMoreNormalSymbols() {
+        return firstNonWhiteSpaceSymbol() != 0;
+    }
 }

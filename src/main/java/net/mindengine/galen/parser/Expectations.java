@@ -16,6 +16,7 @@
 package net.mindengine.galen.parser;
 
 import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -24,6 +25,7 @@ import net.mindengine.galen.specs.Range;
 import net.mindengine.galen.specs.Side;
 import net.mindengine.galen.specs.colors.ColorRange;
 import net.mindengine.galen.specs.page.CorrectionsRect;
+import net.mindengine.galen.specs.reader.StringCharReader;
 import org.apache.commons.lang3.tuple.Pair;
 
 public class Expectations {
@@ -88,5 +90,21 @@ public class Expectations {
 
     public static Expectation<List<Pair<String, String>>> commaSeparatedRepeatedKeyValues() {
         return new ExpectCommaSeparatedKeyValue();
+    }
+
+    public static List<String> readAllWords(String arguments) {
+        List<String> words = new LinkedList<String>();
+        StringCharReader reader = new StringCharReader(arguments);
+
+        ExpectWord expectWord = new ExpectWord();
+
+        while(reader.hasMoreNormalSymbols()) {
+            String word = expectWord.read(reader);
+            if (!word.isEmpty()) {
+                words.add(word);
+            }
+        }
+
+        return words;
     }
 }

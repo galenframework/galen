@@ -39,6 +39,7 @@ import net.mindengine.galen.components.validation.MockedAbsentPageElement;
 import net.mindengine.galen.components.validation.MockedInvisiblePageElement;
 import net.mindengine.galen.components.validation.MockedPage;
 import net.mindengine.galen.components.validation.MockedPageElement;
+import net.mindengine.galen.config.GalenConfig;
 import net.mindengine.galen.page.PageElement;
 import net.mindengine.galen.page.Rect;
 import net.mindengine.galen.specs.*;
@@ -322,9 +323,17 @@ public class ValidationTest {
           
           
           // Text validation 
-          
+
           row(specTextIs("Some text"), page(new HashMap<String, PageElement>(){{
               put("object", element(10, 10, 10, 10).withText("Some text"));
+          }})),
+
+          row(specTextIs("some text").withOperations(asList("lowercase")), page(new HashMap<String, PageElement>(){{
+                put("object", element(10, 10, 10, 10).withText("Some teXt"));
+          }})),
+
+          row(specTextIs("SOME TEXT").withOperations(asList("uppercase")), page(new HashMap<String, PageElement>(){{
+              put("object", element(10, 10, 10, 10).withText("Some Text"));
           }})),
           
           row(specTextIs(""), page(new HashMap<String, PageElement>(){{
@@ -1338,7 +1347,6 @@ public class ValidationTest {
 
         };
     }
-
 
     @Test
     public void imageSpec_shouldAlsoGenerate_imageComparisonMap() {
