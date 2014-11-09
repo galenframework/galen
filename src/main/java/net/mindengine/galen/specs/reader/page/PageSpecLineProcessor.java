@@ -19,6 +19,7 @@ import static net.mindengine.galen.suite.reader.Line.UNKNOWN_LINE;
 
 import java.io.File;
 import java.io.IOException;
+import java.security.NoSuchAlgorithmException;
 import java.util.*;
 import java.util.regex.Pattern;
 
@@ -29,6 +30,7 @@ import net.mindengine.galen.specs.page.ConditionalBlock;
 import net.mindengine.galen.specs.page.PageSection;
 import net.mindengine.galen.specs.reader.Place;
 import net.mindengine.galen.specs.reader.StringCharReader;
+import net.mindengine.galen.utils.GalenUtils;
 
 
 public class PageSpecLineProcessor {
@@ -48,8 +50,6 @@ public class PageSpecLineProcessor {
     private PageSpec pageSpec;
     private Properties properties;
 
-    // Used to store information about spec files that were already loaded
-    private Set<String> processedFiles = new HashSet<String>();
 
     public PageSpecLineProcessor(Properties properties, String contextPath, PageSpecReader pageSpecReader, PageSpec pageSpec) {
         this.properties = properties;
@@ -64,8 +64,12 @@ public class PageSpecLineProcessor {
             line = varsContext.process(line);
             
         	if (isSpecialInstruction(line)) {
-        		doSpecialInstruction(line);
-        	}
+                try {
+                    doSpecialInstruction(line);
+                } catch (NoSuchAlgorithmException e) {
+                    throw new RuntimeException(e.getMessage(), e);
+                }
+            }
         	else if (isObjectSeparator(line)) {
                 switchObjectDefinitionState();
             }
@@ -86,7 +90,7 @@ public class PageSpecLineProcessor {
         return line.trim().startsWith(SPECIAL_INSTRUCTION);
     }
     
-    private void doSpecialInstruction(String line) throws IOException {
+    private void doSpecialInstruction(String line) throws IOException, NoSuchAlgorithmException {
 		line = line.trim().substring(2).trim();
 		
 		StringCharReader reader = new StringCharReader(line);
@@ -172,7 +176,7 @@ public class PageSpecLineProcessor {
         return firstWord.equals("if") || firstWord.equals("or") || firstWord.equals("do") || firstWord.equals("otherwise") || firstWord.equals("end");
     }
 
-    private void importFile(String filePath) throws IOException {
+    private void importFile(String filePath) throws IOException, NoSuchAlgorithmException {
         if (filePath.endsWith(".js")) {
             importJavascript(filePath);
         }
@@ -182,25 +186,12 @@ public class PageSpecLineProcessor {
 	}
 
     private void importJavascript(String filePath) {
+        //TODO use file ids to ignore loaded scripts
         pageSpecReader.runJavascriptFromFile(filePath, contextPath);
     }
 
-    private void importPageSpec(String filePath) throws IOException {
-        if (!processedFiles.contains(filePath)) {
-            processedFiles.add(filePath);
-            filePath = filePath.trim();
-            String path;
-            if (contextPath != null && !filePath.startsWith("/")) {
-                path = contextPath + File.separator + filePath;
-            }
-            else {
-                path = filePath;
-            }
-            PageSpec spec = new PageSpecReader(pageSpecReader.getProperties(), pageSpecReader.getBrowser()).read(path);
-            if (spec != null) {
-                pageSpec.merge(spec);
-            }
-        }
+    private void importPageSpec(String filePath) throws IOException, NoSuchAlgorithmException {
+        pageSpecReader.importPageSpec(filePath, contextPath);
 	}
 
     private void startParameterization(String line) {

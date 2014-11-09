@@ -37,6 +37,7 @@ import java.util.Properties;
 
 import net.mindengine.galen.browser.Browser;
 import net.mindengine.galen.browser.SeleniumBrowser;
+import net.mindengine.galen.components.JsTestRegistry;
 import net.mindengine.galen.components.mocks.driver.MockedDriver;
 import net.mindengine.galen.parser.FileSyntaxException;
 import net.mindengine.galen.specs.Location;
@@ -744,6 +745,32 @@ public class PageSpecsReaderTest {
         assertThat(conditionalBlock.getBodyObjects().get(0).getObjectName(), is("banner-1"));
         assertThat(conditionalBlock.getBodyObjects().get(1).getObjectName(), is("banner-2"));
         assertThat(conditionalBlock.getBodyObjects().get(2).getObjectName(), is("banner-3"));
+    }
+
+
+    @Test
+    public void shouldImport_sameJsScript_andSameSpec_onlyOnes_withinDifferentLevels_ofSpecs() throws IOException {
+        JsTestRegistry.get().clear();
+        PageSpec pageSpec = readSpec("/specs/same-import/main.spec");
+        assertThat("Amount of events should be", JsTestRegistry.get().getEvents().size(), is(1));
+        assertThat("Events should be", JsTestRegistry.get().getEvents(), contains("script is loaded"));
+
+        assertThat("Amout of sections should be", pageSpec.getSections().size(), is(3));
+
+        assertThat(pageSpec.getSections().get(0).getObjects().get(0).getObjectName(), is("main-item"));
+        assertThat(pageSpec.getSections().get(0).getObjects().get(0).getSpecs().get(0).getOriginalText(), is("text is: name from script"));
+
+        assertThat(pageSpec.getSections().get(1).getObjects().get(0).getObjectName(), is("common-object"));
+        assertThat(pageSpec.getSections().get(1).getObjects().get(0).getSpecs().get(0).getOriginalText(), is("width: 100px"));
+
+        assertThat(pageSpec.getSections().get(2).getObjects().get(0).getObjectName(), is("sub-item"));
+        assertThat(pageSpec.getSections().get(2).getObjects().get(0).getSpecs().get(0).getOriginalText(), is("text is: name from script"));
+
+    }
+
+    private PageSpec readSpec(String path) throws IOException {
+        PageSpecReader specReader = new PageSpecReader(new Properties(), null);
+        return specReader.read(getClass().getResource(path).getFile());
     }
 
     private void assertChildComponentSpec(List<Spec> specs) {

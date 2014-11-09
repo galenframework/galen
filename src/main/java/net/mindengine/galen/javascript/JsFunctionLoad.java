@@ -78,7 +78,7 @@ public class JsFunctionLoad extends BaseFunction {
                 fullPath = contextPath + File.separator + filePath;
             }
 
-            String fileId = calculateFileId(fullPath);
+            String fileId = GalenUtils.calculateFileId(fullPath);
 
             if (!loadedFileIds.contains(fileId)) {
 
@@ -101,16 +101,6 @@ public class JsFunctionLoad extends BaseFunction {
         catch (Exception ex) {
             throw new RuntimeException("Could not load script: " + fullPath, ex);
         }
-    }
-
-    private String calculateFileId(String fullPath) throws NoSuchAlgorithmException, FileNotFoundException {
-        String fileName = new File(fullPath).getName();
-        MessageDigest md = MessageDigest.getInstance("MD5");
-        InputStream is = GalenUtils.findFileOrResourceAsStream(fullPath);
-        DigestInputStream dis = new DigestInputStream(is, md);
-        byte [] hashBytes = md.digest();
-
-        return fileName + new String(hashBytes);
     }
 
     public void print(String message) {

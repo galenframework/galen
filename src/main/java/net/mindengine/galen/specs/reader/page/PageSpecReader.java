@@ -27,15 +27,21 @@ import net.mindengine.galen.specs.reader.Place;
 import net.mindengine.galen.utils.GalenUtils;
 
 import java.io.*;
+import java.security.NoSuchAlgorithmException;
 import java.util.HashSet;
 import java.util.Properties;
 import java.util.Set;
 import java.util.regex.Pattern;
 
 public class PageSpecReader implements VarsParserJsFunctions {
-    
+
+    private PageSpecReader parent;
     private VarsContext varsContext;
     private Properties properties;
+
+    // Used to store information about spec files that were already loaded
+    private Set<String> processedFileIds;
+
     /*
      *  This field is needed to look up early building of objects
      *  so they could be used within bash templates
@@ -51,13 +57,27 @@ public class PageSpecReader implements VarsParserJsFunctions {
         }
 
         this.browser = browser;
-        varsContext = new VarsContext(properties, this);
+        this.varsContext = new VarsContext(properties, this);
+        this.processedFileIds = new HashSet<String>();
     }
 
 
     // Browser is used in order to fetch multi object
     // at earlier state so that it is possible to use dynamic ranges
     private Browser browser;
+
+    /**
+     * Creating a sub reader with a parent is need when we need to share javascript objects
+     * and be able to check if a certain script was loaded already or not
+     * @param pageSpecReader
+     */
+    public PageSpecReader(PageSpecReader pageSpecReader) {
+        this.properties  = pageSpecReader.properties;
+        this.browser = pageSpecReader.browser;
+        this.parent = pageSpecReader;
+        this.varsContext = pageSpecReader.varsContext;
+        this.processedFileIds = pageSpecReader.processedFileIds;
+    }
 
 
     public PageSpec read(String filePath) throws IOException {
@@ -142,6 +162,35 @@ public class PageSpecReader implements VarsParserJsFunctions {
     }
 
     public void runJavascriptFromFile(String filePath, String contextPath) {
+
         varsContext.runJavascriptFromFile(filePath, contextPath);
+    }
+
+    public PageSpecReader createNewSubReader() {
+        return new PageSpecReader(this);
+    }
+
+    public PageSpecReader getParent() {
+        return parent;
+    }
+
+    public void importPageSpec(String filePath, String contextPath) throws IOException, NoSuchAlgorithmException {
+        filePath = filePath.trim();
+        String path;
+        if (contextPath != null && !filePath.startsWith("/")) {
+            path = contextPath + File.separator + filePath;
+        }
+        else {
+            path = filePath;
+        }
+
+        String fileId = GalenUtils.calculateFileId(path);
+        if (!processedFileIds.contains(fileId)) {
+            processedFileIds.add(fileId);
+            PageSpec spec = createNewSubReader().read(path);
+            if (spec != null) {
+                pageSpec.merge(spec);
+            }
+        }
     }
 }

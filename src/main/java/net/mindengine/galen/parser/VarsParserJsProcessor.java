@@ -32,6 +32,7 @@ public class VarsParserJsProcessor {
     private Context varsContext;
     private org.mozilla.javascript.Context cx;
     private ImporterTopLevel scope;
+    private JsFunctionLoad jsFunctionLoad = new JsFunctionLoad();
 
     public VarsParserJsProcessor(Context varsContext, VarsParserJsFunctions jsFunctions) {
         this.varsContext = varsContext;
@@ -122,6 +123,7 @@ public class VarsParserJsProcessor {
         if (!filePath.startsWith("/") && contextPath!= null && !contextPath.isEmpty()) {
             fullPath = contextPath + File.separator + filePath;
         }
-        new JsFunctionLoad().load(fullPath, this.cx, this.scope);
+
+        jsFunctionLoad.load(fullPath, this.cx, this.scope);
     }
 }

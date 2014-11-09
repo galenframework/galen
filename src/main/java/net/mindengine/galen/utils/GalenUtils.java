@@ -19,6 +19,9 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.*;
 import java.net.URL;
+import java.security.DigestInputStream;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -42,6 +45,7 @@ import net.mindengine.galen.tests.TestSession;
 import net.mindengine.rainbow4j.Rainbow4J;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringEscapeUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.Platform;
@@ -374,6 +378,24 @@ public class GalenUtils {
                 return GalenUtils.class.getResourceAsStream(windowsFilePath);
             }
         }
+    }
+
+    public static String calculateFileId(String fullPath) throws NoSuchAlgorithmException, FileNotFoundException {
+        String fileName = new File(fullPath).getName();
+        MessageDigest md = MessageDigest.getInstance("MD5");
+        InputStream is = GalenUtils.findFileOrResourceAsStream(fullPath);
+        DigestInputStream dis = new DigestInputStream(is, md);
+        byte [] hashBytes = md.digest();
+
+        return fileName + convertHashBytesToString(hashBytes);
+    }
+
+    private static String convertHashBytesToString(byte[] hashBytes) {
+        StringBuilder builder = new StringBuilder();
+        for (byte b : hashBytes) {
+            builder.append(Integer.toHexString(0xFF & b));
+        }
+        return builder.toString();
     }
 
 
