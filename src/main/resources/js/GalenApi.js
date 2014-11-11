@@ -104,7 +104,7 @@ function readFile(fileName) {
 }
 
 function resize(driver, size) {
-    GalenUtils.resize(driver, size);
+    GalenUtils.resizeDriver(driver, size);
 }
 
 
