@@ -64,6 +64,17 @@ If you would like to make a change to the Galen Framework website (http://galenf
 
 If you want to improve the functionality related to image comparison or color scheme - you have to first make a pull request to [rainbow4j](https://github.com/galenframework/rainbow4j) as all the core code for comparing images, applying filters and calculating the color scheme is located in it. After this it will be released to sonatype central repository and will be available as maven dependency.
 
+
+Building 
+-----------
+This project is mased on Maven. You can use both Intellij or Eclipse for it. It is being developed in Linux so all the assembling scripts are in bash. In order to assemble the dist with zip archives just run ```./makeDist.sh``` and it will create a dist folder with both binary and source folders and it will prepare zip archives there as well. If you want to quickly test the concept and install galen right after the assembling you can use script ```./assembleAndInstall.sh```. It uses ```makeDist.sh``` and then just invokes ```sudo ./install.sh```
+
+
+Testing
+-----------
+There are two levels of testing. The first one is just the regular ```mvn clean test```. But as there is a lot of Javascript code - you need [Mocha](http://mochajs.org). The tests are located in folder ```src/test/js/```. To run the just go to that folder and execute ```testJs.sh```
+
+
 License
 ------------
 
