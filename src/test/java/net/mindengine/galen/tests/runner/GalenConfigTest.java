@@ -39,14 +39,16 @@ import org.apache.commons.io.FileUtils;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.testng.annotations.AfterClass;
+import org.testng.annotations.AfterMethod;
 import org.testng.annotations.Test;
 
 public class GalenConfigTest {
 
-    @AfterClass
+    @AfterMethod
     public void resetConfigToDefault() throws IOException {
         deleteSystemProperty("galen.range.approximation");
         deleteSystemProperty("galen.reporting.listeners");
+        deleteSystemProperty("galen.config.file");
         GalenConfig.getConfig().reset();
     }
     
@@ -66,6 +68,20 @@ public class GalenConfigTest {
         MatcherAssert.assertThat(config.getRangeApproximation(), is(3));
         assertThat(config.getReportingListeners(), Matchers.contains("net.mindengine.CustomListener", "net.mindengine.CustomListener2"));
         config.reset();
+    }
+
+    @Test public void shouldRead_configFile_fromSpecifiedLocation() throws IOException {
+
+        File configFile = new File("config2");
+        configFile.createNewFile();
+        FileUtils.copyFile(new File(getClass().getResource("/config2").getFile()), configFile);
+
+        System.setProperty("galen.config.file", "config2");
+
+        GalenConfig config = GalenConfig.getConfig();
+        config.reset();
+
+        MatcherAssert.assertThat(config.getRangeApproximation(), is(12345));
     }
     
     @Test public void shouldRead_configForLocalProject_fromSystemProperties() throws IOException {

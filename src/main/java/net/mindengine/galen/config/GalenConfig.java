@@ -47,9 +47,9 @@ public class GalenConfig {
     
     private void loadConfig() throws IOException {
         this.properties = new Properties();
-        File configFile = new File("config");
+        File configFile = new File(System.getProperty("galen.config.file", "config"));
         
-        if (configFile.exists()) {
+        if (configFile.exists() && configFile.isFile()) {
             InputStream in = new FileInputStream(configFile);
             properties.load(in);
             in.close();
