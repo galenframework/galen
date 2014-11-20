@@ -46,4 +46,12 @@ public class JsPageElement {
         Rect area = pageElement.getArea();
         return area.getTop() + area.getHeight();
     }
+
+    public int width() {
+        return pageElement.getArea().getWidth();
+    }
+
+    public int height() {
+        return pageElement.getArea().getHeight();
+    }
 }
