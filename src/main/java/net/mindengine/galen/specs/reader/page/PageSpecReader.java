@@ -142,10 +142,12 @@ public class PageSpecReader implements VarsParserJsFunctions {
             }
         }
 
-        for (PageSpecReader childReader : childReaders) {
-            for (String name : childReader.pageSpec.getObjects().keySet()) {
-                if (pattern.matcher(name).matches()) {
-                    collectedNames.add(name);
+        if (childReaders != null) {
+            for (PageSpecReader childReader : childReaders) {
+                for (String name : childReader.pageSpec.getObjects().keySet()) {
+                    if (pattern.matcher(name).matches()) {
+                        collectedNames.add(name);
+                    }
                 }
             }
         }
@@ -154,17 +156,39 @@ public class PageSpecReader implements VarsParserJsFunctions {
     }
 
     public JsPageElement find(String objectName) {
-        if (browser != null && pageSpec.getObjects().containsKey(objectName)) {
-            Page page = browser.getPage();
-            Locator locator = pageSpec.getObjectLocator(objectName);
-            if (locator != null) {
-                PageElement pageElement = page.getObject(objectName, locator);
-                if (pageElement != null) {
-                    return new JsPageElement(pageElement);
+        if (browser != null) {
+            JsPageElement pageElement = findJsPageElement(objectName);
+            if (pageElement != null) {
+                return pageElement;
+            }
+            else {
+
+                if (childReaders != null) {
+                    for (PageSpecReader childReader : childReaders) {
+                        pageElement = childReader.find(objectName);
+                        if (pageElement != null) {
+                            return pageElement;
+                        }
+                    }
                 }
             }
         }
+        return null;
+    }
 
+    private JsPageElement findJsPageElement(String objectName) {
+        if (pageSpec != null) {
+            if (pageSpec.getObjects().containsKey(objectName)) {
+                Page page = browser.getPage();
+                Locator locator = pageSpec.getObjectLocator(objectName);
+                if (locator != null) {
+                    PageElement pageElement = page.getObject(objectName, locator);
+                    if (pageElement != null) {
+                        return new JsPageElement(pageElement);
+                    }
+                }
+            }
+        }
         return null;
     }
 

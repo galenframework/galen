@@ -730,11 +730,25 @@ public class PageSpecsReaderTest {
     }
 
     @Test
-    public void shouldAllowTo_usePageObjectValues_inJsExpressions() throws IOException {
+    public void shouldAllowToUse_pageObjectProperties_inJsExpressions_via_findFunction() throws IOException {
         WebDriver driver = new MockedDriver();
         driver.get("/mocks/pages/object-values-in-js.json");
         PageSpecReader specReader = new PageSpecReader(new Properties(), new SeleniumBrowser(driver));
         PageSpec pageSpec = specReader.read(getClass().getResource("/specs/spec-with-object-values-in-js.spec").getFile());
+        assertThat(pageSpec.getSections().get(0).getObjects().get(0).getSpecs().get(0).getOriginalText(), is("near: menu-item-4 20px left"));
+        assertThat(pageSpec.getSections().get(0).getObjects().get(0).getSpecs().get(1).getOriginalText(), is("above: menu-item-4 30px"));
+    }
+
+    /** Discovered a bug in version 1.4.3
+     * There was a bug that js function 'find' couldn't find all objects when the spec was invoked via import
+     * @throws IOException
+     */
+    @Test
+    public void shouldAllowToUse_pageObjectProperties_inJsExpressions_via_findFunction_withImportedSpecs() throws IOException {
+        WebDriver driver = new MockedDriver();
+        driver.get("/mocks/pages/object-values-in-js.json");
+        PageSpecReader specReader = new PageSpecReader(new Properties(), new SeleniumBrowser(driver));
+        PageSpec pageSpec = specReader.read(getClass().getResource("/specs/spec-with-object-values-in-js-via-import.spec").getFile());
         assertThat(pageSpec.getSections().get(0).getObjects().get(0).getSpecs().get(0).getOriginalText(), is("near: menu-item-4 20px left"));
         assertThat(pageSpec.getSections().get(0).getObjects().get(0).getSpecs().get(1).getOriginalText(), is("above: menu-item-4 30px"));
     }
