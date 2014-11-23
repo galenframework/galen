@@ -41,13 +41,12 @@ public class SpecValidationComponent extends SpecValidation<SpecComponent> {
         PageElement mainObject = pageValidation.findPageElement(objectName);
         checkAvailability(mainObject, objectName);
 
-        Page page = pageValidation.getPage();
         Locator mainObjectLocator = pageValidation.getPageSpec().getObjectLocator(objectName);
-        Page objectContextPage = page.createObjectContextPage(mainObjectLocator);
+        Page objectContextPage = pageValidation.getPage().createObjectContextPage(mainObjectLocator);
         
         ValidationListener validationListener = pageValidation.getValidationListener();
 
-        PageSpecReader pageSpecReader = new PageSpecReader(spec.getProperties(), page);
+        PageSpecReader pageSpecReader = new PageSpecReader(spec.getProperties(), objectContextPage);
 
         PageSpec componentPageSpec;
         try {
