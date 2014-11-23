@@ -40,6 +40,11 @@ public class MockedDriver implements WebDriver, TakesScreenshot, JavascriptExecu
     public MockedDriver() {
     }
 
+    public MockedDriver(String initialUrl) {
+        this.currrentUrl = initialUrl;
+        get(initialUrl);
+    }
+
 
     @Override
     public void get(String url) {

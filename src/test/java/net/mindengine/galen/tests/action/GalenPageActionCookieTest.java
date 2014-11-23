@@ -23,6 +23,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import net.mindengine.galen.components.MockedBrowser;
+import net.mindengine.galen.components.validation.MockedPage;
 import net.mindengine.galen.reports.TestReport;
 import net.mindengine.galen.suite.GalenPageTest;
 import net.mindengine.galen.suite.actions.GalenPageActionCookie;
@@ -32,7 +33,7 @@ import org.testng.annotations.Test;
 public class GalenPageActionCookieTest {
 
     @Test public void shouldSetCookie_andRefreshPage() throws Exception {
-        MockedBrowser browser = new MockedBrowser("", new Dimension(1024, 768));
+        MockedBrowser browser = new MockedBrowser("", new Dimension(1024, 768), new MockedPage());
         
         GalenPageActionCookie action = new GalenPageActionCookie();
         

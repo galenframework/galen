@@ -24,6 +24,8 @@ import static org.hamcrest.Matchers.notNullValue;
 import java.util.Properties;
 
 import net.mindengine.galen.browser.Browser;
+import net.mindengine.galen.components.MockedBrowser;
+import net.mindengine.galen.components.validation.MockedPage;
 import net.mindengine.galen.parser.SyntaxException;
 import net.mindengine.galen.specs.page.CorrectionsRect;
 import net.mindengine.galen.specs.page.Locator;
@@ -37,7 +39,7 @@ import org.testng.annotations.Test;
 
 public class ObjectDefinitionReaderTest {
     
-    private static final Browser NO_BROWSER = null;
+    private static final Browser EMPTY_BROWSER = new MockedBrowser("", null, new MockedPage());
     private static final Properties EMPTY_PROPERTIES = new Properties();
     private static final Place EMPTY_PLACE = new Place("", 1);
 
@@ -45,7 +47,7 @@ public class ObjectDefinitionReaderTest {
     @Test(dataProvider = "provideGoodSamples")
     public void shouldParseCorrect_objectDefinition(String objectDefinitionText, String expectedName, Locator expectedLocator) {
         PageSpec pageSpec = new PageSpec();
-        new StateObjectDefinition(pageSpec, new PageSpecReader(EMPTY_PROPERTIES, NO_BROWSER)).process(objectDefinitionText, EMPTY_PLACE);
+        new StateObjectDefinition(pageSpec, new PageSpecReader(EMPTY_PROPERTIES, EMPTY_BROWSER)).process(objectDefinitionText, EMPTY_PLACE);
         assertThat(pageSpec.getObjects(), hasKey(expectedName));
         assertThat(pageSpec.getObjectLocator(expectedName), is(expectedLocator));
     }
@@ -78,7 +80,7 @@ public class ObjectDefinitionReaderTest {
         SyntaxException exception = null;
         try {
             PageSpec pageSpec = new PageSpec();
-            new StateObjectDefinition(pageSpec, new PageSpecReader(EMPTY_PROPERTIES, NO_BROWSER)).process(objectDefinitionText, EMPTY_PLACE);
+            new StateObjectDefinition(pageSpec, new PageSpecReader(EMPTY_PROPERTIES, EMPTY_BROWSER)).process(objectDefinitionText, EMPTY_PLACE);
         }
         catch (SyntaxException e) {
             exception = e;

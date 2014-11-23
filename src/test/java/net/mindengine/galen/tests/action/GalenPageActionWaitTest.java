@@ -52,7 +52,7 @@ public class GalenPageActionWaitTest {
                 until(UntilType.EXIST, xpath("//div[@id='wqe']")),
                 until(UntilType.GONE, css("qweqwewqee"))
                 ));
-        MockedBrowser browser = new MockedBrowser(null, null);
+        MockedBrowser browser = new MockedBrowser(null, null, new MockedPage());
         browser.setMockedPage(mockedPage);
         wait.execute(new TestReport(), browser, null, null);
     }
@@ -67,7 +67,7 @@ public class GalenPageActionWaitTest {
                 until(UntilType.GONE, xpath("//div[@id='wqe']")),
                 until(UntilType.EXIST, css("qweqwewqee"))
                 ));
-        MockedBrowser browser = new MockedBrowser(null, null);
+        MockedBrowser browser = new MockedBrowser(null, null, new MockedPage());
         browser.setMockedPage(mockedPage);
         
         

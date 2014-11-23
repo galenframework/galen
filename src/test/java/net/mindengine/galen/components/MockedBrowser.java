@@ -25,6 +25,7 @@ import java.util.UUID;
 import com.google.common.io.Files;
 
 import net.mindengine.galen.browser.Browser;
+import net.mindengine.galen.components.validation.MockedPage;
 import net.mindengine.galen.page.Page;
 
 public class MockedBrowser implements Browser {
@@ -36,9 +37,10 @@ public class MockedBrowser implements Browser {
     private Dimension screenSize;
     private Page mockedPage;
 
-    public MockedBrowser(String url, Dimension screenSize) {
+    public MockedBrowser(String url, Dimension screenSize, MockedPage mockedPage) {
         this.url = url;
         this.screenSize = screenSize;
+        this.mockedPage = mockedPage;
     }
 
     @Override

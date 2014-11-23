@@ -23,13 +23,15 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.is;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.List;
 import java.util.Properties;
 
+import net.mindengine.galen.browser.Browser;
 import net.mindengine.galen.browser.SeleniumBrowser;
+import net.mindengine.galen.components.MockedBrowser;
 import net.mindengine.galen.components.TestGroups;
+import net.mindengine.galen.components.validation.MockedPage;
 import net.mindengine.galen.components.validation.TestValidationListener;
 import net.mindengine.galen.page.selenium.SeleniumPage;
 import net.mindengine.galen.specs.page.PageSection;
@@ -52,6 +54,7 @@ import org.testng.annotations.Test;
 public class GalenSeleniumTest {
     
     private static final Properties EMPTY_PROPERTIES = new Properties();
+    private static final Browser EMPTY_BROWSER = new MockedBrowser("", null, new MockedPage());
     WebDriver driver;
     
     @BeforeMethod
@@ -415,7 +418,7 @@ public class GalenSeleniumTest {
         List<PageSection> pageSections = pageSpec.getSections();
         assertThat("Filtered sections size should be", pageSections.size(), is(1));
         
-        SectionValidation sectionValidation = new SectionValidation(pageSections, new PageValidation(null, page, pageSpec, validationListener, null), validationListener);
+        SectionValidation sectionValidation = new SectionValidation(pageSections, new PageValidation(EMPTY_BROWSER, page, pageSpec, validationListener, null), validationListener);
         List<ValidationError> errors = sectionValidation.check();
         
         assertLines(validationListener.getInvokations(), lines(
@@ -499,7 +502,7 @@ public class GalenSeleniumTest {
         
         SectionFilter sectionFilter = new SectionFilter(asList("all", "mobile"), asList("nomobile"));
         
-        SectionValidation sectionValidation = new SectionValidation(pageSections, new PageValidation(null, page, pageSpec, validationListener, sectionFilter), validationListener);
+        SectionValidation sectionValidation = new SectionValidation(pageSections, new PageValidation(EMPTY_BROWSER, page, pageSpec, validationListener, sectionFilter), validationListener);
         List<ValidationError> errors = sectionValidation.check();
         
         assertLines(validationListener.getInvokations(), lines(

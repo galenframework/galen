@@ -1,0 +1,8 @@
+{
+    "items": [
+        {
+            "locator": "css: #menu .menu-item",
+            "area": [0,0,100,10]
+        }
+    ]
+}

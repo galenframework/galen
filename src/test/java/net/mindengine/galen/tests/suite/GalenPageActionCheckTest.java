@@ -41,7 +41,7 @@ public class GalenPageActionCheckTest {
         GalenPageActionCheck check = new GalenPageActionCheck();
         check.setSpecs(Arrays.asList(getClass().getResource("/specs/spec-conditional-simple.spec").getFile()));
         
-        MockedBrowser mockedBrowser = new MockedBrowser("http://galenframework.com", new Dimension(640, 480));
+        MockedBrowser mockedBrowser = new MockedBrowser("http://galenframework.com", new Dimension(640, 480), new MockedPage());
         mockedBrowser.setMockedPage(new MockedPage(new HashMap<String, PageElement>(){{
             put("textfield", new MockedPageElement(0, 0, 100, 100));
             put("button-1", new MockedPageElement(0, 0, 200, 100));
@@ -74,7 +74,7 @@ public class GalenPageActionCheckTest {
         GalenPageActionCheck check = new GalenPageActionCheck();
         check.setSpecs(Arrays.asList(getClass().getResource("/specs/spec-conditional-simple-inverted.spec").getFile()));
         
-        MockedBrowser mockedBrowser = new MockedBrowser("http://galenframework.com", new Dimension(640, 480));
+        MockedBrowser mockedBrowser = new MockedBrowser("http://galenframework.com", new Dimension(640, 480), new MockedPage());
         mockedBrowser.setMockedPage(new MockedPage(new HashMap<String, PageElement>(){{
             put("textfield", new MockedPageElement(0, 0, 100, 100));
             put("button-1", new MockedPageElement(0, 0, 200, 100));
@@ -100,7 +100,7 @@ public class GalenPageActionCheckTest {
         GalenPageActionCheck check = new GalenPageActionCheck();
         check.setSpecs(Arrays.asList(getClass().getResource("/specs/spec-conditional-simple-inverted.spec").getFile()));
         
-        MockedBrowser mockedBrowser = new MockedBrowser("http://galenframework.com", new Dimension(640, 480));
+        MockedBrowser mockedBrowser = new MockedBrowser("http://galenframework.com", new Dimension(640, 480), new MockedPage());
         mockedBrowser.setMockedPage(new MockedPage(new HashMap<String, PageElement>(){{
             put("textfield", new MockedPageElement(0, 0, 100, 100));
             put("button-1", new MockedInvisiblePageElement(0, 0, 100, 100));
@@ -134,7 +134,7 @@ public class GalenPageActionCheckTest {
         GalenPageActionCheck check = new GalenPageActionCheck();
         check.setSpecs(Arrays.asList(getClass().getResource("/specs/spec-conditional-simple.spec").getFile()));
         
-        MockedBrowser mockedBrowser = new MockedBrowser("http://galenframework.com", new Dimension(640, 480));
+        MockedBrowser mockedBrowser = new MockedBrowser("http://galenframework.com", new Dimension(640, 480), new MockedPage());
         mockedBrowser.setMockedPage(new MockedPage(new HashMap<String, PageElement>(){{
             put("textfield", new MockedPageElement(0, 0, 100, 100));
             put("button-1", new MockedInvisiblePageElement(0, 0, 100, 100));
@@ -160,7 +160,7 @@ public class GalenPageActionCheckTest {
         GalenPageActionCheck check = new GalenPageActionCheck();
         check.setSpecs(Arrays.asList(getClass().getResource("/specs/spec-conditional-simple-otherwise.spec").getFile()));
         
-        MockedBrowser mockedBrowser = new MockedBrowser("http://galenframework.com", new Dimension(640, 480));
+        MockedBrowser mockedBrowser = new MockedBrowser("http://galenframework.com", new Dimension(640, 480), new MockedPage());
         mockedBrowser.setMockedPage(new MockedPage(new HashMap<String, PageElement>(){{
             put("textfield", new MockedPageElement(0, 0, 100, 100));
             put("button-1", new MockedInvisiblePageElement(0, 0, 100, 100));
