@@ -955,11 +955,11 @@ public class SpecsReaderTest {
     }
     
     private Spec readSpec(String specText) throws IOException {
-        return new SpecReader(EMPTY_PROPERTIES, NO_BROWSER).read(specText);
+        return new SpecReader(EMPTY_PROPERTIES).read(specText);
     }
 
     private Spec readSpec(String specText, String contextPath) throws IOException {
-        return new SpecReader(EMPTY_PROPERTIES, NO_BROWSER).read(specText, contextPath);
+        return new SpecReader(EMPTY_PROPERTIES).read(specText, contextPath);
     }
     
     private List<Side> sides(Side...sides) {

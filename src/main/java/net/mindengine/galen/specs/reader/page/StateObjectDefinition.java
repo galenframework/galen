@@ -86,8 +86,8 @@ public class StateObjectDefinition extends State {
         }
         else {
             
-            if (pageSpecReader.getBrowser() != null) {
-                pageSpec.updateMultiObject(pageSpecReader.getBrowser().getPage(), objectName, locator);
+            if (pageSpecReader.getPage() != null) {
+                pageSpec.updateMultiObject(pageSpecReader.getPage(), objectName, locator);
             }
             else {
                 pageSpec.addMultiObject(objectName, locator);

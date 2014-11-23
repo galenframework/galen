@@ -33,6 +33,7 @@ import java.util.regex.Pattern;
 
 public class PageSpecReader implements VarsParserJsFunctions {
 
+    private Page page;
     private PageSpecReader parent;
     private VarsContext varsContext;
     private Properties properties;
@@ -46,23 +47,17 @@ public class PageSpecReader implements VarsParserJsFunctions {
      */
     private PageSpec pageSpec;
 
-    public PageSpecReader(Properties properties, Browser browser) {
+    public PageSpecReader(Properties properties, Page page) {
         if (properties == null) {
             this.properties = new Properties();
         }
         else {
             this.properties = properties;
         }
-
-        this.browser = browser;
         this.varsContext = new VarsContext(properties, this);
         this.processedFileIds = new HashSet<String>();
+        this.page = page;
     }
-
-
-    // Browser is used in order to fetch multi object
-    // at earlier state so that it is possible to use dynamic ranges
-    private Browser browser;
 
     /**
      * Creating a sub reader with a parent is need when we need to share javascript objects
@@ -71,15 +66,17 @@ public class PageSpecReader implements VarsParserJsFunctions {
      */
     public PageSpecReader(PageSpecReader pageSpecReader) {
         this.properties  = pageSpecReader.properties;
-        this.browser = pageSpecReader.browser;
         this.parent = pageSpecReader;
         this.varsContext = pageSpecReader.varsContext;
         pageSpecReader.addChild(this);
         this.processedFileIds = pageSpecReader.processedFileIds;
+        this.page = pageSpecReader.page;
     }
 
     // Needed to look up object created within child readers
     private List<PageSpecReader> childReaders = new LinkedList<PageSpecReader>();
+
+
     private void addChild(PageSpecReader pageSpecReader) {
         childReaders.add(pageSpecReader);
     }
@@ -122,14 +119,6 @@ public class PageSpecReader implements VarsParserJsFunctions {
         return lineProcessor.buildPageSpec();
     }
 
-    public Browser getBrowser() {
-        return browser;
-    }
-
-    public void setBrowser(Browser browser) {
-        this.browser = browser;
-    }
-
     public int count(String regex) {
         String jRegex = regex.replace("*", ".*");
         Pattern pattern = Pattern.compile(jRegex);
@@ -156,19 +145,17 @@ public class PageSpecReader implements VarsParserJsFunctions {
     }
 
     public JsPageElement find(String objectName) {
-        if (browser != null) {
-            JsPageElement pageElement = findJsPageElement(objectName);
-            if (pageElement != null) {
-                return pageElement;
-            }
-            else {
+        JsPageElement pageElement = findJsPageElement(objectName);
+        if (pageElement != null) {
+            return pageElement;
+        }
+        else {
 
-                if (childReaders != null) {
-                    for (PageSpecReader childReader : childReaders) {
-                        pageElement = childReader.find(objectName);
-                        if (pageElement != null) {
-                            return pageElement;
-                        }
+            if (childReaders != null) {
+                for (PageSpecReader childReader : childReaders) {
+                    pageElement = childReader.find(objectName);
+                    if (pageElement != null) {
+                        return pageElement;
                     }
                 }
             }
@@ -179,9 +166,8 @@ public class PageSpecReader implements VarsParserJsFunctions {
     private JsPageElement findJsPageElement(String objectName) {
         if (pageSpec != null) {
             if (pageSpec.getObjects().containsKey(objectName)) {
-                Page page = browser.getPage();
                 Locator locator = pageSpec.getObjectLocator(objectName);
-                if (locator != null) {
+                if (locator != null && page != null) {
                     PageElement pageElement = page.getObject(objectName, locator);
                     if (pageElement != null) {
                         return new JsPageElement(pageElement);
@@ -231,5 +217,9 @@ public class PageSpecReader implements VarsParserJsFunctions {
                 pageSpec.merge(spec);
             }
         }
+    }
+
+    public Page getPage() {
+        return page;
     }
 }

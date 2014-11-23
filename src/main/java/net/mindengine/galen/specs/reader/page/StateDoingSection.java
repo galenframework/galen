@@ -76,7 +76,7 @@ public class StateDoingSection extends State {
         this.section = section;
         this.contextPath = contextPath;
         this.setPageSpecReader(pageSpecReader);
-        this.specReader = new SpecReader(properties, pageSpecReader.getBrowser());
+        this.specReader = new SpecReader(properties);
     }
 
     @Override

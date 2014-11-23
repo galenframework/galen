@@ -41,6 +41,7 @@ import net.mindengine.galen.components.JsTestRegistry;
 import net.mindengine.galen.components.MockedBrowser;
 import net.mindengine.galen.components.mocks.driver.MockedDriver;
 import net.mindengine.galen.components.validation.MockedPage;
+import net.mindengine.galen.page.Page;
 import net.mindengine.galen.parser.FileSyntaxException;
 import net.mindengine.galen.specs.Location;
 import net.mindengine.galen.specs.Range;
@@ -66,20 +67,21 @@ public class PageSpecsReaderTest {
     
     private static final String BASE_TEST = "shouldLoadSpecSuccessfully";
     private static final Browser EMPTY_BROWSER = new SeleniumBrowser(new MockedDriver("/mocks/pages/base-page.json"));
+    private static final Page EMPTY_PAGE = EMPTY_BROWSER.getPage();
     private static final Properties EMPTY_PROPERTIES = new Properties();
-    PageSpecReader pageSpecReader = new PageSpecReader(EMPTY_PROPERTIES, EMPTY_BROWSER);
+    PageSpecReader pageSpecReader = new PageSpecReader(EMPTY_PROPERTIES, EMPTY_PAGE);
     PageSpec pageSpec;
     
     @Test
     public void shouldBePossible_toReadSpec_fromInputStream() throws IOException {
-        PageSpec pageSpec = new PageSpecReader(EMPTY_PROPERTIES, EMPTY_BROWSER).read(getClass().getResourceAsStream("/specs.txt"));
+        PageSpec pageSpec = new PageSpecReader(EMPTY_PROPERTIES, EMPTY_PAGE).read(getClass().getResourceAsStream("/specs.txt"));
         assertThat(pageSpec, is(notNullValue()));
     }
     
     @Test
     public void shouldBePossible_toReadSpec_fromFile() throws IOException {
 
-        PageSpec pageSpec = new PageSpecReader(EMPTY_PROPERTIES, EMPTY_BROWSER).read(getClass().getResource("/specs.txt").getFile());
+        PageSpec pageSpec = new PageSpecReader(EMPTY_PROPERTIES, EMPTY_PAGE).read(getClass().getResource("/specs.txt").getFile());
         assertThat(pageSpec, is(notNullValue()));
     }
     
@@ -162,7 +164,7 @@ public class PageSpecsReaderTest {
     public void shouldAllow_toCountObject_byIvoking_JavascriptFunction() throws IOException {
         WebDriver driver = new MockedDriver();
         driver.get("/mocks/pages/count-via-js-page.json");
-        PageSpecReader pageSpecReader = new PageSpecReader(EMPTY_PROPERTIES, new SeleniumBrowser(driver));
+        PageSpecReader pageSpecReader = new PageSpecReader(EMPTY_PROPERTIES, new SeleniumBrowser(driver).getPage());
         PageSpec pageSpec = pageSpecReader.read(getClass().getResource("/specs/count-via-js.spec").getFile());
 
         List<ObjectSpecs> objectSpecs = pageSpec.getSections().get(0).getObjects();
@@ -186,7 +188,7 @@ public class PageSpecsReaderTest {
     public void should_countObjects_evenWhenUsing_emptyImports() throws IOException {
         WebDriver driver = new MockedDriver();
         driver.get("/mocks/pages/count-via-js-page.json");
-        PageSpecReader pageSpecReader = new PageSpecReader(EMPTY_PROPERTIES, new SeleniumBrowser(driver));
+        PageSpecReader pageSpecReader = new PageSpecReader(EMPTY_PROPERTIES, new SeleniumBrowser(driver).getPage());
         PageSpec pageSpec = pageSpecReader.read(getClass().getResource("/specs/count-bug-134.spec").getFile());
 
         List<ObjectSpecs> objectSpecs = pageSpec.getSections().get(0).getObjects();
@@ -199,7 +201,7 @@ public class PageSpecsReaderTest {
     public void should_countObject_insideSecondarySpec() throws IOException {
         WebDriver driver = new MockedDriver();
         driver.get("/mocks/pages/count-via-js-page.json");
-        PageSpecReader pageSpecReader = new PageSpecReader(EMPTY_PROPERTIES, new SeleniumBrowser(driver));
+        PageSpecReader pageSpecReader = new PageSpecReader(EMPTY_PROPERTIES, new SeleniumBrowser(driver).getPage());
         PageSpec pageSpec = pageSpecReader.read(getClass().getResource("/specs/count/main.spec").getFile());
 
         List<ObjectSpecs> objectSpecs = pageSpec.getSections().get(0).getObjects();
@@ -322,7 +324,7 @@ public class PageSpecsReaderTest {
     
     @Test
     public void shouldRead_andProcess_bashTemplateExpressions() throws IOException {
-        PageSpec pageSpec = new PageSpecReader(EMPTY_PROPERTIES, EMPTY_BROWSER).read(getClass().getResourceAsStream("/specs/spec-bash-template.spec"));
+        PageSpec pageSpec = new PageSpecReader(EMPTY_PROPERTIES, EMPTY_PAGE).read(getClass().getResourceAsStream("/specs/spec-bash-template.spec"));
         assertThat(pageSpec, is(notNullValue()));
         
         List<PageSection> sections = pageSpec.getSections();
@@ -338,7 +340,7 @@ public class PageSpecsReaderTest {
     
     @Test
     public void shouldRead_sectionsNames_withTags() throws IOException {
-        PageSpec pageSpec = new PageSpecReader(EMPTY_PROPERTIES, EMPTY_BROWSER).read(getClass().getResourceAsStream("/specs/spec-sections-advanced.spec"));
+        PageSpec pageSpec = new PageSpecReader(EMPTY_PROPERTIES, EMPTY_PAGE).read(getClass().getResourceAsStream("/specs/spec-sections-advanced.spec"));
         assertThat(pageSpec, is(notNullValue()));
         
         List<PageSection> sections = pageSpec.getSections();
@@ -724,7 +726,7 @@ public class PageSpecsReaderTest {
 
     @Test
     public void shouldAllowTo_importJavascriptFiles() throws IOException {
-        PageSpecReader specReader = new PageSpecReader(new Properties(), EMPTY_BROWSER);
+        PageSpecReader specReader = new PageSpecReader(new Properties(), EMPTY_PAGE);
         PageSpec pageSpec = specReader.read(getClass().getResource("/specs/spec-with-javascript-import.spec").getFile());
         assertThat(pageSpec.getSections().get(0).getObjects().get(0).getSpecs().get(0).getOriginalText(), is("text is: some value from-javascript function"));
     }
@@ -733,7 +735,7 @@ public class PageSpecsReaderTest {
     public void shouldAllowToUse_pageObjectProperties_inJsExpressions_via_findFunction() throws IOException {
         WebDriver driver = new MockedDriver();
         driver.get("/mocks/pages/object-values-in-js.json");
-        PageSpecReader specReader = new PageSpecReader(new Properties(), new SeleniumBrowser(driver));
+        PageSpecReader specReader = new PageSpecReader(new Properties(), new SeleniumBrowser(driver).getPage());
         PageSpec pageSpec = specReader.read(getClass().getResource("/specs/spec-with-object-values-in-js.spec").getFile());
         assertThat(pageSpec.getSections().get(0).getObjects().get(0).getSpecs().get(0).getOriginalText(), is("near: menu-item-4 20px left"));
         assertThat(pageSpec.getSections().get(0).getObjects().get(0).getSpecs().get(1).getOriginalText(), is("above: menu-item-4 30px"));
@@ -747,7 +749,7 @@ public class PageSpecsReaderTest {
     public void shouldAllowToUse_pageObjectProperties_inJsExpressions_via_findFunction_withImportedSpecs() throws IOException {
         WebDriver driver = new MockedDriver();
         driver.get("/mocks/pages/object-values-in-js.json");
-        PageSpecReader specReader = new PageSpecReader(new Properties(), new SeleniumBrowser(driver));
+        PageSpecReader specReader = new PageSpecReader(new Properties(), new SeleniumBrowser(driver).getPage());
         PageSpec pageSpec = specReader.read(getClass().getResource("/specs/spec-with-object-values-in-js-via-import.spec").getFile());
         assertThat(pageSpec.getSections().get(0).getObjects().get(0).getSpecs().get(0).getOriginalText(), is("near: menu-item-4 20px left"));
         assertThat(pageSpec.getSections().get(0).getObjects().get(0).getSpecs().get(1).getOriginalText(), is("above: menu-item-4 30px"));
@@ -755,7 +757,7 @@ public class PageSpecsReaderTest {
 
     @Test
     public void shouldAllowTo_useParameterizationIndex_insideJsExpression() throws IOException {
-        PageSpecReader specReader = new PageSpecReader(new Properties(), EMPTY_BROWSER);
+        PageSpecReader specReader = new PageSpecReader(new Properties(), EMPTY_PAGE);
         PageSpec pageSpec = specReader.read(getClass().getResource("/specs/parameterization-index-in-js.spec").getFile());
         assertThat(pageSpec.getSections().get(0).getObjects().get(0).getSpecs().get(0).getOriginalText(), is("above: menu-item-3"));
         assertThat(pageSpec.getSections().get(0).getObjects().get(1).getSpecs().get(0).getOriginalText(), is("above: menu-item-5"));
@@ -764,7 +766,7 @@ public class PageSpecsReaderTest {
 
     @Test
     public void shouldAllowTo_mixConditionalStatements_withParameterizations() throws IOException {
-        PageSpecReader specReader = new PageSpecReader(new Properties(), EMPTY_BROWSER);
+        PageSpecReader specReader = new PageSpecReader(new Properties(), EMPTY_PAGE);
         PageSpec pageSpec = specReader.read(getClass().getResource("/specs/mix-conditions-with-parameterizations.spec").getFile());
         ConditionalBlock conditionalBlock = pageSpec.getSections().get(0).getConditionalBlocks().get(0);
         assertThat(conditionalBlock.getBodyObjects().size(), is(3));
@@ -795,7 +797,7 @@ public class PageSpecsReaderTest {
     }
 
     private PageSpec readSpec(String path) throws IOException {
-        PageSpecReader specReader = new PageSpecReader(new Properties(), EMPTY_BROWSER);
+        PageSpecReader specReader = new PageSpecReader(new Properties(), EMPTY_PAGE);
         return specReader.read(getClass().getResource(path).getFile());
     }
 

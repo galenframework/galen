@@ -47,7 +47,7 @@ public class ObjectDefinitionReaderTest {
     @Test(dataProvider = "provideGoodSamples")
     public void shouldParseCorrect_objectDefinition(String objectDefinitionText, String expectedName, Locator expectedLocator) {
         PageSpec pageSpec = new PageSpec();
-        new StateObjectDefinition(pageSpec, new PageSpecReader(EMPTY_PROPERTIES, EMPTY_BROWSER)).process(objectDefinitionText, EMPTY_PLACE);
+        new StateObjectDefinition(pageSpec, new PageSpecReader(EMPTY_PROPERTIES, new MockedPage())).process(objectDefinitionText, EMPTY_PLACE);
         assertThat(pageSpec.getObjects(), hasKey(expectedName));
         assertThat(pageSpec.getObjectLocator(expectedName), is(expectedLocator));
     }
@@ -80,7 +80,7 @@ public class ObjectDefinitionReaderTest {
         SyntaxException exception = null;
         try {
             PageSpec pageSpec = new PageSpec();
-            new StateObjectDefinition(pageSpec, new PageSpecReader(EMPTY_PROPERTIES, EMPTY_BROWSER)).process(objectDefinitionText, EMPTY_PLACE);
+            new StateObjectDefinition(pageSpec, new PageSpecReader(EMPTY_PROPERTIES, new MockedPage())).process(objectDefinitionText, EMPTY_PLACE);
         }
         catch (SyntaxException e) {
             exception = e;

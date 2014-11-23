@@ -30,7 +30,6 @@ import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import net.mindengine.galen.browser.Browser;
 import net.mindengine.galen.page.Rect;
 import net.mindengine.galen.parser.*;
 import net.mindengine.galen.specs.*;
@@ -45,12 +44,10 @@ public class SpecReader {
     private static final Place NULL_PLACE = null;
     private Properties properties;
     private Map<Pattern, SpecProcessor> specsMap = new HashMap<Pattern, SpecProcessor>();
-    private Browser browser;
 
-    public SpecReader(Properties properties, Browser browser) {
+    public SpecReader(Properties properties) {
         initSpecs();
         this.properties = properties;
-        this.setBrowser(browser);
     }
     
     private void initSpecs() {
@@ -511,14 +508,6 @@ public class SpecReader {
 
     private void putSpec(String patternText, SpecProcessor specProcessor) {
         specsMap.put(Pattern.compile(patternText), specProcessor);
-    }
-
-    public Browser getBrowser() {
-        return browser;
-    }
-
-    public void setBrowser(Browser browser) {
-        this.browser = browser;
     }
 
     public Properties getProperties() {

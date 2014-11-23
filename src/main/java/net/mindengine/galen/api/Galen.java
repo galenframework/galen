@@ -20,32 +20,18 @@ import net.mindengine.galen.browser.SeleniumBrowser;
 import net.mindengine.galen.page.Page;
 import net.mindengine.galen.page.PageElement;
 import net.mindengine.galen.page.Rect;
-import net.mindengine.galen.reports.GalenTestInfo;
-import net.mindengine.galen.reports.LayoutReportNode;
-import net.mindengine.galen.reports.TestReport;
-import net.mindengine.galen.reports.TestReportNode;
 import net.mindengine.galen.reports.model.LayoutReport;
-import net.mindengine.galen.runner.CompleteListener;
-import net.mindengine.galen.specs.page.Locator;
 import net.mindengine.galen.specs.page.PageSection;
 import net.mindengine.galen.specs.reader.page.PageSpec;
 import net.mindengine.galen.specs.reader.page.PageSpecReader;
 import net.mindengine.galen.specs.reader.page.SectionFilter;
-import net.mindengine.galen.suite.GalenPageAction;
-import net.mindengine.galen.suite.actions.GalenPageActionCheck;
-import net.mindengine.galen.tests.GalenEmptyTest;
-import net.mindengine.galen.tests.GalenTest;
-import net.mindengine.galen.tests.TestSession;
-import net.mindengine.galen.utils.GalenUtils;
 import net.mindengine.galen.validation.*;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.openqa.selenium.WebDriver;
 
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.OutputStream;
 import java.util.*;
 
 import static java.util.Arrays.asList;
@@ -56,7 +42,7 @@ public class Galen {
     public static LayoutReport checkLayout(Browser browser, List<String> specPaths,
                                            List<String> includedTags, List<String> excludedTags,
                                            Properties properties, ValidationListener validationListener) throws IOException {
-        PageSpecReader reader = new PageSpecReader(properties, browser);
+        PageSpecReader reader = new PageSpecReader(properties, browser.getPage());
 
         List<PageSpec> specs = new LinkedList<PageSpec>();
 
@@ -129,7 +115,7 @@ public class Galen {
         dumpPage(browser, pageName, specPath, pageDumpPath, maxWidth, maxHeight, new Properties());
     }
     public static void dumpPage(Browser browser, String pageName, String specPath, String pageDumpPath, Integer maxWidth, Integer maxHeight, Properties properties) throws IOException {
-        PageSpecReader reader = new PageSpecReader(properties, browser);
+        PageSpecReader reader = new PageSpecReader(properties, browser.getPage());
         PageSpec pageSpec = reader.read(specPath);
         dumpPage(browser, pageName, pageSpec, new File(pageDumpPath), maxWidth, maxHeight);
     }
