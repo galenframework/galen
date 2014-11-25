@@ -208,6 +208,13 @@ public class PageSpecsReaderTest {
         assertThat(objectSpecs.get(0).getSpecs().get(0).getOriginalText(), is("text is: A count is 4"));
     }
 
+    @Test
+    public void shoulParameterize_withOneItem_whenTemplateIsGiven_2_to_2() throws IOException {
+        PageSpec pageSpec = pageSpecReader.read("/specs/single-item-range-parameterization.spec");
+        assertThat(pageSpec.getSections().size(), is(1));
+        assertThat(pageSpec.getSections().get(0).getObjects().size(), is(1));
+        assertThat(pageSpec.getSections().get(0).getObjects().get(0).getObjectName(), is("menu-item-2"));
+    }
 
     @Test
     public void shouldNotParameterize_ifTemplateIsGiven_from_1_to_0_or_from_1_to_minus1() throws IOException {

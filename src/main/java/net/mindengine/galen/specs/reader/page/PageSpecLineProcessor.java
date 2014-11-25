@@ -231,7 +231,7 @@ public class PageSpecLineProcessor {
     }
 
     private List<String> createSequence(int min, int max) {
-        if (max > min) {
+        if (max >= min) {
             List<String> parameters = new LinkedList<String>();
             for (int i = min; i <= max; i++) {
                 parameters.add(Integer.toString(i));
