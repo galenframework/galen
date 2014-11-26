@@ -67,7 +67,7 @@ If you want to improve the functionality related to image comparison or color sc
 
 Building 
 -----------
-This project is mased on Maven. You can use both Intellij or Eclipse for it. It is being developed in Linux so all the assembling scripts are in bash. In order to assemble the dist with zip archives just run ```./makeDist.sh``` and it will create a dist folder with both binary and source folders and it will prepare zip archives there as well. If you want to quickly test the concept and install galen right after the assembling you can use script ```./assembleAndInstall.sh```. It uses ```makeDist.sh``` and then just invokes ```sudo ./install.sh```
+This project is based on Maven. You can use both Intellij or Eclipse for it. It is being developed in Linux so all the assembling scripts are in bash. In order to assemble the dist with zip archives just run ```./makeDist.sh``` and it will create a dist folder with both binary and source folders and it will prepare zip archives there as well. If you want to quickly test the concept and install galen right after the assembling you can use script ```./assembleAndInstall.sh```. It uses ```makeDist.sh``` and then just invokes ```sudo ./install.sh```
 
 
 Testing
