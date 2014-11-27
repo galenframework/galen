@@ -1,38 +1,44 @@
 <html>
     <head>
         <title>Galen Report</title>
+        <link rel="stylesheet" type="text/css" href="tablesorter.css"></link>
         <link rel="stylesheet" type="text/css" href="galen-report.css"></link>
         <script src="jquery-1.10.2.min.js"></script>
+        <script src="tablesorter.js"></script>
         <script src="galen-report.js"></script>
     </head>
     <body>
         <script>$(function() {Galen.formatMainOverview();});</script>
         <div class="suites-overview">
             <h1>Galen Report</h1>
-            <div class="suites">
-                <div class="status-header">
-                    <div>Passed</div>
-                    <div>Failed</div>
-                    <div>Warnings</div>
-                    <div>Total</div>
-                    <div>Started</div>
-                    <div>Duration</div>
-                    <div>Test</div>
-                </div>
-                <#list tests as testData>
-                <div class="suite">
-                    <div class="status passed">${testData.statistic.passed?c}</div>
-                    <div class="status failed">${testData.statistic.errors?c}</div>
-                    <div class="status warnings">${testData.statistic.warnings?c}</div>
-                    <div class="status total">${testData.statistic.total?c}</div>
-                    <div class="time">${testData.testInfo.startedAt?string("yyyy-MM-dd HH:mm:ss")}</div>
-                    <div class="time">${testData.humanReadableDuration}</div>
-                    <div class="suite-link">
-                        <a href="${testData.testId?html}.html">${testData.testInfo.name?html}</a>
-                    </div>
-                </div>
-                </#list>
-            </div>
+            <table class="suites tablesorter">
+    			<thead>
+	                <tr>
+	                    <th>Passed</th>
+	                    <th>Failed</th>
+	                    <th>Warnings</th>
+	                    <th>Total</th>
+	                    <th>Started</th>
+	                    <th>Duration</th>
+	                    <th>Test</th>
+	                </tr>
+                </thead>
+                <tbody>
+	                <#list tests as testData>
+	                <tr class="suite">
+	                    <td class="status passed">${testData.statistic.passed?c}</td>
+	                    <td class="status failed">${testData.statistic.errors?c}</td>
+	                    <td class="status warnings">${testData.statistic.warnings?c}</td>
+	                    <td class="status total">${testData.statistic.total?c}</td>
+	                    <td class="time">${testData.testInfo.startedAt?string("yyyy-MM-dd HH:mm:ss")}</td>
+	                    <td class="time">${testData.humanReadableDuration}</td>
+	                    <td class="suite-link">
+	                        <a href="${testData.testId?html}.html">${testData.testInfo.name?html}</a>
+	                    </td>
+	                </tr>
+	                </#list>
+	            </tbody>
+            </table>
         </div>
     </body>
 </html>
