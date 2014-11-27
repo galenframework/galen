@@ -244,6 +244,10 @@ public class HtmlReportBuilder {
     
         
     private void copyHtmlResources(String reportFolderPath) throws IOException {
+    	// copy sorting libs
+        copyResourceToFolder("/html-report/tablesorter.css", reportFolderPath + File.separator + "tablesorter.css");
+        copyResourceToFolder("/html-report/tablesorter.js", reportFolderPath + File.separator + "tablesorter.js");
+    	// copy galen libs
         copyResourceToFolder("/html-report/galen-report.css", reportFolderPath + File.separator + "galen-report.css");
         copyResourceToFolder("/html-report/galen-report.js", reportFolderPath + File.separator + "galen-report.js");
         copyResourceToFolder("/html-report/jquery-1.10.2.min.js", reportFolderPath + File.separator + "jquery-1.10.2.min.js");
