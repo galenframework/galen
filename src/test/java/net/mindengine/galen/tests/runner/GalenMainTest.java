@@ -147,7 +147,7 @@ public class GalenMainTest {
         assertThat(htmlReportContent, containsString("<a href=\"report-1-test-number-1.html\">Test number 1</a>"));
         assertThat(htmlReportContent, containsString("<a href=\"report-2-test-number-2.html\">Test number 2</a>"));
         assertThat(htmlReportContent, containsString("<a href=\"report-3-test-number-3.html\">Test number 3</a>"));
-        assertThat(htmlReportContent, containsString("<div class=\"status failed\">1</div>"));
+        assertThat(htmlReportContent, containsString("<td class=\"status failed\">1</td>"));
     }
     
     @Test public void shouldRun_javascriptTestWithEvents() throws Exception {
