@@ -251,7 +251,7 @@ GalenPages.Page = function (driver, mainFields, secondaryFields) {
     }
 
     this.primaryFields = [];
-    thisPrimaryFields = this.primaryFields;
+    var thisPrimaryFields = this.primaryFields;
     iterateOverFields(mainFields, function (property) {
         thisPrimaryFields.push(property);
     });
