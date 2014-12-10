@@ -74,14 +74,14 @@ var GalenPages = {
     extendPage: function (page, driver, mainFields, secondaryFields) {
         var obj = new GalenPages.Page(driver, mainFields, secondaryFields);
         
-        for (key in obj) {
+        for (var key in obj) {
             if (obj.hasOwnProperty(key)) {
                 page[key] = obj[key];
             }
         }
 
         /* Adding all the page functions defined in prototype */
-        for (key in GalenPages.Page.prototype) {
+        for (var key in GalenPages.Page.prototype) {
             if (GalenPages.Page.prototype.hasOwnProperty(key)) {
                 page[key] = GalenPages.Page.prototype[key];
             }
