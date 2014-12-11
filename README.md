@@ -1,5 +1,6 @@
 [Galen Framework](http://galenframework.com)
 ==============
+[![Gitter](https://badges.gitter.im/Join Chat.svg)](https://gitter.im/galenframework/galen?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
 
 Galen is an open-source tool for testing layout and responsive design of web applications. It is also a powerfull functional testing framework.
 For more information visit http://galenframework.com

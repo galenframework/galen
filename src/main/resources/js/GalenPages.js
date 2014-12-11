@@ -73,12 +73,20 @@ var GalenPages = {
     },
     extendPage: function (page, driver, mainFields, secondaryFields) {
         var obj = new GalenPages.Page(driver, mainFields, secondaryFields);
-
-        for (key in obj) {
+        
+        for (var key in obj) {
             if (obj.hasOwnProperty(key)) {
                 page[key] = obj[key];
             }
         }
+
+        /* Adding all the page functions defined in prototype */
+        for (var key in GalenPages.Page.prototype) {
+            if (GalenPages.Page.prototype.hasOwnProperty(key)) {
+                page[key] = GalenPages.Page.prototype[key];
+            }
+        }
+
     },
     Driver: function (driver) {
         this.driver = driver;
@@ -232,109 +240,106 @@ var GalenPages = {
 GalenPages.Page = function (driver, mainFields, secondaryFields) {
     this.driver = driver;
     var thisPage = this;
+    this.initPageElements(mainFields, function (fieldNames) {
+        thisPage.primaryFields = fieldNames;
+    });
+    this.initPageElements(secondaryFields);
+};
+GalenPages.Page.prototype.initPageElements = function (elementsMap, elementsCollectedCallback) {
+    var fieldNames = [];
 
-    var iterateOverFields = function (fields, apply) {
-        if (fields != undefined) {
-            for (var property in fields) {
-                if (fields.hasOwnProperty(property)) {
-                    var value = fields[property];
-                    if (typeof value == "string") {
-                        thisPage[property] = new GalenPages.PageElement(property, GalenPages.parseLocator(value), thisPage);
-                        apply(property);
-                    }
-                    else {
-                        thisPage[property] = value;
-                    }
-                }
+    for (var property in elementsMap) {
+        if (elementsMap.hasOwnProperty(property)) {
+            var value = elementsMap[property];
+            if (typeof value == "string") {
+                this[property] = new GalenPages.PageElement(property, GalenPages.parseLocator(value), this);
+                fieldNames.push(property);
+            }
+            else {
+                this[property] = value;
             }
         }
     }
+    
+    if (elementsCollectedCallback != null && typeof elementsCollectedCallback  == "function") {
+        elementsCollectedCallback(fieldNames);
+    }
+};
+GalenPages.Page.prototype.waitTimeout = "10s";
+GalenPages.Page.prototype.waitPeriod = "1s";
+GalenPages.Page.prototype._report = function (name) {
+    try {
+        GalenPages.report(name);
+    }
+    catch (err) {
+    }
+};
+GalenPages.Page.prototype.open = function (url) {
+    this._report("Open " + url);
+    this.driver.get(url);
+};
+GalenPages.Page.prototype.findChild = function (locator) {
+    if (typeof locator == "string") {
+        locator = GalenPages.parseLocator(locator);
+    }
 
-    this.primaryFields = [];
-    thisPrimaryFields = this.primaryFields;
-    iterateOverFields(mainFields, function (property) {
-        thisPrimaryFields.push(property);
-    });
-    iterateOverFields(secondaryFields, function (property) {});
-
-    this.waitTimeout = "10s";
-    this.waitPeriod = "1s";
-    this._report = function (name) {
+    if (this.parent != undefined ) {
+        return this.parent.findChild(locator);
+    }
+    else {
         try {
-            GalenPages.report(name);
-        }
-        catch (err) {
-
-        }
-    };
-    this.open = function (url) {
-        this._report("Open " + url);
-        this.driver.get(url);
-    };
-    this.findChild = function (locator) {
-        if (typeof locator == "string") {
-            locator = GalenPages.parseLocator(locator);
-        }
-
-        if (this.parent != undefined ) {
-            return this.parent.findChild(locator);
-        }
-        else {
-            try {
-                var element = this.driver.findElement(GalenPages.convertLocator(locator));
-                if (element == null) {
-                    throw new Error("No such element: " + locator.type + " " + locator.value);
-                }
-                return element;
-            }
-            catch(error) {
+            var element = this.driver.findElement(GalenPages.convertLocator(locator));
+            if (element == null) {
                 throw new Error("No such element: " + locator.type + " " + locator.value);
             }
+            return element;
         }
-    };
-    this.findChildren = function (locator) {
-        if (typeof locator == "string") {
-            locator = GalenPages.parseLocator(locator);
+        catch(error) {
+            throw new Error("No such element: " + locator.type + " " + locator.value);
         }
-
-        if (this.parent != undefined ) {
-            return this.parent.findChildren(locator);
-        }
-        else {
-            var list = this.driver.findElements(GalenPages.convertLocator(locator));
-            return listToArray(list);
-        }
-    };
-    this.set = function (props) {
-        for (var property in props) {
-            if (props.hasOwnProperty(property)) {
-                this[property] = props[property];
-            }
-        }
-        return this;
-    };
-    this.waitForIt = function () {
-        if (this.primaryFields.length > 0 ) {
-            var conditions = {};
-            var primaryFields = this.primaryFields;
-            var page = this;
-
-            for (var i = 0; i<this.primaryFields.length; i++) {
-                conditions[this.primaryFields[i] + " to be displayed"] = {
-                    field: this[this.primaryFields[i]],
-                    apply: function () {
-                        return this.field.exists() && this.field.isDisplayed();
-                    }
-                };
-            }
-
-            GalenPages.wait({time: this.waitTimeout, period: this.waitPeriod, message: "timeout waiting for page elements:"}).untilAll(conditions);
-        }
-        else throw  new Error("You can't wait for page as it does not have any fields defined");
-        return this;
-    };
+    }
 };
+GalenPages.Page.prototype.findChildren = function (locator) {
+    if (typeof locator == "string") {
+        locator = GalenPages.parseLocator(locator);
+    }
 
+    if (this.parent != undefined ) {
+        return this.parent.findChildren(locator);
+    }
+    else {
+        var list = this.driver.findElements(GalenPages.convertLocator(locator));
+        return listToArray(list);
+    }
+};
+GalenPages.Page.prototype.set = function (props) {
+    for (var property in props) {
+        if (props.hasOwnProperty(property)) {
+            this[property] = props[property];
+        }
+    }
+    return this;
+};
+GalenPages.Page.prototype.waitForIt = function () {
+    if (this.primaryFields.length > 0 ) {
+        var conditions = {};
+        var primaryFields = this.primaryFields;
+        var page = this;
+
+        for (var i = 0; i<this.primaryFields.length; i++) {
+            conditions[this.primaryFields[i] + " to be displayed"] = {
+                field: this[this.primaryFields[i]],
+                apply: function () {
+                    return this.field.exists() && this.field.isDisplayed();
+                }
+            };
+        }
+
+        GalenPages.wait({time: this.waitTimeout, period: this.waitPeriod, message: "timeout waiting for page elements:"}).untilAll(conditions);
+    }
+    else throw  new Error("You can't wait for page as it does not have any fields defined");
+    return this;
+};
 
 GalenPages.PageElement = function (name, locator, parent) {
         this.name = name;
