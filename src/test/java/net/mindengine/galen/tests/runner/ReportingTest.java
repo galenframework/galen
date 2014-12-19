@@ -39,6 +39,7 @@ import net.mindengine.galen.reports.TestNgReportBuilder;
 import net.mindengine.galen.reports.TestReport;
 import net.mindengine.galen.reports.TestReportNode;
 import net.mindengine.galen.reports.model.LayoutReport;
+import net.mindengine.galen.reports.model.LayoutSection;
 import net.mindengine.galen.validation.LayoutReportListener;
 
 import org.apache.commons.io.FileUtils;
@@ -73,7 +74,7 @@ public class ReportingTest {
         
         List<GalenTestInfo> testInfos = new LinkedList<GalenTestInfo>();
         
-        GalenTestInfo testInfo = new GalenTestInfo("Home page test", null);
+        GalenTestInfo testInfo = new GalenTestInfo("Home page test");
 
         testInfo.setReport(new TestReport());
         testInfo.setStartedAt(new Date(1399741000000L));
@@ -81,7 +82,7 @@ public class ReportingTest {
         testInfo.setException(new FakeException("Some exception here"));
         testInfos.add(testInfo);
         
-        testInfo = new GalenTestInfo("Login page test", null);
+        testInfo = new GalenTestInfo("Login page test");
         testInfo.setReport(new TestReport());
         testInfo.setStartedAt(new Date(1399741000000L));
         testInfo.setEndedAt(new Date(1399746930000L));
@@ -102,7 +103,7 @@ public class ReportingTest {
         
         List<GalenTestInfo> testInfos = new LinkedList<GalenTestInfo>();
         
-        GalenTestInfo testInfo = new GalenTestInfo("Home page test", null);
+        GalenTestInfo testInfo = new GalenTestInfo("Home page test");
         testInfo.setStartedAt(new Date(1399741000000L));
         testInfo.setEndedAt(new Date(1399746930000L));
 
@@ -128,10 +129,10 @@ public class ReportingTest {
         
         List<GalenTestInfo> testInfos = new LinkedList<GalenTestInfo>();
         
-        GalenTestInfo testInfo = new GalenTestInfo("Home page test", null);
+        GalenTestInfo testInfo = new GalenTestInfo("Home page test");
 
         TestReport report = new TestReport();
-        LayoutReport layoutReport = new LayoutReport();
+        LayoutReport layoutReport = new LayoutReport(new LinkedList<String>());
         layoutReport.setScreenshotFullPath(File.createTempFile("screenshot", ".png").getAbsolutePath());
         ReportingListenerTestUtils.performSampleReporting("Home page test", null, new LayoutReportListener(layoutReport), null);
 

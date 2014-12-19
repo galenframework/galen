@@ -22,6 +22,7 @@ import net.mindengine.galen.reports.model.LayoutReport;
 import net.mindengine.galen.reports.model.LayoutSection;
 import net.mindengine.galen.reports.model.LayoutSpec;
 import net.mindengine.galen.validation.ValidationError;
+
 import org.testng.annotations.Test;
 
 import java.util.LinkedList;
@@ -52,7 +53,7 @@ public class LayoutReportNodeTest {
     }
 
     private LayoutReport createSampleLayoutReport() {
-        LayoutReport report = new LayoutReport();
+        LayoutReport report = new LayoutReport(new LinkedList<String>());
         List<ValidationError> list = new LinkedList<ValidationError>();
         report.setValidationErrors(list);
 

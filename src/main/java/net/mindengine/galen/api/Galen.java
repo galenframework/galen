@@ -62,7 +62,7 @@ public class Galen {
         CombinedValidationListener listener = new CombinedValidationListener();
         listener.add(validationListener);
 
-        LayoutReport layoutReport = new LayoutReport();
+        LayoutReport layoutReport = new LayoutReport(includedTags);
         try {
             layoutReport.setScreenshotFullPath(page.createScreenshot().getAbsolutePath());
         }
