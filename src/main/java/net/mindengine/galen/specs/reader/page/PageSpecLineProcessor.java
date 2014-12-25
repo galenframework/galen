@@ -186,7 +186,6 @@ public class PageSpecLineProcessor {
 	}
 
     private void importJavascript(String filePath) {
-        //TODO use file ids to ignore loaded scripts
         pageSpecReader.runJavascriptFromFile(filePath, contextPath);
     }
 

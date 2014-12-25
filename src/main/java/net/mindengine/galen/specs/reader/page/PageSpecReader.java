@@ -15,6 +15,7 @@
 ******************************************************************************/
 package net.mindengine.galen.specs.reader.page;
 
+import net.mindengine.galen.api.Galen;
 import net.mindengine.galen.browser.Browser;
 import net.mindengine.galen.page.Page;
 import net.mindengine.galen.page.PageElement;
@@ -120,8 +121,7 @@ public class PageSpecReader implements VarsParserJsFunctions {
     }
 
     public int count(String regex) {
-        String jRegex = regex.replace("*", ".*");
-        Pattern pattern = Pattern.compile(jRegex);
+        Pattern pattern = GalenUtils.convertObjectNameRegex(regex);
 
         Set<String> collectedNames = new HashSet<String>();
 

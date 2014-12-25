@@ -38,9 +38,7 @@ import java.util.Properties;
 import net.mindengine.galen.browser.Browser;
 import net.mindengine.galen.browser.SeleniumBrowser;
 import net.mindengine.galen.components.JsTestRegistry;
-import net.mindengine.galen.components.MockedBrowser;
 import net.mindengine.galen.components.mocks.driver.MockedDriver;
-import net.mindengine.galen.components.validation.MockedPage;
 import net.mindengine.galen.page.Page;
 import net.mindengine.galen.parser.FileSyntaxException;
 import net.mindengine.galen.specs.Location;
@@ -801,6 +799,19 @@ public class PageSpecsReaderTest {
         assertThat(pageSpec.getSections().get(2).getObjects().get(0).getObjectName(), is("sub-item"));
         assertThat(pageSpec.getSections().get(2).getObjects().get(0).getSpecs().get(0).getOriginalText(), is("text is: name from script"));
 
+    }
+
+    /**
+     * https://github.com/galenframework/galen/issues/149
+     * @throws IOException
+     */
+    @Test
+    public void shouldCountObject_matchinOnlyDigits_whenHashSymbol_isUsed_inObjectNamePattern() throws IOException {
+        PageSpec pageSpec = readSpec("/specs/hash-in-object-name-in-count-function.spec");
+
+        List<Spec> objectSpecs = pageSpec.getSections().get(0).getObjects().get(0).getSpecs();
+        assertThat("Text should be", objectSpecs.get(0).getOriginalText(), is("text is: With hash 2"));
+        assertThat("Text should be", objectSpecs.get(1).getOriginalText(), is("text is: With star 6"));
     }
 
     private PageSpec readSpec(String path) throws IOException {

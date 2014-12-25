@@ -157,7 +157,7 @@ public class SectionValidation {
     }
 
     private List<String> fetchUsingRegex(String simpleRegex) {
-        String regex = simpleRegex.replace("*", "[a-zA-Z0-9_]+");
+        String regex = simpleRegex.replace("#", "[0-9]+").replace("*", "[a-zA-Z0-9_]+");
         Pattern pattern = Pattern.compile(regex);
         
         List<String> objectNames = new LinkedList<String>();
@@ -171,7 +171,7 @@ public class SectionValidation {
     }
 
     private boolean isRegularExpression(String name) {
-        if (name.contains("*")) {
+        if (name.contains("*") || name.contains("#")) {
             return true;
         }
         else return false;

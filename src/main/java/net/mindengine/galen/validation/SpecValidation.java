@@ -57,7 +57,6 @@ public abstract class SpecValidation<T extends Spec> {
      * Fetches all child object, using simple regular expression
      * @param childObjects
      * @param pageSpec
-     * @param validatedObject 
      * @return
      * @throws ValidationErrorException
      */

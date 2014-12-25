@@ -26,6 +26,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import java.util.regex.Pattern;
 
 import javax.imageio.ImageIO;
 
@@ -404,4 +405,8 @@ public class GalenUtils {
     }
 
 
+    public static Pattern convertObjectNameRegex(String regex) {
+        String jRegex = regex.replace("#", "[0-9]+").replace("*", ".*");
+        return Pattern.compile(jRegex);
+    }
 }
