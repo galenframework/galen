@@ -57,7 +57,12 @@ public class GalenPageTestParserTest {
                    .withUrl("http://example.org")
                    .withSize(640, 480)
                    .withBrowserFactory(new SeleniumBrowserFactory(SeleniumBrowserFactory.IE))),
-                   
+
+           test("selenium phantomjs http://example.org 640x480", new GalenPageTest()
+                   .withUrl("http://example.org")
+                   .withSize(640, 480)
+                   .withBrowserFactory(new SeleniumBrowserFactory("phantomjs"))),
+
            test("selenium whatever_other_browser http://example.org 640x480", new GalenPageTest()
                    .withUrl("http://example.org")
                    .withSize(640, 480)
