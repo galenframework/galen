@@ -30,6 +30,7 @@ import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
@@ -58,7 +59,10 @@ import net.mindengine.galen.specs.reader.Place;
 import net.mindengine.galen.specs.reader.page.PageSpec;
 import net.mindengine.galen.specs.reader.page.PageSpecReader;
 
+import org.apache.commons.io.FileUtils;
 import org.openqa.selenium.WebDriver;
+import org.testng.annotations.AfterClass;
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 public class PageSpecsReaderTest {
@@ -69,6 +73,19 @@ public class PageSpecsReaderTest {
     private static final Properties EMPTY_PROPERTIES = new Properties();
     PageSpecReader pageSpecReader = new PageSpecReader(EMPTY_PROPERTIES, EMPTY_PAGE);
     PageSpec pageSpec;
+
+
+    private static final String TEST_FOLDER = "_test_PageSpecsReaderTest";
+
+    @BeforeClass
+    public void init() throws IOException {
+        FileUtils.forceMkdir(new File(TEST_FOLDER));
+    }
+
+    @AfterClass
+    public void removeTestFolder() throws IOException {
+        FileUtils.deleteDirectory(new File(TEST_FOLDER));
+    }
     
     @Test
     public void shouldBePossible_toReadSpec_fromInputStream() throws IOException {
@@ -731,8 +748,16 @@ public class PageSpecsReaderTest {
 
     @Test
     public void shouldAllowTo_importJavascriptFiles() throws IOException {
+
+        FileUtils.copyFile(new File(getClass().getResource("/specs/spec-with-javascript-import.spec").getFile()),
+                new File(TEST_FOLDER + File.separator  + "spec-with-javascript-import.spec"));
+
+        FileUtils.copyFile(new File(getClass().getResource("/specs/customFunction.js").getFile()),
+                new File(TEST_FOLDER + File.separator  + "customFunction.js"));
+
+
         PageSpecReader specReader = new PageSpecReader(new Properties(), EMPTY_PAGE);
-        PageSpec pageSpec = specReader.read(getClass().getResource("/specs/spec-with-javascript-import.spec").getFile());
+        PageSpec pageSpec = specReader.read(TEST_FOLDER + File.separator + "spec-with-javascript-import.spec");
         assertThat(pageSpec.getSections().get(0).getObjects().get(0).getSpecs().get(0).getOriginalText(), is("text is: some value from-javascript function"));
     }
 
@@ -784,7 +809,12 @@ public class PageSpecsReaderTest {
     @Test
     public void shouldImport_sameJsScript_andSameSpec_onlyOnes_withinDifferentLevels_ofSpecs() throws IOException {
         JsTestRegistry.get().clear();
-        PageSpec pageSpec = readSpec("/specs/same-import/main.spec");
+
+        FileUtils.copyDirectory(new File(getClass().getResource("/specs/same-import").getFile()),
+                new File(TEST_FOLDER + File.separator + "same-import"));
+
+
+        PageSpec pageSpec = new PageSpecReader(new Properties(), EMPTY_PAGE).read(TEST_FOLDER + "/same-import/main.spec");
         assertThat("Amount of events should be", JsTestRegistry.get().getEvents().size(), is(1));
         assertThat("Events should be", JsTestRegistry.get().getEvents(), contains("script is loaded"));
 

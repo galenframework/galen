@@ -74,9 +74,17 @@ public class JsFunctionLoad extends BaseFunction {
         String fullPath = filePath;
 
         try {
-            if (!filePath.startsWith("/")) {
+            if (filePath.startsWith("/")) {
+                /*
+                In case load function is called with leading slash
+                - it means that Galen should search for script from root folder of the project
+                 */
+                fullPath = filePath.substring(1);
+            }
+            else {
                 fullPath = contextPath + File.separator + filePath;
             }
+
 
             String fileId = GalenUtils.calculateFileId(fullPath);
 

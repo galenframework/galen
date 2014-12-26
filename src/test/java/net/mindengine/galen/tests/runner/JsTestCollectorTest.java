@@ -23,16 +23,31 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
-import net.mindengine.galen.GalenMain;
 import net.mindengine.galen.components.JsTestRegistry;
-import net.mindengine.galen.runner.GalenArguments;
 import net.mindengine.galen.runner.JsTestCollector;
 import net.mindengine.galen.tests.GalenTest;
 
+import org.apache.commons.io.FileUtils;
+import org.testng.annotations.AfterClass;
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 public class JsTestCollectorTest {
 
+
+    private static final String TEST_DIR_PATH = "_test-js-multilevel";
+
+    @BeforeClass
+    public void init() throws IOException {
+        FileUtils.forceMkdir(new File(TEST_DIR_PATH));
+        FileUtils.copyFile(new File(getClass().getResource("/js-tests/multilevel/main2.test.js").getFile()), new File(TEST_DIR_PATH + File.separator + "main2.test.js"));
+        FileUtils.copyFile(new File(getClass().getResource("/js-tests/multilevel/included.js").getFile()), new File(TEST_DIR_PATH + File.separator + "included.js"));
+    }
+
+    @AfterClass
+    public void removeAllTempFiles() throws IOException {
+        FileUtils.deleteDirectory(new File(TEST_DIR_PATH));
+    }
     
     @Test
     public void shouldExecuteJavascript_andCollectTests() throws Exception {
@@ -81,5 +96,20 @@ public class JsTestCollectorTest {
         assertThat("Events amount should be", events.size(), is(3));
 
         assertThat("Events should be", events, contains("included.js was loaded", "From main name is visible as Included object", "From second name is visible as Included object"));
+    }
+
+
+    @Test
+    public void shouldLoadOtherScripts_fromRootProject_ifPathStartsWithSlash() throws IOException {
+        JsTestCollector testCollector = new JsTestCollector();
+        JsTestRegistry.get().clear();
+        testCollector.execute(new File(new File(TEST_DIR_PATH) + File.separator + "main2.test.js"));
+
+        List<String> events = JsTestRegistry.get().getEvents();
+        assertThat("Events amount should be", events.size(), is(2));
+
+        assertThat("Events should be", events, contains("included.js was loaded", "From main name is visible as Included object"));
+
+
     }
 }
