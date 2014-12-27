@@ -23,6 +23,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Properties;
 
+import net.mindengine.galen.specs.SpecImage;
 import org.apache.commons.lang3.StringUtils;
 
 public class GalenConfig {
@@ -31,6 +32,8 @@ public class GalenConfig {
     public static final String SCREENSHOT_AUTORESIZE = "galen.screenshot.autoresize";
     public static final String SCREENSHOT_FULLPAGE = "galen.browser.screenshots.fullPage";
     public static final String SCREENSHOT_FULLPAGE_SCROLLWAIT = "galen.browser.screenshots.fullPage.scrollWait";
+    private static final String SPEC_IMAGE_TOLERANCE = "galen.spec.image.tolerance";
+    private static final String SPEC_IMAGE_ERROR_RATE = "galen.spec.image.error";
     private int rangeApproximation;
     private List<String> reportingListeners;
     private String defaultBrowser;
@@ -164,5 +167,14 @@ public class GalenConfig {
 
     public boolean shouldAutoresizeScreenshots() {
         return getBooleanProperty(GalenConfig.SCREENSHOT_AUTORESIZE, true);
+    }
+
+    public int getImageSpecDefaultTolerance() {
+        return getIntProperty(GalenConfig.SPEC_IMAGE_TOLERANCE, 25);
+    }
+
+    public SpecImage.ErrorRate getImageSpecDefaultErrorRate() {
+        String errorRateText = readProperty(SPEC_IMAGE_ERROR_RATE, "0px");
+        return SpecImage.ErrorRate.fromString(errorRateText);
     }
 }

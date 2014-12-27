@@ -763,8 +763,8 @@ public class SpecsReaderTest {
     public void shouldReadSpec_image_withMaxPercentageError() throws IOException {
         SpecImage spec = (SpecImage)readSpec("image: file imgs/image.png, error 2.4%");
         assertThat(spec.getImagePaths(), contains("./imgs/image.png"));
-        assertThat(spec.getMaxPercentage(), is(2.4));
-        assertThat(spec.getMaxPixels(), is(nullValue()));
+        assertThat(spec.getErrorRate().getValue(), is(2.4));
+        assertThat(spec.getErrorRate().getType(), is(SpecImage.ErrorRateType.PERCENT));
         assertThat(spec.getTolerance(), is(25));
     }
 
@@ -772,8 +772,8 @@ public class SpecsReaderTest {
     public void shouldReadSpec_image_withMaxPixelsError() throws IOException {
         SpecImage spec = (SpecImage)readSpec("image: file imgs/image.png, error 112 px");
         assertThat(spec.getImagePaths(), contains("./imgs/image.png"));
-        assertThat(spec.getMaxPercentage(), is(nullValue()));
-        assertThat(spec.getMaxPixels(), is(112));
+        assertThat(spec.getErrorRate().getValue(), is(112.0));
+        assertThat(spec.getErrorRate().getType(), is(SpecImage.ErrorRateType.PIXELS));
         assertThat(spec.getTolerance(), is(25));
     }
 
@@ -781,8 +781,8 @@ public class SpecsReaderTest {
     public void shouldReadSpec_image_withMaxPixelsError_tolerance5() throws IOException {
         SpecImage spec = (SpecImage)readSpec("image: file imgs/image.png, error 112 px, tolerance 5");
         assertThat(spec.getImagePaths(), contains("./imgs/image.png"));
-        assertThat(spec.getMaxPercentage(), is(nullValue()));
-        assertThat(spec.getMaxPixels(), is(112));
+        assertThat(spec.getErrorRate().getValue(), is(112.0));
+        assertThat(spec.getErrorRate().getType(), is(SpecImage.ErrorRateType.PIXELS));
         assertThat(spec.getTolerance(), is(5));
         assertThat(spec.isStretch(), is(false));
         assertThat(spec.isCropIfOutside(), is(false));
@@ -792,8 +792,8 @@ public class SpecsReaderTest {
     public void shouldReadSpec_image_withMaxPixelsError_tolerance5_stretch() throws IOException {
         SpecImage spec = (SpecImage)readSpec("image: file imgs/image.png, error 112 px, tolerance 5, stretch");
         assertThat(spec.getImagePaths(), contains("./imgs/image.png"));
-        assertThat(spec.getMaxPercentage(), is(nullValue()));
-        assertThat(spec.getMaxPixels(), is(112));
+        assertThat(spec.getErrorRate().getValue(), is(112.0));
+        assertThat(spec.getErrorRate().getType(), is(SpecImage.ErrorRateType.PIXELS));
         assertThat(spec.getTolerance(), is(5));
         assertThat(spec.isStretch(), is(true));
     }
@@ -809,8 +809,8 @@ public class SpecsReaderTest {
     public void shouldReadSpec_image_withMaxPixelsError_tolerance5_filterBlur2() throws IOException {
         SpecImage spec = (SpecImage)readSpec("image: file imgs/image.png, error 112 px, tolerance 5, filter blur 2");
         assertThat(spec.getImagePaths(), contains("./imgs/image.png"));
-        assertThat(spec.getMaxPercentage(), is(nullValue()));
-        assertThat(spec.getMaxPixels(), is(112));
+        assertThat(spec.getErrorRate().getValue(), is(112.0));
+        assertThat(spec.getErrorRate().getType(), is(SpecImage.ErrorRateType.PIXELS));
         assertThat(spec.getTolerance(), is(5));
         assertThat(spec.getOriginalFilters().size(), is(1));
         assertThat(spec.getSampleFilters().size(), is(1));
@@ -823,8 +823,8 @@ public class SpecsReaderTest {
     public void shouldReadSpec_image_withMaxPixelsError_tolerance5_filterABlur2() throws IOException {
         SpecImage spec = (SpecImage)readSpec("image: file imgs/image.png, error 112 px, tolerance 5, filter-a blur 2");
         assertThat(spec.getImagePaths(), contains("./imgs/image.png"));
-        assertThat(spec.getMaxPercentage(), is(nullValue()));
-        assertThat(spec.getMaxPixels(), is(112));
+        assertThat(spec.getErrorRate().getValue(), is(112.0));
+        assertThat(spec.getErrorRate().getType(), is(SpecImage.ErrorRateType.PIXELS));
         assertThat(spec.getTolerance(), is(5));
         assertThat(spec.getOriginalFilters().size(), is(1));
         assertThat(spec.getSampleFilters().size(), is(0));
@@ -836,8 +836,8 @@ public class SpecsReaderTest {
     public void shouldReadSpec_image_withMaxPixelsError_tolerance5_filterBBlur2() throws IOException {
         SpecImage spec = (SpecImage)readSpec("image: file imgs/image.png, error 112 px, tolerance 5, filter-b blur 2");
         assertThat(spec.getImagePaths(), contains("./imgs/image.png"));
-        assertThat(spec.getMaxPercentage(), is(nullValue()));
-        assertThat(spec.getMaxPixels(), is(112));
+        assertThat(spec.getErrorRate().getValue(), is(112.0));
+        assertThat(spec.getErrorRate().getType(), is(SpecImage.ErrorRateType.PIXELS));
         assertThat(spec.getTolerance(), is(5));
         assertThat(spec.getOriginalFilters().size(), is(0));
         assertThat(spec.getSampleFilters().size(), is(1));
@@ -850,8 +850,8 @@ public class SpecsReaderTest {
     public void shouldReadSpec_image_withMaxPixelsError_tolerance5_filterBlur2_filterDenoise1() throws IOException {
         SpecImage spec = (SpecImage)readSpec("image: file imgs/image.png, error 112 px, filter blur 2, filter denoise 4, tolerance 5");
         assertThat(spec.getImagePaths(), contains("./imgs/image.png"));
-        assertThat(spec.getMaxPercentage(), is(nullValue()));
-        assertThat(spec.getMaxPixels(), is(112));
+        assertThat(spec.getErrorRate().getValue(), is(112.0));
+        assertThat(spec.getErrorRate().getType(), is(SpecImage.ErrorRateType.PIXELS));
         assertThat(spec.getTolerance(), is(5));
 
         assertThat(spec.getOriginalFilters().size(), is(2));
@@ -866,9 +866,9 @@ public class SpecsReaderTest {
     @Test
     public void shouldReadSpec_image_withMaxPixelsError_tolerance5_filterBlur2_filterSaturation10_mapFilterDenoise1() throws IOException {
         SpecImage spec = (SpecImage)readSpec("image: file imgs/image.png, error 112 px, filter blur 2, filter saturation 10, map-filter denoise 4, tolerance 5");
+        assertThat(spec.getErrorRate().getValue(), is(112.0));
+        assertThat(spec.getErrorRate().getType(), is(SpecImage.ErrorRateType.PIXELS));
         assertThat(spec.getImagePaths(), contains("./imgs/image.png"));
-        assertThat(spec.getMaxPercentage(), is(nullValue()));
-        assertThat(spec.getMaxPixels(), is(112));
         assertThat(spec.getTolerance(), is(5));
 
         assertThat(spec.getOriginalFilters().size(), is(2));
@@ -890,8 +890,8 @@ public class SpecsReaderTest {
     public void shouldReadSpec_image_withMaxPixelsError_andArea() throws IOException {
         SpecImage spec = (SpecImage)readSpec("image: file imgs/image.png, error 112 px, area 10 10 100 20");
         assertThat(spec.getImagePaths(), contains("./imgs/image.png"));
-        assertThat(spec.getMaxPercentage(), is(nullValue()));
-        assertThat(spec.getMaxPixels(), is(112));
+        assertThat(spec.getErrorRate().getValue(), is(112.0));
+        assertThat(spec.getErrorRate().getType(), is(SpecImage.ErrorRateType.PIXELS));
         assertThat(spec.getTolerance(), is(25));
         assertThat(spec.getSelectedArea(), is(new Rect(10,10,100,20)));
     }
@@ -900,12 +900,26 @@ public class SpecsReaderTest {
     public void shouldReadSpec_image_andBuildImagePath_withContextPath() throws IOException {
         SpecImage spec = (SpecImage) readSpec("image: file image.png", "some-component/specs");
         assertThat(spec.getImagePaths(), contains("some-component/specs/image.png"));
-        assertThat(spec.getMaxPercentage(), is(nullValue()));
-        assertThat(spec.getMaxPixels(), is(nullValue()));
-        assertThat(spec.getTolerance(), is(25));
     }
 
+    /**
+     * Comes from https://github.com/galenframework/galen/issues/171
+     * @throws IOException
+     */
+    @Test
+    public void shouldReadSpec_image_toleranceAndErrorRate_fromConfig() throws IOException {
+        System.setProperty("galen.spec.image.tolerance", "21");
+        System.setProperty("galen.spec.image.error", "121%");
+        SpecImage spec = (SpecImage)readSpec("image: file image.png");
 
+        assertThat(spec.getTolerance(), is(21));
+        assertThat(spec.getErrorRate().getValue(), is(121.0));
+        assertThat(spec.getErrorRate().getType(), is(SpecImage.ErrorRateType.PERCENT));
+
+
+        System.getProperties().remove("galen.spec.image.tolerance");
+        System.getProperties().remove("galen.spec.image.error");
+    }
 
 
     @Test(expectedExceptions={SyntaxException.class}, expectedExceptionsMessageRegExp="Cannot parse number: \"\"")

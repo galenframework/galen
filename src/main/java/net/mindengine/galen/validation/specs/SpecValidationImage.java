@@ -15,6 +15,7 @@
 ******************************************************************************/
 package net.mindengine.galen.validation.specs;
 
+import net.mindengine.galen.config.GalenConfig;
 import net.mindengine.galen.page.PageElement;
 import net.mindengine.galen.page.Rect;
 import net.mindengine.galen.specs.SpecImage;
@@ -57,7 +58,13 @@ public class SpecValidationImage extends SpecValidation<SpecImage> {
 
         // TODO fix. should only take screenshot once per the same page if there are multiple image comparison checks
 
-        int tolerance = spec.getTolerance() != null ? Math.abs(spec.getTolerance()) : 25;
+        int tolerance = GalenConfig.getConfig().getImageSpecDefaultTolerance();
+
+
+
+        if (spec.getTolerance() != null && spec.getTolerance() >= 0) {
+            tolerance = spec.getTolerance();
+        }
 
         ComparisonOptions options = new ComparisonOptions();
         options.setStretchToFit(spec.isStretch());
@@ -129,19 +136,21 @@ public class SpecValidationImage extends SpecValidation<SpecImage> {
 
         double difference = 0.0;
         String errorMessage = null;
-        if (spec.getMaxPercentage() != null) {
-            difference = result.getPercentage() - spec.getMaxPercentage();
+
+        SpecImage.ErrorRate errorRate = spec.getErrorRate();
+        if (errorRate == null) {
+            errorRate = GalenConfig.getConfig().getImageSpecDefaultErrorRate();
+        }
+
+        if (errorRate.getType() == SpecImage.ErrorRateType.PERCENT) {
+            difference = result.getPercentage() - errorRate.getValue();
             if (difference > 0) {
-                errorMessage = createErrorMessageForPercentage(msgErrorPrefix(spec.getImagePaths().get(0)), spec.getMaxPercentage(), result.getPercentage());
+                errorMessage = createErrorMessageForPercentage(msgErrorPrefix(spec.getImagePaths().get(0)), errorRate.getValue(), result.getPercentage());
             }
         } else {
-            if (spec.getMaxPixels() == null) {
-                spec.setMaxPixels(0);
-            }
-
-            difference = result.getTotalPixels() - spec.getMaxPixels();
+            difference = result.getTotalPixels() - errorRate.getValue();
             if (difference > 0) {
-                errorMessage = createErrorMessageForPixels(msgErrorPrefix(spec.getImagePaths().get(0)), spec.getMaxPixels(), result.getTotalPixels());
+                errorMessage = createErrorMessageForPixels(msgErrorPrefix(spec.getImagePaths().get(0)), errorRate.getValue().intValue(), result.getTotalPixels());
             }
         }
 

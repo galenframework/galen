@@ -30,6 +30,7 @@ import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import net.mindengine.galen.config.GalenConfig;
 import net.mindengine.galen.page.Rect;
 import net.mindengine.galen.parser.*;
 import net.mindengine.galen.specs.*;
@@ -339,6 +340,8 @@ public class SpecReader {
                 SpecImage spec = new SpecImage();
                 spec.setImagePaths(new LinkedList<String>());
                 spec.setStretch(false);
+                spec.setErrorRate(GalenConfig.getConfig().getImageSpecDefaultErrorRate());
+                spec.setTolerance(GalenConfig.getConfig().getImageSpecDefaultTolerance());
 
                 for (Pair<String, String> parameter : parameters) {
                     if ("file".equals(parameter.getKey())) {
@@ -350,14 +353,7 @@ public class SpecReader {
                         }
                     }
                     else if ("error".equals(parameter.getKey())) {
-                        Pair<Double, String> error = parseError(parameter.getValue());
-                        if (error.getRight().equals("%")) {
-                            spec.setMaxPercentage(error.getLeft());
-                        }
-                        else if (error.getRight().equals("px")) {
-                            spec.setMaxPixels(error.getLeft().intValue());
-                        }
-                        else throw new SyntaxException("Unknown error unit: " + error.getRight());
+                        spec.setErrorRate(SpecImage.ErrorRate.fromString(parameter.getValue()));
                     }
                     else if ("tolerance".equals(parameter.getKey())) {
                         spec.setTolerance(parseIntegerParameter("tolerance", parameter.getValue()));
@@ -436,15 +432,6 @@ public class SpecReader {
         }
 
         return new Rect(numbers);
-    }
-
-    private Pair<Double, String> parseError(String text) {
-        StringCharReader reader = new StringCharReader(text);
-
-        Double number = Expectations.number().read(reader);
-        String unit = Expectations.word().read(reader);
-
-        return new ImmutablePair<Double, String>(number, unit);
     }
 
     private Integer parseIntegerParameter(String name, String value) {

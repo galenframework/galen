@@ -1504,10 +1504,10 @@ public class ValidationTest {
         SpecImage spec = new SpecImage();
 
         if (isPixelUnit) {
-            spec.setMaxPixels((int)errorValue);
+            spec.setErrorRate(new SpecImage.ErrorRate(errorValue, SpecImage.ErrorRateType.PIXELS));
         }
         else {
-            spec.setMaxPercentage(errorValue);
+            spec.setErrorRate(new SpecImage.ErrorRate(errorValue, SpecImage.ErrorRateType.PERCENT));
         }
 
         spec.setImagePaths(imagePaths);
