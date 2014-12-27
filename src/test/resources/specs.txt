@@ -5,7 +5,7 @@
 submit              xpath   //input[@name = 'submit']  
 search-field        css     #search
 menu                id      menu
-big-box             tag     container
+big-box             #container
 
 menu-item-*         css     #menu .menu-item
 ====================================================

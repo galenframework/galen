@@ -58,7 +58,7 @@ public class ObjectDefinitionReaderTest {
             row("myObject id my-object", "myObject", new Locator("id", "my-object")),
             row("myObject\tid\tmy-object", "myObject", new Locator("id", "my-object")),
             row("myObject xpath   //div[@name = \"auto's\"]", "myObject", new Locator("xpath", "//div[@name = \"auto's\"]")),
-            row("myObject whatEver   sas fas f 3r 32r 1qwr ", "myObject", new Locator("whatEver", "sas fas f 3r 32r 1qwr")),
+            row("myObject whatEver   sas fas f 3r 32r 1qwr ", "myObject", new Locator("css", "whatEver   sas fas f 3r 32r 1qwr")),
             row("my-object-123    css   .container div:first-child()", "my-object-123", new Locator("css", ".container div:first-child()")),
             row("my-object-123    css   #qwe", "my-object-123", new Locator("css", "#qwe")),
             row("my-object-123  @(0,0,-1,-1)  css   #qwe", "my-object-123", new Locator("css", "#qwe").withCorrections(simpleCorrectionRect(0, 0, -1, -1))),
@@ -71,6 +71,22 @@ public class ObjectDefinitionReaderTest {
                                     new CorrectionsRect.Correction(0, CorrectionsRect.Type.PLUS),
                                     new CorrectionsRect.Correction(40, CorrectionsRect.Type.EQUALS),
                                     new CorrectionsRect.Correction(30, CorrectionsRect.Type.EQUALS)))),
+            row("obj #qwe", "obj", new Locator("css", "#qwe")),
+            row("obj qwe", "obj", new Locator("css", "qwe")),
+            row("obj //qwe", "obj", new Locator("xpath", "//qwe")),
+            row("obj /qwe", "obj", new Locator("xpath", "/qwe")),
+            row("obj @ (1, 2, 3, 4) #qwe", "obj", new Locator("css", "#qwe").withCorrections(
+                    new CorrectionsRect(
+                            new CorrectionsRect.Correction(1, CorrectionsRect.Type.PLUS),
+                            new CorrectionsRect.Correction(2, CorrectionsRect.Type.PLUS),
+                            new CorrectionsRect.Correction(3, CorrectionsRect.Type.PLUS),
+                            new CorrectionsRect.Correction(4, CorrectionsRect.Type.PLUS)))),
+            row("obj @ (1, 2, 3, 4) //qwe", "obj", new Locator("xpath", "//qwe").withCorrections(
+                    new CorrectionsRect(
+                        new CorrectionsRect.Correction(1, CorrectionsRect.Type.PLUS),
+                        new CorrectionsRect.Correction(2, CorrectionsRect.Type.PLUS),
+                        new CorrectionsRect.Correction(3, CorrectionsRect.Type.PLUS),
+                        new CorrectionsRect.Correction(4, CorrectionsRect.Type.PLUS)))),
         };
     }
     
@@ -93,13 +109,9 @@ public class ObjectDefinitionReaderTest {
     @DataProvider
     public Object[][] provideBadSamples() {
         return new Object[][] {
-            row("myObject", 
+            row("myObject",
                     "Missing locator for object \"myObject\""),
-            row("myObject id", 
-                    "Locator for object \"myObject\" is not defined correctly"),
-            row("myObject #", 
-                    "Locator for object \"myObject\" is not defined correctly"),
-            row("myObject @ id some-id", 
+            row("myObject @ id some-id",
                     "Error parsing corrections. Missing starting '(' symbol"),
             row("myObject @ 10, 20, 30, 40) id some-id", 
                     "Error parsing corrections. Missing starting '(' symbol"),
@@ -123,9 +135,7 @@ public class ObjectDefinitionReaderTest {
                     "Wrong number of arguments in corrections: 1"),
             row("myObject @(10, 20, 30, 40)", 
                     "Missing locator for object \"myObject\""),
-            row("myObject @(10, 20, 30, 40) id", 
-                    "Locator for object \"myObject\" is not defined correctly"),
-            row("  ", 
+            row("  ",
                     "Object name is not defined correctly"),
         };
     }

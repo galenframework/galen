@@ -113,7 +113,7 @@ public class PageSpecsReaderTest {
         assertThat(objects, hasEntry("submit", new Locator("xpath", "//input[@name = 'submit']"))); 
         assertThat(objects, hasEntry("search-field", new Locator("css", "#search")));
         assertThat(objects, hasEntry("menu", new Locator("id", "menu")));
-        assertThat(objects, hasEntry("big-box", new Locator("tag", "container")));
+        assertThat(objects, hasEntry("big-box", new Locator("css", "#container")));
         assertThat(objects, hasEntry("anotherObject", new Locator("xpath", "//div")));
         assertThat(objects, hasEntry("menu-item-1", new Locator("css", "#menu .menu-item", 1)));
     }

@@ -16,8 +16,10 @@
 package net.mindengine.galen.specs.reader.page;
 
 import static java.lang.String.format;
+import static net.mindengine.galen.parser.Expectations.word;
 import static net.mindengine.galen.suite.reader.Line.UNKNOWN_LINE;
 import net.mindengine.galen.parser.ExpectWord;
+import net.mindengine.galen.parser.Expectation;
 import net.mindengine.galen.parser.Expectations;
 import net.mindengine.galen.parser.SyntaxException;
 import net.mindengine.galen.specs.page.CorrectionsRect;
@@ -46,21 +48,20 @@ public class StateObjectDefinition extends State {
         
         try {
             String word = expectCorrectionsOrId(reader, objectName);
-            String locatorType;
+            String locatorText;
+
             CorrectionsRect corrections = null;
             if (word.equals(CORRECTIONS_SYMBOL)) {
                 corrections = Expectations.corrections().read(reader);
-                
-                locatorType = expectWord(reader, format("Missing locator for object \"%s\"", objectName));
+                locatorText = reader.getTheRest();
             }
-            else locatorType = word;
-            
-            
-            String value = reader.getTheRest().trim();
-            if (value.isEmpty()) {
-                throw new SyntaxException(UNKNOWN_LINE, format("Locator for object \"%s\" is not defined correctly", objectName));
+            else {
+                locatorText = word + reader.getTheRest();
             }
-            addObjectToSpec(objectName, locatorType, corrections, value);
+
+            Locator locator = readLocatorFromString(objectName, locatorText.trim());
+            locator.setCorrections(corrections);
+            addObjectToSpec(objectName, locator);
         }
         catch (SyntaxException e) {
             throw e;
@@ -70,8 +71,44 @@ public class StateObjectDefinition extends State {
         }
     }
 
-    private void addObjectToSpec(String objectName, String locatorType, CorrectionsRect corrections, String value) {
-        Locator locator = new Locator(locatorType, value).withCorrections(corrections);
+    private Locator readLocatorFromString(String objectName, String locatorText) {
+
+        if (locatorText.isEmpty()) {
+            throw new SyntaxException("Missing locator for object \"" + objectName + "\"");
+        }
+
+        StringCharReader reader = new StringCharReader(locatorText);
+
+        String firstWord = word().read(reader);
+        String locatorValue = reader.getTheRest().trim();
+
+        if ("id".equals(firstWord) ||
+                "css".equals(firstWord) ||
+                "xpath".equals(firstWord)) {
+            return createLocator(objectName, firstWord, locatorValue);
+        }
+        else {
+            return identifyLocator(locatorText);
+        }
+    }
+
+    private Locator identifyLocator(String locatorText) {
+        if (locatorText.startsWith("/")) {
+            return new Locator("xpath", locatorText);
+        }
+        else {
+            return new Locator("css", locatorText);
+        }
+    }
+
+    private Locator createLocator(String objectName, String type, String value) {
+        if (value == null || value.isEmpty()) {
+            throw new SyntaxException("Locator for object \"" + objectName + "\" is not defined correctly");
+        }
+        return new Locator(type, value);
+    }
+
+    private void addObjectToSpec(String objectName, Locator locator) {
         if (objectName.contains("*")) {
             addMultiObject(objectName, locator);
         }
