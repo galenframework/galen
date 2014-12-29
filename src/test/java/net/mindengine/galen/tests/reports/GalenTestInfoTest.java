@@ -45,20 +45,23 @@ public class GalenTestInfoTest {
 
     @Test
     public void shouldCreate_testInfo_fromString() {
-        GalenTestInfo testInfo = GalenTestInfo.fromString("Test 1");
-        verifyTestInfo(testInfo, "Test 1");
+        GalenTestInfo testInfo = new GalenTestInfo("Test 1");
+        verifyTestInfo(testInfo, "Test 1", null);
     }
 
     @Test
     public void shouldCreate_testInfo_fromMethod() throws NoSuchMethodException {
         Method method = getClass().getMethod("shouldCreate_testInfo_fromMethod");
-        GalenTestInfo testInfo = GalenTestInfo.fromMethod(method);
-        verifyTestInfo(testInfo, GalenTestInfoTest.class.getName() + "#" + "shouldCreate_testInfo_fromMethod");
+        GalenTestInfo testInfo = new GalenTestInfo(GalenTestInfoTest.class.getName(),method.getName());
+        verifyTestInfo(testInfo, "shouldCreate_testInfo_fromMethod",GalenTestInfoTest.class.getName());
     }
 
 
-    private void verifyTestInfo(GalenTestInfo testInfo, String name) {
+    private void verifyTestInfo(GalenTestInfo testInfo, String name, String group) {
         assertThat(testInfo.getName(), is(name));
+        if(group!=null){
+            assertThat(testInfo.getGroup(), is(group));
+        }
         assertThat(testInfo.getStartedAt().getTime(), is(greaterThan(startDate)));
         assertThat(testInfo.getEndedAt().getTime(), is(greaterThan(startDate)));
         assertThat(testInfo.getReport(), is(notNullValue()));

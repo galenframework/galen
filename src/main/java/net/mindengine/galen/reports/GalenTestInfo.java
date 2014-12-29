@@ -15,7 +15,6 @@
 ******************************************************************************/
 package net.mindengine.galen.reports;
 
-import java.lang.reflect.Method;
 import java.util.Date;
 
 import net.mindengine.galen.tests.GalenEmptyTest;
@@ -23,41 +22,88 @@ import net.mindengine.galen.tests.GalenTest;
 
 public class GalenTestInfo {
 
-    private String name;
+	private String name;
+    private String group;
     private TestReport report = new TestReport();
     private Throwable exception;
     private Date startedAt = new Date();
     private Date endedAt = new Date();
     private GalenTest test;
     
+
     
-    public GalenTestInfo(String name, GalenTest test) {
-        setName(name);
-        setTest(test);
+    /**
+     * Creates Galen test info
+     * @param pName name of the test
+     */
+    public GalenTestInfo(final String pName) {
+        setName(pName);
+        setTest(new GalenEmptyTest(pName));
+    }
+
+    /**
+     * Creates Galen test info
+     * @param pGroup name of a test group
+     * @param pName name of the test
+     */
+    public GalenTestInfo(final String pGroup, final String pName) {
+        setGroup(pGroup);
+        setName(pName);
+        setTest(new GalenEmptyTest(pName));
+    }
+    
+    /**
+     * Creates Galen test info
+     * @param pName name of the test
+     * @param pTest test reference
+     */
+    public GalenTestInfo(final String pName, final GalenTest pTest) {
+        setName(pName);
+        setTest(pTest);
+    }
+    
+    /**
+     * Creates Galen test info
+     * @param pGroup name of a test group
+     * @param pName name of the test
+     * @param pTest test reference
+     */
+    public GalenTestInfo(final String pGroup, final String pName, final GalenTest pTest) {
+        setName(pName);
+        setGroup(pGroup);
+        setTest(pTest);
     }
     
     public boolean isFailed() {
         return exception != null || report.fetchStatistic().getErrors() > 0;
     }
 
+	public String getGroup() {
+		return group;
+	}
+
+	public void setGroup(final String pGroup) {
+		this.group = pGroup;
+	}
+
     public String getName() {
         return name;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setName(final String pName) {
+        this.name = pName;
     }
 
     public TestReport getReport() {
         return report;
     }
 
-    public void setReport(TestReport report) {
-        this.report = report;
+    public void setReport(final TestReport pReport) {
+        this.report = pReport;
     }
 
-    public void setException(Throwable ex) {
-        this.exception = ex;
+    public void setException(final Throwable pThrowable) {
+        this.exception = pThrowable;
     }
 
     public Throwable getException() {
@@ -68,33 +114,66 @@ public class GalenTestInfo {
         return startedAt;
     }
 
-    public void setStartedAt(Date startedAt) {
-        this.startedAt = startedAt;
+    public void setStartedAt(final Date pStart) {
+        this.startedAt = pStart;
     }
 
     public Date getEndedAt() {
         return endedAt;
     }
 
-    public void setEndedAt(Date endedAt) {
-        this.endedAt = endedAt;
+    public void setEndedAt(final Date pEnd) {
+        this.endedAt = pEnd;
     }
 
     public GalenTest getTest() {
         return test;
     }
 
-    public void setTest(GalenTest test) {
-        this.test = test;
+    public void setTest(final GalenTest pTest) {
+        this.test = pTest;
     }
 
-    public static GalenTestInfo fromString(String name) {
-        return new GalenTestInfo(name, new GalenEmptyTest(name));
-    }
 
-    public static GalenTestInfo fromMethod(Method method) {
-        String name = method.getDeclaringClass().getName() + "#" + method.getName();
-        return GalenTestInfo.fromString(name);
-    }
-
+    @Override
+	public String toString() {
+		StringBuilder builder = new StringBuilder();
+		builder.append("GalenTestInfo [");
+		if (name != null) {
+			builder.append("name=");
+			builder.append(name);
+			builder.append(", ");
+		}
+		if (group != null) {
+			builder.append("group=");
+			builder.append(group);
+			builder.append(", ");
+		}
+		if (report != null) {
+			builder.append("report=");
+			builder.append(report);
+			builder.append(", ");
+		}
+		if (exception != null) {
+			builder.append("exception=");
+			builder.append(exception);
+			builder.append(", ");
+		}
+		if (startedAt != null) {
+			builder.append("startedAt=");
+			builder.append(startedAt);
+			builder.append(", ");
+		}
+		if (endedAt != null) {
+			builder.append("endedAt=");
+			builder.append(endedAt);
+			builder.append(", ");
+		}
+		if (test != null) {
+			builder.append("test=");
+			builder.append(test);
+		}
+		builder.append("]");
+		return builder.toString();
+	}
 }
