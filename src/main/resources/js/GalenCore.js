@@ -352,6 +352,17 @@ function testFilter(callback) {
     }));
 }
 
+function testRetry(callback) {
+    _galenCore.addTestRetryEvent(new TestRetryEvent({
+        callback: {
+            func: callback
+        },
+        shouldRetry: function (testName, retryCount) {
+            return this.callback.func(testName, retryCount);
+        }
+    }));
+}
+
 (function (exports) {
     exports.test = test;
     exports.forAll = forAll;
@@ -364,4 +375,5 @@ function testFilter(callback) {
     exports.createTestDataProvider = createTestDataProvider;
     exports.GalenCore = GalenCore;
     exports.testFilter = testFilter;
+    exports.testRetry = testRetry;
 })(this);

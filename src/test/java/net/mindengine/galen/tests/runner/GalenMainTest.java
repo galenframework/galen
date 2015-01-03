@@ -38,6 +38,7 @@ import net.mindengine.galen.runner.GalenArguments;
 import net.mindengine.galen.tests.GalenTest;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.hamcrest.Matchers;
 import org.testng.annotations.Test;
 
@@ -182,6 +183,45 @@ public class GalenMainTest {
                 "Test C invoked",
                 "Test A invoked"
                 ));
+    }
+
+    /**
+     * Comes from https://github.com/galenframework/galen/issues/184
+     * Test Retry Handler
+     * @throws Exception
+     */
+    @Test
+    public void shouldRunJavascriptTests_andRetryThem() throws Exception {
+        File htmlReportDir = Files.createTempDir();
+        JsTestRegistry.get().clear();
+
+        new GalenMain().execute(new GalenArguments()
+                        .withAction("test")
+                        .withPaths(asList(getClass().getResource("/js-tests/testretry.test.js").getFile()))
+                        .withHtmlReport(htmlReportDir.getAbsolutePath())
+        );
+
+        List<String> events = JsTestRegistry.get().getEvents();
+
+        assertThat("Amount of events is", events.size(), is(8));
+
+        assertThat(events, contains(
+                "Test A invoked",
+                "Retry handler invoked for test: Test A",
+                "Test A invoked",
+                "Retry handler invoked for test: Test A",
+                "Test A invoked",
+                "Retry handler invoked for test: Test A",
+                "Test B invoked",
+                "Retry handler invoked for test: Test B"
+        ));
+
+
+        String htmlReportContent = FileUtils.readFileToString(new File(htmlReportDir.getAbsolutePath()
+                + File.separator + "report.html"));
+
+        int amountOfReportedTests = StringUtils.countMatches(htmlReportContent, "<a href=\"report-");
+        assertThat("Amount of reported tests should be", amountOfReportedTests, is(2));
     }
     
     @Test public void shouldFindAndRun_allTestsRecursivelly_inParallel() throws Exception {

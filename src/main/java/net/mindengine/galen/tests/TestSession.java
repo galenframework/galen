@@ -16,8 +16,6 @@
 package net.mindengine.galen.tests;
 
 import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Map;
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -28,7 +26,6 @@ import net.mindengine.galen.runner.CompleteListener;
 public class TestSession {
     
     private static final ThreadLocal<TestSession> _sessions = new ThreadLocal<TestSession>();
-    private static final List<TestSession> _sessionsList = new LinkedList<TestSession>();
     private static final ReentrantLock lock = new ReentrantLock();
 
     private GalenTestInfo testInfo;
@@ -46,7 +43,6 @@ public class TestSession {
         try {
             TestSession session = new TestSession(info);
             _sessions.set(session);
-            _sessionsList.add(session);
             return session;
         }
         catch (Exception ex) {
@@ -109,18 +105,5 @@ public class TestSession {
 
     public void setProperties(GalenProperties properties) {
         this.properties = properties;
-    }
-
-    public static List<TestSession> getAllSessions() {
-        lock.lock();
-        try {
-            return new LinkedList<TestSession>(_sessionsList);
-        }
-        catch (Exception ex) {
-            throw new RuntimeException(ex);
-        }
-        finally {
-            lock.unlock();
-        }
     }
 }

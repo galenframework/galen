@@ -21,6 +21,7 @@ import java.util.List;
 import net.mindengine.galen.reports.GalenTestInfo;
 import net.mindengine.galen.runner.events.TestEvent;
 import net.mindengine.galen.runner.events.TestFilterEvent;
+import net.mindengine.galen.runner.events.TestRetryEvent;
 import net.mindengine.galen.runner.events.TestSuiteEvent;
 
 public class EventHandler {
@@ -28,6 +29,7 @@ public class EventHandler {
     private List<TestEvent> beforeTestEvents = new LinkedList<TestEvent>();
     private List<TestEvent> afterTestEvents = new LinkedList<TestEvent>();
     private List<TestFilterEvent> testFilterEvents = new LinkedList<TestFilterEvent>();
+    private List<TestRetryEvent> testRetryEvents = new LinkedList<TestRetryEvent>();
 
     private List<TestSuiteEvent> beforeTestSuiteEvents = new LinkedList<TestSuiteEvent>();
     private List<TestSuiteEvent> afterTestSuiteEvents = new LinkedList<TestSuiteEvent>();
@@ -104,5 +106,13 @@ public class EventHandler {
 
     public void setTestFilterEvents(List<TestFilterEvent> testFilterEvents) {
         this.testFilterEvents = testFilterEvents;
+    }
+
+    public List<TestRetryEvent> getTestRetryEvents() {
+        return testRetryEvents;
+    }
+
+    public void setTestRetryEvents(List<TestRetryEvent> testRetryEvents) {
+        this.testRetryEvents = testRetryEvents;
     }
 }

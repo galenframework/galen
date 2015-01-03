@@ -24,6 +24,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import net.mindengine.galen.runner.events.TestFilterEvent;
+import net.mindengine.galen.runner.events.TestRetryEvent;
 import org.apache.commons.io.IOUtils;
 
 import net.mindengine.galen.javascript.GalenJsExecutor;
@@ -96,6 +97,10 @@ public class JsTestCollector {
 
     public void addTestFilterEvent(TestFilterEvent event) {
         eventHandler.getTestFilterEvents().add(event);
+    }
+
+    public void addTestRetryEvent(TestRetryEvent event) {
+        eventHandler.getTestRetryEvents().add(event);
     }
 
 }

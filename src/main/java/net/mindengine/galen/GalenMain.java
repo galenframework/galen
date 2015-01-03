@@ -25,9 +25,7 @@ import java.io.IOException;
 import java.io.StringWriter;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.LinkedList;
+import java.util.*;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -306,62 +304,17 @@ public class GalenMain {
         ExecutorService executor = Executors.newFixedThreadPool(amountOfThreads);
         
         Pattern filterPattern = createTestFilter(arguments.getFilter());
-        final List<GalenTestInfo> testInfos = new LinkedList<GalenTestInfo>();
-
 
         tests = filterTests(tests, eventHandler);
 
         tellBeforeTestSuite(listener, tests);
-        
-        final ReentrantLock testInfoLock = new ReentrantLock();
-        
+
+
+        List<GalenTestInfo> testInfos = Collections.synchronizedList(new LinkedList<GalenTestInfo>());
+
         for (final GalenTest test : tests) {
             if (matchesPattern(test.getName(), filterPattern)) {
-                Runnable thread = new Runnable() {
-                    @Override
-                    public void run() {
-                        
-                        GalenTestInfo info = new GalenTestInfo(test.getName(), test);
-                        TestReport report = new TestReport();
-
-                        info.setStartedAt(new Date());
-                        info.setReport(report);
-                        
-                        
-                        testInfoLock.lock();
-                        try {
-                            testInfos.add(info);
-                            TestSession session = TestSession.register(info);
-                            session.setReport(report);
-                            session.setListener(listener);
-                        }
-                        catch (Exception ex) {
-                            ex.printStackTrace();
-                        }
-                        finally {
-                            testInfoLock.unlock();
-                        }
-                        
-                        eventHandler.invokeBeforeTestEvents(info);
-                        
-                        tellTestStarted(listener, test);
-                        try {
-                            test.execute(report, listener);
-                        }
-                        catch(Throwable ex) {
-                            info.setException(ex);
-                            report.error(ex);
-                            ex.printStackTrace();
-                        }
-                        info.setEndedAt(new Date());
-                        
-                        eventHandler.invokeAfterTestEvents(info);
-                        tellTestFinished(listener, test);
-                        
-                        TestSession.clear();
-                    }
-                };
-                executor.execute(thread);
+                executor.execute(new TestRunnable(test, listener, eventHandler, testInfos));
             }
         }
         executor.shutdown();
@@ -410,28 +363,6 @@ public class GalenMain {
             catch(Exception ex) {
                 ex.printStackTrace();
             }
-        }
-    }
-
-    private void tellTestFinished(TestListener testListener, GalenTest test) {
-        try {
-            if (testListener != null) {
-                testListener.onTestFinished(test);
-            }
-        }
-        catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    private void tellTestStarted(TestListener testListener, GalenTest test) {
-        try {
-            if (testListener != null) {
-                testListener.onTestStarted(test);
-            }
-        }
-        catch (Exception e) {
-            e.printStackTrace();
         }
     }
 
