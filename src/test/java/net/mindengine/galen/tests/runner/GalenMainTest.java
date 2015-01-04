@@ -203,17 +203,26 @@ public class GalenMainTest {
 
         List<String> events = JsTestRegistry.get().getEvents();
 
-        assertThat("Amount of events is", events.size(), is(8));
 
         assertThat(events, contains(
+                "Before test suite event",
+                "Before test event for: Test A",
                 "Test A invoked",
+                "After test event for: Test A",
                 "Retry handler invoked for test: Test A",
+                "Before test event for: Test A",
                 "Test A invoked",
+                "After test event for: Test A",
                 "Retry handler invoked for test: Test A",
+                "Before test event for: Test A",
                 "Test A invoked",
+                "After test event for: Test A",
                 "Retry handler invoked for test: Test A",
+                "Before test event for: Test B",
                 "Test B invoked",
-                "Retry handler invoked for test: Test B"
+                "After test event for: Test B",
+                "Retry handler invoked for test: Test B",
+                "After test suite event"
         ));
 
 

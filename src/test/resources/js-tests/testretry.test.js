@@ -1,5 +1,21 @@
 importClass(net.mindengine.galen.components.JsTestRegistry);
 
+beforeTestSuite(function () {
+   JsTestRegistry.get().registerEvent("Before test suite event");
+});
+
+afterTestSuite(function () {
+   JsTestRegistry.get().registerEvent("After test suite event");
+});
+
+beforeTest(function (test) {
+   JsTestRegistry.get().registerEvent("Before test event for: " + test.getName());
+});
+
+afterTest(function (test) {
+   JsTestRegistry.get().registerEvent("After test event for: " + test.getName());
+});
+
 testRetry(function (test, retryCount){
    JsTestRegistry.get().registerEvent("Retry handler invoked for test: " + test.getName());
 
