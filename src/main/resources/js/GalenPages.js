@@ -386,10 +386,15 @@ GalenPages.PageElement.prototype.clear = function () {
     this.getWebElement().clear();
 };
 GalenPages.PageElement.prototype.getWebElement = function () {
-    if (GalenPages.settings.cacheWebElements && this.cachedWebElement == null) {
-        this.cachedWebElement = this.parent.findChild(this.locator);
+    if (GalenPages.settings.cacheWebElements) {
+        if (this.cachedWebElement == null) {
+            this.cachedWebElement = this.parent.findChild(this.locator);
+        }
+        return this.cachedWebElement;
     }
-    return this.cachedWebElement;
+    else {
+        return this.parent.findChild(this.locator);
+    }
 };
 GalenPages.PageElement.prototype.isDisplayed = function () {
     return this.getWebElement().isDisplayed();
