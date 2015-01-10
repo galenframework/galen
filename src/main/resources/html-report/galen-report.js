@@ -339,7 +339,7 @@ var Galen = {
             }
         });
 
-        $("ul.test-specs li.fail span").click(function () {
+        $("ul.test-specs li.fail span, ul.test-specs li.warn span").click(function () {
             var subObjects = $(this).parent().parent().find(".sub-objects");
             if (subObjects.length > 0) {
                 subObjects.slideToggle();
