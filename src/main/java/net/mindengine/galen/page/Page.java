@@ -37,4 +37,8 @@ public interface Page {
     File createScreenshot();
 
     String getTitle();
+
+    void switchToFrame(PageElement mainObject);
+
+    void switchToParentFrame();
 }

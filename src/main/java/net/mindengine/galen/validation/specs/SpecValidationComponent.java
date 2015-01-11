@@ -15,14 +15,11 @@
 ******************************************************************************/
 package net.mindengine.galen.validation.specs;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
 import net.mindengine.galen.page.Page;
 import net.mindengine.galen.page.PageElement;
-import net.mindengine.galen.page.selenium.SeleniumPage;
-import net.mindengine.galen.parser.SyntaxException;
 import net.mindengine.galen.specs.SpecComponent;
 import net.mindengine.galen.specs.page.Locator;
 import net.mindengine.galen.specs.reader.page.PageSpec;
@@ -40,6 +37,13 @@ public class SpecValidationComponent extends SpecValidation<SpecComponent> {
     public void check(PageValidation pageValidation, String objectName, SpecComponent spec) throws ValidationErrorException {
         PageElement mainObject = pageValidation.findPageElement(objectName);
         checkAvailability(mainObject, objectName);
+
+        Page page = pageValidation.getPage();
+
+        if (spec.isFrame()) {
+            page.switchToFrame(mainObject);
+        }
+
 
         Locator mainObjectLocator = pageValidation.getPageSpec().getObjectLocator(objectName);
         Page objectContextPage = pageValidation.getPage().createObjectContextPage(mainObjectLocator);
@@ -62,6 +66,10 @@ public class SpecValidationComponent extends SpecValidation<SpecComponent> {
         List<ValidationError> errors = sectionValidation.check();
         if (errors != null && errors.size() > 0) {
             throw new ValidationErrorException("Child component spec contains " + errors.size() + " errors");
+        }
+
+        if (spec.isFrame()) {
+            page.switchToParentFrame();
         }
     }
 

@@ -246,5 +246,16 @@ public class SeleniumPage implements Page {
         return driver.getTitle();
     }
 
+    @Override
+    public void switchToFrame(PageElement mainObject) {
+        WebPageElement webPageElement = (WebPageElement)mainObject;
+        driver.switchTo().frame(webPageElement.getWebElement());
+    }
+
+    @Override
+    public void switchToParentFrame() {
+        driver.switchTo().parentFrame();
+    }
+
 
 }
