@@ -13,7 +13,18 @@
     <developerConnection>scm:git:ssh://git@github.com/galenframework/galen.git</developerConnection>
     <url>git@github.com/galenframework/galen.git</url>
   </scm>
-  <dependencies>
+  <dependencies>	
+  	<dependency>
+	  <groupId>org.slf4j</groupId>
+	  <artifactId>slf4j-api</artifactId>
+	  <version>${slf4j.version}</version>
+    </dependency>
+    <!-- Simple Logging -->
+    <dependency>
+	  <groupId>org.slf4j</groupId>
+	  <artifactId>slf4j-simple</artifactId>
+	  <version>${slf4j.version}</version>
+    </dependency>
     <dependency>
       <groupId>org.hamcrest</groupId>
       <artifactId>hamcrest-all</artifactId>
@@ -178,6 +189,8 @@
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <sonatypeOssDistMgmtSnapshotsUrl>https://oss.sonatype.org/content/repositories/snapshots/</sonatypeOssDistMgmtSnapshotsUrl>
+    <!-- version numbers  -->
+	<slf4j.version>1.7.10</slf4j.version>
   </properties>
 
   <licenses>
