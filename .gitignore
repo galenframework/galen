@@ -9,3 +9,5 @@ bin/
 dist/
 .release-notes
 *.swp
+
+config2

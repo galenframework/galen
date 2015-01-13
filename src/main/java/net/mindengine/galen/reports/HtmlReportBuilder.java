@@ -36,7 +36,8 @@ import net.mindengine.rainbow4j.Rainbow4J;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
-import org.testng.log4testng.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import freemarker.template.Configuration;
 import freemarker.template.Template;
@@ -44,7 +45,7 @@ import freemarker.template.TemplateException;
 
 public class HtmlReportBuilder {
 
-  private final static Logger LOG = Logger.getLogger(HtmlReportBuilder.class);
+  private final static Logger LOG = LoggerFactory.getLogger(HtmlReportBuilder.class);
 
   private final TestIdGenerator testIdGenerator = new TestIdGenerator();
   private final UniqueIdGenerator comparisonMapUniqueIdGenerator = new UniqueIdGenerator();

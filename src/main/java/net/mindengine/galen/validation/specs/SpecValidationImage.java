@@ -34,11 +34,12 @@ import net.mindengine.rainbow4j.ComparisonOptions;
 import net.mindengine.rainbow4j.ImageCompareResult;
 import net.mindengine.rainbow4j.Rainbow4J;
 
-import org.testng.log4testng.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class SpecValidationImage extends SpecValidation<SpecImage> {
 
-  private final static Logger LOG = Logger.getLogger(SpecValidationImage.class);
+  private final static Logger LOG = LoggerFactory.getLogger(SpecValidationImage.class);
 
   private static class ImageCheck {
 

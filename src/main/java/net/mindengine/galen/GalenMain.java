@@ -56,11 +56,12 @@ import net.mindengine.galen.tests.GalenTest;
 import net.mindengine.galen.validation.FailureListener;
 
 import org.apache.commons.io.IOUtils;
-import org.testng.log4testng.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class GalenMain {
 
-  private final static Logger LOG = Logger.getLogger(GalenMain.class);
+  private final static Logger LOG = LoggerFactory.getLogger(GalenMain.class);
 
   private CompleteListener listener;
 

@@ -18,17 +18,18 @@ package net.mindengine.galen.runner;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.testng.log4testng.Logger;
-
 import net.mindengine.galen.reports.GalenTestInfo;
 import net.mindengine.galen.runner.events.TestEvent;
 import net.mindengine.galen.runner.events.TestFilterEvent;
 import net.mindengine.galen.runner.events.TestRetryEvent;
 import net.mindengine.galen.runner.events.TestSuiteEvent;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class EventHandler {
 
-  private final static Logger LOG = Logger.getLogger(EventHandler.class);
+  private final static Logger LOG = LoggerFactory.getLogger(EventHandler.class);
 
   private List<TestEvent> beforeTestEvents = new LinkedList<TestEvent>();
   private List<TestEvent> afterTestEvents = new LinkedList<TestEvent>();

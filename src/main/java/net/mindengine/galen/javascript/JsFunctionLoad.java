@@ -27,11 +27,12 @@ import net.mindengine.galen.utils.GalenUtils;
 import org.mozilla.javascript.BaseFunction;
 import org.mozilla.javascript.Context;
 import org.mozilla.javascript.Scriptable;
-import org.testng.log4testng.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class JsFunctionLoad extends BaseFunction {
 
-  private final static Logger LOG = Logger.getLogger(JsFunctionLoad.class);
+  private final static Logger LOG = LoggerFactory.getLogger(JsFunctionLoad.class);
 
   /**
      * 
