@@ -93,16 +93,14 @@ public class GalenMain {
       }
     } else {
       if (arguments.getPrintVersion()) {
-
-        LOG.info("Galen Framework");
-
+        System.out.println("Galen Framework");
         String version = getClass().getPackage().getImplementationVersion();
         if (version == null) {
           version = "unknown";
         } else {
           version = version.replace("-SNAPSHOT", "");
         }
-        LOG.info("Version: " + version);
+        System.out.println("Version: " + version);
       }
     }
   }

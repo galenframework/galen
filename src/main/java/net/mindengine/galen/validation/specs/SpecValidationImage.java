@@ -98,11 +98,11 @@ public class SpecValidationImage extends SpecValidation<SpecImage> {
         }
       }
     } catch (ValidationErrorException ex) {
-      LOG.error("Validation errors during image compare.", ex);
+      LOG.trace("Validation errors during image compare.", ex);
       ex.withErrorArea(new ErrorArea(pageElement.getArea(), objectName));
       throw ex;
     } catch (Exception ex) {
-      LOG.error("Unkown errors during image compare.", ex);
+      LOG.trace("Unkown errors during image compare.", ex);
       throw new ValidationErrorException(ex).withErrorArea(new ErrorArea(pageElement.getArea(), objectName));
     }
 
