@@ -17,7 +17,6 @@ package net.mindengine.galen.parser;
 
 import net.mindengine.galen.javascript.JsFunctionLoad;
 import net.mindengine.galen.suite.reader.Context;
-import net.mindengine.galen.validation.specs.SpecValidationImage;
 
 import org.mozilla.javascript.BaseFunction;
 import org.mozilla.javascript.ImporterTopLevel;

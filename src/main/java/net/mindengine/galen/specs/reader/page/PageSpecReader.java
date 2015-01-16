@@ -15,8 +15,6 @@
 ******************************************************************************/
 package net.mindengine.galen.specs.reader.page;
 
-import net.mindengine.galen.api.Galen;
-import net.mindengine.galen.browser.Browser;
 import net.mindengine.galen.page.Page;
 import net.mindengine.galen.page.PageElement;
 import net.mindengine.galen.parser.FileSyntaxException;

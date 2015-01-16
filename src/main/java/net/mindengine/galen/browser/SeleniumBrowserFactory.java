@@ -17,8 +17,6 @@ package net.mindengine.galen.browser;
 
 import net.mindengine.galen.config.GalenConfig;
 
-import net.mindengine.galen.page.PageElement;
-import net.mindengine.galen.specs.page.Locator;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -27,8 +25,6 @@ import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.ie.InternetExplorerDriver;
 import org.openqa.selenium.phantomjs.PhantomJSDriver;
-import org.openqa.selenium.phantomjs.PhantomJSDriverService;
-import org.openqa.selenium.remote.DesiredCapabilities;
 
 /**
  * This is a general browser factory which could also 

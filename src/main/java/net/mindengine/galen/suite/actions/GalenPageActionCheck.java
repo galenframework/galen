@@ -17,7 +17,6 @@ package net.mindengine.galen.suite.actions;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.Properties;
 
 import net.mindengine.galen.api.Galen;
 import net.mindengine.galen.browser.Browser;
@@ -27,7 +26,6 @@ import net.mindengine.galen.reports.TestReportNode;
 import net.mindengine.galen.reports.model.LayoutReport;
 import net.mindengine.galen.suite.GalenPageAction;
 import net.mindengine.galen.suite.GalenPageTest;
-import net.mindengine.galen.tests.TestSession;
 import net.mindengine.galen.validation.ValidationListener;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;

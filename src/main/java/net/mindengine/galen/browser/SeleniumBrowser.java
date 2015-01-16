@@ -26,8 +26,6 @@ import net.mindengine.galen.page.selenium.SeleniumPage;
 import net.mindengine.galen.utils.GalenUtils;
 
 import org.openqa.selenium.JavascriptExecutor;
-import org.openqa.selenium.OutputType;
-import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
 
 public class SeleniumBrowser implements Browser {

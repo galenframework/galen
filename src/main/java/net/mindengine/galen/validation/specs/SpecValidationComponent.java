@@ -15,14 +15,11 @@
 ******************************************************************************/
 package net.mindengine.galen.validation.specs;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
 import net.mindengine.galen.page.Page;
 import net.mindengine.galen.page.PageElement;
-import net.mindengine.galen.page.selenium.SeleniumPage;
-import net.mindengine.galen.parser.SyntaxException;
 import net.mindengine.galen.specs.SpecComponent;
 import net.mindengine.galen.specs.page.Locator;
 import net.mindengine.galen.specs.reader.page.PageSpec;

@@ -19,10 +19,8 @@ import net.mindengine.galen.specs.reader.StringCharReader;
 import org.apache.commons.lang3.tuple.MutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 
-import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 
 
 public class ExpectCommaSeparatedKeyValue implements Expectation<List<Pair<String, String>>> {

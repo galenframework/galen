@@ -16,7 +16,6 @@
 package net.mindengine.galen.specs;
 
 import net.mindengine.galen.page.Rect;
-import net.mindengine.galen.parser.Expectations;
 import net.mindengine.galen.parser.SyntaxException;
 import net.mindengine.galen.specs.reader.StringCharReader;
 import net.mindengine.rainbow4j.filters.ImageFilter;

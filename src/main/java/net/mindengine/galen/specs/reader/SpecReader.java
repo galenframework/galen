@@ -37,7 +37,6 @@ import net.mindengine.galen.specs.*;
 import net.mindengine.galen.specs.colors.ColorRange;
 import net.mindengine.rainbow4j.filters.*;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 
 public class SpecReader {

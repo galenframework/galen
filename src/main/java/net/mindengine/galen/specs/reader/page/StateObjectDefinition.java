@@ -18,8 +18,8 @@ package net.mindengine.galen.specs.reader.page;
 import static java.lang.String.format;
 import static net.mindengine.galen.parser.Expectations.word;
 import static net.mindengine.galen.suite.reader.Line.UNKNOWN_LINE;
+
 import net.mindengine.galen.parser.ExpectWord;
-import net.mindengine.galen.parser.Expectation;
 import net.mindengine.galen.parser.Expectations;
 import net.mindengine.galen.parser.SyntaxException;
 import net.mindengine.galen.specs.page.CorrectionsRect;
