@@ -15,9 +15,16 @@
 ******************************************************************************/
 package net.mindengine.galen.utils;
 
-import java.awt.*;
+import java.awt.Dimension;
+import java.awt.Graphics2D;
+import java.awt.Image;
 import java.awt.image.BufferedImage;
-import java.io.*;
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
 import java.net.URL;
 import java.security.DigestInputStream;
 import java.security.MessageDigest;
@@ -215,11 +222,11 @@ public class GalenUtils {
             Thread.sleep(hardTime);
         }
 
-        int time = 5000;
+        int time = 250;
         boolean isScrolledToPosition = false;
         while(time >= 0 && !isScrolledToPosition) {
-            Thread.sleep(500);
-            time -= 500;
+            Thread.sleep(50);
+            time -= 50;
             isScrolledToPosition = Math.abs(obtainVerticalScrollPosition(driver) - scrollPosition) < 3;
         }
     }
