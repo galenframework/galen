@@ -15,20 +15,26 @@
 ******************************************************************************/
 package net.mindengine.galen.api;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.core.JsonGenerationException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import net.mindengine.galen.browser.Browser;
-import net.mindengine.rainbow4j.Rainbow4J;
-import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.IOUtils;
-
 import java.awt.image.BufferedImage;
-import java.io.*;
+import java.io.File;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
+import net.mindengine.galen.browser.Browser;
+import net.mindengine.rainbow4j.Rainbow4J;
+
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 public class PageDump {
+
+    private final static Logger LOG = LoggerFactory.getLogger(PageDump.class);
 
     private String pageName;
     private String title;
@@ -103,7 +109,7 @@ public class PageDump {
                     Rainbow4J.saveImage(subImage, new File(objectsFolder.getAbsolutePath() + File.separator + element.getObjectName() + ".png"));
                 }
                 catch (Exception ex) {
-                    ex.printStackTrace();
+                    LOG.error("Got error during saving image", ex);
                 }
             }
         }

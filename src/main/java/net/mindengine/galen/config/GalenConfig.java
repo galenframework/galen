@@ -24,9 +24,14 @@ import java.util.List;
 import java.util.Properties;
 
 import net.mindengine.galen.specs.SpecImage;
+
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class GalenConfig {
+
+    private final static Logger LOG = LoggerFactory.getLogger(GalenConfig.class);
     
     private final static GalenConfig instance = new GalenConfig();
     public static final String SCREENSHOT_AUTORESIZE = "galen.screenshot.autoresize";
@@ -44,7 +49,7 @@ public class GalenConfig {
             loadConfig();
         }
         catch (Exception e) {
-            e.printStackTrace();
+            LOG.trace("Unkown error during Galen Config", e);
         }
     }
     

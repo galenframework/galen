@@ -17,16 +17,22 @@ package net.mindengine.galen.parser;
 
 import net.mindengine.galen.javascript.JsFunctionLoad;
 import net.mindengine.galen.suite.reader.Context;
-import net.mindengine.galen.utils.GalenUtils;
+import net.mindengine.galen.validation.specs.SpecValidationImage;
+
 import org.mozilla.javascript.BaseFunction;
 import org.mozilla.javascript.ImporterTopLevel;
 import org.mozilla.javascript.Scriptable;
 import org.mozilla.javascript.ScriptableObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.util.Map;
 
 public class VarsParserJsProcessor {
+
+    private final static Logger LOG = LoggerFactory.getLogger(VarsParserJsProcessor.class);
+
     private final VarsParserJsFunctions jsFunctions;
 
     private Context varsContext;
@@ -40,6 +46,7 @@ public class VarsParserJsProcessor {
         initJsProcessor();
     }
 
+    @SuppressWarnings("serial")
     private void initJsProcessor() {
         this.cx = org.mozilla.javascript.Context.enter();
         this.scope = new ImporterTopLevel(cx);
@@ -84,7 +91,7 @@ public class VarsParserJsProcessor {
             } else return null;
         }
         catch (Exception ex) {
-            ex.printStackTrace();
+            LOG.error("Unkown error during processing javascript expressions.", ex);
             return null;
         }
     }

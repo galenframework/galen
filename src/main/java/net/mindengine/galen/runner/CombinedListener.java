@@ -18,6 +18,9 @@ package net.mindengine.galen.runner;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import net.mindengine.galen.reports.GalenTestInfo;
 import net.mindengine.galen.specs.Spec;
 import net.mindengine.galen.specs.page.PageSection;
@@ -27,6 +30,8 @@ import net.mindengine.galen.validation.PageValidation;
 import net.mindengine.galen.validation.ValidationError;
 
 public class CombinedListener implements CompleteListener {
+
+    private final static Logger LOG = LoggerFactory.getLogger(CombinedListener.class);
 
     List<CompleteListener> listeners = new LinkedList<CompleteListener>();
     
@@ -41,7 +46,7 @@ public class CombinedListener implements CompleteListener {
                 listener.onTestFinished(test);
             }
             catch (Exception ex) {
-                ex.printStackTrace();
+                LOG.error("Unkown error during finishing test", ex);
             }
         }
     }
@@ -53,7 +58,7 @@ public class CombinedListener implements CompleteListener {
                 listener.onTestStarted(test);
             }
             catch (Exception ex) {
-                ex.printStackTrace();
+                LOG.error("Unkown error starting finishing test", ex);
             }
         }
     }
@@ -65,7 +70,7 @@ public class CombinedListener implements CompleteListener {
                 listener.onObject(pageRunner, pageValidation, objectName);
             }
             catch (Exception ex) {
-                ex.printStackTrace();
+                LOG.trace("Unkown error during test execution", ex);
             }
         }
     }
@@ -77,7 +82,7 @@ public class CombinedListener implements CompleteListener {
                 listener.onAfterObject(pageRunner, pageValidation, objectName);
             }
             catch (Exception ex) {
-                ex.printStackTrace();
+                LOG.trace("Unkown error during test execution", ex);
             }
         }
     }
@@ -89,7 +94,7 @@ public class CombinedListener implements CompleteListener {
                 listener.onSpecError(pageRunner, pageValidation, objectName, spec, error);
             }
             catch (Exception ex) {
-                ex.printStackTrace();
+                LOG.trace("Unkown error when checking spec errors", ex);
             }
         }
     }
@@ -101,7 +106,7 @@ public class CombinedListener implements CompleteListener {
                 listener.onSpecSuccess(pageRunner, pageValidation, objectName, spec);
             }
             catch (Exception ex) {
-                ex.printStackTrace();
+                LOG.trace("Unkown error when checking spec success", ex);
             }
         }
     }
@@ -113,7 +118,7 @@ public class CombinedListener implements CompleteListener {
                 listener.done();
             }
             catch (Exception ex) {
-                ex.printStackTrace();
+                LOG.trace("Unkown error during completion", ex);
             }
         } 
     }
@@ -125,7 +130,7 @@ public class CombinedListener implements CompleteListener {
                 listener.onGlobalError(pageRunner, e);
             }
             catch (Exception ex) {
-                ex.printStackTrace();
+                LOG.trace("Unkown error when checking global errors", ex);
             }
         }
     }
@@ -137,7 +142,7 @@ public class CombinedListener implements CompleteListener {
                 listener.onBeforePageAction(pageRunner, action);
             }
             catch (Exception ex) {
-                ex.printStackTrace();
+                LOG.trace("Unkown error during before page action", ex);
             }
         }
     }
@@ -149,7 +154,7 @@ public class CombinedListener implements CompleteListener {
                 listener.onAfterPageAction(pageRunner, action);
             }
             catch (Exception ex) {
-                ex.printStackTrace();
+                LOG.trace("Unkown error during after page action", ex);
             }
         }
     }
@@ -161,7 +166,7 @@ public class CombinedListener implements CompleteListener {
                 listener.onBeforeSection(pageRunner, pageValidation, pageSection);
             }
             catch (Exception ex) {
-                ex.printStackTrace();
+                LOG.trace("Unkown error during before section", ex);
             }
         }
     }
@@ -173,7 +178,7 @@ public class CombinedListener implements CompleteListener {
                 listener.onAfterSection(pageRunner, pageValidation, pageSection);
             }
             catch (Exception ex) {
-                ex.printStackTrace();
+                LOG.trace("Unkown error during after section", ex);
             }
         }
     }
@@ -185,7 +190,7 @@ public class CombinedListener implements CompleteListener {
                 listener.beforeTestSuite(tests);
             }
             catch (Exception ex) {
-                ex.printStackTrace();
+                LOG.trace("Unkown error during before testsuite", ex);
             }
         }
     }
@@ -197,7 +202,7 @@ public class CombinedListener implements CompleteListener {
                 listener.afterTestSuite(tests);
             }
             catch (Exception ex) {
-                ex.printStackTrace();
+                LOG.trace("Unkown error during after testsuite", ex);
             }
         }
     }

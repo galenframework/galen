@@ -19,6 +19,9 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.regex.Pattern;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import net.mindengine.galen.runner.GalenPageRunner;
 import net.mindengine.galen.specs.Spec;
 import net.mindengine.galen.specs.page.ConditionalBlock;
@@ -27,6 +30,8 @@ import net.mindengine.galen.specs.page.ObjectSpecs;
 import net.mindengine.galen.specs.page.PageSection;
 
 public class SectionValidation {
+    
+    private final static Logger LOG = LoggerFactory.getLogger(SectionValidation.class);
 
     private static final GalenPageRunner UNKNOWN_PAGE_RUNNER = null;
     private static final List<ValidationError> EMPTY_ERRORS = new LinkedList<ValidationError>();
@@ -183,7 +188,7 @@ public class SectionValidation {
                 validationListener.onAfterObject(UNKNOWN_PAGE_RUNNER, pageValidation, objectName);
             }
             catch (Exception e) {
-                e.printStackTrace();
+                LOG.trace("Unkown error during validation after object", e);
             }
         } 
     }
@@ -194,7 +199,7 @@ public class SectionValidation {
                 validationListener.onObject(UNKNOWN_PAGE_RUNNER, pageValidation, objectName);
             }
             catch (Exception e) {
-                e.printStackTrace();
+                LOG.trace("Unkown error during validation on object", e);
             }
         }
     }
@@ -224,7 +229,7 @@ public class SectionValidation {
             }
         }
         catch (Exception e) {
-            e.printStackTrace();
+            LOG.trace("Unkown error during tell spec error", e);
         }
     }
 
@@ -235,7 +240,7 @@ public class SectionValidation {
             }
         }
         catch (Exception e) {
-            e.printStackTrace();
+            LOG.trace("Unkown error during tell spec success", e);
         }
     }
 

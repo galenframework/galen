@@ -17,6 +17,9 @@ package net.mindengine.galen.runner;
 
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import net.mindengine.galen.browser.Browser;
 import net.mindengine.galen.reports.TestReport;
 import net.mindengine.galen.suite.GalenPageTest;
@@ -25,6 +28,8 @@ import net.mindengine.galen.validation.ValidationListener;
 
 
 public class GalenBasicTestRunner {
+
+    private final static Logger LOG = LoggerFactory.getLogger(GalenBasicTestRunner.class);
 
     private TestListener testListener;
     private ValidationListener validationListener;
@@ -66,7 +71,7 @@ public class GalenBasicTestRunner {
                 pageRunner.run(browser, pageTest);
             }
             catch (Exception ex) {
-                ex.printStackTrace();
+                LOG.trace("Unkown error during test run", ex);
                 report.error(ex);
             }
             
