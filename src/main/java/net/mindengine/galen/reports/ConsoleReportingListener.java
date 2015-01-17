@@ -19,9 +19,6 @@ import java.io.PrintStream;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import net.mindengine.galen.config.GalenConfig;
 import net.mindengine.galen.runner.CompleteListener;
 import net.mindengine.galen.runner.GalenPageRunner;
@@ -33,8 +30,6 @@ import net.mindengine.galen.validation.PageValidation;
 import net.mindengine.galen.validation.ValidationError;
 
 public class ConsoleReportingListener implements CompleteListener {
-    
-    private final static Logger LOG = LoggerFactory.getLogger(ConsoleReportingListener.class);
 
     private static final String SPEC_ERROR_MESSAGE_INDENTATION_SUFFIX   = ":   ";
     private static final String SPEC_ERROR_INDENTATION_HEADER           = "->  ";
@@ -174,7 +169,7 @@ public class ConsoleReportingListener implements CompleteListener {
 
     @Override
     public void onGlobalError(GalenPageRunner pageRunner, Exception e) {
-        LOG.error("General error during repoting occurred.", e);
+        e.printStackTrace(err);
     }
 
     @Override
