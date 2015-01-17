@@ -297,7 +297,7 @@ public class SpecReader {
             }
         }));
         
-        putSpec("component", new SpecProcessor() {
+        putSpec("component.*", new SpecProcessor() {
             
             @Override
             public Spec processSpec(String specName, String paramsText, String contextPath) throws IOException {

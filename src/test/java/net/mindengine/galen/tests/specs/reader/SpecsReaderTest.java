@@ -934,7 +934,7 @@ public class SpecsReaderTest {
         SpecComponent spec = (SpecComponent)readSpec("component frame: some.spec");
         assertThat(spec.isFrame(), is(true));
         assertThat(spec.getSpecPath(), is("./some.spec"));
-        assertThat(spec.getOriginalText(), is("component: some.spec"));
+        assertThat(spec.getOriginalText(), is("component frame: some.spec"));
     }
 
 
