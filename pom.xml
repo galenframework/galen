@@ -145,7 +145,17 @@
     </dependency>        
   </dependencies>
   <build>
-    <plugins>
+    <plugins>  
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-eclipse-plugin</artifactId>
+        <version>${maven-eclipse-plugin.version}</version>
+        <configuration>
+          <buildOutputDirectory>build/classes</buildOutputDirectory>
+          <downloadJavadocs>true</downloadJavadocs>
+          <downloadSources>true</downloadSources>
+        </configuration>
+      </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
@@ -222,7 +232,9 @@
     <slf4j.version>1.7.10</slf4j.version>
     <!-- testing libs -->
     <mockito.version>1.9.5</mockito.version>
-    <powermock.version>1.5.3</powermock.version>
+    <powermock.version>1.5.3</powermock.version><maven-ejb-plugin.version>2.3</maven-ejb-plugin.version>
+    <!-- maven plugins -->
+    <maven-eclipse-plugin.version>2.7</maven-eclipse-plugin.version>
   </properties>
 
   <licenses>

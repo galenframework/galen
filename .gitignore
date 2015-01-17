@@ -3,11 +3,13 @@
 .classpath
 .project
 .settings/
+bin/
+build/
 target/
 test-output/
-bin/
 dist/
 .release-notes
 *.swp
 
 config2
+
