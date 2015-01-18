@@ -79,13 +79,11 @@ public class MockedPage implements Page {
 
     @Override
     public Page createObjectContextPage(Locator mainObjectLocator) {
-        // TODO Auto-generated method stub
         return null;
     }
 
     @Override
     public BufferedImage getScreenshotImage() {
-        // TODO Auto-generated method stub
         return screenshotImage;
     }
 
@@ -97,6 +95,21 @@ public class MockedPage implements Page {
     @Override
     public String getTitle() {
         return "";
+    }
+
+    @Override
+    public void switchToFrame(PageElement mainObject) {
+
+    }
+
+    @Override
+    public void switchToParentFrame() {
+
+    }
+
+    @Override
+    public Page createFrameContext(PageElement mainObject) {
+        return null;
     }
 
     public void setScreenshotImage(BufferedImage screenshotImage) {

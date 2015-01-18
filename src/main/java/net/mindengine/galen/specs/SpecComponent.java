@@ -19,6 +19,7 @@ package net.mindengine.galen.specs;
 public class SpecComponent extends Spec {
 
     private String specPath;
+    private boolean frame;
 
     public String getSpecPath() {
         return specPath;
@@ -26,5 +27,13 @@ public class SpecComponent extends Spec {
 
     public void setSpecPath(String specPath) {
         this.specPath = specPath;
+    }
+
+    public boolean isFrame() {
+        return frame;
+    }
+
+    public void setFrame(boolean frame) {
+        this.frame = frame;
     }
 }

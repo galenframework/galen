@@ -30,6 +30,7 @@ import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import com.sun.org.apache.xml.internal.utils.XMLString;
 import net.mindengine.galen.config.GalenConfig;
 import net.mindengine.galen.page.Rect;
 import net.mindengine.galen.parser.*;
@@ -296,10 +297,11 @@ public class SpecReader {
             }
         }));
         
-        putSpec("component", new SpecProcessor() {
+        putSpec("component.*", new SpecProcessor() {
             
             @Override
             public Spec processSpec(String specName, String paramsText, String contextPath) throws IOException {
+
                 String childFilePath = paramsText.trim();
                 if (childFilePath.isEmpty()) {
                     throw new SyntaxException("File path to component spec is not specified");
@@ -312,6 +314,12 @@ public class SpecReader {
                 
                 SpecComponent spec = new SpecComponent();
                 spec.setSpecPath(fullFilePath);
+
+
+                if (getSecondWord(specName).equals("frame")) {
+                    spec.setFrame(true);
+                }
+
                 return spec;
             }
         });
@@ -397,6 +405,12 @@ public class SpecReader {
         }));
         
 
+    }
+
+    private String getSecondWord(String text) {
+        StringCharReader reader = new StringCharReader(text);
+        Expectations.word().read(reader);
+        return Expectations.word().read(reader);
     }
 
     private ImageFilter parseImageFilter(String filterText) {

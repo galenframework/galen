@@ -21,7 +21,7 @@ import net.mindengine.galen.page.Rect;
 import java.util.HashMap;
 import java.util.Map;
 
-public class MockedPageElement implements PageElement {
+public class MockedPageElement extends PageElement {
 
     private Rect rect;
     private String innerText;
@@ -32,7 +32,7 @@ public class MockedPageElement implements PageElement {
     }
 
     @Override
-    public Rect getArea() {
+    public Rect calculateArea() {
         return rect;
     }
 

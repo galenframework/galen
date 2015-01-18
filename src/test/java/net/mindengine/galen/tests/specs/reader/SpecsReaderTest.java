@@ -921,6 +921,23 @@ public class SpecsReaderTest {
         System.getProperties().remove("galen.spec.image.error");
     }
 
+    @Test
+    public void shouldReadSpec_component() throws IOException {
+        SpecComponent spec = (SpecComponent)readSpec("component: some.spec");
+        assertThat(spec.isFrame(), is(false));
+        assertThat(spec.getSpecPath(), is("./some.spec"));
+        assertThat(spec.getOriginalText(), is("component: some.spec"));
+    }
+
+    @Test
+    public void shouldReadSpec_component_frame() throws IOException {
+        SpecComponent spec = (SpecComponent)readSpec("component frame: some.spec");
+        assertThat(spec.isFrame(), is(true));
+        assertThat(spec.getSpecPath(), is("./some.spec"));
+        assertThat(spec.getOriginalText(), is("component frame: some.spec"));
+    }
+
+
 
     @Test(expectedExceptions={SyntaxException.class}, expectedExceptionsMessageRegExp="Cannot parse number: \"\"")
     public void givesError_specImage_withIncorrectArea() throws IOException {

@@ -15,10 +15,10 @@
 ******************************************************************************/
 package net.mindengine.galen.page;
 
-public class AbsentPageElement implements PageElement {
+public class AbsentPageElement extends PageElement {
 
     @Override
-    public Rect getArea() {
+    public Rect calculateArea() {
         return null;
     }
 

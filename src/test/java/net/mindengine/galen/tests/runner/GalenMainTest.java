@@ -25,7 +25,6 @@ import static org.hamcrest.Matchers.is;
 import java.awt.Dimension;
 import java.io.File;
 import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;

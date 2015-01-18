@@ -15,26 +15,60 @@
 ******************************************************************************/
 package net.mindengine.galen.page;
 
-public interface PageElement {
+public abstract class PageElement {
 
-    Rect getArea();
+    private int offsetLeft = 0;
+    private int offsetTop = 0;
 
-    boolean isPresent();
+    private Rect cachedArea = null;
 
-    boolean isVisible();
+
+    public final Rect getArea() {
+        if (cachedArea == null) {
+            cachedArea = this.calculateArea().offset(offsetLeft, offsetTop);
+        }
+        return cachedArea;
+    }
+
+    protected abstract Rect calculateArea();
+
+    public abstract boolean isPresent();
+
+    public abstract boolean isVisible();
     
-    int getWidth();
-    int getHeight();
-    int getLeft();
-    int getTop();
+    public abstract int getWidth();
+    public abstract int getHeight();
+    public abstract int getLeft();
+    public abstract int getTop();
 
-    String getText();
+    public abstract String getText();
 
     /**
      * Should be implemented only for WEB page element
      * @param cssPropertyName
      * @return
      */
-    String getCssProperty(String cssPropertyName);
+    public abstract String getCssProperty(String cssPropertyName);
 
+    public int getOffsetLeft() {
+        return offsetLeft;
+    }
+
+    public void setOffsetLeft(int offsetLeft) {
+        this.offsetLeft = offsetLeft;
+    }
+
+    public int getOffsetTop() {
+        return offsetTop;
+    }
+
+    public void setOffsetTop(int offsetTop) {
+        this.offsetTop = offsetTop;
+    }
+
+    public PageElement withOffset(int offsetLeft, int offsetTop) {
+        setOffsetLeft(offsetLeft);
+        setOffsetTop(offsetTop);
+        return this;
+    }
 }

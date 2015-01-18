@@ -15,24 +15,18 @@
 ******************************************************************************/
 package net.mindengine.galen.validation.specs;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
+import net.mindengine.galen.browser.Browser;
 import net.mindengine.galen.page.Page;
 import net.mindengine.galen.page.PageElement;
-import net.mindengine.galen.page.selenium.SeleniumPage;
-import net.mindengine.galen.parser.SyntaxException;
 import net.mindengine.galen.specs.SpecComponent;
 import net.mindengine.galen.specs.page.Locator;
 import net.mindengine.galen.specs.reader.page.PageSpec;
 import net.mindengine.galen.specs.reader.page.PageSpecReader;
-import net.mindengine.galen.validation.PageValidation;
-import net.mindengine.galen.validation.SectionValidation;
-import net.mindengine.galen.validation.SpecValidation;
-import net.mindengine.galen.validation.ValidationError;
-import net.mindengine.galen.validation.ValidationErrorException;
-import net.mindengine.galen.validation.ValidationListener;
+import net.mindengine.galen.specs.reader.page.SectionFilter;
+import net.mindengine.galen.validation.*;
 
 public class SpecValidationComponent extends SpecValidation<SpecComponent> {
 
@@ -41,12 +35,40 @@ public class SpecValidationComponent extends SpecValidation<SpecComponent> {
         PageElement mainObject = pageValidation.findPageElement(objectName);
         checkAvailability(mainObject, objectName);
 
-        Locator mainObjectLocator = pageValidation.getPageSpec().getObjectLocator(objectName);
-        Page objectContextPage = pageValidation.getPage().createObjectContextPage(mainObjectLocator);
-        
-        ValidationListener validationListener = pageValidation.getValidationListener();
+        List<ValidationError> errors;
 
-        PageSpecReader pageSpecReader = new PageSpecReader(spec.getProperties(), objectContextPage);
+        if (spec.isFrame()) {
+            errors = checkInsideFrame(mainObject, pageValidation, spec);
+        }
+        else {
+            errors = checkInsideNormalWebElement(pageValidation, objectName, spec);
+        }
+
+        if (errors != null && errors.size() > 0) {
+            throw new ValidationErrorException("Child component spec contains " + errors.size() + " errors");
+        }
+
+    }
+
+    private List<ValidationError> checkInsideFrame(PageElement mainObject, PageValidation pageValidation, SpecComponent spec) {
+        Page page = pageValidation.getPage();
+
+        Page framePage = page.createFrameContext(mainObject);
+
+        List<ValidationError> errors = checkInsidePage(pageValidation.getBrowser(), framePage, spec,
+                pageValidation.getSectionFilter(), pageValidation.getValidationListener());
+
+        if (spec.isFrame()) {
+            page.switchToParentFrame();
+        }
+
+        return errors;
+    }
+
+
+    private List<ValidationError> checkInsidePage(Browser browser, Page page, SpecComponent spec,
+                                                  SectionFilter sectionFilter, ValidationListener validationListener) {
+        PageSpecReader pageSpecReader = new PageSpecReader(spec.getProperties(), page);
 
         PageSpec componentPageSpec;
         try {
@@ -54,15 +76,20 @@ public class SpecValidationComponent extends SpecValidation<SpecComponent> {
         } catch (IOException e) {
             throw new RuntimeException(e.getMessage(), e);
         }
-        
-        SectionValidation sectionValidation = new SectionValidation(componentPageSpec.findSections(pageValidation.getSectionFilter()), 
-                new PageValidation(pageValidation.getBrowser(), objectContextPage, componentPageSpec, validationListener, pageValidation.getSectionFilter()), 
+
+        SectionValidation sectionValidation = new SectionValidation(componentPageSpec.findSections(sectionFilter),
+                new PageValidation(browser, page, componentPageSpec, validationListener, sectionFilter),
                 validationListener);
-        
-        List<ValidationError> errors = sectionValidation.check();
-        if (errors != null && errors.size() > 0) {
-            throw new ValidationErrorException("Child component spec contains " + errors.size() + " errors");
-        }
+
+        return sectionValidation.check();
+    }
+
+    private List<ValidationError> checkInsideNormalWebElement(PageValidation pageValidation, String objectName, SpecComponent spec) {
+        Locator mainObjectLocator = pageValidation.getPageSpec().getObjectLocator(objectName);
+        Page objectContextPage = pageValidation.getPage().createObjectContextPage(mainObjectLocator);
+
+        return checkInsidePage(pageValidation.getBrowser(), objectContextPage, spec,
+                pageValidation.getSectionFilter(), pageValidation.getValidationListener());
     }
 
 }
