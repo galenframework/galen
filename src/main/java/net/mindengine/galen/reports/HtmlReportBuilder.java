@@ -61,7 +61,7 @@ public class HtmlReportBuilder {
             try {
                 exportTestReport(aggregatedInfo, reportFolderPath);
             } catch (Exception ex) {
-                ex.printStackTrace();
+                LOG.error("Unkown report export", ex);
             }
         }
         exportMainReport(reportFolderPath, aggregatedTests);
@@ -166,7 +166,7 @@ public class HtmlReportBuilder {
                         spec.getImageComparison().setComparisonMapPath(filePrefix + "/" + comparisonMapPath);
                         Rainbow4J.saveImage(spec.getImageComparison().getComparisonMap(), mapFile);
                     } catch (Throwable ex) {
-                        ex.printStackTrace();
+                        LOG.trace("Unkown error during image comparison", ex);
                     }
                 }
             }
@@ -198,7 +198,7 @@ public class HtmlReportBuilder {
             fos.close();
             return newName;
         } catch (Exception ex) {
-            ex.printStackTrace();
+            LOG.trace("Unkown error during moving files", ex);
             return imagePath;
         }
     }

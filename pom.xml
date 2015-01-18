@@ -114,10 +114,48 @@
       <groupId>com.github.detro</groupId>
       <artifactId>phantomjsdriver</artifactId>
       <version>1.2.0</version>
+    </dependency>    
+    <dependency>
+      <groupId>org.mockito</groupId>
+      <artifactId>mockito-all</artifactId>
+      <version>${mockito.version}</version>
+      <scope>test</scope>
     </dependency>
+    <dependency>
+      <groupId>org.powermock</groupId>
+      <artifactId>powermock-module-testng</artifactId>
+      <version>${powermock.version}</version>
+      <scope>test</scope>
+    </dependency><dependency>
+      <groupId>org.powermock</groupId>
+      <artifactId>powermock-api-support</artifactId>
+      <version>${powermock.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.powermock</groupId>
+      <artifactId>powermock-api-mockito</artifactId>
+      <version>${powermock.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.powermock</groupId>
+      <artifactId>powermock-reflect</artifactId>
+      <version>${powermock.version}</version>
+    </dependency>        
   </dependencies>
   <build>
-    <plugins>
+    <plugins>  
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-eclipse-plugin</artifactId>
+        <version>${maven-eclipse-plugin.version}</version>
+        <configuration>
+          <buildOutputDirectory>build/classes</buildOutputDirectory>
+          <downloadJavadocs>true</downloadJavadocs>
+          <downloadSources>true</downloadSources>
+        </configuration>
+      </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
@@ -189,8 +227,14 @@
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <sonatypeOssDistMgmtSnapshotsUrl>https://oss.sonatype.org/content/repositories/snapshots/</sonatypeOssDistMgmtSnapshotsUrl>
-    <!-- version numbers  -->
-	<slf4j.version>1.7.10</slf4j.version>
+
+    <!-- VERSION NUMBERS  -->	
+    <slf4j.version>1.7.10</slf4j.version>
+    <!-- testing libs -->
+    <mockito.version>1.9.5</mockito.version>
+    <powermock.version>1.5.3</powermock.version><maven-ejb-plugin.version>2.3</maven-ejb-plugin.version>
+    <!-- maven plugins -->
+    <maven-eclipse-plugin.version>2.7</maven-eclipse-plugin.version>
   </properties>
 
   <licenses>

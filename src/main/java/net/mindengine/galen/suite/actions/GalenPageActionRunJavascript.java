@@ -24,7 +24,6 @@ import net.mindengine.galen.browser.SeleniumBrowser;
 import net.mindengine.galen.browser.WebDriverWrapper;
 import net.mindengine.galen.javascript.GalenJsExecutor;
 import net.mindengine.galen.reports.TestReport;
-import net.mindengine.galen.runner.JsTestCollector;
 import net.mindengine.galen.suite.GalenPageAction;
 import net.mindengine.galen.suite.GalenPageTest;
 import net.mindengine.galen.utils.GalenUtils;

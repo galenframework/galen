@@ -17,7 +17,6 @@ package net.mindengine.galen.specs.reader.page;
 
 import static net.mindengine.galen.suite.reader.Line.UNKNOWN_LINE;
 
-import java.io.File;
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 import java.util.*;
@@ -30,7 +29,6 @@ import net.mindengine.galen.specs.page.ConditionalBlock;
 import net.mindengine.galen.specs.page.PageSection;
 import net.mindengine.galen.specs.reader.Place;
 import net.mindengine.galen.specs.reader.StringCharReader;
-import net.mindengine.galen.utils.GalenUtils;
 
 
 public class PageSpecLineProcessor {

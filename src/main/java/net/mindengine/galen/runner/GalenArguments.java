@@ -24,7 +24,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.regex.Pattern;
 
-import net.mindengine.galen.suite.actions.GalenPageActionDumpPage;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.MissingArgumentException;

@@ -18,7 +18,6 @@ package net.mindengine.galen.parser;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 
 import net.mindengine.galen.specs.Location;
 import net.mindengine.galen.specs.Range;

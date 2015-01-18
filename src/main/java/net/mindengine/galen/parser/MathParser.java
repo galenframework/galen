@@ -16,7 +16,6 @@
 package net.mindengine.galen.parser;
 
 import net.mindengine.galen.javascript.GalenJsExecutor;
-import org.apache.commons.lang3.StringUtils;
 
 import net.mindengine.galen.specs.reader.StringCharReader;
 

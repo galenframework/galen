@@ -15,7 +15,6 @@
 ******************************************************************************/
 package net.mindengine.galen.parser;
 
-import static java.lang.String.format;
 import static net.mindengine.galen.parser.Expectations.isDelimeter;
 import static net.mindengine.galen.parser.Expectations.isNumeric;
 import static net.mindengine.galen.suite.reader.Line.UNKNOWN_LINE;

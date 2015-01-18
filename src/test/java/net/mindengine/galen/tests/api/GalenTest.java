@@ -16,12 +16,15 @@
 package net.mindengine.galen.tests.api;
 
 import com.google.common.io.Files;
+import com.google.gson.JsonParser;
+
 import net.mindengine.galen.api.Galen;
 import net.mindengine.galen.components.mocks.driver.MockedDriver;
 import net.mindengine.galen.page.Rect;
 import net.mindengine.galen.reports.model.LayoutReport;
 import net.mindengine.galen.validation.ErrorArea;
 import net.mindengine.galen.validation.ValidationError;
+
 import org.apache.commons.io.FileUtils;
 import org.junit.Assert;
 import org.openqa.selenium.WebDriver;
@@ -63,7 +66,7 @@ public class GalenTest {
         Galen.dumpPage(driver, "test page", "/specs/galen4j/pagedump.spec", pageDumpPath);
 
         assertFileExists(pageDumpPath + "/page.json");
-        assertFileContent(pageDumpPath + "/page.json", "/pagedump/expected.json");
+        assertJSONContent(pageDumpPath + "/page.json", "/pagedump/expected.json");
         assertFileExists(pageDumpPath + "/page.html");
 
         assertFileExists(pageDumpPath + "/page.png");
@@ -95,14 +98,19 @@ public class GalenTest {
         assertFileExists(pageDumpPath + "/objects/menu-item-3.png");
         assertFileDoesNotExist(pageDumpPath + "/objects/big-container.png");
     }
+    
+    private void assertJSONContent(String pathForRealContent, String pathForExpectedContent) throws IOException {
+        Assert.assertEquals(String.format("Content of \"%s\" should be the same as in \"%s\"", pathForRealContent, pathForExpectedContent),
+                new JsonParser().parse(readFileToString(new File(pathForRealContent)).replaceAll("\\s+", "")),
+                        new JsonParser().parse(readFileToString(new File(getClass().getResource(pathForExpectedContent).getFile())).replaceAll("\\s+", "")));
+    }
 
-
+    // TODO move to test util class
     private void assertFileContent(String pathForRealContent, String pathForExpectedContent) throws IOException {
         Assert.assertEquals(String.format("Content of \"%s\" should be the same as in \"%s\"", pathForRealContent, pathForExpectedContent),
                 readFileToString(new File(pathForRealContent)).replaceAll("\\s+", ""),
                 readFileToString(new File(getClass().getResource(pathForExpectedContent).getFile())).replaceAll("\\s+", ""));
     }
-
     private void assertFileDoesNotExist(String path) {
         assertThat("File " + path + " + should not exist", new File(path).exists(), is(false));
     }

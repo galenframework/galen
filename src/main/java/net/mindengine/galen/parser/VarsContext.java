@@ -17,7 +17,6 @@ package net.mindengine.galen.parser;
 
 import java.util.Properties;
 
-import net.mindengine.galen.specs.reader.page.PageSpecReader;
 import net.mindengine.galen.suite.reader.Context;
 
 public class VarsContext extends Context {

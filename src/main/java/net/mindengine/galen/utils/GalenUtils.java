@@ -15,9 +15,16 @@
 ******************************************************************************/
 package net.mindengine.galen.utils;
 
-import java.awt.*;
+import java.awt.Dimension;
+import java.awt.Graphics2D;
+import java.awt.Image;
 import java.awt.image.BufferedImage;
-import java.io.*;
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
 import java.net.URL;
 import java.security.DigestInputStream;
 import java.security.MessageDigest;
@@ -30,8 +37,6 @@ import java.util.regex.Pattern;
 
 import javax.imageio.ImageIO;
 
-import com.thoughtworks.selenium.Wait;
-import net.mindengine.galen.api.Galen;
 import net.mindengine.galen.api.UnregisteredTestSession;
 import net.mindengine.galen.browser.SeleniumBrowser;
 import net.mindengine.galen.browser.SeleniumBrowserFactory;
@@ -42,19 +47,22 @@ import net.mindengine.galen.runner.CompleteListener;
 import net.mindengine.galen.suite.actions.GalenPageActionCheck;
 import net.mindengine.galen.tests.GalenProperties;
 import net.mindengine.galen.tests.TestSession;
-
 import net.mindengine.rainbow4j.Rainbow4J;
+
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringEscapeUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.Platform;
 import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class GalenUtils {
 
+    private final static Logger LOG = LoggerFactory.getLogger(GalenUtils.class);
+    
     private static final String URL_REGEX = "[a-zA-Z0-9]+://.*";
     public static final String JS_RETRIEVE_DEVICE_PIXEL_RATIO = "var pr = window.devicePixelRatio; if (pr != undefined && pr != null)return pr; else return 1.0;";
 
@@ -204,7 +212,7 @@ public class GalenUtils {
         try {
             waitUntilItIsScrolledToPosition(driver, scroll);
         } catch (InterruptedException e) {
-            e.printStackTrace();
+            LOG.trace("Interrupt error during scrolling occurred.", e);
         }
     }
 
@@ -214,11 +222,11 @@ public class GalenUtils {
             Thread.sleep(hardTime);
         }
 
-        int time = 5000;
+        int time = 250;
         boolean isScrolledToPosition = false;
         while(time >= 0 && !isScrolledToPosition) {
-            Thread.sleep(500);
-            time -= 500;
+            Thread.sleep(50);
+            time -= 50;
             isScrolledToPosition = Math.abs(obtainVerticalScrollPosition(driver) - scrollPosition) < 3;
         }
     }
@@ -390,9 +398,9 @@ public class GalenUtils {
         String fileName = new File(fullPath).getName();
         MessageDigest md = MessageDigest.getInstance("MD5");
         InputStream is = GalenUtils.findFileOrResourceAsStream(fullPath);
-        DigestInputStream dis = new DigestInputStream(is, md);
+        new DigestInputStream(is, md);
         byte [] hashBytes = md.digest();
-
+        
         return fileName + convertHashBytesToString(hashBytes);
     }
 

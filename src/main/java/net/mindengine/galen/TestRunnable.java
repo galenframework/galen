@@ -27,10 +27,15 @@ import net.mindengine.galen.tests.TestSession;
 import java.util.Date;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * Used for running the test and invoking all test related events like: before, after, testRetry
  */
 public class TestRunnable implements Runnable {
+    private final static Logger LOG = LoggerFactory.getLogger(TestRunnable.class);
+    
     private final GalenTest test;
     private final CompleteListener listener;
     private final EventHandler eventHandler;
@@ -65,7 +70,7 @@ public class TestRunnable implements Runnable {
         catch(Throwable ex) {
             info.setException(ex);
             report.error(ex);
-            ex.printStackTrace();
+            LOG.trace("Reporting test exception", ex);
         }
         info.setEndedAt(new Date());
 
@@ -108,7 +113,7 @@ public class TestRunnable implements Runnable {
             }
         }
         catch (Exception e) {
-            e.printStackTrace();
+            LOG.error("Unkown error during test finishing", e);
         }
     }
 
@@ -119,7 +124,7 @@ public class TestRunnable implements Runnable {
             }
         }
         catch (Exception e) {
-            e.printStackTrace();
+            LOG.error("Unkown error during test start", e);
         }
     }
 

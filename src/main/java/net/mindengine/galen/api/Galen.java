@@ -26,9 +26,12 @@ import net.mindengine.galen.specs.reader.page.PageSpec;
 import net.mindengine.galen.specs.reader.page.PageSpecReader;
 import net.mindengine.galen.specs.reader.page.SectionFilter;
 import net.mindengine.galen.validation.*;
+
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.openqa.selenium.WebDriver;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
@@ -38,6 +41,7 @@ import static java.util.Arrays.asList;
 
 public class Galen {
 
+    private final static Logger LOG = LoggerFactory.getLogger(Galen.class);
 
     public static LayoutReport checkLayout(Browser browser, List<String> specPaths,
                                            List<String> includedTags, List<String> excludedTags,
@@ -64,10 +68,14 @@ public class Galen {
 
         LayoutReport layoutReport = new LayoutReport();
         try {
-            layoutReport.setScreenshotFullPath(page.createScreenshot().getAbsolutePath());
+            final File screenshot = page.createScreenshot();
+            if (screenshot != null) {
+                layoutReport.setScreenshotFullPath(screenshot.getAbsolutePath());
+            }
         }
         catch (Exception ex) {
-            ex.printStackTrace();
+            LOG.error("Error during setting screenshot.", ex);
+        
         }
         listener.add(new LayoutReportListener(layoutReport));
 
