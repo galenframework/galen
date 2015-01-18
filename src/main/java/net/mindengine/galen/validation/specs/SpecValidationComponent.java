@@ -21,7 +21,6 @@ import java.util.List;
 import net.mindengine.galen.browser.Browser;
 import net.mindengine.galen.page.Page;
 import net.mindengine.galen.page.PageElement;
-import net.mindengine.galen.page.Rect;
 import net.mindengine.galen.specs.SpecComponent;
 import net.mindengine.galen.specs.page.Locator;
 import net.mindengine.galen.specs.reader.page.PageSpec;
@@ -39,7 +38,7 @@ public class SpecValidationComponent extends SpecValidation<SpecComponent> {
         List<ValidationError> errors;
 
         if (spec.isFrame()) {
-            errors = checkInsideFrame(mainObject, pageValidation, objectName, spec);
+            errors = checkInsideFrame(mainObject, pageValidation, spec);
         }
         else {
             errors = checkInsideNormalWebElement(pageValidation, objectName, spec);
@@ -51,7 +50,7 @@ public class SpecValidationComponent extends SpecValidation<SpecComponent> {
 
     }
 
-    private List<ValidationError> checkInsideFrame(PageElement mainObject, PageValidation pageValidation, String objectName, SpecComponent spec) {
+    private List<ValidationError> checkInsideFrame(PageElement mainObject, PageValidation pageValidation, SpecComponent spec) {
         Page page = pageValidation.getPage();
 
         Page framePage = page.createFrameContext(mainObject);

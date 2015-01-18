@@ -43,7 +43,7 @@ public class SeleniumPage implements Page {
     private Map<String, PageElement> cachedPageElements = new HashMap<String, PageElement>();
     
     private WebElement objectContext;
-    private Locator objectContextLocator;
+    private PageElement parentObject;
 
     private BufferedImage cachedScreenshotImage;
     private File cachedScreenshotFile;
@@ -57,7 +57,6 @@ public class SeleniumPage implements Page {
     
     public SeleniumPage(WebDriver driver, Locator objectContextLocator) {
         this.driver = driver;
-        this.objectContextLocator = objectContextLocator;
         setObjectContext(objectContextLocator);
     }
 
@@ -81,6 +80,10 @@ public class SeleniumPage implements Page {
             else {
                 objectContext = driver.findElement(by);
             }
+
+
+            this.parentObject = new WebPageElement("parent", objectContext, objectContextLocator)
+                    .withOffset(offsetLeft, offsetTop);
         }
     }
 
@@ -203,11 +206,10 @@ public class SeleniumPage implements Page {
             return new ViewportElement(driver);
         }
         else if ("parent".equals(objectName)) {
-            if (objectContext != null) {
-                return new WebPageElement("parent", objectContext, objectContextLocator)
-                        .withOffset(offsetLeft, offsetTop);
+            if (parentObject != null) {
+                return parentObject;
             }
-            else throw new RuntimeException("There is no object context defined on page");
+            else throw new RuntimeException("There is no parent object defined on page");
         }
         else return null;
     }
@@ -267,6 +269,7 @@ public class SeleniumPage implements Page {
         Rect mainObjectArea = frameElement.getArea();
         framePage.setOffset(mainObjectArea.getLeft(), mainObjectArea.getTop());
         framePage.switchToFrame(frameElement);
+        framePage.setParentObject(frameElement);
         return framePage;
     }
 
@@ -275,5 +278,12 @@ public class SeleniumPage implements Page {
         this.offsetTop = offsetTop;
     }
 
+    public PageElement getParentObject() {
+        return parentObject;
+    }
+
+    public void setParentObject(PageElement parentObject) {
+        this.parentObject = parentObject;
+    }
 
 }
