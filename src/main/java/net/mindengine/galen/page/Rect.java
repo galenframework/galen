@@ -121,5 +121,9 @@ public class Rect {
     public int[] toIntArray() {
         return new int[]{getLeft(), getTop(), getWidth(), getHeight()};
     }
+
+    public Rect offset(int offsetLeft, int offsetTop) {
+        return new Rect(left + offsetLeft, top + offsetTop, width, height);
+    }
 }
 

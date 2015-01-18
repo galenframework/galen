@@ -107,6 +107,11 @@ public class MockedPage implements Page {
 
     }
 
+    @Override
+    public Page createFrameContext(PageElement mainObject) {
+        return null;
+    }
+
     public void setScreenshotImage(BufferedImage screenshotImage) {
         this.screenshotImage = screenshotImage;
     }

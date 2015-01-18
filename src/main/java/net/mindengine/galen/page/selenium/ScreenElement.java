@@ -23,7 +23,7 @@ import net.mindengine.galen.page.Rect;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 
-public class ScreenElement implements PageElement {
+public class ScreenElement extends PageElement {
 
     private WebDriver driver;
 
@@ -33,7 +33,7 @@ public class ScreenElement implements PageElement {
 
     @SuppressWarnings("unchecked")
     @Override
-    public Rect getArea() {
+    public Rect calculateArea() {
         List<Long> size = (List<Long>)((JavascriptExecutor)driver).executeScript("return [Math.max(" +
                     "document.body.scrollWidth, document.documentElement.scrollWidth," + 
                     "document.body.offsetWidth, document.documentElement.offsetWidth," +

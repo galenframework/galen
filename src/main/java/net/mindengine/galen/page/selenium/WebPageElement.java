@@ -24,7 +24,7 @@ import org.openqa.selenium.Dimension;
 import org.openqa.selenium.Point;
 import org.openqa.selenium.WebElement;
 
-public class WebPageElement implements PageElement {
+public class WebPageElement extends PageElement {
 
     private WebElement webElement;
     private Locator locator;
@@ -40,7 +40,7 @@ public class WebPageElement implements PageElement {
     private Rect cachedArea = null;
     
     @Override
-    public Rect getArea() {
+    public Rect calculateArea() {
         if (cachedArea == null) {   
             Point location = getWebElement().getLocation();
             Dimension size = getWebElement().getSize();

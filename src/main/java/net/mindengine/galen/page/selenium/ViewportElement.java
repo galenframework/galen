@@ -23,7 +23,7 @@ import net.mindengine.galen.page.Rect;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 
-public class ViewportElement implements PageElement {
+public class ViewportElement extends PageElement {
 
     private WebDriver driver;
 
@@ -33,7 +33,7 @@ public class ViewportElement implements PageElement {
 
     @SuppressWarnings("unchecked")
     @Override
-    public Rect getArea() {
+    public Rect calculateArea() {
         List<Long> size = (List<Long>)((JavascriptExecutor)driver).executeScript("return [window.innerWidth" +
                     "|| document.documentElement.clientWidth" + 
                     "|| document.body.clientWidth," +

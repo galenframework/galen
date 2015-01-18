@@ -41,4 +41,6 @@ public interface Page {
     void switchToFrame(PageElement mainObject);
 
     void switchToParentFrame();
+
+    Page createFrameContext(PageElement mainObject);
 }

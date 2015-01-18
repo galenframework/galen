@@ -26,13 +26,12 @@ import net.mindengine.galen.browser.SeleniumBrowser;
 import net.mindengine.galen.page.AbsentPageElement;
 import net.mindengine.galen.page.Page;
 import net.mindengine.galen.page.PageElement;
+import net.mindengine.galen.page.Rect;
 import net.mindengine.galen.specs.page.Locator;
 import net.mindengine.rainbow4j.Rainbow4J;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
-import org.openqa.selenium.OutputType;
-import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 
@@ -48,7 +47,9 @@ public class SeleniumPage implements Page {
 
     private BufferedImage cachedScreenshotImage;
     private File cachedScreenshotFile;
-    
+    private int offsetLeft = 0;
+    private int offsetTop = 0;
+
 
     public SeleniumPage(WebDriver driver) {
         this.driver = driver;
@@ -115,7 +116,8 @@ public class SeleniumPage implements Page {
             pageElements = new LinkedList<PageElement>();
             int i = 1;
             for (WebElement webElement : webElements) {
-                pageElements.add(new WebPageElement(objectName, webElement, new Locator(objectLocator.getLocatorType(), objectLocator.getLocatorValue(), i)));
+                pageElements.add(new WebPageElement(objectName, webElement, new Locator(objectLocator.getLocatorType(), objectLocator.getLocatorValue(), i))
+                    .withOffset(offsetLeft, offsetTop));
                 i++;
             }
         }
@@ -170,7 +172,7 @@ public class SeleniumPage implements Page {
         
         try {
             WebElement webElement = driverFindElement(by);
-            pageElement = new WebPageElement(objectName, webElement, objectLocator);
+            pageElement = new WebPageElement(objectName, webElement, objectLocator).withOffset(offsetLeft, offsetTop);
         }
         catch (NoSuchElementException e) {
             pageElement = new AbsentPageElement();
@@ -195,14 +197,15 @@ public class SeleniumPage implements Page {
     @Override
     public PageElement getSpecialObject(String objectName) {
         if ("screen".equals(objectName)) {
-            return new ScreenElement(driver);
+            return new ScreenElement(driver).withOffset(offsetLeft, offsetTop);
         }
         else if ("viewport".equals(objectName)) {
             return new ViewportElement(driver);
         }
         else if ("parent".equals(objectName)) {
             if (objectContext != null) {
-                return new WebPageElement("parent", objectContext, objectContextLocator);
+                return new WebPageElement("parent", objectContext, objectContextLocator)
+                        .withOffset(offsetLeft, offsetTop);
             }
             else throw new RuntimeException("There is no object context defined on page");
         }
@@ -255,6 +258,21 @@ public class SeleniumPage implements Page {
     @Override
     public void switchToParentFrame() {
         driver.switchTo().parentFrame();
+    }
+
+    @Override
+    public Page createFrameContext(PageElement frameElement) {
+        SeleniumPage framePage = new SeleniumPage(driver);
+
+        Rect mainObjectArea = frameElement.getArea();
+        framePage.setOffset(mainObjectArea.getLeft(), mainObjectArea.getTop());
+        framePage.switchToFrame(frameElement);
+        return framePage;
+    }
+
+    private void setOffset(int offsetLeft, int offsetTop) {
+        this.offsetLeft = offsetLeft;
+        this.offsetTop = offsetTop;
     }
 
 

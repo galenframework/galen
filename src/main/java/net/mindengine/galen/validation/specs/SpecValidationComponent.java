@@ -21,17 +21,13 @@ import java.util.List;
 import net.mindengine.galen.browser.Browser;
 import net.mindengine.galen.page.Page;
 import net.mindengine.galen.page.PageElement;
+import net.mindengine.galen.page.Rect;
 import net.mindengine.galen.specs.SpecComponent;
 import net.mindengine.galen.specs.page.Locator;
 import net.mindengine.galen.specs.reader.page.PageSpec;
 import net.mindengine.galen.specs.reader.page.PageSpecReader;
 import net.mindengine.galen.specs.reader.page.SectionFilter;
-import net.mindengine.galen.validation.PageValidation;
-import net.mindengine.galen.validation.SectionValidation;
-import net.mindengine.galen.validation.SpecValidation;
-import net.mindengine.galen.validation.ValidationError;
-import net.mindengine.galen.validation.ValidationErrorException;
-import net.mindengine.galen.validation.ValidationListener;
+import net.mindengine.galen.validation.*;
 
 public class SpecValidationComponent extends SpecValidation<SpecComponent> {
 
@@ -43,7 +39,7 @@ public class SpecValidationComponent extends SpecValidation<SpecComponent> {
         List<ValidationError> errors;
 
         if (spec.isFrame()) {
-            errors = checkInaideFrame(mainObject, pageValidation, objectName, spec);
+            errors = checkInsideFrame(mainObject, pageValidation, objectName, spec);
         }
         else {
             errors = checkInsideNormalWebElement(pageValidation, objectName, spec);
@@ -55,11 +51,12 @@ public class SpecValidationComponent extends SpecValidation<SpecComponent> {
 
     }
 
-    private List<ValidationError> checkInaideFrame(PageElement mainObject, PageValidation pageValidation, String objectName, SpecComponent spec) {
+    private List<ValidationError> checkInsideFrame(PageElement mainObject, PageValidation pageValidation, String objectName, SpecComponent spec) {
         Page page = pageValidation.getPage();
-        page.switchToFrame(mainObject);
 
-        List<ValidationError> errors = checkInsidePage(pageValidation.getBrowser(), page, spec,
+        Page framePage = page.createFrameContext(mainObject);
+
+        List<ValidationError> errors = checkInsidePage(pageValidation.getBrowser(), framePage, spec,
                 pageValidation.getSectionFilter(), pageValidation.getValidationListener());
 
         if (spec.isFrame()) {
@@ -68,6 +65,7 @@ public class SpecValidationComponent extends SpecValidation<SpecComponent> {
 
         return errors;
     }
+
 
     private List<ValidationError> checkInsidePage(Browser browser, Page page, SpecComponent spec,
                                                   SectionFilter sectionFilter, ValidationListener validationListener) {
