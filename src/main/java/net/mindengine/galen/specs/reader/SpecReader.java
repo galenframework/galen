@@ -147,7 +147,10 @@ public class SpecReader {
             public Spec init(String specName, String paramsText, String contextPath, Object[] args) {
                 String objectName = (String) args[0];
                 List<Location> locations = (List<Location>) args[1];
-                
+
+                if (locations == null || locations.size() == 0) {
+                    throw new SyntaxException(UNKNOWN_LINE, "There is no location defined");
+                }
                 return new SpecNear(objectName, locations);
             }
         }));
@@ -291,7 +294,10 @@ public class SpecReader {
                 
                 
                 List<Location> locations = (List<Location>) args[1];
-                
+                if (locations == null || locations.size() == 0) {
+                    throw new SyntaxException(UNKNOWN_LINE, "There is no location defined");
+                }
+
                 return new SpecOn(objectName, sideHorizontal, sideVertical, locations);
             }
         }));

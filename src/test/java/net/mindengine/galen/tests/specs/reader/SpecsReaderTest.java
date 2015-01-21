@@ -73,7 +73,19 @@ public class SpecsReaderTest {
     public void clearApproximation() {
         System.getProperties().remove("galen.range.approximation");
     }
-    
+
+    @Test
+    public void shouldReadSpec_inside() throws IOException {
+        Spec spec = readSpec("inside: object");
+        SpecInside specInside = (SpecInside) spec;
+
+        assertThat(specInside.getObject(), is("object"));
+        assertThat(specInside.getPartly(), is(false));
+
+        List<Location> locations = specInside.getLocations();
+        assertThat(locations.size(), is(0));
+    }
+
     @Test
     public void shouldReadSpec_inside_object_10px_right() throws IOException {
         Spec spec = readSpec("inside: object 10px right");

@@ -15,14 +15,41 @@
 ******************************************************************************/
 package net.mindengine.galen.validation.specs;
 
+import net.mindengine.galen.page.PageElement;
 import net.mindengine.galen.page.Point;
 import net.mindengine.galen.page.Rect;
-import net.mindengine.galen.specs.Location;
 import net.mindengine.galen.specs.Side;
 import net.mindengine.galen.specs.SpecInside;
+import net.mindengine.galen.validation.ErrorArea;
 import net.mindengine.galen.validation.PageValidation;
+import net.mindengine.galen.validation.ValidationErrorException;
 
 public class SpecValidationInside extends SpecValidationGeneral<SpecInside> {
+
+
+    @Override
+    public void check(PageValidation pageValidation, String objectName, SpecInside spec) throws ValidationErrorException {
+        super.check(pageValidation, objectName, spec);
+
+
+        PageElement mainObject = pageValidation.findPageElement(objectName);
+        PageElement secondObject = pageValidation.findPageElement(spec.getObject());
+
+        Rect mainArea = mainObject.getArea();
+        Rect secondArea = secondObject.getArea();
+        if (!spec.getPartly()) {
+            Point[] points = mainArea.getPoints();
+
+            for (Point point : points) {
+                if (!secondArea.contains(point)) {
+                    throw new ValidationErrorException()
+                            .withErrorArea(new ErrorArea(mainArea, objectName))
+                            .withErrorArea(new ErrorArea(secondArea, spec.getObject()))
+                            .withMessage(String.format("\"%s\" is not completely inside", objectName));
+                }
+            }
+        }
+    }
 
     @Override
     protected int getOffsetForSide(Rect mainArea, Rect parentArea, Side side, SpecInside spec) {
@@ -43,17 +70,4 @@ public class SpecValidationInside extends SpecValidationGeneral<SpecInside> {
         }
     }
 
-    @Override
-    protected String verifyLocation(Rect mainArea, Rect secondArea, Location location, PageValidation pageValidation, SpecInside spec) {
-        if (!spec.getPartly()) {
-            Point[] points = mainArea.getPoints();
-            
-            for (Point point : points) {
-                if (!secondArea.contains(point)) {
-                    return "not completely inside";
-                }
-            }
-        }
-        return super.verifyLocation(mainArea, secondArea, location, pageValidation, spec);
-    }
 }

@@ -41,9 +41,6 @@ public class ExpectLocations implements Expectation<List<Location>> {
                 reader.next();
             }
         }
-        if (locations.size() == 0) {
-            throw new SyntaxException(UNKNOWN_LINE, "There is no location defined");
-        }
         return locations;
     }
 

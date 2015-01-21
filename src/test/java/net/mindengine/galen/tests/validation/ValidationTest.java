@@ -153,8 +153,13 @@ public class ValidationTest {
               put("object", element(10, 10, 100, 100));
           }})),
           
-          // Inside 
-          
+          // Inside
+
+          row(specInside("container"), page(new HashMap<String, PageElement>(){{
+              put("object", element(10, 20, 100, 100));
+              put("container", element(10, 10, 110, 110));
+          }})),
+
           row(specInside("container", location(exact(10), RIGHT, TOP)), page(new HashMap<String, PageElement>(){{
               put("object", element(10, 20, 100, 100));
               put("container", element(10, 10, 110, 110));
@@ -605,8 +610,15 @@ public class ValidationTest {
 
 
           // Inside
-          
-          row(new ValidationError(areas(new ErrorArea(new Rect(10, 10, 500, 50), "object"), new ErrorArea(new Rect(0, 0, 130, 120), "container")), 
+
+          row(new ValidationError(areas(new ErrorArea(new Rect(10, 10, 500, 50), "object"), new ErrorArea(new Rect(0, 0, 130, 120), "container")),
+                          messages("\"object\" is not completely inside")),
+                  specInside("container"), page(new HashMap<String, PageElement>(){{
+                      put("object", element(10, 10, 500, 50));
+                      put("container", element(0, 0, 130, 120));
+          }})),
+
+          row(new ValidationError(areas(new ErrorArea(new Rect(10, 10, 500, 50), "object"), new ErrorArea(new Rect(0, 0, 130, 120), "container")),
                   messages("\"object\" is not completely inside")),
               specInside("container", location(exact(10), LEFT)), page(new HashMap<String, PageElement>(){{
                   put("object", element(10, 10, 500, 50));
