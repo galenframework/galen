@@ -21,12 +21,21 @@ import net.mindengine.galen.validation.PageValidation;
 import net.mindengine.galen.validation.SpecValidation;
 import net.mindengine.galen.validation.ValidationErrorException;
 
+import static java.lang.String.format;
+
 public class SpecValidationVisible extends SpecValidation<SpecVisible> {
 
     @Override
     public void check(PageValidation pageValidation, String objectName, SpecVisible spec) throws ValidationErrorException {
         PageElement mainObject = pageValidation.findPageElement(objectName);
-        checkAvailability(mainObject, objectName);
+        if (mainObject == null) {
+            throw new ValidationErrorException(format(OBJECT_WITH_NAME_S_IS_NOT_DEFINED_IN_PAGE_SPEC, objectName));
+        }
+        if (!mainObject.isPresent()) {
+            throw new ValidationErrorException(format(OBJECT_S_IS_ABSENT_ON_PAGE, objectName));
+        } else if (!mainObject.isVisible()) {
+            throw new ValidationErrorException((format(OBJECT_S_IS_NOT_VISIBLE_ON_PAGE, objectName)));
+        }
     }
 
 }

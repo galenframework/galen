@@ -39,6 +39,7 @@ public class GalenConfig {
     public static final String SCREENSHOT_FULLPAGE_SCROLLWAIT = "galen.browser.screenshots.fullPage.scrollWait";
     private static final String SPEC_IMAGE_TOLERANCE = "galen.spec.image.tolerance";
     private static final String SPEC_IMAGE_ERROR_RATE = "galen.spec.image.error";
+    private static final String SPEC_GLOBAL_VISIBILITY_CHECK = "galen.spec.global.visibility";
     private int rangeApproximation;
     private List<String> reportingListeners;
     private String defaultBrowser;
@@ -49,7 +50,7 @@ public class GalenConfig {
             loadConfig();
         }
         catch (Exception e) {
-            LOG.trace("Unkown error during Galen Config", e);
+            LOG.trace("Unknown error during Galen Config", e);
         }
     }
     
@@ -172,6 +173,10 @@ public class GalenConfig {
 
     public boolean shouldAutoresizeScreenshots() {
         return getBooleanProperty(GalenConfig.SCREENSHOT_AUTORESIZE, true);
+    }
+
+    public boolean shouldCheckVisibilityGlobally() {
+        return getBooleanProperty(GalenConfig.SPEC_GLOBAL_VISIBILITY_CHECK, true);
     }
 
     public int getImageSpecDefaultTolerance() {

@@ -20,6 +20,7 @@ import static java.lang.String.format;
 import java.util.LinkedList;
 import java.util.List;
 
+import net.mindengine.galen.config.GalenConfig;
 import net.mindengine.galen.page.PageElement;
 import net.mindengine.galen.specs.Range;
 import net.mindengine.galen.specs.Spec;
@@ -41,16 +42,16 @@ public abstract class SpecValidation<T extends Spec> {
     
     
     protected void checkAvailability(PageElement object, String objectName) throws ValidationErrorException {
-        if (object == null) {
-            throw new ValidationErrorException(format(OBJECT_WITH_NAME_S_IS_NOT_DEFINED_IN_PAGE_SPEC, objectName));
+        if (GalenConfig.getConfig().shouldCheckVisibilityGlobally()) {
+            if (object == null) {
+                throw new ValidationErrorException(format(OBJECT_WITH_NAME_S_IS_NOT_DEFINED_IN_PAGE_SPEC, objectName));
+            }
+            if (!object.isPresent()) {
+                throw new ValidationErrorException(format(OBJECT_S_IS_ABSENT_ON_PAGE, objectName));
+            } else if (!object.isVisible()) {
+                throw new ValidationErrorException((format(OBJECT_S_IS_NOT_VISIBLE_ON_PAGE, objectName)));
+            }
         }
-        if (!object.isPresent()) {
-        	throw new ValidationErrorException(format(OBJECT_S_IS_ABSENT_ON_PAGE, objectName));
-        }
-        else if (!object.isVisible()) {
-        	throw new ValidationErrorException((format(OBJECT_S_IS_NOT_VISIBLE_ON_PAGE, objectName)));
-        }
-        
     }
     
     /**
