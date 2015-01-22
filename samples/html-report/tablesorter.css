@@ -4,7 +4,8 @@ Default Theme
 /* overall */
 .tablesorter-default {
 	width: 100%;
-	font: 12px/18px Arial, Sans-serif;
+	font-family: Arial, Sans-serif;
+    font-size: 0.8em;
 	color: #333;
 	background-color: #fff;
 	border-spacing: 0;
@@ -15,7 +16,8 @@ Default Theme
 /* header */
 .tablesorter-default th,
 .tablesorter-default thead td {
-	font: bold 12px/18px Arial, Sans-serif;
+	font-family: Arial, Sans-serif;
+    font-weight: bold;
 	color: #000;
 	background-color: #fff;
 	border-collapse: collapse;
@@ -39,7 +41,7 @@ Default Theme
 .tablesorter-default thead .tablesorter-headerSortUp,
 .tablesorter-default thead .tablesorter-headerAsc {
 	background-image: url(data:image/gif;base64,R0lGODlhFQAEAIAAACMtMP///yH5BAEAAAEALAAAAAAVAAQAAAINjI8Bya2wnINUMopZAQA7);
-	border-bottom: #000 2px solid;
+    border-bottom: #000 2px solid;
 }
 .tablesorter-default thead .headerSortDown,
 .tablesorter-default thead .tablesorter-headerSortDown,
@@ -73,7 +75,7 @@ Default Theme
 .tablesorter-default tbody > tr:hover > td,
 .tablesorter-default tbody > tr.even:hover > td,
 .tablesorter-default tbody > tr.odd:hover > td {
-	background: #fff;
+	background: #FFE9D6;
 	color: #000;
 }
 
@@ -87,34 +89,12 @@ Default Theme
 
 /* Zebra Widget - row alternating colors */
 .tablesorter-default tr.odd > td {
-	background-color: #dfdfdf;
+	background-color: #ffffff;
 }
 .tablesorter-default tr.even > td {
-	background-color: #efefef;
+	background-color: #fff;
 }
 
-/* Column Widget - column sort colors */
-.tablesorter-default tr.odd td.primary {
-	background-color: #bfbfbf;
-}
-.tablesorter-default td.primary,
-.tablesorter-default tr.even td.primary {
-	background-color: #d9d9d9;
-}
-.tablesorter-default tr.odd td.secondary {
-	background-color: #d9d9d9;
-}
-.tablesorter-default td.secondary,
-.tablesorter-default tr.even td.secondary {
-	background-color: #e6e6e6;
-}
-.tablesorter-default tr.odd td.tertiary {
-	background-color: #e6e6e6;
-}
-.tablesorter-default td.tertiary,
-.tablesorter-default tr.even td.tertiary {
-	background-color: #f2f2f2;
-}
 
 /* caption */
 caption {

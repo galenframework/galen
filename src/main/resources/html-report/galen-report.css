@@ -52,6 +52,11 @@ a {
     content: ".";
     font-size: 0;
 }
+
+.suites-overview {
+    padding: 10px;
+}
+
 .suites-overview .suites .suite {
     clear: both;
 }

@@ -1,4 +1,3 @@
-
 * {
     margin: 0;
     padding: 0;
@@ -18,6 +17,7 @@ h1, h2, h3 {
 
 h1 {
     margin-top: 20px;
+    margin-left: 20px;
     font-size: 2em;
 }
 
@@ -52,13 +52,24 @@ a {
     content: ".";
     font-size: 0;
 }
+
+.suites-overview {
+    padding: 10px;
+}
+
 .suites-overview .suites .suite {
     clear: both;
 }
 .suites-overview .suites .suite > div.status {
     float: left;
     padding: 10px;
-    width: 70px;
+    width: 71px;
+}
+.suites-overview .suites .suite > div.time{
+    float: left;
+    padding: 10px;
+    width: 71px;
+    font-size: 0.8em;
 }
 .suites-overview .suites .suite > div.suite-link {
     float: left;
@@ -76,18 +87,26 @@ a {
 .suites-overview .suites .passed {
     color: #229605;
 }
+.suites-overview .suites .warnings {
+    color: #D6A502;
+}
 .suites-overview .suites .progress {
     border: none;
     border-collapse: collapse;
     clear: both;
+    margin-top: 7px;
     margin-bottom: 10px;
     margin-left: 10px;
     width: 260px;
     padding: 0;
-    height: 3px;
+    height: 10px;
+    border-spacing: 0;
 }
 .suites-overview .suites .progress td {
-    height: 3px;
+    height: 10px;
+    padding: 0;
+    margin: 0;
+    border: none;
 }
 .suites-overview .suites .progress td.failed {
     background: #FA644D;
@@ -95,25 +114,112 @@ a {
 .suites-overview .suites .progress td.passed {
     background: #71E854;
 }
+.suites-overview .suites .progress td.warning {
+    background: #FFC400;
+}
 
 
 
 
-.suite h2, .suite h3 {
+ul.report {
+    margin-left: 40px;
+    list-style: none;
+}
+
+ul.report li {
+    margin: 0 0 5px 0px;
+}
+
+body > ul.report > li {
+    margin-left: 35px;
+}
+
+ul.report li span.time {
+    position: absolute;
+    font-size: 0.6em;
+    left: 0;
+    color: #aaa;
+    padding: 8px;
+}
+ul.report li a.report-link {
+    text-decoration: none;
+    position: relative;
+    display: inline-block;
+    padding: 5px;
+    font-size: 0.8em;
+    border-radius: 10px;
+}
+ul.report li a.report-link.report-status-info {
+    color: #555;
+    background: #f0f0f0;
+}
+
+ul.report li a.report-link.report-status-warn {
+    color: #fff;
+    background: #C97600;
+    font-weight: bold;
+}
+ul.report li a.report-link.report-status-error {
+    color: #fff;
+    background: #E33900;
+    font-weight: bold;
+}
+
+ul.report li .report-caption {
+    display: inline;
+}
+
+ul.report li a.report-link:before {
+    display: block;
+    position: absolute;
+    left: -20px;
+    top: 3px;
+    font-size: 1.2em;
+    content: "-";
+    color: #777;
+    background: #fff;
+    width: 16px;
+    height: 14px;
+    padding-top: 0px;
+    padding-bottom: 3px;
+    text-align: center;
+    border:1px solid #f0f0f0;
+    border-radius: 20px;
+}
+ul.report li a.report-link.collapsed:before  {
+    content: "+";
+}
+ul.report li a.report-status-error:before {
+    color: #E33900;
+    border:1px solid #FABCA7;
+}
+ul.report li a.report-status-warn:before {
+    color: #C97600;
+    border:1px solid #FFCC85;
+}
+
+
+
+
+.layout-report {
+    margin-left: 40px;
+}
+
+.layout-report h2, .layout-report h3 {
     cursor: pointer;
 }
-.suite h2:hover, .suite h3:hover {
+.layout-report h2:hover, .layout-report h3:hover {
     color: #555;
 }
 
-.suite h2.page-action, .suite h2.page-section { 
+.layout-report h2.page-action, .layout-report h2.page-section {
     font-size: 1.2em;
 }
 
-.suite h3 {
+.layout-report h3 {
     font-size: 1.0em;
 }
-div.suite, div.test, div.page-action, div.page-section, div.object, div.sub-objects {
+div.test, div.page-action, div.page-section, div.object, div.sub-objects {
     padding-left: 40px;
 }
 
@@ -138,15 +244,18 @@ ul.test-specs li.fail > div > span {
 ul.test-specs li.fail > div > span:hover {
     color: #FA7F05;
 }
+ul.test-specs li.warn > div > span {
+    color: #BF7900;
+    cursor:pointer;
+}
 
-ul.test-specs li.fail:before, .global-error span:before, h2.has-failures:before {
+
+ul.test-specs li.fail:before, ul.test-specs li.warn:before, h2.has-failures:before {
     display: block;
     position: absolute;
     left: -30px;
     font-size: 0.8em;
     content: "!";
-    color: #fff;
-    background: #F53711;
     width: 16px;
     height: 14px;
     padding-top: 2px;
@@ -159,6 +268,14 @@ ul.test-specs li.fail:before, .global-error span:before, h2.has-failures:before 
 h2.has-failures:before {
     left: 10px;
     font-size: 0.6em;
+}
+ul.test-specs li.fail:before, h2.has-failures:before {
+    color: #fff;
+    background: #F53711;
+}
+ul.test-specs li.warn:before {
+    color: #F53711;
+    background: #FFE100;
 }
 
 ul.areas {
@@ -235,21 +352,78 @@ ul.error-message li:before {
     z-index: 9;
 }
 
-.global-error {
-    position: relative;
-    color: #E32F0B;
-    margin-left: 60px;
-    font-weight: bold;
-    cursor: pointer;
-    margin-bottom:20px;
+li.report-status-passed,  li.report-status-passed > a {
+    color: #000;
 }
-.global-error span {
-    position: relative;
+
+li.report-status-error > div.report-caption, li.report-status-error > a{
+    color: #AD1B0A;
 }
-.global-error ul {
-    display: none;
+
+li.report-status-warn, li.report-status-warn > a {
+    color: #C99400;
+}
+
+.stacktrace {
+    white-space: pre;
+}
+
+
+ul.report ul.attachments {
     list-style: none;
+    margin: 10px;
 }
-.global-error ul li{
-    margin-left: 20px;
+
+ul.report ul.attachments li {
+    display: inline-block;
+
+}
+ul.report ul.attachments li a {
+    position: relative;
+    display: inline-block;
+    color: white;
+    background: #1271C4;
+    text-decoration: none;
+    padding: 8px 8px 8px 42px;
+    height: 30px;
+    border-radius: 5px;
+}
+ul.report ul.attachments li a:hover {
+    background: #DE5900;
+}
+ul.report ul.attachments li a svg {
+    position: absolute;
+    left: 8px;
+}
+ul.report ul.attachments li a span {
+    display: inline-block;
+    padding-top: 6px;
+    vertical-align: center;
+    white-space: nowrap;
+}
+
+iconset {
+    display: none;
+}
+
+.image-comparison { 
+    position: relative;
+    margin: 10px;
+}
+.image-comparison b {
+    display: block;
+    margin-top: 20px;
+    margin-bottom: 5px;
+}
+.image-comparison .image {
+    margin: 0px;
+    box-shadow: 0px 0px 20px #999;
+}
+.image-comparison .image.layed-on-top {
+    position: absolute;
+    left: 0;
+    top: 0;
+}
+.image-comparison .image.sample.layed-on-top {
+    opacity: 0.5;
 }
