@@ -407,7 +407,7 @@ public class PageSpecsReaderTest {
         FileSyntaxException exception = expectExceptionFromReading("/negative-specs/invalid-spec.spec");
         String fullSpecPath = getClass().getResource("/negative-specs/invalid-spec.spec").getFile();
         
-        assertThat(exception.getMessage(), is("There is no location defined\n    in " + fullSpecPath + ":10"));
+        assertThat(exception.getMessage(), is("There are no sides defined for location\n    in " + fullSpecPath + ":10"));
         assertThat(exception.getFilePath(), endsWith("/invalid-spec.spec"));
         assertThat(exception.getLine(), is(10));
     }

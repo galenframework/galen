@@ -7,7 +7,7 @@ object:
 @ another section
 ----------------------------
 menu
-    inside: object 
+    inside: object 10px
     
     
 @ one more section
