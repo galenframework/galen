@@ -14,27 +14,27 @@
             <table class="suites tablesorter">
     			<thead>
 	                <tr>
+						<th>Test</th>
 	                    <th>Passed</th>
 	                    <th>Failed</th>
 	                    <th>Warnings</th>
 	                    <th>Total</th>
 	                    <th>Started</th>
 	                    <th>Duration</th>
-	                    <th>Test</th>
 	                </tr>
                 </thead>
                 <tbody>
 	                <#list tests as testData>
 	                <tr class="suite">
+						<td class="suite-link">
+							<a href="${testData.testId?html}.html">${testData.testInfo.name?html}</a>
+						</td>
 	                    <td class="status passed">${testData.statistic.passed?c}</td>
 	                    <td class="status failed">${testData.statistic.errors?c}</td>
 	                    <td class="status warnings">${testData.statistic.warnings?c}</td>
 	                    <td class="status total">${testData.statistic.total?c}</td>
 	                    <td class="time">${testData.testInfo.startedAt?string("yyyy-MM-dd HH:mm:ss")}</td>
 	                    <td class="time">${testData.humanReadableDuration}</td>
-	                    <td class="suite-link">
-	                        <a href="${testData.testId?html}.html">${testData.testInfo.name?html}</a>
-	                    </td>
 	                </tr>
 	                </#list>
 	            </tbody>
