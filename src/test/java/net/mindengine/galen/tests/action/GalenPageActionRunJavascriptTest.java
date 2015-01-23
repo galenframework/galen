@@ -22,18 +22,18 @@ import net.mindengine.galen.browser.SeleniumBrowser;
 import net.mindengine.galen.reports.TestReport;
 import net.mindengine.galen.suite.GalenPageTest;
 import net.mindengine.galen.suite.actions.GalenPageActionRunJavascript;
+import net.mindengine.galen.tests.util.WebDriverFactory;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.firefox.FirefoxDriver;
 import org.testng.annotations.Test;
 
 public class GalenPageActionRunJavascriptTest {
     private static final String TEST_URL = "file://" + GalenPageActionCheckTest.class.getResource("/html/page-for-js-check.html").getPath();
     
     @Test public void shouldRun_javascriptFile_andPerformActions_onBrowser() throws Exception {
-        WebDriver driver = new FirefoxDriver();
+        WebDriver driver = WebDriverFactory.getInstance();
         Browser browser = new SeleniumBrowser(driver);
         browser.load(TEST_URL);
         
@@ -46,7 +46,8 @@ public class GalenPageActionRunJavascriptTest {
         action.execute(new TestReport(), browser, new GalenPageTest(), null);
         
         assertThat("Search input should contain text", element.getAttribute("value"), is("This was typed by a selenium from javascript text from imported script"));
-        browser.quit();
+        // TODO tear down after class!!
+        WebDriverFactory.tearDown();
     }
     
 }

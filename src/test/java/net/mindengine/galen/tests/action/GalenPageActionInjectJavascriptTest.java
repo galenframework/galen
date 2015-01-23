@@ -25,18 +25,18 @@ import net.mindengine.galen.browser.SeleniumBrowser;
 import net.mindengine.galen.reports.TestReport;
 import net.mindengine.galen.suite.GalenPageTest;
 import net.mindengine.galen.suite.actions.GalenPageActionInjectJavascript;
+import net.mindengine.galen.tests.util.WebDriverFactory;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.firefox.FirefoxDriver;
 import org.testng.annotations.Test;
 
 public class GalenPageActionInjectJavascriptTest {
     private static final String TEST_URL = "file://" + GalenPageActionCheckTest.class.getResource("/html/page1.html").getPath();
     
     @Test public void shouldInject_javascript() throws IOException {
-        WebDriver driver = new FirefoxDriver();
+        WebDriver driver = WebDriverFactory.getInstance();
         Browser browser = new SeleniumBrowser(driver);
         browser.load(TEST_URL);
         
@@ -46,6 +46,7 @@ public class GalenPageActionInjectJavascriptTest {
         WebElement element = driver.findElement(By.xpath("//body/injected-tag"));
         
         assertThat("Inject tags text should be", element.getText(), is("Some injected content"));
-        browser.quit();
+        // TODO tear down after class!!
+        WebDriverFactory.tearDown();
     }
 }

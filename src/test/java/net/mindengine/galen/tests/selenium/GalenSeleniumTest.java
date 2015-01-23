@@ -38,13 +38,13 @@ import net.mindengine.galen.specs.page.PageSection;
 import net.mindengine.galen.specs.reader.page.PageSpec;
 import net.mindengine.galen.specs.reader.page.PageSpecReader;
 import net.mindengine.galen.specs.reader.page.SectionFilter;
+import net.mindengine.galen.tests.util.WebDriverFactory;
 import net.mindengine.galen.validation.PageValidation;
 import net.mindengine.galen.validation.SectionValidation;
 import net.mindengine.galen.validation.ValidationError;
 
 import org.openqa.selenium.Dimension;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.firefox.FirefoxDriver;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
@@ -59,12 +59,13 @@ public class GalenSeleniumTest {
     
     @BeforeMethod
     public void createDriver() {
-        driver = new FirefoxDriver();
+        driver = WebDriverFactory.getInstance();
     }
-    
+
+    // TODO tear down after class!!
     @AfterMethod
     public void quitDriver() {
-        driver.quit();
+       WebDriverFactory.tearDown();
     }
     
     @Test

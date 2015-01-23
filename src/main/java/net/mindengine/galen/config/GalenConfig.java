@@ -56,6 +56,8 @@ public class GalenConfig {
     
     private void loadConfig() throws IOException {
         this.properties = new Properties();
+
+        // TODO use constant
         File configFile = new File(System.getProperty("galen.config.file", "config"));
         
         if (configFile.exists() && configFile.isFile()) {
@@ -63,7 +65,8 @@ public class GalenConfig {
             properties.load(in);
             in.close();
         }
-        
+
+        // TODO use constant
         rangeApproximation = Integer.parseInt(readProperty("galen.range.approximation", "2"));
         reportingListeners = converCommaSeparatedList(readProperty("galen.reporting.listeners", ""));
         defaultBrowser = readProperty("galen.default.browser", "firefox");
@@ -156,6 +159,8 @@ public class GalenConfig {
     }
 
     public int getLogLevel() {
+
+        // TODO use constant
         String value = readProperty("galen.log.level", "10");
         if (StringUtils.isNumeric(value)) {
             return Integer.parseInt(value);
@@ -164,6 +169,8 @@ public class GalenConfig {
     }
     
     public boolean getUseFailExitCode() {
+
+        // TODO use constant
         String value = readProperty("galen.use.fail.exit.code");
         if (value != null && !value.trim().isEmpty()) {
             return Boolean.parseBoolean(value);
