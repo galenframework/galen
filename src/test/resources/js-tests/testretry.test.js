@@ -20,14 +20,13 @@ testRetry(function (test, retryCount){
    JsTestRegistry.get().registerEvent("Retry handler invoked for test: " + test.getName());
 
    // Retrying only Test A
-   if (test.getName() == "Test A" && retryCount < 3) {
+   if (retryCount < 3) {
       return true;
    }
    else {
       return false;
    }
 });
-
 
 
 test("Test A", function () {
@@ -37,4 +36,7 @@ test("Test A", function () {
 test("Test B", function () {
    JsTestRegistry.get().registerEvent("Test B invoked");
    throw new Error("");
+});
+test("Test C", function () {
+   JsTestRegistry.get().registerEvent("Test C invoked");
 });
