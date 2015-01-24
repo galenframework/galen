@@ -90,7 +90,12 @@ public class TestRunnable implements Runnable {
         int tries = 1;
         while (shouldRetry) {
             info = runTest();
-            shouldRetry = checkIfShouldRetry(info.getTest(), tries);
+            if (info.isFailed()) {
+                shouldRetry = checkIfShouldRetry(info.getTest(), tries);
+            }
+            else {
+                shouldRetry = false;
+            }
             tries++;
         }
 

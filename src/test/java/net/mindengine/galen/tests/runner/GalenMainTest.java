@@ -114,7 +114,7 @@ public class GalenMainTest {
         File reportsDir = Files.createTempDir();
         String htmlReportPath = reportsDir.getAbsolutePath();
         String testngReportPath = reportsDir.getAbsolutePath() + "/testng-report.html";
-        
+
         JsTestRegistry.get().clear();
         
         new GalenMain().execute(new GalenArguments()
@@ -221,6 +221,17 @@ public class GalenMainTest {
                 "Test B invoked",
                 "After test event for: Test B",
                 "Retry handler invoked for test: Test B",
+                "Before test event for: Test B",
+                "Test B invoked",
+                "After test event for: Test B",
+                "Retry handler invoked for test: Test B",
+                "Before test event for: Test B",
+                "Test B invoked",
+                "After test event for: Test B",
+                "Retry handler invoked for test: Test B",
+                "Before test event for: Test C",
+                "Test C invoked",
+                "After test event for: Test C",
                 "After test suite event"
         ));
 
@@ -229,7 +240,7 @@ public class GalenMainTest {
                 + File.separator + "report.html"));
 
         int amountOfReportedTests = StringUtils.countMatches(htmlReportContent, "<a href=\"report-");
-        assertThat("Amount of reported tests should be", amountOfReportedTests, is(2));
+        assertThat("Amount of reported tests should be", amountOfReportedTests, is(3));
     }
     
     @Test public void shouldFindAndRun_allTestsRecursivelly_inParallel() throws Exception {
