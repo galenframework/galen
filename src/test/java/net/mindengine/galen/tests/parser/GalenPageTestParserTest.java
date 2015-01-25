@@ -17,18 +17,39 @@ package net.mindengine.galen.tests.parser;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
+
+import java.io.IOException;
+
 import net.mindengine.galen.browser.JsBrowserFactory;
 import net.mindengine.galen.browser.SeleniumBrowserFactory;
 import net.mindengine.galen.browser.SeleniumGridBrowserFactory;
+import net.mindengine.galen.config.GalenConfig;
 import net.mindengine.galen.parser.GalenPageTestReader;
 import net.mindengine.galen.suite.GalenPageTest;
 
 import org.openqa.selenium.Platform;
+import org.testng.annotations.AfterClass;
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
 public class GalenPageTestParserTest {
+    
+    private      String browser ;
+    
+    @BeforeClass
+    public void setup() throws IOException {
+        // ignore test parameter
+        browser = System.getProperty("galen.default.browser");
+        System.getProperties().remove("galen.default.browser");
+        GalenConfig.getConfig().reset();
+    }
 
+    
+    @AfterClass
+    public void tearDown() {
+        System.setProperty("galen.default.browser", browser);
+    }
     
     @Test(dataProvider="provideGoodSamples") public void shouldParse_galenPageTest_successfully(String text, GalenPageTest expected) {
         GalenPageTest real = GalenPageTestReader.readFrom(text);
