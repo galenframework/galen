@@ -127,9 +127,10 @@
       <version>2.4.2</version>
     </dependency>
     <dependency>
-      <groupId>com.github.detro</groupId>
+      <!-- see https://github.com/detro/ghostdriver/issues/397 -->
+      <groupId>com.codeborne</groupId>
       <artifactId>phantomjsdriver</artifactId>
-      <version>1.2.0</version>
+      <version>${phantomjsdriver.version}</version>
     </dependency>    
     <dependency>
       <groupId>org.mockito</groupId>
@@ -246,6 +247,7 @@
 
     <!-- VERSION NUMBERS  -->
     <selenium.version>2.44.0</selenium.version>
+    <phantomjsdriver.version>1.2.1</phantomjsdriver.version>
     <slf4j.version>1.7.10</slf4j.version>
     <!-- testing libs -->
     <mockito.version>1.9.5</mockito.version>
