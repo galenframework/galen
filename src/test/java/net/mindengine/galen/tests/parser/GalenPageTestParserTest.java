@@ -48,7 +48,9 @@ public class GalenPageTestParserTest {
     
     @AfterClass
     public void tearDown() {
-        System.setProperty("galen.default.browser", browser);
+    	if(browser!=null){
+    		System.setProperty("galen.default.browser", browser);
+        }    	
     }
     
     @Test(dataProvider="provideGoodSamples") public void shouldParse_galenPageTest_successfully(String text, GalenPageTest expected) {

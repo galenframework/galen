@@ -67,13 +67,10 @@ import org.testng.annotations.Test;
 
 public class PageSpecsReaderTest {
     
-    private static final String BASE_TEST = "shouldLoadSpecSuccessfully";
     private static final Browser EMPTY_BROWSER = new SeleniumBrowser(new MockedDriver("/mocks/pages/base-page.json"));
     private static final Page EMPTY_PAGE = EMPTY_BROWSER.getPage();
     private static final Properties EMPTY_PROPERTIES = new Properties();
-    PageSpecReader pageSpecReader = new PageSpecReader(EMPTY_PROPERTIES, EMPTY_PAGE);
-    PageSpec pageSpec;
-
+    
 
     private static final String TEST_FOLDER = "_test_PageSpecsReaderTest";
 
@@ -102,13 +99,18 @@ public class PageSpecsReaderTest {
     
     @Test
     public void shouldLoadSpecSuccessfully() throws IOException {
-        pageSpec = pageSpecReader.read(getClass().getResource("/specs.txt").getFile());
-        assertThat(pageSpec, is(notNullValue()));
+        loadPageSpec();
     }
     
-    @Test(dependsOnMethods = BASE_TEST)
-    public void shouldRead_objectDefinitions() {
-        Map<String, Locator> objects = pageSpec.getObjects();
+    public synchronized PageSpec loadPageSpec() throws IOException {
+        final PageSpec pageSpec = new PageSpecReader(EMPTY_PROPERTIES, EMPTY_PAGE).read(getClass().getResource("/specs.txt").getFile());
+        assertThat(pageSpec, is(notNullValue()));
+        return pageSpec;    	
+    }
+    
+    @Test
+    public void shouldRead_objectDefinitions() throws IOException {
+        Map<String, Locator> objects = loadPageSpec().getObjects();
         assertThat("Amount of objects should be", objects.size(), is(6));
         assertThat(objects, hasEntry("submit", new Locator("xpath", "//input[@name = 'submit']"))); 
         assertThat(objects, hasEntry("search-field", new Locator("css", "#search")));
@@ -119,9 +121,9 @@ public class PageSpecsReaderTest {
     }
     
     
-    @Test(dependsOnMethods = BASE_TEST)
-    public void shouldRead_allSpecs_asSections_markedByTags() {
-        List<PageSection> sections = pageSpec.getSections();
+    @Test
+    public void shouldRead_allSpecs_asSections_markedByTags() throws IOException {
+        List<PageSection> sections = loadPageSpec().getSections();
 
         assertThat("Amount of sections should be", sections.size(), is(6));
         assertThat(sections.get(0).getTags(), hasSize(0));
@@ -141,9 +143,9 @@ public class PageSpecsReaderTest {
         assertThat(sections.get(5).getTags(), contains("parameterized2"));
     }
     
-    @Test(dependsOnMethods = BASE_TEST) 
-    public void shouldStore_lineNumber_inSpecs() {
-        List<PageSection> sections = pageSpec.getSections();
+    @Test
+    public void shouldStore_lineNumber_inSpecs() throws IOException {
+        List<PageSection> sections = loadPageSpec().getSections();
         Place place = sections.get(0).getObjects().get(0).getSpecs().get(0).getPlace();
         assertThat(place.getFilePath(), endsWith("/specs.txt"));
         assertThat(place.getLineNumber(), is(18));
@@ -155,7 +157,7 @@ public class PageSpecsReaderTest {
     
     @Test
     public void shouldAlways_provideAsteriskTags_whenFiltering_byIncludedTags() throws IOException {
-        PageSpec pageSpec = pageSpecReader.read(getClass().getResource("/specs/spec-asterisk-tags.spec").getFile());
+        PageSpec pageSpec = new PageSpecReader(EMPTY_PROPERTIES, EMPTY_PAGE).read(getClass().getResource("/specs/spec-asterisk-tags.spec").getFile());
         
         assertThat("Total amount of sections should be", pageSpec.getSections().size(), is(3));
         
@@ -172,7 +174,7 @@ public class PageSpecsReaderTest {
      */
     @Test
     public void shouldAvoidUsing_doubleSlashes_whenImporting_andNotGiveException() throws Exception {
-        pageSpecReader.read("/specs/spec-issue-double-slash.spec");
+        new PageSpecReader(EMPTY_PROPERTIES, EMPTY_PAGE).read("/specs/spec-issue-double-slash.spec");
     }
 
     @Test
@@ -202,9 +204,8 @@ public class PageSpecsReaderTest {
     @Test
     public void should_countObjects_evenWhenUsing_emptyImports() throws IOException {
         WebDriver driver = new MockedDriver();
-        driver.get("/mocks/pages/count-via-js-page.json");
-        PageSpecReader pageSpecReader = new PageSpecReader(EMPTY_PROPERTIES, new SeleniumBrowser(driver).getPage());
-        PageSpec pageSpec = pageSpecReader.read(getClass().getResource("/specs/count-bug-134.spec").getFile());
+        driver.get("/mocks/pages/count-via-js-page.json");        
+        PageSpec pageSpec = new PageSpecReader(EMPTY_PROPERTIES, new SeleniumBrowser(driver).getPage()).read(getClass().getResource("/specs/count-bug-134.spec").getFile());
 
         List<ObjectSpecs> objectSpecs = pageSpec.getSections().get(0).getObjects();
         assertThat(objectSpecs.get(0).getSpecs().get(0).getOriginalText(), is("text is: A count is 4"));
@@ -215,17 +216,15 @@ public class PageSpecsReaderTest {
     @Test
     public void should_countObject_insideSecondarySpec() throws IOException {
         WebDriver driver = new MockedDriver();
-        driver.get("/mocks/pages/count-via-js-page.json");
-        PageSpecReader pageSpecReader = new PageSpecReader(EMPTY_PROPERTIES, new SeleniumBrowser(driver).getPage());
-        PageSpec pageSpec = pageSpecReader.read(getClass().getResource("/specs/count/main.spec").getFile());
-
+        driver.get("/mocks/pages/count-via-js-page.json");        
+        PageSpec pageSpec = new PageSpecReader(EMPTY_PROPERTIES, new SeleniumBrowser(driver).getPage()).read(getClass().getResource("/specs/count/main.spec").getFile());
         List<ObjectSpecs> objectSpecs = pageSpec.getSections().get(0).getObjects();
         assertThat(objectSpecs.get(0).getSpecs().get(0).getOriginalText(), is("text is: A count is 4"));
     }
 
     @Test
     public void shoulParameterize_withOneItem_whenTemplateIsGiven_2_to_2() throws IOException {
-        PageSpec pageSpec = pageSpecReader.read("/specs/single-item-range-parameterization.spec");
+        PageSpec pageSpec = new PageSpecReader(EMPTY_PROPERTIES, EMPTY_PAGE).read("/specs/single-item-range-parameterization.spec");
         assertThat(pageSpec.getSections().size(), is(1));
         assertThat(pageSpec.getSections().get(0).getObjects().size(), is(1));
         assertThat(pageSpec.getSections().get(0).getObjects().get(0).getObjectName(), is("menu-item-2"));
@@ -233,14 +232,14 @@ public class PageSpecsReaderTest {
 
     @Test
     public void shouldNotParameterize_ifTemplateIsGiven_from_1_to_0_or_from_1_to_minus1() throws IOException {
-        PageSpec pageSpec = pageSpecReader.read("/specs/incorrect-parameterization.spec");
+        PageSpec pageSpec = new PageSpecReader(EMPTY_PROPERTIES, EMPTY_PAGE).read("/specs/incorrect-parameterization.spec");
         assertThat(pageSpec.getSections().size(), is(0));
     }
     
     
-    @Test(dependsOnMethods = BASE_TEST)
-    public void shouldRead_parameterizedSpecs() {
-        List<PageSection> sections = pageSpec.findSections(asList("parameterized"));
+    @Test
+    public void shouldRead_parameterizedSpecs() throws IOException {
+        List<PageSection> sections = loadPageSpec().findSections(asList("parameterized"));
         assertThat(sections.size(), is(1));
         
         PageSection section = sections.get(0);
@@ -257,9 +256,9 @@ public class PageSpecsReaderTest {
         }
     }
     
-    @Test(dependsOnMethods = BASE_TEST)
-    public void shouldRead_parameterizedSpecs_2() {
-        List<PageSection> sections = pageSpec.findSections(asList("parameterized2"));
+    @Test
+    public void shouldRead_parameterizedSpecs_2() throws IOException {
+        List<PageSection> sections = loadPageSpec().findSections(asList("parameterized2"));
         assertThat(sections.size(), is(1));
         
         PageSection section = sections.get(0);
@@ -280,9 +279,9 @@ public class PageSpecsReaderTest {
         }
     }
     
-    @Test(dependsOnMethods = BASE_TEST)
-    public void shouldRead_allSpecs_withinFirstSection() {
-        List<ObjectSpecs> objects = pageSpec.getSections().get(0).getObjects();
+    @Test
+    public void shouldRead_allSpecs_withinFirstSection() throws IOException {
+        List<ObjectSpecs> objects = loadPageSpec().getSections().get(0).getObjects();
         assertThat(objects.size(), is(1));
         
         ObjectSpecs objectSpecs = objects.get(0);
@@ -296,9 +295,9 @@ public class PageSpecsReaderTest {
     }
 
     
-    @Test(dependsOnMethods = BASE_TEST)
-    public void shouldRead_allSpecs_withinSecondSection() {
-        List<ObjectSpecs> objects = pageSpec.getSections().get(1).getObjects();
+    @Test
+    public void shouldRead_allSpecs_withinSecondSection() throws IOException {
+        List<ObjectSpecs> objects = loadPageSpec().getSections().get(1).getObjects();
         assertThat(objects.size(), is(2));
         
         assertThat(objects.get(0).getObjectName(), is("submit"));
@@ -316,9 +315,9 @@ public class PageSpecsReaderTest {
         assertThat((SpecInside) objects.get(1).getSpecs().get(0), is(new SpecInside("big-box", locations(new Location(Range.exact(30), sides(RIGHT))))));
     }
     
-    @Test(dependsOnMethods = BASE_TEST)
-    public void shouldRead_allSpecs_withinThirdSection() {
-        List<ObjectSpecs> objects = pageSpec.getSections().get(2).getObjects();
+    @Test
+    public void shouldRead_allSpecs_withinThirdSection() throws IOException {
+        List<ObjectSpecs> objects = loadPageSpec().getSections().get(2).getObjects();
         assertThat(objects.size(), is(1));
         
         ObjectSpecs objectSpecs = objects.get(0);
@@ -330,9 +329,9 @@ public class PageSpecsReaderTest {
         assertThat((SpecWidth) specs.get(0), is(new SpecWidth(Range.exact(900))));
     }
     
-    @Test(dependsOnMethods = BASE_TEST)
-    public void shouldRead_allSpecs_withinFourthSection() {
-        List<ObjectSpecs> objects = pageSpec.getSections().get(3).getObjects();
+    @Test
+    public void shouldRead_allSpecs_withinFourthSection() throws IOException {
+        List<ObjectSpecs> objects = loadPageSpec().getSections().get(3).getObjects();
         assertThat(objects.size(), is(1));
         
         ObjectSpecs objectSpecs = objects.get(0);
@@ -458,11 +457,12 @@ public class PageSpecsReaderTest {
     
     @Test
     public void shouldImport_otherSpecs_fromOtherFiles() throws Exception {
-    	PageSpec pageSpec = pageSpecReader.read("/spec-import-test/main.spec");
+    	PageSpec pageSpec = new PageSpecReader(EMPTY_PROPERTIES, EMPTY_PAGE).read("/spec-import-test/main.spec");
     	
-    	assertThat(pageSpec.getObjects(), hasKey("content"));
-    	assertThat(pageSpec.getObjects(), hasKey("header"));
-    	assertThat(pageSpec.getObjects(), hasKey("header-text"));
+    	 Map<String, Locator> objectMap=pageSpec.getObjects();
+    	assertThat(objectMap, hasKey("content"));
+    	assertThat(objectMap, hasKey("header"));
+    	assertThat(objectMap, hasKey("header-text"));
     	
     	
     	List<PageSection> sections = pageSpec.getSections();
@@ -485,7 +485,7 @@ public class PageSpecsReaderTest {
     
     @Test
     public void shouldProcess_simpleMathOperations_inParameterizedSpecs() throws IOException {
-    	PageSpec pageSpec = pageSpecReader.read(getClass().getResource("/spec-math.spec").getFile());
+    	PageSpec pageSpec = new PageSpecReader(EMPTY_PROPERTIES, EMPTY_PAGE).read(getClass().getResource("/spec-math.spec").getFile());
     	
         List<Spec> specs = pageSpec.getSections().get(0).getObjects().get(0).getSpecs();
     	
@@ -497,7 +497,7 @@ public class PageSpecsReaderTest {
     
     @Test 
     public void shouldParse_conditionalSpecBlocks() throws Exception {
-        PageSpec pageSpec = pageSpecReader.read(getClass().getResource("/specs/spec-conditional-simple.spec").getFile());
+        PageSpec pageSpec = new PageSpecReader(EMPTY_PROPERTIES, EMPTY_PAGE).read(getClass().getResource("/specs/spec-conditional-simple.spec").getFile());
         
         List<PageSection> sections = pageSpec.getSections();
         assertThat(sections.size(), is(1));
@@ -536,7 +536,7 @@ public class PageSpecsReaderTest {
     
     @Test 
     public void shouldParse_conditionalSpecBlocks_withOrStatement() throws Exception {
-        PageSpec pageSpec = pageSpecReader.read(getClass().getResource("/specs/spec-conditional-or.spec").getFile());
+        PageSpec pageSpec = new PageSpecReader(EMPTY_PROPERTIES, EMPTY_PAGE).read(getClass().getResource("/specs/spec-conditional-or.spec").getFile());
         
         List<PageSection> sections = pageSpec.getSections();
         assertThat(sections.size(), is(1));
@@ -586,7 +586,7 @@ public class PageSpecsReaderTest {
     
     @Test 
     public void shouldParse_conditionalSpecBlocks_inverted() throws Exception {
-        PageSpec pageSpec = pageSpecReader.read(getClass().getResource("/specs/spec-conditional-inverted.spec").getFile());
+        PageSpec pageSpec = new PageSpecReader(EMPTY_PROPERTIES, EMPTY_PAGE).read(getClass().getResource("/specs/spec-conditional-inverted.spec").getFile());
         
         List<PageSection> sections = pageSpec.getSections();
         assertThat(sections.size(), is(1));
@@ -628,7 +628,7 @@ public class PageSpecsReaderTest {
     
     @Test 
     public void shouldParse_conditionalSpecBlocks_withOtherwise() throws Exception {
-        PageSpec pageSpec = pageSpecReader.read(getClass().getResource("/specs/spec-conditional-otherwise.spec").getFile());
+        PageSpec pageSpec = new PageSpecReader(EMPTY_PROPERTIES, EMPTY_PAGE).read(getClass().getResource("/specs/spec-conditional-otherwise.spec").getFile());
         
         List<PageSection> sections = pageSpec.getSections();
         assertThat(sections.size(), is(1));
@@ -665,7 +665,7 @@ public class PageSpecsReaderTest {
     
     @Test
     public void shouldParse_componentSpecs() throws Exception {
-        PageSpec pageSpec = pageSpecReader.read(getClass().getResource("/specs/components/spec-for-component-test-main.spec").getFile());
+        PageSpec pageSpec = new PageSpecReader(EMPTY_PROPERTIES, EMPTY_PAGE).read(getClass().getResource("/specs/components/spec-for-component-test-main.spec").getFile());
         List<PageSection> sections = pageSpec.getSections();
         assertThat(sections.size(), is(1));
         
@@ -687,7 +687,7 @@ public class PageSpecsReaderTest {
     @Test
     public void shouldParse_variablesDefinitions() throws Exception {
         
-        PageSpec pageSpec = pageSpecReader.read(getClass().getResource("/specs/spec-variables.spec").getFile());
+        PageSpec pageSpec = new PageSpecReader(EMPTY_PROPERTIES, EMPTY_PAGE).read(getClass().getResource("/specs/spec-variables.spec").getFile());
         List<PageSection> sections = pageSpec.getSections();
         assertThat(sections.size(), is(1));
         
@@ -709,7 +709,7 @@ public class PageSpecsReaderTest {
 
     @Test
     public void shouldParse_warningLevels_forSpecs() throws IOException {
-        PageSpec pageSpec = pageSpecReader.read(getClass().getResource("/specs/spec-warning-level.spec").getFile());
+        PageSpec pageSpec = new PageSpecReader(EMPTY_PROPERTIES, EMPTY_PAGE).read(getClass().getResource("/specs/spec-warning-level.spec").getFile());
         List<PageSection> sections = pageSpec.getSections();
         assertThat(sections.size(), is(1));
         PageSection pageSection = sections.get(0);
@@ -860,7 +860,7 @@ public class PageSpecsReaderTest {
 
     private FileSyntaxException expectExceptionFromReading(String file) throws IOException {
         try {
-            pageSpecReader.read(getClass().getResource(file).getFile());
+            new PageSpecReader(EMPTY_PROPERTIES, EMPTY_PAGE).read(getClass().getResource(file).getFile());
         }
         catch(FileSyntaxException exception) {
             return exception;
