@@ -41,7 +41,6 @@ public class FailureListener implements CompleteListener {
 
     @Override
     public void onSpecError(GalenPageRunner pageRunner, PageValidation pageValidation, String objectName, Spec spec, ValidationError error) {
-        this.hasFailures = true;
     }
 
     @Override
@@ -51,7 +50,6 @@ public class FailureListener implements CompleteListener {
 
     @Override
     public void onGlobalError(GalenPageRunner pageRunner, Exception e) {
-        this.hasFailures = true;
     }
 
     @Override
@@ -76,7 +74,6 @@ public class FailureListener implements CompleteListener {
 
     @Override
     public void onTestFinished(GalenTest test) {
-        
     }
 
     @Override

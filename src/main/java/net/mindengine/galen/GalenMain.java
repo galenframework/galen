@@ -88,6 +88,7 @@ public class GalenMain {
 
             if (GalenConfig.getConfig().getUseFailExitCode()) {
                 if (failureListener.hasFailures()) {
+                    System.err.println("There were failures in galen tests");
                     System.exit(1);
                 }
             }
@@ -148,9 +149,9 @@ public class GalenMain {
             IOUtils.write(writer.toString(), fos, "UTF-8");
             fos.flush();
             fos.close();
-            LOG.info("Created config file");
+            System.out.println("Created config file");
         } else {
-            LOG.info("Config file already exists");
+            System.err.println("Config file already exists");
         }
     }
 
