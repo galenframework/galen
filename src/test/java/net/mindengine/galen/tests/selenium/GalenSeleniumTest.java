@@ -67,8 +67,8 @@ public class GalenSeleniumTest {
         PageSpec pageSpec = new PageSpecReader(EMPTY_PROPERTIES, new SeleniumBrowser(getDriver()).getPage()).read(getClass().getResourceAsStream("/html/page.spec"));
         
         openDriverForNicePage();
-        
-        getDriver().manage().window().maximize();
+
+        getDriver().manage().window().setSize(new Dimension(1024, 768));
         
         SeleniumPage page = new SeleniumPage(getDriver());
         
