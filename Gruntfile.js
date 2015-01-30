@@ -8,6 +8,7 @@ module.exports = function (grunt) {
     require('load-grunt-tasks')(grunt);
     require('time-grunt')(grunt);
     grunt.loadNpmTasks('grunt-mocha-test');
+    grunt.loadNpmTasks('grunt-jslint');
     grunt.loadNpmTasks('grunt-contrib-jshint');
     grunt.loadNpmTasks('grunt-contrib-concat');
     grunt.loadNpmTasks('grunt-contrib-uglify');
@@ -16,7 +17,7 @@ module.exports = function (grunt) {
     grunt.initConfig({
         galen: {
             // configurable paths
-            src: 'src/main/js',
+            src: 'src/main/resources/js',
             test: 'src/test/js',
             dist: 'target'
         },
@@ -28,6 +29,20 @@ module.exports = function (grunt) {
                 quotmark: 'single'
             }
         },
+        jslint: {
+            client: {
+                src: ['<%= galen.src %>/*.js'],
+                directives: {
+                    browser: true,
+                    predef: [
+                        'jQuery'
+                    ]
+                },
+                options: {
+                    junit: '<%= galen.dist %>/surefire-reports/junitreports/TEST-jsLint.xml'
+                }
+            }
+        },
         concat: {
             options: {
                 separator: ';\n',
@@ -35,7 +50,7 @@ module.exports = function (grunt) {
             },
             build: {
                 files: [{
-                    src: ['src/*.js'],
+                    src: ['<%= galen.src %>/*.js'],
                     dest: 'build/<%= pkg.name %>.js'
                 }]
             },
@@ -70,7 +85,8 @@ module.exports = function (grunt) {
     });
 
     grunt.registerTask('test', [
-        'mochaTest'
+        'mochaTest',
+        'jslint'
     ]);
 
     grunt.registerTask('build', [
