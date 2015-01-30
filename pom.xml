@@ -162,7 +162,40 @@
     </dependency>        
   </dependencies>
   <build>
-    <plugins>  
+    <plugins>
+      <plugin>
+        <groupId>com.github.eirslett</groupId>
+        <artifactId>frontend-maven-plugin</artifactId>
+        <version>${frontend-maven-plugin.version}</version>
+        <executions>
+          <execution>
+            <id>install node and npm</id>
+            <goals>
+              <goal>install-node-and-npm</goal>
+            </goals>
+            <configuration>
+              <nodeVersion>v0.10.18</nodeVersion>
+              <npmVersion>1.3.8</npmVersion>
+            </configuration>
+          </execution>
+          <execution>
+            <id>npm install</id>
+            <goals>
+              <goal>npm</goal>
+            </goals>
+          </execution>
+          <execution>
+            <id>javascript tests</id>
+            <goals>
+              <goal>grunt</goal>
+            </goals>
+            <phase>test</phase>
+            <configuration>
+              <arguments>test</arguments>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-eclipse-plugin</artifactId>
@@ -253,6 +286,7 @@
     <mockito.version>1.9.5</mockito.version>
     <powermock.version>1.5.3</powermock.version><maven-ejb-plugin.version>2.3</maven-ejb-plugin.version>
     <!-- maven plugins -->
+    <frontend-maven-plugin.version>0.0.20</frontend-maven-plugin.version>
     <maven-eclipse-plugin.version>2.7</maven-eclipse-plugin.version>
   </properties>
 

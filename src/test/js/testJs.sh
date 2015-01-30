@@ -1,3 +1,2 @@
-#!/bin/bash
-
+#!/bin/sh
 mocha *-test.js
