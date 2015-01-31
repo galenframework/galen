@@ -14,6 +14,11 @@
  * limitations under the License.
  * ******************************************************************************/
 
+"use strict";
+
+/*global GalenUtils, TestSession, System, Galen*/
+/*jslint nomen: true*/
+
 
 function createDriver(url, size, browserType) {
 
@@ -33,23 +38,18 @@ function createDriver(url, size, browserType) {
     return driver;
 }
 
+function __galen_getAttr(attrs, name) {
+    if (attrs[name] !== undefined && attrs[name] !== null) {
+        return attrs[name];
+    }
+    return null;
+}
 function createGridDriver(url, attrs) {
-
-    var attr = function (name, defaultValue) {
-        defaultValue = defaultValue || null;
-
-        if (attrs[name] !== undefined && attrs[name] !== null) {
-            return attrs[name];
-        }
-        else{
-            return defaultValue;
-        }
-    };
-    var browser = attr("browser");
-    var browserVersion = attr("browserVersion");
-    var platform = attr("platform");
-    var size = attr("size");
-    var dc = attr("desiredCapabilities");
+    var browser = __galen_getAttr(attrs, "browser"),
+        browserVersion = __galen_getAttr(attrs, "browserVersion"),
+        platform = __galen_getAttr(attrs, "platform"),
+        size = __galen_getAttr(attrs, "size"),
+        dc = __galen_getAttr(attrs, "desiredCapabilities");
 
     return GalenUtils.createGridDriver(url, browser, browserVersion, platform, dc, size);
 }
@@ -75,9 +75,10 @@ function checkLayout(driver, pageSpecFile, includedTags, excludedTags) {
 
 
 function logged(title, callback) {
-    var report = TestSession.current().getReport();
+    var report = TestSession.current().getReport(),
+        result;
     report.sectionStart(title);
-    var result = callback(report);
+    result = callback(report);
     report.sectionEnd();
     return result;
 }
@@ -91,9 +92,9 @@ function loadProperties(fileName) {
     return GalenUtils.loadProperties(fileName);
 }
 
-function cookie(driver, cookie) {
-    logged("Setting cookie: " + cookie, function () {
-        GalenUtils.cookie(driver, cookie);
+function cookie(driver, cookieText) {
+    logged("Setting cookie: " + cookieText, function () {
+        GalenUtils.cookie(driver, cookieText);
     });
 }
 
@@ -120,7 +121,7 @@ var session = {
     test: function () {
         return TestSession.current().getTest();
     },
-    report: function() {
+    report: function () {
         return TestSession.current().getReport();
     },
     testInfo: function () {
@@ -132,8 +133,9 @@ var galenConsole = {
     log: function (object) {
         if (typeof object === "string") {
             System.out.println(object);
+        } else {
+            System.out.println(JSON.stringify(object));
         }
-        else System.out.println(JSON.stringify(object));
     }
 };
 
@@ -162,4 +164,4 @@ function dumpPage(driver, pageName, specPath, exportPath, maxWidth, maxHeight) {
     exports.console = galenConsole;
     exports.dumpPage = dumpPage;
     exports.resize = resize;
-})(this);
+}(this));
