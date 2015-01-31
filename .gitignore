@@ -8,8 +8,11 @@ build/
 target/
 test-output/
 dist/
+node/*
+node_modules/*
 .release-notes
 *.swp
-
 config2
-
+*.log
+/galen.ipr
+/galen.iws

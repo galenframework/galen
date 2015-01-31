@@ -48,7 +48,7 @@ header-text-2
 
 menu:
     near:   header              0px bottom
-    near:   main                0px top
+    near:   main                -1 to 0px top
 
 menu-item-home:
     aligned horizontally centered: menu-item-categories

@@ -29,9 +29,9 @@ import net.mindengine.galen.components.validation.TestValidationListener;
 import net.mindengine.galen.reports.TestReport;
 import net.mindengine.galen.suite.GalenPageTest;
 import net.mindengine.galen.suite.actions.GalenPageActionCheck;
+import net.mindengine.galen.tests.util.WebDriverFactory;
 
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.firefox.FirefoxDriver;
 import org.testng.annotations.Test;
 
 @Test(groups=TestGroups.SELENIUM)
@@ -44,7 +44,7 @@ public class GalenPageActionCheckTest {
     @Test public void runsTestSuccessfully_inPredefinedBrowser() throws IOException {
         TestValidationListener validationListener = new TestValidationListener();
         
-        WebDriver driver = new FirefoxDriver();
+        WebDriver driver = WebDriverFactory.getInstance();
         
         GalenPageActionCheck action = new GalenPageActionCheck()
             .withIncludedTags(asList("mobile"))
@@ -56,7 +56,8 @@ public class GalenPageActionCheckTest {
         
         action.execute(new TestReport(), browser, new GalenPageTest(), validationListener);
         
-        driver.quit();
+        // TODO tear down after class!!
+        WebDriverFactory.tearDown();
         
         assertThat("Invokations should be", validationListener.getInvokations(), is("<o header>\n" +
                 "<SpecHeight header>\n" +
@@ -75,7 +76,7 @@ public class GalenPageActionCheckTest {
     @Test public void runsTestSuccessfully_andExlcudesSpecifiedTags() throws IOException {
         TestValidationListener validationListener = new TestValidationListener();
         
-        WebDriver driver = new FirefoxDriver();
+        WebDriver driver = WebDriverFactory.getInstance();
         
         GalenPageActionCheck action = new GalenPageActionCheck()
             .withIncludedTags(asList("mobile"))
@@ -87,7 +88,9 @@ public class GalenPageActionCheckTest {
         browser.changeWindowSize(new Dimension(400, 800));
         
         action.execute(new TestReport(), browser, new GalenPageTest(), validationListener);
-        driver.quit();
+
+        // TODO tear down after class!!
+        WebDriverFactory.tearDown();
         
         assertThat("Invokations should be", validationListener.getInvokations(), is("<o header>\n" +
                 "<SpecHeight header>\n" +

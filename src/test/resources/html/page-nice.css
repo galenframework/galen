@@ -131,6 +131,6 @@ body.tablet #sections, body.mobile #sections{
 	padding:10px;
 	border:1px solid #999;
 	border-radius: 5px;
-	bottom:0;
-	right:0;
+	bottom:1px;
+	right:1px;
 }
