@@ -17,15 +17,15 @@
 
 function createDriver(url, size, browserType) {
 
-    if (url == undefined) {
+    if (url === undefined) {
         url = null;
     }
 
-    if (size == undefined) {
+    if (size === undefined) {
         size = null;
     }
 
-    if (browserType == undefined || browserType == null) {
+    if (browserType === undefined || browserType === null) {
         browserType = "firefox";
     }
 
@@ -38,10 +38,12 @@ function createGridDriver(url, attrs) {
     var attr = function (name, defaultValue) {
         defaultValue = defaultValue || null;
 
-        if (attrs[name] != undefined && attrs[name] != null) {
+        if (attrs[name] !== undefined && attrs[name] !== null) {
             return attrs[name];
         }
-        else return defaultValue;
+        else{
+            return defaultValue;
+        }
     };
     var browser = attr("browser");
     var browserVersion = attr("browserVersion");
@@ -55,16 +57,16 @@ function createGridDriver(url, attrs) {
 
 function checkLayout(driver, pageSpecFile, includedTags, excludedTags) {
 
-    if (includedTags == undefined) {
+    if (includedTags === undefined) {
         includedTags = null;
     }
-    if (excludedTags == undefined) {
+    if (excludedTags === undefined) {
         excludedTags = null;
     }
-    if (!Array.isArray(includedTags) && includedTags != null) {
+    if (!Array.isArray(includedTags) && includedTags !== null) {
         includedTags = [includedTags];
     }
-    if (!Array.isArray(excludedTags) && excludedTags != null) {
+    if (!Array.isArray(excludedTags) && excludedTags !== null) {
         excludedTags = [excludedTags];
     }
 
@@ -128,7 +130,7 @@ var session = {
 
 var galenConsole = {
     log: function (object) {
-        if (typeof object == "string") {
+        if (typeof object === "string") {
             System.out.println(object);
         }
         else System.out.println(JSON.stringify(object));
@@ -136,11 +138,11 @@ var galenConsole = {
 };
 
 function dumpPage(driver, pageName, specPath, exportPath, maxWidth, maxHeight) {
-    if (maxWidth == undefined) {
+    if (maxWidth === undefined) {
         maxWidth = null;
     }
 
-    if (maxHeight == undefined) {
+    if (maxHeight === undefined) {
         maxHeight = null;
     }
     Galen.dumpPage(driver, pageName, specPath, exportPath, maxWidth, maxHeight);

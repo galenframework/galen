@@ -40,7 +40,7 @@ var GalenCore = {
                 var value = this.stack[i].value;
 
 
-                if (data[name] == null || data[name] == undefined) {
+                if (data[name] === null || data[name] === undefined) {
                     if (Array.isArray(value)) {
                         data[name] = value;
                     }
@@ -130,7 +130,7 @@ var GalenCore = {
             var state = 0;
             while(processing) {
                 var sym = name.charAt(id);
-                if (sym == "$" && id < name.length - 1 && name.charAt(id + 1) == "{") {
+                if (sym === "$" && id < name.length - 1 && name.charAt(id + 1) === "{") {
                     varName = "";
                     id++;
                     state = 1;
@@ -163,7 +163,7 @@ var GalenCore = {
 
 function test(name, callback) {
     var callbacks = [];
-    if (typeof callback == "function") {
+    if (typeof callback === "function") {
         callbacks = [callback];
     }
     var aTest = {
@@ -181,7 +181,7 @@ function test(name, callback) {
             return this.do(callback);
         },
         do: function (callback) {
-            if (typeof callback == "function") {
+            if (typeof callback === "function") {
                 this.callbacks.push(callback);
             }
             return this;

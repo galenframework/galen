@@ -24,15 +24,15 @@ function listToArray(list) {
 var GalenPages = {
     settings: {
         cacheWebElements: true,
-        allowReporting: true,
+        allowReporting: true
     },
     report: function (name, details) {
         if (GalenPages.settings.allowReporting) {
             var testSession = TestSession.current();
-            if (testSession != null) {
+            if (testSession !== null) {
                 var node = testSession.getReport().info(name);
 
-                if (details != undefined && details != null) {
+                if (details !== undefined && details !== null) {
                     node.withDetails(details);
                 }
             }
@@ -48,13 +48,13 @@ var GalenPages = {
             var typeText = locatorText.substr(0, index).trim();
             var value = locatorText.substr(index + 1, locatorText.length - 1 - index).trim();
             var type = "css";
-            if (typeText == "id") {
+            if (typeText === "id") {
                 type = typeText;
             }
-            else if (typeText == "xpath") {
+            else if (typeText === "xpath") {
                 type = typeText;
             }
-            else if (typeText == "css") {
+            else if (typeText === "css") {
                 type = typeText;
             }
             else {
@@ -105,32 +105,32 @@ var GalenPages = {
     },
 
     convertLocator: function(galenLocator) {
-        if (galenLocator.type == "id") {
+        if (galenLocator.type === "id") {
             return By.id(galenLocator.value);
         }
-        else if (galenLocator.type == "css") {
+        else if (galenLocator.type === "css") {
             return By.cssSelector(galenLocator.value);
         }
-        else if (galenLocator.type == "xpath") {
+        else if (galenLocator.type === "xpath") {
             return By.xpath(galenLocator.value);
         }
     },
 
     convertTimeToMillis: function (userTime) {
-        if (typeof userTime == "string") {
+        if (typeof userTime === "string") {
             var number = parseInt(userTime);
             var type = userTime.replace(new RegExp("([0-9]| )", "g"), "");
-            if (type == "") {
+            if (type === "") {
                 return number;
             }
             else {
-                if (type == "m") {
+                if (type === "m") {
                     return number * 60000;
                 }
-                else if(type == "s") {
+                else if(type === "s") {
                     return number * 1000;
                 }
-                else throw  new Error("Cannot convert time. Uknown metric: " + type);
+                else throw  new Error("Cannot convert time. Unknown metric: " + type);
             }
         }
         else return userTime;
@@ -139,17 +139,17 @@ var GalenPages = {
     Wait: function (settings) {
         this.settings = settings;
 
-        if (settings.time == undefined) {
+        if (settings.time === undefined) {
             throw  new Error("time was not defined");
         }
 
         var period = settings.period;
-        if (period == undefined) {
+        if (period === undefined) {
             period = 1000;
         }
 
         this.message = null;
-        if (typeof settings.message == "string") {
+        if (typeof settings.message === "string") {
             this.message = settings.message;
         }
         else this.message = "timeout error waiting for:"
@@ -221,7 +221,7 @@ var GalenPages = {
 
         //Need this hack since sometimes it could be function and sometimes it could be an object with apply function inside
         this._applyConditionFunc = function (conditionFunc) {
-            if (typeof conditionFunc == "function") {
+            if (typeof conditionFunc === "function") {
                 return conditionFunc();
             }
             else {
@@ -251,7 +251,7 @@ GalenPages.Page.prototype.initPageElements = function (elementsMap, elementsColl
     for (var property in elementsMap) {
         if (elementsMap.hasOwnProperty(property)) {
             var value = elementsMap[property];
-            if (typeof value == "string") {
+            if (typeof value === "string") {
                 this[property] = new GalenPages.PageElement(property, GalenPages.parseLocator(value), this);
                 fieldNames.push(property);
             }
@@ -279,17 +279,17 @@ GalenPages.Page.prototype.open = function (url) {
     this.driver.get(url);
 };
 GalenPages.Page.prototype.findChild = function (locator) {
-    if (typeof locator == "string") {
+    if (typeof locator === "string") {
         locator = GalenPages.parseLocator(locator);
     }
 
-    if (this.parent != undefined ) {
+    if (this.parent !== undefined ) {
         return this.parent.findChild(locator);
     }
     else {
         try {
             var element = this.driver.findElement(GalenPages.convertLocator(locator));
-            if (element == null) {
+            if (element === null) {
                 throw new Error("No such element: " + locator.type + " " + locator.value);
             }
             return element;
@@ -300,11 +300,11 @@ GalenPages.Page.prototype.findChild = function (locator) {
     }
 };
 GalenPages.Page.prototype.findChildren = function (locator) {
-    if (typeof locator == "string") {
+    if (typeof locator === "string") {
         locator = GalenPages.parseLocator(locator);
     }
 
-    if (this.parent != undefined ) {
+    if (this.parent !== undefined ) {
         return this.parent.findChildren(locator);
     }
     else {
@@ -387,7 +387,7 @@ GalenPages.PageElement.prototype.clear = function () {
 };
 GalenPages.PageElement.prototype.getWebElement = function () {
     if (GalenPages.settings.cacheWebElements) {
-        if (this.cachedWebElement == null) {
+        if (this.cachedWebElement === null) {
             this.cachedWebElement = this.parent.findChild(this.locator);
         }
         return this.cachedWebElement;
@@ -402,7 +402,7 @@ GalenPages.PageElement.prototype.isDisplayed = function () {
 GalenPages.PageElement.prototype.selectByValue = function (value) {
     this._report("Select by value \"" + value + "\" in " + this.name);
     var option = this.getWebElement().findElement(By.xpath(".//option[@value=\"" + value + "\"]"));
-    if (option != null) {
+    if (option !== null) {
         option.click();
     }
     else throw  new Error("Cannot find option with value \"" + value + "\"");
@@ -410,7 +410,7 @@ GalenPages.PageElement.prototype.selectByValue = function (value) {
 GalenPages.PageElement.prototype.selectByText = function (text) {
     this._report("Select by text \"" + text + "\" in " + this.name);
     var option = this.getWebElement().findElement(By.xpath(".//option[normalize-space(.)=\"" + text + "\"]"));
-    if (option != null) {
+    if (option !== null) {
         option.click();
     }
     else throw  new Error("Cannot find option with text \"" + value + "\"");
@@ -456,17 +456,17 @@ GalenPages.PageElement.prototype.exists = function () {
     return true;
 };
 GalenPages.PageElement.prototype.findChild = function (locator) {
-    if (typeof locator == "string") {
+    if (typeof locator === "string") {
         locator = GalenPages.parseLocator(locator);
     }
 
-    if (this.parent != undefined ) {
+    if (this.parent !== undefined ) {
         return this.parent.findChild(locator);
     }
     else {
         try {
             var element = this.driver.findElement(GalenPages.convertLocator(locator));
-            if (element == null) {
+            if (element === null) {
                 throw new Error("No such element: " + locator.type + " " + locator.value);
             }
             return element;
@@ -477,11 +477,11 @@ GalenPages.PageElement.prototype.findChild = function (locator) {
     }
 };
 GalenPages.PageElement.prototype.findChildren = function (locator) {
-    if (typeof locator == "string") {
+    if (typeof locator === "string") {
         locator = GalenPages.parseLocator(locator);
     }
 
-    if (this.parent != undefined ) {
+    if (this.parent !== undefined ) {
         return this.parent.findChildren(locator);
     }
     else {
