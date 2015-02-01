@@ -25,11 +25,11 @@ import java.io.IOException;
 import net.mindengine.galen.browser.Browser;
 import net.mindengine.galen.browser.SeleniumBrowser;
 import net.mindengine.galen.components.TestGroups;
+import net.mindengine.galen.components.mocks.driver.MockedDriver;
 import net.mindengine.galen.components.validation.TestValidationListener;
 import net.mindengine.galen.reports.TestReport;
 import net.mindengine.galen.suite.GalenPageTest;
 import net.mindengine.galen.suite.actions.GalenPageActionCheck;
-import net.mindengine.galen.tests.util.WebDriverFactory;
 
 import org.openqa.selenium.WebDriver;
 import org.testng.annotations.Test;
@@ -37,18 +37,16 @@ import org.testng.annotations.Test;
 @Test(groups=TestGroups.SELENIUM)
 public class GalenPageActionCheckTest {
 
-    private static final String TEST_URL = "file://" + GalenPageActionCheckTest.class.getResource("/html/page1.html").getPath();
-
-    
+    private static final String TEST_URL = "/GalenPageActionCheckTest/page.json";
 
     @Test public void runsTestSuccessfully_inPredefinedBrowser() throws IOException {
         TestValidationListener validationListener = new TestValidationListener();
         
-        WebDriver driver = WebDriverFactory.getInstance();
+        WebDriver driver = new MockedDriver();
         
         GalenPageActionCheck action = new GalenPageActionCheck()
             .withIncludedTags(asList("mobile"))
-            .withSpecs(asList("/html/page.spec"));
+            .withSpecs(asList(getClass().getResource("/GalenPageActionCheckTest/page.spec").getPath()));
         
         Browser browser = new SeleniumBrowser(driver);
         browser.load(TEST_URL);
@@ -56,54 +54,54 @@ public class GalenPageActionCheckTest {
         
         action.execute(new TestReport(), browser, new GalenPageTest(), validationListener);
         
-        // TODO tear down after class!!
-        WebDriverFactory.tearDown();
-        
-        assertThat("Invokations should be", validationListener.getInvokations(), is("<o header>\n" +
+        assertThat("Invokations should be", validationListener.getInvokations(), is(
+                "<o header>\n" +
                 "<SpecHeight header>\n" +
                 "<e><msg>\"header\" height is 140px which is not in range of 150 to 185px</msg></e>\n" +
                 "</o header>\n" +
-                "<o menu-item-home>\n" +
-                "<SpecHorizontally menu-item-home>\n" +
-                "</o menu-item-home>\n" +
-                "<o menu-item-rss>\n" +
-                "<SpecHorizontally menu-item-rss>\n" +
-                "<SpecNear menu-item-rss>\n" +
-                "</o menu-item-rss>\n"
+                "<o header-text-1>\n" +
+                "<SpecInside header-text-1>\n" +
+                "</o header-text-1>\n" +
+                "<o menu>\n" +
+                "<SpecBelow menu>\n" +
+                "<SpecVertically menu>\n" +
+                "</o menu>\n" +
+                "<o menu>\n" +
+                "<SpecWidth menu>\n" +
+                "<e><msg>\"menu\" width is 410px instead of 400px</msg></e>\n" +
+                "</o menu>\n"
                 ));
     }
     
-    @Test public void runsTestSuccessfully_andExlcudesSpecifiedTags() throws IOException {
+    @Test public void runsTestSuccessfully_andExcludesSpecifiedTags() throws IOException {
         TestValidationListener validationListener = new TestValidationListener();
         
-        WebDriver driver = WebDriverFactory.getInstance();
+        WebDriver driver = new MockedDriver();
         
         GalenPageActionCheck action = new GalenPageActionCheck()
             .withIncludedTags(asList("mobile"))
             .withExcludedTags(asList("debug"))
-            .withSpecs(asList("/html/page-exclusion.spec"));
-    
+            .withSpecs(asList(getClass().getResource("/GalenPageActionCheckTest/page.spec").getPath()));
+
         Browser browser = new SeleniumBrowser(driver);
         browser.load(TEST_URL);
         browser.changeWindowSize(new Dimension(400, 800));
         
         action.execute(new TestReport(), browser, new GalenPageTest(), validationListener);
 
-        // TODO tear down after class!!
-        WebDriverFactory.tearDown();
-        
-        assertThat("Invokations should be", validationListener.getInvokations(), is("<o header>\n" +
+        assertThat("Invokations should be", validationListener.getInvokations(), is(
+                "<o header>\n" +
                 "<SpecHeight header>\n" +
-                "<e><msg>\"header\" height is 140px which is not in range of 150 to 170px</msg></e>\n" +
+                "<e><msg>\"header\" height is 140px which is not in range of 150 to 185px</msg></e>\n" +
                 "</o header>\n" +
-                "<o menu-item-home>\n" +
-                "<SpecHorizontally menu-item-home>\n" +
-                "</o menu-item-home>\n" +
-                "<o menu-item-rss>\n" +
-                "<SpecHorizontally menu-item-rss>\n" +
-                "<SpecNear menu-item-rss>\n" +
-                "</o menu-item-rss>\n"
-                ));
+                "<o header-text-1>\n" +
+                "<SpecInside header-text-1>\n" +
+                "</o header-text-1>\n" +
+                "<o menu>\n" +
+                "<SpecWidth menu>\n" +
+                "<e><msg>\"menu\" width is 410px instead of 400px</msg></e>\n" +
+                "</o menu>\n"
+        ));
     }
     
 }

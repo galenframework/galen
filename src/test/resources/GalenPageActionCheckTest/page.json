@@ -1,0 +1,25 @@
+{
+  "title": "GalenPageActionCheckTest page",
+  "items": [
+    {
+      "locator": "id: header",
+      "area": [0, 0, 400, 140]
+    },
+
+    {
+      "locator": "css: #header h1",
+      "area": [20, 20, 360, 55]
+    },
+
+    {
+      "locator": "css: #header h2",
+      "area": [20, 75, 360, 26]
+    },
+
+    {
+      "locator": "id: menu",
+      "area": [0, 160, 410, 47]
+    }
+
+  ]
+}
