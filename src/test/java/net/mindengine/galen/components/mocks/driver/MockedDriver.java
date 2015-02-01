@@ -36,6 +36,7 @@ public class MockedDriver implements WebDriver, TakesScreenshot, JavascriptExecu
     private String currrentUrl;
 
     private Dimension screenSize = new Dimension(1024, 768);
+    private List<String> allExecutedJavascript = new LinkedList<String>();
 
     public MockedDriver() {
     }
@@ -226,6 +227,8 @@ public class MockedDriver implements WebDriver, TakesScreenshot, JavascriptExecu
 
     @Override
     public Object executeScript(String s, Object... objects) {
+        allExecutedJavascript.add(s);
+
         if (s.equals(GalenUtils.JS_RETRIEVE_DEVICE_PIXEL_RATIO)) {
             return 1L;
         }
@@ -234,6 +237,11 @@ public class MockedDriver implements WebDriver, TakesScreenshot, JavascriptExecu
 
     @Override
     public Object executeAsyncScript(String s, Object... objects) {
+        allExecutedJavascript.add(s);
         return null;
+    }
+
+    public List<String> getAllExecutedJavascript() {
+        return allExecutedJavascript;
     }
 }
