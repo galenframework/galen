@@ -1,0 +1,16 @@
+{
+  "title": "GalenPageActionCheckTest page",
+  "items": [
+    {
+      "locator": "id: header",
+      "area": [0, 0, 400, 140]
+    },
+
+
+    {
+      "locator": "id: search-query",
+      "area": [0, 160, 410, 47]
+    }
+
+  ]
+}

@@ -16,38 +16,40 @@
 package net.mindengine.galen.tests.action;
 
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.hasItems;
 import static org.hamcrest.Matchers.is;
+import static org.mockito.Matchers.contains;
+
 import net.mindengine.galen.browser.Browser;
 import net.mindengine.galen.browser.SeleniumBrowser;
+import net.mindengine.galen.components.mocks.driver.MockedDriver;
+import net.mindengine.galen.components.mocks.driver.MockedDriverElement;
 import net.mindengine.galen.reports.TestReport;
 import net.mindengine.galen.suite.GalenPageTest;
 import net.mindengine.galen.suite.actions.GalenPageActionRunJavascript;
-import net.mindengine.galen.tests.util.WebDriverFactory;
 
 import org.openqa.selenium.By;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
 import org.testng.annotations.Test;
 
 public class GalenPageActionRunJavascriptTest {
-    private static final String TEST_URL = "file://" + GalenPageActionCheckTest.class.getResource("/html/page-for-js-check.html").getPath();
-    
+    private static final String TEST_URL = "/GalenPageActionRunJavascriptTest/page.json";
+
     @Test public void shouldRun_javascriptFile_andPerformActions_onBrowser() throws Exception {
-        WebDriver driver = WebDriverFactory.getInstance();
+        MockedDriver driver = new MockedDriver();
         Browser browser = new SeleniumBrowser(driver);
         browser.load(TEST_URL);
         
-        WebElement element = driver.findElement(By.id("search-query"));
-        assertThat("Search input should not contain any text yet", element.getAttribute("value"), is(""));
-        
+
         GalenPageActionRunJavascript action = new GalenPageActionRunJavascript(getClass().getResource("/scripts/to-run-1.js").getFile());
         action.setJsonArguments("{prefix: 'This was'}");
         
         action.execute(new TestReport(), browser, new GalenPageTest(), null);
-        
-        assertThat("Search input should contain text", element.getAttribute("value"), is("This was typed by a selenium from javascript text from imported script"));
-        // TODO tear down after class!!
-        WebDriverFactory.tearDown();
+
+
+        MockedDriverElement webElement = (MockedDriverElement) driver.findElement(By.id("search-query"));
+        assertThat("Mocked events of element should be",
+                webElement.getMockedEvents(),
+                hasItems("#sendKeys: This was typed by a selenium from javascript text from imported script"));
     }
     
 }

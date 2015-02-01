@@ -16,7 +16,6 @@
 package net.mindengine.galen.components.mocks.driver;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import net.mindengine.galen.components.validation.MockedPage;
 import net.mindengine.galen.utils.GalenUtils;
 import net.mindengine.rainbow4j.Rainbow4J;
 import org.openqa.selenium.*;

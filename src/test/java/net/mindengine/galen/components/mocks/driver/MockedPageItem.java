@@ -19,6 +19,8 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 
 import java.lang.reflect.Field;
+import java.util.LinkedList;
+import java.util.List;
 
 public class MockedPageItem {
     private String locator;
@@ -28,6 +30,7 @@ public class MockedPageItem {
     private String locatorType;
     private String locatorValue;
     private boolean visible = true;
+    private List<String> mockedEvents = new LinkedList<String>();
 
     private String getLocatorType() {
         return locatorType;
@@ -112,5 +115,9 @@ public class MockedPageItem {
 
     public void setVisible(boolean visible) {
         this.visible = visible;
+    }
+
+    public List<String> getMockedEvents() {
+        return this.mockedEvents;
     }
 }

@@ -42,6 +42,12 @@ public class MockedDriverElement implements WebElement {
     @Override
     public void sendKeys(CharSequence... charSequences) {
 
+        StringBuilder builder = new StringBuilder();
+        for (CharSequence charSequence : charSequences) {
+            builder.append(charSequence.toString());
+        }
+
+        registerEvent("#sendKeys: " + builder.toString());
     }
 
     @Override
@@ -113,4 +119,13 @@ public class MockedDriverElement implements WebElement {
     public String getCssValue(String s) {
         return null;
     }
+
+    public List<String> getMockedEvents() {
+        return this.item.getMockedEvents();
+    }
+
+    private void registerEvent(String event) {
+        this.item.getMockedEvents().add(event);
+    }
+
 }
