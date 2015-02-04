@@ -22,10 +22,8 @@ import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.hasItems;
 import static org.hamcrest.Matchers.is;
 
-import java.awt.Dimension;
 import java.io.File;
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -38,7 +36,6 @@ import net.mindengine.galen.tests.GalenTest;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.hamcrest.Matchers;
 import org.testng.annotations.Test;
 
 import com.google.common.io.Files;
@@ -46,70 +43,6 @@ import com.google.common.io.Files;
 
 public class GalenMainTest {
 
-    @Test public void shouldRun_singleTestSuccessfully() throws Exception {
-        String testUrl = "file://" + getClass().getResource("/html/page-nice.html").getFile();
-        System.setProperty("url", testUrl);
-        System.setProperty("spec.path", getClass().getResource("/html/page.spec").getFile());
-        
-        GalenMain galen = new GalenMain();
-        
-        File reportsDir = Files.createTempDir();
-        String htmlReportPath = reportsDir.getAbsolutePath();
-        String testngReportPath = reportsDir.getAbsolutePath() + "/testng-report.html";
-        
-        galen.execute(new GalenArguments()
-            .withAction("test")
-            .withPaths(asList(getClass().getResource("/suites/to-run/suite-single.test").getFile()))
-            .withHtmlReport(htmlReportPath)
-            .withTestngReport(testngReportPath)
-            );
-        
-        assertThat("Should create screenshot 1 and place it in same folder as report", new File(reportsDir.getAbsolutePath() + "/report-1-home-page-test-screenshot-1.png").exists(), is(true));
-        assertThat("Should create screenshot 2 and place it in same folder as report", new File(reportsDir.getAbsolutePath() + "/report-2-home-page-test-2-screenshot-2.png").exists(), is(true));
-        
-        String htmlReportContent = FileUtils.readFileToString(new File(htmlReportPath + File.separator + "report.html"));
-        String testngReportContent = FileUtils.readFileToString(new File(testngReportPath));
-        
-        //Verifying only parts of the report content to make sure that the test were executed
-        assertThat(htmlReportContent, containsString("<a href=\"report-1-home-page-test.html\">Home page test</a>"));
-        assertThat(htmlReportContent, containsString("<a href=\"report-2-home-page-test-2.html\">Home page test 2</a>"));
-        
-        assertThat(testngReportContent, containsString("<test name=\"Home page test\">"));
-        assertThat(testngReportContent, containsString("<class name=\"Home page test\">"));
-        
-        assertThat(testngReportContent, containsString("<test name=\"Home page test 2\">"));
-        assertThat(testngReportContent, containsString("<class name=\"Home page test 2\">"));
-    }
-    
-    @Test public void shouldFindAndRun_allTestsRecursivelly() throws Exception {
-        String testUrl = "file://" + getClass().getResource("/html/page-nice.html").getFile();
-        System.setProperty("url", testUrl);
-        System.setProperty("spec.path", getClass().getResource("/html/page.spec").getFile());
-        
-        GalenMain galen = new GalenMain();
-        
-        File reportsDir = Files.createTempDir();
-        String testngReportPath = reportsDir.getAbsolutePath() + "/testng-report.xml";
-        
-        galen.execute(new GalenArguments()
-            .withAction("test")
-            .withPaths(asList(getClass().getResource("/suites/to-run/recursive-check").getFile()))
-            .withRecursive(true)
-            .withTestngReport(testngReportPath)
-            );
-        
-        String testngReportContent = FileUtils.readFileToString(new File(testngReportPath));
-        
-        assertThat(testngReportContent, containsString("<test name=\"Recursion check 1\">"));
-        assertThat(testngReportContent, containsString("<class name=\"Recursion check 1\">"));
-        
-        assertThat(testngReportContent, containsString("<test name=\"Recursion check 2\">"));
-        assertThat(testngReportContent, containsString("<class name=\"Recursion check 2\">"));
-        
-        assertThat(testngReportContent, containsString("<test name=\"Recursion check 3\">"));
-        assertThat(testngReportContent, containsString("<class name=\"Recursion check 3\">"));
-    }
-    
     @Test public void shouldRun_javascriptTest() throws Exception {
         File reportsDir = Files.createTempDir();
         String htmlReportPath = reportsDir.getAbsolutePath();
@@ -241,67 +174,6 @@ public class GalenMainTest {
 
         int amountOfReportedTests = StringUtils.countMatches(htmlReportContent, "<a href=\"report-");
         assertThat("Amount of reported tests should be", amountOfReportedTests, is(3));
-    }
-    
-    @Test public void shouldFindAndRun_allTestsRecursivelly_inParallel() throws Exception {
-        String testUrl = "file://" + getClass().getResource("/html/page-nice.html").getFile();
-        System.setProperty("url", testUrl);
-        System.setProperty("spec.path", getClass().getResource("/html/page.spec").getFile());
-        
-        GalenMain galen = new GalenMain();
-        
-        File reportsDir = Files.createTempDir();
-        String testngReportPath = reportsDir.getAbsolutePath() + "/testng-report.html";
-        
-        galen.execute(new GalenArguments()
-            .withAction("test")
-            .withPaths(asList(getClass().getResource("/suites/to-run/recursive-check").getFile()))
-            .withRecursive(true)
-            .withTestngReport(testngReportPath)
-            .withParallelSuites(5)
-            );
-    }
-    
-    @Test public void shouldRun_simplePageCheck() throws Exception {
-        String testUrl = "file://" + getClass().getResource("/html/page-nice.html").getFile();
-        String pageSpec = getClass().getResource("/html/page.spec").getFile();
-        File reportsDir = Files.createTempDir();
-        String htmlReportPath = reportsDir.getAbsolutePath();
-        String testngReportPath = reportsDir.getAbsolutePath() + "/testng-report.html";
-        
-        new GalenMain().execute(new GalenArguments()
-            .withAction("check")
-            .withUrl(testUrl)
-            .withPaths(Arrays.asList(pageSpec))
-            .withScreenSize(new Dimension(450, 500))
-            .withHtmlReport(htmlReportPath)
-            .withTestngReport(testngReportPath)
-            .withIncludedTags("desktop"));
-        
-        String testngReportContent = FileUtils.readFileToString(new File(testngReportPath));
-        
-        assertThat(testngReportContent, containsString("<test name=\"" + pageSpec + "\">"));
-        assertThat(testngReportContent, containsString("<class name=\"" + pageSpec + "\">"));
-    }
-    
-    @Test public void shouldGiveError_whenPageSpecIsIncorrect() throws Exception {
-        String testUrl = "file://" + getClass().getResource("/html/page-nice.html").getFile();
-        String pageSpec = getClass().getResource("/negative-specs/invalid-spec.spec").getFile();
-        File reportsDir = Files.createTempDir();
-        String testngReportPath = reportsDir.getAbsolutePath() + "/testng-report.html";
-        
-        new GalenMain().execute(new GalenArguments()
-            .withAction("check")
-            .withUrl(testUrl)
-            .withPaths(Arrays.asList(pageSpec))
-            .withScreenSize(new Dimension(450, 500))
-            .withTestngReport(testngReportPath)
-            .withIncludedTags("desktop")
-            .withOriginal("check invalid-spec.spec --include desktop"));
-        
-        String testngReportContent = FileUtils.readFileToString(new File(testngReportPath));
-
-        assertThat(testngReportContent, containsString("<test-method status=\"FAIL\""));
     }
     
     @Test public void shouldGenerate_configFile() throws IOException {
