@@ -108,7 +108,7 @@
     <dependency>
       <groupId>net.mindengine</groupId>
       <artifactId>rainbow4j</artifactId>
-      <version>0.4.0</version>
+      <version>0.5.0</version>
     </dependency>
     <dependency>
       <groupId>org.mozilla</groupId>
