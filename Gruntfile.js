@@ -39,7 +39,7 @@ module.exports = function (grunt) {
                     ]
                 },
                 options: {
-                    junit: '<%= galen.dist %>/surefire-reports/junitreports/TEST-jsLint.xml'
+                    junit: '<%= galen.dist %>/TEST-jsLint.xml'
                 }
             }
         },
