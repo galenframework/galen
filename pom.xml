@@ -3,7 +3,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>net.mindengine</groupId>
   <artifactId>galen</artifactId>
-  <version>1.5.3-SNAPSHOT</version>
+  <version>1.5.4-SNAPSHOT</version>
   <name>Galen Framework</name>
   <packaging>jar</packaging>
   <description>A library for layout testing of websites</description>
@@ -109,7 +109,7 @@
     <dependency>
       <groupId>net.mindengine</groupId>
       <artifactId>rainbow4j</artifactId>
-      <version>0.4.0</version>
+      <version>0.5.0</version>
     </dependency>
     <dependency>
       <groupId>org.mozilla</groupId>
