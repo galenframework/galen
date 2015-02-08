@@ -1,0 +1,159 @@
+body {
+    font-size: 1.em;
+    font-family: helvetica;
+}
+ul {
+    list-style: none;
+    padding-left: 20px;
+}
+
+
+#main > ul {
+    padding-left: 0px;
+}
+
+.node-expand-button {
+    position: relative;
+    display: inline-block;
+    padding: 5px;
+    text-decoration: none;
+    border-radius: 10px;
+    text-transform: uppercase;
+    font-size: 0.8em;
+    margin-left: 25px;
+}
+a.node-expand-button:before { 
+    display: block;
+    position: absolute;
+    left: -20px;
+    top: 3px;
+    font-size: 1.2em;
+    content: "-";
+    color: #777;
+    background: #fff;
+    width: 16px;
+    height: 14px;
+    padding-top: 0px;
+    padding-bottom: 3px;
+    text-align: center;
+    border:1px solid #f0f0f0;
+    border-radius: 20px;
+}
+
+.node-expand-button.node-status-info {
+    background: #f0f0f0;
+    color: #555;
+}
+
+.report-nodes > li {
+    padding: 7px;
+}
+.report-time {
+    font-size: 0.6em;
+    color: #aaa;
+}
+.node-name {
+    display: inline-block;
+    color: #555;
+}
+
+
+.report-node-attachments  {
+    margin-top: 5px;
+}
+.report-node-attachments li a {
+    position: relative;
+    display: inline-block;
+    color: white;
+    background: #1271C4;
+    text-decoration: none;
+    padding: 8px 8px 8px 42px;
+    height: 30px;
+    border-radius: 5px;
+}
+
+
+
+/* Layout  */
+ul.layout-sections > li, ul.layout-objects > li, ul.layout-checks > li {
+    margin: 5px;
+}
+a.layout-section, a.layout-object, a.layout-check {
+    padding: 2px;
+    position: relative;
+    margin-left: 40px;
+    color: #555;
+    text-decoration: none;
+    font-size: 1.0em;
+}
+a.layout-section:before, a.layout-object:before, a.layout-check:before {
+    display: block;
+    position: absolute;
+    content: " ";
+    width: 24px;
+    height: 24px;
+}
+a.layout-section:before {
+    top: 0px;
+    left: -20px;
+    background: url('icon-section.png') no-repeat;
+    opacity: 0.3;
+}
+a.layout-object:before {
+    top: -3px;
+    left: -25px;
+    background: url('icon-object.png') no-repeat;
+    opacity: 0.3;
+}
+a.layout-check-status-info:before {
+    left: -20px;
+    top: 0px;
+    background: url('icon-check.png') no-repeat;
+    opacity: 0.3;
+}
+a.layout-check-status-error:before {
+    left: -20px;
+    top: 0px;
+    border: 1px solid red;
+    content: "!";
+    width: 10px;
+    height: 13px; 
+    padding-top: 3px;
+    padding-left: 5px;
+    border-radius: 10px;
+}
+a.layout-check-status-warn:before {
+    left: -20px;
+    top: 0px;
+    border: 1px solid #B87700;
+    content: "?";
+    width: 10px;
+    height: 13px; 
+    padding-top: 3px;
+    padding-left: 5px;
+    border-radius: 10px;
+}
+
+a.layout-object {
+    font-weight: bold;
+}
+a.layout-check-status-error {
+    font-weight: bold;
+    color: #DB4B4B;
+}
+a.layout-check-status-warn {
+    font-weight: bold;
+    color: #B87700;
+}
+
+.layout-check-error-message {
+    margin-top: 5px;
+    margin-bottom: 20px;
+    display:block;
+    list-style: none;
+    padding: 20px;
+    color: #B33914;
+    background: #FCF6E8;
+    border-radius: 10px;
+    box-shadow: 1px 1px 4px #bbb; 
+}

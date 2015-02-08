@@ -13,18 +13,37 @@ var reportData = {
             "name": "Open http://testapp.galenframework.com",
             "status": "info",
             "time": "1423304760053",
+            "attachments": [ 
+                {
+                    "name": "screenshot.png"
+                }
+            ]
         },
         {
             "type": "node",
-            "name": "Click loginButton",
+            "name": "Navigate to login page",
             "status": "info",
-            "time": "1423304780953",
+            "time": "1423304760053",
             "nodes": [
                 {
-                    "type": "text",
-                    "text": "css: #login-button"
+                    "type": "node",
+                    "name": "Click loginButton",
+                    "status": "info",
+                    "time": "1423304780953",
+                    "nodes": [
+                        {
+                            "type": "text",
+                            "text": "css: #login-button"
+                        }
+                    ]
                 }
             ]
+        },
+        {
+            "type": "node",
+            "name": "Node report without child nodes",
+            "time": "1423304780953",
+            "status": "info"
         },
         {
             "type": "layout",
@@ -32,6 +51,7 @@ var reportData = {
             "tags": ["mobile", "tablet"],
             "status": "error",
             "time": "1423304781953",
+            "screenshot": "somescreenshot.png",
             "objects": {
                 "header": {
                     "area": [0, 0, 1000, 60]
@@ -164,20 +184,102 @@ var reportData = {
             <ul class="report-nodes">
             {{#each nodes}}
                 {{renderNode this}}
-
-
             {{/each}}
             </ul>
         </script>
         <script id="report-node-tpl" type="text/x-handlebars-template">
             <li>
-                <a class="node-expand-button node-status-label node-status-{{status}}" href="#"></a>
+                <span class="report-time">{{formatReportTime time}}</span>
+                <a class="expand-link node-expand-button node-status-{{status}}" href="#">{{status}}</a>
                 <div class="node-name">{{name}}</div>
-                <div class="node-details">
-
+                {{#if attachments}}
+                    <ul class="report-node-attachments">
+                        {{#each attachments}}
+                            <li>
+                                <a href="{{name}}">{{name}}</a>
+                            </li>
+                        {{/each}}
+                    </ul>
+                {{/if}}
+                <div class="node-details expand-container">
+                    <ul class="report-nodes">
+                        {{#each nodes}}
+                            {{renderNode this}}
+                        {{/each}}
+                    </ul>
                 </div>
             </li>
         </script>
+        <script id="report-node-text-tpl" type="text/x-handlebars-template">
+            <li>{{text}}</li>
+        </script>
+        <script id="report-layout-tpl" type="text/x-handlebars-template">
+            <li>
+                <span class="report-time">{{formatReportTime time}}</span>
+                <a class="expand-link node-expand-button node-status-label node-status-info" href="#">INFO</a>
+                <div class="node-name">{{name}}</div>
+                <div class="node-details expand-container">
+                    <div class="layout-report" data-screenshot="{{screenshot}}">
+                        <ul class="layout-sections">
+                            {{#each sections}}
+                                {{renderLayoutSection this}}
+                            {{/each}}
+                        </ul>
+                    </div>
+                </div>
+            </li>
+        </script>
+        <script id="report-layout-sublayout-tpl" type="text/x-handlebars-template">
+            <ul class="layout-sections">
+                {{#each sections}}
+                    {{renderLayoutSection this}}
+                {{/each}}
+            </ul>
+        </script>
+        <script id="report-layout-section-tpl" type="text/x-handlebars-template">
+            <li>
+                <a class="layout-section expand-link" href="#">{{name}}</a>
+                <div class="layout-details expand-container">
+                    <ul class="layout-sections">
+                    {{#each sections}}
+                        {{renderLayoutSection this}}
+                    {{/each}}
+                    </ul>
+
+                    <ul class="layout-objects">
+                        {{#each objects}}
+                            {{renderLayoutObject this}}
+                        {{/each}}
+                    </ul>
+                </div>
+            </li>
+        </script>
+        
+        <script id="report-layout-object-tpl" type="text/x-handlebars-template">
+            <li>
+                <a class="layout-object expand-link" href="#">{{name}}</a>
+                <ul class="layout-checks expand-container">
+                    {{#each checks}}
+                        {{renderLayoutCheck this}}
+                    {{/each}}
+                </ul>
+            </li>
+        </script>
+        <script id="report-layout-check-tpl" type="text/x-handlebars-template">
+            <li>
+                <a class="layout-check layout-check-status-{{status}}" href="#">{{name}}</a>
+                {{#if error}}
+                    <div class="layout-check-error-message">
+                        {{error}}
+                    </div>
+                {{/if}}
+
+                {{#if sublayout}}
+                    {{renderSublayout sublayout}}
+                {{/if}}
+            </li>
+        </script>
+
         <h2>Some test</h2>
         <div id="main"></div>
     </body>
