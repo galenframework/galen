@@ -91,6 +91,8 @@ function createGalenReport() {
                     container = $(this).next().next(".expand-container");
                 }
                 container.slideToggle('fast');
+
+                return false;
             });
         }
     };

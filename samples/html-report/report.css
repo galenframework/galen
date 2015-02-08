@@ -8,9 +8,14 @@ ul {
 }
 
 
+
 #main > ul {
     padding-left: 0px;
 }
+#main > ul.report-nodes {
+    margin-left: 30px;
+}
+
 
 .node-expand-button {
     position: relative;
@@ -49,6 +54,9 @@ a.node-expand-button:before {
     padding: 7px;
 }
 .report-time {
+    position: absolute;
+    left: 5;
+    margin-top: 8px;
     font-size: 0.6em;
     color: #aaa;
 }
@@ -61,14 +69,18 @@ a.node-expand-button:before {
 .report-node-attachments  {
     margin-top: 5px;
 }
+.report-node-attachments li a img {
+    width: 24px;
+    margin-right: 10px;
+}
 .report-node-attachments li a {
     position: relative;
     display: inline-block;
     color: white;
     background: #1271C4;
     text-decoration: none;
-    padding: 8px 8px 8px 42px;
-    height: 30px;
+    padding: 8px;
+    height: 26px;
     border-radius: 5px;
 }
 
@@ -157,3 +169,5 @@ a.layout-check-status-warn {
     border-radius: 10px;
     box-shadow: 1px 1px 4px #bbb; 
 }
+
+
