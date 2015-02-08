@@ -1,15 +1,184 @@
 <html>
     <head>
         <title>Galen Reports</title>
+        <link rel="stylesheet" type="text/css" href="report.css"></link>
+        <script src="jquery-1.11.2.min.js"></script>
+        <script src="handlebars-v2.0.0.js"></script>
+        <script src="galen-report.js"></script>
+        <script>
+var reportData = {
+    "nodes": [
+        {
+            "type": "node",
+            "name": "Open http://testapp.galenframework.com",
+            "status": "info",
+            "time": "1423304760053",
+        },
+        {
+            "type": "node",
+            "name": "Click loginButton",
+            "status": "info",
+            "time": "1423304780953",
+            "nodes": [
+                {
+                    "type": "text",
+                    "text": "css: #login-button"
+                }
+            ]
+        },
+        {
+            "type": "layout",
+            "name": "Check layout: specs/addNotePage.spec",
+            "tags": ["mobile", "tablet"],
+            "status": "error",
+            "time": "1423304781953",
+            "objects": {
+                "header": {
+                    "area": [0, 0, 1000, 60]
+                },
+                "header-icon": {
+                    "area": [10, 10, 40, 40]
+                }
+            },
+            "sections": [
+                {
+                    "name": "Header",
+                    "sections": [
+                        {
+                            "name": "Should have normal icon",
+                            "objects": [
+                                {
+                                    "name": "header-icon",
+                                    "checks": [
+                                        {
+                                            "name": "image: file imgs/header.png, error 4%",
+                                            "status": "error",
+                                            "location": "specs/homepage.spec:10",
+                                            "error": "Element does not look like \"imgs/header.png\". There are 1130 mismatching pixels but max allowed is 400",
+                                            "highlight": [
+                                                "header-icon"
+                                            ],
+                                            "image-comparison": {
+                                                "actual": {
+                                                    "path": "asdadasdad.png",
+                                                    "area": [10, 10, 40, 40]
+                                                },
+                                                "expected": {
+                                                    "path": "asdasd.png",
+                                                    "area": null
+                                                },
+                                                "comparison-map": {
+                                                    "path":  "comparison-map.png",
+                                                    "area": null
+                                                }
+                                            }
+                                        }
+                                    ]
+                                }
+                            ],
+                            "sections": [
+                                {
+                                    "name": "Should be squared",
+                                    "objects": [
+                                        {
+                                            "name": "header-icon",
+                                            "checks": [
+                                                {
+                                                    "name": "width: 100% of header-icon/height",
+                                                    "location": "specs/homepage.spec:15",
+                                                    "status": "info",
+                                                    "highlight": [
+                                                        "header-icon"
+                                                    ]
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    ],
+                    "objects": [
+                        {
+                            "name": "header",
+                            "checks": [
+                                {
+                                    "name": "inside: screen 0px left top right",
+                                    "location": "specs/homepage.spec:16",
+                                    "status": "info",
+                                    "highlight": [
+                                        "header",
+                                        "screen"
+                                    ],
+                                },
+                                {
+                                    "name": "component: header.spec",
+                                    "status": "info",
+                                    "sublayout": {
+                                        "type": "layout",
+                                        "objects": {
+                                            "parent": [0, 0, 100, 60],
+                                            "header-icon": [10, 10, 40, 40]
+                                        },
+                                        "sections": [
+                                            {
+                                                "name": "subsection",
+                                                "objects": [
+                                                    {
+                                                        "name": "header-icon",
+                                                        "checks": [
+                                                            {
+                                                                "name": "inside: parent 11px top left",
+                                                                "status": "warn",
+                                                                "error": "Element \"header-icon\" is 10 px top and left inside \"parent\"",
+                                                                "highlight": [
+                                                                    "header-icon", "parent"
+                                                                ]
+                                                            }
+                                                        ]
+                                                    }
+                                                ]
+                                            }
+                                        ]
+                                    }
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+};
+        </script>
+        <script>
+
+            $(function () {
+                var galenReport = createGalenReport();
+                galenReport.render("main", reportData);
+            });
+        </script>
     </head>
     <body>
-        <div class="report-node root-node">
-            <div class="report-title report-info">Home page test</div>
-            <div class="report-node">
-                <div class="report-title report-warn">http://example.com 640x480</div>
-                <div class="report-node">
+        <script id="report-tpl" type="text/x-handlebars-template">
+            <ul class="report-nodes">
+            {{#each nodes}}
+                {{renderNode this}}
+
+
+            {{/each}}
+            </ul>
+        </script>
+        <script id="report-node-tpl" type="text/x-handlebars-template">
+            <li>
+                <a class="node-expand-button node-status-label node-status-{{status}}" href="#"></a>
+                <div class="node-name">{{name}}</div>
+                <div class="node-details">
+
                 </div>
-            </div>
-        </div>
+            </li>
+        </script>
+        <h2>Some test</h2>
+        <div id="main"></div>
     </body>
 </html>

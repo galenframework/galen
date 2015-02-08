@@ -77,7 +77,10 @@
                                             "checks": [
                                                 "name": "width: 100% of header-icon/height",
                                                 "location": "specs/homepage.spec:15",
-                                                "status": "info"
+                                                "status": "info",
+                                                "highlight": [
+                                                    "header-icon"
+                                                ]
                                             ]
                                         }
                                     ]
@@ -86,6 +89,49 @@
                         }
                     ],
                     "objects": [
+                        {
+                            "name": "header",
+                            "checks": [
+                                {
+                                    "name": "inside: screen 0px left top right",
+                                    "location": "specs/homepage.spec:16",
+                                    "status": "info",
+                                    "highlight": [
+                                        "header",
+                                        "screen"
+                                    ],
+                                },
+                                {
+                                    "name": "component: header.spec",
+                                    "status": "info",
+                                    "sublayout": {
+                                        "type": "layout",
+                                        "objects": {
+                                            "parent": [0, 0, 100, 60],
+                                            "header-icon": [10, 10, 40, 40]
+                                        },
+                                        "sections": [
+                                            {
+                                                "name": "subsection",
+                                                "objects": [
+                                                    "name": "header-icon",
+                                                    "checks": [
+                                                        {
+                                                            "name": "inside: parent 11px top left",
+                                                            "status": "warn",
+                                                            "error": "Element \"header-icon\" is 10 px top and left inside \"parent\"",
+                                                            "highlight": [
+                                                                "header-icon", "parent"
+                                                            ]
+                                                        }
+                                                    ]
+                                                ]
+                                            }
+                                        ]
+                                    }
+                                }
+                            ]
+                        }
                     ]
                 }
             ]
