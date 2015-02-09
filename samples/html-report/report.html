@@ -190,7 +190,7 @@ var reportData = {
         <script id="report-node-tpl" type="text/x-handlebars-template">
             <li>
                 <span class="report-time">{{formatReportTime time}}</span>
-                <a class="expand-link node-expand-button node-status-{{status}}" href="#">{{status}}</a>
+                <a class="expand-link node-expand-button node-status-{{status}} contains-children-{{hasChildElements nodes}} collapsed" href="#">{{status}}</a>
                 <div class="node-name">{{name}}</div>
                 {{#if attachments}}
                     <ul class="report-node-attachments">
@@ -202,11 +202,13 @@ var reportData = {
                     </ul>
                 {{/if}}
                 <div class="node-details expand-container">
-                    <ul class="report-nodes">
-                        {{#each nodes}}
-                            {{renderNode this}}
-                        {{/each}}
-                    </ul>
+                    {{#if nodes}}
+                        <ul class="report-nodes">
+                            {{#each nodes}}
+                                {{renderNode this}}
+                            {{/each}}
+                        </ul>
+                    {{/if}}
                 </div>
             </li>
         </script>
@@ -216,7 +218,7 @@ var reportData = {
         <script id="report-layout-tpl" type="text/x-handlebars-template">
             <li>
                 <span class="report-time">{{formatReportTime time}}</span>
-                <a class="expand-link node-expand-button node-status-label node-status-info" href="#">INFO</a>
+                <a class="expand-link node-expand-button node-status-label node-status-info contains-children-true collapsed" href="#">INFO</a>
                 <div class="node-name">{{name}}</div>
                 <div class="node-details expand-container">
                     <div class="layout-report" data-screenshot="{{screenshot}}">
@@ -240,17 +242,20 @@ var reportData = {
             <li>
                 <a class="layout-section expand-link" href="#">{{name}}</a>
                 <div class="layout-details expand-container">
-                    <ul class="layout-sections">
-                    {{#each sections}}
-                        {{renderLayoutSection this}}
-                    {{/each}}
-                    </ul>
-
-                    <ul class="layout-objects">
-                        {{#each objects}}
-                            {{renderLayoutObject this}}
+                    {{#if sections}}
+                        <ul class="layout-sections">
+                        {{#each sections}}
+                            {{renderLayoutSection this}}
                         {{/each}}
-                    </ul>
+                        </ul>
+                    {{/if}}
+                    {{#if objects}}
+                        <ul class="layout-objects">
+                            {{#each objects}}
+                                {{renderLayoutObject this}}
+                            {{/each}}
+                        </ul>
+                    {{/if}}
                 </div>
             </li>
         </script>
@@ -258,11 +263,13 @@ var reportData = {
         <script id="report-layout-object-tpl" type="text/x-handlebars-template">
             <li>
                 <a class="layout-object expand-link" href="#">{{name}}</a>
-                <ul class="layout-checks expand-container">
-                    {{#each checks}}
-                        {{renderLayoutCheck this}}
-                    {{/each}}
-                </ul>
+                {{#if checks}}
+                    <ul class="layout-checks expand-container">
+                        {{#each checks}}
+                            {{renderLayoutCheck this}}
+                        {{/each}}
+                    </ul>
+                {{/if}}
             </li>
         </script>
         <script id="report-layout-check-tpl" type="text/x-handlebars-template">

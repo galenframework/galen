@@ -17,6 +17,10 @@ var _GalenReport = {};
 function safeHtml(html) {
     return new Handlebars.SafeString(html);
 }
+
+function hasChildElements(items) {
+    return items !== null && items !== undefined && Array.isArray(items) && items.length > 0;
+}
 function createGalenReport() {
     Handlebars.registerHelper("renderNode", function (node) {
         if (node !== null && node !== undefined) {
@@ -55,6 +59,13 @@ function createGalenReport() {
         }
     });
 
+    Handlebars.registerHelper("hasChildElements", function (items1, items2) {
+        if (hasChildElements(items1) || hasChildElements(items2)) {
+            return "true"
+        }
+        return "false";
+    });
+
     Handlebars.registerHelper("formatReportTime", function (time) {
         if (time !== null && time !== undefined) {
         var date = new Date(time * 1000);
@@ -84,13 +95,24 @@ function createGalenReport() {
         render: function (id, reportData) {
             setHtml(id, this.tpl.main(reportData));
 
-            $("a.expand-link").click(function () {
+            
+            $("a.expand-link.contains-children-true").click(function () {
+                var expandLink = this;
 
                 var container = $(this).next(".expand-container");
                 if (container.length === 0) {
                     container = $(this).next().next(".expand-container");
                 }
-                container.slideToggle('fast');
+                container.slideToggle({
+                    duration: "fast",
+                    complete: function () {
+                        if ($(this).is(":visible")) {
+                            $(expandLink).removeClass("collapsed").addClass("expanded");
+                        } else {
+                            $(expandLink).removeClass("expanded").addClass("collapsed");
+                        }
+                    }
+                });
 
                 return false;
             });

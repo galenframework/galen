@@ -16,6 +16,9 @@ ul {
     margin-left: 30px;
 }
 
+.expand-container {
+    display: none;
+}
 
 .node-expand-button {
     position: relative;
@@ -27,13 +30,13 @@ ul {
     font-size: 0.8em;
     margin-left: 25px;
 }
-a.node-expand-button:before { 
+a.node-expand-button.contains-children-true:before { 
     display: block;
     position: absolute;
     left: -20px;
     top: 3px;
     font-size: 1.2em;
-    content: "-";
+    content: " ";
     color: #777;
     background: #fff;
     width: 16px;
@@ -43,6 +46,12 @@ a.node-expand-button:before {
     text-align: center;
     border:1px solid #f0f0f0;
     border-radius: 20px;
+}
+a.node-expand-button.contains-children-true.expanded:before { 
+    content: "-";
+}
+a.node-expand-button.contains-children-true.collapsed:before { 
+    content: "+";
 }
 
 .node-expand-button.node-status-info {
@@ -88,12 +97,11 @@ a.node-expand-button:before {
 
 /* Layout  */
 ul.layout-sections > li, ul.layout-objects > li, ul.layout-checks > li {
-    margin: 5px;
+    margin:5px 5px 5px 7px;
 }
 a.layout-section, a.layout-object, a.layout-check {
     padding: 2px;
     position: relative;
-    margin-left: 40px;
     color: #555;
     text-decoration: none;
     font-size: 1.0em;
@@ -166,8 +174,7 @@ a.layout-check-status-warn {
     padding: 20px;
     color: #B33914;
     background: #FCF6E8;
-    border-radius: 10px;
-    box-shadow: 1px 1px 4px #bbb; 
+    border-left: 4px solid #DB4B4B;
 }
 
 
