@@ -28,7 +28,7 @@ var reportData = {
                 {
                     "type": "node",
                     "name": "Click loginButton",
-                    "status": "info",
+                    "status": "error",
                     "time": "1423304780953",
                     "nodes": [
                         {
@@ -51,7 +51,7 @@ var reportData = {
             "tags": ["mobile", "tablet"],
             "status": "error",
             "time": "1423304781953",
-            "screenshot": "somescreenshot.png",
+            "screenshot": "screenshot.png",
             "objects": {
                 "header": {
                     "area": [0, 0, 1000, 60]
@@ -136,9 +136,14 @@ var reportData = {
                                     "status": "info",
                                     "sublayout": {
                                         "type": "layout",
+                                        "screenshot": "screenshot.png",
                                         "objects": {
-                                            "parent": [0, 0, 100, 60],
-                                            "header-icon": [10, 10, 40, 40]
+                                            "parent": {
+                                                "area": [0, 0, 100, 60]
+                                            },
+                                            "header-icon": {
+                                                "area": [10, 10, 40, 40] 
+                                            }
                                         },
                                         "sections": [
                                             {
@@ -221,26 +226,22 @@ var reportData = {
                 <a class="expand-link node-expand-button node-status-label node-status-info contains-children-true collapsed" href="#">INFO</a>
                 <div class="node-name">{{name}}</div>
                 <div class="node-details expand-container">
-                    <div class="layout-report" data-screenshot="{{screenshot}}">
-                        <ul class="layout-sections">
-                            {{#each sections}}
-                                {{renderLayoutSection this}}
-                            {{/each}}
-                        </ul>
-                    </div>
+                    {{renderSublayout this}}
                 </div>
             </li>
         </script>
         <script id="report-layout-sublayout-tpl" type="text/x-handlebars-template">
-            <ul class="layout-sections">
-                {{#each sections}}
-                    {{renderLayoutSection this}}
-                {{/each}}
-            </ul>
+            <div class="layout-report" data-layout-id="{{layoutId}}" data-screenshot="{{screenshot}}">
+                <ul class="layout-sections">
+                    {{#each sections}}
+                        {{renderLayoutSection this}}
+                    {{/each}}
+                </ul>
+            </div>
         </script>
         <script id="report-layout-section-tpl" type="text/x-handlebars-template">
             <li>
-                <a class="layout-section expand-link" href="#">{{name}}</a>
+                <a class="layout-section expand-link contains-children-true" href="#">{{name}}</a>
                 <div class="layout-details expand-container">
                     {{#if sections}}
                         <ul class="layout-sections">
@@ -262,7 +263,7 @@ var reportData = {
         
         <script id="report-layout-object-tpl" type="text/x-handlebars-template">
             <li>
-                <a class="layout-object expand-link" href="#">{{name}}</a>
+                <a class="layout-object expand-link contains-children-true" href="#">{{name}}</a>
                 {{#if checks}}
                     <ul class="layout-checks expand-container">
                         {{#each checks}}
@@ -274,10 +275,19 @@ var reportData = {
         </script>
         <script id="report-layout-check-tpl" type="text/x-handlebars-template">
             <li>
-                <a class="layout-check layout-check-status-{{status}}" href="#">{{name}}</a>
+                <a class="layout-check layout-check-status-{{status}}" href="#" data-highlight-objects="{{commaSeparated highlight}}">{{name}}</a>
                 {{#if error}}
                     <div class="layout-check-error-message">
-                        {{error}}
+                        {{#if image-comparison}}
+                        <a class="image-comparison-link" 
+                            data-actual-image="{{image-comparison.actual.path}}" data-actual-image-area="{{image-comparison.actual.area}}" 
+                            data-expected-image="{{image-comparison.expected.path}}" data-expected-image-area="{{image-comparison.expected.area}}" 
+                            data-map-image="{{image-comparison.comparison-map.path}}" data-map-image-area="{{image-comparison.comparison-map.area}}" 
+                            href="#">Show image comparison</a>
+                        {{/if}}
+                        <div class="layout-check-error-message-text">
+                            {{error}}
+                        </div>
                     </div>
                 {{/if}}
 
@@ -286,8 +296,42 @@ var reportData = {
                 {{/if}}
             </li>
         </script>
+        <script id="screenshot-popup-tpl" type="text/x-handlebars-template">
+            <div class="screenshot-canvas">
+                <img src="{{screenshot}}"/>
+                {{#each objects}}
+                <div class="canvas-rect" style="left: {{area.left}}px; top: {{area.top}}px; width: {{area.width}}px; height: {{area.height}}px; border-color: {{color}};">
+                    <div class="canvas-rect-wrapper">
+                        <div class="canvas-rect-hint" style="background: {{color}};">{{@key}}</div>
+                    </div>
+                </div>
+                {{/each}}
+            </div>
+        </script>
 
+
+        <div id="menu">
+            <ul>
+                <li><a class="menu-op-expand-all" href="#">Expand All</a></li>
+                <li><a class="menu-op-collapse-all" href="#">Collapse All</a></li>
+                <li><a class="menu-op-expand-errors" href="#">Expand Erorrs</a></li>
+            </ul>
+        </div>
         <h2>Some test</h2>
         <div id="main"></div>
+        <div id="screen-shadow"></div>
+        <div id="popup" class="popup">
+            <div class="popup-wrapper">
+                <a class="popup-close-link" href="#">close</a>
+                <div class="popup-content"></div>
+            </div>
+        </div>
+        <div id="notification" class="notification">
+            <div class="notification-wrapper">
+                <a class="notification-close-link" href="#">close</a>
+                <div class="notification-summary"></div>
+                <div class="notification-message"></div>
+            </div>
+        </div>
     </body>
 </html>

@@ -1,11 +1,43 @@
 body {
     font-size: 1.em;
     font-family: helvetica;
+    margin: 0;
+    padding: 0;
 }
 ul {
     list-style: none;
     padding-left: 20px;
 }
+
+
+#menu{
+    background: #4982A6;
+    padding: 0;
+    margin: 0;
+    color: #fff;
+}
+#menu ul:after {
+    display: block;
+    content: " ";
+    clear: both;
+}
+#menu ul li {
+    margin: 0;
+    padding: 0;
+    float: left;
+    border-right: 1px dotted #80A7BF;
+}
+#menu a {
+    color: #fff;
+    display: inline-block;
+    padding: 10px;
+    font-weight: bold;
+    text-decoration: none;
+}
+#menu a:hover {
+    background: #305B75;
+}
+
 
 
 
@@ -18,6 +50,8 @@ ul {
 
 .expand-container {
     display: none;
+    border-left: 1px dashed #eee;
+    margin-left: 14px;
 }
 
 .node-expand-button {
@@ -57,6 +91,10 @@ a.node-expand-button.contains-children-true.collapsed:before {
 .node-expand-button.node-status-info {
     background: #f0f0f0;
     color: #555;
+}
+.node-expand-button.node-status-error {
+    background: #f04040;
+    color: #fff;
 }
 
 .report-nodes > li {
@@ -176,5 +214,104 @@ a.layout-check-status-warn {
     background: #FCF6E8;
     border-left: 4px solid #DB4B4B;
 }
+.layout-check-error-message-text {
+    margin-top: 10px;
+}
 
+/* Image comparison */
+.image-comparison-link {
+    color: #A32214;
+    font-weight: bold;
+}
 
+/* Notifications */
+
+.notification {
+    position: fixed;
+    display: none;
+    top: 10px;
+    right: 10px;
+    padding: 10px;
+    background: white;
+    font-size: 0.8em;
+    border-radius: 10px;
+    box-shadow: 1px 1px 5px #000;
+}
+.notification-wrapper {
+    position: relative;
+    padding-top: 10px;
+}
+.notification .notification-close-link {
+    display: inline-block;
+    position: absolute;
+    right: -5px;
+    top: -5px;
+    color: #777;
+    font-weight: normal;
+    text-decoration: none;
+}
+.notification .notification-summary {
+    font-weight: bold;
+}
+
+/* Popup */
+#screen-shadow {
+    display: none;
+    background: black;
+    opacity: 0.8;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.popup {
+    position: absolute;
+    display: none;
+    background: white;
+    border-radius: 10px;
+    box-shadow: 1px 1px 5px #000;
+}
+
+.popup .popup-wrapper {
+    padding: 30px 10px 10px 10px;
+    position: relative;
+}
+
+.popup .popup-close-link {
+    position: absolute;
+    top: 6px;
+    right : 7px;
+    color: #777;
+    font-size: 0.8em;
+    text-decoration: none;
+}
+
+.screenshot-canvas {
+    position: relative;
+    padding: 0;
+    margin: 0;
+}
+.screenshot-canvas .canvas-rect {
+    position: absolute;
+    border-radius: 3px;
+    border:3px solid;
+    opacity: 0.6;
+}
+.screenshot-canvas div.canvas-rect:hover {
+    opacity: 1.0;
+}
+.screenshot-canvas .canvas-rect .canvas-rect-wrapper {
+    position: relative;
+}
+.screenshot-canvas .canvas-rect .canvas-rect-hint {
+    position: absolute;
+    font-size: 0.8em;
+    top: -18px;
+    left: 0px;
+    white-space: nowrap;
+    padding: 2px;
+    color: #fff;
+    font-weight: bold;
+}
