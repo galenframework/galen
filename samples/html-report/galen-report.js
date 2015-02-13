@@ -93,7 +93,7 @@ function onLayoutCheckClick() {
     var objectNames = $this.attr("data-highlight-objects").split(",");
 
     var checkText = $this.text();
-    var errorText = $this.next(".layout-check-error-message").text();
+    var errorText = $this.next(".layout-check-error-message").find(".layout-check-error-message-text").text();
 
     var layoutId = $this.closest(".layout-report").attr("data-layout-id");
 
@@ -101,18 +101,13 @@ function onLayoutCheckClick() {
         var layout = _GalenReport.layouts[layoutId];
 
         if (layout !== null) {
-            var img = new Image();
             var objects = collectObjectsToHighlight(layout.objects, objectNames);
 
-            img.onload = function() {
+            loadImage(layout.screenshot, function () {
                 _GalenReport.showNotification(checkText, errorText);
                 _GalenReport.showScreenshotWithObjects(layout.screenshot, this.width, this.height, objects);
-            };
-            img.onerror = function() {
-                _GalenReport.showNotification("Cannot load screenshot", "Can't load screenshot: " + layout.screenshot);
-            };
+            });
 
-            img.src = layout.screenshot;
         } else {
             _GalenReport.showErrorNotification("Couldn't find layout data");
         }
@@ -123,8 +118,34 @@ function onLayoutCheckClick() {
     return false;
 }
 
+function loadImage(imagePath, callback) {
+    var img = new Image();
+    img.onload = function () {
+        callback(this, this.width, this.height);
+    };
+    img.onerror = function() {
+        _GalenReport.showNotification("Cannot load image", "Path: " + imagePath);
+    };
+    img.src = imagePath;
+}
+
 function onImageComparisonClick() {
     var $this = $(this);
+    var actualImagePath = $this.attr("data-actual-image");
+    var expectedImagePath = $this.attr("data-expected-image");
+    var mapImagePath = $this.attr("data-map-image");
+
+    loadImage(actualImagePath, function (actualImage, actualImageWidth, actualImageHeight) {
+        loadImage(expectedImagePath, function (expectedImage, expectedImageWidth, expectedImageHeight) {
+            loadImage(mapImagePath, function (mapImage, mapImageWidth, mapImageHeight) {
+                showPopup(_GalenReport.tpl.imageComparison({
+                    actual: actualImagePath,
+                    expected: expectedImagePath,
+                    map: mapImagePath
+                }));
+            });
+        });
+    });
     return false;
 }
 
@@ -199,7 +220,8 @@ function createGalenReport() {
            layoutObject: createTemplate("report-layout-object-tpl"),
            layoutCheck: createTemplate("report-layout-check-tpl"),
            sublayout: createTemplate("report-layout-sublayout-tpl"),
-           screenshotPopup: createTemplate("screenshot-popup-tpl")
+           screenshotPopup: createTemplate("screenshot-popup-tpl"),
+           imageComparison: createTemplate("image-comparison-tpl")
         },
 
         render: function (id, reportData) {

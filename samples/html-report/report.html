@@ -79,18 +79,9 @@ var reportData = {
                                                 "header-icon"
                                             ],
                                             "image-comparison": {
-                                                "actual": {
-                                                    "path": "asdadasdad.png",
-                                                    "area": [10, 10, 40, 40]
-                                                },
-                                                "expected": {
-                                                    "path": "asdasd.png",
-                                                    "area": null
-                                                },
-                                                "comparison-map": {
-                                                    "path":  "comparison-map.png",
-                                                    "area": null
-                                                }
+                                                "actual": "actual.png",
+                                                "expected": "expected.png",
+                                                "comparison-map": "comparison-map.png"
                                             }
                                         }
                                     ]
@@ -280,9 +271,9 @@ var reportData = {
                     <div class="layout-check-error-message">
                         {{#if image-comparison}}
                         <a class="image-comparison-link" 
-                            data-actual-image="{{image-comparison.actual.path}}" data-actual-image-area="{{image-comparison.actual.area}}" 
-                            data-expected-image="{{image-comparison.expected.path}}" data-expected-image-area="{{image-comparison.expected.area}}" 
-                            data-map-image="{{image-comparison.comparison-map.path}}" data-map-image-area="{{image-comparison.comparison-map.area}}" 
+                            data-actual-image="{{image-comparison.actual}}" 
+                            data-expected-image="{{image-comparison.expected}}" 
+                            data-map-image="{{image-comparison.comparison-map}}"
                             href="#">Show image comparison</a>
                         {{/if}}
                         <div class="layout-check-error-message-text">
@@ -306,6 +297,18 @@ var reportData = {
                     </div>
                 </div>
                 {{/each}}
+            </div>
+        </script>
+        <script id="image-comparison-tpl" type="text/x-handlebars-template">
+            <div class="image-comparison">
+                <h5>Actual</h5>
+                <img src="{{actual}}"/>
+
+                <h5>Expected</h5>
+                <img src="{{expected}}"/>
+
+                <h5>Comparison map</h5>
+                <img src="{{map}}"/>
             </div>
         </script>
 

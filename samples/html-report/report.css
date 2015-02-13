@@ -223,6 +223,16 @@ a.layout-check-status-warn {
     color: #A32214;
     font-weight: bold;
 }
+.image-comparison {
+    min-width: 300px;
+}
+.image-comparison h5 {
+    font-size: 1.em;
+    margin: 10px 0px 5px 0px;
+}
+.image-comparison img {
+    margin-bottom: 20px;
+}
 
 /* Notifications */
 
