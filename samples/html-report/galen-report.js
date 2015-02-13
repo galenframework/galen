@@ -262,6 +262,10 @@ function createGalenReport() {
 
     $(".notification-close-link").click(onNotificationCloseClick);
     $(".popup-close-link").click(onPopupCloseClick);
+    $("#screen-shadow").click(function () {
+        hidePopup();
+        hideNotification();
+    });
 
     $(".menu-op-expand-all").click(expandAllNodes);
     $(".menu-op-collapse-all").click(collapseAllNodes);
