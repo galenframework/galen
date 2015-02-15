@@ -43,7 +43,7 @@ var reportData = {
             "type": "node",
             "name": "Node report without child nodes",
             "time": "1423304780953",
-            "status": "info"
+            "status": "warn"
         },
         {
             "type": "layout",
@@ -187,7 +187,7 @@ var reportData = {
             <li>
                 <span class="report-time">{{formatReportTime time}}</span>
                 <a class="expand-link node-expand-button node-status-{{status}} contains-children-{{hasChildElements nodes}} collapsed" href="#">{{status}}</a>
-                <div class="node-name">{{name}}</div>
+                <div class="node-name node-status-{{status}}">{{name}}</div>
                 {{#if attachments}}
                     <ul class="report-node-attachments">
                         {{#each attachments}}
@@ -209,7 +209,11 @@ var reportData = {
             </li>
         </script>
         <script id="report-node-text-tpl" type="text/x-handlebars-template">
-            <li>{{text}}</li>
+            <li>
+                <div class="node-simple-text">
+                    {{text}}
+                </div>
+            </li>
         </script>
         <script id="report-layout-tpl" type="text/x-handlebars-template">
             <li>
@@ -266,7 +270,11 @@ var reportData = {
         </script>
         <script id="report-layout-check-tpl" type="text/x-handlebars-template">
             <li>
-                <a class="layout-check layout-check-status-{{status}}" href="#" data-highlight-objects="{{commaSeparated highlight}}">{{name}}</a>
+            <a class="layout-check layout-check-status-{{status}}" href="#" 
+                data-highlight-objects="{{commaSeparated highlight}}"
+                title="{{location}}"
+                >{{name}}</a>
+
                 {{#if error}}
                     <div class="layout-check-error-message">
                         {{#if image-comparison}}
@@ -317,7 +325,7 @@ var reportData = {
             <ul>
                 <li><a class="menu-op-expand-all" href="#">Expand All</a></li>
                 <li><a class="menu-op-collapse-all" href="#">Collapse All</a></li>
-                <li><a class="menu-op-expand-errors" href="#">Expand Erorrs</a></li>
+                <li><a class="menu-op-expand-errors" href="#">Expand Errors</a></li>
             </ul>
         </div>
         <h2>Some test</h2>

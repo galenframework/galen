@@ -73,6 +73,16 @@ public class FailureListener implements CompleteListener {
     }
 
     @Override
+    public void onSubLayout(PageValidation pageValidation, String objectName) {
+
+    }
+
+    @Override
+    public void onAfterSubLayout(PageValidation pageValidation, String objectName) {
+
+    }
+
+    @Override
     public void onTestFinished(GalenTest test) {
     }
 

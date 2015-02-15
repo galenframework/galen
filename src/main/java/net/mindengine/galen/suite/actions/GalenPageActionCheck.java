@@ -20,9 +20,9 @@ import java.util.List;
 
 import net.mindengine.galen.api.Galen;
 import net.mindengine.galen.browser.Browser;
-import net.mindengine.galen.reports.LayoutReportNode;
+import net.mindengine.galen.reports.nodes.LayoutReportNode;
 import net.mindengine.galen.reports.TestReport;
-import net.mindengine.galen.reports.TestReportNode;
+import net.mindengine.galen.reports.nodes.TestReportNode;
 import net.mindengine.galen.reports.model.LayoutReport;
 import net.mindengine.galen.suite.GalenPageAction;
 import net.mindengine.galen.suite.GalenPageTest;

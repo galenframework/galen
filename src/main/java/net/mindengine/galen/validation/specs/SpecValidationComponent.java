@@ -27,14 +27,18 @@ import net.mindengine.galen.specs.reader.page.PageSpec;
 import net.mindengine.galen.specs.reader.page.PageSpecReader;
 import net.mindengine.galen.specs.reader.page.SectionFilter;
 import net.mindengine.galen.validation.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class SpecValidationComponent extends SpecValidation<SpecComponent> {
+    private final static Logger LOG = LoggerFactory.getLogger(SpecValidationComponent.class);
 
     @Override
     public void check(PageValidation pageValidation, String objectName, SpecComponent spec) throws ValidationErrorException {
         PageElement mainObject = pageValidation.findPageElement(objectName);
         checkAvailability(mainObject, objectName);
 
+        tellListenerSubLayout(pageValidation, objectName);
         List<ValidationError> errors;
 
         if (spec.isFrame()) {
@@ -43,12 +47,36 @@ public class SpecValidationComponent extends SpecValidation<SpecComponent> {
         else {
             errors = checkInsideNormalWebElement(pageValidation, objectName, spec);
         }
+        tellListenerAfterSubLayout(pageValidation, objectName);
 
         if (errors != null && errors.size() > 0) {
             throw new ValidationErrorException("Child component spec contains " + errors.size() + " errors");
         }
 
     }
+
+    private void tellListenerAfterSubLayout(PageValidation pageValidation, String objectName) {
+        if (pageValidation.getValidationListener() != null) {
+            try {
+                pageValidation.getValidationListener().onAfterSubLayout(pageValidation, objectName);
+            }
+            catch (Exception ex) {
+                LOG.trace("Unknown error during validation after object", ex);
+            }
+        }
+    }
+
+    private void tellListenerSubLayout(PageValidation pageValidation, String objectName) {
+        if (pageValidation.getValidationListener() != null) {
+            try {
+                pageValidation.getValidationListener().onSubLayout(pageValidation, objectName);
+            }
+            catch (Exception ex) {
+                LOG.trace("Unknown error during validation after object", ex);
+            }
+        }
+    }
+
 
     private List<ValidationError> checkInsideFrame(PageElement mainObject, PageValidation pageValidation, SpecComponent spec) {
         Page page = pageValidation.getPage();

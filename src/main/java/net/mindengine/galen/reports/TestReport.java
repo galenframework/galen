@@ -16,6 +16,8 @@
 package net.mindengine.galen.reports;
 
 import net.mindengine.galen.reports.model.LayoutReport;
+import net.mindengine.galen.reports.nodes.LayoutReportNode;
+import net.mindengine.galen.reports.nodes.TestReportNode;
 
 import java.util.List;
 

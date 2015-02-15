@@ -24,37 +24,36 @@ import java.util.List;
 import net.mindengine.galen.page.Rect;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.apache.commons.lang3.exception.ExceptionUtils;
 
 public class ValidationError {
 
-    private List<ErrorArea> errorAreas;
+    private List<ValidationObject> objects = new LinkedList<ValidationObject>();
     private List<String> messages;
     private ImageComparison imageComparison;
     private boolean onlyWarn;
 
-    public ValidationError(List<ErrorArea> errorAreas, List<String> messages) {
-        this.setErrorAreas(errorAreas);
+    public ValidationError(List<ValidationObject> objects, List<String> messages) {
+        this.setObjects(objects);
         this.messages = messages;
     }
 
-    public ValidationError(List<ErrorArea> errorAreas, List<String> messages, ImageComparison imageComparison) {
-        this.setErrorAreas(errorAreas);
+    public ValidationError(List<ValidationObject> objects, List<String> messages, ImageComparison imageComparison) {
+        this.objects = objects;
         this.messages = messages;
         this.imageComparison = imageComparison;
     }
 
     public ValidationError() {
-        
     }
         
 
     @Override
     public int hashCode() {
         return new HashCodeBuilder(17, 31)
-                .append(getErrorAreas())
+                .append(objects)
                 .append(messages)
                 .append(imageComparison)
+                .append(onlyWarn)
                 .toHashCode();
     }
     
@@ -69,26 +68,18 @@ public class ValidationError {
         
         ValidationError rhs = (ValidationError)obj;
         return new EqualsBuilder()
-                .append(getErrorAreas(), rhs.getErrorAreas())
+                .append(objects, rhs.objects)
                 .append(messages, rhs.messages)
                 .append(imageComparison, rhs.imageComparison)
+                .append(onlyWarn, rhs.onlyWarn)
                 .isEquals();
     }
     
     @Override
     public String toString() {
-        return format("Error{%s, areas=%s, imageComparisonSample=%s}", messages, getErrorAreas(), imageComparison);
+        return format("Error{%s, areas=%s, imageComparisonSample=%s, onlyWarn=%s}", messages, objects, imageComparison, onlyWarn);
     }
 
-
-
-    public ValidationError withArea(ErrorArea errorArea) {
-        if (getErrorAreas() == null) {
-            setErrorAreas(new LinkedList<ErrorArea>());
-        }
-        getErrorAreas().add(errorArea);
-        return this;
-    }
 
     public List<String> getMessages() {
         return messages;
@@ -104,23 +95,6 @@ public class ValidationError {
         }
         messages.add(message);
         return this;
-    }
-
-    public ValidationError withErrorAreas(List<ErrorArea> errorAreas) {
-        this.setErrorAreas(errorAreas);
-        return this;
-    }
-
-    public List<ErrorArea> getErrorAreas() {
-        return errorAreas;
-    }
-
-    public void setErrorAreas(List<ErrorArea> errorAreas) {
-        this.errorAreas = errorAreas;
-    }
-
-    public static ValidationError fromException(Exception e) {
-        return new ValidationError().withMessage(ExceptionUtils.getMessage(e));
     }
 
     public void setOnlyWarn(boolean onlyWarn) {
@@ -150,4 +124,11 @@ public class ValidationError {
         this.imageComparison = imageComparison;
     }
 
+    public List<ValidationObject> getObjects() {
+        return objects;
+    }
+
+    public void setObjects(List<ValidationObject> objects) {
+        this.objects = objects;
+    }
 }

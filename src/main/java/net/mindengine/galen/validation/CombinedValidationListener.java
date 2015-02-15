@@ -92,6 +92,21 @@ public class CombinedValidationListener implements ValidationListener {
         }
     }
 
+    @Override
+    public void onSubLayout(PageValidation pageValidation, String objectName) {
+        for (ValidationListener listener: listeners) {
+            listener.onSubLayout(pageValidation, objectName);
+        }
+    }
+
+    @Override
+    public void onAfterSubLayout(PageValidation pageValidation, String objectName) {
+        for (ValidationListener listener: listeners) {
+            listener.onAfterSubLayout(pageValidation, objectName);
+        }
+
+    }
+
     public void add(ValidationListener validationListener) {
         if (validationListener != null) {
             listeners.add(validationListener);

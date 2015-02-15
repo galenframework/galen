@@ -15,6 +15,7 @@
 ******************************************************************************/
 package net.mindengine.galen.tests.runner;
 
+import static org.apache.commons.io.FileUtils.readFileToString;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 
@@ -23,7 +24,6 @@ import java.io.File;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.io.UnsupportedEncodingException;
-import java.lang.reflect.Field;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
@@ -31,20 +31,14 @@ import java.util.List;
 import junit.framework.Assert;
 import net.mindengine.galen.components.report.FakeException;
 import net.mindengine.galen.components.report.ReportingListenerTestUtils;
-import net.mindengine.galen.reports.ConsoleReportingListener;
-import net.mindengine.galen.reports.GalenTestInfo;
-import net.mindengine.galen.reports.HtmlReportBuilder;
-import net.mindengine.galen.reports.LayoutReportNode;
-import net.mindengine.galen.reports.TestNgReportBuilder;
-import net.mindengine.galen.reports.TestReport;
-import net.mindengine.galen.reports.TestReportNode;
+import net.mindengine.galen.reports.*;
+import net.mindengine.galen.reports.json.JsonReportBuilder;
 import net.mindengine.galen.reports.model.LayoutReport;
-import net.mindengine.galen.validation.LayoutReportListener;
+import net.mindengine.galen.reports.nodes.LayoutReportNode;
+import net.mindengine.galen.reports.LayoutReportListener;
 
-import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.testng.annotations.AfterMethod;
-import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import com.google.common.io.Files;
@@ -60,14 +54,35 @@ public class ReportingTest {
     }
     
     
-    @BeforeMethod
-    public void cleanupUniqueIds() throws NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException {
-        Field field = TestReportNode.class.getDeclaredField("_uniqueId");
-        field.setAccessible(true);
-        field.set(null, 0L);
+
+
+    @Test
+    public void shouldReport_inJsonFormat() throws IOException {
+        String reportPath = Files.createTempDir().getAbsolutePath() + "/json-report";
+        List<GalenTestInfo> testInfos = new LinkedList<GalenTestInfo>();
+        GalenTestInfo testInfo = new GalenTestInfo("Home page test", null);
+        TestReport report = new TestReport();
+        LayoutReport layoutReport = new LayoutReport();
+        layoutReport.setScreenshotFullPath(File.createTempFile("screenshot", ".png").getAbsolutePath());
+        ReportingListenerTestUtils.performSampleReporting("Home page test", null, new LayoutReportListener(layoutReport), null);
+
+        report.addNode(new LayoutReportNode(layoutReport, "check layout"));
+        report.getNodes().get(0).setTime(new Date(1404681346000L));
+
+
+        testInfo.setReport(report);
+        testInfos.add(testInfo);
+        testInfo.setStartedAt(new Date(1404681346000L));
+        testInfo.setEndedAt(new Date(1404681416000L));
+
+
+        new JsonReportBuilder().build(testInfos, reportPath);
+
+        assertFileContents("Report overview", reportPath + "/report.json", "/expected-reports/json/report.json");
+        assertFileContents("Test report", reportPath + "/1-home-page-test.json", "/expected-reports/json/1-home-page-test.json");
     }
-    
-    
+
+
     @Test public void shouldReport_inTestNgFormat_successfully() throws IOException, TemplateException {
         String reportPath = Files.createTempDir().getAbsolutePath() + "/testng-report/report.xml";
         
@@ -92,7 +107,7 @@ public class ReportingTest {
         
         String expectedXml = IOUtils.toString(getClass().getResourceAsStream("/expected-reports/testng-report.xml"));
        
-        String realXml = FileUtils.readFileToString(new File(reportPath));
+        String realXml = readFileToString(new File(reportPath));
         
         Assert.assertEquals(trimEveryLine(expectedXml), trimEveryLine(realXml));
     }
@@ -117,7 +132,7 @@ public class ReportingTest {
         new HtmlReportBuilder().build(testInfos, reportDirPath);
         
         String expectedSuite1Html = trimEveryLine(IOUtils.toString(getClass().getResourceAsStream("/expected-reports/test-with-attachment.html")));
-        String realSuite1Html = trimEveryLine(FileUtils.readFileToString(new File(reportDirPath + "/report-1-home-page-test.html")));
+        String realSuite1Html = trimEveryLine(readFileToString(new File(reportDirPath + "/report-1-home-page-test.html")));
         Assert.assertEquals(expectedSuite1Html, realSuite1Html);
         
         assertThat("Should place attachment file in same folder", new File(reportDirPath + "/report-1-home-page-test-attachment-1-custom.txt").exists(), is(true));
@@ -150,11 +165,11 @@ public class ReportingTest {
         
         
         String expectedGeneralHtml = trimEveryLine(IOUtils.toString(getClass().getResourceAsStream("/expected-reports/report.html")));
-        String realGeneralHtml = trimEveryLine(FileUtils.readFileToString(new File(reportDirPath + "/report.html")));
+        String realGeneralHtml = trimEveryLine(readFileToString(new File(reportDirPath + "/report.html")));
         Assert.assertEquals(expectedGeneralHtml, realGeneralHtml);
         
         String expectedSuite1Html = trimEveryLine(IOUtils.toString(getClass().getResourceAsStream("/expected-reports/test-1.html")));
-        String realSuite1Html = trimEveryLine(FileUtils.readFileToString(new File(reportDirPath + "/report-1-home-page-test.html")));
+        String realSuite1Html = trimEveryLine(readFileToString(new File(reportDirPath + "/report-1-home-page-test.html")));
         Assert.assertEquals(expectedSuite1Html, realSuite1Html);
         
         assertThat("Should place screenshot 1 in same folder", new File(reportDirPath + "/report-1-home-page-test-screenshot-1.png").exists(), is(true));
@@ -207,4 +222,15 @@ public class ReportingTest {
         
         Assert.assertEquals(expectedText, baos.toString("UTF-8"));
     }
+
+    private void assertFileContents(String title, String actualPath, String expectedPath) throws IOException {
+        String actualContent = readFileToString(new File(actualPath));
+
+        System.out.println("\n\n---- " + title + " -----------");
+        System.out.println(actualContent);
+        String expectedContent = readFileToString(new File(getClass().getResource(expectedPath).getFile()));
+
+        assertThat(title + " content should be", actualContent, is(expectedContent));
+    }
+
 }

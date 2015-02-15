@@ -18,59 +18,24 @@ package net.mindengine.galen.reports.model;
 import java.util.LinkedList;
 import java.util.List;
 
+import net.mindengine.galen.reports.nodes.TestReportNode;
 import net.mindengine.galen.specs.reader.Place;
-import net.mindengine.galen.validation.ErrorArea;
 import net.mindengine.galen.validation.ImageComparison;
 
 public class LayoutSpec {
+
+    private TestReportNode.Status status = TestReportNode.Status.INFO;
     
     private Place place;
-    private String text;
-    private Boolean failed = false;
-    private List<String> errorMessages = new LinkedList<String>();
-    private List<ErrorArea> errorAreas = new LinkedList<ErrorArea>();
-    private List<LayoutObject> subObjects;
-    private boolean onlyWarn;
+    private String name;
+    private List<String> errors = new LinkedList<String>();
+
+    // List of object names to be highlighted in report
+    private List<String> highlight = new LinkedList<String>();
     private ImageComparison imageComparison;
 
-    public String getText() {
-        return text;
-    }
-
-    public void setText(String text) {
-        this.text = text;
-    }
-
-    public Boolean getFailed() {
-        return failed;
-    }
-
-    public void setFailed(Boolean failed) {
-        this.failed = failed;
-    }
-
-    public void setErrorMessages(List<String> errorMessages) {
-        this.errorMessages = errorMessages;
-    }
-
-    public List<String> getErrorMessages() {
-        return this.errorMessages;
-    }
-
-    public void setErrorAreas(List<ErrorArea> errorAreas) {
-        this.errorAreas = errorAreas;
-    }
-    public List<ErrorArea> getErrorAreas() {
-        return this.errorAreas;
-    }
-
-    public List<LayoutObject> getSubObjects() {
-        return subObjects;
-    }
-
-    public void setSubObjects(List<LayoutObject> subObjects) {
-        this.subObjects = subObjects;
-    }
+    // Here it will temporarily store sub objects that will be later picked up by spec
+    private LayoutReport subLayout;
 
     public Place getPlace() {
         return place;
@@ -80,19 +45,51 @@ public class LayoutSpec {
         this.place = place;
     }
 
-    public void setOnlyWarn(boolean onlyWarn) {
-        this.onlyWarn = onlyWarn;
-    }
-
-    public boolean isOnlyWarn() {
-        return onlyWarn;
-    }
-
     public void setImageComparison(ImageComparison imageComparison) {
         this.imageComparison = imageComparison;
     }
 
     public ImageComparison getImageComparison() {
         return imageComparison;
+    }
+
+    public TestReportNode.Status getStatus() {
+        return status;
+    }
+
+    public void setStatus(TestReportNode.Status status) {
+        this.status = status;
+    }
+
+    public List<String> getErrors() {
+        return errors;
+    }
+
+    public void setErrors(List<String> errors) {
+        this.errors = errors;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public List<String> getHighlight() {
+        return highlight;
+    }
+
+    public void setHighlight(List<String> highlight) {
+        this.highlight = highlight;
+    }
+
+    public LayoutReport getSubLayout() {
+        return subLayout;
+    }
+
+    public void setSubLayout(LayoutReport subLayout) {
+        this.subLayout = subLayout;
     }
 }

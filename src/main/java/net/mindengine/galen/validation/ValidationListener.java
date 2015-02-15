@@ -33,11 +33,15 @@ public interface ValidationListener {
     void onGlobalError(GalenPageRunner pageRunner, Exception e);
 
     void onBeforePageAction(GalenPageRunner pageRunner, GalenPageAction action);
-    
+
     void onAfterPageAction(GalenPageRunner pageRunner, GalenPageAction action);
     
     void onBeforeSection(GalenPageRunner pageRunner, PageValidation pageValidation, PageSection pageSection);
     
     void onAfterSection(GalenPageRunner pageRunner, PageValidation pageValidation, PageSection pageSection);
+
+    void onSubLayout(PageValidation pageValidation, String objectName);
+
+    void onAfterSubLayout(PageValidation pageValidation, String objectName);
     
 }

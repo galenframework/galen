@@ -15,12 +15,13 @@
 ******************************************************************************/
 package net.mindengine.galen.tests.reports;
 
-import net.mindengine.galen.reports.LayoutReportNode;
+import net.mindengine.galen.reports.nodes.LayoutReportNode;
 import net.mindengine.galen.reports.TestStatistic;
 import net.mindengine.galen.reports.model.LayoutObject;
 import net.mindengine.galen.reports.model.LayoutReport;
 import net.mindengine.galen.reports.model.LayoutSection;
 import net.mindengine.galen.reports.model.LayoutSpec;
+import net.mindengine.galen.reports.nodes.TestReportNode;
 import net.mindengine.galen.validation.ValidationError;
 import org.testng.annotations.Test;
 
@@ -92,21 +93,19 @@ public class LayoutReportNodeTest {
 
     private LayoutSpec warnSpec() {
         LayoutSpec spec = new LayoutSpec();
-        spec.setFailed(true);
-        spec.setOnlyWarn(true);
+        spec.setStatus(TestReportNode.Status.WARN);
         return spec;
     }
 
     private LayoutSpec failedSpec() {
         LayoutSpec spec = new LayoutSpec();
-        spec.setFailed(true);
-        spec.setOnlyWarn(false);
+        spec.setStatus(TestReportNode.Status.ERROR);
         return spec;
     }
 
     private LayoutSpec passedSpec() {
         LayoutSpec spec = new LayoutSpec();
-        spec.setFailed(false);
+        spec.setStatus(TestReportNode.Status.INFO);
         return spec;
     }
 

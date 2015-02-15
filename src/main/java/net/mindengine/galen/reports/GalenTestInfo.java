@@ -18,16 +18,23 @@ package net.mindengine.galen.reports;
 import java.lang.reflect.Method;
 import java.util.Date;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import net.mindengine.galen.tests.GalenEmptyTest;
 import net.mindengine.galen.tests.GalenTest;
 
 public class GalenTestInfo {
 
     private String name;
+
+    @JsonIgnore
     private TestReport report = new TestReport();
+
+    @JsonIgnore
     private Throwable exception;
     private Date startedAt = new Date();
     private Date endedAt = new Date();
+
+    @JsonIgnore
     private GalenTest test;
     
     

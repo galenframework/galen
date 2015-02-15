@@ -24,28 +24,12 @@ public class LayoutObject {
     
     private String name;
     private List<LayoutSpec> specs = new LinkedList<LayoutSpec>();
-    private LayoutObject parent;
-    
-    // Here it will temporarily store sub objects that will be later picked up by spec
-    private List<LayoutObject> subObjects = null;
+
+
     private Rect area;
 
     public LayoutObject() {
         
-    }
-    
-    public LayoutObject(LayoutObject parent) {
-        this.setParent(parent);
-        if (parent != null) {
-            parent.appendChildObject(this);
-        }
-    }
-
-    private void appendChildObject(LayoutObject pageTestObject) {
-        if (getSubObjects() == null) {
-            setSubObjects(new LinkedList<LayoutObject>());
-        }
-        getSubObjects().add(pageTestObject);
     }
 
     public String getName() {
@@ -62,22 +46,6 @@ public class LayoutObject {
 
     public void setSpecs(List<LayoutSpec> specs) {
         this.specs = specs;
-    }
-
-    public LayoutObject getParent() {
-        return parent;
-    }
-
-    public void setParent(LayoutObject parent) {
-        this.parent = parent;
-    }
-
-    public List<LayoutObject> getSubObjects() {
-        return subObjects;
-    }
-
-    public void setSubObjects(List<LayoutObject> subObjects) {
-        this.subObjects = subObjects;
     }
 
     public void setArea(Rect area) {

@@ -188,7 +188,7 @@ public class SectionValidation {
                 validationListener.onAfterObject(UNKNOWN_PAGE_RUNNER, pageValidation, objectName);
             }
             catch (Exception e) {
-                LOG.trace("Unkown error during validation after object", e);
+                LOG.trace("Unknown error during validation after object", e);
             }
         } 
     }
@@ -199,7 +199,7 @@ public class SectionValidation {
                 validationListener.onObject(UNKNOWN_PAGE_RUNNER, pageValidation, objectName);
             }
             catch (Exception e) {
-                LOG.trace("Unkown error during validation on object", e);
+                LOG.trace("Unknown error during validation on object", e);
             }
         }
     }
@@ -229,7 +229,7 @@ public class SectionValidation {
             }
         }
         catch (Exception e) {
-            LOG.trace("Unkown error during tell spec error", e);
+            LOG.trace("Unknown error during tell spec error", e);
         }
     }
 
@@ -240,7 +240,7 @@ public class SectionValidation {
             }
         }
         catch (Exception e) {
-            LOG.trace("Unkown error during tell spec success", e);
+            LOG.trace("Unknown error during tell spec success", e);
         }
     }
 

@@ -15,6 +15,7 @@
 ******************************************************************************/
 package net.mindengine.galen.reports;
 
+import net.mindengine.galen.reports.nodes.TestReportNode;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 
 public class ExceptionReportNode extends TestReportNode {

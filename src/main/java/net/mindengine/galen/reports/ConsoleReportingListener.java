@@ -203,6 +203,16 @@ public class ConsoleReportingListener implements CompleteListener {
     }
 
     @Override
+    public void onSubLayout(PageValidation pageValidation, String objectName) {
+
+    }
+
+    @Override
+    public void onAfterSubLayout(PageValidation pageValidation, String objectName) {
+
+    }
+
+    @Override
     public void beforeTestSuite(List<GalenTest> tests) {
     }
 

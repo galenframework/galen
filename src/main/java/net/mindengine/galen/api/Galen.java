@@ -20,6 +20,7 @@ import net.mindengine.galen.browser.SeleniumBrowser;
 import net.mindengine.galen.page.Page;
 import net.mindengine.galen.page.PageElement;
 import net.mindengine.galen.page.Rect;
+import net.mindengine.galen.reports.LayoutReportListener;
 import net.mindengine.galen.reports.model.LayoutReport;
 import net.mindengine.galen.specs.page.PageSection;
 import net.mindengine.galen.specs.reader.page.PageSpec;

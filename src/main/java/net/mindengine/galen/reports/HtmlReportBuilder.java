@@ -31,6 +31,8 @@ import net.mindengine.galen.reports.model.LayoutObject;
 import net.mindengine.galen.reports.model.LayoutReport;
 import net.mindengine.galen.reports.model.LayoutSection;
 import net.mindengine.galen.reports.model.LayoutSpec;
+import net.mindengine.galen.reports.nodes.LayoutReportNode;
+import net.mindengine.galen.reports.nodes.TestReportNode;
 import net.mindengine.galen.utils.GalenUtils;
 import net.mindengine.rainbow4j.Rainbow4J;
 
@@ -61,7 +63,7 @@ public class HtmlReportBuilder {
             try {
                 exportTestReport(aggregatedInfo, reportFolderPath);
             } catch (Exception ex) {
-                LOG.error("Unkown report export", ex);
+                LOG.error("Unknown report export", ex);
             }
         }
         exportMainReport(reportFolderPath, aggregatedTests);
@@ -172,11 +174,13 @@ public class HtmlReportBuilder {
             }
         }
 
+        /*
         if (layoutObject.getSubObjects() != null) {
             for (LayoutObject subObject : layoutObject.getSubObjects()) {
                 searchForLayoutAttachmentsAndMoveThem(subObject, reportFolderPath, filePrefix);
             }
         }
+        */
     }
 
     private String moveFileOrResourceTo(String imagePath, File reportFolder) {

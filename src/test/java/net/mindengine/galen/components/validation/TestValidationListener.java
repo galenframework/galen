@@ -85,4 +85,14 @@ public class TestValidationListener implements ValidationListener {
     public void onAfterSection(GalenPageRunner pageRunner, PageValidation pageValidation, PageSection pageSection) {
     }
 
+    @Override
+    public void onSubLayout(PageValidation pageValidation, String objectName) {
+
+    }
+
+    @Override
+    public void onAfterSubLayout(PageValidation pageValidation, String objectName) {
+
+    }
+
 }

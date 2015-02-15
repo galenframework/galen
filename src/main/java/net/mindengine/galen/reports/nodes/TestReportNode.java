@@ -13,7 +13,13 @@
 * See the License for the specific language governing permissions and
 * limitations under the License.
 ******************************************************************************/
-package net.mindengine.galen.reports;
+package net.mindengine.galen.reports.nodes;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonValue;
+import net.mindengine.galen.reports.ExceptionReportNode;
+import net.mindengine.galen.reports.TestAttachment;
+import net.mindengine.galen.reports.TestStatistic;
 
 import java.io.File;
 import java.util.Date;
@@ -21,16 +27,14 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class TestReportNode {
-    
-    private static Long _uniqueId = 0L;
 
-    private Long id = generateUniqueId();
     private String name;
     private Status status = Status.INFO;
     private List<TestReportNode> nodes;
+
+    @JsonIgnore
     private TestReportNode parent;
     private List<TestAttachment> attachments;
-    private String details;
     private Date time = new Date();
 
     public Date getTime() {
@@ -40,7 +44,6 @@ public class TestReportNode {
     public void setTime(Date time) {
         this.time = time;
     }
-
 
     public static enum Status {
         INFO("info"),
@@ -54,13 +57,14 @@ public class TestReportNode {
         private final String name;
         
         @Override
+        @JsonValue
         public String toString() {
             return name;
         }
     }
     
     public TestReportNode withDetails(String details) {
-        setDetails(details);
+        this.addNode(new TextReportNode(details));
         return this;
     }
     public static TestReportNode info(String name) {
@@ -70,11 +74,6 @@ public class TestReportNode {
         return node;
     }
     
-    private synchronized Long generateUniqueId() {
-        _uniqueId++;
-        return _uniqueId;
-    }
-
     public static TestReportNode warn(String name) {
         TestReportNode node = new TestReportNode();
         node.setName(name);
@@ -184,19 +183,10 @@ public class TestReportNode {
         }
         return testStatistic;
     }
-    
-    public Long getId() {
-        return this.id;
+
+
+    public String getType() {
+        return "node";
     }
-
-    public String getDetails() {
-        return details;
-    }
-
-    public void setDetails(String details) {
-        this.details = details;
-    }
-
-
 
 }

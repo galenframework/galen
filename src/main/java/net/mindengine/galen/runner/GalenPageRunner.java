@@ -154,6 +154,20 @@ public class GalenPageRunner implements ValidationListener {
         }
     }
 
+    @Override
+    public void onSubLayout(PageValidation pageValidation, String objectName) {
+        if (validationListener != null) {
+            validationListener.onSubLayout(pageValidation, objectName);
+        }
+    }
+
+    @Override
+    public void onAfterSubLayout(PageValidation pageValidation, String objectName) {
+        if (validationListener != null) {
+            validationListener.onAfterSubLayout(pageValidation, objectName);
+        }
+    }
+
     public TestReport getReport() {
         return report;
     }

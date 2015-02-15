@@ -17,11 +17,14 @@ package net.mindengine.galen.reports;
 
 import java.text.SimpleDateFormat;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonUnwrapped;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 
 
 public class GalenTestAggregatedInfo {
 
+    @JsonUnwrapped
     private GalenTestInfo testInfo;
     private TestStatistic statistic;
     private String testId;
@@ -62,28 +65,26 @@ public class GalenTestAggregatedInfo {
     public void setTestId(String testId) {
         this.testId = testId;
     }
-    
+
     public String getExceptionMessage() {
-        return ExceptionUtils.getMessage(testInfo.getException());
+        if (testInfo.getException() != null) {
+            return ExceptionUtils.getMessage(testInfo.getException());
+        }
+        return null;
     }
-    
+
     public String getExceptionStacktrace() {
-        return ExceptionUtils.getStackTrace(testInfo.getException());
+        if (testInfo.getException() != null) {
+            return ExceptionUtils.getStackTrace(testInfo.getException());
+        }
+        return null;
     }
     
     public Long getDuration() {
         return testInfo.getEndedAt().getTime() - testInfo.getStartedAt().getTime();
     }
     
-    public String getStartedAtFormatted() {
-        return sdf.format(testInfo.getStartedAt());
-    }
-    
-    public String getEndedAtFormatted() {
-        return sdf.format(testInfo.getEndedAt());
-    }
-
-    public String getHumanReadableDuration() {
+    public String getDurationPretty() {
         if (testInfo.getStartedAt() != null && testInfo.getEndedAt() != null) {
             Long durationInSeconds = (testInfo.getEndedAt().getTime() - testInfo.getStartedAt().getTime())/1000;
 

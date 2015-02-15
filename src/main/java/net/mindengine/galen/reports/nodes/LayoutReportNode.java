@@ -13,20 +13,31 @@
 * See the License for the specific language governing permissions and
 * limitations under the License.
 ******************************************************************************/
-package net.mindengine.galen.reports;
+package net.mindengine.galen.reports.nodes;
 
+import com.fasterxml.jackson.annotation.JsonUnwrapped;
+import net.mindengine.galen.reports.TestStatistic;
 import net.mindengine.galen.reports.model.LayoutObject;
 import net.mindengine.galen.reports.model.LayoutReport;
 import net.mindengine.galen.reports.model.LayoutSection;
 import net.mindengine.galen.reports.model.LayoutSpec;
 
+import java.util.List;
+
 public class LayoutReportNode extends TestReportNode {
 
+    @JsonUnwrapped
     private LayoutReport layoutReport;
 
     public LayoutReportNode(LayoutReport layoutReport, String name) {
         this.setLayoutReport(layoutReport);
         setName(name);
+    }
+
+
+    @Override
+    public String getType() {
+        return "layout";
     }
 
     public LayoutReport getLayoutReport() {
@@ -40,16 +51,20 @@ public class LayoutReportNode extends TestReportNode {
     @Override
     public TestStatistic fetchStatistic(TestStatistic testStatistic) {
         if (layoutReport.getSections() != null) {
-            for (LayoutSection section : layoutReport.getSections()) {
-                if (section.getObjects() != null) {
-                    for (LayoutObject object: section.getObjects()) {
-                        fetchStatisticForObject(object, testStatistic);
-                    }
-                }
-            }
+            fetchStatisticForSections(layoutReport.getSections(), testStatistic);
         }
         
         return testStatistic;
+    }
+
+    private void fetchStatisticForSections(List<LayoutSection> sections, TestStatistic testStatistic) {
+        for (LayoutSection section : sections) {
+            if (section.getObjects() != null) {
+                for (LayoutObject object: section.getObjects()) {
+                    fetchStatisticForObject(object, testStatistic);
+                }
+            }
+        }
     }
 
     private void fetchStatisticForObject(LayoutObject object, TestStatistic testStatistic) {
@@ -60,24 +75,23 @@ public class LayoutReportNode extends TestReportNode {
                  Checking if it was a component spec and if yes - than it will not take it into account
                  but rather will go into its child spec list
                   */
-                if (spec.getSubObjects() != null && spec.getSubObjects().size() > 0) {
-                    for (LayoutObject subObject : spec.getSubObjects()) {
-                        fetchStatisticForObject(subObject, testStatistic);
-                    }
+                if (spec.getSubLayout() != null && spec.getSubLayout().getSections() != null) {
+                   fetchStatisticForSections(spec.getSubLayout().getSections(), testStatistic);
                 }
                 else {
                     testStatistic.setTotal(testStatistic.getTotal() + 1);
 
-                    if (spec.getFailed()) {
-                        if (spec.isOnlyWarn()) {
-                            testStatistic.setWarnings(testStatistic.getWarnings() + 1);
-                        } else {
-                            testStatistic.setErrors(testStatistic.getErrors() + 1);
-                        }
-                    } else testStatistic.setPassed(testStatistic.getPassed() + 1);
+                    if (spec.getStatus() == Status.WARN) {
+                        testStatistic.setWarnings(testStatistic.getWarnings() + 1);
+                    } else if (spec.getStatus() == Status.ERROR) {
+                        testStatistic.setErrors(testStatistic.getErrors() + 1);
+                    } else {
+                        testStatistic.setPassed(testStatistic.getPassed() + 1);
+                    }
                 }
             }
         }
     }
+
 
 }

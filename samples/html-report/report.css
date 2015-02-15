@@ -9,6 +9,9 @@ ul {
     padding-left: 20px;
 }
 
+#main, h2 {
+    margin-left: 10px;
+}
 
 #menu{
     background: #4982A6;
@@ -96,6 +99,16 @@ a.node-expand-button.contains-children-true.collapsed:before {
     background: #f04040;
     color: #fff;
 }
+.node-name.node-status-error {
+    color: #DB4B4B;
+}
+.node-expand-button.node-status-warn {
+    background: #D66C0F;
+    color: #fff;
+}
+.node-name.node-status-warn {
+    color: #D63D00;
+}
 
 .report-nodes > li {
     padding: 7px;
@@ -111,7 +124,10 @@ a.node-expand-button.contains-children-true.collapsed:before {
     display: inline-block;
     color: #555;
 }
-
+.node-simple-text {
+    color: #555;
+    margin-left: 40px;
+}
 
 .report-node-attachments  {
     margin-top: 5px;

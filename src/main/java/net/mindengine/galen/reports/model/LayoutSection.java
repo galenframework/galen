@@ -23,7 +23,14 @@ public class LayoutSection {
     private String name;
     
     private List<LayoutObject> objects = new LinkedList<LayoutObject>();
-    
+
+    public LayoutSection(){
+    }
+
+    public LayoutSection(String name) {
+        this.setName(name);
+    }
+
     public List<LayoutObject> getObjects() {
         return objects;
     }
