@@ -20,10 +20,7 @@ import static java.util.Arrays.asList;
 import net.mindengine.galen.page.PageElement;
 import net.mindengine.galen.page.Rect;
 import net.mindengine.galen.specs.SpecText;
-import net.mindengine.galen.validation.ErrorArea;
-import net.mindengine.galen.validation.PageValidation;
-import net.mindengine.galen.validation.SpecValidation;
-import net.mindengine.galen.validation.ValidationErrorException;
+import net.mindengine.galen.validation.*;
 
 import java.util.List;
 import java.util.regex.Pattern;
@@ -31,7 +28,7 @@ import java.util.regex.Pattern;
 public class SpecValidationText<T extends SpecText> extends SpecValidation<T> {
 
     @Override
-    public void check(PageValidation pageValidation, String objectName, T spec) throws ValidationErrorException {
+    public ValidationResult check(PageValidation pageValidation, String objectName, T spec) throws ValidationErrorException {
         PageElement mainObject = pageValidation.findPageElement(objectName);
         
         checkAvailability(mainObject, objectName);
@@ -44,6 +41,8 @@ public class SpecValidationText<T extends SpecText> extends SpecValidation<T> {
 
         realText = applyOperationsTo(realText, spec.getOperations());
         checkValue(spec, objectName, realText, "text", area);
+
+        return new ValidationResult(asList(new ValidationObject(area, objectName)));
     }
 
     private String applyOperationsTo(String text, List<String> operations) {
@@ -76,32 +75,32 @@ public class SpecValidationText<T extends SpecText> extends SpecValidation<T> {
 
     protected void checkIs(String objectName, Rect area, String realText, String text, String checkEntity) throws ValidationErrorException {
         if (!realText.equals(text)) {
-            throw new ValidationErrorException(asList(new ErrorArea(area, objectName)), asList(format("\"%s\" %s is \"%s\" but should be \"%s\"", objectName, checkEntity, realText, text)));
+            throw new ValidationErrorException(asList(new ValidationObject(area, objectName)), asList(format("\"%s\" %s is \"%s\" but should be \"%s\"", objectName, checkEntity, realText, text)));
         }
     }
 
     protected void checkStarts(String objectName, Rect area, String realText, String text, String checkEntity) throws ValidationErrorException {
         if (!realText.startsWith(text)) {
-        	throw new ValidationErrorException(asList(new ErrorArea(area, objectName)), asList(format("\"%s\" %s is \"%s\" but should start with \"%s\"", objectName, checkEntity, realText, text)));
+        	throw new ValidationErrorException(asList(new ValidationObject(area, objectName)), asList(format("\"%s\" %s is \"%s\" but should start with \"%s\"", objectName, checkEntity, realText, text)));
         }
     }
     
     protected void checkEnds(String objectName, Rect area, String realText, String text, String checkEntity) throws ValidationErrorException {
         if (!realText.endsWith(text)) {
-        	throw new ValidationErrorException(asList(new ErrorArea(area, objectName)), asList(format("\"%s\" %s is \"%s\" but should end with \"%s\"", objectName, checkEntity, realText, text)));
+        	throw new ValidationErrorException(asList(new ValidationObject(area, objectName)), asList(format("\"%s\" %s is \"%s\" but should end with \"%s\"", objectName, checkEntity, realText, text)));
         }
     }
     
     protected void checkMatches(String objectName, Rect area, String realText, String text, String checkEntity) throws ValidationErrorException {
         Pattern regex = Pattern.compile(text, Pattern.DOTALL);
         if (!regex.matcher(realText).matches()) {
-        	throw new ValidationErrorException(asList(new ErrorArea(area, objectName)), asList(format("\"%s\" %s is \"%s\" but should match \"%s\"", objectName, checkEntity, realText, text)));
+        	throw new ValidationErrorException(asList(new ValidationObject(area, objectName)), asList(format("\"%s\" %s is \"%s\" but should match \"%s\"", objectName, checkEntity, realText, text)));
         }
     }
 
     protected void checkContains(String objectName, Rect area, String realText, String text, String checkEntity) throws ValidationErrorException {
         if (!realText.contains(text)) {
-        	throw new ValidationErrorException(asList(new ErrorArea(area, objectName)), asList(format("\"%s\" %s is \"%s\" but should contain \"%s\"", objectName, checkEntity, realText, text)));
+        	throw new ValidationErrorException(asList(new ValidationObject(area, objectName)), asList(format("\"%s\" %s is \"%s\" but should contain \"%s\"", objectName, checkEntity, realText, text)));
         }
     }
     

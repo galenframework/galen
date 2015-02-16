@@ -81,7 +81,7 @@ public class Galen {
         listener.add(new LayoutReportListener(layoutReport));
 
 
-        List<ValidationError> allValidationErrors = new LinkedList<ValidationError>();
+        List<ValidationResult> allValidationErrorResults = new LinkedList<ValidationResult>();
 
         for (PageSpec spec : specs) {
 
@@ -89,13 +89,15 @@ public class Galen {
             List<PageSection> pageSections = spec.findSections(sectionFilter);
             SectionValidation sectionValidation = new SectionValidation(pageSections, new PageValidation(browser, page, spec, listener, sectionFilter), listener);
 
-            List<ValidationError> errors = sectionValidation.check();
-            if (errors != null && errors.size() > 0) {
-                allValidationErrors.addAll(errors);
+            List<ValidationResult> results= sectionValidation.check();
+            for (ValidationResult result : results) {
+                if (result.getError() != null) {
+                    allValidationErrorResults.add(result);
+                }
             }
         }
 
-        layoutReport.setValidationErrors(allValidationErrors);
+        layoutReport.setValidationErrorResults(allValidationErrorResults);
 
         return layoutReport;
     }

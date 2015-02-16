@@ -26,9 +26,9 @@ public interface ValidationListener {
     
     void onAfterObject(GalenPageRunner pageRunner, PageValidation pageValidation, String objectName);
     
-    void onSpecError(GalenPageRunner pageRunner, PageValidation pageValidation, String objectName, Spec spec, ValidationError error);
+    void onSpecError(GalenPageRunner pageRunner, PageValidation pageValidation, String objectName, Spec spec, ValidationResult validationResult);
 
-    void onSpecSuccess(GalenPageRunner pageRunner, PageValidation pageValidation, String objectName, Spec spec);
+    void onSpecSuccess(GalenPageRunner pageRunner, PageValidation pageValidation, String objectName, Spec spec, ValidationResult validationResult);
 
     void onGlobalError(GalenPageRunner pageRunner, Exception e);
 

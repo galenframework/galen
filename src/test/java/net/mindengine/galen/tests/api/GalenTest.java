@@ -22,10 +22,10 @@ import net.mindengine.galen.api.Galen;
 import net.mindengine.galen.components.mocks.driver.MockedDriver;
 import net.mindengine.galen.page.Rect;
 import net.mindengine.galen.reports.model.LayoutReport;
-import net.mindengine.galen.validation.ErrorArea;
+import net.mindengine.galen.validation.ValidationObject;
 import net.mindengine.galen.validation.ValidationError;
 
-import org.apache.commons.io.FileUtils;
+import net.mindengine.galen.validation.ValidationResult;
 import org.junit.Assert;
 import org.openqa.selenium.WebDriver;
 import org.testng.annotations.Test;
@@ -48,12 +48,16 @@ public class GalenTest {
 
         LayoutReport layoutReport = Galen.checkLayout(driver, "/specs/galen4j/sample-spec-with-error.spec", asList("mobile"), null, new Properties(), null);
 
-        assertThat(layoutReport.getValidationErrors(), contains(
-                new ValidationError().withMessage("\"save-button\" is 10px left instead of 50px")
-                        .withArea(new ErrorArea(new Rect(10, 10, 100, 50), "save-button"))
-                        .withArea(new ErrorArea(new Rect(120, 10, 200, 50), "name-textfield")),
-                new ValidationError().withMessage("\"save-button\" text is \"Save\" but should be \"Store\"")
-                        .withArea(new ErrorArea(new Rect(10, 10, 100, 50), "save-button"))));
+        assertThat(layoutReport.getValidationErrorResults(), contains(
+                new ValidationResult(
+                        asList(
+                                new ValidationObject(new Rect(10, 10, 100, 50), "save-button"),
+                                new ValidationObject(new Rect(120, 10, 200, 50), "name-textfield")),
+                        new ValidationError().withMessage("\"save-button\" is 10px left instead of 50px")),
+                new ValidationResult(
+                        asList(
+                                new ValidationObject(new Rect(10, 10, 100, 50), "save-button")),
+                        new ValidationError().withMessage("\"save-button\" text is \"Save\" but should be \"Store\""))));
     }
 
 

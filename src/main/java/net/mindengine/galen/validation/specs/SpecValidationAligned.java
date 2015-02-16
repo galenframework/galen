@@ -15,19 +15,18 @@
 ******************************************************************************/
 package net.mindengine.galen.validation.specs;
 
-import java.util.Arrays;
+import java.util.List;
 
 import net.mindengine.galen.page.PageElement;
 import net.mindengine.galen.specs.SpecAligned;
-import net.mindengine.galen.validation.ErrorArea;
-import net.mindengine.galen.validation.PageValidation;
-import net.mindengine.galen.validation.SpecValidation;
-import net.mindengine.galen.validation.ValidationErrorException;
+import net.mindengine.galen.validation.*;
+
+import static java.util.Arrays.asList;
 
 public abstract class SpecValidationAligned<T extends SpecAligned> extends SpecValidation<T> {
 
     @Override
-    public void check(PageValidation pageValidation, String objectName, T spec) throws ValidationErrorException {
+    public ValidationResult check(PageValidation pageValidation, String objectName, T spec) throws ValidationErrorException {
         PageElement mainObject = pageValidation.findPageElement(objectName);
         
         checkAvailability(mainObject, objectName);
@@ -35,11 +34,16 @@ public abstract class SpecValidationAligned<T extends SpecAligned> extends SpecV
         PageElement childObject = pageValidation.findPageElement(spec.getObject());
         checkAvailability(childObject, spec.getObject());
         
-        int offset = Math.abs(getOffset(spec, mainObject, childObject)); 
+        int offset = Math.abs(getOffset(spec, mainObject, childObject));
+
+        List<ValidationObject> objects = asList(new ValidationObject(mainObject.getArea(), objectName), new ValidationObject(childObject.getArea(), spec.getObject()));
+
         if (offset > Math.abs(spec.getErrorRate())) {
-            throw new ValidationErrorException(Arrays.asList(new ErrorArea(mainObject.getArea(), objectName), new ErrorArea(childObject.getArea(), spec.getObject())),
-                    Arrays.asList(errorMisalignedObjects(objectName, spec.getObject(), spec, offset)));
+            throw new ValidationErrorException(objects,
+                    asList(errorMisalignedObjects(objectName, spec.getObject(), spec, offset)));
         }
+
+        return new ValidationResult(objects);
     }
 
     private String errorMisalignedObjects(String objectName, String misalignedObjectName, T spec, int offset) {

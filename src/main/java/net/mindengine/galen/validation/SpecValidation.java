@@ -38,7 +38,7 @@ public abstract class SpecValidation<T extends Spec> {
      * @param spec
      * @throws ValidationErrorException
      */
-    public abstract void check(PageValidation pageValidation, String objectName, T spec) throws ValidationErrorException;
+    public abstract ValidationResult check(PageValidation pageValidation, String objectName, T spec) throws ValidationErrorException;
     
     
     protected void checkAvailability(PageElement object, String objectName) throws ValidationErrorException {

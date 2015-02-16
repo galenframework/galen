@@ -24,6 +24,7 @@ import net.mindengine.galen.suite.GalenPageTest;
 import net.mindengine.galen.validation.PageValidation;
 import net.mindengine.galen.validation.ValidationError;
 import net.mindengine.galen.validation.ValidationListener;
+import net.mindengine.galen.validation.ValidationResult;
 
 /**
  * Implements ValidationListener as a proxy listener so it can pass itself to it. 
@@ -106,16 +107,16 @@ public class GalenPageRunner implements ValidationListener {
     }
 
     @Override
-    public void onSpecError(GalenPageRunner pageRunner, PageValidation pageValidation, String objectName, Spec spec, ValidationError error) {
+    public void onSpecError(GalenPageRunner pageRunner, PageValidation pageValidation, String objectName, Spec spec, ValidationResult result) {
         if (validationListener != null) {
-            validationListener.onSpecError(this, pageValidation, objectName, spec, error);
+            validationListener.onSpecError(this, pageValidation, objectName, spec, result);
         }
     }
 
     @Override
-    public void onSpecSuccess(GalenPageRunner pageRunner, PageValidation pageValidation, String objectName, Spec spec) {
+    public void onSpecSuccess(GalenPageRunner pageRunner, PageValidation pageValidation, String objectName, Spec spec, ValidationResult result) {
         if (validationListener != null) {
-            validationListener.onSpecSuccess(this, pageValidation, objectName, spec);
+            validationListener.onSpecSuccess(this, pageValidation, objectName, spec, result);
         }
     }
 

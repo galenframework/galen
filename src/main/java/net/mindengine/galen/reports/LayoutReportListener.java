@@ -29,6 +29,7 @@ import net.mindengine.galen.suite.GalenPageAction;
 import net.mindengine.galen.validation.PageValidation;
 import net.mindengine.galen.validation.ValidationError;
 import net.mindengine.galen.validation.ValidationListener;
+import net.mindengine.galen.validation.ValidationResult;
 
 public class LayoutReportListener implements ValidationListener {
 
@@ -76,7 +77,7 @@ public class LayoutReportListener implements ValidationListener {
     }
 
     @Override
-    public void onSpecError(GalenPageRunner pageRunner, PageValidation pageValidation, String objectName, Spec originalSpec, ValidationError error) {
+    public void onSpecError(GalenPageRunner pageRunner, PageValidation pageValidation, String objectName, Spec originalSpec, ValidationResult result) {
         LayoutSpec spec = new LayoutSpec();
         spec.setPlace(originalSpec.getPlace());
         getCurrentObject().getSpecs().add(spec);
@@ -88,7 +89,7 @@ public class LayoutReportListener implements ValidationListener {
         } else {
             spec.setStatus(TestReportNode.Status.ERROR);
         }
-        spec.setImageComparison(error.getImageComparison());
+        spec.setImageComparison(result.getError().getImageComparison());
 
         //TODO put object for highlighting
 
@@ -96,7 +97,7 @@ public class LayoutReportListener implements ValidationListener {
     }
 
     @Override
-    public void onSpecSuccess(GalenPageRunner pageRunner, PageValidation pageValidation, String objectName, Spec originalSpec) {
+    public void onSpecSuccess(GalenPageRunner pageRunner, PageValidation pageValidation, String objectName, Spec originalSpec, ValidationResult result) {
         LayoutSpec spec = new LayoutSpec();
         spec.setPlace(originalSpec.getPlace());
         getCurrentObject().getSpecs().add(spec);

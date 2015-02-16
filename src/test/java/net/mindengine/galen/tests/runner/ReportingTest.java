@@ -28,6 +28,8 @@ import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import junit.framework.Assert;
 import net.mindengine.galen.components.report.FakeException;
 import net.mindengine.galen.components.report.ReportingListenerTestUtils;
@@ -78,8 +80,8 @@ public class ReportingTest {
 
         new JsonReportBuilder().build(testInfos, reportPath);
 
-        assertFileContents("Report overview", reportPath + "/report.json", "/expected-reports/json/report.json");
-        assertFileContents("Test report", reportPath + "/1-home-page-test.json", "/expected-reports/json/1-home-page-test.json");
+        assertJsonFileContents("Report overview", reportPath + "/report.json", "/expected-reports/json/report.json");
+        assertJsonFileContents("Test report", reportPath + "/1-home-page-test.json", "/expected-reports/json/1-home-page-test.json");
     }
 
 
@@ -223,14 +225,19 @@ public class ReportingTest {
         Assert.assertEquals(expectedText, baos.toString("UTF-8"));
     }
 
-    private void assertFileContents(String title, String actualPath, String expectedPath) throws IOException {
+    private void assertJsonFileContents(String title, String actualPath, String expectedPath) throws IOException {
         String actualContent = readFileToString(new File(actualPath));
 
         System.out.println("\n\n---- " + title + " -----------");
         System.out.println(actualContent);
         String expectedContent = readFileToString(new File(getClass().getResource(expectedPath).getFile()));
 
-        assertThat(title + " content should be", actualContent, is(expectedContent));
+
+        ObjectMapper mapper = new ObjectMapper();
+
+        JsonNode actualTree = mapper.readTree(actualContent);
+        JsonNode expectedTree = mapper.readTree(expectedContent);
+        assertThat(title + " content should be", actualTree, is(expectedTree));
     }
 
 }

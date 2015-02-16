@@ -20,13 +20,15 @@ import net.mindengine.galen.page.Rect;
 import net.mindengine.galen.specs.SpecCss;
 import net.mindengine.galen.validation.specs.SpecValidationText;
 
+import static java.util.Arrays.asList;
+
 /**
  * Created by ishubin on 2014/11/08.
  */
 public class SpecValidationCss extends SpecValidationText<SpecCss> {
 
     @Override
-    public void check(PageValidation pageValidation, String objectName, SpecCss spec) throws ValidationErrorException {
+    public ValidationResult check(PageValidation pageValidation, String objectName, SpecCss spec) throws ValidationErrorException {
         PageElement mainObject = pageValidation.findPageElement(objectName);
 
         checkAvailability(mainObject, objectName);
@@ -38,6 +40,8 @@ public class SpecValidationCss extends SpecValidationText<SpecCss> {
         }
 
         checkValue(spec, objectName, realText, "css property \"" + spec.getCssPropertyName() + "\"", area);
+
+        return new ValidationResult(asList(new ValidationObject(area, objectName)));
     }
 
 }

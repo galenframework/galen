@@ -36,7 +36,7 @@
                     <#list node.layoutReport.sections as section>
                         <h2 class="page-section">${section.name?html}</h2>
                         <div class="page-section">
-                            <#list section.objects as obj>
+                            <#list section.validationObjects as obj>
                             <@object_node object=obj/>
                             </#list>
                         </div>
@@ -75,7 +75,7 @@
                         </#if>
                     </ul>
                     <#if spec.subObjects?has_content>
-                    <div class="sub-objects">
+                    <div class="sub-validationObjects">
                         <#list spec.subObjects as subObject>
                         <@object_node object=subObject/>
                         </#list>
@@ -89,7 +89,7 @@
                     <span<#if spec.place?has_content> title="Location: ${spec.place.filePath!"unknown location"}#${spec.place.lineNumber!"?"}"</#if>>${spec.text?html}</span>
                 </div>
                 <#if spec.subObjects?has_content>
-                <div class="sub-objects">
+                <div class="sub-validationObjects">
                     <#list spec.subObjects as subObject>
                     <@object_node object=subObject/>
                     </#list>

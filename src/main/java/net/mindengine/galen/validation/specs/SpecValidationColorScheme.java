@@ -26,12 +26,11 @@ import net.mindengine.galen.page.PageElement;
 import net.mindengine.galen.page.Rect;
 import net.mindengine.galen.specs.SpecColorScheme;
 import net.mindengine.galen.specs.colors.ColorRange;
-import net.mindengine.galen.validation.ErrorArea;
-import net.mindengine.galen.validation.PageValidation;
-import net.mindengine.galen.validation.SpecValidation;
-import net.mindengine.galen.validation.ValidationErrorException;
+import net.mindengine.galen.validation.*;
 import net.mindengine.rainbow4j.Rainbow4J;
 import net.mindengine.rainbow4j.Spectrum;
+
+import static java.util.Arrays.asList;
 
 public class SpecValidationColorScheme extends SpecValidation<SpecColorScheme> {
     
@@ -39,7 +38,7 @@ public class SpecValidationColorScheme extends SpecValidation<SpecColorScheme> {
     private static final int TEST_RANGE = GalenConfig.getConfig().getIntProperty("spec.colorscheme.testrange", 6, 0, 256);
 
     @Override
-    public void check(PageValidation pageValidation, String objectName, SpecColorScheme spec) throws ValidationErrorException {
+    public ValidationResult check(PageValidation pageValidation, String objectName, SpecColorScheme spec) throws ValidationErrorException {
         PageElement mainObject = pageValidation.findPageElement(objectName);
         checkAvailability(mainObject, objectName);
 
@@ -49,7 +48,7 @@ public class SpecValidationColorScheme extends SpecValidation<SpecColorScheme> {
         Rect area = mainObject.getArea();
         if (pageImage.getWidth() < area.getLeft() + area.getWidth() || pageImage.getHeight() < area.getTop() + area.getHeight()) {
             throw new ValidationErrorException()
-                .withErrorArea(new ErrorArea(area, objectName))
+                .withValidationObject(new ValidationObject(area, objectName))
                 .withMessage("Can't fetch image for \"object\" as it is outside of screenshot");
         }
         
@@ -74,12 +73,17 @@ public class SpecValidationColorScheme extends SpecValidation<SpecColorScheme> {
                 messages.add(String.format("color %s on \"%s\" is %d%% %s", toHexColor(color), objectName, (int)percentage, colorRange.getRange().getErrorMessageSuffix("%")));
             }
         }
+
+
+        List<ValidationObject> objects = asList(new ValidationObject(area, objectName));
         
         if (messages.size() > 0) {
             throw new ValidationErrorException()
-                    .withErrorArea(new ErrorArea(area, objectName))
+                    .withValidationObjects(objects)
                     .withMessages(messages);
         }
+
+        return new ValidationResult(objects);
     }
 
     private String toHexColor(Color color) {

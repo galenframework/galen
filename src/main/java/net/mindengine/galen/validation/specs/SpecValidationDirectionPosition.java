@@ -19,10 +19,11 @@ import net.mindengine.galen.page.PageElement;
 import net.mindengine.galen.page.Rect;
 import net.mindengine.galen.specs.Range;
 import net.mindengine.galen.specs.SpecDirectionPosition;
-import net.mindengine.galen.validation.ErrorArea;
-import net.mindengine.galen.validation.PageValidation;
-import net.mindengine.galen.validation.SpecValidation;
-import net.mindengine.galen.validation.ValidationErrorException;
+import net.mindengine.galen.validation.*;
+
+import java.util.List;
+
+import static java.util.Arrays.asList;
 
 public class SpecValidationDirectionPosition extends SpecValidation<SpecDirectionPosition> {
 	
@@ -47,7 +48,7 @@ public class SpecValidationDirectionPosition extends SpecValidation<SpecDirectio
 	}
 
 	@Override
-	public void check(PageValidation pageValidation, String objectName, SpecDirectionPosition spec) throws ValidationErrorException {
+	public ValidationResult check(PageValidation pageValidation, String objectName, SpecDirectionPosition spec) throws ValidationErrorException {
 		
 		PageElement mainObject = pageValidation.findPageElement(objectName);
         
@@ -62,22 +63,30 @@ public class SpecValidationDirectionPosition extends SpecValidation<SpecDirectio
         
         
         Range range = convertRange(spec.getRange(), pageValidation);
+
+        List<ValidationObject> objects = asList(
+                new ValidationObject(mainArea, objectName),
+                new ValidationObject(secondArea, spec.getObject()));
+
         
         if (!range.holds(offset)) {
         	throw new ValidationErrorException().withMessage(
-        			String.format("\"%s\" is %dpx %s \"%s\" %s", 
-        					objectName, 
-        					offset, 
-        					direction.toString(), 
-        					spec.getObject(), 
-        					spec.getRange().getErrorMessageSuffix()))
-        		.withErrorArea(new ErrorArea(mainArea, objectName))
-        		.withErrorArea(new ErrorArea(secondArea, spec.getObject()));
+                    String.format("\"%s\" is %dpx %s \"%s\" %s",
+                            objectName,
+                            offset,
+                            direction.toString(),
+                            spec.getObject(),
+                            spec.getRange().getErrorMessageSuffix()))
+        		.withValidationObjects(objects);
         }
+
+        return new ValidationResult(objects);
 	}
 
 
-	private int getOffset(Rect mainArea, Rect secondArea) {
+
+
+    private int getOffset(Rect mainArea, Rect secondArea) {
 		if (direction == Direction.ABOVE) {
 			return secondArea.getTop() - mainArea.getTop() - mainArea.getHeight();
 		}

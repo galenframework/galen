@@ -18,6 +18,7 @@ package net.mindengine.galen.runner;
 import java.util.LinkedList;
 import java.util.List;
 
+import net.mindengine.galen.validation.ValidationResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -88,10 +89,10 @@ public class CombinedListener implements CompleteListener {
     }
 
     @Override
-    public void onSpecError(GalenPageRunner pageRunner, PageValidation pageValidation, String objectName, Spec spec, ValidationError error) {
+    public void onSpecError(GalenPageRunner pageRunner, PageValidation pageValidation, String objectName, Spec spec, ValidationResult result) {
         for (CompleteListener listener : listeners) {
             try {
-                listener.onSpecError(pageRunner, pageValidation, objectName, spec, error);
+                listener.onSpecError(pageRunner, pageValidation, objectName, spec, result);
             }
             catch (Exception ex) {
                 LOG.trace("Unknown error when checking spec errors", ex);
@@ -100,10 +101,10 @@ public class CombinedListener implements CompleteListener {
     }
 
     @Override
-    public void onSpecSuccess(GalenPageRunner pageRunner, PageValidation pageValidation, String objectName, Spec spec) {
+    public void onSpecSuccess(GalenPageRunner pageRunner, PageValidation pageValidation, String objectName, Spec spec, ValidationResult result) {
         for (CompleteListener listener : listeners) {
             try {
-                listener.onSpecSuccess(pageRunner, pageValidation, objectName, spec);
+                listener.onSpecSuccess(pageRunner, pageValidation, objectName, spec, result);
             }
             catch (Exception ex) {
                 LOG.trace("Unknown error when checking spec success", ex);

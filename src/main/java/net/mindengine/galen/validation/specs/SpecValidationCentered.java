@@ -16,19 +16,19 @@
 package net.mindengine.galen.validation.specs;
 
 import java.util.Arrays;
+import java.util.List;
 
 import net.mindengine.galen.page.PageElement;
 import net.mindengine.galen.page.Rect;
 import net.mindengine.galen.specs.SpecCentered;
-import net.mindengine.galen.validation.ErrorArea;
-import net.mindengine.galen.validation.PageValidation;
-import net.mindengine.galen.validation.SpecValidation;
-import net.mindengine.galen.validation.ValidationErrorException;
+import net.mindengine.galen.validation.*;
+
+import static java.util.Arrays.asList;
 
 public class SpecValidationCentered extends SpecValidation<SpecCentered> {
 
     @Override
-    public void check(PageValidation pageValidation, String objectName, SpecCentered spec) throws ValidationErrorException {
+    public ValidationResult check(PageValidation pageValidation, String objectName, SpecCentered spec) throws ValidationErrorException {
         PageElement mainObject = pageValidation.findPageElement(objectName);
         checkAvailability(mainObject, objectName);
         
@@ -43,8 +43,9 @@ public class SpecValidationCentered extends SpecValidation<SpecCentered> {
         
         int offsetTop = mainArea.getTop() - secondArea.getTop();
         int offsetBottom = secondArea.getTop() + secondArea.getHeight() - mainArea.getTop() - mainArea.getHeight();
-        
-        
+
+
+        List<ValidationObject> objects = asList(new ValidationObject(mainArea, objectName), new ValidationObject(secondArea, spec.getObject()));
         try {
             if (spec.getLocation() == SpecCentered.Location.INSIDE) {
                 checkCentered(offsetLeft, offsetRight, offsetTop, offsetBottom, objectName, spec, "inside");
@@ -55,10 +56,11 @@ public class SpecValidationCentered extends SpecValidation<SpecCentered> {
             }
         }
         catch (ValidationErrorException exception) {
-            exception.setErrorAreas(Arrays.asList(new ErrorArea(mainArea, objectName), new ErrorArea(secondArea, spec.getObject())));
+            exception.setValidationObjects(objects);
             throw exception;
         }
 
+        return new ValidationResult(objects);
     }
 
     private void checkCentered(int offsetLeft, int offsetRight, int offsetTop, int offsetBottom, String objectName, SpecCentered spec, String location) throws ValidationErrorException {

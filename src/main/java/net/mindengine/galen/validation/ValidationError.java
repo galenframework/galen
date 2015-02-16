@@ -27,18 +27,15 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 public class ValidationError {
 
-    private List<ValidationObject> objects = new LinkedList<ValidationObject>();
     private List<String> messages;
     private ImageComparison imageComparison;
     private boolean onlyWarn;
 
-    public ValidationError(List<ValidationObject> objects, List<String> messages) {
-        this.setObjects(objects);
+    public ValidationError(List<String> messages) {
         this.messages = messages;
     }
 
-    public ValidationError(List<ValidationObject> objects, List<String> messages, ImageComparison imageComparison) {
-        this.objects = objects;
+    public ValidationError(List<String> messages, ImageComparison imageComparison) {
         this.messages = messages;
         this.imageComparison = imageComparison;
     }
@@ -50,7 +47,6 @@ public class ValidationError {
     @Override
     public int hashCode() {
         return new HashCodeBuilder(17, 31)
-                .append(objects)
                 .append(messages)
                 .append(imageComparison)
                 .append(onlyWarn)
@@ -68,7 +64,6 @@ public class ValidationError {
         
         ValidationError rhs = (ValidationError)obj;
         return new EqualsBuilder()
-                .append(objects, rhs.objects)
                 .append(messages, rhs.messages)
                 .append(imageComparison, rhs.imageComparison)
                 .append(onlyWarn, rhs.onlyWarn)
@@ -77,7 +72,7 @@ public class ValidationError {
     
     @Override
     public String toString() {
-        return format("Error{%s, areas=%s, imageComparisonSample=%s, onlyWarn=%s}", messages, objects, imageComparison, onlyWarn);
+        return format("Error{%s, imageComparisonSample=%s, onlyWarn=%s}", messages, imageComparison, onlyWarn);
     }
 
 
@@ -124,11 +119,4 @@ public class ValidationError {
         this.imageComparison = imageComparison;
     }
 
-    public List<ValidationObject> getObjects() {
-        return objects;
-    }
-
-    public void setObjects(List<ValidationObject> objects) {
-        this.objects = objects;
-    }
 }

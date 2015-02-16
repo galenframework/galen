@@ -30,29 +30,36 @@ import net.mindengine.galen.validation.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import static java.util.Arrays.asList;
+
 public class SpecValidationComponent extends SpecValidation<SpecComponent> {
     private final static Logger LOG = LoggerFactory.getLogger(SpecValidationComponent.class);
 
     @Override
-    public void check(PageValidation pageValidation, String objectName, SpecComponent spec) throws ValidationErrorException {
+    public ValidationResult check(PageValidation pageValidation, String objectName, SpecComponent spec) throws ValidationErrorException {
         PageElement mainObject = pageValidation.findPageElement(objectName);
         checkAvailability(mainObject, objectName);
 
         tellListenerSubLayout(pageValidation, objectName);
-        List<ValidationError> errors;
+        List<ValidationResult> results;
 
         if (spec.isFrame()) {
-            errors = checkInsideFrame(mainObject, pageValidation, spec);
+            results = checkInsideFrame(mainObject, pageValidation, spec);
         }
         else {
-            errors = checkInsideNormalWebElement(pageValidation, objectName, spec);
+            results = checkInsideNormalWebElement(pageValidation, objectName, spec);
         }
         tellListenerAfterSubLayout(pageValidation, objectName);
 
-        if (errors != null && errors.size() > 0) {
-            throw new ValidationErrorException("Child component spec contains " + errors.size() + " errors");
+        List<ValidationObject> objects = asList(new ValidationObject(mainObject.getArea(), objectName));
+
+        List<ValidationResult> errorResults = ValidationResult.filterOnlyErrorResults(results);
+        if (errorResults.size() > 0) {
+            throw new ValidationErrorException("Child component spec contains " + errorResults.size() + " errors")
+                    .withValidationObjects(objects);
         }
 
+        return new ValidationResult(objects);
     }
 
     private void tellListenerAfterSubLayout(PageValidation pageValidation, String objectName) {
@@ -78,24 +85,24 @@ public class SpecValidationComponent extends SpecValidation<SpecComponent> {
     }
 
 
-    private List<ValidationError> checkInsideFrame(PageElement mainObject, PageValidation pageValidation, SpecComponent spec) {
+    private List<ValidationResult> checkInsideFrame(PageElement mainObject, PageValidation pageValidation, SpecComponent spec) {
         Page page = pageValidation.getPage();
 
         Page framePage = page.createFrameContext(mainObject);
 
-        List<ValidationError> errors = checkInsidePage(pageValidation.getBrowser(), framePage, spec,
+        List<ValidationResult> results = checkInsidePage(pageValidation.getBrowser(), framePage, spec,
                 pageValidation.getSectionFilter(), pageValidation.getValidationListener());
 
         if (spec.isFrame()) {
             page.switchToParentFrame();
         }
 
-        return errors;
+        return results;
     }
 
 
-    private List<ValidationError> checkInsidePage(Browser browser, Page page, SpecComponent spec,
-                                                  SectionFilter sectionFilter, ValidationListener validationListener) {
+    private List<ValidationResult> checkInsidePage(Browser browser, Page page, SpecComponent spec,
+                                                   SectionFilter sectionFilter, ValidationListener validationListener) {
         PageSpecReader pageSpecReader = new PageSpecReader(spec.getProperties(), page);
 
         PageSpec componentPageSpec;
@@ -112,7 +119,7 @@ public class SpecValidationComponent extends SpecValidation<SpecComponent> {
         return sectionValidation.check();
     }
 
-    private List<ValidationError> checkInsideNormalWebElement(PageValidation pageValidation, String objectName, SpecComponent spec) {
+    private List<ValidationResult> checkInsideNormalWebElement(PageValidation pageValidation, String objectName, SpecComponent spec) {
         Locator mainObjectLocator = pageValidation.getPageSpec().getObjectLocator(objectName);
         Page objectContextPage = pageValidation.getPage().createObjectContextPage(mainObjectLocator);
 

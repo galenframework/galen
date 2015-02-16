@@ -19,23 +19,22 @@ import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 import java.io.InputStream;
 import java.util.Iterator;
+import java.util.List;
 
 import net.mindengine.galen.config.GalenConfig;
 import net.mindengine.galen.page.PageElement;
 import net.mindengine.galen.page.Rect;
 import net.mindengine.galen.specs.SpecImage;
 import net.mindengine.galen.utils.GalenUtils;
-import net.mindengine.galen.validation.ErrorArea;
-import net.mindengine.galen.validation.ImageComparison;
-import net.mindengine.galen.validation.PageValidation;
-import net.mindengine.galen.validation.SpecValidation;
-import net.mindengine.galen.validation.ValidationErrorException;
+import net.mindengine.galen.validation.*;
 import net.mindengine.rainbow4j.ComparisonOptions;
 import net.mindengine.rainbow4j.ImageCompareResult;
 import net.mindengine.rainbow4j.Rainbow4J;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import static java.util.Arrays.asList;
 
 public class SpecValidationImage extends SpecValidation<SpecImage> {
 
@@ -57,13 +56,11 @@ public class SpecValidationImage extends SpecValidation<SpecImage> {
     }
 
     @Override
-    public void check(PageValidation pageValidation, String objectName, SpecImage spec) throws ValidationErrorException {
+    public ValidationResult check(PageValidation pageValidation, String objectName, SpecImage spec) throws ValidationErrorException {
         PageElement pageElement = pageValidation.findPageElement(objectName);
         checkAvailability(pageElement, objectName);
 
         final BufferedImage pageImage = pageValidation.getPage().getScreenshotImage();
-
-        // TODO fix. should only take screenshot once per the same page if there are multiple image comparison checks
 
         int tolerance = GalenConfig.getConfig().getImageSpecDefaultTolerance();
 
@@ -85,7 +82,7 @@ public class SpecValidationImage extends SpecValidation<SpecImage> {
         Iterator<String> it = spec.getImagePaths().iterator();
 
         if (!it.hasNext()) {
-            throw new ValidationErrorException("There are now images defined to compare with").withErrorArea(new ErrorArea(pageElement.getArea(), objectName));
+            throw new ValidationErrorException("There are now images defined to compare with").withValidationObject(new ValidationObject(pageElement.getArea(), objectName));
         }
 
         try {
@@ -99,18 +96,28 @@ public class SpecValidationImage extends SpecValidation<SpecImage> {
             }
         } catch (ValidationErrorException ex) {
             LOG.trace("Validation errors during image compare.", ex);
-            ex.withErrorArea(new ErrorArea(pageElement.getArea(), objectName));
+            ex.withValidationObject(new ValidationObject(pageElement.getArea(), objectName));
             throw ex;
         } catch (Exception ex) {
             LOG.trace("Unkown errors during image compare.", ex);
-            throw new ValidationErrorException(ex).withErrorArea(new ErrorArea(pageElement.getArea(), objectName));
+            throw new ValidationErrorException(ex).withValidationObject(new ValidationObject(pageElement.getArea(), objectName));
         }
 
+        List<ValidationObject> objects = asList(new ValidationObject(pageElement.getArea(), objectName));
+
         if (minCheck.difference > 0) {
-            throw new ValidationErrorException(minCheck.errorMessage).withErrorArea(new ErrorArea(pageElement.getArea(), objectName)).withImageComparison(
-                    new ImageComparison(spec.getSelectedArea(), minCheck.imagePath, minCheck.result.getComparisonMap()));
+            throw new ValidationErrorException(minCheck.errorMessage)
+                    .withValidationObjects(objects)
+                    .withImageComparison(new ImageComparison(
+                            spec.getSelectedArea(),
+                            minCheck.imagePath,
+                            minCheck.result.getComparisonMap()));
         }
+
+        return new ValidationResult(objects);
     }
+
+
 
     private ImageCheck checkImages(SpecImage spec, BufferedImage pageImage, ComparisonOptions options, Rect elementArea, String imagePath)
             throws ValidationErrorException {

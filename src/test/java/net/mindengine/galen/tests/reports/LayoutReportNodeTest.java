@@ -23,6 +23,8 @@ import net.mindengine.galen.reports.model.LayoutSection;
 import net.mindengine.galen.reports.model.LayoutSpec;
 import net.mindengine.galen.reports.nodes.TestReportNode;
 import net.mindengine.galen.validation.ValidationError;
+import net.mindengine.galen.validation.ValidationObject;
+import net.mindengine.galen.validation.ValidationResult;
 import org.testng.annotations.Test;
 
 import java.util.LinkedList;
@@ -32,6 +34,8 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 
 public class LayoutReportNodeTest {
+
+    private static final List<ValidationObject> EMPTY_OBJECTS = new LinkedList<ValidationObject>();
 
     @Test
     public void should_fetchStatistics_properly() {
@@ -54,14 +58,15 @@ public class LayoutReportNodeTest {
 
     private LayoutReport createSampleLayoutReport() {
         LayoutReport report = new LayoutReport();
-        List<ValidationError> list = new LinkedList<ValidationError>();
-        report.setValidationErrors(list);
+        List<ValidationResult> list = new LinkedList<ValidationResult>();
+        report.setValidationErrorResults(list);
 
-        list.add(new ValidationError().withOnlyWarn(true));
-        list.add(new ValidationError());
-        list.add(new ValidationError());
-        list.add(new ValidationError().withOnlyWarn(true));
-        list.add(new ValidationError());
+        list.add(new ValidationResult(EMPTY_OBJECTS, new ValidationError().withOnlyWarn(true)));
+        list.add(new ValidationResult(EMPTY_OBJECTS, new ValidationError()));
+        list.add(new ValidationResult(EMPTY_OBJECTS, new ValidationError()));
+        list.add(new ValidationResult(EMPTY_OBJECTS, new ValidationError().withOnlyWarn(true)));
+        list.add(new ValidationResult(EMPTY_OBJECTS, new ValidationError()));
+
 
 
         List<LayoutSection> sections = new LinkedList<LayoutSection>();

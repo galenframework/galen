@@ -20,18 +20,18 @@ import net.mindengine.galen.specs.Spec;
 import net.mindengine.galen.specs.page.PageSection;
 import net.mindengine.galen.suite.GalenPageAction;
 import net.mindengine.galen.validation.PageValidation;
-import net.mindengine.galen.validation.ValidationError;
 import net.mindengine.galen.validation.ValidationListener;
+import net.mindengine.galen.validation.ValidationResult;
 
 public class TestValidationListener implements ValidationListener {
 
     private StringBuffer invokations = new StringBuffer();
 
     @Override
-    public void onSpecError(GalenPageRunner pageRunner, PageValidation pageValidation, String objectName, Spec spec, ValidationError error) {
+    public void onSpecError(GalenPageRunner pageRunner, PageValidation pageValidation, String objectName, Spec spec, ValidationResult result) {
         append("<" + spec.getClass().getSimpleName() + " " + objectName + ">");
         StringBuffer buffer = new StringBuffer();
-        for (String message : error.getMessages()) {
+        for (String message : result.getError().getMessages()) {
             buffer.append("<msg>");
             buffer.append(message);
             buffer.append("</msg>");
@@ -40,7 +40,7 @@ public class TestValidationListener implements ValidationListener {
     }
 
     @Override
-    public void onSpecSuccess(GalenPageRunner pageRunner, PageValidation pageValidation, String objectName, Spec spec) {
+    public void onSpecSuccess(GalenPageRunner pageRunner, PageValidation pageValidation, String objectName, Spec spec, ValidationResult result) {
         append("<" + spec.getClass().getSimpleName() + " " + objectName + ">");
     }
 

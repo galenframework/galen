@@ -101,7 +101,7 @@ feedback
 
 
 
-@ multiple-objects-check
+@ multiple-validationObjects-check
 -----------------------------
 menu-item-*:
     height: 40 to 50px

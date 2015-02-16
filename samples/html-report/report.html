@@ -52,7 +52,7 @@ var reportData = {
             "status": "error",
             "time": "1423304781953",
             "screenshot": "screenshot.png",
-            "objects": {
+            "validationObjects": {
                 "header": {
                     "area": [0, 0, 1000, 60]
                 },
@@ -66,7 +66,7 @@ var reportData = {
                     "sections": [
                         {
                             "name": "Should have normal icon",
-                            "objects": [
+                            "validationObjects": [
                                 {
                                     "name": "header-icon",
                                     "checks": [
@@ -90,7 +90,7 @@ var reportData = {
                             "sections": [
                                 {
                                     "name": "Should be squared",
-                                    "objects": [
+                                    "validationObjects": [
                                         {
                                             "name": "header-icon",
                                             "checks": [
@@ -109,7 +109,7 @@ var reportData = {
                             ]
                         }
                     ],
-                    "objects": [
+                    "validationObjects": [
                         {
                             "name": "header",
                             "checks": [
@@ -128,7 +128,7 @@ var reportData = {
                                     "sublayout": {
                                         "type": "layout",
                                         "screenshot": "screenshot.png",
-                                        "objects": {
+                                        "validationObjects": {
                                             "parent": {
                                                 "area": [0, 0, 100, 60]
                                             },
@@ -139,7 +139,7 @@ var reportData = {
                                         "sections": [
                                             {
                                                 "name": "subsection",
-                                                "objects": [
+                                                "validationObjects": [
                                                     {
                                                         "name": "header-icon",
                                                         "checks": [
@@ -245,9 +245,9 @@ var reportData = {
                         {{/each}}
                         </ul>
                     {{/if}}
-                    {{#if objects}}
-                        <ul class="layout-objects">
-                            {{#each objects}}
+                    {{#if validationObjects}}
+                        <ul class="layout-validationObjects">
+                            {{#each validationObjects}}
                                 {{renderLayoutObject this}}
                             {{/each}}
                         </ul>
@@ -271,7 +271,7 @@ var reportData = {
         <script id="report-layout-check-tpl" type="text/x-handlebars-template">
             <li>
             <a class="layout-check layout-check-status-{{status}}" href="#" 
-                data-highlight-objects="{{commaSeparated highlight}}"
+                data-highlight-validationObjects="{{commaSeparated highlight}}"
                 title="{{location}}"
                 >{{name}}</a>
 
@@ -298,7 +298,7 @@ var reportData = {
         <script id="screenshot-popup-tpl" type="text/x-handlebars-template">
             <div class="screenshot-canvas">
                 <img src="{{screenshot}}"/>
-                {{#each objects}}
+                {{#each validationObjects}}
                 <div class="canvas-rect" style="left: {{area.left}}px; top: {{area.top}}px; width: {{area.width}}px; height: {{area.height}}px; border-color: {{color}};">
                     <div class="canvas-rect-wrapper">
                         <div class="canvas-rect-hint" style="background: {{color}};">{{@key}}</div>

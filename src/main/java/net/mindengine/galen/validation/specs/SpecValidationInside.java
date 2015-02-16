@@ -20,15 +20,20 @@ import net.mindengine.galen.page.Point;
 import net.mindengine.galen.page.Rect;
 import net.mindengine.galen.specs.Side;
 import net.mindengine.galen.specs.SpecInside;
-import net.mindengine.galen.validation.ErrorArea;
+import net.mindengine.galen.validation.ValidationObject;
 import net.mindengine.galen.validation.PageValidation;
 import net.mindengine.galen.validation.ValidationErrorException;
+import net.mindengine.galen.validation.ValidationResult;
+
+import java.util.List;
+
+import static java.util.Arrays.asList;
 
 public class SpecValidationInside extends SpecValidationGeneral<SpecInside> {
 
 
     @Override
-    public void check(PageValidation pageValidation, String objectName, SpecInside spec) throws ValidationErrorException {
+    public ValidationResult check(PageValidation pageValidation, String objectName, SpecInside spec) throws ValidationErrorException {
         super.check(pageValidation, objectName, spec);
 
 
@@ -37,18 +42,22 @@ public class SpecValidationInside extends SpecValidationGeneral<SpecInside> {
 
         Rect mainArea = mainObject.getArea();
         Rect secondArea = secondObject.getArea();
+
+        List<ValidationObject> objects = asList(new ValidationObject(mainArea, objectName),new ValidationObject(secondArea, spec.getObject()));
+
         if (!spec.getPartly()) {
             Point[] points = mainArea.getPoints();
 
             for (Point point : points) {
                 if (!secondArea.contains(point)) {
                     throw new ValidationErrorException()
-                            .withErrorArea(new ErrorArea(mainArea, objectName))
-                            .withErrorArea(new ErrorArea(secondArea, spec.getObject()))
+                            .withValidationObjects(objects)
                             .withMessage(String.format("\"%s\" is not completely inside", objectName));
                 }
             }
         }
+
+        return new ValidationResult(objects);
     }
 
     @Override

@@ -28,6 +28,7 @@ import net.mindengine.galen.suite.GalenPageAction;
 import net.mindengine.galen.tests.GalenTest;
 import net.mindengine.galen.validation.PageValidation;
 import net.mindengine.galen.validation.ValidationError;
+import net.mindengine.galen.validation.ValidationResult;
 
 public class ConsoleReportingListener implements CompleteListener {
 
@@ -112,12 +113,12 @@ public class ConsoleReportingListener implements CompleteListener {
     }
 
     @Override
-    public void onSpecError(GalenPageRunner pageRunner, PageValidation pageValidation, String objectName, Spec spec, ValidationError error) {
+    public void onSpecError(GalenPageRunner pageRunner, PageValidation pageValidation, String objectName, Spec spec, ValidationResult result) {
         if (logLevel >= OBJECT_SPEC_LEVEL) {
             err.print(getSpecErrorIndentation());
             err.println(spec.toText());
-            if (error.getMessages() != null) {
-                for (String message : error.getMessages()) {
+            if (result.getError().getMessages() != null) {
+                for (String message : result.getError().getMessages()) {
                     err.print(getSpecErrorIndentation());
                     err.print(SPEC_ERROR_MESSAGE_INDENTATION_SUFFIX);
                     err.println(message);
@@ -139,7 +140,7 @@ public class ConsoleReportingListener implements CompleteListener {
     }
 
     @Override
-    public void onSpecSuccess(GalenPageRunner pageRunner, PageValidation pageValidation, String objectName, Spec spec) {
+    public void onSpecSuccess(GalenPageRunner pageRunner, PageValidation pageValidation, String objectName, Spec spec, ValidationResult result) {
         if (logLevel >= OBJECT_SPEC_LEVEL) {
             out.print(getObjectIndentation());
             out.print(NORMAL_INDETATION);

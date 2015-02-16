@@ -29,14 +29,16 @@ import net.mindengine.galen.specs.page.ConditionalBlockStatement;
 import net.mindengine.galen.specs.page.ObjectSpecs;
 import net.mindengine.galen.specs.page.PageSection;
 
+import static net.mindengine.galen.validation.ValidationResult.doesNotHaveErrors;
+
 public class SectionValidation {
     
     private final static Logger LOG = LoggerFactory.getLogger(SectionValidation.class);
 
     private static final GalenPageRunner UNKNOWN_PAGE_RUNNER = null;
-    private static final List<ValidationError> EMPTY_ERRORS = new LinkedList<ValidationError>();
     private static final boolean SHOULD_REPORT = true;
     private static final boolean SHOULD_NOT_REPORT = false;
+    private static final List<ValidationResult> EMPTY_RESULTS = new LinkedList<ValidationResult>();
     private List<PageSection> pageSections;
     private PageValidation pageValidation;
     private ValidationListener validationListener;
@@ -47,33 +49,33 @@ public class SectionValidation {
         this.validationListener = validationListener;
     }
 
-    public List<ValidationError> check() {
+    public List<ValidationResult> check() {
         
         //Fetching all multi objects from page before validation
         pageValidation.getPageSpec().updateMultiObjects(pageValidation.getPage());
         
-        List<ValidationError> errors = new LinkedList<ValidationError>();
+        List<ValidationResult> validationResults = new LinkedList<ValidationResult>();
         
         for (PageSection section : pageSections) {
-            errors.addAll(checkSection(section));
+            validationResults.addAll(checkSection(section));
         }
-        return errors;
+        return validationResults;
     }
 
-    private List<ValidationError> checkSection(PageSection section) {
+    private List<ValidationResult> checkSection(PageSection section) {
         tellBeforeSection(section);
-        List<ValidationError> errors = new LinkedList<ValidationError>();
-        errors.addAll(checkObjects(section.getObjects()));
+        List<ValidationResult> validationResult= new LinkedList<ValidationResult>();
+        validationResult.addAll(checkObjects(section.getObjects()));
         
         List<ConditionalBlock> conditionalBlocks = section.getConditionalBlocks();
         if (conditionalBlocks != null) {
             for (ConditionalBlock block : conditionalBlocks) {
-                errors.addAll(checkConditionalBlock(block));
+                validationResult.addAll(checkConditionalBlock(block));
             }
         }
         
         tellAfterSection(section);
-        return errors;
+        return validationResult;
     }
 
     private void tellAfterSection(PageSection section) {
@@ -88,8 +90,8 @@ public class SectionValidation {
         }
     }
 
-    private List<ValidationError> checkObjects(List<ObjectSpecs> objects, boolean shouldReport) {
-        List<ValidationError> errors = new LinkedList<ValidationError>();
+    private List<ValidationResult> checkObjects(List<ObjectSpecs> objects, boolean shouldReport) {
+        List<ValidationResult> validationResults = new LinkedList<ValidationResult>();
         for (ObjectSpecs object : objects) {
             List<String> allObjectNames = findAllObjectNames(object.getObjectName());
             for (String objectName : allObjectNames) {
@@ -97,35 +99,35 @@ public class SectionValidation {
                     tellOnObject(objectName);
                 }
                 
-                errors.addAll(checkObject(objectName, object.getSpecs(), shouldReport));
+                validationResults.addAll(checkObject(objectName, object.getSpecs(), shouldReport));
                 
                 if (shouldReport) {
                     tellOnAfterObject(objectName);
                 }
             }
         }
-        return errors;
+        return validationResults;
     }
 
-    private List<ValidationError> checkConditionalBlock(ConditionalBlock block) {
+    private List<ValidationResult> checkConditionalBlock(ConditionalBlock block) {
         if (oneOfConditionsApplies(block.getStatements())) {
             return checkObjects(block.getBodyObjects());
         }
         else if (block.getOtherwiseObjects() != null) {
             return checkObjects(block.getOtherwiseObjects());
         }
-        else return EMPTY_ERRORS;
+        else return EMPTY_RESULTS;
     }
 
-    private List<ValidationError> checkObjects(List<ObjectSpecs> bodyObjects) {
+    private List<ValidationResult> checkObjects(List<ObjectSpecs> bodyObjects) {
         return checkObjects(bodyObjects, SHOULD_REPORT);
     }
 
     private boolean oneOfConditionsApplies(List<ConditionalBlockStatement> statements) {
         for (ConditionalBlockStatement statement : statements) {
-            List<ValidationError> errors = checkObjectsSilently(statement.getObjects());
+            List<ValidationResult> validationResults = checkObjectsSilently(statement.getObjects());
             
-            boolean statementStatus =  (errors == null || errors.size() == 0);
+            boolean statementStatus =  doesNotHaveErrors(validationResults);
             if (statement.isInverted()) {
                 statementStatus = !statementStatus;
             }
@@ -137,7 +139,8 @@ public class SectionValidation {
         return false;
     }
 
-    private List<ValidationError> checkObjectsSilently(List<ObjectSpecs> objects) {
+
+    private List<ValidationResult> checkObjectsSilently(List<ObjectSpecs> objects) {
         return checkObjects(objects, SHOULD_NOT_REPORT);
     }
 
@@ -204,28 +207,28 @@ public class SectionValidation {
         }
     }
 
-    private List<ValidationError> checkObject(String objectName, List<Spec> specs, boolean shouldReport) {
-        List<ValidationError> errors = new LinkedList<ValidationError>();
+    private List<ValidationResult> checkObject(String objectName, List<Spec> specs, boolean shouldReport) {
+        List<ValidationResult> validationResults = new LinkedList<ValidationResult>();
         for (Spec spec : specs) {
             
-            ValidationError error = pageValidation.check(objectName, spec);
-            if (error != null) {
-                errors.add(error);
+            ValidationResult result = pageValidation.check(objectName, spec);
+            if (result.getError()!= null) {
+                validationResults.add(result);
                 if (shouldReport) {
-                    tellOnSpecError(pageValidation, objectName, spec, error);
+                    tellOnSpecError(pageValidation, objectName, spec, result);
                 }
             }
             else if (shouldReport) {
-                tellOnSpecSuccess(pageValidation, objectName, spec);
+                tellOnSpecSuccess(pageValidation, objectName, spec, result);
             }
         }
-        return errors;
+        return validationResults;
     }
 
-    private void tellOnSpecError(PageValidation pageValidation, String objectName, Spec spec, ValidationError error) {
+    private void tellOnSpecError(PageValidation pageValidation, String objectName, Spec spec, ValidationResult result) {
         try {
             if (validationListener != null) {
-                validationListener.onSpecError(UNKNOWN_PAGE_RUNNER, pageValidation, objectName, spec, error);
+                validationListener.onSpecError(UNKNOWN_PAGE_RUNNER, pageValidation, objectName, spec, result);
             }
         }
         catch (Exception e) {
@@ -233,10 +236,10 @@ public class SectionValidation {
         }
     }
 
-    private void tellOnSpecSuccess(PageValidation pageValidation, String objectName, Spec spec) {
+    private void tellOnSpecSuccess(PageValidation pageValidation, String objectName, Spec spec, ValidationResult result) {
         try {
             if (validationListener != null) {
-                validationListener.onSpecSuccess(UNKNOWN_PAGE_RUNNER, pageValidation, objectName, spec);
+                validationListener.onSpecSuccess(UNKNOWN_PAGE_RUNNER, pageValidation, objectName, spec, result);
             }
         }
         catch (Exception e) {

@@ -15,7 +15,7 @@
 ******************************************************************************/
 package net.mindengine.galen.reports.model;
 
-import net.mindengine.galen.validation.ValidationError;
+import net.mindengine.galen.validation.ValidationResult;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -28,7 +28,7 @@ public class LayoutReport {
 
     private String screenshot;
     private String screenshotFullPath;
-    private List<ValidationError> validationErrors;
+    private List<ValidationResult> validationErrorResults;
 
     public String getTitle() {
         return title;
@@ -62,15 +62,15 @@ public class LayoutReport {
         this.screenshotFullPath = screenshotFullPath;
     }
 
-    public void setValidationErrors(List<ValidationError> validationErrors) {
-        this.validationErrors = validationErrors;
+    public void setValidationErrorResults(List<ValidationResult> validationErrorResults) {
+        this.validationErrorResults = validationErrorResults;
     }
 
     public int errors() {
         int errors = 0;
-        if (validationErrors != null) {
-            for (ValidationError validationError : validationErrors) {
-                if (!validationError.isOnlyWarn()) {
+        if (validationErrorResults != null) {
+            for (ValidationResult validationError : validationErrorResults) {
+                if (!validationError.getError().isOnlyWarn()) {
                     errors++;
                 }
             }
@@ -80,9 +80,9 @@ public class LayoutReport {
 
     public int warnings() {
         int warnings = 0;
-        if (validationErrors != null) {
-            for (ValidationError validationError : validationErrors) {
-                if (validationError.isOnlyWarn()) {
+        if (validationErrorResults != null) {
+            for (ValidationResult validationError : validationErrorResults) {
+                if (validationError.getError().isOnlyWarn()) {
                     warnings ++;
                 }
             }
@@ -90,7 +90,7 @@ public class LayoutReport {
         return warnings;
     }
 
-    public List<ValidationError> getValidationErrors() {
-        return validationErrors;
+    public List<ValidationResult> getValidationErrorResults() {
+        return validationErrorResults;
     }
 }

@@ -26,10 +26,7 @@ import net.mindengine.galen.specs.Location;
 import net.mindengine.galen.specs.Range;
 import net.mindengine.galen.specs.Side;
 import net.mindengine.galen.specs.SpecComplex;
-import net.mindengine.galen.validation.ErrorArea;
-import net.mindengine.galen.validation.PageValidation;
-import net.mindengine.galen.validation.SpecValidation;
-import net.mindengine.galen.validation.ValidationErrorException;
+import net.mindengine.galen.validation.*;
 
 /**
  * Used for specs 'inside' and 'near'
@@ -40,7 +37,7 @@ import net.mindengine.galen.validation.ValidationErrorException;
 public abstract class SpecValidationGeneral<T extends SpecComplex> extends SpecValidation<T>{
 
     @Override
-    public void check(PageValidation pageValidation, String objectName, T spec) throws ValidationErrorException {
+    public ValidationResult check(PageValidation pageValidation, String objectName, T spec) throws ValidationErrorException {
         PageElement mainObject = pageValidation.findPageElement(objectName);
         checkAvailability(mainObject, objectName);
         
@@ -58,13 +55,19 @@ public abstract class SpecValidationGeneral<T extends SpecComplex> extends SpecV
                 messages.add(message);
             }
         }
-        
+
+
+        List<ValidationObject> validationObjects = new LinkedList<ValidationObject>();
+        validationObjects.add(new ValidationObject(mainArea, objectName));
+        validationObjects.add(new ValidationObject(secondArea, spec.getObject()));
+
         if (messages.size() > 0) {
         	throw new ValidationErrorException()
-                .withErrorArea(new ErrorArea(mainArea, objectName))
-                .withErrorArea(new ErrorArea(secondArea, spec.getObject()))
-                .withMessage(createMessage(messages, objectName)); 
+                .withMessage(createMessage(messages, objectName))
+                .withValidationObjects(validationObjects);
         }
+
+        return new ValidationResult(validationObjects);
     }
 
     private String createMessage(List<String> messages, String objectName) {

@@ -24,15 +24,12 @@ import net.mindengine.galen.page.PageElement;
 import net.mindengine.galen.page.Point;
 import net.mindengine.galen.page.Rect;
 import net.mindengine.galen.specs.SpecContains;
-import net.mindengine.galen.validation.ErrorArea;
-import net.mindengine.galen.validation.PageValidation;
-import net.mindengine.galen.validation.SpecValidation;
-import net.mindengine.galen.validation.ValidationErrorException;
+import net.mindengine.galen.validation.*;
 
 public class SpecValidationContains extends SpecValidation<SpecContains> {
 
     @Override
-    public void check(PageValidation pageValidation, String objectName, SpecContains spec) throws ValidationErrorException {
+    public ValidationResult check(PageValidation pageValidation, String objectName, SpecContains spec) throws ValidationErrorException {
         PageElement mainObject = pageValidation.findPageElement(objectName);
         
         checkAvailability(mainObject, objectName);
@@ -42,8 +39,11 @@ public class SpecValidationContains extends SpecValidation<SpecContains> {
         List<String> childObjects = fetchChildObjets(spec.getChildObjects(), pageValidation.getPageSpec());
 
         
-        List<ErrorArea> errorAreas = new LinkedList<ErrorArea>();
         List<String> errorMessages = new LinkedList<String>();
+
+
+        List<ValidationObject> objects = new LinkedList<ValidationObject>();
+        objects.add(new ValidationObject(objectArea, objectName));
         
         for (String childObjectName : childObjects) {
             PageElement childObject = pageValidation.findPageElement(childObjectName);
@@ -58,8 +58,11 @@ public class SpecValidationContains extends SpecValidation<SpecContains> {
                 } 
                 else {
                     Rect childObjectArea = childObject.getArea();
+
+
+                    objects.add(new ValidationObject(childObjectArea, childObjectName));
+
                     if (!childObjectMatches(spec, objectArea, childObjectArea)) {
-                        errorAreas.add(new ErrorArea(childObjectArea, childObjectName));
                         errorMessages.add(format("\"%s\" is outside \"%s\"", childObjectName, objectName));
                     }
                 }
@@ -71,8 +74,10 @@ public class SpecValidationContains extends SpecValidation<SpecContains> {
         }
         
         if (errorMessages.size() > 0 ) { 
-            throw new ValidationErrorException(errorAreas, errorMessages).withErrorArea(new ErrorArea(objectArea, objectName));
+            throw new ValidationErrorException(objects, errorMessages).withValidationObject(new ValidationObject(objectArea, objectName));
         }
+
+        return new ValidationResult(objects);
     }
 
     

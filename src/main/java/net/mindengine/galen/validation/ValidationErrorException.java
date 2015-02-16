@@ -22,16 +22,16 @@ import static java.util.Arrays.asList;
 
 public class ValidationErrorException extends Exception {
 
-	private List<ErrorArea> errorAreas;
 	private List<String> errorMessages;
     private ImageComparison imageComparison;
+    private List<ValidationObject> validationObjects;
 
     public ValidationErrorException() {
 		super();
 	}
 	
-	public ValidationErrorException(List<ErrorArea> errorAreas, List<String> errorMessages) {
-		this.errorAreas = errorAreas;
+	public ValidationErrorException(List<ValidationObject> validationObjects, List<String> errorMessages) {
+        this.validationObjects = validationObjects;
 		this.errorMessages = errorMessages;
 	}
 	
@@ -49,12 +49,12 @@ public class ValidationErrorException extends Exception {
 		return this;
 	}
 
-	public ValidationErrorException withErrorArea(ErrorArea errorArea) {
-    	if (errorAreas == null) {
-    		errorAreas = new LinkedList<ErrorArea>();
+	public ValidationErrorException withValidationObject(ValidationObject validationObject) {
+    	if (this.validationObjects== null) {
+    		this.validationObjects = new LinkedList<ValidationObject>();
     	}
-    	errorAreas.add(errorArea);
-    	
+        this.validationObjects.add(validationObject);
+
     	return this;
     }
     
@@ -76,12 +76,12 @@ public class ValidationErrorException extends Exception {
 		this.errorMessages = errorMessages;
 	}
 
-	public List<ErrorArea> getErrorAreas() {
-		return errorAreas;
+	public List<ValidationObject> getValidationObjects() {
+		return validationObjects;
 	}
 
-	public void setErrorAreas(List<ErrorArea> errorAreas) {
-		this.errorAreas = errorAreas;
+	public void setValidationObjects(List<ValidationObject> validationObjects) {
+        this.validationObjects = validationObjects;
 	}
 
 	/**
@@ -94,8 +94,8 @@ public class ValidationErrorException extends Exception {
         return this;
     }
 
-    public ValidationError asValidationError() {
-        return new ValidationError(this.getErrorAreas(), this.getErrorMessages(), this.getImageComparison());
+    public ValidationResult asValidationResult() {
+        return new ValidationResult(this.getValidationObjects(), new ValidationError(this.getErrorMessages(), this.getImageComparison()));
     }
 
     public ImageComparison getImageComparison() {
@@ -108,6 +108,15 @@ public class ValidationErrorException extends Exception {
 
     public ValidationErrorException withImageComparison(ImageComparison imageComparison) {
         setImageComparison(imageComparison);
+        return this;
+    }
+
+    public ValidationErrorException withValidationObjects(List<ValidationObject> validationObjects) {
+        if (this.validationObjects == null) {
+            this.validationObjects = validationObjects;
+        } else {
+            this.validationObjects.addAll(validationObjects);
+        }
         return this;
     }
 }

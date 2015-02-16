@@ -18,24 +18,23 @@ package net.mindengine.galen.validation.specs;
 import static java.lang.String.format;
 import net.mindengine.galen.page.PageElement;
 import net.mindengine.galen.specs.SpecAbsent;
-import net.mindengine.galen.validation.ErrorArea;
-import net.mindengine.galen.validation.PageValidation;
-import net.mindengine.galen.validation.SpecValidation;
-import net.mindengine.galen.validation.ValidationErrorException;
+import net.mindengine.galen.validation.*;
 
 public class SpecValidationAbsent extends SpecValidation<SpecAbsent>{
 
     @Override
-    public void check(PageValidation pageValidation, String objectName, SpecAbsent spec) throws ValidationErrorException {
+    public ValidationResult check(PageValidation pageValidation, String objectName, SpecAbsent spec) throws ValidationErrorException {
         PageElement mainObject = pageValidation.findPageElement(objectName);
         if (mainObject == null) {
             throw new ValidationErrorException(String.format(OBJECT_WITH_NAME_S_IS_NOT_DEFINED_IN_PAGE_SPEC, objectName));
         }
         else if (mainObject.isPresent() && mainObject.isVisible()) {
             throw new ValidationErrorException()
-                .withErrorArea(new ErrorArea(mainObject.getArea(), objectName))
+                .withValidationObject(new ValidationObject(mainObject.getArea(), objectName))
                 .withMessage(format("\"%s\" is not absent on page", objectName));
         }
+
+        return new ValidationResult();
     }
 
 }

@@ -55,18 +55,19 @@ public class PageValidation {
     }
 
     @SuppressWarnings({ "rawtypes", "unchecked" })
-    public ValidationError check(String objectName, Spec spec) {
+    public ValidationResult check(String objectName, Spec spec) {
         SpecValidation specValidation = ValidationFactory.getValidation(spec, this);
+
         try {
-            specValidation.check(this, objectName, spec);
-            return null;
+            return specValidation.check(this, objectName, spec);
         }
         catch (ValidationErrorException ex) {
-            ValidationError validationError = ex.asValidationError();
+
+            ValidationResult result = ex.asValidationResult();
             if (spec.isOnlyWarn()) {
-                validationError.setOnlyWarn(true);
+                result.getError().setOnlyWarn(true);
             }
-            return validationError;
+            return result;
         }
     }
 
