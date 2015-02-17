@@ -35,6 +35,7 @@ import net.mindengine.galen.components.report.FakeException;
 import net.mindengine.galen.components.report.ReportingListenerTestUtils;
 import net.mindengine.galen.reports.*;
 import net.mindengine.galen.reports.json.JsonReportBuilder;
+import net.mindengine.galen.reports.model.FileTempStorage;
 import net.mindengine.galen.reports.model.LayoutReport;
 import net.mindengine.galen.reports.nodes.LayoutReportNode;
 import net.mindengine.galen.reports.LayoutReportListener;
@@ -65,10 +66,10 @@ public class ReportingTest {
         GalenTestInfo testInfo = new GalenTestInfo("Home page test", null);
         TestReport report = new TestReport();
         LayoutReport layoutReport = new LayoutReport();
-        layoutReport.setScreenshotFullPath(File.createTempFile("screenshot", ".png").getAbsolutePath());
+        layoutReport.setScreenshot(layoutReport.getFileStorage().registerFile("screenshot.png", File.createTempFile("screenshot", ".png")));
         ReportingListenerTestUtils.performSampleReporting("Home page test", null, new LayoutReportListener(layoutReport), null);
 
-        report.addNode(new LayoutReportNode(layoutReport, "check layout"));
+        report.addNode(new LayoutReportNode(new FileTempStorage("test"), layoutReport, "check layout"));
         report.getNodes().get(0).setTime(new Date(1404681346000L));
 
 
@@ -149,12 +150,12 @@ public class ReportingTest {
 
         TestReport report = new TestReport();
         LayoutReport layoutReport = new LayoutReport();
-        layoutReport.setScreenshotFullPath(File.createTempFile("screenshot", ".png").getAbsolutePath());
+        layoutReport.setScreenshot(layoutReport.getFileStorage().registerFile("screenshot.png", File.createTempFile("screenshot", ".png")));
         ReportingListenerTestUtils.performSampleReporting("Home page test", null, new LayoutReportListener(layoutReport), null);
 
 
 
-        report.addNode(new LayoutReportNode(layoutReport, "check layout"));
+        report.addNode(new LayoutReportNode(new FileTempStorage("test"), layoutReport, "check layout"));
         report.getNodes().get(0).setTime(new Date(1404681346000L));
 
 
@@ -213,7 +214,7 @@ public class ReportingTest {
         performConsoleReporting_andCompare("/expected-reports/console-2.txt");
     }
     
-    private void performConsoleReporting_andCompare(String expectedReport) throws IOException, UnsupportedEncodingException {
+    private void performConsoleReporting_andCompare(String expectedReport) throws IOException {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         PrintStream ps = new PrintStream(baos);
         ConsoleReportingListener listener = new ConsoleReportingListener(ps, ps);

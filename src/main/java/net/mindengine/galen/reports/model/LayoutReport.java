@@ -15,20 +15,41 @@
 ******************************************************************************/
 package net.mindengine.galen.reports.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import net.mindengine.galen.validation.ValidationResult;
+import net.mindengine.rainbow4j.Rainbow4J;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 public class LayoutReport {
-    
+
+    private final static Logger LOG = LoggerFactory.getLogger(LayoutReport.class);
+
     private String title;
     
     private List<LayoutSection> sections = new LinkedList<LayoutSection>();
+    private Map<String, LayoutObjectDetails> validationObjects = new HashMap<String, LayoutObjectDetails>();
 
     private String screenshot;
-    private String screenshotFullPath;
     private List<ValidationResult> validationErrorResults;
+
+
+    /**
+     Used to store temporary files which could be saved later.
+     Everything that refers to a report file like screenshot or image comparison files
+     will actually point to a name in @fileStorage container.
+     Once the HTML or JSON report is about to be rendered - it will copy those files to the report folder.
+      */
+    @JsonIgnore
+    private FileTempStorage fileStorage = new FileTempStorage("layout");
 
     public String getTitle() {
         return title;
@@ -42,6 +63,7 @@ public class LayoutReport {
         return sections;
     }
 
+
     public void setSections(List<LayoutSection> sections) {
         this.sections = sections;
     }
@@ -52,14 +74,6 @@ public class LayoutReport {
 
     public void setScreenshot(String screenshot) {
         this.screenshot = screenshot;
-    }
-
-    public String getScreenshotFullPath() {
-        return screenshotFullPath;
-    }
-
-    public void setScreenshotFullPath(String screenshotFullPath) {
-        this.screenshotFullPath = screenshotFullPath;
     }
 
     public void setValidationErrorResults(List<ValidationResult> validationErrorResults) {
@@ -92,5 +106,36 @@ public class LayoutReport {
 
     public List<ValidationResult> getValidationErrorResults() {
         return validationErrorResults;
+    }
+
+    public Map<String, LayoutObjectDetails> getValidationObjects() {
+        return validationObjects;
+    }
+
+    public void setValidationObjects(Map<String, LayoutObjectDetails> validationObjects) {
+        this.validationObjects = validationObjects;
+    }
+
+    public FileTempStorage getFileStorage() {
+        return fileStorage;
+    }
+
+    /**
+     * Saves image in temporary png file and generates a name for it.
+     * @param prefix
+     * @param image
+     * @return
+     */
+    public String registerImageFile(String prefix, BufferedImage image) throws IOException {
+        File file = File.createTempFile(prefix, ".png");
+        Rainbow4J.saveImage(image, file);
+
+        return fileStorage.registerFile(prefix, file);
+    }
+
+
+    public String registerFile(String fileName, File file) {
+        return fileStorage.registerFile(fileName, file);
+
     }
 }

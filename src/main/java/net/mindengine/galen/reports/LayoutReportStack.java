@@ -1,11 +1,11 @@
 package net.mindengine.galen.reports;
 
-import net.mindengine.galen.reports.model.LayoutObject;
-import net.mindengine.galen.reports.model.LayoutReport;
-import net.mindengine.galen.reports.model.LayoutSection;
-import net.mindengine.galen.reports.model.LayoutSpec;
+import net.mindengine.galen.reports.model.*;
 import net.mindengine.galen.specs.page.PageSection;
+import net.mindengine.galen.validation.ValidationObject;
 
+import java.awt.image.BufferedImage;
+import java.util.List;
 import java.util.Stack;
 
 /**
@@ -52,4 +52,11 @@ public class LayoutReportStack {
     public LayoutSpec getCurrentSpec() {
         return currentSpec;
     }
+
+    public void putObjects(List<ValidationObject> validationObjects) {
+        for (ValidationObject validationObject : validationObjects) {
+            layoutReport.getValidationObjects().put(validationObject.getName(), new LayoutObjectDetails(validationObject.getArea().toIntArray()));
+        }
+    }
+
 }

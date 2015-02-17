@@ -15,6 +15,7 @@
 ******************************************************************************/
 package net.mindengine.galen.reports;
 
+import net.mindengine.galen.reports.model.FileTempStorage;
 import net.mindengine.galen.reports.model.LayoutReport;
 import net.mindengine.galen.reports.nodes.LayoutReportNode;
 import net.mindengine.galen.reports.nodes.TestReportNode;
@@ -24,23 +25,29 @@ import java.util.List;
 
 public class TestReport {
 
-    private TestReportNode rootNode = new TestReportNode();
+
+    /**
+     * Used for storing test report node file attachments
+     */
+    private FileTempStorage fileStorage = new FileTempStorage("attachment");
+
+    private TestReportNode rootNode = new TestReportNode(fileStorage);
     private TestReportNode currentNode = rootNode;
     
     public TestReportNode info(String name) {
-        TestReportNode node = TestReportNode.info(name);
+        TestReportNode node = new TestReportNode(fileStorage, name, TestReportNode.Status.INFO);
         currentNode.addNode(node);
         return node;
     }
 
     public TestReportNode warn(String name) {
-        TestReportNode node = TestReportNode.warn(name);
+        TestReportNode node = new TestReportNode(fileStorage, name, TestReportNode.Status.WARN);
         currentNode.addNode(node);
         return node;
     }
     
     public TestReportNode error(String name) {
-        TestReportNode node = TestReportNode.error(name);
+        TestReportNode node = new TestReportNode(fileStorage, name, TestReportNode.Status.ERROR);
         currentNode.addNode(node);
         return node;
     }
@@ -50,7 +57,7 @@ public class TestReport {
     }
 
     public TestReportNode sectionStart(String name) {
-        TestReportNode node = new TestReportNode();
+        TestReportNode node = new TestReportNode(fileStorage);
         node.setName(name);
         
         this.currentNode.addNode(node);
@@ -68,7 +75,7 @@ public class TestReport {
     }
 
     public TestReportNode error(Throwable ex) {
-        TestReportNode node = new ExceptionReportNode(ex);
+        TestReportNode node = new ExceptionReportNode(fileStorage, ex);
         this.currentNode.addNode(node);
         return node;
     }
@@ -79,7 +86,7 @@ public class TestReport {
     }
 
     public LayoutReportNode layout(LayoutReport layoutReport, String title) {
-        LayoutReportNode layoutReportNode = new LayoutReportNode(layoutReport, title);
+        LayoutReportNode layoutReportNode = new LayoutReportNode(fileStorage, layoutReport, title);
         if (layoutReport.errors() > 0) {
             layoutReportNode.setStatus(TestReportNode.Status.ERROR);
         }
@@ -93,7 +100,9 @@ public class TestReport {
     public TestStatistic fetchStatistic() {
         return rootNode.fetchStatistic(new TestStatistic());
     }
-    
-    
 
+
+    public FileTempStorage getFileStorage() {
+        return fileStorage;
+    }
 }

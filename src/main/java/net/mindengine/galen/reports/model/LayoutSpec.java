@@ -20,7 +20,6 @@ import java.util.List;
 
 import net.mindengine.galen.reports.nodes.TestReportNode;
 import net.mindengine.galen.specs.reader.Place;
-import net.mindengine.galen.validation.ImageComparison;
 
 public class LayoutSpec {
 
@@ -28,11 +27,11 @@ public class LayoutSpec {
     
     private Place place;
     private String name;
-    private List<String> errors = new LinkedList<String>();
+    private List<String> errors;
 
     // List of object names to be highlighted in report
     private List<String> highlight = new LinkedList<String>();
-    private ImageComparison imageComparison;
+    private LayoutImageComparison imageComparison;
 
     // Here it will temporarily store sub objects that will be later picked up by spec
     private LayoutReport subLayout;
@@ -45,13 +44,6 @@ public class LayoutSpec {
         this.place = place;
     }
 
-    public void setImageComparison(ImageComparison imageComparison) {
-        this.imageComparison = imageComparison;
-    }
-
-    public ImageComparison getImageComparison() {
-        return imageComparison;
-    }
 
     public TestReportNode.Status getStatus() {
         return status;
@@ -91,5 +83,13 @@ public class LayoutSpec {
 
     public void setSubLayout(LayoutReport subLayout) {
         this.subLayout = subLayout;
+    }
+
+    public LayoutImageComparison getImageComparison() {
+        return imageComparison;
+    }
+
+    public void setImageComparison(LayoutImageComparison imageComparison) {
+        this.imageComparison = imageComparison;
     }
 }

@@ -15,28 +15,27 @@
 ******************************************************************************/
 package net.mindengine.galen.reports;
 
+import java.io.IOException;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Stack;
 
-import net.mindengine.galen.reports.model.LayoutObject;
-import net.mindengine.galen.reports.model.LayoutReport;
-import net.mindengine.galen.reports.model.LayoutSection;
-import net.mindengine.galen.reports.model.LayoutSpec;
+import net.mindengine.galen.reports.model.*;
 import net.mindengine.galen.reports.nodes.TestReportNode;
 import net.mindengine.galen.runner.GalenPageRunner;
 import net.mindengine.galen.specs.Spec;
 import net.mindengine.galen.specs.page.PageSection;
 import net.mindengine.galen.suite.GalenPageAction;
-import net.mindengine.galen.validation.PageValidation;
-import net.mindengine.galen.validation.ValidationError;
-import net.mindengine.galen.validation.ValidationListener;
-import net.mindengine.galen.validation.ValidationResult;
+import net.mindengine.galen.validation.*;
 
 public class LayoutReportListener implements ValidationListener {
 
 
     private Stack<LayoutReportStack> reportStack = new Stack<LayoutReportStack>();
+    private LayoutReport rootLayoutReport;
 
     public LayoutReportListener(LayoutReport layoutReport) {
+        this.rootLayoutReport = layoutReport;
         reportStack.push(new LayoutReportStack(layoutReport));
     }
 
@@ -89,11 +88,27 @@ public class LayoutReportListener implements ValidationListener {
         } else {
             spec.setStatus(TestReportNode.Status.ERROR);
         }
-        spec.setImageComparison(result.getError().getImageComparison());
+        try {
+            spec.setImageComparison(convertImageComparison(objectName, result.getError().getImageComparison()));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
-        //TODO put object for highlighting
+        currentReport().putObjects(result.getValidationObjects());
+        spec.setHighlight(convertToObjectNames(result.getValidationObjects()));
+        spec.setErrors(result.getError().getMessages());
 
         currentReport().setCurrentSpec(spec);
+    }
+
+    private LayoutImageComparison convertImageComparison(String objectName, ImageComparison imageComparison) throws IOException {
+        LayoutImageComparison layoutImageComparison = new LayoutImageComparison();
+
+        layoutImageComparison.setActualImage(rootLayoutReport.registerImageFile(objectName + "-actual", imageComparison.getOriginalFilteredImage()));
+        layoutImageComparison.setExpectedImage(rootLayoutReport.registerImageFile(objectName + "-expected", imageComparison.getSampleFilteredImage()));
+        layoutImageComparison.setComparisonMapImage(rootLayoutReport.registerImageFile(objectName + "-map", imageComparison.getComparisonMap()));
+
+        return layoutImageComparison;
     }
 
     @Override
@@ -104,8 +119,18 @@ public class LayoutReportListener implements ValidationListener {
 
         spec.setName(originalSpec.getOriginalText());
 
-        //TODO highlited objects
+        currentReport().putObjects(result.getValidationObjects());
+        spec.setHighlight(convertToObjectNames(result.getValidationObjects()));
         currentReport().setCurrentSpec(spec);
+    }
+
+    private List<String> convertToObjectNames(List<ValidationObject> validationObjects) {
+        List<String> names = new LinkedList<String>();
+        for (ValidationObject validationObject : validationObjects) {
+            names.add(validationObject.getName());
+        }
+
+        return names;
     }
 
 

@@ -1335,16 +1335,14 @@ public class ValidationTest {
 
             row(new ValidationResult(areas(new ValidationObject(new Rect(100, 90, 100, 40), "object")),
                         new ValidationError(messages("Element does not look like \"/imgs/button-sample-incorrect.png\". " +
-                                "There are 3820 mismatching pixels but max allowed is 600"))
-                            .withImageComparisonSample(null, "/imgs/button-sample-incorrect.png", null)),
+                                "There are 3820 mismatching pixels but max allowed is 600"))),
                 specImage(asList("/imgs/button-sample-incorrect.png"), 600, PIXEL_UNIT, 0, 10), page(new HashMap<String, PageElement>() {{
                         put("object", element(100, 90, 100, 40));
                     }}, imageComparisonTestScreenshot)),
 
             row(new ValidationResult(areas(new ValidationObject(new Rect(100, 90, 100, 40), "object")),
                             new ValidationError(messages("Element does not look like \"/imgs/button-sample-incorrect.png\". " +
-                                    "There are 95.5% mismatching pixels but max allowed is 2.0%"))
-                            .withImageComparisonSample(null, "/imgs/button-sample-incorrect.png", null)),
+                                    "There are 95.5% mismatching pixels but max allowed is 2.0%"))),
                     specImage(asList("/imgs/button-sample-incorrect.png"), 2.0, PERCENTAGE_UNIT, 0, 10), page(new HashMap<String, PageElement>() {{
                         put("object", element(100, 90, 100, 40));
                     }}, imageComparisonTestScreenshot)),

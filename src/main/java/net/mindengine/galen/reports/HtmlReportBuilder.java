@@ -86,133 +86,17 @@ public class HtmlReportBuilder {
         fileWriter.close();
     }
 
-    private void moveAllAttachmentsInReport(GalenTestAggregatedInfo aggregatedInfo, String reportFolderPath) {
+    private void moveAllAttachmentsInReport(GalenTestAggregatedInfo aggregatedInfo, String reportFolderPath) throws IOException {
         TestReport report = aggregatedInfo.getTestInfo().getReport();
-        if (report.getNodes() != null) {
-            for (TestReportNode node : report.getNodes()) {
-                moveAttachmentsInReportNode(node, reportFolderPath, aggregatedInfo.getTestId());
-            }
+
+        for (Map.Entry<String, File> entry: report.getFileStorage().getFiles().entrySet()) {
+            FileUtils.copyFile(entry.getValue(), new File(reportFolderPath + File.separator + entry.getKey()));
         }
     }
 
-    private void moveAttachmentsInReportNode(TestReportNode node, String reportFolderPath, String filePrefix) {
 
-        if (node.getAttachments() != null) {
-            for (TestAttachment attachment : node.getAttachments()) {
-                moveAttachmentFile(attachment, reportFolderPath, filePrefix);
-            }
-        }
 
-        if (node instanceof LayoutReportNode) {
-            moveAllFilesForLayoutReport((LayoutReportNode) node, reportFolderPath, filePrefix);
-        }
 
-        if (node.getNodes() != null) {
-            for (TestReportNode subNode : node.getNodes()) {
-                moveAttachmentsInReportNode(subNode, reportFolderPath, filePrefix);
-            }
-        }
-    }
-
-    private void moveAttachmentFile(TestAttachment attachment, String reportFolderPath, String filePrefix) {
-        if (attachment.getFile() != null) {
-            String fileName = createUniqueFileName(filePrefix + "-attachment", "-" + attachment.getFile().getName());
-            try {
-                FileUtils.copyFile(attachment.getFile(), new File(reportFolderPath + File.separator + fileName));
-                attachment.setPathInReport(fileName);
-            } catch (IOException e) {
-                LOG.error("IO error during copying attachment files for layout report.", e);
-            }
-        }
-    }
-
-    private void moveAllFilesForLayoutReport(LayoutReportNode node, String reportFolderPath, String filePrefix) {
-        if (node.getLayoutReport() != null && node.getLayoutReport().getScreenshotFullPath() != null) {
-            String fileName = createUniqueFileName(filePrefix + "-screenshot", ".png");
-
-            node.getLayoutReport().setScreenshot(fileName);
-            try {
-                FileUtils.copyFile(new File(node.getLayoutReport().getScreenshotFullPath()), new File(reportFolderPath + File.separator + fileName));
-            } catch (IOException e) {
-                LOG.error("IO error during moving files for layout report.", e);
-            }
-
-            searchForLayoutAttachmentsAndMoveThem(node.getLayoutReport(), reportFolderPath, filePrefix);
-        }
-    }
-
-    private void searchForLayoutAttachmentsAndMoveThem(LayoutReport layoutReport, String reportFolderPath, String filePrefix) {
-        for (LayoutSection section : layoutReport.getSections()) {
-            for (LayoutObject layoutObject : section.getObjects()) {
-                searchForLayoutAttachmentsAndMoveThem(layoutObject, reportFolderPath, filePrefix);
-            }
-        }
-    }
-
-    private void searchForLayoutAttachmentsAndMoveThem(LayoutObject layoutObject, String reportFolderPath, String filePrefix) {
-
-        for (LayoutSpec spec : layoutObject.getSpecs()) {
-            if (spec.getImageComparison() != null) {
-
-                File reportFolder = new File(reportFolderPath + File.separator + filePrefix);
-                reportFolder.mkdirs();
-
-                String newName = moveFileOrResourceTo(spec.getImageComparison().getImageSamplePath(), reportFolder);
-
-                spec.getImageComparison().setImageSamplePath(filePrefix + "/" + newName);
-
-                if (spec.getImageComparison().getComparisonMap() != null) {
-                    try {
-                        String comparisonMapPath = layoutObject.getName() + "-" + comparisonMapUniqueIdGenerator.uniqueId() + ".map.png";
-                        File mapFile = new File(reportFolder.getAbsoluteFile() + File.separator + comparisonMapPath);
-                        spec.getImageComparison().setComparisonMapPath(filePrefix + "/" + comparisonMapPath);
-                        Rainbow4J.saveImage(spec.getImageComparison().getComparisonMap(), mapFile);
-                    } catch (Throwable ex) {
-                        LOG.trace("Unkown error during image comparison", ex);
-                    }
-                }
-            }
-        }
-
-        /*
-        if (layoutObject.getSubObjects() != null) {
-            for (LayoutObject subObject : layoutObject.getSubObjects()) {
-                searchForLayoutAttachmentsAndMoveThem(subObject, reportFolderPath, filePrefix);
-            }
-        }
-        */
-    }
-
-    private String moveFileOrResourceTo(String imagePath, File reportFolder) {
-        try {
-            InputStream stream = GalenUtils.findFileOrResourceAsStream(imagePath);
-
-            if (stream == null) {
-                throw new FileNotFoundException(imagePath);
-            }
-
-            String newName = GalenUtils.convertToFileName(imagePath);
-
-            File file = new File(reportFolder.getAbsolutePath() + File.separator + newName);
-            file.createNewFile();
-
-            FileOutputStream fos = new FileOutputStream(file);
-            IOUtils.copy(stream, fos);
-            fos.flush();
-            fos.close();
-            return newName;
-        } catch (Exception ex) {
-            LOG.trace("Unkown error during moving files", ex);
-            return imagePath;
-        }
-    }
-
-    private Long _uniqueId = 0L;
-
-    private synchronized String createUniqueFileName(String prefix, String suffix) {
-        _uniqueId++;
-        return String.format("%s-%d%s", prefix, _uniqueId, suffix);
-    }
 
     private File createTestReportFile(GalenTestAggregatedInfo aggregatedInfo, String reportFolderPath) throws IOException {
         File file = new File(reportFolderPath + File.separator + String.format("%s.html", aggregatedInfo.getTestId()));

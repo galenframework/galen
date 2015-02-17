@@ -15,6 +15,7 @@
 ******************************************************************************/
 package net.mindengine.galen.reports;
 
+import net.mindengine.galen.reports.model.FileTempStorage;
 import net.mindengine.galen.reports.nodes.TestReportNode;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 
@@ -22,7 +23,8 @@ public class ExceptionReportNode extends TestReportNode {
 
     private Throwable exception;
 
-    public ExceptionReportNode(Throwable exception) {
+    public ExceptionReportNode(FileTempStorage fileStorage, Throwable exception) {
+        super(fileStorage);
         this.exception = exception;
         this.setStatus(TestReportNode.Status.ERROR);
     }

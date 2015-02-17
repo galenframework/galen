@@ -15,7 +15,6 @@
 ******************************************************************************/
 package net.mindengine.galen.validation;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import net.mindengine.galen.page.Rect;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
@@ -24,73 +23,18 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import java.awt.image.BufferedImage;
 
 public class ImageComparison {
-    private Rect area;
-    private String imageSamplePath;
-    @JsonIgnore
+    private BufferedImage sampleFilteredImage;
+    private BufferedImage originalFilteredImage;
     private BufferedImage comparisonMap;
-    private String comparisonMapPath;
 
 
-    public ImageComparison(Rect area, String imageSamplePath, BufferedImage comparisonMap) {
-        this.area = area;
-        this.imageSamplePath = imageSamplePath;
+    public ImageComparison(BufferedImage originalFilteredImage,
+                           BufferedImage sampleFilteredImage, BufferedImage comparisonMap) {
+        this.originalFilteredImage = originalFilteredImage;
+        this.sampleFilteredImage = sampleFilteredImage;
         this.comparisonMap = comparisonMap;
+
     }
-
-    public Rect getArea() {
-        return area;
-    }
-
-    public void setArea(Rect area) {
-        this.area = area;
-    }
-
-    public String getImageSamplePath() {
-        return imageSamplePath;
-    }
-
-    public void setImageSamplePath(String imageSamplePath) {
-        this.imageSamplePath = imageSamplePath;
-    }
-
-
-    @Override
-    public boolean equals(Object obj) {
-        if (obj == null)
-            return false;
-        if (obj == this)
-            return true;
-        if (!(obj instanceof ImageComparison))
-            return false;
-
-        ImageComparison rhs = (ImageComparison)obj;
-
-        return new EqualsBuilder()
-                .append(area, rhs.area)
-                .append(imageSamplePath, rhs.imageSamplePath)
-                .isEquals();
-    }
-
-    @Override
-    public int hashCode() {
-        return new HashCodeBuilder()
-                .append(area)
-                .append(imageSamplePath)
-                .toHashCode();
-    }
-
-    @Override
-    public String toString() {
-        return new ToStringBuilder(this)
-                .append("area", area)
-                .append("imageSamplePath", imageSamplePath)
-                .toString();
-    }
-
-    public String getComparisonMapPath() {
-        return comparisonMapPath;
-    }
-
 
     public BufferedImage getComparisonMap() {
         return comparisonMap;
@@ -100,7 +44,19 @@ public class ImageComparison {
         this.comparisonMap = comparisonMap;
     }
 
-    public void setComparisonMapPath(String comparisonMapPath) {
-        this.comparisonMapPath = comparisonMapPath;
+    public BufferedImage getOriginalFilteredImage() {
+        return originalFilteredImage;
+    }
+
+    public void setOriginalFilteredImage(BufferedImage originalFilteredImage) {
+        this.originalFilteredImage = originalFilteredImage;
+    }
+
+    public BufferedImage getSampleFilteredImage() {
+        return sampleFilteredImage;
+    }
+
+    public void setSampleFilteredImage(BufferedImage sampleFilteredImage) {
+        this.sampleFilteredImage = sampleFilteredImage;
     }
 }

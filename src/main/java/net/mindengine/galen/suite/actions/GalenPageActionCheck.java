@@ -45,7 +45,7 @@ public class GalenPageActionCheck extends GalenPageAction {
 
         if (report != null) {
             String reportTitle = "Check layout: " + toCommaSeparated(getSpecs()) + " included tags: " + toCommaSeparated(includedTags);
-            TestReportNode layoutReportNode = new LayoutReportNode(layoutReport, reportTitle);
+            TestReportNode layoutReportNode = new LayoutReportNode(report.getFileStorage(), layoutReport, reportTitle);
             if (layoutReport.errors() > 0) {
                 layoutReportNode.setStatus(TestReportNode.Status.ERROR);
             }

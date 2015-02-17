@@ -15,12 +15,9 @@
 ******************************************************************************/
 package net.mindengine.galen.tests.reports;
 
+import net.mindengine.galen.reports.model.*;
 import net.mindengine.galen.reports.nodes.LayoutReportNode;
 import net.mindengine.galen.reports.TestStatistic;
-import net.mindengine.galen.reports.model.LayoutObject;
-import net.mindengine.galen.reports.model.LayoutReport;
-import net.mindengine.galen.reports.model.LayoutSection;
-import net.mindengine.galen.reports.model.LayoutSpec;
 import net.mindengine.galen.reports.nodes.TestReportNode;
 import net.mindengine.galen.validation.ValidationError;
 import net.mindengine.galen.validation.ValidationObject;
@@ -41,7 +38,7 @@ public class LayoutReportNodeTest {
     public void should_fetchStatistics_properly() {
         LayoutReport report = createSampleLayoutReport();
         TestStatistic statistics = new TestStatistic();
-        new LayoutReportNode(report, "Layout check").fetchStatistic(statistics);
+        new LayoutReportNode(new FileTempStorage("test"), report, "Layout check").fetchStatistic(statistics);
 
         assertThat(statistics.getPassed(), is(1));
         assertThat(statistics.getErrors(), is(3));

@@ -1,6 +1,7 @@
 package net.mindengine.galen.reports.nodes;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import net.mindengine.galen.reports.model.FileTempStorage;
 
 import java.util.Date;
 import java.util.List;
@@ -9,8 +10,8 @@ import java.util.List;
  * Created by ishubin on 2015/02/15.
  */
 public class TextReportNode extends TestReportNode {
-    public TextReportNode(String details) {
-        super();
+    public TextReportNode(FileTempStorage fileTempStorage, String details) {
+        super(fileTempStorage);
         setName(details);
     }
 

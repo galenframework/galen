@@ -17,11 +17,9 @@ package net.mindengine.galen.validation;
 
 import static java.lang.String.format;
 
-import java.awt.image.BufferedImage;
 import java.util.LinkedList;
 import java.util.List;
 
-import net.mindengine.galen.page.Rect;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
@@ -48,7 +46,6 @@ public class ValidationError {
     public int hashCode() {
         return new HashCodeBuilder(17, 31)
                 .append(messages)
-                .append(imageComparison)
                 .append(onlyWarn)
                 .toHashCode();
     }
@@ -65,14 +62,13 @@ public class ValidationError {
         ValidationError rhs = (ValidationError)obj;
         return new EqualsBuilder()
                 .append(messages, rhs.messages)
-                .append(imageComparison, rhs.imageComparison)
                 .append(onlyWarn, rhs.onlyWarn)
                 .isEquals();
     }
     
     @Override
     public String toString() {
-        return format("Error{%s, imageComparisonSample=%s, onlyWarn=%s}", messages, imageComparison, onlyWarn);
+        return format("Error{%s, onlyWarn=%s}", messages, onlyWarn);
     }
 
 
@@ -106,17 +102,13 @@ public class ValidationError {
     }
 
 
-    public ValidationError withImageComparisonSample(Rect area, String imagePath, BufferedImage bufferedImage) {
-        setImageComparisonSample(new ImageComparison(area, imagePath, bufferedImage));
-        return this;
-    }
-
     public ImageComparison getImageComparison() {
         return imageComparison;
     }
 
-    public void setImageComparisonSample(ImageComparison imageComparison) {
+    public ValidationError withImageComparison(ImageComparison imageComparison) {
         this.imageComparison = imageComparison;
+        return this;
     }
 
 }

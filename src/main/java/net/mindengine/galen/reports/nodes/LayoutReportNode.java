@@ -17,10 +17,7 @@ package net.mindengine.galen.reports.nodes;
 
 import com.fasterxml.jackson.annotation.JsonUnwrapped;
 import net.mindengine.galen.reports.TestStatistic;
-import net.mindengine.galen.reports.model.LayoutObject;
-import net.mindengine.galen.reports.model.LayoutReport;
-import net.mindengine.galen.reports.model.LayoutSection;
-import net.mindengine.galen.reports.model.LayoutSpec;
+import net.mindengine.galen.reports.model.*;
 
 import java.util.List;
 
@@ -29,7 +26,8 @@ public class LayoutReportNode extends TestReportNode {
     @JsonUnwrapped
     private LayoutReport layoutReport;
 
-    public LayoutReportNode(LayoutReport layoutReport, String name) {
+    public LayoutReportNode(FileTempStorage fileStorage, LayoutReport layoutReport, String name) {
+        super(fileStorage);
         this.setLayoutReport(layoutReport);
         setName(name);
     }

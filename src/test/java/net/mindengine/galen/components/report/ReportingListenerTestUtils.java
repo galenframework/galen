@@ -22,6 +22,7 @@ import static net.mindengine.galen.specs.Side.LEFT;
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import net.mindengine.galen.components.MockedPageValidation;
@@ -38,10 +39,7 @@ import net.mindengine.galen.specs.page.PageSection;
 import net.mindengine.galen.specs.reader.Place;
 import net.mindengine.galen.suite.actions.GalenPageActionCheck;
 import net.mindengine.galen.tests.GalenBasicTest;
-import net.mindengine.galen.validation.ValidationError;
-import net.mindengine.galen.validation.ValidationListener;
-import net.mindengine.galen.validation.ValidationObject;
-import net.mindengine.galen.validation.ValidationResult;
+import net.mindengine.galen.validation.*;
 import net.mindengine.rainbow4j.Rainbow4J;
 
 public class ReportingListenerTestUtils {
@@ -193,10 +191,11 @@ public class ReportingListenerTestUtils {
                         new ValidationResult(
                                 asList(new ValidationObject(new Rect(10, 10, 100, 50), "objectB1")),
                                 new ValidationError(asList("objectB1 is not inside other-object", "second error message with <xml> &tags"))
-                                    .withImageComparisonSample(
-                                            new Rect(20, 30, 100, 40),
-                                            "imgs/button-sample-correct.png",
-                                            Rainbow4J.loadImage(comparisonMapImagePath))));
+                                    .withImageComparison(
+                                            new ImageComparison(
+                                                Rainbow4J.loadImage(comparisonMapImagePath),
+                                                Rainbow4J.loadImage(comparisonMapImagePath),
+                                                Rainbow4J.loadImage(comparisonMapImagePath)))));
             }
             validationListener.onAfterObject(pageRunner, pageValidation, "objectB1"); 
             

@@ -99,7 +99,7 @@ public class SpecValidationImage extends SpecValidation<SpecImage> {
             ex.withValidationObject(new ValidationObject(pageElement.getArea(), objectName));
             throw ex;
         } catch (Exception ex) {
-            LOG.trace("Unkown errors during image compare.", ex);
+            LOG.trace("Unknown errors during image compare", ex);
             throw new ValidationErrorException(ex).withValidationObject(new ValidationObject(pageElement.getArea(), objectName));
         }
 
@@ -109,8 +109,8 @@ public class SpecValidationImage extends SpecValidation<SpecImage> {
             throw new ValidationErrorException(minCheck.errorMessage)
                     .withValidationObjects(objects)
                     .withImageComparison(new ImageComparison(
-                            spec.getSelectedArea(),
-                            minCheck.imagePath,
+                            minCheck.result.getOriginalFilteredImage(),
+                            minCheck.result.getSampleFilteredImage(),
                             minCheck.result.getComparisonMap()));
         }
 

@@ -69,9 +69,9 @@ public class Galen {
 
         LayoutReport layoutReport = new LayoutReport();
         try {
-            final File screenshot = page.createScreenshot();
+            File screenshot = page.createScreenshot();
             if (screenshot != null) {
-                layoutReport.setScreenshotFullPath(screenshot.getAbsolutePath());
+                layoutReport.setScreenshot(layoutReport.registerFile("screenshot.png", screenshot));
             }
         }
         catch (Exception ex) {

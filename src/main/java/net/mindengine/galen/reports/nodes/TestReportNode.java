@@ -18,8 +18,8 @@ package net.mindengine.galen.reports.nodes;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonValue;
 import net.mindengine.galen.reports.ExceptionReportNode;
-import net.mindengine.galen.reports.TestAttachment;
 import net.mindengine.galen.reports.TestStatistic;
+import net.mindengine.galen.reports.model.FileTempStorage;
 
 import java.io.File;
 import java.util.Date;
@@ -28,14 +28,24 @@ import java.util.List;
 
 public class TestReportNode {
 
+    private final FileTempStorage fileStorage;
     private String name;
     private Status status = Status.INFO;
     private List<TestReportNode> nodes;
 
     @JsonIgnore
     private TestReportNode parent;
-    private List<TestAttachment> attachments;
+    private List<String> attachments;
     private Date time = new Date();
+
+    public TestReportNode(FileTempStorage fileStorage) {
+        this.fileStorage = fileStorage;
+    }
+    public TestReportNode(FileTempStorage fileStorage, String name, Status status) {
+        this.fileStorage = fileStorage;
+        this.name = name;
+        this.status = status;
+    }
 
     public Date getTime() {
         return time;
@@ -43,6 +53,20 @@ public class TestReportNode {
 
     public void setTime(Date time) {
         this.time = time;
+    }
+
+    public TestReportNode withAttachment(String name, File file) {
+        if (attachments == null) {
+            attachments = new LinkedList<String>();
+        }
+
+        String attachmentName = getFileStorage().registerFile(name, file);
+        attachments.add(attachmentName);
+        return this;
+    }
+
+    private FileTempStorage getFileStorage() {
+        return fileStorage;
     }
 
     public static enum Status {
@@ -64,36 +88,11 @@ public class TestReportNode {
     }
     
     public TestReportNode withDetails(String details) {
-        this.addNode(new TextReportNode(details));
+        this.addNode(new TextReportNode(fileStorage, details));
         return this;
     }
-    public static TestReportNode info(String name) {
-        TestReportNode node = new TestReportNode();
-        node.setName(name);
-        node.setStatus(Status.INFO);
-        return node;
-    }
-    
-    public static TestReportNode warn(String name) {
-        TestReportNode node = new TestReportNode();
-        node.setName(name);
-        node.setStatus(Status.WARN);
-        return node;
-    }
-    
-    public static TestReportNode error(String name) {
-        TestReportNode node = new TestReportNode();
-        node.setName(name);
-        node.setStatus(Status.ERROR);
-        return node;
-    }
-    
-    public static ExceptionReportNode error(Throwable exception) {
-        return new ExceptionReportNode(exception);
-    }
 
-    
-    
+
     public String getName() {
         return name;
     }
@@ -135,31 +134,6 @@ public class TestReportNode {
 
     public void setNodes(List<TestReportNode> nodes) {
         this.nodes = nodes;
-    }
-
-    public TestReportNode withAttachment(String name, File file) {
-        this.addAttachment(new TestAttachment(name, file));
-        return this;
-    }
-    
-    public TestReportNode withAttachment(String name, String filePath) {
-        this.addAttachment(new TestAttachment(name, new File(filePath)));
-        return this;
-    }
-
-    private synchronized void addAttachment(TestAttachment testAttachment) {
-        if (attachments == null) {
-            attachments = new LinkedList<TestAttachment>();
-        }
-        attachments.add(testAttachment);
-    }
-
-    public List<TestAttachment> getAttachments() {
-        return attachments;
-    }
-
-    public void setAttachments(List<TestAttachment> attachments) {
-        this.attachments = attachments;
     }
 
     public TestStatistic fetchStatistic(TestStatistic testStatistic) {
