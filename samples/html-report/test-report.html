@@ -1,0 +1,363 @@
+<html>
+    <head>
+        <title>Galen Reports</title>
+        <link rel="stylesheet" type="text/css" href="report.css"></link>
+        <script src="jquery-1.11.2.min.js"></script>
+        <script src="handlebars-v2.0.0.js"></script>
+        <script src="galen-report.js"></script>
+        <script>
+var reportData = {
+    "testId": "1-home-page-test",
+    "name": "Home page test", 
+    "report": {
+        "nodes": [
+            {
+                "type": "node",
+                "name": "Open http://testapp.galenframework.com",
+                "status": "info",
+                "time": "1423304760053",
+                "attachments": [ 
+                    "screenshot.png"
+                ]
+            },
+            {
+                "type": "node",
+                "name": "Navigate to login page",
+                "status": "info",
+                "time": "1423304760053",
+                "nodes": [
+                    {
+                        "type": "node",
+                        "name": "Click loginButton",
+                        "status": "error",
+                        "time": "1423304780953",
+                        "nodes": [
+                            {
+                                "type": "text",
+                                "text": "css: #login-button"
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "type": "node",
+                "name": "Node report without child nodes",
+                "time": "1423304780953",
+                "status": "warn"
+            },
+            {
+                "type": "layout",
+                "name": "Check layout: specs/addNotePage.spec",
+                "tags": ["mobile", "tablet"],
+                "status": "error",
+                "time": "1423304781953",
+                "screenshot": "screenshot.png",
+                "objects": {
+                    "header": {
+                        "area": [0, 0, 1000, 60]
+                    },
+                    "header-icon": {
+                        "area": [10, 10, 40, 40]
+                    }
+                },
+                "sections": [
+                    {
+                        "name": "Header",
+                        "sections": [
+                            {
+                                "name": "Should have normal icon",
+                                "objects": [
+                                    {
+                                        "name": "header-icon",
+                                        "checks": [
+                                            {
+                                                "name": "image: file imgs/header.png, error 4%",
+                                                "status": "error",
+                                                "place": {
+                                                    "filePath": "specs/homepage.spec",
+                                                    "lineNumber": 12
+                                                },
+                                                "errors": ["Element does not look like \"imgs/header.png\". There are 1130 mismatching pixels but max allowed is 400"],
+                                                "highlight": [
+                                                    "header-icon"
+                                                ],
+                                                "image-comparison": {
+                                                    "actual": "actual.png",
+                                                    "expected": "expected.png",
+                                                    "comparison-map": "comparison-map.png"
+                                                }
+                                            }
+                                        ]
+                                    }
+                                ],
+                                "sections": [
+                                    {
+                                        "name": "Should be squared",
+                                        "objects": [
+                                            {
+                                                "name": "header-icon",
+                                                "checks": [
+                                                    {
+                                                        "name": "width: 100% of header-icon/height",
+                                                        "place": {
+                                                            "filePath": "specs/homepage.spec",
+                                                            "lineNumber": 12
+                                                        },
+                                                        "status": "info",
+                                                        "highlight": [
+                                                            "header-icon"
+                                                        ]
+                                                    }
+                                                ]
+                                            }
+                                        ]
+                                    }
+                                ]
+                            }
+                        ],
+                        "objects": [
+                            {
+                                "name": "header",
+                                "checks": [
+                                    {
+                                        "name": "inside: screen 0px left top right",
+                                        "place": {
+                                            "filePath": "specs/homepage.spec",
+                                            "lineNumber": 12
+                                        },
+                                        "status": "info",
+                                        "highlight": [
+                                            "header",
+                                            "screen"
+                                        ],
+                                    },
+                                    {
+                                        "name": "component: header.spec",
+                                        "status": "info",
+                                        "sublayout": {
+                                            "type": "layout",
+                                            "screenshot": "screenshot.png",
+                                            "objects": {
+                                                "parent": {
+                                                    "area": [0, 0, 100, 60]
+                                                },
+                                                "header-icon": {
+                                                    "area": [10, 10, 40, 40] 
+                                                }
+                                            },
+                                            "sections": [
+                                                {
+                                                    "name": "subsection",
+                                                    "objects": [
+                                                        {
+                                                            "name": "header-icon",
+                                                            "checks": [
+                                                                {
+                                                                    "name": "inside: parent 11px top left",
+                                                                    "status": "warn",
+                                                                    "place": {
+                                                                        "filePath": "specs/homepage.spec",
+                                                                        "lineNumber": 12
+                                                                    },
+                                                                    "errors": ["Element \"header-icon\" is 10 px top and left inside \"parent\""],
+                                                                    "highlight": [
+                                                                        "header-icon", "parent"
+                                                                    ]
+                                                                }
+                                                            ]
+                                                        }
+                                                    ]
+                                                }
+                                            ]
+                                        }
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                ]
+            }
+        ]
+    }
+};
+        </script>
+        <script>
+
+            $(function () {
+                var galenReport = createGalenReport();
+                galenReport.render("main", reportData);
+            });
+        </script>
+    </head>
+    <body>
+        <script id="report-tpl" type="text/x-handlebars-template">
+            <ul class="report-nodes">
+            {{#each report.nodes}}
+                {{renderNode this}}
+            {{/each}}
+            </ul>
+        </script>
+        <script id="report-node-tpl" type="text/x-handlebars-template">
+            <li>
+                <span class="report-time">{{formatReportTime time}}</span>
+                <a class="expand-link node-expand-button node-status-{{status}} contains-children-{{hasChildElements nodes}} collapsed" href="#">{{status}}</a>
+                <div class="node-name node-status-{{status}}">{{name}}</div>
+                {{#if attachments}}
+                    <ul class="report-node-attachments">
+                        {{#each attachments}}
+                            <li>
+                                <a href="{{this}}"><img src="icon-download.svg"/> {{this}}</a>
+                            </li>
+                        {{/each}}
+                    </ul>
+                {{/if}}
+                <div class="node-details expand-container">
+                    {{#if nodes}}
+                        <ul class="report-nodes">
+                            {{#each nodes}}
+                                {{renderNode this}}
+                            {{/each}}
+                        </ul>
+                    {{/if}}
+                </div>
+            </li>
+        </script>
+        <script id="report-node-text-tpl" type="text/x-handlebars-template">
+            <li>
+                <div class="node-simple-text">
+                    {{text}}
+                </div>
+            </li>
+        </script>
+        <script id="report-layout-tpl" type="text/x-handlebars-template">
+            <li>
+                <span class="report-time">{{formatReportTime time}}</span>
+                <a class="expand-link node-expand-button node-status-label node-status-info contains-children-true collapsed" href="#">INFO</a>
+                <div class="node-name">{{name}}</div>
+                <div class="node-details expand-container">
+                    {{renderSublayout this}}
+                </div>
+            </li>
+        </script>
+        <script id="report-layout-sublayout-tpl" type="text/x-handlebars-template">
+            <div class="layout-report" data-layout-id="{{layoutId}}" data-screenshot="{{screenshot}}">
+                <ul class="layout-sections">
+                    {{#each sections}}
+                        {{renderLayoutSection this}}
+                    {{/each}}
+                </ul>
+            </div>
+        </script>
+        <script id="report-layout-section-tpl" type="text/x-handlebars-template">
+            <li>
+                <a class="layout-section expand-link contains-children-true" href="#">{{name}}</a>
+                <div class="layout-details expand-container">
+                    {{#if sections}}
+                        <ul class="layout-sections">
+                        {{#each sections}}
+                            {{renderLayoutSection this}}
+                        {{/each}}
+                        </ul>
+                    {{/if}}
+                    {{#if objects}}
+                        <ul class="layout-objects">
+                            {{#each objects}}
+                                {{renderLayoutObject this}}
+                            {{/each}}
+                        </ul>
+                    {{/if}}
+                </div>
+            </li>
+        </script>
+        
+        <script id="report-layout-object-tpl" type="text/x-handlebars-template">
+            <li>
+                <a class="layout-object expand-link contains-children-true" href="#">{{name}}</a>
+                {{#if checks}}
+                    <ul class="layout-checks expand-container">
+                        {{#each checks}}
+                            {{renderLayoutCheck this}}
+                        {{/each}}
+                    </ul>
+                {{/if}}
+            </li>
+        </script>
+        <script id="report-layout-check-tpl" type="text/x-handlebars-template">
+            <li>
+            <a class="layout-check layout-check-status-{{status}}" href="#" 
+                data-highlight-objects="{{commaSeparated highlight}}"
+                title="{{location}}"
+                >{{name}}</a>
+
+                {{#if error}}
+                    <div class="layout-check-error-message">
+                        {{#if image-comparison}}
+                        <a class="image-comparison-link" 
+                            data-actual-image="{{image-comparison.actual}}" 
+                            data-expected-image="{{image-comparison.expected}}" 
+                            data-map-image="{{image-comparison.comparison-map}}"
+                            href="#">Show image comparison</a>
+                        {{/if}}
+                        <div class="layout-check-error-message-text">
+                            {{error}}
+                        </div>
+                    </div>
+                {{/if}}
+
+                {{#if sublayout}}
+                    {{renderSublayout sublayout}}
+                {{/if}}
+            </li>
+        </script>
+        <script id="screenshot-popup-tpl" type="text/x-handlebars-template">
+            <div class="screenshot-canvas">
+                <img src="{{screenshot}}"/>
+                {{#each objects}}
+                <div class="canvas-rect" style="left: {{area.left}}px; top: {{area.top}}px; width: {{area.width}}px; height: {{area.height}}px; border-color: {{color}};">
+                    <div class="canvas-rect-wrapper">
+                        <div class="canvas-rect-hint" style="background: {{color}};">{{@key}}</div>
+                    </div>
+                </div>
+                {{/each}}
+            </div>
+        </script>
+        <script id="image-comparison-tpl" type="text/x-handlebars-template">
+            <div class="image-comparison">
+                <h5>Actual</h5>
+                <img src="{{actual}}"/>
+
+                <h5>Expected</h5>
+                <img src="{{expected}}"/>
+
+                <h5>Comparison map</h5>
+                <img src="{{map}}"/>
+            </div>
+        </script>
+
+
+        <div id="menu">
+            <ul>
+                <li><a class="menu-op-expand-all" href="#">Expand All</a></li>
+                <li><a class="menu-op-collapse-all" href="#">Collapse All</a></li>
+                <li><a class="menu-op-expand-errors" href="#">Expand Errors</a></li>
+            </ul>
+        </div>
+        <h2>Some test</h2>
+        <div id="main"></div>
+        <div id="screen-shadow"></div>
+        <div id="popup" class="popup">
+            <div class="popup-wrapper">
+                <a class="popup-close-link" href="#">close</a>
+                <div class="popup-content"></div>
+            </div>
+        </div>
+        <div id="notification" class="notification">
+            <div class="notification-wrapper">
+                <a class="notification-close-link" href="#">close</a>
+                <div class="notification-summary"></div>
+                <div class="notification-message"></div>
+            </div>
+        </div>
+    </body>
+</html>

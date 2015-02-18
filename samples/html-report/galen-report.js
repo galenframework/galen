@@ -322,7 +322,7 @@ Handlebars.registerHelper("hasChildElements", function (items1, items2) {
 
 Handlebars.registerHelper("formatReportTime", function (time) {
     if (time !== null && time !== undefined) {
-    var date = new Date(time * 1000);
+    var date = new Date(time);
         var hh = date.getUTCHours();
         var mm = date.getUTCMinutes();
         var ss = date.getSeconds();
