@@ -1,0 +1,59 @@
+<html>
+    <head>
+        <title>Galen Reports</title>
+        <link rel="stylesheet" type="text/css" href="overview.css"></link>
+        <link rel="stylesheet" type="text/css" href="tablesorter.css"></link>
+        <script src="jquery-1.11.2.min.js"></script>
+        <script src="handlebars-v2.0.0.js"></script>
+        <script src="galen-overview.js"></script>
+        <script src="tablesorter.js"></script>
+        <script>
+var reportData = ##REPORT-DATA##;
+
+        </script>
+        <script>
+            $(function () {
+                var galenReport = createGalenTestOverview();
+                galenReport.render("main", reportData);
+            });
+        </script>
+    </head>
+    <body>
+
+    <h2>Galen Test Report</h2>
+    <div id="main">
+    </div>
+    <script id="main-overview" type="text/x-handlebars-template">
+        <div class="tests-overview">
+            <table class="tests tablesorter">
+                <thead>
+                    <tr>
+                        <th>Test</th>
+                        <th>Passed</th>
+                        <th>Failed</th>
+                        <th>Warnings</th>
+                        <th>Total</th>
+                        <th>Started</th>
+                        <th>Duration</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {{#each tests}}
+                    <tr class="test">
+                        <td class="suite-link">
+                            <a href="{{testId}}.html">{{name}}</a>
+                        </td>
+                        <td class="status passed">{{statistic.passed}}</td>
+                        <td class="status failed">{{statistic.errors}}</td>
+                        <td class="status warnings">{{statistic.warnings}}</td>
+                        <td class="status total">{{statistic.total}}</td>
+                        <td class="time">{{formatDateTime startedAt}}</td>
+                        <td class="time">{{durationPretty}}</td>
+                    </tr>
+                    {{/each}}
+                </tbody>
+            </table>
+        </div>
+    </script>
+    </body>
+</html>

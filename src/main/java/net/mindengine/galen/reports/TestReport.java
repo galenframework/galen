@@ -15,6 +15,7 @@
 ******************************************************************************/
 package net.mindengine.galen.reports;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import net.mindengine.galen.reports.model.FileTempStorage;
 import net.mindengine.galen.reports.model.LayoutReport;
 import net.mindengine.galen.reports.nodes.LayoutReportNode;
@@ -29,7 +30,8 @@ public class TestReport {
     /**
      * Used for storing test report node file attachments
      */
-    private FileTempStorage fileStorage = new FileTempStorage("attachment");
+    @JsonIgnore
+    private FileTempStorage fileStorage = new FileTempStorage("file");
 
     private TestReportNode rootNode = new TestReportNode(fileStorage);
     private TestReportNode currentNode = rootNode;

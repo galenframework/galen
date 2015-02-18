@@ -15,8 +15,10 @@
 ******************************************************************************/
 package net.mindengine.galen.tests.runner;
 
+import static java.util.Arrays.asList;
 import static org.apache.commons.io.FileUtils.readFileToString;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.is;
 
 import java.io.ByteArrayOutputStream;
@@ -24,6 +26,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.io.UnsupportedEncodingException;
+import java.lang.reflect.Field;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
@@ -41,6 +44,7 @@ import net.mindengine.galen.reports.nodes.LayoutReportNode;
 import net.mindengine.galen.reports.LayoutReportListener;
 
 import org.apache.commons.io.IOUtils;
+import org.hamcrest.MatcherAssert;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.Test;
 
@@ -60,7 +64,10 @@ public class ReportingTest {
 
 
     @Test
-    public void shouldReport_inJsonFormat() throws IOException {
+    public void shouldReport_inJsonFormat() throws Exception {
+        resetUniqueIdForFileTempStorage();
+
+
         String reportPath = Files.createTempDir().getAbsolutePath() + "/json-report";
         List<GalenTestInfo> testInfos = new LinkedList<GalenTestInfo>();
         GalenTestInfo testInfo = new GalenTestInfo("Home page test", null);
@@ -69,8 +76,12 @@ public class ReportingTest {
         layoutReport.setScreenshot(layoutReport.getFileStorage().registerFile("screenshot.png", File.createTempFile("screenshot", ".png")));
         ReportingListenerTestUtils.performSampleReporting("Home page test", null, new LayoutReportListener(layoutReport), null);
 
-        report.addNode(new LayoutReportNode(new FileTempStorage("test"), layoutReport, "check layout"));
-        report.getNodes().get(0).setTime(new Date(1404681346000L));
+        report.info("Just a simple info node with attachment")
+                .withAttachment("some-file.txt", File.createTempFile("some-file", ".txt"))
+                .setTime(new Date(1404681346001L));
+
+        report.addNode(new LayoutReportNode(report.getFileStorage(), layoutReport, "check layout"))
+                .setTime(new Date(1404681346002L));
 
 
         testInfo.setReport(report);
@@ -83,6 +94,25 @@ public class ReportingTest {
 
         assertJsonFileContents("Report overview", reportPath + "/report.json", "/expected-reports/json/report.json");
         assertJsonFileContents("Test report", reportPath + "/1-home-page-test.json", "/expected-reports/json/1-home-page-test.json");
+
+
+        // Check that all files from storage were saved in report folder
+
+        assertThat("Report folder contains files", asList(new File(reportPath).list()), contains(
+                "1-home-page-test.json",
+                "file-5-some-file.txt",
+                "layout-1-screenshot.png",
+                "layout-2-objectB1-actual.png",
+                "layout-3-objectB1-expected.png",
+                "layout-4-objectB1-map.png",
+                "report.json"
+        ));
+    }
+
+    private void resetUniqueIdForFileTempStorage() throws NoSuchFieldException, IllegalAccessException {
+        Field _uniqueIdField = FileTempStorage.class.getDeclaredField("_uniqueId");
+        _uniqueIdField.setAccessible(true);
+        _uniqueIdField.set(null, 0L);
     }
 
 
@@ -229,10 +259,7 @@ public class ReportingTest {
     private void assertJsonFileContents(String title, String actualPath, String expectedPath) throws IOException {
         String actualContent = readFileToString(new File(actualPath));
 
-        System.out.println("\n\n---- " + title + " -----------");
-        System.out.println(actualContent);
         String expectedContent = readFileToString(new File(getClass().getResource(expectedPath).getFile()));
-
 
         ObjectMapper mapper = new ObjectMapper();
 

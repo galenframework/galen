@@ -26,9 +26,11 @@ public class LayoutReportNode extends TestReportNode {
     @JsonUnwrapped
     private LayoutReport layoutReport;
 
-    public LayoutReportNode(FileTempStorage fileStorage, LayoutReport layoutReport, String name) {
-        super(fileStorage);
+    public LayoutReportNode(FileTempStorage parentStorage, LayoutReport layoutReport, String name) {
+        super(parentStorage);
         this.setLayoutReport(layoutReport);
+
+        parentStorage.registerStorage(layoutReport.getFileStorage());
         setName(name);
     }
 

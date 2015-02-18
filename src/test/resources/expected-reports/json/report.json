@@ -5,10 +5,10 @@
     "endedAt" : 1404681416000,
     "failed" : true,
     "statistic" : {
-      "passed" : 6,
+      "passed" : 7,
       "errors" : 4,
       "warnings" : 1,
-      "total" : 11
+      "total" : 12
     },
     "testId" : "1-home-page-test",
     "failed" : true,

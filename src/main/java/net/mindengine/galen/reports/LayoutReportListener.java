@@ -89,7 +89,9 @@ public class LayoutReportListener implements ValidationListener {
             spec.setStatus(TestReportNode.Status.ERROR);
         }
         try {
-            spec.setImageComparison(convertImageComparison(objectName, result.getError().getImageComparison()));
+            if (result.getError().getImageComparison() != null) {
+                spec.setImageComparison(convertImageComparison(objectName, result.getError().getImageComparison()));
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }

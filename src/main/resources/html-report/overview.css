@@ -1,0 +1,93 @@
+.tests-overview h1,  {
+    margin: 0;
+    padding: 20px;
+    background: #249AE3;
+    color: white;
+    text-shadow: -1px -1px 0px #06578A;
+    font-size: 3em;
+}
+
+.tests-overview .status-header {
+    border-bottom: 1px solid #d0d0d0;
+}
+.tests-overview .status-header > div {
+    padding: 10px;
+    font-weight: bold;
+    color: black;
+    display: block;
+    float: left;
+    width: 70px;
+    border-left: 1px solid #d0d0d0;
+}
+.tests-overview .status-header:after {
+    display: block;
+    clear: both;
+    content: ".";
+    font-size: 0;
+}
+
+.tests-overview {
+    padding: 10px;
+}
+
+.tests-overview .tests .test {
+    clear: both;
+}
+.tests-overview .tests .test > div.status {
+    float: left;
+    padding: 10px;
+    width: 71px;
+}
+.tests-overview .tests .test > div.time{
+    float: left;
+    padding: 10px;
+    width: 71px;
+    font-size: 0.8em;
+}
+.tests-overview .tests .test > div.test-link {
+    float: left;
+    padding: 10px;
+}
+.tests-overview .tests .test > div.test-link a {
+    color: #1271C4;
+}
+.tests-overview .tests .test > div.test-link a:hover {
+    text-decoration: none;
+}
+.tests-overview .tests .failed {
+    color: #D60F26;
+}
+.tests-overview .tests .passed {
+    color: #229605;
+}
+.tests-overview .tests .warnings {
+    color: #D6A502;
+}
+.tests-overview .tests .progress {
+    border: none;
+    border-collapse: collapse;
+    clear: both;
+    margin-top: 7px;
+    margin-bottom: 10px;
+    margin-left: 10px;
+    width: 260px;
+    padding: 0;
+    height: 10px;
+    border-spacing: 0;
+}
+.tests-overview .tests .progress td {
+    height: 10px;
+    padding: 0;
+    margin: 0;
+    border: none;
+}
+.tests-overview .tests .progress td.failed {
+    background: #FA644D;
+}
+.tests-overview .tests .progress td.passed {
+    background: #71E854;
+}
+.tests-overview .tests .progress td.warning {
+    background: #FFC400;
+}
+

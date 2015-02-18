@@ -4,7 +4,6 @@ import net.mindengine.galen.reports.model.*;
 import net.mindengine.galen.specs.page.PageSection;
 import net.mindengine.galen.validation.ValidationObject;
 
-import java.awt.image.BufferedImage;
 import java.util.List;
 import java.util.Stack;
 
@@ -55,7 +54,7 @@ public class LayoutReportStack {
 
     public void putObjects(List<ValidationObject> validationObjects) {
         for (ValidationObject validationObject : validationObjects) {
-            layoutReport.getValidationObjects().put(validationObject.getName(), new LayoutObjectDetails(validationObject.getArea().toIntArray()));
+            layoutReport.getObjects().put(validationObject.getName(), new LayoutObjectDetails(validationObject.getArea().toIntArray()));
         }
     }
 

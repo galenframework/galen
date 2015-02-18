@@ -81,7 +81,7 @@ public class GalenTest {
         assertFileExists(pageDumpPath + "/objects/menu-item-3.png");
         assertFileExists(pageDumpPath + "/objects/big-container.png");
 
-        assertFileExists(pageDumpPath + "/jquery-1.10.2.min.js");
+        assertFileExists(pageDumpPath + "/jquery-1.11.2.min.js");
         assertFileExists(pageDumpPath + "/galen-pagedump.js");
         assertFileExists(pageDumpPath + "/galen-pagedump.css");
     }

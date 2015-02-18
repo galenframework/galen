@@ -36,20 +36,20 @@ public class LayoutReport {
     private String title;
     
     private List<LayoutSection> sections = new LinkedList<LayoutSection>();
-    private Map<String, LayoutObjectDetails> validationObjects = new HashMap<String, LayoutObjectDetails>();
+    private Map<String, LayoutObjectDetails> objects = new HashMap<String, LayoutObjectDetails>();
 
     private String screenshot;
     private List<ValidationResult> validationErrorResults;
-
 
     /**
      Used to store temporary files which could be saved later.
      Everything that refers to a report file like screenshot or image comparison files
      will actually point to a name in @fileStorage container.
      Once the HTML or JSON report is about to be rendered - it will copy those files to the report folder.
-      */
+     */
     @JsonIgnore
     private FileTempStorage fileStorage = new FileTempStorage("layout");
+
 
     public String getTitle() {
         return title;
@@ -108,12 +108,12 @@ public class LayoutReport {
         return validationErrorResults;
     }
 
-    public Map<String, LayoutObjectDetails> getValidationObjects() {
-        return validationObjects;
+    public Map<String, LayoutObjectDetails> getObjects() {
+        return objects;
     }
 
-    public void setValidationObjects(Map<String, LayoutObjectDetails> validationObjects) {
-        this.validationObjects = validationObjects;
+    public void setObjects(Map<String, LayoutObjectDetails> objects) {
+        this.objects = objects;
     }
 
     public FileTempStorage getFileStorage() {
@@ -130,7 +130,7 @@ public class LayoutReport {
         File file = File.createTempFile(prefix, ".png");
         Rainbow4J.saveImage(image, file);
 
-        return fileStorage.registerFile(prefix, file);
+        return fileStorage.registerFile(prefix + ".png", file);
     }
 
 

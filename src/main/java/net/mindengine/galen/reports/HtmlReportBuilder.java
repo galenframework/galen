@@ -15,128 +15,41 @@
  ******************************************************************************/
 package net.mindengine.galen.reports;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-
-import net.mindengine.galen.reports.model.LayoutObject;
-import net.mindengine.galen.reports.model.LayoutReport;
-import net.mindengine.galen.reports.model.LayoutSection;
-import net.mindengine.galen.reports.model.LayoutSpec;
-import net.mindengine.galen.reports.nodes.LayoutReportNode;
-import net.mindengine.galen.reports.nodes.TestReportNode;
-import net.mindengine.galen.utils.GalenUtils;
-import net.mindengine.rainbow4j.Rainbow4J;
-
+import net.mindengine.galen.reports.json.JsonReportBuilder;
+import net.mindengine.galen.reports.json.ReportOverview;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
-import freemarker.template.Configuration;
-import freemarker.template.Template;
-import freemarker.template.TemplateException;
+import java.io.*;
+import java.util.List;
 
 public class HtmlReportBuilder {
 
-    private final static Logger LOG = LoggerFactory.getLogger(HtmlReportBuilder.class);
-
-    private final TestIdGenerator testIdGenerator = new TestIdGenerator();
-    private final UniqueIdGenerator comparisonMapUniqueIdGenerator = new UniqueIdGenerator();
-    private Configuration freemarkerConfiguration = new Configuration();
-
-    public void build(List<GalenTestInfo> tests, String reportFolderPath) throws IOException, TemplateException {
-        List<GalenTestAggregatedInfo> aggregatedTests = new LinkedList<GalenTestAggregatedInfo>();
-
-        for (GalenTestInfo test : tests) {
-            GalenTestAggregatedInfo aggregatedInfo = new GalenTestAggregatedInfo("report-" + testIdGenerator.generateTestId(test.getName()), test);
-            aggregatedTests.add(aggregatedInfo);
-
-            try {
-                exportTestReport(aggregatedInfo, reportFolderPath);
-            } catch (Exception ex) {
-                LOG.error("Unknown report export", ex);
-            }
-        }
-        exportMainReport(reportFolderPath, aggregatedTests);
-    }
-
-    private void exportTestReport(GalenTestAggregatedInfo aggregatedInfo, String reportFolderPath) throws IOException, TemplateException {
+    public void build(List<GalenTestInfo> tests, String reportFolderPath) throws IOException {
         makeSureReportFolderExists(reportFolderPath);
 
-        File file = createTestReportFile(aggregatedInfo, reportFolderPath);
-        moveAllAttachmentsInReport(aggregatedInfo, reportFolderPath);
+        JsonReportBuilder jsonBuilder = new JsonReportBuilder();
+        ReportOverview reportOverview = jsonBuilder.createReportOverview(tests);
 
-        FileWriter fileWriter = new FileWriter(file);
-        Map<String, Object> model = new HashMap<String, Object>();
-        model.put("test", aggregatedInfo);
+        String overviewTemplate = IOUtils.toString(getClass().getResourceAsStream("/html-report/report.tpl.html"));
+        String testReportTemplate = IOUtils.toString(getClass().getResourceAsStream("/html-report/report-test.tpl.html"));
 
-        Template template = new Template("report-main", new InputStreamReader(getClass().getResourceAsStream("/html-report/report-test.ftl.html")),
-                freemarkerConfiguration);
-        template.process(model, fileWriter);
-        fileWriter.flush();
-        fileWriter.close();
-    }
-
-    private void moveAllAttachmentsInReport(GalenTestAggregatedInfo aggregatedInfo, String reportFolderPath) throws IOException {
-        TestReport report = aggregatedInfo.getTestInfo().getReport();
-
-        for (Map.Entry<String, File> entry: report.getFileStorage().getFiles().entrySet()) {
-            FileUtils.copyFile(entry.getValue(), new File(reportFolderPath + File.separator + entry.getKey()));
+        for (GalenTestAggregatedInfo aggregatedInfo : reportOverview.getTests()) {
+            String testReportJson = jsonBuilder.exportTestReportToJsonString(aggregatedInfo);
+            FileUtils.writeStringToFile(new File(reportFolderPath + File.separator + aggregatedInfo.getTestId() + ".html"),
+                    testReportTemplate.replace("##REPORT-DATA##", testReportJson));
         }
-    }
 
+        String overviewJson = jsonBuilder.exportReportOverviewToJsonAsString(reportOverview);
 
-
-
-
-    private File createTestReportFile(GalenTestAggregatedInfo aggregatedInfo, String reportFolderPath) throws IOException {
-        File file = new File(reportFolderPath + File.separator + String.format("%s.html", aggregatedInfo.getTestId()));
-        if (!file.exists()) {
-            if (!file.createNewFile()) {
-                throw new RuntimeException("Cannot create file: " + file.getAbsolutePath());
-            }
-        }
-        return file;
-    }
-
-    private void exportMainReport(String reportFolderPath, List<GalenTestAggregatedInfo> tests) throws IOException, TemplateException {
-        makeSureReportFolderExists(reportFolderPath);
-
-        File file = new File(reportFolderPath + File.separator + "report.html");
-        if (!file.exists()) {
-            if (!file.createNewFile()) {
-                throw new RuntimeException("Cannot create file: " + file.getAbsolutePath());
-            }
-        }
-        FileWriter fileWriter = new FileWriter(file);
-        Map<String, Object> model = new HashMap<String, Object>();
-        model.put("tests", tests);
-
-        Template template = new Template("report-main", new InputStreamReader(getClass().getResourceAsStream("/html-report/report.ftl.html")),
-                freemarkerConfiguration);
-        template.process(model, fileWriter);
-        fileWriter.flush();
-        fileWriter.close();
+        FileUtils.writeStringToFile(new File(reportFolderPath + File.separator + "report.html"),
+                overviewTemplate.replace("##REPORT-DATA##", overviewJson));
 
         copyHtmlResources(reportFolderPath);
     }
 
     private void makeSureReportFolderExists(String reportFolderPath) throws IOException {
-        File reportFolder = new File(reportFolderPath);
-        if (!reportFolder.exists()) {
-            if (!reportFolder.mkdirs()) {
-                throw new IOException("Could not create directories: " + reportFolderPath);
-            }
-        }
+        FileUtils.forceMkdir(new File(reportFolderPath));
     }
 
     private void copyHtmlResources(String reportFolderPath) throws IOException {

@@ -29,7 +29,6 @@ public class GalenTestAggregatedInfo {
     private TestStatistic statistic;
     private String testId;
 
-    private static SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
 
     public GalenTestAggregatedInfo(String testId, GalenTestInfo test) {
         this.setTestInfo(test);

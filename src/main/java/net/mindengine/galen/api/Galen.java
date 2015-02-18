@@ -163,7 +163,7 @@ public class Galen {
         pageDump.exportAllScreenshots(browser, reportFolder);
 
 
-        copyResource("/html-report/jquery-1.10.2.min.js", new File(reportFolder.getAbsolutePath() + File.separator + "jquery-1.10.2.min.js"));
+        copyResource("/html-report/jquery-1.11.2.min.js", new File(reportFolder.getAbsolutePath() + File.separator + "jquery-1.11.2.min.js"));
         copyResource("/pagedump/galen-pagedump.js", new File(reportFolder.getAbsolutePath() + File.separator + "galen-pagedump.js"));
         copyResource("/pagedump/galen-pagedump.css", new File(reportFolder.getAbsolutePath() + File.separator + "galen-pagedump.css"));
     }

@@ -1,10 +1,12 @@
 package net.mindengine.galen.reports.json;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import net.mindengine.galen.reports.GalenTestAggregatedInfo;
 import net.mindengine.galen.reports.GalenTestInfo;
 import net.mindengine.galen.reports.TestIdGenerator;
+import net.mindengine.galen.reports.TestReport;
 import org.apache.commons.io.FileUtils;
 
 import java.io.File;
@@ -27,17 +29,37 @@ public class JsonReportBuilder {
 
     private TestIdGenerator testIdGenerator = new TestIdGenerator();
 
+
     public void build(List<GalenTestInfo> testInfos, String reportPath) throws IOException {
-        ReportOverview reportOverview = new ReportOverview();
+        ReportOverview reportOverview = createReportOverview(testInfos);
 
-        for (GalenTestInfo testInfo : testInfos) {
-            String testId = testIdGenerator.generateTestId(testInfo.getName());
-            reportOverview.add(new GalenTestAggregatedInfo(testId, testInfo));
-
-            exportTestReportToJson(new JsonTestReport(testId, testInfo), reportPath);
+        for (GalenTestAggregatedInfo aggregatedInfo : reportOverview.getTests()) {
+            exportTestReportToJson(new JsonTestReport(aggregatedInfo.getTestId(), aggregatedInfo.getTestInfo()), reportPath);
+            moveAllReportFiles(aggregatedInfo.getTestInfo().getReport(), reportPath);
         }
 
         exportReportOverviewToJson(reportOverview, reportPath);
+    }
+
+
+    private void moveAllReportFiles(TestReport report, String reportPath) throws IOException {
+        if (report != null && report.getFileStorage() != null) {
+            report.getFileStorage().copyAllFilesTo(new File(reportPath));
+        }
+    }
+
+    public ReportOverview createReportOverview(List<GalenTestInfo> testInfos) {
+        ReportOverview reportOverview = new ReportOverview();
+        for (GalenTestInfo testInfo : testInfos) {
+            String testId = testIdGenerator.generateTestId(testInfo.getName());
+            reportOverview.add(new GalenTestAggregatedInfo(testId, testInfo));
+        }
+
+        return reportOverview;
+    }
+
+    public String exportReportOverviewToJsonAsString(ReportOverview reportOverview) throws JsonProcessingException {
+        return jsonMapper.writerWithDefaultPrettyPrinter().writeValueAsString(reportOverview);
     }
 
     private void exportReportOverviewToJson(ReportOverview reportOverview, String reportPath) throws IOException {
@@ -58,5 +80,9 @@ public class JsonReportBuilder {
 
     private void makeSureFolderExists(String reportPath) throws IOException {
         FileUtils.forceMkdir(new File(reportPath));
+    }
+
+    public String exportTestReportToJsonString(GalenTestAggregatedInfo info) throws JsonProcessingException {
+        return jsonMapper.writerWithDefaultPrettyPrinter().writeValueAsString(new JsonTestReport(info.getTestId(), info.getTestInfo()));
     }
 }

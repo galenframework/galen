@@ -17,7 +17,6 @@ package net.mindengine.galen.reports.nodes;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonValue;
-import net.mindengine.galen.reports.ExceptionReportNode;
 import net.mindengine.galen.reports.TestStatistic;
 import net.mindengine.galen.reports.model.FileTempStorage;
 
@@ -28,6 +27,7 @@ import java.util.List;
 
 public class TestReportNode {
 
+    @JsonIgnore
     private final FileTempStorage fileStorage;
     private String name;
     private Status status = Status.INFO;
@@ -35,6 +35,7 @@ public class TestReportNode {
 
     @JsonIgnore
     private TestReportNode parent;
+
     private List<String> attachments;
     private Date time = new Date();
 
@@ -161,6 +162,15 @@ public class TestReportNode {
 
     public String getType() {
         return "node";
+    }
+
+
+    public List<String> getAttachments() {
+        return this.attachments;
+    }
+
+    public void setAttachments(List<String> attachments) {
+        this.attachments = attachments;
     }
 
 }
