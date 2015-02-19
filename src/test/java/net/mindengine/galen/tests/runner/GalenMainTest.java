@@ -77,10 +77,9 @@ public class GalenMainTest {
         
         String htmlReportContent = FileUtils.readFileToString(new File(htmlReportPath + File.separator + "report.html"));
         
-        assertThat(htmlReportContent, containsString("<a href=\"report-1-test-number-1.html\">Test number 1</a>"));
-        assertThat(htmlReportContent, containsString("<a href=\"report-2-test-number-2.html\">Test number 2</a>"));
-        assertThat(htmlReportContent, containsString("<a href=\"report-3-test-number-3.html\">Test number 3</a>"));
-        assertThat(htmlReportContent, containsString("<td class=\"status failed\">1</td>"));
+        assertThat(htmlReportContent, containsString("\"testId\" : \"1-test-number-1\""));
+        assertThat(htmlReportContent, containsString("\"testId\" : \"2-test-number-2\""));
+        assertThat(htmlReportContent, containsString("\"testId\" : \"3-test-number-3\""));
     }
     
     @Test public void shouldRun_javascriptTestWithEvents() throws Exception {
@@ -172,7 +171,7 @@ public class GalenMainTest {
         String htmlReportContent = FileUtils.readFileToString(new File(htmlReportDir.getAbsolutePath()
                 + File.separator + "report.html"));
 
-        int amountOfReportedTests = StringUtils.countMatches(htmlReportContent, "<a href=\"report-");
+        int amountOfReportedTests = StringUtils.countMatches(htmlReportContent, "\"testId\"");
         assertThat("Amount of reported tests should be", amountOfReportedTests, is(3));
     }
     
