@@ -132,21 +132,19 @@ a.node-expand-button.contains-children-true.collapsed:before {
 .report-node-attachments  {
     margin-top: 5px;
 }
-.report-node-attachments li a img {
-    width: 24px;
-    margin-right: 10px;
-}
 .report-node-attachments li a {
     position: relative;
     display: inline-block;
     color: white;
     background: #1271C4;
     text-decoration: none;
-    padding: 8px;
+    padding: 8px 8px 0px 35px;
     height: 26px;
     border-radius: 5px;
 }
-
+.report-node-attachments li a:hover {
+    background: #2C8BDE;
+}
 
 
 /* Layout  */
@@ -160,52 +158,51 @@ a.layout-section, a.layout-object, a.layout-check {
     text-decoration: none;
     font-size: 1.0em;
 }
-a.layout-section:before, a.layout-object:before, a.layout-check:before {
-    display: block;
+
+
+.icon-sprite-before:before {
     position: absolute;
+    left: -20px;
+    top: 0px;
+    background-image: url('icon-sprites.png');
+    background-repeat: none;
+    display: block;
     content: " ";
+    opacity: 0.6;
+}
+.layout-section.icon-sprite-before:before {
+    width: 16px;
+    height: 16px;
+    background-position: -147px -5px;
+}
+.layout-object.icon-sprite-before:before {
     width: 24px;
     height: 24px;
-}
-a.layout-section:before {
-    top: 0px;
-    left: -20px;
-    background: url('icon-section.png') no-repeat;
-    opacity: 0.3;
-}
-a.layout-object:before {
+    background-position: -113px -5px;
+    left: -24px;
     top: -3px;
-    left: -25px;
-    background: url('icon-object.png') no-repeat;
-    opacity: 0.3;
 }
-a.layout-check-status-info:before {
-    left: -20px;
-    top: 0px;
-    background: url('icon-check.png') no-repeat;
-    opacity: 0.3;
+.layout-check.layout-check-status-info.icon-sprite-before:before {
+    width: 16px;
+    height: 16px;
+    background-position: -31px -5px;
 }
-a.layout-check-status-error:before {
-    left: -20px;
-    top: 0px;
-    border: 1px solid red;
-    content: "!";
-    width: 10px;
-    height: 13px; 
-    padding-top: 3px;
-    padding-left: 5px;
-    border-radius: 10px;
+.layout-check.layout-check-status-warn.icon-sprite-before:before {
+    width: 16px;
+    height: 16px;
+    background-position: -5px -5px;
 }
-a.layout-check-status-warn:before {
-    left: -20px;
-    top: 0px;
-    border: 1px solid #B87700;
-    content: "?";
-    width: 10px;
-    height: 13px; 
-    padding-top: 3px;
-    padding-left: 5px;
-    border-radius: 10px;
+.layout-check.layout-check-status-error.icon-sprite-before:before {
+    width: 16px;
+    height: 16px;
+    background-position: -57px -5px;
+}
+.node-attachment.icon-sprite-before:before {
+    width: 20px;
+    height: 20px;
+    background-position: -83px -5px;
+    left: 8px;
+    top: 5px;
 }
 
 a.layout-object {
@@ -232,6 +229,9 @@ a.layout-check-status-warn {
 }
 .layout-check-error-message-text {
     margin-top: 10px;
+}
+.layout-check-error-message-text ul{
+    list-style: disc;
 }
 
 /* Image comparison */
@@ -341,3 +341,100 @@ a.layout-check-status-warn {
     color: #fff;
     font-weight: bold;
 }
+
+
+/* Overview */
+.tests-overview h2,  {
+    margin: 0;
+    padding: 20px;
+    background: #249AE3;
+    color: white;
+    text-shadow: -1px -1px 0px #06578A;
+    font-size: 3em;
+}
+
+.tests-overview .status-header {
+    border-bottom: 1px solid #d0d0d0;
+}
+.tests-overview .status-header > div {
+    padding: 10px;
+    font-weight: bold;
+    color: black;
+    display: block;
+    float: left;
+    width: 70px;
+    border-left: 1px solid #d0d0d0;
+}
+.tests-overview .status-header:after {
+    display: block;
+    clear: both;
+    content: ".";
+    font-size: 0;
+}
+
+.tests-overview {
+    padding: 10px;
+}
+
+.tests-overview .tests .test {
+    clear: both;
+}
+.tests-overview .tests .test > div.status {
+    float: left;
+    padding: 10px;
+    width: 71px;
+}
+.tests-overview .tests .test > div.time{
+    float: left;
+    padding: 10px;
+    width: 71px;
+    font-size: 0.8em;
+}
+.tests-overview .tests .test > div.test-link {
+    float: left;
+    padding: 10px;
+}
+.tests-overview .tests .test > div.test-link a {
+    color: #1271C4;
+}
+.tests-overview .tests .test > div.test-link a:hover {
+    text-decoration: none;
+}
+.tests-overview .tests .failed {
+    color: #D60F26;
+}
+.tests-overview .tests .passed {
+    color: #229605;
+}
+.tests-overview .tests .warnings {
+    color: #D6A502;
+}
+.tests-overview .tests .progress {
+    border: none;
+    border-collapse: collapse;
+    clear: both;
+    margin-top: 7px;
+    margin-bottom: 10px;
+    margin-left: 10px;
+    width: 260px;
+    padding: 0;
+    height: 10px;
+    border-spacing: 0;
+    max-width: 100%;
+}
+.tests-overview .tests .progress td {
+    height: 10px;
+    padding: 0;
+    margin: 0;
+    border: none;
+}
+.tests-overview .tests .progress td.failed {
+    background: #FA644D;
+}
+.tests-overview .tests .progress td.passed {
+    background: #71E854;
+}
+.tests-overview .tests .progress td.warning {
+    background: #FFC400;
+}
+

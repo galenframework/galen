@@ -1,12 +1,12 @@
 <html>
     <head>
         <title>Galen Reports</title>
-        <link rel="stylesheet" type="text/css" href="overview.css"></link>
+        <link rel="stylesheet" type="text/css" href="report.css"></link>
         <link rel="stylesheet" type="text/css" href="tablesorter.css"></link>
         <script src="jquery-1.11.2.min.js"></script>
         <script src="handlebars-v2.0.0.js"></script>
-        <script src="galen-overview.js"></script>
         <script src="tablesorter.js"></script>
+        <script src="galen-report.js"></script>
         <script>
 var reportData = ##REPORT-DATA##;
 
@@ -20,11 +20,11 @@ var reportData = ##REPORT-DATA##;
     </head>
     <body>
 
-    <h2>Galen Test Report</h2>
     <div id="main">
     </div>
     <script id="main-overview" type="text/x-handlebars-template">
         <div class="tests-overview">
+            <h2>Galen Test Report</h2>
             <table class="tests tablesorter">
                 <thead>
                     <tr>
@@ -35,6 +35,7 @@ var reportData = ##REPORT-DATA##;
                         <th>Total</th>
                         <th>Started</th>
                         <th>Duration</th>
+                        <th></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -49,6 +50,9 @@ var reportData = ##REPORT-DATA##;
                         <td class="status total">{{statistic.total}}</td>
                         <td class="time">{{formatDateTime startedAt}}</td>
                         <td class="time">{{durationPretty}}</td>
+                        <td class="progressbar">
+                            {{renderProgressBar statistic}}
+                        </td>
                     </tr>
                     {{/each}}
                 </tbody>

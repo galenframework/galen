@@ -33,7 +33,7 @@ var reportData = ##REPORT-DATA##;
                     <ul class="report-node-attachments">
                         {{#each attachments}}
                             <li>
-                                <a href="{{this}}"><img src="icon-download.svg"/> {{this}}</a>
+                                <a class="icon-sprite-before node-attachment" href="{{this}}">{{this}}</a>
                             </li>
                         {{/each}}
                     </ul>
@@ -77,7 +77,7 @@ var reportData = ##REPORT-DATA##;
         </script>
         <script id="report-layout-section-tpl" type="text/x-handlebars-template">
             <li>
-                <a class="layout-section expand-link contains-children-true" href="#">{{name}}</a>
+                <a class="layout-section icon-sprite-before expand-link contains-children-true" href="#">{{name}}</a>
                 <div class="layout-details expand-container">
                     {{#if sections}}
                         <ul class="layout-sections">
@@ -99,7 +99,7 @@ var reportData = ##REPORT-DATA##;
         
         <script id="report-layout-object-tpl" type="text/x-handlebars-template">
             <li>
-                <a class="layout-object expand-link contains-children-true" href="#">{{name}}</a>
+                <a class="layout-object icon-sprite-before expand-link contains-children-true" href="#">{{name}}</a>
                 {{#if checks}}
                     <ul class="layout-checks expand-container">
                         {{#each checks}}
@@ -111,12 +111,12 @@ var reportData = ##REPORT-DATA##;
         </script>
         <script id="report-layout-check-tpl" type="text/x-handlebars-template">
             <li>
-            <a class="layout-check layout-check-status-{{status}}" href="#" 
+            <a class="layout-check icon-sprite-before layout-check-status-{{status}}" href="#" 
                 data-highlight-objects="{{commaSeparated highlight}}"
                 title="{{location}}"
                 >{{name}}</a>
 
-                {{#if error}}
+                {{#if errors}}
                     <div class="layout-check-error-message">
                         {{#if image-comparison}}
                         <a class="image-comparison-link" 
@@ -126,7 +126,11 @@ var reportData = ##REPORT-DATA##;
                             href="#">Show image comparison</a>
                         {{/if}}
                         <div class="layout-check-error-message-text">
-                            {{error}}
+                            <ul>
+                            {{#each errors}}
+                                <li>{{this}}</li>
+                            {{/each}}
+                            </ul>
                         </div>
                     </div>
                 {{/if}}

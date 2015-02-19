@@ -20,6 +20,8 @@ check homepage.spec --include all,mobile
 -------------------------
     objectA1
         height: 10 to 20px
+@ Sub section
+-------------------------
             sub-objectA1
                 height: 10 to 20px
 ->              width: 10px

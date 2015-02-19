@@ -4,7 +4,7 @@
         <#list tests as test>
         <test name="${test.testInfo.name?html}">
             <class name="${test.testInfo.name?html}">
-                <test-method status="<#if test.failed>FAIL<#else>PASS</#if>" signature="${test.testInfo.name?html}" name="${test.testInfo.name?html}" duration-ms="${test.duration?c}" started-at="${test.startedAtFormatted}" finished-at="${test.endedAtFormatted}" description="">
+                <test-method status="<#if test.failed>FAIL<#else>PASS</#if>" signature="${test.testInfo.name?html}" name="${test.testInfo.name?html}" duration-ms="${test.duration?c}" started-at="${test.testInfo.startedAt?string('yyyy-MM-dd\'T\'HH:mm:ss\'Z\'')}" finished-at="${test.testInfo.endedAt?string('yyyy-MM-dd\'T\'HH:mm:ss\'Z\'')}" description="">
                     <#if test.testInfo.exception?has_content>
                     <exception class="${test.testInfo.exception.class.name}">
                         <message>${test.exceptionMessage?html}</message>

@@ -1,40 +1,215 @@
 <html>
-    <head>
-        <title>Galen Report | Home page test</title>
-        <link rel="stylesheet" type="text/css" href="galen-report.css"/>
-        <script src="jquery-1.10.2.min.js"></script>
-        <script src="galen-report.js"></script>
-    </head>
-    <body>
-        <iconset>
-            <svg class="icon-download"  width="28px" height="28px" version="1.1" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" xmlns:sketch="http://www.bohemiancoding.com/sketch/ns" xmlns:xlink="http://www.w3.org/1999/xlink"><title/><defs/><g fill="none" fill-rule="evenodd" id="Icons with numbers" stroke="none" stroke-width="1"><g fill="#ffffff" id="Group" transform="translate(-480.000000, 0.000000)"><path d="M495,11 L495,15 L481,15 L481,11 L480.975342,11 L484,2 L486,2 L486,3 L484.571429,3 L482,11 L494,11 L491.428571,3 L490,3 L490,2 L492,2 L495.00354,11 Z M487,1 L489,1 L489,6 L491,6 L488,10 L485,6 L487,6 Z M486,12 L486,13 L490,13 L490,12 Z M486,12" id="Rectangle 142 copy"/></g></g></svg>
-        </iconset>
-        <script>$(function() {Galen.formatSuiteReport();});</script>
-        <h1>Home page test</h1>
-        <ul class="report">
-            <li class="report-status-error">
-                <span class="time">18:56:40</span>
-                <a class="report-link report-status-error" id="report-link-2" href="#" data-report-id="2">ERROR</a>
-                <div class="report-caption">FakeException: Some exception here</div>
-                <ul class="attachments">
-                    <li><a href="report-1-home-page-test-attachment-1-custom.txt">custom.txt</a></li>
-                </ul>
-                <div id="report-nodes-2" class="report-container">
-                    <div class="stacktrace">net.mindengine.galen.components.report.FakeException: Some exception here
-                        at net.mindengine.someclass.SomeClass.method1(SomeClass.java:4)
-                        at net.mindengine.someclass.SomeClass2.method2(SomeClass2.java:5)
-                        at net.mindengine.someclass.SomeClass3.method3(SomeClass3.java:6)
-                    </div>
-                </div>
-            </li>         
-            <li class="report-status-info">
-                <span class="time">18:56:40</span>
-                <a class="report-link report-status-info" id="report-link-3" href="#" data-report-id="3">INFO</a>
-                <div class="report-caption">Some detailed report</div>
-                <div id="report-nodes-3" class="report-container">
-                    <div class="details">Some details</div>
-                </div>
-            </li>           
+<head>
+    <title>Galen Reports</title>
+    <link rel="stylesheet" type="text/css" href="report.css"></link>
+    <script src="jquery-1.11.2.min.js"></script>
+    <script src="handlebars-v2.0.0.js"></script>
+    <script src="galen-report.js"></script>
+    <script>
+        var reportData = {
+            "testId" : "1-home-page-test",
+            "name" : "Home page test",
+            "report" : {
+                "nodes" : [ {
+                    "name" : "FakeException: Some exception here",
+                    "status" : "error",
+                    "attachments" : [ "file-1-custom.txt" ],
+                    "time" : 1399741000000,
+                    "stacktrace" : "net.mindengine.galen.components.report.FakeException: Some exception here\n\tat net.mindengine.someclass.SomeClass.method1(SomeClass.java:4)\n\tat net.mindengine.someclass.SomeClass2.method2(SomeClass2.java:5)\n\tat net.mindengine.someclass.SomeClass3.method3(SomeClass3.java:6)\n",
+                    "type" : "node"
+                }, {
+                    "name" : "Some detailed report",
+                    "status" : "info",
+                    "nodes" : [ {
+                        "name" : "Some details",
+                        "type" : "text"
+                    } ],
+                    "time" : 1399741000000,
+                    "type" : "node"
+                } ]
+            }
+        };
+    </script>
+    <script>
+
+        $(function () {
+            var galenReport = createGalenReport();
+            galenReport.render("main", reportData);
+        });
+    </script>
+</head>
+<body>
+<script id="report-tpl" type="text/x-handlebars-template">
+    <ul class="report-nodes">
+        {{#each report.nodes}}
+        {{renderNode this}}
+        {{/each}}
+    </ul>
+</script>
+<script id="report-node-tpl" type="text/x-handlebars-template">
+    <li>
+        <span class="report-time">{{formatReportTime time}}</span>
+        <a class="expand-link node-expand-button node-status-{{status}} contains-children-{{hasChildElements nodes}} collapsed" href="#">{{status}}</a>
+        <div class="node-name node-status-{{status}}">{{name}}</div>
+        {{#if attachments}}
+        <ul class="report-node-attachments">
+            {{#each attachments}}
+            <li>
+                <a class="icon-sprite-before node-attachment" href="{{this}}">{{this}}</a>
+            </li>
+            {{/each}}
         </ul>
-    </body>
+        {{/if}}
+        <div class="node-details expand-container">
+            {{#if nodes}}
+            <ul class="report-nodes">
+                {{#each nodes}}
+                {{renderNode this}}
+                {{/each}}
+            </ul>
+            {{/if}}
+        </div>
+    </li>
+</script>
+<script id="report-node-text-tpl" type="text/x-handlebars-template">
+    <li>
+        <div class="node-simple-text">
+            {{text}}
+        </div>
+    </li>
+</script>
+<script id="report-layout-tpl" type="text/x-handlebars-template">
+    <li>
+        <span class="report-time">{{formatReportTime time}}</span>
+        <a class="expand-link node-expand-button node-status-label node-status-info contains-children-true collapsed" href="#">INFO</a>
+        <div class="node-name">{{name}}</div>
+        <div class="node-details expand-container">
+            {{renderSublayout this}}
+        </div>
+    </li>
+</script>
+<script id="report-layout-sublayout-tpl" type="text/x-handlebars-template">
+    <div class="layout-report" data-layout-id="{{layoutId}}" data-screenshot="{{screenshot}}">
+        <ul class="layout-sections">
+            {{#each sections}}
+            {{renderLayoutSection this}}
+            {{/each}}
+        </ul>
+    </div>
+</script>
+<script id="report-layout-section-tpl" type="text/x-handlebars-template">
+    <li>
+        <a class="layout-section icon-sprite-before expand-link contains-children-true" href="#">{{name}}</a>
+        <div class="layout-details expand-container">
+            {{#if sections}}
+            <ul class="layout-sections">
+                {{#each sections}}
+                {{renderLayoutSection this}}
+                {{/each}}
+            </ul>
+            {{/if}}
+            {{#if objects}}
+            <ul class="layout-objects">
+                {{#each objects}}
+                {{renderLayoutObject this}}
+                {{/each}}
+            </ul>
+            {{/if}}
+        </div>
+    </li>
+</script>
+
+<script id="report-layout-object-tpl" type="text/x-handlebars-template">
+    <li>
+        <a class="layout-object icon-sprite-before expand-link contains-children-true" href="#">{{name}}</a>
+        {{#if checks}}
+        <ul class="layout-checks expand-container">
+            {{#each checks}}
+            {{renderLayoutCheck this}}
+            {{/each}}
+        </ul>
+        {{/if}}
+    </li>
+</script>
+<script id="report-layout-check-tpl" type="text/x-handlebars-template">
+    <li>
+        <a class="layout-check icon-sprite-before layout-check-status-{{status}}" href="#"
+           data-highlight-objects="{{commaSeparated highlight}}"
+           title="{{location}}"
+                >{{name}}</a>
+
+        {{#if errors}}
+        <div class="layout-check-error-message">
+            {{#if image-comparison}}
+            <a class="image-comparison-link"
+               data-actual-image="{{image-comparison.actual}}"
+               data-expected-image="{{image-comparison.expected}}"
+               data-map-image="{{image-comparison.comparison-map}}"
+               href="#">Show image comparison</a>
+            {{/if}}
+            <div class="layout-check-error-message-text">
+                <ul>
+                    {{#each errors}}
+                    <li>{{this}}</li>
+                    {{/each}}
+                </ul>
+            </div>
+        </div>
+        {{/if}}
+
+        {{#if sublayout}}
+        {{renderSublayout sublayout}}
+        {{/if}}
+    </li>
+</script>
+<script id="screenshot-popup-tpl" type="text/x-handlebars-template">
+    <div class="screenshot-canvas">
+        <img src="{{screenshot}}"/>
+        {{#each objects}}
+        <div class="canvas-rect" style="left: {{area.left}}px; top: {{area.top}}px; width: {{area.width}}px; height: {{area.height}}px; border-color: {{color}};">
+            <div class="canvas-rect-wrapper">
+                <div class="canvas-rect-hint" style="background: {{color}};">{{@key}}</div>
+            </div>
+        </div>
+        {{/each}}
+    </div>
+</script>
+<script id="image-comparison-tpl" type="text/x-handlebars-template">
+    <div class="image-comparison">
+        <h5>Actual</h5>
+        <img src="{{actual}}"/>
+
+        <h5>Expected</h5>
+        <img src="{{expected}}"/>
+
+        <h5>Comparison map</h5>
+        <img src="{{map}}"/>
+    </div>
+</script>
+
+
+<div id="menu">
+    <ul>
+        <li><a class="menu-op-expand-all" href="#">Expand All</a></li>
+        <li><a class="menu-op-collapse-all" href="#">Collapse All</a></li>
+        <li><a class="menu-op-expand-errors" href="#">Expand Errors</a></li>
+    </ul>
+</div>
+<h2>Some test</h2>
+<div id="main"></div>
+<div id="screen-shadow"></div>
+<div id="popup" class="popup">
+    <div class="popup-wrapper">
+        <a class="popup-close-link" href="#">close</a>
+        <div class="popup-content"></div>
+    </div>
+</div>
+<div id="notification" class="notification">
+    <div class="notification-wrapper">
+        <a class="notification-close-link" href="#">close</a>
+        <div class="notification-summary"></div>
+        <div class="notification-message"></div>
+    </div>
+</div>
+</body>
 </html>

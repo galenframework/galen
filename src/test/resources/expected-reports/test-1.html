@@ -1,159 +1,373 @@
 <html>
-    <head>
-        <title>Galen Report | Home page test</title>
-        <link rel="stylesheet" type="text/css" href="galen-report.css"/>
-        <script src="jquery-1.10.2.min.js"></script>
-        <script src="galen-report.js"></script>
-    </head>
-    <body>
-        <iconset>
-            <svg class="icon-download"  width="28px" height="28px" version="1.1" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" xmlns:sketch="http://www.bohemiancoding.com/sketch/ns" xmlns:xlink="http://www.w3.org/1999/xlink"><title/><defs/><g fill="none" fill-rule="evenodd" id="Icons with numbers" stroke="none" stroke-width="1"><g fill="#ffffff" id="Group" transform="translate(-480.000000, 0.000000)"><path d="M495,11 L495,15 L481,15 L481,11 L480.975342,11 L484,2 L486,2 L486,3 L484.571429,3 L482,11 L494,11 L491.428571,3 L490,3 L490,2 L492,2 L495.00354,11 Z M487,1 L489,1 L489,6 L491,6 L488,10 L485,6 L487,6 Z M486,12 L486,13 L490,13 L490,12 Z M486,12" id="Rectangle 142 copy"/></g></g></svg>
-        </iconset>
-        <script>$(function() {Galen.formatSuiteReport();});</script>
-        <h1>Home page test</h1>
-        <ul class="report">
-            <li class="report-status-info">
-                <span class="time">23:15:46</span>
-                <a class="report-link report-status-info" id="report-link-4" href="#" data-report-id="4">INFO</a>
-                <div class="report-caption">check layout</div>
-                <div id="report-nodes-4" class="report-container">
-                        <div class="layout-report" data-screenshot="report-1-home-page-test-screenshot-1.png">
-                            <h2 class="page-section">Unnamed</h2>
-                            <div class="page-section">
-                                <h3 class="object">objectA1</h3>
-                                <div class="object" data-area="10,10,100,50" data-name="objectA1">
-                                    <ul class="test-specs">
-                                        <li class="fail">
-                                            <div class="description">
-                                                <span title="Location: specs.spec#12">inside: other-object 10px left</span>
-                                                <ul class="error-message">
-                                                    <li>objectA1 is not inside other-object</li>
-                                                </ul>
-                                                <ul class="areas">
-                                                    <li data-area="10,10,100,50">objectA1</li>
-                                                </ul>
-                                            </div>
-                                        </li>
-                                        <li class="success">
-                                            <div class="description">
-                                                <span title="Location: specs.spec#12">width: 10 to 20px</span>
-                                            </div>
-                                        </li>
-                                    </ul>
-                                </div>
-                                <h3 class="object">objectA2</h3>
-                                <div class="object" data-area="200,300,50,30" data-name="objectA2">
-                                    <ul class="test-specs">
-                                        <li class="success">
-                                            <div class="description">
-                                                <span title="Location: specs.spec#12">width: 10 to 20px</span>
-                                            </div>
-                                        </li>
-                                        <li class="fail">
-                                            <div class="description">
-                                                <span title="Location: specs.spec#12">width: 10px</span>
-                                                <ul class="error-message">
-                                                    <li>objectA2 width is 20px instead of 10px</li>
-                                                </ul>
-                                                <ul class="areas">
-                                                    <li data-area="200,300,50,30">objectA2</li>
-                                                </ul>
-                                            </div>
-                                        </li>
-                                        <li class="warn">
-                                            <div class="description">
-                                                <span title="Location: specs.spec#12">text is: Login</span>
-                                                <ul class="error-message">
-                                                    <li>objectA2 text is &quot;Logout&quot; instead of &quot;Login&quot;</li>
-                                                </ul>
-                                                <ul class="areas">
-                                                    <li data-area="200,300,50,30">objectA2</li>
-                                                </ul>
-                                            </div>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </div>
-                            <h2 class="page-section">some section 2</h2>
-                            <div class="page-section">
-                                <h3 class="object">objectA1</h3>
-                                <div class="object" data-area="10,10,100,50" data-name="objectA1">
-                                    <ul class="test-specs">
-                                        <li class="success">
-                                            <div class="description">
-                                                <span title="Location: specs.spec#12">height: 10 to 20px</span>
-                                            </div>
-                                        </li>
-                                        <li class="success">
-                                            <div class="description">
-                                                <span title="Location: specs.spec#12">component: some-component.spec</span>
-                                            </div>
-                                            <div class="sub-objects">
-                                                <h3 class="object">sub-objectA1</h3>
-                                                <div class="object" data-area="200,300,50,30" data-name="sub-objectA1">
-                                                    <ul class="test-specs">
-                                                        <li class="success">
-                                                            <div class="description">
-                                                                <span title="Location: specs.spec#12">height: 10 to 20px</span>
-                                                            </div>
-                                                        </li>
-                                                        <li class="fail">
-                                                            <div class="description">
-                                                                <span title="Location: specs.spec#12">width: 10px</span>
-                                                                <ul class="error-message">
-                                                                    <li>sub-objectA1 width is 20px instead of 10px</li>
-                                                                </ul>
-                                                                <ul class="areas">
-                                                                    <li data-area="200,300,50,30">sub-objectA1</li>
-                                                                </ul>
-                                                            </div>
-                                                        </li>
-                                                    </ul>
-                                                </div>
-                                            </div>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </div>
-                            <h2 class="page-section">some section 1</h2>
-                            <div class="page-section">
-                            <h3 class="object">objectB1</h3>
-                            <div class="object" data-area="10,10,100,50" data-name="objectB1">
-                                <ul class="test-specs">
-                                    <li class="success">
-                                        <div class="description">
-                                            <span title="Location: specs.spec#12">width: 10 to 20px</span>
-                                        </div>
-                                    </li>
-                                    <li class="fail">
-                                        <div class="description">
-                                            <span title="Location: specs.spec#12">inside: other-object 10px left</span>
-                                            <a class="link-show-differences" data-area="20,30,100,40" data-imagesource="report-1-home-page-test/imgs-button-sample-correct.png" data-comparisonmap="report-1-home-page-test/objectB1-1.map.png" href="#">Show differences</a>
-                                            <ul class="error-message">
-                                                <li>objectB1 is not inside other-object</li>
-                                                <li>second error message with &lt;xml&gt; &amp;tags</li>
-                                            </ul>
-                                            <ul class="areas">
-                                                <li data-area="10,10,100,50">objectB1</li>
-                                            </ul>
-                                        </div>
-                                    </li>
-                                </ul>
-                            </div>
-                            <h3 class="object">objectB2</h3>
-                            <div class="object" data-area="200,300,50,30" data-name="objectB2">
-                                <ul class="test-specs">
-                                    <li class="success">
-                                        <div class="description">
-                                            <span title="Location: specs.spec#12">height: 100px</span>
-                                        </div>
-                                    </li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+<head>
+    <title>Galen Reports</title>
+    <link rel="stylesheet" type="text/css" href="report.css"></link>
+    <script src="jquery-1.11.2.min.js"></script>
+    <script src="handlebars-v2.0.0.js"></script>
+    <script src="galen-report.js"></script>
+    <script>
+        var reportData = {
+    "testId" : "1-home-page-test",
+    "name" : "Home page test",
+    "report" : {
+        "nodes" : [ {
+            "name" : "Just a simple info node with attachment",
+            "status" : "info",
+            "attachments" : [ "file-5-some-file.txt" ],
+            "time" : 1404681346001,
+            "type" : "node"
+        }, {
+            "name" : "check layout",
+            "status" : "info",
+            "time" : 1404681346002,
+            "sections" : [ {
+                "name" : "",
+                "objects" : [ {
+                    "name" : "objectA1",
+                    "specs" : [ {
+                        "status" : "error",
+                        "place" : {
+                            "filePath" : "specs.spec",
+                            "lineNumber" : 12
+                        },
+                        "name" : "inside: other-object 10px left",
+                        "errors" : [ "objectA1 is not inside other-object" ],
+                        "highlight" : [ "objectA1", "other-object" ]
+                    }, {
+                        "status" : "info",
+                        "place" : {
+                            "filePath" : "specs.spec",
+                            "lineNumber" : 12
+                        },
+                        "name" : "width: 10 to 20px",
+                        "highlight" : [ "objectA1" ]
+                    } ]
+                }, {
+                    "name" : "objectA2",
+                    "specs" : [ {
+                        "status" : "info",
+                        "place" : {
+                            "filePath" : "specs.spec",
+                            "lineNumber" : 12
+                        },
+                        "name" : "width: 10 to 20px",
+                        "highlight" : [ "objectA2" ]
+                    }, {
+                        "status" : "error",
+                        "place" : {
+                            "filePath" : "specs.spec",
+                            "lineNumber" : 12
+                        },
+                        "name" : "width: 10px",
+                        "errors" : [ "objectA2 width is 20px instead of 10px" ],
+                        "highlight" : [ "objectA2" ]
+                    }, {
+                        "status" : "warn",
+                        "place" : {
+                            "filePath" : "specs.spec",
+                            "lineNumber" : 12
+                        },
+                        "name" : "text is: Login",
+                        "errors" : [ "objectA2 text is \"Logout\" instead of \"Login\"" ],
+                        "highlight" : [ "objectA2" ]
+                    } ]
+                } ]
+            }, {
+                "name" : "some section 2",
+                "objects" : [ {
+                    "name" : "objectA1",
+                    "specs" : [ {
+                        "status" : "info",
+                        "place" : {
+                            "filePath" : "specs.spec",
+                            "lineNumber" : 12
+                        },
+                        "name" : "height: 10 to 20px",
+                        "highlight" : [ "objectA1" ],
+                        "subLayout" : {
+                            "sections" : [ {
+                                "name" : "Sub section",
+                                "objects" : [ {
+                                    "name" : "sub-objectA1",
+                                    "specs" : [ {
+                                        "status" : "info",
+                                        "place" : {
+                                            "filePath" : "specs.spec",
+                                            "lineNumber" : 12
+                                        },
+                                        "name" : "height: 10 to 20px",
+                                        "highlight" : [ "sub-objectA1" ]
+                                    }, {
+                                        "status" : "error",
+                                        "place" : {
+                                            "filePath" : "specs.spec",
+                                            "lineNumber" : 12
+                                        },
+                                        "name" : "width: 10px",
+                                        "errors" : [ "sub-objectA1 width is 20px instead of 10px" ],
+                                        "highlight" : [ "sub-objectA1" ]
+                                    } ]
+                                } ]
+                            } ],
+                            "objects" : {
+                                "sub-objectA1" : {
+                                    "area" : [ 200, 300, 50, 30 ]
+                                }
+                            }
+                        }
+                    }, {
+                        "status" : "info",
+                        "place" : {
+                            "filePath" : "specs.spec",
+                            "lineNumber" : 12
+                        },
+                        "name" : "component: some-component.spec",
+                        "highlight" : [ "objectA1" ]
+                    } ]
+                } ]
+            }, {
+                "name" : "some section 1",
+                "objects" : [ {
+                    "name" : "objectB1",
+                    "specs" : [ {
+                        "status" : "info",
+                        "place" : {
+                            "filePath" : "specs.spec",
+                            "lineNumber" : 12
+                        },
+                        "name" : "width: 10 to 20px",
+                        "highlight" : [ "objectB1" ]
+                    }, {
+                        "status" : "error",
+                        "place" : {
+                            "filePath" : "specs.spec",
+                            "lineNumber" : 12
+                        },
+                        "name" : "inside: other-object 10px left",
+                        "errors" : [ "objectB1 is not inside other-object", "second error message with <xml> &tags" ],
+                        "highlight" : [ "objectB1" ],
+                        "imageComparison" : {
+                            "actualImage" : "layout-2-objectB1-actual.png",
+                            "expectedImage" : "layout-3-objectB1-expected.png",
+                            "comparisonMapImage" : "layout-4-objectB1-map.png"
+                        }
+                    } ]
+                }, {
+                    "name" : "objectB2",
+                    "specs" : [ {
+                        "status" : "info",
+                        "place" : {
+                            "filePath" : "specs.spec",
+                            "lineNumber" : 12
+                        },
+                        "name" : "height: 100px",
+                        "highlight" : [ "objectB2" ]
+                    } ]
+                } ]
+            } ],
+            "objects" : {
+                "objectA2" : {
+                    "area" : [ 200, 300, 50, 30 ]
+                },
+                "other-object" : {
+                    "area" : [ 1, 1, 90, 100 ]
+                },
+                "objectB2" : {
+                    "area" : [ 200, 300, 50, 30 ]
+                },
+                "objectB1" : {
+                    "area" : [ 10, 10, 100, 50 ]
+                },
+                "objectA1" : {
+                    "area" : [ 10, 10, 100, 50 ]
+                }
+            },
+            "screenshot" : "layout-1-screenshot.png",
+            "type" : "layout"
+        } ]
+    }
+};
+    </script>
+    <script>
+
+        $(function () {
+            var galenReport = createGalenReport();
+            galenReport.render("main", reportData);
+        });
+    </script>
+</head>
+<body>
+<script id="report-tpl" type="text/x-handlebars-template">
+    <ul class="report-nodes">
+        {{#each report.nodes}}
+        {{renderNode this}}
+        {{/each}}
+    </ul>
+</script>
+<script id="report-node-tpl" type="text/x-handlebars-template">
+    <li>
+        <span class="report-time">{{formatReportTime time}}</span>
+        <a class="expand-link node-expand-button node-status-{{status}} contains-children-{{hasChildElements nodes}} collapsed" href="#">{{status}}</a>
+        <div class="node-name node-status-{{status}}">{{name}}</div>
+        {{#if attachments}}
+        <ul class="report-node-attachments">
+            {{#each attachments}}
+            <li>
+                <a class="icon-sprite-before node-attachment" href="{{this}}">{{this}}</a>
             </li>
+            {{/each}}
         </ul>
-    </body>
+        {{/if}}
+        <div class="node-details expand-container">
+            {{#if nodes}}
+            <ul class="report-nodes">
+                {{#each nodes}}
+                {{renderNode this}}
+                {{/each}}
+            </ul>
+            {{/if}}
+        </div>
+    </li>
+</script>
+<script id="report-node-text-tpl" type="text/x-handlebars-template">
+    <li>
+        <div class="node-simple-text">
+            {{text}}
+        </div>
+    </li>
+</script>
+<script id="report-layout-tpl" type="text/x-handlebars-template">
+    <li>
+        <span class="report-time">{{formatReportTime time}}</span>
+        <a class="expand-link node-expand-button node-status-label node-status-info contains-children-true collapsed" href="#">INFO</a>
+        <div class="node-name">{{name}}</div>
+        <div class="node-details expand-container">
+            {{renderSublayout this}}
+        </div>
+    </li>
+</script>
+<script id="report-layout-sublayout-tpl" type="text/x-handlebars-template">
+    <div class="layout-report" data-layout-id="{{layoutId}}" data-screenshot="{{screenshot}}">
+        <ul class="layout-sections">
+            {{#each sections}}
+            {{renderLayoutSection this}}
+            {{/each}}
+        </ul>
+    </div>
+</script>
+<script id="report-layout-section-tpl" type="text/x-handlebars-template">
+    <li>
+        <a class="layout-section icon-sprite-before expand-link contains-children-true" href="#">{{name}}</a>
+        <div class="layout-details expand-container">
+            {{#if sections}}
+            <ul class="layout-sections">
+                {{#each sections}}
+                {{renderLayoutSection this}}
+                {{/each}}
+            </ul>
+            {{/if}}
+            {{#if objects}}
+            <ul class="layout-objects">
+                {{#each objects}}
+                {{renderLayoutObject this}}
+                {{/each}}
+            </ul>
+            {{/if}}
+        </div>
+    </li>
+</script>
+
+<script id="report-layout-object-tpl" type="text/x-handlebars-template">
+    <li>
+        <a class="layout-object icon-sprite-before expand-link contains-children-true" href="#">{{name}}</a>
+        {{#if checks}}
+        <ul class="layout-checks expand-container">
+            {{#each checks}}
+            {{renderLayoutCheck this}}
+            {{/each}}
+        </ul>
+        {{/if}}
+    </li>
+</script>
+<script id="report-layout-check-tpl" type="text/x-handlebars-template">
+    <li>
+        <a class="layout-check icon-sprite-before layout-check-status-{{status}}" href="#"
+           data-highlight-objects="{{commaSeparated highlight}}"
+           title="{{location}}"
+                >{{name}}</a>
+
+        {{#if errors}}
+        <div class="layout-check-error-message">
+            {{#if image-comparison}}
+            <a class="image-comparison-link"
+               data-actual-image="{{image-comparison.actual}}"
+               data-expected-image="{{image-comparison.expected}}"
+               data-map-image="{{image-comparison.comparison-map}}"
+               href="#">Show image comparison</a>
+            {{/if}}
+            <div class="layout-check-error-message-text">
+                <ul>
+                    {{#each errors}}
+                    <li>{{this}}</li>
+                    {{/each}}
+                </ul>
+            </div>
+        </div>
+        {{/if}}
+
+        {{#if sublayout}}
+        {{renderSublayout sublayout}}
+        {{/if}}
+    </li>
+</script>
+<script id="screenshot-popup-tpl" type="text/x-handlebars-template">
+    <div class="screenshot-canvas">
+        <img src="{{screenshot}}"/>
+        {{#each objects}}
+        <div class="canvas-rect" style="left: {{area.left}}px; top: {{area.top}}px; width: {{area.width}}px; height: {{area.height}}px; border-color: {{color}};">
+            <div class="canvas-rect-wrapper">
+                <div class="canvas-rect-hint" style="background: {{color}};">{{@key}}</div>
+            </div>
+        </div>
+        {{/each}}
+    </div>
+</script>
+<script id="image-comparison-tpl" type="text/x-handlebars-template">
+    <div class="image-comparison">
+        <h5>Actual</h5>
+        <img src="{{actual}}"/>
+
+        <h5>Expected</h5>
+        <img src="{{expected}}"/>
+
+        <h5>Comparison map</h5>
+        <img src="{{map}}"/>
+    </div>
+</script>
+
+
+<div id="menu">
+    <ul>
+        <li><a class="menu-op-expand-all" href="#">Expand All</a></li>
+        <li><a class="menu-op-collapse-all" href="#">Collapse All</a></li>
+        <li><a class="menu-op-expand-errors" href="#">Expand Errors</a></li>
+    </ul>
+</div>
+<h2>Some test</h2>
+<div id="main"></div>
+<div id="screen-shadow"></div>
+<div id="popup" class="popup">
+    <div class="popup-wrapper">
+        <a class="popup-close-link" href="#">close</a>
+        <div class="popup-content"></div>
+    </div>
+</div>
+<div id="notification" class="notification">
+    <div class="notification-wrapper">
+        <a class="notification-close-link" href="#">close</a>
+        <div class="notification-summary"></div>
+        <div class="notification-message"></div>
+    </div>
+</div>
+</body>
 </html>

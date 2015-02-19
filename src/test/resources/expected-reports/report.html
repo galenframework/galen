@@ -1,17 +1,48 @@
 <html>
     <head>
-        <title>Galen Report</title>
+        <title>Galen Reports</title>
+        <link rel="stylesheet" type="text/css" href="report.css"></link>
         <link rel="stylesheet" type="text/css" href="tablesorter.css"></link>
-        <link rel="stylesheet" type="text/css" href="galen-report.css"></link>
-        <script src="jquery-1.10.2.min.js"></script>
+        <script src="jquery-1.11.2.min.js"></script>
+        <script src="handlebars-v2.0.0.js"></script>
         <script src="tablesorter.js"></script>
         <script src="galen-report.js"></script>
+        <script>
+var reportData = {
+    "tests" : [ {
+        "name" : "Home page test",
+        "startedAt" : 1404681346000,
+        "endedAt" : 1404681416000,
+        "failed" : true,
+        "statistic" : {
+            "passed" : 7,
+            "errors" : 4,
+            "warnings" : 1,
+            "total" : 12
+        },
+        "testId" : "1-home-page-test",
+        "failed" : true,
+        "duration" : 70000,
+        "durationPretty" : "1m 10s"
+    } ]
+};
+
+        </script>
+        <script>
+            $(function () {
+                var galenReport = createGalenTestOverview();
+                galenReport.render("main", reportData);
+            });
+        </script>
     </head>
     <body>
-        <script>$(function() {Galen.formatMainOverview();});</script>
-        <div class="suites-overview">
-            <h1>Galen Report</h1>
-            <table class="suites tablesorter">
+
+    <div id="main">
+    </div>
+    <script id="main-overview" type="text/x-handlebars-template">
+        <div class="tests-overview">
+            <h2>Galen Test Report</h2>
+            <table class="tests tablesorter">
                 <thead>
                     <tr>
                         <th>Test</th>
@@ -21,22 +52,29 @@
                         <th>Total</th>
                         <th>Started</th>
                         <th>Duration</th>
+                        <th></th>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr class="suite">
+                    {{#each tests}}
+                    <tr class="test">
                         <td class="suite-link">
-                            <a href="report-1-home-page-test.html">Home page test</a>
+                            <a href="{{testId}}.html">{{name}}</a>
                         </td>
-                        <td class="status passed">6</td>
-                        <td class="status failed">4</td>
-                        <td class="status warnings">1</td>
-                        <td class="status total">11</td>
-                        <td class="time">2014-07-06 23:15:46</td>
-                        <td class="time">1m 10s</td>
+                        <td class="status passed">{{statistic.passed}}</td>
+                        <td class="status failed">{{statistic.errors}}</td>
+                        <td class="status warnings">{{statistic.warnings}}</td>
+                        <td class="status total">{{statistic.total}}</td>
+                        <td class="time">{{formatDateTime startedAt}}</td>
+                        <td class="time">{{durationPretty}}</td>
+                        <td class="progressbar">
+                            {{renderProgressBar statistic}}
+                        </td>
                     </tr>
+                    {{/each}}
                 </tbody>
             </table>
         </div>
+    </script>
     </body>
 </html>

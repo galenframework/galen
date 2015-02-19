@@ -19,13 +19,13 @@ import static java.util.Arrays.asList;
 import static org.apache.commons.io.FileUtils.readFileToString;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.contains;
+import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.Matchers.is;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintStream;
-import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Field;
 import java.util.Date;
 import java.util.LinkedList;
@@ -44,8 +44,8 @@ import net.mindengine.galen.reports.nodes.LayoutReportNode;
 import net.mindengine.galen.reports.LayoutReportListener;
 
 import org.apache.commons.io.IOUtils;
-import org.hamcrest.MatcherAssert;
 import org.testng.annotations.AfterMethod;
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import com.google.common.io.Files;
@@ -60,14 +60,15 @@ public class ReportingTest {
         System.getProperties().remove(GALEN_LOG_LEVEL);
     }
     
-    
+
+    @BeforeMethod
+    public void resetUniqueId() throws NoSuchFieldException, IllegalAccessException {
+        resetUniqueIdForFileTempStorage();
+    }
 
 
     @Test
     public void shouldReport_inJsonFormat() throws Exception {
-        resetUniqueIdForFileTempStorage();
-
-
         String reportPath = Files.createTempDir().getAbsolutePath() + "/json-report";
         List<GalenTestInfo> testInfos = new LinkedList<GalenTestInfo>();
         GalenTestInfo testInfo = new GalenTestInfo("Home page test", null);
@@ -165,10 +166,10 @@ public class ReportingTest {
         new HtmlReportBuilder().build(testInfos, reportDirPath);
         
         String expectedSuite1Html = trimEveryLine(IOUtils.toString(getClass().getResourceAsStream("/expected-reports/test-with-attachment.html")));
-        String realSuite1Html = trimEveryLine(readFileToString(new File(reportDirPath + "/report-1-home-page-test.html")));
+        String realSuite1Html = trimEveryLine(readFileToString(new File(reportDirPath + "/1-home-page-test.html")));
         Assert.assertEquals(expectedSuite1Html, realSuite1Html);
         
-        assertThat("Should place attachment file in same folder", new File(reportDirPath + "/report-1-home-page-test-attachment-1-custom.txt").exists(), is(true));
+        assertThat("Should place attachment file in same folder", new File(reportDirPath + "/file-1-custom.txt").exists(), is(true));
     }
     
     @Test public void shouldReport_inHtmlFormat_successfully_andSplitFiles_perTest() throws IOException, TemplateException {
@@ -185,8 +186,12 @@ public class ReportingTest {
 
 
 
-        report.addNode(new LayoutReportNode(new FileTempStorage("test"), layoutReport, "check layout"));
-        report.getNodes().get(0).setTime(new Date(1404681346000L));
+        report.info("Just a simple info node with attachment")
+                .withAttachment("some-file.txt", File.createTempFile("some-file", ".txt"))
+                .setTime(new Date(1404681346001L));
+
+        report.addNode(new LayoutReportNode(report.getFileStorage(), layoutReport, "check layout"))
+                .setTime(new Date(1404681346002L));
 
 
         testInfo.setReport(report);
@@ -202,20 +207,25 @@ public class ReportingTest {
         Assert.assertEquals(expectedGeneralHtml, realGeneralHtml);
         
         String expectedSuite1Html = trimEveryLine(IOUtils.toString(getClass().getResourceAsStream("/expected-reports/test-1.html")));
-        String realSuite1Html = trimEveryLine(readFileToString(new File(reportDirPath + "/report-1-home-page-test.html")));
+        String realSuite1Html = trimEveryLine(readFileToString(new File(reportDirPath + "/1-home-page-test.html")));
         Assert.assertEquals(expectedSuite1Html, realSuite1Html);
-        
-        assertThat("Should place screenshot 1 in same folder", new File(reportDirPath + "/report-1-home-page-test-screenshot-1.png").exists(), is(true));
 
-        assertThat("Should place image comparison image as an attachment to the report",
-                new File(reportDirPath + "/report-1-home-page-test/imgs-button-sample-correct.png").exists(), is(true));
-
-        assertThat("Should place image comparison map image as an attachment to the report",
-                new File(reportDirPath + "/report-1-home-page-test/objectB1-1.map.png").exists(), is(true));
-        
-        assertThat("Should place css same folder", new File(reportDirPath + "/galen-report.css").exists(), is(true));
-        assertThat("Should place js same folder", new File(reportDirPath + "/galen-report.js").exists(), is(true));
-        assertThat("Should place jquery same folder", new File(reportDirPath + "/jquery-1.10.2.min.js").exists(), is(true));
+        assertThat("Report folder contains files", asList(new File(reportDirPath).list()), containsInAnyOrder(
+                "1-home-page-test.html",
+                "file-5-some-file.txt",
+                "layout-1-screenshot.png",
+                "layout-2-objectB1-actual.png",
+                "layout-3-objectB1-expected.png",
+                "layout-4-objectB1-map.png",
+                "report.html",
+                "handlebars-v2.0.0.js",
+                "galen-report.js",
+                "report.css",
+                "icon-sprites.png",
+                "jquery-1.11.2.min.js",
+                "tablesorter.js",
+                "tablesorter.css"
+        ));
     }
 
     private String trimEveryLine(String text) {

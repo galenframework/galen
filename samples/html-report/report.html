@@ -1,46 +1,14 @@
 <html>
     <head>
         <title>Galen Reports</title>
-        <link rel="stylesheet" type="text/css" href="overview.css"></link>
+        <link rel="stylesheet" type="text/css" href="report.css"></link>
         <link rel="stylesheet" type="text/css" href="tablesorter.css"></link>
         <script src="jquery-1.11.2.min.js"></script>
         <script src="handlebars-v2.0.0.js"></script>
-        <script src="galen-overview.js"></script>
         <script src="tablesorter.js"></script>
+        <script src="galen-report.js"></script>
         <script>
-var reportData = {
-    "tests" : [ {
-        "name" : "Home page test 1",
-        "startedAt" : 1404681346000,
-        "endedAt" : 1404681416000,
-        "failed" : true,
-        "testId" : "test-report",
-        "failed" : true,
-        "duration" : 70000,
-        "durationPretty" : "1m 10s",
-        "statistic" : {
-            "passed" : 7,
-            "errors" : 4,
-            "warnings" : 1,
-            "total" : 12
-        }
-    }, {
-        "name" : "Home page test 2",
-        "startedAt" : 1404681346000,
-        "endedAt" : 1404681416000,
-        "failed" : true,
-        "testId" : "1-home-page-test-2",
-        "failed" : false,
-        "duration" : 70000,
-        "durationPretty" : "2m 10s",
-        "statistic" : {
-            "passed" : 20,
-            "errors" : 0,
-            "warnings" : 2,
-            "total" : 12
-        }
-    }]
-};
+var reportData = ##REPORT-DATA##;
 
         </script>
         <script>
@@ -52,11 +20,11 @@ var reportData = {
     </head>
     <body>
 
-    <h2>Galen Test Report</h2>
     <div id="main">
     </div>
     <script id="main-overview" type="text/x-handlebars-template">
         <div class="tests-overview">
+            <h2>Galen Test Report</h2>
             <table class="tests tablesorter">
                 <thead>
                     <tr>
@@ -67,6 +35,7 @@ var reportData = {
                         <th>Total</th>
                         <th>Started</th>
                         <th>Duration</th>
+                        <th></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -81,6 +50,9 @@ var reportData = {
                         <td class="status total">{{statistic.total}}</td>
                         <td class="time">{{formatDateTime startedAt}}</td>
                         <td class="time">{{durationPretty}}</td>
+                        <td class="progressbar">
+                            {{renderProgressBar statistic}}
+                        </td>
                     </tr>
                     {{/each}}
                 </tbody>
