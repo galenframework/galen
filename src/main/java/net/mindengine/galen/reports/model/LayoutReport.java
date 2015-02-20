@@ -39,6 +39,8 @@ public class LayoutReport {
     private Map<String, LayoutObjectDetails> objects = new HashMap<String, LayoutObjectDetails>();
 
     private String screenshot;
+
+    @JsonIgnore
     private List<ValidationResult> validationErrorResults;
 
     /**

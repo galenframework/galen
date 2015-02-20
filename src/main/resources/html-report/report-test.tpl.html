@@ -100,9 +100,9 @@ var reportData = ##REPORT-DATA##;
         <script id="report-layout-object-tpl" type="text/x-handlebars-template">
             <li>
                 <a class="layout-object icon-sprite-before expand-link contains-children-true" href="#">{{name}}</a>
-                {{#if checks}}
+                {{#if specs}}
                     <ul class="layout-checks expand-container">
-                        {{#each checks}}
+                        {{#each specs}}
                             {{renderLayoutCheck this}}
                         {{/each}}
                     </ul>
@@ -113,16 +113,16 @@ var reportData = ##REPORT-DATA##;
             <li>
             <a class="layout-check icon-sprite-before layout-check-status-{{status}}" href="#" 
                 data-highlight-objects="{{commaSeparated highlight}}"
-                title="{{location}}"
+                title="{{place.filePath}}#{{place.lineNumber}}"
                 >{{name}}</a>
 
                 {{#if errors}}
                     <div class="layout-check-error-message">
-                        {{#if image-comparison}}
+                        {{#if imageComparison}}
                         <a class="image-comparison-link" 
-                            data-actual-image="{{image-comparison.actual}}" 
-                            data-expected-image="{{image-comparison.expected}}" 
-                            data-map-image="{{image-comparison.comparison-map}}"
+                            data-actual-image="{{imageComparison.actualImage}}"
+                            data-expected-image="{{imageComparison.expectedImage}}"
+                            data-map-image="{{imageComparison.comparisonMapImage}}"
                             href="#">Show image comparison</a>
                         {{/if}}
                         <div class="layout-check-error-message-text">

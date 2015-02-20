@@ -26,6 +26,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 public class ValidationError {
 
     private List<String> messages;
+
     private ImageComparison imageComparison;
     private boolean onlyWarn;
 

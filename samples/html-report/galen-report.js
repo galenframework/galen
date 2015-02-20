@@ -322,7 +322,7 @@ Handlebars.registerHelper("hasChildElements", function (items1, items2) {
 
 Handlebars.registerHelper("formatReportTime", function (time) {
     if (time !== null && time !== undefined) {
-    var date = new Date(time);
+        var date = new Date(time);
         var hh = date.getUTCHours();
         var mm = date.getUTCMinutes();
         var ss = date.getSeconds();
@@ -333,13 +333,6 @@ Handlebars.registerHelper("formatReportTime", function (time) {
     }
     return "";
 });
-
-function toStringWithLeadingZero(number) {
-    if (number < 10) {
-        return "0" + number;
-    }
-    return number;
-}
 
 Handlebars.registerHelper("formatDateTime", function (time) {
     if (time !== null && time !== undefined) {
@@ -355,6 +348,14 @@ Handlebars.registerHelper("formatDateTime", function (time) {
     }
     return "";
 });
+
+function toStringWithLeadingZero(number) {
+    if (number < 10) {
+        return "0" + number;
+    }
+    return number;
+}
+
 
 Handlebars.registerHelper("renderProgressBar", function (statistic) {
     var total = statistic.passed + statistic.errors + statistic.warnings;

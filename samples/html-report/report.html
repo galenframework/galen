@@ -8,7 +8,39 @@
         <script src="tablesorter.js"></script>
         <script src="galen-report.js"></script>
         <script>
-var reportData = ##REPORT-DATA##;
+var reportData = {
+    "tests" : [ {
+        "name" : "Home page test",
+        "startedAt" : 1404681346000,
+        "endedAt" : 1404681416000,
+        "failed" : true,
+        "statistic" : {
+            "passed" : 7,
+            "errors" : 4,
+            "warnings" : 1,
+            "total" : 12
+        },
+        "testId" : "test-report",
+        "failed" : true,
+        "duration" : 70000,
+        "durationPretty" : "1m 10s"
+    },{
+        "name" : "Home page test 2",
+        "startedAt" : 1404681346000,
+        "endedAt" : 1404681416000,
+        "failed" : true,
+        "statistic" : {
+            "passed" : 3,
+            "errors" : 4,
+            "warnings" : 1,
+            "total" : 6
+        },
+        "testId" : "1-home-page-test",
+        "failed" : true,
+        "duration" : 70000,
+        "durationPretty" : "1m 10s"
+    }] 
+};
 
         </script>
         <script>
