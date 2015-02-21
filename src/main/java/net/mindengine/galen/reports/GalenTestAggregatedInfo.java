@@ -15,9 +15,7 @@
 ******************************************************************************/
 package net.mindengine.galen.reports;
 
-import java.text.SimpleDateFormat;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.annotation.JsonUnwrapped;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 

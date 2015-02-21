@@ -19,6 +19,7 @@ import java.lang.reflect.Method;
 import java.util.Date;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import net.mindengine.galen.tests.GalenEmptyTest;
 import net.mindengine.galen.tests.GalenTest;
 

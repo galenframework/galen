@@ -99,7 +99,7 @@ public class ReportingTest {
 
         // Check that all files from storage were saved in report folder
 
-        assertThat("Report folder contains files", asList(new File(reportPath).list()), contains(
+        assertThat("Report folder contains files", asList(new File(reportPath).list()), containsInAnyOrder(
                 "1-home-page-test.json",
                 "file-5-some-file.txt",
                 "layout-1-screenshot.png",
@@ -165,10 +165,6 @@ public class ReportingTest {
         testInfos.add(testInfo);
         new HtmlReportBuilder().build(testInfos, reportDirPath);
         
-        String expectedSuite1Html = trimEveryLine(IOUtils.toString(getClass().getResourceAsStream("/expected-reports/test-with-attachment.html")));
-        String realSuite1Html = trimEveryLine(readFileToString(new File(reportDirPath + "/1-home-page-test.html")));
-        Assert.assertEquals(expectedSuite1Html, realSuite1Html);
-        
         assertThat("Should place attachment file in same folder", new File(reportDirPath + "/file-1-custom.txt").exists(), is(true));
     }
     
@@ -201,15 +197,6 @@ public class ReportingTest {
 
         new HtmlReportBuilder().build(testInfos, reportDirPath);
         
-        
-        String expectedGeneralHtml = trimEveryLine(IOUtils.toString(getClass().getResourceAsStream("/expected-reports/report.html")));
-        String realGeneralHtml = trimEveryLine(readFileToString(new File(reportDirPath + "/report.html")));
-        Assert.assertEquals(expectedGeneralHtml, realGeneralHtml);
-        
-        String expectedSuite1Html = trimEveryLine(IOUtils.toString(getClass().getResourceAsStream("/expected-reports/test-1.html")));
-        String realSuite1Html = trimEveryLine(readFileToString(new File(reportDirPath + "/1-home-page-test.html")));
-        Assert.assertEquals(expectedSuite1Html, realSuite1Html);
-
         assertThat("Report folder contains files", asList(new File(reportDirPath).list()), containsInAnyOrder(
                 "1-home-page-test.html",
                 "file-5-some-file.txt",
