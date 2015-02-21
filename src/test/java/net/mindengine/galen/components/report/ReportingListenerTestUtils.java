@@ -207,7 +207,16 @@ public class ReportingListenerTestUtils {
                         new ValidationResult(asList(new ValidationObject(new Rect(200, 300, 50, 30), "objectB2"))));
             }
             validationListener.onAfterObject(pageRunner, pageValidation, "objectB2");
-            
+
+            validationListener.onObject(pageRunner, pageValidation, "objectB2"); {
+            validationListener.onSpecSuccess(pageRunner, pageValidation, "objectB2",
+                    new SpecWidth(exact(100))
+                            .withOriginalText("width: 100px")
+                            .withPlace(new Place("specs.spec", 13)),
+                    new ValidationResult(asList(new ValidationObject(new Rect(200, 300, 50, 30), "objectB2"))));
+        }
+            validationListener.onAfterObject(pageRunner, pageValidation, "objectB2");
+
             validationListener.onGlobalError(pageRunner, new FakeException("Some exception here"));
             
             validationListener.onAfterSection(pageRunner, pageValidation, section1);

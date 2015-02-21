@@ -47,4 +47,14 @@ public class LayoutSection {
         this.name = name;
     }
 
+    public LayoutObject findObject(String objectName) {
+        if (objects != null) {
+            for (LayoutObject object : objects) {
+                if (object.getName().equals(objectName)) {
+                    return object;
+                }
+            }
+        }
+        return null;
+    }
 }

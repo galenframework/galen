@@ -64,10 +64,13 @@ public class LayoutReportListener implements ValidationListener {
 
     @Override
     public void onObject(GalenPageRunner pageRunner, PageValidation pageValidation, String objectName) {
-        LayoutObject object = new LayoutObject();
-        object.setName(objectName);
-        currentSection().getObjects().add(object);
-
+        // Searching for the same object if it was already reported
+        LayoutObject object = currentSection().findObject(objectName);
+        if (object == null) {
+            object = new LayoutObject();
+            object.setName(objectName);
+            currentSection().getObjects().add(object);
+        }
         currentReport().setCurrentObject(object);
     }
 

@@ -156,6 +156,14 @@
                         },
                         "name" : "height: 100px",
                         "highlight" : [ "objectB2" ]
+                    }, {
+                        "status" : "info",
+                        "place" : {
+                            "filePath" : "specs.spec",
+                            "lineNumber" : 13
+                        },
+                        "name" : "width: 100px",
+                        "highlight" : [ "objectB2" ]
                     } ]
                 } ]
             } ],
