@@ -40,6 +40,7 @@ import net.mindengine.galen.reports.ConsoleReportingListener;
 import net.mindengine.galen.reports.GalenTestInfo;
 import net.mindengine.galen.reports.HtmlReportBuilder;
 import net.mindengine.galen.reports.TestNgReportBuilder;
+import net.mindengine.galen.reports.json.JsonReportBuilder;
 import net.mindengine.galen.runner.CombinedListener;
 import net.mindengine.galen.runner.CompleteListener;
 import net.mindengine.galen.runner.EventHandler;
@@ -350,6 +351,17 @@ public class GalenMain {
         }
         if (arguments.getHtmlReport() != null) {
             createHtmlReport(arguments.getHtmlReport(), testInfos);
+        }
+        if (arguments.getJsonReport() != null) {
+            createJsonReport(arguments.getJsonReport(), testInfos);
+        }
+    }
+
+    private void createJsonReport(String jsonReport, List<GalenTestInfo> testInfos) {
+        try {
+            new JsonReportBuilder().build(testInfos, jsonReport);
+        } catch (IOException e) {
+            LOG.trace("Failed generating json report", e);
         }
     }
 

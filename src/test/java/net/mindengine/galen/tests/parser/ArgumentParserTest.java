@@ -25,8 +25,6 @@ import java.awt.Dimension;
 import net.mindengine.galen.runner.GalenArguments;
 
 import org.apache.commons.cli.ParseException;
-import org.hamcrest.MatcherAssert;
-import org.hamcrest.Matchers;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
@@ -54,13 +52,16 @@ public class ArgumentParserTest {
             {args("test", "mysuite", 
                             "--recursive", 
                             "--htmlreport", "some.html",
-                            "--testngreport", "testng.xml"), 
+                            "--testngreport", "testng.xml",
+                            "--jsonreport", "json-reports"
+                    ),
                 new GalenArguments()
                     .withAction("test")
                     .withPaths(asList("mysuite"))
                     .withRecursive(true)
                     .withHtmlReport("some.html")
                     .withTestngReport("testng.xml")
+                    .withJsonReport("json-reports")
                     .withIncludedTags(EMPTY_TAGS)
                     .withExcludedTags(EMPTY_TAGS)},
                     

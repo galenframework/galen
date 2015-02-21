@@ -53,6 +53,7 @@ public class GalenArguments {
     private String export;
     private Integer maxWidth;
     private Integer maxHeight;
+    private String jsonReport;
 
     public GalenArguments withAction(String action) {
         this.setAction(action);
@@ -150,6 +151,7 @@ public class GalenArguments {
         options.addOption("e", "exclude", true, "Tags for sections that should be excluded from test run");
         options.addOption("s", "size", true, "Browser screen size");
         options.addOption("h", "htmlreport", true, "Path for html output report");
+        options.addOption("J", "jsonreport", true, "Path for json report");
         options.addOption("g", "testngreport", true, "Path for testng xml report");
         options.addOption("r", "recursive", false, "Flag for recursive tests scan");
         options.addOption("p", "parallel-suites", true, "Amount of suites to be run in parallel");
@@ -205,6 +207,7 @@ public class GalenArguments {
         galen.setExport(cmd.getOptionValue("E"));
         galen.setMaxWidth(parseOptionalInt(cmd.getOptionValue("W")));
         galen.setMaxHeight(parseOptionalInt(cmd.getOptionValue("H")));
+        galen.setJsonReport(cmd.getOptionValue("J"));
         
         verifyArguments(galen);
         return galen;
@@ -322,22 +325,23 @@ public class GalenArguments {
     @Override
     public int hashCode() {
         return new HashCodeBuilder(13, 19)
-        .append(action)
-        .append(paths)
-        .append(recursive)
-        .append(javascript)
-        .append(includedTags)
-        .append(excludedTags)
-        .append(screenSize)
-        .append(htmlReport)
-        .append(testngReport)
-        .append(url)
-        .append(parallelSuites)
-        .append(filter)
-        .append(export)
-        .append(maxWidth)
-        .append(maxHeight)
-        .toHashCode();
+            .append(action)
+            .append(paths)
+            .append(recursive)
+            .append(javascript)
+            .append(includedTags)
+            .append(excludedTags)
+            .append(screenSize)
+            .append(htmlReport)
+            .append(testngReport)
+            .append(url)
+            .append(parallelSuites)
+            .append(filter)
+            .append(export)
+            .append(maxWidth)
+            .append(maxHeight)
+            .append(jsonReport)
+            .toHashCode();
     }
     
     @Override
@@ -369,6 +373,7 @@ public class GalenArguments {
             .append(export, rhs.export)
             .append(maxWidth, rhs.maxWidth)
             .append(maxHeight, rhs.maxHeight)
+            .append(jsonReport, rhs.jsonReport)
             .isEquals();
     }
     
@@ -390,6 +395,7 @@ public class GalenArguments {
             .append("export", export)
             .append("maxWidth", maxWidth)
             .append("maxHeight", maxHeight)
+            .append("jsonReport", jsonReport)
             .toString();
     }
 
@@ -516,5 +522,18 @@ public class GalenArguments {
 
     public Integer getMaxHeight() {
         return maxHeight;
+    }
+
+    public GalenArguments withJsonReport(String jsonReportPath) {
+        setJsonReport(jsonReportPath);
+        return this;
+    }
+
+    public void setJsonReport(String jsonReport) {
+        this.jsonReport = jsonReport;
+    }
+
+    public String getJsonReport() {
+        return jsonReport;
     }
 }

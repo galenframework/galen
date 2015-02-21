@@ -17,10 +17,7 @@ package net.mindengine.galen.tests.runner;
 
 import static java.util.Arrays.asList;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.contains;
-import static org.hamcrest.Matchers.containsString;
-import static org.hamcrest.Matchers.hasItems;
-import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.*;
 
 import java.io.File;
 import java.io.IOException;
@@ -43,10 +40,12 @@ import com.google.common.io.Files;
 
 public class GalenMainTest {
 
-    @Test public void shouldRun_javascriptTest() throws Exception {
+    @Test public void shouldRun_javascriptTest_andGenerateReports() throws Exception {
         File reportsDir = Files.createTempDir();
         String htmlReportPath = reportsDir.getAbsolutePath();
         String testngReportPath = reportsDir.getAbsolutePath() + "/testng-report.html";
+        String jsonReportPath = reportsDir.getAbsolutePath() + "/json-reports";
+
 
         JsTestRegistry.get().clear();
         
@@ -55,6 +54,7 @@ public class GalenMainTest {
             .withPaths(asList(getClass().getResource("/js-tests/simple-with-error.test.js").getFile()))
             .withHtmlReport(htmlReportPath)
             .withTestngReport(testngReportPath)
+            .withJsonReport(jsonReportPath)
         );
         
         assertThat(JsTestRegistry.get().getEvents().size(), is(3));
@@ -80,6 +80,17 @@ public class GalenMainTest {
         assertThat(htmlReportContent, containsString("\"testId\" : \"1-test-number-1\""));
         assertThat(htmlReportContent, containsString("\"testId\" : \"2-test-number-2\""));
         assertThat(htmlReportContent, containsString("\"testId\" : \"3-test-number-3\""));
+
+
+
+        File jsonReportDir = new File(jsonReportPath);
+        assertThat("json-reports folder should be created", jsonReportDir.exists() && jsonReportDir.isDirectory(), is(true));
+
+        assertThat("json-reports folder contains files", asList(jsonReportDir.list()), containsInAnyOrder(
+                "1-test-number-1.json",
+                "2-test-number-2.json",
+                "3-test-number-3.json",
+                "report.json"));
     }
     
     @Test public void shouldRun_javascriptTestWithEvents() throws Exception {
