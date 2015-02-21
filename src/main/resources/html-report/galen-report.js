@@ -76,10 +76,10 @@ function collectObjectsToHighlight(objects, objectNames) {
 
             collected[objectName] = {
                 area: {
-                    left: area[0] - 1,
-                    top: area[1] - 1,
-                    width: area[2] + 2,
-                    height: area[3] + 2
+                    left: area[0] - 3,
+                    top: area[1] - 3,
+                    width: area[2],
+                    height: area[3]
                 },
                 color: colorPicker.pickColor()
             };
