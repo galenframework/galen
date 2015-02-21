@@ -1,0 +1,794 @@
+<html>
+    <head>
+        <title>Galen Reports</title>
+        <link rel="stylesheet" type="text/css" href="report.css"></link>
+        <script src="jquery-1.11.2.min.js"></script>
+        <script src="handlebars-v2.0.0.js"></script>
+        <script src="galen-report.js"></script>
+        <script>
+var reportData = {
+  "testId" : "8-login-page-on-mobile-device",
+  "name" : "Login page on mobile device",
+  "report" : {
+    "nodes" : [ {
+      "name" : "Basic layout check",
+      "status" : "info",
+      "nodes" : [ {
+        "name" : "Click loginButton",
+        "status" : "info",
+        "nodes" : [ {
+          "name" : "css: #welcome-page .button-login",
+          "type" : "text"
+        } ],
+        "time" : 1424509214381,
+        "type" : "node"
+      }, {
+        "name" : "Check layout: specs/loginPage.spec included tags: mobile",
+        "status" : "info",
+        "time" : 1424509215609,
+        "sections" : [ {
+          "name" : "Header",
+          "objects" : [ {
+            "name" : "header",
+            "specs" : [ {
+              "status" : "info",
+              "place" : {
+                "filePath" : "specs/common.spec",
+                "lineNumber" : 22
+              },
+              "name" : "inside: screen 0px top",
+              "highlight" : [ "header", "screen" ]
+            }, {
+              "status" : "info",
+              "place" : {
+                "filePath" : "specs/common.spec",
+                "lineNumber" : 23
+              },
+              "name" : "centered horizontally inside: screen 1px",
+              "highlight" : [ "header", "screen" ]
+            }, {
+              "status" : "info",
+              "place" : {
+                "filePath" : "specs/common.spec",
+                "lineNumber" : 24
+              },
+              "name" : "height: ~ 70px",
+              "highlight" : [ "header" ]
+            } ]
+          }, {
+            "name" : "header-logo",
+            "specs" : [ {
+              "status" : "info",
+              "place" : {
+                "filePath" : "specs/common.spec",
+                "lineNumber" : 27
+              },
+              "name" : "inside: header 5 to 15px top, 0 to 10px left",
+              "highlight" : [ "header-logo", "header" ]
+            }, {
+              "status" : "info",
+              "place" : {
+                "filePath" : "specs/common.spec",
+                "lineNumber" : 28
+              },
+              "name" : "near: header-text 5 to 30px left",
+              "highlight" : [ "header-logo", "header-text" ]
+            } ]
+          }, {
+            "name" : "header-text",
+            "specs" : [ {
+              "status" : "info",
+              "place" : {
+                "filePath" : "specs/common.spec",
+                "lineNumber" : 31
+              },
+              "name" : "inside: header 10 to 25px top",
+              "highlight" : [ "header-text", "header" ]
+            } ]
+          } ]
+        }, {
+          "name" : "Header",
+          "objects" : [ {
+            "name" : "header-text",
+            "specs" : [ {
+              "status" : "info",
+              "place" : {
+                "filePath" : "specs/common.spec",
+                "lineNumber" : 46
+              },
+              "name" : "text is: Sample Website",
+              "highlight" : [ "header-text" ]
+            } ]
+          } ]
+        }, {
+          "name" : "Menu",
+          "objects" : [ {
+            "name" : "menu",
+            "specs" : [ {
+              "status" : "info",
+              "place" : {
+                "filePath" : "specs/common.spec",
+                "lineNumber" : 54
+              },
+              "name" : "centered horizontally inside: screen 1px",
+              "highlight" : [ "menu", "screen" ]
+            }, {
+              "status" : "info",
+              "place" : {
+                "filePath" : "specs/common.spec",
+                "lineNumber" : 55
+              },
+              "name" : "below: header ~ 0px",
+              "highlight" : [ "menu", "header" ]
+            } ]
+          } ]
+        }, {
+          "name" : "Menu",
+          "objects" : [ {
+            "name" : "menu-item-1",
+            "specs" : [ {
+              "status" : "info",
+              "place" : {
+                "filePath" : "specs/common.spec",
+                "lineNumber" : 88
+              },
+              "name" : "width: 48 to 50% of screen/width",
+              "highlight" : [ "menu-item-1" ]
+            }, {
+              "status" : "info",
+              "place" : {
+                "filePath" : "specs/common.spec",
+                "lineNumber" : 92
+              },
+              "name" : "above: menu-item-3 0 to 5px",
+              "highlight" : [ "menu-item-1", "menu-item-3" ]
+            }, {
+              "status" : "info",
+              "place" : {
+                "filePath" : "specs/common.spec",
+                "lineNumber" : 96
+              },
+              "name" : "near: menu-item-2  0 to 5 px left",
+              "highlight" : [ "menu-item-1", "menu-item-2" ]
+            } ]
+          }, {
+            "name" : "menu-item-2",
+            "specs" : [ {
+              "status" : "info",
+              "place" : {
+                "filePath" : "specs/common.spec",
+                "lineNumber" : 88
+              },
+              "name" : "width: 48 to 50% of screen/width",
+              "highlight" : [ "menu-item-2" ]
+            }, {
+              "status" : "info",
+              "place" : {
+                "filePath" : "specs/common.spec",
+                "lineNumber" : 92
+              },
+              "name" : "above: menu-item-4 0 to 5px",
+              "highlight" : [ "menu-item-2", "menu-item-4" ]
+            } ]
+          }, {
+            "name" : "menu-item-3",
+            "specs" : [ {
+              "status" : "info",
+              "place" : {
+                "filePath" : "specs/common.spec",
+                "lineNumber" : 88
+              },
+              "name" : "width: 48 to 50% of screen/width",
+              "highlight" : [ "menu-item-3" ]
+            }, {
+              "status" : "info",
+              "place" : {
+                "filePath" : "specs/common.spec",
+                "lineNumber" : 96
+              },
+              "name" : "near: menu-item-4  0 to 5 px left",
+              "highlight" : [ "menu-item-3", "menu-item-4" ]
+            } ]
+          }, {
+            "name" : "menu-item-4",
+            "specs" : [ {
+              "status" : "info",
+              "place" : {
+                "filePath" : "specs/common.spec",
+                "lineNumber" : 88
+              },
+              "name" : "width: 48 to 50% of screen/width",
+              "highlight" : [ "menu-item-4" ]
+            } ]
+          } ]
+        }, {
+          "name" : "Content",
+          "objects" : [ {
+            "name" : "content",
+            "specs" : [ {
+              "status" : "info",
+              "place" : {
+                "filePath" : "specs/common.spec",
+                "lineNumber" : 105
+              },
+              "name" : "below: menu ~ 0px",
+              "highlight" : [ "content", "menu" ]
+            }, {
+              "status" : "info",
+              "place" : {
+                "filePath" : "specs/common.spec",
+                "lineNumber" : 106
+              },
+              "name" : "centered horizontally inside: screen 1px",
+              "highlight" : [ "content", "screen" ]
+            } ]
+          } ]
+        }, {
+          "name" : "Footer",
+          "objects" : [ {
+            "name" : "footer",
+            "specs" : [ {
+              "status" : "info",
+              "place" : {
+                "filePath" : "specs/common.spec",
+                "lineNumber" : 118
+              },
+              "name" : "height: ~ 200px",
+              "highlight" : [ "footer" ]
+            }, {
+              "status" : "info",
+              "place" : {
+                "filePath" : "specs/common.spec",
+                "lineNumber" : 119
+              },
+              "name" : "below: content 0px",
+              "highlight" : [ "footer", "content" ]
+            } ]
+          } ]
+        }, {
+          "name" : "Login box",
+          "objects" : [ {
+            "name" : "login-box",
+            "specs" : [ {
+              "status" : "info",
+              "place" : {
+                "filePath" : "specs/loginPage.spec",
+                "lineNumber" : 21
+              },
+              "name" : "centered horizontally inside: content 1px",
+              "highlight" : [ "login-box", "content" ]
+            }, {
+              "status" : "info",
+              "place" : {
+                "filePath" : "specs/loginPage.spec",
+                "lineNumber" : 22
+              },
+              "name" : "below: menu 20 to 45px",
+              "highlight" : [ "login-box", "menu" ]
+            } ]
+          }, {
+            "name" : "login-caption",
+            "specs" : [ {
+              "status" : "info",
+              "place" : {
+                "filePath" : "specs/loginPage.spec",
+                "lineNumber" : 25
+              },
+              "name" : "height: 20 to 35px",
+              "highlight" : [ "login-caption" ]
+            }, {
+              "status" : "info",
+              "place" : {
+                "filePath" : "specs/loginPage.spec",
+                "lineNumber" : 26
+              },
+              "name" : "text is: Login",
+              "highlight" : [ "login-caption" ]
+            } ]
+          }, {
+            "name" : "username-textfield",
+            "specs" : [ {
+              "status" : "info",
+              "place" : {
+                "filePath" : "specs/loginPage.spec",
+                "lineNumber" : 29
+              },
+              "name" : "height: 25 to 35 px",
+              "highlight" : [ "username-textfield" ]
+            }, {
+              "status" : "info",
+              "place" : {
+                "filePath" : "specs/loginPage.spec",
+                "lineNumber" : 32
+              },
+              "name" : "below: login-caption 5 to 15px",
+              "highlight" : [ "username-textfield", "login-caption" ]
+            }, {
+              "status" : "info",
+              "place" : {
+                "filePath" : "specs/loginPage.spec",
+                "lineNumber" : 33
+              },
+              "name" : "aligned vertically all: password-textfield",
+              "highlight" : [ "username-textfield", "password-textfield" ]
+            } ]
+          }, {
+            "name" : "password-textfield",
+            "specs" : [ {
+              "status" : "info",
+              "place" : {
+                "filePath" : "specs/loginPage.spec",
+                "lineNumber" : 29
+              },
+              "name" : "height: 25 to 35 px",
+              "highlight" : [ "password-textfield" ]
+            }, {
+              "status" : "info",
+              "place" : {
+                "filePath" : "specs/loginPage.spec",
+                "lineNumber" : 36
+              },
+              "name" : "below: username-textfield 5 to 15px",
+              "highlight" : [ "password-textfield", "username-textfield" ]
+            }, {
+              "status" : "info",
+              "place" : {
+                "filePath" : "specs/loginPage.spec",
+                "lineNumber" : 37
+              },
+              "name" : "aligned vertically left: login-button",
+              "highlight" : [ "password-textfield", "login-button" ]
+            } ]
+          }, {
+            "name" : "login-button",
+            "specs" : [ {
+              "status" : "info",
+              "place" : {
+                "filePath" : "specs/loginPage.spec",
+                "lineNumber" : 40
+              },
+              "name" : "height: 40 to 50 px",
+              "highlight" : [ "login-button" ]
+            }, {
+              "status" : "info",
+              "place" : {
+                "filePath" : "specs/loginPage.spec",
+                "lineNumber" : 43
+              },
+              "name" : "text is: Login",
+              "highlight" : [ "login-button" ]
+            } ]
+          }, {
+            "name" : "cancel-button",
+            "specs" : [ {
+              "status" : "info",
+              "place" : {
+                "filePath" : "specs/loginPage.spec",
+                "lineNumber" : 40
+              },
+              "name" : "height: 40 to 50 px",
+              "highlight" : [ "cancel-button" ]
+            }, {
+              "status" : "info",
+              "place" : {
+                "filePath" : "specs/loginPage.spec",
+                "lineNumber" : 46
+              },
+              "name" : "text is: Cancel",
+              "highlight" : [ "cancel-button" ]
+            } ]
+          } ]
+        }, {
+          "name" : "Login box",
+          "objects" : [ {
+            "name" : "login-box",
+            "specs" : [ {
+              "status" : "info",
+              "place" : {
+                "filePath" : "specs/loginPage.spec",
+                "lineNumber" : 74
+              },
+              "name" : "inside: screen ~ 20px left right",
+              "highlight" : [ "login-box", "screen" ]
+            } ]
+          }, {
+            "name" : "username-textfield",
+            "specs" : [ {
+              "status" : "info",
+              "place" : {
+                "filePath" : "specs/loginPage.spec",
+                "lineNumber" : 77
+              },
+              "name" : "inside: login-box 0px left right",
+              "highlight" : [ "username-textfield", "login-box" ]
+            } ]
+          }, {
+            "name" : "password-textfield",
+            "specs" : [ {
+              "status" : "info",
+              "place" : {
+                "filePath" : "specs/loginPage.spec",
+                "lineNumber" : 77
+              },
+              "name" : "inside: login-box 0px left right",
+              "highlight" : [ "password-textfield", "login-box" ]
+            } ]
+          }, {
+            "name" : "login-caption",
+            "specs" : [ {
+              "status" : "info",
+              "place" : {
+                "filePath" : "specs/loginPage.spec",
+                "lineNumber" : 80
+              },
+              "name" : "inside: login-box 0px top, 0px left",
+              "highlight" : [ "login-caption", "login-box" ]
+            } ]
+          }, {
+            "name" : "login-button",
+            "specs" : [ {
+              "status" : "info",
+              "place" : {
+                "filePath" : "specs/loginPage.spec",
+                "lineNumber" : 83
+              },
+              "name" : "inside: login-box 0px left right",
+              "highlight" : [ "login-button", "login-box" ]
+            }, {
+              "status" : "info",
+              "place" : {
+                "filePath" : "specs/loginPage.spec",
+                "lineNumber" : 84
+              },
+              "name" : "above: cancel-button  4 to 10px",
+              "highlight" : [ "login-button", "cancel-button" ]
+            }, {
+              "status" : "info",
+              "place" : {
+                "filePath" : "specs/loginPage.spec",
+                "lineNumber" : 85
+              },
+              "name" : "aligned vertically all: cancel-button",
+              "highlight" : [ "login-button", "cancel-button" ]
+            } ]
+          } ]
+        } ],
+        "objects" : {
+          "menu-item-4" : {
+            "area" : [ 217, 134, 213, 64 ]
+          },
+          "screen" : {
+            "area" : [ 0, 0, 435, 798 ]
+          },
+          "login-button" : {
+            "area" : [ 20, 379, 395, 46 ]
+          },
+          "menu" : {
+            "area" : [ 0, 70, 435, 128 ]
+          },
+          "cancel-button" : {
+            "area" : [ 20, 435, 395, 46 ]
+          },
+          "password-textfield" : {
+            "area" : [ 20, 325, 395, 34 ]
+          },
+          "login-caption" : {
+            "area" : [ 20, 238, 395, 33 ]
+          },
+          "menu-item-1" : {
+            "area" : [ 0, 70, 213, 64 ]
+          },
+          "header" : {
+            "area" : [ 0, 0, 435, 70 ]
+          },
+          "menu-item-2" : {
+            "area" : [ 217, 70, 213, 64 ]
+          },
+          "menu-item-3" : {
+            "area" : [ 0, 134, 213, 64 ]
+          },
+          "content" : {
+            "area" : [ 0, 198, 435, 400 ]
+          },
+          "footer" : {
+            "area" : [ 0, 598, 435, 200 ]
+          },
+          "header-logo" : {
+            "area" : [ 0, 13, 48, 48 ]
+          },
+          "username-textfield" : {
+            "area" : [ 20, 281, 395, 34 ]
+          },
+          "header-text" : {
+            "area" : [ 70, 20, 262, 40 ]
+          },
+          "login-box" : {
+            "area" : [ 20, 238, 395, 243 ]
+          }
+        },
+        "screenshot" : "layout-26-screenshot.png",
+        "type" : "layout"
+      } ],
+      "time" : 1424509214321,
+      "type" : "node"
+    }, {
+      "name" : "Checking error box",
+      "status" : "info",
+      "nodes" : [ {
+        "name" : "Type text \"qweqwe\" to username",
+        "status" : "info",
+        "nodes" : [ {
+          "name" : "css: input[name='login.username']",
+          "type" : "text"
+        } ],
+        "time" : 1424509215610,
+        "type" : "node"
+      }, {
+        "name" : "Click loginButton",
+        "status" : "info",
+        "nodes" : [ {
+          "name" : "css: button.button-login",
+          "type" : "text"
+        } ],
+        "time" : 1424509215663,
+        "type" : "node"
+      }, {
+        "name" : "Check layout: specs/loginPage-withErrorMessage.spec included tags: mobile",
+        "status" : "info",
+        "time" : 1424509216038,
+        "sections" : [ {
+          "name" : "Error message",
+          "objects" : [ {
+            "name" : "error-message",
+            "specs" : [ {
+              "status" : "info",
+              "place" : {
+                "filePath" : "specs/loginPage-withErrorMessage.spec",
+                "lineNumber" : 16
+              },
+              "name" : "below: password-textfield 5 to 15px",
+              "highlight" : [ "error-message", "password-textfield" ]
+            }, {
+              "status" : "info",
+              "place" : {
+                "filePath" : "specs/loginPage-withErrorMessage.spec",
+                "lineNumber" : 17
+              },
+              "name" : "height: ~ 52px",
+              "highlight" : [ "error-message" ]
+            }, {
+              "status" : "info",
+              "place" : {
+                "filePath" : "specs/loginPage-withErrorMessage.spec",
+                "lineNumber" : 18
+              },
+              "name" : "aligned vertically all: password-textfield",
+              "highlight" : [ "error-message", "password-textfield" ]
+            }, {
+              "status" : "info",
+              "place" : {
+                "filePath" : "specs/loginPage-withErrorMessage.spec",
+                "lineNumber" : 19
+              },
+              "name" : "above: login-button 10 to 30px",
+              "highlight" : [ "error-message", "login-button" ]
+            } ]
+          } ]
+        }, {
+          "name" : "Error message",
+          "objects" : [ {
+            "name" : "error-message",
+            "specs" : [ {
+              "status" : "info",
+              "place" : {
+                "filePath" : "specs/loginPage-withErrorMessage.spec",
+                "lineNumber" : 25
+              },
+              "name" : "aligned vertically all: login-button",
+              "highlight" : [ "error-message", "login-button" ]
+            } ]
+          } ]
+        } ],
+        "objects" : {
+          "login-button" : {
+            "area" : [ 20, 451, 395, 46 ]
+          },
+          "error-message" : {
+            "area" : [ 20, 369, 395, 52 ]
+          },
+          "password-textfield" : {
+            "area" : [ 20, 325, 395, 34 ]
+          }
+        },
+        "screenshot" : "layout-27-screenshot.png",
+        "type" : "layout"
+      } ],
+      "time" : 1424509215609,
+      "type" : "node"
+    } ]
+  }
+};
+        </script>
+        <script>
+
+            $(function () {
+                var galenReport = createGalenReport();
+                galenReport.render("main", reportData);
+            });
+        </script>
+    </head>
+    <body>
+        <script id="report-tpl" type="text/x-handlebars-template">
+            <ul class="report-nodes">
+            {{#each report.nodes}}
+                {{renderNode this}}
+            {{/each}}
+            </ul>
+        </script>
+        <script id="report-node-tpl" type="text/x-handlebars-template">
+            <li>
+                <span class="report-time">{{formatReportTime time}}</span>
+                <a class="expand-link node-expand-button node-status-{{status}} contains-children-{{hasChildElements nodes}} collapsed" href="#">{{status}}</a>
+                <div class="node-name node-status-{{status}}">{{name}}</div>
+                {{#if attachments}}
+                    <ul class="report-node-attachments">
+                        {{#each attachments}}
+                            <li>
+                                <a class="icon-sprite-before node-attachment" href="{{this}}">{{this}}</a>
+                            </li>
+                        {{/each}}
+                    </ul>
+                {{/if}}
+                <div class="node-details expand-container">
+                    {{#if nodes}}
+                        <ul class="report-nodes">
+                            {{#each nodes}}
+                                {{renderNode this}}
+                            {{/each}}
+                        </ul>
+                    {{/if}}
+                </div>
+            </li>
+        </script>
+        <script id="report-node-text-tpl" type="text/x-handlebars-template">
+            <li>
+                <div class="node-simple-text">
+                    {{text}}
+                </div>
+            </li>
+        </script>
+        <script id="report-layout-tpl" type="text/x-handlebars-template">
+            <li>
+                <span class="report-time">{{formatReportTime time}}</span>
+                <a class="expand-link node-expand-button node-status-label node-status-info contains-children-true collapsed" href="#">INFO</a>
+                <div class="node-name">{{name}}</div>
+                <div class="node-details expand-container">
+                    {{renderSublayout this}}
+                </div>
+            </li>
+        </script>
+        <script id="report-layout-sublayout-tpl" type="text/x-handlebars-template">
+            <div class="layout-report" data-layout-id="{{layoutId}}" data-screenshot="{{screenshot}}">
+                <ul class="layout-sections">
+                    {{#each sections}}
+                        {{renderLayoutSection this}}
+                    {{/each}}
+                </ul>
+            </div>
+        </script>
+        <script id="report-layout-section-tpl" type="text/x-handlebars-template">
+            <li>
+                <a class="layout-section icon-sprite-before expand-link contains-children-true" href="#">{{name}}</a>
+                <div class="layout-details expand-container">
+                    {{#if sections}}
+                        <ul class="layout-sections">
+                        {{#each sections}}
+                            {{renderLayoutSection this}}
+                        {{/each}}
+                        </ul>
+                    {{/if}}
+                    {{#if objects}}
+                        <ul class="layout-objects">
+                            {{#each objects}}
+                                {{renderLayoutObject this}}
+                            {{/each}}
+                        </ul>
+                    {{/if}}
+                </div>
+            </li>
+        </script>
+        
+        <script id="report-layout-object-tpl" type="text/x-handlebars-template">
+            <li>
+                <a class="layout-object icon-sprite-before expand-link contains-children-true" href="#">{{name}}</a>
+                {{#if specs}}
+                    <ul class="layout-checks expand-container">
+                        {{#each specs}}
+                            {{renderLayoutCheck this}}
+                        {{/each}}
+                    </ul>
+                {{/if}}
+            </li>
+        </script>
+        <script id="report-layout-check-tpl" type="text/x-handlebars-template">
+            <li>
+            <a class="layout-check icon-sprite-before layout-check-status-{{status}}" href="#" 
+                data-highlight-objects="{{commaSeparated highlight}}"
+                title="{{place.filePath}}#{{place.lineNumber}}"
+                >{{name}}</a>
+
+                {{#if errors}}
+                    <div class="layout-check-error-message">
+                        {{#if imageComparison}}
+                        <a class="image-comparison-link" 
+                            data-actual-image="{{imageComparison.actualImage}}"
+                            data-expected-image="{{imageComparison.expectedImage}}"
+                            data-map-image="{{imageComparison.comparisonMapImage}}"
+                            href="#">Show image comparison</a>
+                        {{/if}}
+                        <div class="layout-check-error-message-text">
+                            <ul>
+                            {{#each errors}}
+                                <li>{{this}}</li>
+                            {{/each}}
+                            </ul>
+                        </div>
+                    </div>
+                {{/if}}
+
+                {{#if sublayout}}
+                    {{renderSublayout sublayout}}
+                {{/if}}
+            </li>
+        </script>
+        <script id="screenshot-popup-tpl" type="text/x-handlebars-template">
+            <div class="screenshot-canvas">
+                <img src="{{screenshot}}"/>
+                {{#each objects}}
+                <div class="canvas-rect" style="left: {{area.left}}px; top: {{area.top}}px; width: {{area.width}}px; height: {{area.height}}px; border-color: {{color}};">
+                    <div class="canvas-rect-wrapper">
+                        <div class="canvas-rect-hint" style="background: {{color}};">{{@key}}</div>
+                    </div>
+                </div>
+                {{/each}}
+            </div>
+        </script>
+        <script id="image-comparison-tpl" type="text/x-handlebars-template">
+            <div class="image-comparison">
+                <h5>Actual</h5>
+                <img src="{{actual}}"/>
+
+                <h5>Expected</h5>
+                <img src="{{expected}}"/>
+
+                <h5>Comparison map</h5>
+                <img src="{{map}}"/>
+            </div>
+        </script>
+
+
+        <div id="menu">
+            <ul>
+                <li><a class="menu-op-expand-all" href="#">Expand All</a></li>
+                <li><a class="menu-op-collapse-all" href="#">Collapse All</a></li>
+                <li><a class="menu-op-expand-errors" href="#">Expand Errors</a></li>
+            </ul>
+        </div>
+        <h2>Some test</h2>
+        <div id="main"></div>
+        <div id="screen-shadow"></div>
+        <div id="popup" class="popup">
+            <div class="popup-wrapper">
+                <a class="popup-close-link" href="#">close</a>
+                <div class="popup-content"></div>
+            </div>
+        </div>
+        <div id="notification" class="notification">
+            <div class="notification-wrapper">
+                <a class="notification-close-link" href="#">close</a>
+                <div class="notification-summary"></div>
+                <div class="notification-message"></div>
+            </div>
+        </div>
+    </body>
+</html>

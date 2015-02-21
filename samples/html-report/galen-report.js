@@ -76,10 +76,10 @@ function collectObjectsToHighlight(objects, objectNames) {
 
             collected[objectName] = {
                 area: {
-                    left: area[0] - 1,
-                    top: area[1] - 1,
-                    width: area[2] + 2,
-                    height: area[3] + 2
+                    left: area[0] - 3,
+                    top: area[1] - 3,
+                    width: area[2],
+                    height: area[3]
                 },
                 color: colorPicker.pickColor()
             };
@@ -322,7 +322,7 @@ Handlebars.registerHelper("hasChildElements", function (items1, items2) {
 
 Handlebars.registerHelper("formatReportTime", function (time) {
     if (time !== null && time !== undefined) {
-        var date = new Date(time);
+    var date = new Date(time);
         var hh = date.getUTCHours();
         var mm = date.getUTCMinutes();
         var ss = date.getSeconds();
@@ -333,6 +333,13 @@ Handlebars.registerHelper("formatReportTime", function (time) {
     }
     return "";
 });
+
+function toStringWithLeadingZero(number) {
+    if (number < 10) {
+        return "0" + number;
+    }
+    return number;
+}
 
 Handlebars.registerHelper("formatDateTime", function (time) {
     if (time !== null && time !== undefined) {
@@ -348,14 +355,6 @@ Handlebars.registerHelper("formatDateTime", function (time) {
     }
     return "";
 });
-
-function toStringWithLeadingZero(number) {
-    if (number < 10) {
-        return "0" + number;
-    }
-    return number;
-}
-
 
 Handlebars.registerHelper("renderProgressBar", function (statistic) {
     var total = statistic.passed + statistic.errors + statistic.warnings;

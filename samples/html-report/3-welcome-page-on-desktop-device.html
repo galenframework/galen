@@ -1,0 +1,761 @@
+<html>
+    <head>
+        <title>Galen Reports</title>
+        <link rel="stylesheet" type="text/css" href="report.css"></link>
+        <script src="jquery-1.11.2.min.js"></script>
+        <script src="handlebars-v2.0.0.js"></script>
+        <script src="galen-report.js"></script>
+        <script>
+var reportData = {
+  "testId" : "3-welcome-page-on-desktop-device",
+  "name" : "Welcome page on desktop device",
+  "report" : {
+    "nodes" : [ {
+      "name" : "Check layout: specs/welcomePage.spec included tags: desktop",
+      "status" : "error",
+      "time" : 1424509185571,
+      "sections" : [ {
+        "name" : "Header",
+        "objects" : [ {
+          "name" : "header",
+          "specs" : [ {
+            "status" : "info",
+            "place" : {
+              "filePath" : "specs/common.spec",
+              "lineNumber" : 22
+            },
+            "name" : "inside: screen 0px top",
+            "highlight" : [ "header", "screen" ]
+          }, {
+            "status" : "info",
+            "place" : {
+              "filePath" : "specs/common.spec",
+              "lineNumber" : 23
+            },
+            "name" : "centered horizontally inside: screen 1px",
+            "highlight" : [ "header", "screen" ]
+          }, {
+            "status" : "info",
+            "place" : {
+              "filePath" : "specs/common.spec",
+              "lineNumber" : 24
+            },
+            "name" : "height: ~ 70px",
+            "highlight" : [ "header" ]
+          } ]
+        }, {
+          "name" : "header-logo",
+          "specs" : [ {
+            "status" : "info",
+            "place" : {
+              "filePath" : "specs/common.spec",
+              "lineNumber" : 27
+            },
+            "name" : "inside: header 5 to 15px top, 0 to 10px left",
+            "highlight" : [ "header-logo", "header" ]
+          }, {
+            "status" : "info",
+            "place" : {
+              "filePath" : "specs/common.spec",
+              "lineNumber" : 28
+            },
+            "name" : "near: header-text 5 to 30px left",
+            "highlight" : [ "header-logo", "header-text" ]
+          } ]
+        }, {
+          "name" : "header-text",
+          "specs" : [ {
+            "status" : "info",
+            "place" : {
+              "filePath" : "specs/common.spec",
+              "lineNumber" : 31
+            },
+            "name" : "inside: header 10 to 25px top",
+            "highlight" : [ "header-text", "header" ]
+          } ]
+        } ]
+      }, {
+        "name" : "Header",
+        "objects" : [ {
+          "name" : "header",
+          "specs" : [ {
+            "status" : "info",
+            "place" : {
+              "filePath" : "specs/common.spec",
+              "lineNumber" : 37
+            },
+            "name" : "width: 900px",
+            "highlight" : [ "header" ]
+          } ]
+        }, {
+          "name" : "header-text",
+          "specs" : [ {
+            "status" : "info",
+            "place" : {
+              "filePath" : "specs/common.spec",
+              "lineNumber" : 40
+            },
+            "name" : "text is: Sample Website for Galen Framework",
+            "highlight" : [ "header-text" ]
+          } ]
+        } ]
+      }, {
+        "name" : "Menu",
+        "objects" : [ {
+          "name" : "menu",
+          "specs" : [ {
+            "status" : "info",
+            "place" : {
+              "filePath" : "specs/common.spec",
+              "lineNumber" : 54
+            },
+            "name" : "centered horizontally inside: screen 1px",
+            "highlight" : [ "menu", "screen" ]
+          }, {
+            "status" : "info",
+            "place" : {
+              "filePath" : "specs/common.spec",
+              "lineNumber" : 55
+            },
+            "name" : "below: header ~ 0px",
+            "highlight" : [ "menu", "header" ]
+          } ]
+        } ]
+      }, {
+        "name" : "Menu",
+        "objects" : [ {
+          "name" : "menu",
+          "specs" : [ {
+            "status" : "info",
+            "place" : {
+              "filePath" : "specs/common.spec",
+              "lineNumber" : 61
+            },
+            "name" : "width: 900px",
+            "highlight" : [ "menu" ]
+          } ]
+        } ]
+      }, {
+        "name" : "Menu",
+        "objects" : [ {
+          "name" : "menu-item-1",
+          "specs" : [ {
+            "status" : "info",
+            "place" : {
+              "filePath" : "specs/common.spec",
+              "lineNumber" : 67
+            },
+            "name" : "inside: menu ~ 0px top left bottom",
+            "highlight" : [ "menu-item-1", "menu" ]
+          }, {
+            "status" : "info",
+            "place" : {
+              "filePath" : "specs/common.spec",
+              "lineNumber" : 74
+            },
+            "name" : "width: 90 to 130px",
+            "highlight" : [ "menu-item-1" ]
+          }, {
+            "status" : "info",
+            "place" : {
+              "filePath" : "specs/common.spec",
+              "lineNumber" : 75
+            },
+            "name" : "height: ~ 64px",
+            "highlight" : [ "menu-item-1" ]
+          }, {
+            "status" : "info",
+            "place" : {
+              "filePath" : "specs/common.spec",
+              "lineNumber" : 76
+            },
+            "name" : "inside: menu ~ 0px top",
+            "highlight" : [ "menu-item-1", "menu" ]
+          }, {
+            "status" : "info",
+            "place" : {
+              "filePath" : "specs/common.spec",
+              "lineNumber" : 80
+            },
+            "name" : "near: menu-item-2 0 to 5px left",
+            "highlight" : [ "menu-item-1", "menu-item-2" ]
+          }, {
+            "status" : "info",
+            "place" : {
+              "filePath" : "specs/common.spec",
+              "lineNumber" : 81
+            },
+            "name" : "aligned horizontally all: menu-item-2",
+            "highlight" : [ "menu-item-1", "menu-item-2" ]
+          } ]
+        }, {
+          "name" : "menu-item-2",
+          "specs" : [ {
+            "status" : "error",
+            "place" : {
+              "filePath" : "specs/common.spec",
+              "lineNumber" : 70
+            },
+            "name" : "image: file menu-item-1.png",
+            "errors" : [ "Element does not look like \"specs/menu-item-1.png\". There are 1136 mismatching pixels but max allowed is 0" ],
+            "highlight" : [ "menu-item-2" ],
+            "imageComparison" : {
+              "actualImage" : "layout-8-menu-item-2-actual.png",
+              "expectedImage" : "layout-9-menu-item-2-expected.png",
+              "comparisonMapImage" : "layout-10-menu-item-2-map.png"
+            }
+          }, {
+            "status" : "info",
+            "place" : {
+              "filePath" : "specs/common.spec",
+              "lineNumber" : 74
+            },
+            "name" : "width: 90 to 130px",
+            "highlight" : [ "menu-item-2" ]
+          }, {
+            "status" : "info",
+            "place" : {
+              "filePath" : "specs/common.spec",
+              "lineNumber" : 75
+            },
+            "name" : "height: ~ 64px",
+            "highlight" : [ "menu-item-2" ]
+          }, {
+            "status" : "info",
+            "place" : {
+              "filePath" : "specs/common.spec",
+              "lineNumber" : 76
+            },
+            "name" : "inside: menu ~ 0px top",
+            "highlight" : [ "menu-item-2", "menu" ]
+          }, {
+            "status" : "info",
+            "place" : {
+              "filePath" : "specs/common.spec",
+              "lineNumber" : 80
+            },
+            "name" : "near: menu-item-3 0 to 5px left",
+            "highlight" : [ "menu-item-2", "menu-item-3" ]
+          }, {
+            "status" : "info",
+            "place" : {
+              "filePath" : "specs/common.spec",
+              "lineNumber" : 81
+            },
+            "name" : "aligned horizontally all: menu-item-3",
+            "highlight" : [ "menu-item-2", "menu-item-3" ]
+          } ]
+        }, {
+          "name" : "menu-item-3",
+          "specs" : [ {
+            "status" : "info",
+            "place" : {
+              "filePath" : "specs/common.spec",
+              "lineNumber" : 74
+            },
+            "name" : "width: 90 to 130px",
+            "highlight" : [ "menu-item-3" ]
+          }, {
+            "status" : "info",
+            "place" : {
+              "filePath" : "specs/common.spec",
+              "lineNumber" : 75
+            },
+            "name" : "height: ~ 64px",
+            "highlight" : [ "menu-item-3" ]
+          }, {
+            "status" : "info",
+            "place" : {
+              "filePath" : "specs/common.spec",
+              "lineNumber" : 76
+            },
+            "name" : "inside: menu ~ 0px top",
+            "highlight" : [ "menu-item-3", "menu" ]
+          }, {
+            "status" : "info",
+            "place" : {
+              "filePath" : "specs/common.spec",
+              "lineNumber" : 80
+            },
+            "name" : "near: menu-item-4 0 to 5px left",
+            "highlight" : [ "menu-item-3", "menu-item-4" ]
+          }, {
+            "status" : "info",
+            "place" : {
+              "filePath" : "specs/common.spec",
+              "lineNumber" : 81
+            },
+            "name" : "aligned horizontally all: menu-item-4",
+            "highlight" : [ "menu-item-3", "menu-item-4" ]
+          } ]
+        }, {
+          "name" : "menu-item-4",
+          "specs" : [ {
+            "status" : "info",
+            "place" : {
+              "filePath" : "specs/common.spec",
+              "lineNumber" : 74
+            },
+            "name" : "width: 90 to 130px",
+            "highlight" : [ "menu-item-4" ]
+          }, {
+            "status" : "info",
+            "place" : {
+              "filePath" : "specs/common.spec",
+              "lineNumber" : 75
+            },
+            "name" : "height: ~ 64px",
+            "highlight" : [ "menu-item-4" ]
+          }, {
+            "status" : "info",
+            "place" : {
+              "filePath" : "specs/common.spec",
+              "lineNumber" : 76
+            },
+            "name" : "inside: menu ~ 0px top",
+            "highlight" : [ "menu-item-4", "menu" ]
+          } ]
+        } ]
+      }, {
+        "name" : "Content",
+        "objects" : [ {
+          "name" : "content",
+          "specs" : [ {
+            "status" : "info",
+            "place" : {
+              "filePath" : "specs/common.spec",
+              "lineNumber" : 105
+            },
+            "name" : "below: menu ~ 0px",
+            "highlight" : [ "content", "menu" ]
+          }, {
+            "status" : "info",
+            "place" : {
+              "filePath" : "specs/common.spec",
+              "lineNumber" : 106
+            },
+            "name" : "centered horizontally inside: screen 1px",
+            "highlight" : [ "content", "screen" ]
+          } ]
+        } ]
+      }, {
+        "name" : "Content",
+        "objects" : [ {
+          "name" : "content",
+          "specs" : [ {
+            "status" : "info",
+            "place" : {
+              "filePath" : "specs/common.spec",
+              "lineNumber" : 112
+            },
+            "name" : "width: 900px",
+            "highlight" : [ "content" ]
+          } ]
+        } ]
+      }, {
+        "name" : "Footer",
+        "objects" : [ {
+          "name" : "footer",
+          "specs" : [ {
+            "status" : "info",
+            "place" : {
+              "filePath" : "specs/common.spec",
+              "lineNumber" : 118
+            },
+            "name" : "height: ~ 200px",
+            "highlight" : [ "footer" ]
+          }, {
+            "status" : "info",
+            "place" : {
+              "filePath" : "specs/common.spec",
+              "lineNumber" : 119
+            },
+            "name" : "below: content 0px",
+            "highlight" : [ "footer", "content" ]
+          } ]
+        } ]
+      }, {
+        "name" : "Content",
+        "objects" : [ {
+          "name" : "welcome-block",
+          "specs" : [ {
+            "status" : "info",
+            "place" : {
+              "filePath" : "specs/welcomePage.spec",
+              "lineNumber" : 15
+            },
+            "name" : "inside: content ~ 20px top left right",
+            "highlight" : [ "welcome-block", "content" ]
+          } ]
+        }, {
+          "name" : "text-block-1",
+          "specs" : [ {
+            "status" : "info",
+            "place" : {
+              "filePath" : "specs/welcomePage.spec",
+              "lineNumber" : 18
+            },
+            "name" : "inside: welcome-block ~30px left",
+            "highlight" : [ "text-block-1", "welcome-block" ]
+          }, {
+            "status" : "info",
+            "place" : {
+              "filePath" : "specs/welcomePage.spec",
+              "lineNumber" : 25
+            },
+            "name" : "height: > 20px",
+            "highlight" : [ "text-block-1" ]
+          }, {
+            "status" : "info",
+            "place" : {
+              "filePath" : "specs/welcomePage.spec",
+              "lineNumber" : 26
+            },
+            "name" : "above: login-button 10 to 50 px",
+            "highlight" : [ "text-block-1", "login-button" ]
+          } ]
+        }, {
+          "name" : "login-button",
+          "specs" : [ {
+            "status" : "info",
+            "place" : {
+              "filePath" : "specs/welcomePage.spec",
+              "lineNumber" : 18
+            },
+            "name" : "inside: welcome-block ~30px left",
+            "highlight" : [ "login-button", "welcome-block" ]
+          }, {
+            "status" : "info",
+            "place" : {
+              "filePath" : "specs/welcomePage.spec",
+              "lineNumber" : 29
+            },
+            "name" : "height: ~ 45px",
+            "highlight" : [ "login-button" ]
+          }, {
+            "status" : "info",
+            "place" : {
+              "filePath" : "specs/welcomePage.spec",
+              "lineNumber" : 30
+            },
+            "name" : "text is: Login",
+            "highlight" : [ "login-button" ]
+          }, {
+            "status" : "info",
+            "place" : {
+              "filePath" : "specs/welcomePage.spec",
+              "lineNumber" : 31
+            },
+            "name" : "above: text-block-3 10 to 50px",
+            "highlight" : [ "login-button", "text-block-3" ]
+          } ]
+        }, {
+          "name" : "text-block-3",
+          "specs" : [ {
+            "status" : "info",
+            "place" : {
+              "filePath" : "specs/welcomePage.spec",
+              "lineNumber" : 18
+            },
+            "name" : "inside: welcome-block ~30px left",
+            "highlight" : [ "text-block-3", "welcome-block" ]
+          } ]
+        }, {
+          "name" : "greeting",
+          "specs" : [ {
+            "status" : "info",
+            "place" : {
+              "filePath" : "specs/welcomePage.spec",
+              "lineNumber" : 21
+            },
+            "name" : "above: text-block-1 10 to 50 px",
+            "highlight" : [ "greeting", "text-block-1" ]
+          }, {
+            "status" : "info",
+            "place" : {
+              "filePath" : "specs/welcomePage.spec",
+              "lineNumber" : 22
+            },
+            "name" : "inside: welcome-block ~ 30px left",
+            "highlight" : [ "greeting", "welcome-block" ]
+          } ]
+        } ]
+      }, {
+        "name" : "Content",
+        "objects" : [ {
+          "name" : "greeting",
+          "specs" : [ {
+            "status" : "info",
+            "place" : {
+              "filePath" : "specs/welcomePage.spec",
+              "lineNumber" : 39
+            },
+            "name" : "height: ~ 69px",
+            "highlight" : [ "greeting" ]
+          }, {
+            "status" : "info",
+            "place" : {
+              "filePath" : "specs/welcomePage.spec",
+              "lineNumber" : 40
+            },
+            "name" : "inside: welcome-block ~ 68 px top",
+            "highlight" : [ "greeting", "welcome-block" ]
+          } ]
+        }, {
+          "name" : "login-button",
+          "specs" : [ {
+            "status" : "info",
+            "place" : {
+              "filePath" : "specs/welcomePage.spec",
+              "lineNumber" : 43
+            },
+            "name" : "width: ~ 78px",
+            "highlight" : [ "login-button" ]
+          } ]
+        } ]
+      } ],
+      "objects" : {
+        "menu-item-4" : {
+          "area" : [ 415, 70, 100, 64 ]
+        },
+        "screen" : {
+          "area" : [ 0, 0, 1085, 781 ]
+        },
+        "greeting" : {
+          "area" : [ 143, 222, 800, 69 ]
+        },
+        "login-button" : {
+          "area" : [ 143, 346, 78, 46 ]
+        },
+        "menu" : {
+          "area" : [ 93, 70, 900, 64 ]
+        },
+        "menu-item-1" : {
+          "area" : [ 93, 70, 100, 64 ]
+        },
+        "header" : {
+          "area" : [ 93, 0, 900, 70 ]
+        },
+        "menu-item-2" : {
+          "area" : [ 197, 70, 110, 64 ]
+        },
+        "menu-item-3" : {
+          "area" : [ 311, 70, 100, 64 ]
+        },
+        "content" : {
+          "area" : [ 93, 134, 900, 447 ]
+        },
+        "footer" : {
+          "area" : [ 0, 581, 1085, 200 ]
+        },
+        "text-block-3" : {
+          "area" : [ 143, 407, 800, 61 ]
+        },
+        "text-block-1" : {
+          "area" : [ 143, 301, 800, 30 ]
+        },
+        "header-logo" : {
+          "area" : [ 93, 13, 48, 48 ]
+        },
+        "welcome-block" : {
+          "area" : [ 113, 154, 860, 377 ]
+        },
+        "header-text" : {
+          "area" : [ 163, 20, 610, 40 ]
+        }
+      },
+      "screenshot" : "layout-7-screenshot.png",
+      "type" : "layout"
+    }, {
+      "name" : "Screenshot",
+      "status" : "info",
+      "attachments" : [ "file-11-Screenshot" ],
+      "time" : 1424509185571,
+      "type" : "node"
+    } ]
+  }
+};
+        </script>
+        <script>
+
+            $(function () {
+                var galenReport = createGalenReport();
+                galenReport.render("main", reportData);
+            });
+        </script>
+    </head>
+    <body>
+        <script id="report-tpl" type="text/x-handlebars-template">
+            <ul class="report-nodes">
+            {{#each report.nodes}}
+                {{renderNode this}}
+            {{/each}}
+            </ul>
+        </script>
+        <script id="report-node-tpl" type="text/x-handlebars-template">
+            <li>
+                <span class="report-time">{{formatReportTime time}}</span>
+                <a class="expand-link node-expand-button node-status-{{status}} contains-children-{{hasChildElements nodes}} collapsed" href="#">{{status}}</a>
+                <div class="node-name node-status-{{status}}">{{name}}</div>
+                {{#if attachments}}
+                    <ul class="report-node-attachments">
+                        {{#each attachments}}
+                            <li>
+                                <a class="icon-sprite-before node-attachment" href="{{this}}">{{this}}</a>
+                            </li>
+                        {{/each}}
+                    </ul>
+                {{/if}}
+                <div class="node-details expand-container">
+                    {{#if nodes}}
+                        <ul class="report-nodes">
+                            {{#each nodes}}
+                                {{renderNode this}}
+                            {{/each}}
+                        </ul>
+                    {{/if}}
+                </div>
+            </li>
+        </script>
+        <script id="report-node-text-tpl" type="text/x-handlebars-template">
+            <li>
+                <div class="node-simple-text">
+                    {{text}}
+                </div>
+            </li>
+        </script>
+        <script id="report-layout-tpl" type="text/x-handlebars-template">
+            <li>
+                <span class="report-time">{{formatReportTime time}}</span>
+                <a class="expand-link node-expand-button node-status-label node-status-info contains-children-true collapsed" href="#">INFO</a>
+                <div class="node-name">{{name}}</div>
+                <div class="node-details expand-container">
+                    {{renderSublayout this}}
+                </div>
+            </li>
+        </script>
+        <script id="report-layout-sublayout-tpl" type="text/x-handlebars-template">
+            <div class="layout-report" data-layout-id="{{layoutId}}" data-screenshot="{{screenshot}}">
+                <ul class="layout-sections">
+                    {{#each sections}}
+                        {{renderLayoutSection this}}
+                    {{/each}}
+                </ul>
+            </div>
+        </script>
+        <script id="report-layout-section-tpl" type="text/x-handlebars-template">
+            <li>
+                <a class="layout-section icon-sprite-before expand-link contains-children-true" href="#">{{name}}</a>
+                <div class="layout-details expand-container">
+                    {{#if sections}}
+                        <ul class="layout-sections">
+                        {{#each sections}}
+                            {{renderLayoutSection this}}
+                        {{/each}}
+                        </ul>
+                    {{/if}}
+                    {{#if objects}}
+                        <ul class="layout-objects">
+                            {{#each objects}}
+                                {{renderLayoutObject this}}
+                            {{/each}}
+                        </ul>
+                    {{/if}}
+                </div>
+            </li>
+        </script>
+        
+        <script id="report-layout-object-tpl" type="text/x-handlebars-template">
+            <li>
+                <a class="layout-object icon-sprite-before expand-link contains-children-true" href="#">{{name}}</a>
+                {{#if specs}}
+                    <ul class="layout-checks expand-container">
+                        {{#each specs}}
+                            {{renderLayoutCheck this}}
+                        {{/each}}
+                    </ul>
+                {{/if}}
+            </li>
+        </script>
+        <script id="report-layout-check-tpl" type="text/x-handlebars-template">
+            <li>
+            <a class="layout-check icon-sprite-before layout-check-status-{{status}}" href="#" 
+                data-highlight-objects="{{commaSeparated highlight}}"
+                title="{{place.filePath}}#{{place.lineNumber}}"
+                >{{name}}</a>
+
+                {{#if errors}}
+                    <div class="layout-check-error-message">
+                        {{#if imageComparison}}
+                        <a class="image-comparison-link" 
+                            data-actual-image="{{imageComparison.actualImage}}"
+                            data-expected-image="{{imageComparison.expectedImage}}"
+                            data-map-image="{{imageComparison.comparisonMapImage}}"
+                            href="#">Show image comparison</a>
+                        {{/if}}
+                        <div class="layout-check-error-message-text">
+                            <ul>
+                            {{#each errors}}
+                                <li>{{this}}</li>
+                            {{/each}}
+                            </ul>
+                        </div>
+                    </div>
+                {{/if}}
+
+                {{#if sublayout}}
+                    {{renderSublayout sublayout}}
+                {{/if}}
+            </li>
+        </script>
+        <script id="screenshot-popup-tpl" type="text/x-handlebars-template">
+            <div class="screenshot-canvas">
+                <img src="{{screenshot}}"/>
+                {{#each objects}}
+                <div class="canvas-rect" style="left: {{area.left}}px; top: {{area.top}}px; width: {{area.width}}px; height: {{area.height}}px; border-color: {{color}};">
+                    <div class="canvas-rect-wrapper">
+                        <div class="canvas-rect-hint" style="background: {{color}};">{{@key}}</div>
+                    </div>
+                </div>
+                {{/each}}
+            </div>
+        </script>
+        <script id="image-comparison-tpl" type="text/x-handlebars-template">
+            <div class="image-comparison">
+                <h5>Actual</h5>
+                <img src="{{actual}}"/>
+
+                <h5>Expected</h5>
+                <img src="{{expected}}"/>
+
+                <h5>Comparison map</h5>
+                <img src="{{map}}"/>
+            </div>
+        </script>
+
+
+        <div id="menu">
+            <ul>
+                <li><a class="menu-op-expand-all" href="#">Expand All</a></li>
+                <li><a class="menu-op-collapse-all" href="#">Collapse All</a></li>
+                <li><a class="menu-op-expand-errors" href="#">Expand Errors</a></li>
+            </ul>
+        </div>
+        <h2>Some test</h2>
+        <div id="main"></div>
+        <div id="screen-shadow"></div>
+        <div id="popup" class="popup">
+            <div class="popup-wrapper">
+                <a class="popup-close-link" href="#">close</a>
+                <div class="popup-content"></div>
+            </div>
+        </div>
+        <div id="notification" class="notification">
+            <div class="notification-wrapper">
+                <a class="notification-close-link" href="#">close</a>
+                <div class="notification-summary"></div>
+                <div class="notification-message"></div>
+            </div>
+        </div>
+    </body>
+</html>
