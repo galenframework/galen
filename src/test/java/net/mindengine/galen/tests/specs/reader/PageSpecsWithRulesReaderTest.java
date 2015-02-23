@@ -3,6 +3,7 @@ package net.mindengine.galen.tests.specs.reader;
 import net.mindengine.galen.components.specs.ExpectedSpecObject;
 import net.mindengine.galen.page.Page;
 import net.mindengine.galen.parser.SyntaxException;
+import net.mindengine.galen.specs.page.PageSection;
 import net.mindengine.galen.specs.reader.page.PageSpec;
 import net.mindengine.galen.specs.reader.page.PageSpecReader;
 import org.testng.annotations.Test;
@@ -26,7 +27,10 @@ public class PageSpecsWithRulesReaderTest {
     public void shouldParsePageSpec_withSimpleRule_declaredBeforeUsage_containingObjectAndSpecs() throws IOException {
         PageSpec pageSpec = readPageSpec("simple-rule-objects-and-specs-before.spec");
 
-        assertThat(ExpectedSpecObject.convertSection(pageSpec.getSections().get(0)),
+        PageSection ruleSection = pageSpec.getSections().get(0).getSections().get(0);
+
+        assertThat(ruleSection.getName(), is("Login button should be visible"));
+        assertThat(ExpectedSpecObject.convertSection(ruleSection),
                 contains(new ExpectedSpecObject("login-button")
                         .withSpecs("visible")));
     }
@@ -36,7 +40,10 @@ public class PageSpecsWithRulesReaderTest {
     public void shouldParsePageSpec_withSimpleRule_declaredAfterUsage_containingObjectAndSpecs() throws IOException {
         PageSpec pageSpec = readPageSpec("simple-rule-objects-and-specs-after.spec");
 
-        assertThat(ExpectedSpecObject.convertSection(pageSpec.getSections().get(0)),
+        PageSection ruleSection = pageSpec.getSections().get(0).getSections().get(0);
+
+        assertThat(ruleSection.getName(), is("Login button should be visible"));
+        assertThat(ExpectedSpecObject.convertSection(ruleSection),
                 contains(new ExpectedSpecObject("login-button")
                         .withSpecs("visible")));
     }
@@ -45,7 +52,10 @@ public class PageSpecsWithRulesReaderTest {
     public void shouldParsePageSpec_withSimpleRule_declaredBeforeUsage_containingOnlySpecs() throws IOException {
         PageSpec pageSpec = readPageSpec("simple-rule-only-specs-before.spec");
 
-        assertThat(ExpectedSpecObject.convertSection(pageSpec.getSections().get(0)),
+        PageSection ruleSection = pageSpec.getSections().get(0).getSections().get(0);
+
+        assertThat(ruleSection.getName(), is("Login button should be visible"));
+        assertThat(ExpectedSpecObject.convertSection(ruleSection),
                 contains(new ExpectedSpecObject("login-button")
                         .withSpecs("visible")));
     }
@@ -54,7 +64,10 @@ public class PageSpecsWithRulesReaderTest {
     public void shouldParsePageSpec_withSimpleRule_declaredAfterUsage_containingOnlySpecs() throws IOException {
         PageSpec pageSpec = readPageSpec("simple-rule-only-specs-after.spec");
 
-        assertThat(ExpectedSpecObject.convertSection(pageSpec.getSections().get(0)),
+        PageSection ruleSection = pageSpec.getSections().get(0).getSections().get(0);
+
+        assertThat(ruleSection.getName(), is("Login button should be visible"));
+        assertThat(ExpectedSpecObject.convertSection(ruleSection),
                 contains(new ExpectedSpecObject("login-button")
                         .withSpecs("visible")));
     }
@@ -64,7 +77,10 @@ public class PageSpecsWithRulesReaderTest {
     public void shouldParsePageSpec_withParameterizedRule_containingObjectAndSpecs() throws IOException {
         PageSpec pageSpec = readPageSpec("parameterized-rule-object-and-specs.spec");
 
-        assertThat(ExpectedSpecObject.convertSection(pageSpec.getSections().get(0)),
+        PageSection ruleSection = pageSpec.getSections().get(0).getSections().get(0);
+
+        assertThat(ruleSection.getName(), is("Login button should be visible"));
+        assertThat(ExpectedSpecObject.convertSection(ruleSection),
                 contains(new ExpectedSpecObject("login-button")
                         .withSpecs("height: 100px")));
     }
@@ -73,7 +89,10 @@ public class PageSpecsWithRulesReaderTest {
     public void shouldParsePageSpec_withParameterizedRule_containingOnlySpecs() throws IOException {
         PageSpec pageSpec = readPageSpec("parameterized-rule-only-specs.spec");
 
-        assertThat(ExpectedSpecObject.convertSection(pageSpec.getSections().get(0)),
+        PageSection ruleSection = pageSpec.getSections().get(0).getSections().get(0);
+
+        assertThat(ruleSection.getName(), is("Login button should be visible"));
+        assertThat(ExpectedSpecObject.convertSection(ruleSection),
                 contains(new ExpectedSpecObject("login-button")
                         .withSpecs("height: 100px")));
     }
@@ -82,7 +101,10 @@ public class PageSpecsWithRulesReaderTest {
     public void shouldParsePageSpec_withParameterizedRule_containingOnlySpecs_andReusingObjectName_asParameter() throws IOException {
         PageSpec pageSpec = readPageSpec("parameterized-rule-only-specs-with-objectname-parameter.spec");
 
-        assertThat(ExpectedSpecObject.convertSection(pageSpec.getSections().get(0)),
+        PageSection ruleSection = pageSpec.getSections().get(0).getSections().get(0);
+
+        assertThat(ruleSection.getName(), is("Login button should be visible"));
+        assertThat(ExpectedSpecObject.convertSection(ruleSection),
                 contains(new ExpectedSpecObject("login-button")
                         .withSpecs("height: 100px")));
     }

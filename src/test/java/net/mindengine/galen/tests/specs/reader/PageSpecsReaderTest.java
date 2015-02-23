@@ -54,11 +54,11 @@ import net.mindengine.galen.specs.page.ConditionalBlock;
 import net.mindengine.galen.specs.page.ConditionalBlockStatement;
 import net.mindengine.galen.specs.page.Locator;
 import net.mindengine.galen.specs.page.ObjectSpecs;
-import net.mindengine.galen.specs.page.PageSection;
 import net.mindengine.galen.specs.reader.Place;
 import net.mindengine.galen.specs.reader.page.PageSpec;
 import net.mindengine.galen.specs.reader.page.PageSpecReader;
 
+import net.mindengine.galen.specs.reader.page.TaggedPageSection;
 import org.apache.commons.io.FileUtils;
 import org.openqa.selenium.WebDriver;
 import org.testng.annotations.AfterClass;
@@ -123,7 +123,7 @@ public class PageSpecsReaderTest {
     
     @Test
     public void shouldRead_allSpecs_asSections_markedByTags() throws IOException {
-        List<PageSection> sections = loadPageSpec().getSections();
+        List<TaggedPageSection> sections = loadPageSpec().getSections();
 
         assertThat("Amount of sections should be", sections.size(), is(6));
         assertThat(sections.get(0).getTags(), hasSize(0));
@@ -145,7 +145,7 @@ public class PageSpecsReaderTest {
     
     @Test
     public void shouldStore_lineNumber_inSpecs() throws IOException {
-        List<PageSection> sections = loadPageSpec().getSections();
+        List<TaggedPageSection> sections = loadPageSpec().getSections();
         Place place = sections.get(0).getObjects().get(0).getSpecs().get(0).getPlace();
         assertThat(place.getFilePath(), endsWith("/specs.txt"));
         assertThat(place.getLineNumber(), is(18));
@@ -161,7 +161,7 @@ public class PageSpecsReaderTest {
         
         assertThat("Total amount of sections should be", pageSpec.getSections().size(), is(3));
         
-        List<PageSection> filteredSections = pageSpec.findSections(asList("tag2"));
+        List<TaggedPageSection> filteredSections = pageSpec.findSections(asList("tag2"));
         assertThat("Amount of filtered sections should be", filteredSections.size(), is(2));
         assertThat("Tag for first filtered section should be", filteredSections.get(0).getTags(), contains("*"));
         assertThat("Tag for second filtered section should be", filteredSections.get(1).getTags(), contains("tag2"));
@@ -239,10 +239,10 @@ public class PageSpecsReaderTest {
     
     @Test
     public void shouldRead_parameterizedSpecs() throws IOException {
-        List<PageSection> sections = loadPageSpec().findSections(asList("parameterized"));
+        List<TaggedPageSection> sections = loadPageSpec().findSections(asList("parameterized"));
         assertThat(sections.size(), is(1));
         
-        PageSection section = sections.get(0);
+        TaggedPageSection section = sections.get(0);
         
         List<ObjectSpecs> objects = section.getObjects();
         
@@ -258,10 +258,10 @@ public class PageSpecsReaderTest {
     
     @Test
     public void shouldRead_parameterizedSpecs_2() throws IOException {
-        List<PageSection> sections = loadPageSpec().findSections(asList("parameterized2"));
+        List<TaggedPageSection> sections = loadPageSpec().findSections(asList("parameterized2"));
         assertThat(sections.size(), is(1));
         
-        PageSection section = sections.get(0);
+        TaggedPageSection section = sections.get(0);
         
         List<ObjectSpecs> objects = section.getObjects();
         
@@ -348,7 +348,7 @@ public class PageSpecsReaderTest {
         PageSpec pageSpec = new PageSpecReader(EMPTY_PROPERTIES, EMPTY_PAGE).read(getClass().getResourceAsStream("/specs/spec-bash-template.spec"));
         assertThat(pageSpec, is(notNullValue()));
         
-        List<PageSection> sections = pageSpec.getSections();
+        List<TaggedPageSection> sections = pageSpec.getSections();
         assertThat(sections.size(), is(1));
         
         List<ObjectSpecs> objects = sections.get(0).getObjects();
@@ -364,7 +364,7 @@ public class PageSpecsReaderTest {
         PageSpec pageSpec = new PageSpecReader(EMPTY_PROPERTIES, EMPTY_PAGE).read(getClass().getResourceAsStream("/specs/spec-sections-advanced.spec"));
         assertThat(pageSpec, is(notNullValue()));
         
-        List<PageSection> sections = pageSpec.getSections();
+        List<TaggedPageSection> sections = pageSpec.getSections();
         assertThat(sections.size(), is(7));
         
         assertThat(sections.get(0).getName(), is("Section 1"));
@@ -465,7 +465,7 @@ public class PageSpecsReaderTest {
     	assertThat(objectMap, hasKey("header-text"));
     	
     	
-    	List<PageSection> sections = pageSpec.getSections();
+    	List<TaggedPageSection> sections = pageSpec.getSections();
     	
     	assertThat(sections.size(), is(2));
     	
@@ -499,10 +499,10 @@ public class PageSpecsReaderTest {
     public void shouldParse_conditionalSpecBlocks() throws Exception {
         PageSpec pageSpec = new PageSpecReader(EMPTY_PROPERTIES, EMPTY_PAGE).read(getClass().getResource("/specs/spec-conditional-simple.spec").getFile());
         
-        List<PageSection> sections = pageSpec.getSections();
+        List<TaggedPageSection> sections = pageSpec.getSections();
         assertThat(sections.size(), is(1));
         
-        PageSection pageSection = sections.get(0);
+        TaggedPageSection pageSection = sections.get(0);
         List<ConditionalBlock> blocks = pageSection.getConditionalBlocks();
         assertThat(blocks.size(), is(1));
         
@@ -538,10 +538,10 @@ public class PageSpecsReaderTest {
     public void shouldParse_conditionalSpecBlocks_withOrStatement() throws Exception {
         PageSpec pageSpec = new PageSpecReader(EMPTY_PROPERTIES, EMPTY_PAGE).read(getClass().getResource("/specs/spec-conditional-or.spec").getFile());
         
-        List<PageSection> sections = pageSpec.getSections();
+        List<TaggedPageSection> sections = pageSpec.getSections();
         assertThat(sections.size(), is(1));
         
-        PageSection pageSection = sections.get(0);
+        TaggedPageSection pageSection = sections.get(0);
         List<ConditionalBlock> blocks = pageSection.getConditionalBlocks();
         assertThat(blocks.size(), is(1));
         
@@ -588,10 +588,10 @@ public class PageSpecsReaderTest {
     public void shouldParse_conditionalSpecBlocks_inverted() throws Exception {
         PageSpec pageSpec = new PageSpecReader(EMPTY_PROPERTIES, EMPTY_PAGE).read(getClass().getResource("/specs/spec-conditional-inverted.spec").getFile());
         
-        List<PageSection> sections = pageSpec.getSections();
+        List<TaggedPageSection> sections = pageSpec.getSections();
         assertThat(sections.size(), is(1));
         
-        PageSection pageSection = sections.get(0);
+        TaggedPageSection pageSection = sections.get(0);
         List<ConditionalBlock> blocks = pageSection.getConditionalBlocks();
         assertThat(blocks.size(), is(1));
         
@@ -630,10 +630,10 @@ public class PageSpecsReaderTest {
     public void shouldParse_conditionalSpecBlocks_withOtherwise() throws Exception {
         PageSpec pageSpec = new PageSpecReader(EMPTY_PROPERTIES, EMPTY_PAGE).read(getClass().getResource("/specs/spec-conditional-otherwise.spec").getFile());
         
-        List<PageSection> sections = pageSpec.getSections();
+        List<TaggedPageSection> sections = pageSpec.getSections();
         assertThat(sections.size(), is(1));
         
-        PageSection pageSection = sections.get(0);
+        TaggedPageSection pageSection = sections.get(0);
         List<ConditionalBlock> blocks = pageSection.getConditionalBlocks();
         assertThat(blocks.size(), is(1));
         
@@ -666,10 +666,10 @@ public class PageSpecsReaderTest {
     @Test
     public void shouldParse_componentSpecs() throws Exception {
         PageSpec pageSpec = new PageSpecReader(EMPTY_PROPERTIES, EMPTY_PAGE).read(getClass().getResource("/specs/components/spec-for-component-test-main.spec").getFile());
-        List<PageSection> sections = pageSpec.getSections();
+        List<TaggedPageSection> sections = pageSpec.getSections();
         assertThat(sections.size(), is(1));
         
-        PageSection pageSection = sections.get(0);
+        TaggedPageSection pageSection = sections.get(0);
         
         List<ObjectSpecs> objects = pageSection.getObjects();
         assertThat(objects.size(), is(3));
@@ -688,10 +688,10 @@ public class PageSpecsReaderTest {
     public void shouldParse_variablesDefinitions() throws Exception {
         
         PageSpec pageSpec = new PageSpecReader(EMPTY_PROPERTIES, EMPTY_PAGE).read(getClass().getResource("/specs/spec-variables.spec").getFile());
-        List<PageSection> sections = pageSpec.getSections();
+        List<TaggedPageSection> sections = pageSpec.getSections();
         assertThat(sections.size(), is(1));
         
-        PageSection pageSection = sections.get(0);
+        TaggedPageSection pageSection = sections.get(0);
         
         List<ObjectSpecs> objects = pageSection.getObjects();
         assertThat(objects.size(), is(2));
@@ -710,9 +710,9 @@ public class PageSpecsReaderTest {
     @Test
     public void shouldParse_warningLevels_forSpecs() throws IOException {
         PageSpec pageSpec = new PageSpecReader(EMPTY_PROPERTIES, EMPTY_PAGE).read(getClass().getResource("/specs/spec-warning-level.spec").getFile());
-        List<PageSection> sections = pageSpec.getSections();
+        List<TaggedPageSection> sections = pageSpec.getSections();
         assertThat(sections.size(), is(1));
-        PageSection pageSection = sections.get(0);
+        TaggedPageSection pageSection = sections.get(0);
 
         List<ObjectSpecs> objects = pageSection.getObjects();
         assertThat(objects.size(), is(3));

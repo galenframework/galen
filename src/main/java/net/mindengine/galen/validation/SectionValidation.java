@@ -19,6 +19,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.regex.Pattern;
 
+import net.mindengine.galen.specs.reader.page.TaggedPageSection;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -39,11 +40,11 @@ public class SectionValidation {
     private static final boolean SHOULD_REPORT = true;
     private static final boolean SHOULD_NOT_REPORT = false;
     private static final List<ValidationResult> EMPTY_RESULTS = new LinkedList<ValidationResult>();
-    private List<PageSection> pageSections;
+    private List<TaggedPageSection> pageSections;
     private PageValidation pageValidation;
     private ValidationListener validationListener;
 
-    public SectionValidation(List<PageSection> pageSections, PageValidation pageValidation, ValidationListener validationListener) {
+    public SectionValidation(List<TaggedPageSection> pageSections, PageValidation pageValidation, ValidationListener validationListener) {
         this.pageSections = pageSections;
         this.pageValidation = pageValidation;
         this.validationListener = validationListener;
@@ -56,13 +57,13 @@ public class SectionValidation {
         
         List<ValidationResult> validationResults = new LinkedList<ValidationResult>();
         
-        for (PageSection section : pageSections) {
+        for (TaggedPageSection section : pageSections) {
             validationResults.addAll(checkSection(section));
         }
         return validationResults;
     }
 
-    private List<ValidationResult> checkSection(PageSection section) {
+    private List<ValidationResult> checkSection(TaggedPageSection section) {
         tellBeforeSection(section);
         List<ValidationResult> validationResult= new LinkedList<ValidationResult>();
         validationResult.addAll(checkObjects(section.getObjects()));

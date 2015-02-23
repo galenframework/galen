@@ -20,18 +20,9 @@ import java.util.List;
 
 public class PageSection {
 
-    private List<String> tags;
     private List<ObjectSpecs> objects = new LinkedList<ObjectSpecs>();
-    private List<ConditionalBlock> conditionalBlocks;
     private String name;
-
-    public List<String> getTags() {
-        return this.tags;
-    }
-
-    public void setTags(List<String> tags) {
-        this.tags = tags;
-    }
+    private List<PageSection> sections = new LinkedList<PageSection>();
 
     public List<ObjectSpecs> getObjects() {
         return this.objects;
@@ -42,38 +33,6 @@ public class PageSection {
     }
 
 
-    public boolean appliesToTags(List<String> includedTags) {
-        return tags.contains("*") || hasAnyTag(includedTags);
-    }
-    
-    public boolean hasAnyTag(List<String> includedTags) {
-        if (includedTags != null && includedTags.size() > 0) {
-            if (tags != null) {
-                for (String tag : includedTags) {
-                    if (tags.contains(tag)) {
-                        return true;
-                    }
-                }
-            }
-            return false;
-        }
-        else return true;
-    }
-
-    public List<ConditionalBlock> getConditionalBlocks() {
-        return this.conditionalBlocks;
-    }
-
-    public void setConditionalBlocks(List<ConditionalBlock> conditionalBlocks) {
-        this.conditionalBlocks = conditionalBlocks;
-    }
-
-    public void addConditionalBlock(ConditionalBlock conditionalBlock) {
-        if (conditionalBlocks == null) {
-            conditionalBlocks = new LinkedList<ConditionalBlock>();
-        }
-        conditionalBlocks.add(conditionalBlock);
-    }
 
     public String getName() {
         return name;
@@ -84,4 +43,11 @@ public class PageSection {
     }
 
 
+    public List<PageSection> getSections() {
+        return sections;
+    }
+
+    public void setSections(List<PageSection> sections) {
+        this.sections = sections;
+    }
 }
