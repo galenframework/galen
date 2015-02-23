@@ -71,7 +71,7 @@ public class StateDoingConditionalBlocks extends State {
         PageSection currentSection = new PageSection();
         currentSectionState = new StateDoingSection(getProperties(), currentSection, getContextPath(), getPageSpecReader());
         
-        currentStatement.setObjects(currentSection.getObjects());
+        currentStatement.setSection(currentSection);
     }
 
     public void startBody() {
@@ -82,7 +82,7 @@ public class StateDoingConditionalBlocks extends State {
         PageSection currentSection = new PageSection();
         currentSectionState = new StateDoingSection(getProperties(), currentSection, getContextPath(), getPageSpecReader());
         
-        conditionalBlock.setBodyObjects(currentSection.getObjects());
+        conditionalBlock.setBodyObjects(currentSection);
         state = STATE.BODY;
     }
 
@@ -95,7 +95,7 @@ public class StateDoingConditionalBlocks extends State {
         currentSectionState = new StateDoingSection(getProperties(), currentSection, contextPath, getPageSpecReader());
         state = STATE.BODY;
         
-        conditionalBlock.setOtherwiseObjects(currentSection.getObjects());
+        conditionalBlock.setOtherwiseObjects(currentSection);
     }
 
     public ConditionalBlock build() {

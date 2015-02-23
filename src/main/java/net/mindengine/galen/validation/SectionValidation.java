@@ -19,6 +19,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.regex.Pattern;
 
+import net.mindengine.galen.page.Page;
 import net.mindengine.galen.specs.reader.page.TaggedPageSection;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -40,6 +41,8 @@ public class SectionValidation {
     private static final boolean SHOULD_REPORT = true;
     private static final boolean SHOULD_NOT_REPORT = false;
     private static final List<ValidationResult> EMPTY_RESULTS = new LinkedList<ValidationResult>();
+    private static final boolean DONT_TELL_FOR_ITSELF = false;
+    private static final boolean TELL_FOR_ITSELF = true;
     private List<TaggedPageSection> pageSections;
     private PageValidation pageValidation;
     private ValidationListener validationListener;
@@ -58,15 +61,15 @@ public class SectionValidation {
         List<ValidationResult> validationResults = new LinkedList<ValidationResult>();
         
         for (TaggedPageSection section : pageSections) {
-            validationResults.addAll(checkSection(section));
+            validationResults.addAll(checkTaggedSection(section));
         }
         return validationResults;
     }
 
-    private List<ValidationResult> checkSection(TaggedPageSection section) {
+    private List<ValidationResult> checkTaggedSection(TaggedPageSection section) {
         tellBeforeSection(section);
         List<ValidationResult> validationResult= new LinkedList<ValidationResult>();
-        validationResult.addAll(checkObjects(section.getObjects()));
+        validationResult.addAll(checkSection(section, DONT_TELL_FOR_ITSELF));
         
         List<ConditionalBlock> conditionalBlocks = section.getConditionalBlocks();
         if (conditionalBlocks != null) {
@@ -112,21 +115,39 @@ public class SectionValidation {
 
     private List<ValidationResult> checkConditionalBlock(ConditionalBlock block) {
         if (oneOfConditionsApplies(block.getStatements())) {
-            return checkObjects(block.getBodyObjects());
+            return checkSection(block.getBodyObjects(), DONT_TELL_FOR_ITSELF);
         }
         else if (block.getOtherwiseObjects() != null) {
-            return checkObjects(block.getOtherwiseObjects());
+            return checkSection(block.getOtherwiseObjects(), DONT_TELL_FOR_ITSELF);
         }
         else return EMPTY_RESULTS;
     }
 
-    private List<ValidationResult> checkObjects(List<ObjectSpecs> bodyObjects) {
-        return checkObjects(bodyObjects, SHOULD_REPORT);
+    private List<ValidationResult> checkSection(PageSection section, boolean tellForItSelf) {
+        if (tellForItSelf) {
+            tellBeforeSection(section);
+        }
+
+        List<ValidationResult> result  = new LinkedList<ValidationResult>();
+
+        if (section.getSections() != null) {
+            for (PageSection subSection : section.getSections()) {
+                result.addAll(checkSection(subSection, TELL_FOR_ITSELF));
+            }
+        }
+
+        result.addAll(checkObjects(section.getObjects(), SHOULD_REPORT));
+
+        if (tellForItSelf) {
+            tellAfterSection(section);
+        }
+
+        return result;
     }
 
     private boolean oneOfConditionsApplies(List<ConditionalBlockStatement> statements) {
         for (ConditionalBlockStatement statement : statements) {
-            List<ValidationResult> validationResults = checkObjectsSilently(statement.getObjects());
+            List<ValidationResult> validationResults = checkSectionSilently(statement.getSection());
             
             boolean statementStatus =  doesNotHaveErrors(validationResults);
             if (statement.isInverted()) {
@@ -138,6 +159,19 @@ public class SectionValidation {
             }
         }
         return false;
+    }
+
+    private List<ValidationResult> checkSectionSilently(PageSection section) {
+        List<ValidationResult> result = new LinkedList<ValidationResult>();
+
+        if (section.getSections() != null) {
+            for (PageSection subSection : section.getSections()) {
+                result.addAll(checkSectionSilently(subSection));
+            }
+        }
+
+        result.addAll(checkObjectsSilently(section.getObjects()));
+        return result;
     }
 
 
