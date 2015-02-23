@@ -15,6 +15,7 @@
 ******************************************************************************/
 package net.mindengine.galen.reports;
 
+import net.mindengine.galen.page.Rect;
 import net.mindengine.galen.reports.model.*;
 import net.mindengine.galen.specs.page.PageSection;
 import net.mindengine.galen.validation.ValidationObject;
@@ -68,8 +69,16 @@ public class LayoutReportStack {
     }
 
     public void putObjects(List<ValidationObject> validationObjects) {
-        for (ValidationObject validationObject : validationObjects) {
-            layoutReport.getObjects().put(validationObject.getName(), new LayoutObjectDetails(validationObject.getArea().toIntArray()));
+        if (validationObjects != null) {
+            for (ValidationObject validationObject : validationObjects) {
+                int[] area = null;
+                Rect rectArea = validationObject.getArea();
+                if (rectArea != null) {
+                    area = rectArea.toIntArray();
+                }
+
+                layoutReport.getObjects().put(validationObject.getName(), new LayoutObjectDetails(area));
+            }
         }
     }
 

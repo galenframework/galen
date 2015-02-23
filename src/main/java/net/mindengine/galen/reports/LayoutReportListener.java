@@ -131,10 +131,11 @@ public class LayoutReportListener implements ValidationListener {
 
     private List<String> convertToObjectNames(List<ValidationObject> validationObjects) {
         List<String> names = new LinkedList<String>();
-        for (ValidationObject validationObject : validationObjects) {
-            names.add(validationObject.getName());
+        if (validationObjects != null) {
+            for (ValidationObject validationObject : validationObjects) {
+                names.add(validationObject.getName());
+            }
         }
-
         return names;
     }
 
