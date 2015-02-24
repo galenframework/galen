@@ -13,36 +13,27 @@
 * See the License for the specific language governing permissions and
 * limitations under the License.
 ******************************************************************************/
-package net.mindengine.galen.specs.reader.page.rules;
+package net.mindengine.galen.specs.reader.page;
 
-import java.util.LinkedList;
-import java.util.List;
-import java.util.regex.Pattern;
+import net.mindengine.galen.specs.reader.page.rules.Rule;
 
 /**
- * Created by ishubin on 2015/02/22.
+ * Created by ishubin on 2015/02/24.
  */
-public class Rule {
-    private Pattern pattern;
-    private List<String> parameters = new LinkedList<String>();
+public class PageSpecRule {
+    private final Rule rule;
+    private final RuleProcessor ruleProcessor;
 
-    public Pattern getPattern() {
-        return pattern;
+    public PageSpecRule(Rule rule, RuleProcessor ruleProcessor) {
+        this.rule = rule;
+        this.ruleProcessor = ruleProcessor;
     }
 
-    public void setPattern(Pattern pattern) {
-        this.pattern = pattern;
+    public Rule getRule() {
+        return rule;
     }
 
-    public List<String> getParameters() {
-        return parameters;
-    }
-
-    public void setParameters(List<String> parameters) {
-        this.parameters = parameters;
-    }
-
-    public void addParameter(String name) {
-        parameters.add(name);
+    public RuleProcessor getRuleProcessor() {
+        return ruleProcessor;
     }
 }

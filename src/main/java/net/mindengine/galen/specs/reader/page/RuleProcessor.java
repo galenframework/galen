@@ -13,36 +13,17 @@
 * See the License for the specific language governing permissions and
 * limitations under the License.
 ******************************************************************************/
-package net.mindengine.galen.specs.reader.page.rules;
+package net.mindengine.galen.specs.reader.page;
 
-import java.util.LinkedList;
-import java.util.List;
-import java.util.regex.Pattern;
+import net.mindengine.galen.parser.VarsContext;
+import net.mindengine.galen.specs.page.ObjectSpecs;
+import net.mindengine.galen.specs.page.PageSection;
 
-/**
- * Created by ishubin on 2015/02/22.
- */
-public class Rule {
-    private Pattern pattern;
-    private List<String> parameters = new LinkedList<String>();
+import java.io.IOException;
+import java.util.Properties;
 
-    public Pattern getPattern() {
-        return pattern;
-    }
+public interface RuleProcessor {
 
-    public void setPattern(Pattern pattern) {
-        this.pattern = pattern;
-    }
-
-    public List<String> getParameters() {
-        return parameters;
-    }
-
-    public void setParameters(List<String> parameters) {
-        this.parameters = parameters;
-    }
-
-    public void addParameter(String name) {
-        parameters.add(name);
-    }
+    void processRule(ObjectSpecs object, String ruleText, VarsContext varsContext, PageSection section,
+                     Properties properties, String contextPath, PageSpecReader pageSpecReader) throws IOException;
 }

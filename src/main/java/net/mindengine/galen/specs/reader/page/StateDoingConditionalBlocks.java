@@ -20,6 +20,7 @@ import java.util.LinkedList;
 import java.util.Properties;
 
 import net.mindengine.galen.parser.SyntaxException;
+import net.mindengine.galen.parser.VarsContext;
 import net.mindengine.galen.specs.page.ConditionalBlock;
 import net.mindengine.galen.specs.page.ConditionalBlockStatement;
 import net.mindengine.galen.specs.page.PageSection;
@@ -55,8 +56,8 @@ public class StateDoingConditionalBlocks extends State {
     }
 
     @Override
-    public void process(String line, Place place) throws IOException {
-        currentSectionState.process(line, place);
+    public void process(VarsContext varsContext, String line, Place place) throws IOException {
+        currentSectionState.process(varsContext, line, place);
     }
 
     public void startNewStatement(boolean inverted) {

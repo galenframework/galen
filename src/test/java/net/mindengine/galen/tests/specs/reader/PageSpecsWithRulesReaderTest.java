@@ -1,7 +1,23 @@
+/*******************************************************************************
+* Copyright 2015 Ivan Shubin http://mindengine.net
+* 
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+* 
+*   http://www.apache.org/licenses/LICENSE-2.0
+* 
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+******************************************************************************/
 package net.mindengine.galen.tests.specs.reader;
 
 import net.mindengine.galen.components.specs.ExpectedSpecObject;
 import net.mindengine.galen.page.Page;
+import net.mindengine.galen.parser.FileSyntaxException;
 import net.mindengine.galen.parser.SyntaxException;
 import net.mindengine.galen.specs.page.PageSection;
 import net.mindengine.galen.specs.reader.page.PageSpec;
@@ -35,10 +51,9 @@ public class PageSpecsWithRulesReaderTest {
                         .withSpecs("visible")));
     }
 
-
     @Test
-    public void shouldParsePageSpec_withSimpleRule_declaredAfterUsage_containingObjectAndSpecs() throws IOException {
-        PageSpec pageSpec = readPageSpec("simple-rule-objects-and-specs-after.spec");
+    public void shouldParsePageSpec_withSimpleRule_declaredInImportedFile() throws IOException {
+        PageSpec pageSpec = readPageSpec("simple-rule-import.spec");
 
         PageSection ruleSection = pageSpec.getSections().get(0).getSections().get(0);
 
@@ -52,26 +67,12 @@ public class PageSpecsWithRulesReaderTest {
     public void shouldParsePageSpec_withSimpleRule_declaredBeforeUsage_containingOnlySpecs() throws IOException {
         PageSpec pageSpec = readPageSpec("simple-rule-only-specs-before.spec");
 
-        PageSection ruleSection = pageSpec.getSections().get(0).getSections().get(0);
+        PageSection ruleSection = pageSpec.getSections().get(0);
 
-        assertThat(ruleSection.getName(), is("Login button should be visible"));
         assertThat(ExpectedSpecObject.convertSection(ruleSection),
                 contains(new ExpectedSpecObject("login-button")
                         .withSpecs("visible")));
     }
-
-    @Test
-    public void shouldParsePageSpec_withSimpleRule_declaredAfterUsage_containingOnlySpecs() throws IOException {
-        PageSpec pageSpec = readPageSpec("simple-rule-only-specs-after.spec");
-
-        PageSection ruleSection = pageSpec.getSections().get(0).getSections().get(0);
-
-        assertThat(ruleSection.getName(), is("Login button should be visible"));
-        assertThat(ExpectedSpecObject.convertSection(ruleSection),
-                contains(new ExpectedSpecObject("login-button")
-                        .withSpecs("visible")));
-    }
-
 
     @Test
     public void shouldParsePageSpec_withParameterizedRule_containingObjectAndSpecs() throws IOException {
@@ -79,55 +80,55 @@ public class PageSpecsWithRulesReaderTest {
 
         PageSection ruleSection = pageSpec.getSections().get(0).getSections().get(0);
 
-        assertThat(ruleSection.getName(), is("Login button should be visible"));
+        assertThat(ruleSection.getName(), is("login-button should have 100 pixels height"));
         assertThat(ExpectedSpecObject.convertSection(ruleSection),
                 contains(new ExpectedSpecObject("login-button")
-                        .withSpecs("height: 100px")));
+                        .withSpecs("height: 100 px")));
     }
 
     @Test
     public void shouldParsePageSpec_withParameterizedRule_containingOnlySpecs() throws IOException {
         PageSpec pageSpec = readPageSpec("parameterized-rule-only-specs.spec");
 
-        PageSection ruleSection = pageSpec.getSections().get(0).getSections().get(0);
+        PageSection ruleSection = pageSpec.getSections().get(0);
 
-        assertThat(ruleSection.getName(), is("Login button should be visible"));
         assertThat(ExpectedSpecObject.convertSection(ruleSection),
                 contains(new ExpectedSpecObject("login-button")
-                        .withSpecs("height: 100px")));
+                        .withSpecs(
+                                "width: 50 px",
+                                "height: 50 px")));
     }
 
     @Test
     public void shouldParsePageSpec_withParameterizedRule_containingOnlySpecs_andReusingObjectName_asParameter() throws IOException {
         PageSpec pageSpec = readPageSpec("parameterized-rule-only-specs-with-objectname-parameter.spec");
 
-        PageSection ruleSection = pageSpec.getSections().get(0).getSections().get(0);
+        PageSection ruleSection = pageSpec.getSections().get(0);
 
-        assertThat(ruleSection.getName(), is("Login button should be visible"));
         assertThat(ExpectedSpecObject.convertSection(ruleSection),
                 contains(new ExpectedSpecObject("login-button")
-                        .withSpecs("height: 100px")));
+                        .withSpecs("width: 100% of login-button/height")));
     }
 
 
     @Test
     public void shouldThrowError_whenRuleIsNotMatched() throws IOException {
         assertThatSyntaxExceptionIsThrownFor("error-rule-not-matched.spec",
-                "There are no rules that matching this: | Login button should ve invisible");
+                "There are no rules matching: Login button should be visible");
     }
 
     private void assertThatSyntaxExceptionIsThrownFor(String pageSpecPath, String expectedMessage) throws IOException {
         try {
-            readPageSpec("parameterized-rule-only-specs-with-objectname-parameter.spec");
+            readPageSpec(pageSpecPath);
             throw new RuntimeException("The expected exception was not thrown");
-        } catch (SyntaxException ex) {
-            assertThat(ex.getMessage(), is(expectedMessage));
+        } catch (FileSyntaxException ex) {
+            assertThat(ex.getCause().getMessage(), is(expectedMessage));
         }
 
     }
 
     private PageSpec readPageSpec(String specName) throws IOException {
-        return new PageSpecReader(EMPTY_PROPERTIES, EMPTY_PAGE).read(getClass().getResourceAsStream("/page-spec-with-rules/" + specName));
+        return new PageSpecReader(EMPTY_PROPERTIES, EMPTY_PAGE).read(getClass().getResource("/page-spec-with-rules/" + specName).getFile());
     }
 
 }

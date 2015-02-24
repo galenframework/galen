@@ -23,6 +23,7 @@ import java.util.regex.Pattern;
 
 import net.mindengine.galen.page.Page;
 import net.mindengine.galen.specs.page.Locator;
+import net.mindengine.galen.specs.reader.page.rules.Rule;
 
 
 public class PageSpec {
@@ -31,6 +32,7 @@ public class PageSpec {
     private Map<String, Locator> objects = new HashMap<String, Locator>();
     private Map<String, Locator> multiObjects = new HashMap<String, Locator>();
     private List<TaggedPageSection> sections = new LinkedList<TaggedPageSection>();
+    private List<PageSpecRule> pageSpecRules = new LinkedList<PageSpecRule>();
 
     public Map<String, Locator> getObjects() {
         return this.objects;
@@ -132,6 +134,7 @@ public class PageSpec {
 		objects.putAll(spec.getObjects());
 		multiObjects.putAll(spec.getMultiObjects());
 		sections.addAll(spec.getSections());
+        pageSpecRules.addAll(spec.getRules());
 	}
 
     public List<TaggedPageSection> findSections(SectionFilter sectionFilter) {
@@ -141,6 +144,14 @@ public class PageSpec {
         else {
             return getSections();
         }
+    }
+
+    public void addRuleProcessor(Rule rule, RuleStandardProcessor ruleProcessor) {
+        this.pageSpecRules.add(new PageSpecRule(rule, ruleProcessor));
+    }
+
+    public List<PageSpecRule> getRules() {
+        return this.pageSpecRules;
     }
 
 }

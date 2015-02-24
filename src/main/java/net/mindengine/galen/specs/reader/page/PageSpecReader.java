@@ -220,4 +220,8 @@ public class PageSpecReader implements VarsParserJsFunctions {
     public Page getPage() {
         return page;
     }
+
+    public List<PageSpecRule> getRules() {
+        return pageSpec.getRules();
+    }
 }

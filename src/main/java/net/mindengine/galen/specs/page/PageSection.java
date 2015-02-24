@@ -50,4 +50,8 @@ public class PageSection {
     public void setSections(List<PageSection> sections) {
         this.sections = sections;
     }
+
+    public void addSubSection(PageSection subSection) {
+        getSections().add(subSection);
+    }
 }
