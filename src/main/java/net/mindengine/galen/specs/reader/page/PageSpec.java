@@ -24,6 +24,7 @@ import java.util.regex.Pattern;
 import net.mindengine.galen.page.Page;
 import net.mindengine.galen.specs.page.Locator;
 import net.mindengine.galen.specs.reader.page.rules.Rule;
+import net.mindengine.galen.specs.reader.page.rules.RuleParser;
 
 
 public class PageSpec {
@@ -146,9 +147,10 @@ public class PageSpec {
         }
     }
 
-    public void addRuleProcessor(Rule rule, RuleStandardProcessor ruleProcessor) {
+    public void addRuleProcessor(Rule rule, RuleProcessor ruleProcessor) {
         this.pageSpecRules.add(new PageSpecRule(rule, ruleProcessor));
     }
+
 
     public List<PageSpecRule> getRules() {
         return this.pageSpecRules;

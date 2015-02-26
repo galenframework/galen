@@ -110,6 +110,27 @@ public class PageSpecsWithRulesReaderTest {
                         .withSpecs("width: 100% of login-button/height")));
     }
 
+    @Test
+    public void shouldParsePageSpec_withParameterizedRule_providedFromJavaScript() throws IOException {
+        PageSpec pageSpec = readPageSpec("rules-provided-via-js.spec");
+
+        PageSection globalSection = pageSpec.getSections().get(0);
+        PageSection ruleSection = globalSection.getSections().get(0);
+
+        assertThat(ExpectedSpecObject.convertSection(ruleSection),
+                contains(
+                        new ExpectedSpecObject("login-button")
+                                .withSpecs("aligned horizontally all: cancel-button")
+                ));
+
+
+        assertThat(ExpectedSpecObject.convertSection(globalSection),
+                contains(
+                        new ExpectedSpecObject("cancel-button")
+                            .withSpecs("width: 100% of cancel-button/height")
+                        ));
+    }
+
 
     @Test
     public void shouldThrowError_whenRuleIsNotMatched() throws IOException {
@@ -128,7 +149,7 @@ public class PageSpecsWithRulesReaderTest {
     }
 
     private PageSpec readPageSpec(String specName) throws IOException {
-        return new PageSpecReader(EMPTY_PROPERTIES, EMPTY_PAGE).read(getClass().getResource("/page-spec-with-rules/" + specName).getFile());
+        return new PageSpecReader(EMPTY_PROPERTIES, EMPTY_PAGE).read("/page-spec-with-rules/" + specName);
     }
 
 }

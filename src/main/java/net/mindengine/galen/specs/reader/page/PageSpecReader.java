@@ -23,6 +23,8 @@ import net.mindengine.galen.parser.VarsContext;
 import net.mindengine.galen.parser.VarsParserJsFunctions;
 import net.mindengine.galen.specs.page.Locator;
 import net.mindengine.galen.specs.reader.Place;
+import net.mindengine.galen.specs.reader.page.rules.Rule;
+import net.mindengine.galen.specs.reader.page.rules.RuleParser;
 import net.mindengine.galen.utils.GalenUtils;
 
 import java.io.*;
@@ -53,7 +55,7 @@ public class PageSpecReader implements VarsParserJsFunctions {
         else {
             this.properties = properties;
         }
-        this.varsContext = new VarsContext(properties, this);
+        this.varsContext = new VarsContext(properties, this, this);
         this.processedFileIds = new HashSet<String>();
         this.page = page;
     }
@@ -223,5 +225,11 @@ public class PageSpecReader implements VarsParserJsFunctions {
 
     public List<PageSpecRule> getRules() {
         return pageSpec.getRules();
+    }
+
+
+    public void addRuleProcessor(String ruleExpression, RuleProcessor ruleProcessor) {
+        Rule rule = new RuleParser().parse(ruleExpression);
+        this.pageSpec.addRuleProcessor(rule, ruleProcessor);
     }
 }

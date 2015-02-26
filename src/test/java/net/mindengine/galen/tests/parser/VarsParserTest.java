@@ -24,14 +24,17 @@ import net.mindengine.galen.parser.JsPageElement;
 import net.mindengine.galen.parser.VarsParser;
 import net.mindengine.galen.parser.VarsParserJsFunctions;
 import net.mindengine.galen.parser.VarsParserJsProcessor;
+import net.mindengine.galen.specs.reader.page.PageSpec;
+import net.mindengine.galen.specs.reader.page.PageSpecReader;
 import net.mindengine.galen.suite.reader.Context;
 
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
 public class VarsParserTest {
-    
+
     private static final Properties EMPTY_PROPERTIES = new Properties();
+    public static final PageSpecReader EMPTY_PAGE_SPEC_READER = new PageSpecReader(EMPTY_PROPERTIES, null);
     private VarsParserJsFunctions jsFunctions = new VarsParserJsFunctions() {
         @Override
         public int count(String regex) {
@@ -49,7 +52,7 @@ public class VarsParserTest {
 
 
     @Test(dataProvider="provideGoodSamples") public void shouldProcessTemplate_successfully(Integer number, Context context, String templateText, String expectedText) {
-        VarsParser template = new VarsParser(context, EMPTY_PROPERTIES, new VarsParserJsProcessor(context, jsFunctions));
+        VarsParser template = new VarsParser(context, EMPTY_PROPERTIES, new VarsParserJsProcessor(context, jsFunctions, EMPTY_PAGE_SPEC_READER));
         String realText = template.parse(templateText);
 
         assertThat(realText, is(expectedText));
@@ -58,7 +61,7 @@ public class VarsParserTest {
     @Test
     public void shouldAllowTo_loadCustomJavascript() {
         Context context = new Context();
-        VarsParser template = new VarsParser(context, EMPTY_PROPERTIES, new VarsParserJsProcessor(context, jsFunctions));
+        VarsParser template = new VarsParser(context, EMPTY_PROPERTIES, new VarsParserJsProcessor(context, jsFunctions, EMPTY_PAGE_SPEC_READER));
         String realText = template.parse("${load('/specs/customFunction.js')} got it from js: ${customFunction('qwe', 'ert')}");
 
         assertThat(realText, is(" got it from js: qwe-ert"));

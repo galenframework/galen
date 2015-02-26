@@ -73,10 +73,10 @@ public class JsFunctionLoad extends BaseFunction {
 
         try {
             if (filePath.startsWith("/")) {
-        /*
-         * In case load function is called with leading slash - it means that Galen should search for script from root
-         * folder of the project
-         */
+                /*
+                 * In case load function is called with leading slash - it means that Galen should search for script from root
+                 * folder of the project
+                 */
                 fullPath = filePath.substring(1);
             } else {
                 fullPath = contextPath + File.separator + filePath;
@@ -93,6 +93,7 @@ public class JsFunctionLoad extends BaseFunction {
                 }
 
                 InputStream is = GalenUtils.findFileOrResourceAsStream(fullPath);
+
 
                 cx.evaluateReader(scope, new InputStreamReader(is), file.getAbsolutePath(), 1, null);
                 loadedFileIds.add(fileId);
