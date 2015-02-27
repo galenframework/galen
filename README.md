@@ -65,6 +65,25 @@ If you would like to make a change to the Galen Framework website (http://galenf
 
 If you want to improve the functionality related to image comparison or color scheme - you have to first make a pull request to [rainbow4j](https://github.com/galenframework/rainbow4j) as all the core code for comparing images, applying filters and calculating the color scheme is located in it. After this it will be released to sonatype central repository and will be available as maven dependency.
 
+Add GPG key to your maven settings.xml:
+
+```
+      <properties>
+          <gpg.keyname>C78F3CC4</gpg.keyname>
+          <gpg.passphrase>Password</gpg.passphrase>
+          ...
+```
+
+The test can be run via
+```mvn verify```
+
+To run integrations tests against chrome:
+
+```mvn clean verify -Dwebdriver.chrome.driver=/opt/dev/chromedriver -Dselenium.browser=chrome```
+
+Please ensure that you download chromedriver, see [here](https://sites.google.com/a/chromium.org/chromedriver/downloads)
+
+
 
 Building 
 -----------
