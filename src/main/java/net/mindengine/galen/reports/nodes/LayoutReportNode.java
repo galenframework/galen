@@ -69,25 +69,37 @@ public class LayoutReportNode extends TestReportNode {
 
     private void fetchStatisticForObject(LayoutObject object, TestStatistic testStatistic) {
         if (object.getSpecs() != null) {
-            for (LayoutSpec spec : object.getSpecs()) {
+            fetchStatisticFromSpecs(testStatistic, object.getSpecs());
+        }
 
-                /*
-                 Checking if it was a component spec and if yes - than it will not take it into account
-                 but rather will go into its child spec list
-                  */
-                if (spec.getSubLayout() != null && spec.getSubLayout().getSections() != null) {
-                   fetchStatisticForSections(spec.getSubLayout().getSections(), testStatistic);
+        if (object.getSpecGroups() != null) {
+            for (LayoutSpecGroup specGroup : object.getSpecGroups()) {
+                if (specGroup.getSpecs() != null) {
+                    fetchStatisticFromSpecs(testStatistic, specGroup.getSpecs());
                 }
-                else {
-                    testStatistic.setTotal(testStatistic.getTotal() + 1);
+            }
+        }
+    }
 
-                    if (spec.getStatus() == Status.WARN) {
-                        testStatistic.setWarnings(testStatistic.getWarnings() + 1);
-                    } else if (spec.getStatus() == Status.ERROR) {
-                        testStatistic.setErrors(testStatistic.getErrors() + 1);
-                    } else {
-                        testStatistic.setPassed(testStatistic.getPassed() + 1);
-                    }
+    private void fetchStatisticFromSpecs(TestStatistic testStatistic, List<LayoutSpec> specs) {
+        for (LayoutSpec spec : specs) {
+
+            /*
+             Checking if it was a component spec and if yes - than it will not take it into account
+             but rather will go into its child spec list
+              */
+            if (spec.getSubLayout() != null && spec.getSubLayout().getSections() != null) {
+               fetchStatisticForSections(spec.getSubLayout().getSections(), testStatistic);
+            }
+            else {
+                testStatistic.setTotal(testStatistic.getTotal() + 1);
+
+                if (spec.getStatus() == Status.WARN) {
+                    testStatistic.setWarnings(testStatistic.getWarnings() + 1);
+                } else if (spec.getStatus() == Status.ERROR) {
+                    testStatistic.setErrors(testStatistic.getErrors() + 1);
+                } else {
+                    testStatistic.setPassed(testStatistic.getPassed() + 1);
                 }
             }
         }

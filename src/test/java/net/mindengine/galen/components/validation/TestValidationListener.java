@@ -95,4 +95,14 @@ public class TestValidationListener implements ValidationListener {
 
     }
 
+    @Override
+    public void onSpecGroup(PageValidation pageValidation, String specGroupName) {
+
+    }
+
+    @Override
+    public void onAfterSpecGroup(PageValidation pageValidation, String specGroupName) {
+
+    }
+
 }

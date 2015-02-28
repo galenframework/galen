@@ -24,6 +24,7 @@ public class LayoutObject {
     
     private String name;
     private List<LayoutSpec> specs = new LinkedList<LayoutSpec>();
+    private List<LayoutSpecGroup> specGroups;
 
 
     private Rect area;
@@ -55,4 +56,19 @@ public class LayoutObject {
         return this.area;
     }
 
+    public List<LayoutSpecGroup> getSpecGroups() {
+        return specGroups;
+    }
+
+    public void setSpecGroups(List<LayoutSpecGroup> specGroups) {
+        this.specGroups = specGroups;
+    }
+
+    public void addSpecGroup(LayoutSpecGroup specGroup) {
+        if (this.specGroups == null) {
+            this.specGroups = new LinkedList<LayoutSpecGroup>();
+        }
+
+        specGroups.add(specGroup);
+    }
 }

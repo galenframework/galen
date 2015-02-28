@@ -20,16 +20,13 @@ import java.util.List;
 import java.util.regex.Pattern;
 
 import net.mindengine.galen.page.Page;
+import net.mindengine.galen.specs.page.*;
 import net.mindengine.galen.specs.reader.page.TaggedPageSection;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import net.mindengine.galen.runner.GalenPageRunner;
 import net.mindengine.galen.specs.Spec;
-import net.mindengine.galen.specs.page.ConditionalBlock;
-import net.mindengine.galen.specs.page.ConditionalBlockStatement;
-import net.mindengine.galen.specs.page.ObjectSpecs;
-import net.mindengine.galen.specs.page.PageSection;
 
 import static net.mindengine.galen.validation.ValidationResult.doesNotHaveErrors;
 
@@ -104,6 +101,8 @@ public class SectionValidation {
                 }
                 
                 validationResults.addAll(checkObject(objectName, object.getSpecs(), shouldReport));
+
+                checkSpecGroups(objectName, object.getSpecGroups(), shouldReport);
                 
                 if (shouldReport) {
                     tellOnAfterObject(objectName);
@@ -111,6 +110,18 @@ public class SectionValidation {
             }
         }
         return validationResults;
+    }
+
+    private void checkSpecGroups(String objectName, List<SpecGroup> specGroups, boolean shouldReport) {
+        if (specGroups != null) {
+            for (SpecGroup specGroup : specGroups) {
+                tellOnSpecGroup(specGroup);
+
+                checkObject(objectName, specGroup.getSpecs(), shouldReport);
+
+                tellOnAfterSpecGroup(specGroup);
+            }
+        }
     }
 
     private List<ValidationResult> checkConditionalBlock(ConditionalBlock block) {
@@ -242,6 +253,27 @@ public class SectionValidation {
         }
     }
 
+    private void tellOnSpecGroup(SpecGroup specGroup) {
+        if (validationListener != null) {
+            try {
+                validationListener.onSpecGroup(pageValidation, specGroup.getName());
+            }
+            catch (Exception e) {
+                LOG.trace("Unknown error during validation of spec group", e);
+            }
+        }
+    }
+
+    private void tellOnAfterSpecGroup(SpecGroup specGroup) {
+        if (validationListener != null) {
+            try {
+                validationListener.onAfterSpecGroup(pageValidation, specGroup.getName());
+            }
+            catch (Exception e) {
+                LOG.trace("Unknown error during validation of spec group", e);
+            }
+        }
+    }
     private List<ValidationResult> checkObject(String objectName, List<Spec> specs, boolean shouldReport) {
         List<ValidationResult> validationResults = new LinkedList<ValidationResult>();
         for (Spec spec : specs) {
@@ -257,6 +289,7 @@ public class SectionValidation {
                 tellOnSpecSuccess(pageValidation, objectName, spec, result);
             }
         }
+
         return validationResults;
     }
 

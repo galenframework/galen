@@ -31,6 +31,7 @@ public class LayoutReportStack {
     private final LayoutReport layoutReport;
     private final Stack<LayoutSection> sectionStack = new Stack<LayoutSection>();
     private LayoutSpec currentSpec;
+    private List<LayoutSpec> currentSpecCollector;
 
 
     public LayoutReportStack(LayoutReport layoutReport) {
@@ -57,6 +58,7 @@ public class LayoutReportStack {
 
     public void setCurrentObject(LayoutObject currentObject) {
         this.currentObject = currentObject;
+        this.currentSpecCollector = currentObject.getSpecs();
     }
 
     public void setCurrentSpec(LayoutSpec currentSpec) {
@@ -73,4 +75,11 @@ public class LayoutReportStack {
         }
     }
 
+    public List<LayoutSpec> getCurrentSpecCollector() {
+        return currentSpecCollector;
+    }
+
+    public void setCurrentSpecCollector(List<LayoutSpec> currentSpecCollector) {
+        this.currentSpecCollector = currentSpecCollector;
+    }
 }

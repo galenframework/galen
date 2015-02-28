@@ -30,7 +30,6 @@ import net.mindengine.galen.validation.*;
 
 public class LayoutReportListener implements ValidationListener {
 
-
     private Stack<LayoutReportStack> reportStack = new Stack<LayoutReportStack>();
     private LayoutReport rootLayoutReport;
 
@@ -82,7 +81,8 @@ public class LayoutReportListener implements ValidationListener {
     public void onSpecError(GalenPageRunner pageRunner, PageValidation pageValidation, String objectName, Spec originalSpec, ValidationResult result) {
         LayoutSpec spec = new LayoutSpec();
         spec.setPlace(originalSpec.getPlace());
-        getCurrentObject().getSpecs().add(spec);
+
+        currentReport().getCurrentSpecCollector().add(spec);
 
         spec.setName(originalSpec.getOriginalText());
 
@@ -106,6 +106,36 @@ public class LayoutReportListener implements ValidationListener {
         currentReport().setCurrentSpec(spec);
     }
 
+    @Override
+    public void onSpecGroup(PageValidation pageValidation, String specGroupName) {
+        LayoutSpecGroup specGroup = new LayoutSpecGroup();
+        specGroup.setName(specGroupName);
+        specGroup.setSpecs(new LinkedList<LayoutSpec>());
+
+        currentReport().getCurrentObject().addSpecGroup(specGroup);
+        currentReport().setCurrentSpecCollector(specGroup.getSpecs());
+    }
+
+    @Override
+    public void onAfterSpecGroup(PageValidation pageValidation, String specGroupName) {
+        currentReport().setCurrentSpecCollector(currentReport().getCurrentObject().getSpecs());
+    }
+
+
+    @Override
+    public void onSpecSuccess(GalenPageRunner pageRunner, PageValidation pageValidation, String objectName, Spec originalSpec, ValidationResult result) {
+        LayoutSpec spec = new LayoutSpec();
+        spec.setPlace(originalSpec.getPlace());
+
+        currentReport().getCurrentSpecCollector().add(spec);
+
+        spec.setName(originalSpec.getOriginalText());
+
+        currentReport().putObjects(result.getValidationObjects());
+        spec.setHighlight(convertToObjectNames(result.getValidationObjects()));
+        currentReport().setCurrentSpec(spec);
+    }
+
     private LayoutImageComparison convertImageComparison(String objectName, ImageComparison imageComparison) throws IOException {
         LayoutImageComparison layoutImageComparison = new LayoutImageComparison();
 
@@ -114,19 +144,6 @@ public class LayoutReportListener implements ValidationListener {
         layoutImageComparison.setComparisonMapImage(rootLayoutReport.registerImageFile(objectName + "-map", imageComparison.getComparisonMap()));
 
         return layoutImageComparison;
-    }
-
-    @Override
-    public void onSpecSuccess(GalenPageRunner pageRunner, PageValidation pageValidation, String objectName, Spec originalSpec, ValidationResult result) {
-        LayoutSpec spec = new LayoutSpec();
-        spec.setPlace(originalSpec.getPlace());
-        getCurrentObject().getSpecs().add(spec);
-
-        spec.setName(originalSpec.getOriginalText());
-
-        currentReport().putObjects(result.getValidationObjects());
-        spec.setHighlight(convertToObjectNames(result.getValidationObjects()));
-        currentReport().setCurrentSpec(spec);
     }
 
     private List<String> convertToObjectNames(List<ValidationObject> validationObjects) {
