@@ -18,6 +18,7 @@ package net.mindengine.galen.specs.reader.page;
 import net.mindengine.galen.parser.VarsContext;
 import net.mindengine.galen.specs.page.ObjectSpecs;
 import net.mindengine.galen.specs.page.PageSection;
+import net.mindengine.galen.specs.page.SpecGroup;
 import net.mindengine.galen.specs.reader.Place;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
@@ -40,8 +41,17 @@ public class RuleStandardProcessor implements RuleProcessor {
 
         List<Pair<String, Place>> lines = new LinkedList<Pair<String, Place>>();
         String indentation = "";
+
+        ObjectSpecs temporaryObjectSpecs = null;
+        SpecGroup specGroup = null;
+
         if (objectSpecs != null) {
             indentation = "    ";
+
+            specGroup = new SpecGroup();
+            specGroup.setName(ruleText);
+
+            temporaryObjectSpecs = new ObjectSpecs(objectSpecs.getObjectName());
         }
         else {
             PageSection subSection = new PageSection();
@@ -56,10 +66,19 @@ public class RuleStandardProcessor implements RuleProcessor {
 
 
         StateDoingSection stateDoingSection = new StateDoingSection(properties, section, contextPath, pageSpecReader);
-        stateDoingSection.setCurrentObject(objectSpecs);
+
+        if (objectSpecs != null) {
+            stateDoingSection.setCurrentObject(temporaryObjectSpecs);
+        }
 
         for (Pair<String, Place> line : lines) {
             stateDoingSection.process(varsContext, line.getLeft(), line.getRight());
+        }
+
+
+        if (objectSpecs != null) {
+            specGroup.getSpecs().addAll(temporaryObjectSpecs.getSpecs());
+            objectSpecs.getSpecGroups().add(specGroup);
         }
     }
 }

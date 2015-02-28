@@ -5,10 +5,10 @@ importClass(net.mindengine.galen.specs.reader.SpecReader);
 importClass(net.mindengine.galen.specs.page.PageSection);
 importClass(net.mindengine.galen.specs.page.ObjectSpecs);
 importClass(java.util.Properties);
+importClass(net.mindengine.galen.specs.page.SpecGroup);
 
 function _readDataFromProperties(properties) {
     var data = {},
-        key,
         it,
         entry;
 
@@ -63,8 +63,12 @@ this.rule = function (ruleExpression, callback) {
                             throw new Error("The rule was used not on the object level");
                         }
 
+                        var specGroup = new SpecGroup();
+                        specGroup.setName(ruleText);
+                        object.getSpecGroups().add(specGroup);
+
                         for (var i = 0; i < specs.length; i += 1) {
-                            object.getSpecs().add(_readSpec(specs[i]));
+                            specGroup.getSpecs().add(_readSpec(specs[i]));
                         }
                     },
                     addObjectSpecs: function (objectName, specs) {

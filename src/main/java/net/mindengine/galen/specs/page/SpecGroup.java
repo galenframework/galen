@@ -15,43 +15,29 @@
 ******************************************************************************/
 package net.mindengine.galen.specs.page;
 
+import net.mindengine.galen.specs.Spec;
+
 import java.util.LinkedList;
 import java.util.List;
 
-import net.mindengine.galen.specs.Spec;
+public class SpecGroup {
+    private String name;
 
-public class ObjectSpecs {
-
-    private String objectName;
     private List<Spec> specs = new LinkedList<Spec>();
 
-    private List<SpecGroup> specGroups = new LinkedList<SpecGroup>();
-
-    public ObjectSpecs(String objectName) {
-        this.objectName = objectName;
+    public String getName() {
+        return name;
     }
 
-    public String getObjectName() {
-        return this.objectName;
-    }
-
-    public void setObjectName(String objectName) {
-        this.objectName = objectName;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public List<Spec> getSpecs() {
-        return this.specs;
+        return specs;
     }
 
     public void setSpecs(List<Spec> specs) {
         this.specs = specs;
-    }
-
-    public List<SpecGroup> getSpecGroups() {
-        return specGroups;
-    }
-
-    public void setSpecGroups(List<SpecGroup> specGroups) {
-        this.specGroups = specGroups;
     }
 }

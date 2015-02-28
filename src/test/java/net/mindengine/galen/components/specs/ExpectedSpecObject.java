@@ -18,22 +18,23 @@ package net.mindengine.galen.components.specs;
 import net.mindengine.galen.specs.Spec;
 import net.mindengine.galen.specs.page.ObjectSpecs;
 import net.mindengine.galen.specs.page.PageSection;
+import net.mindengine.galen.specs.page.SpecGroup;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 import static java.util.Arrays.asList;
 
-/**
- * Created by ishubin on 2015/02/22.
- */
 public class ExpectedSpecObject {
 
     private String expectedName;
-    private List<String> specs;
+    private List<String> specs = new LinkedList<String>();
+    private Map<String, List<String>> specGroups = new HashMap<String, List<String>>();
 
     public ExpectedSpecObject(String expectedName) {
         this.expectedName = expectedName;
@@ -52,18 +53,34 @@ public class ExpectedSpecObject {
         List<ExpectedSpecObject> objects = new LinkedList<ExpectedSpecObject>();
 
         for (ObjectSpecs objectSpecs : pageSection.getObjects()) {
-            ExpectedSpecObject object = new ExpectedSpecObject(objectSpecs.getObjectName());
-            List<String> specs = new LinkedList<String>();
-
-            for (Spec spec : objectSpecs.getSpecs()) {
-                specs.add(spec.getOriginalText());
-            }
-
-            object.setSpecs(specs);
+            ExpectedSpecObject object = convertExpectedSpecObject(objectSpecs);
             objects.add(object);
         }
 
         return objects;
+    }
+
+    private static ExpectedSpecObject convertExpectedSpecObject(ObjectSpecs objectSpecs) {
+        ExpectedSpecObject object = new ExpectedSpecObject(objectSpecs.getObjectName());
+        List<String> specs = convertSpecs(objectSpecs.getSpecs());
+        object.setSpecs(specs);
+
+        Map<String, List<String>> specGroups = new HashMap<String, List<String>>();
+
+        for (SpecGroup specGroup : objectSpecs.getSpecGroups()) {
+            specGroups.put(specGroup.getName(), convertSpecs(specGroup.getSpecs()));
+        }
+
+        object.setSpecGroups(specGroups);
+        return object;
+    }
+
+    private static List<String> convertSpecs(List<Spec> originalSpecs) {
+        List<String> specs = new LinkedList<String>();
+        for (Spec spec : originalSpecs) {
+            specs.add(spec.getOriginalText());
+        }
+        return specs;
     }
 
     public String getExpectedName() {
@@ -84,6 +101,7 @@ public class ExpectedSpecObject {
         return new HashCodeBuilder()
                 .append(expectedName)
                 .append(specs)
+                .append(specGroups)
                 .toHashCode();
     }
 
@@ -103,6 +121,7 @@ public class ExpectedSpecObject {
         return new EqualsBuilder()
                 .append(expectedName, rhs.expectedName)
                 .append(specs, rhs.specs)
+                .append(specGroups, rhs.specGroups)
                 .isEquals();
     }
 
@@ -111,6 +130,16 @@ public class ExpectedSpecObject {
         return new ToStringBuilder(this)
                 .append("expectedName", expectedName)
                 .append("specs", specs)
+                .append("specGroups", specGroups)
                 .toString();
+    }
+
+    public void setSpecGroups(Map<String, List<String>> specGroups) {
+        this.specGroups = specGroups;
+    }
+
+    public ExpectedSpecObject withSpecGroup(String name, List<String> specs) {
+        specGroups.put(name, specs);
+        return this;
     }
 }

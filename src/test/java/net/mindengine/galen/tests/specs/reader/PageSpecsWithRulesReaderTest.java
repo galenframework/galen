@@ -18,7 +18,6 @@ package net.mindengine.galen.tests.specs.reader;
 import net.mindengine.galen.components.specs.ExpectedSpecObject;
 import net.mindengine.galen.page.Page;
 import net.mindengine.galen.parser.FileSyntaxException;
-import net.mindengine.galen.parser.SyntaxException;
 import net.mindengine.galen.specs.page.PageSection;
 import net.mindengine.galen.specs.reader.page.PageSpec;
 import net.mindengine.galen.specs.reader.page.PageSpecReader;
@@ -27,6 +26,7 @@ import org.testng.annotations.Test;
 import java.io.IOException;
 import java.util.Properties;
 
+import static java.util.Arrays.asList;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.is;
@@ -71,7 +71,7 @@ public class PageSpecsWithRulesReaderTest {
 
         assertThat(ExpectedSpecObject.convertSection(ruleSection),
                 contains(new ExpectedSpecObject("login-button")
-                        .withSpecs("visible")));
+                        .withSpecGroup("should be visible", asList("visible"))));
     }
 
     @Test
@@ -94,9 +94,9 @@ public class PageSpecsWithRulesReaderTest {
 
         assertThat(ExpectedSpecObject.convertSection(ruleSection),
                 contains(new ExpectedSpecObject("login-button")
-                        .withSpecs(
-                                "width: 50 px",
-                                "height: 50 px")));
+                        .withSpecGroup("should be a square with 50 pixels size",
+                                asList("width: 50 px",
+                                       "height: 50 px"))));
     }
 
     @Test
@@ -107,7 +107,8 @@ public class PageSpecsWithRulesReaderTest {
 
         assertThat(ExpectedSpecObject.convertSection(ruleSection),
                 contains(new ExpectedSpecObject("login-button")
-                        .withSpecs("width: 100% of login-button/height")));
+                        .withSpecGroup("should be squared",
+                                asList("width: 100% of login-button/height"))));
     }
 
     @Test
@@ -127,7 +128,7 @@ public class PageSpecsWithRulesReaderTest {
         assertThat(ExpectedSpecObject.convertSection(globalSection),
                 contains(
                         new ExpectedSpecObject("cancel-button")
-                            .withSpecs("width: 100% of cancel-button/height")
+                            .withSpecGroup("squared", asList("width: 100% of cancel-button/height"))
                         ));
     }
 
