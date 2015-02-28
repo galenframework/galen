@@ -18,46 +18,5 @@ var reportData = ##REPORT-DATA##;
             });
         </script>
     </head>
-    <body>
-
-    <div id="main">
-    </div>
-    <script id="main-overview" type="text/x-handlebars-template">
-        <div class="tests-overview">
-            <h2>Galen Test Report</h2>
-            <table class="tests tablesorter">
-                <thead>
-                    <tr>
-                        <th>Test</th>
-                        <th>Passed</th>
-                        <th>Failed</th>
-                        <th>Warnings</th>
-                        <th>Total</th>
-                        <th>Started</th>
-                        <th>Duration</th>
-                        <th></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {{#each tests}}
-                    <tr class="test">
-                        <td class="suite-link">
-                            <a href="{{testId}}.html">{{name}}</a>
-                        </td>
-                        <td class="status passed">{{statistic.passed}}</td>
-                        <td class="status failed">{{statistic.errors}}</td>
-                        <td class="status warnings">{{statistic.warnings}}</td>
-                        <td class="status total">{{statistic.total}}</td>
-                        <td class="time">{{formatDateTime startedAt}}</td>
-                        <td class="time">{{durationPretty}}</td>
-                        <td class="progressbar">
-                            {{renderProgressBar statistic}}
-                        </td>
-                    </tr>
-                    {{/each}}
-                </tbody>
-            </table>
-        </div>
-    </script>
-    </body>
+    <body></body>
 </html>
