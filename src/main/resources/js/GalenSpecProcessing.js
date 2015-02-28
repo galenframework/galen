@@ -1,6 +1,8 @@
 /** This script is used in PageSpecReader **/
+/*jslint nomen: true*/
+/*global importClass, net, java, SpecReader, RuleProcessor, PageSection, ObjectSpecs, Properties, SpecGroup, _pageSpec*/
+
 importClass(net.mindengine.galen.specs.reader.page.RuleProcessor);
-importClass(java.lang.System);
 importClass(net.mindengine.galen.specs.reader.SpecReader);
 importClass(net.mindengine.galen.specs.page.PageSection);
 importClass(net.mindengine.galen.specs.page.ObjectSpecs);
@@ -8,11 +10,12 @@ importClass(java.util.Properties);
 importClass(net.mindengine.galen.specs.page.SpecGroup);
 
 function _readDataFromProperties(properties) {
+    "use strict";
     var data = {},
         it,
         entry;
 
-    if (properties != null) {
+    if (properties !== null) {
         it = properties.entrySet().iterator();
 
         while (it.hasNext()) {
@@ -21,15 +24,17 @@ function _readDataFromProperties(properties) {
         }
     }
 
-
     return data;
 }
 
 function _readSpec(specText) {
+    "use strict";
     return new SpecReader(new Properties()).read(specText);
 }
 
+/*jslint unparam: true*/
 this.rule = function (ruleExpression, callback) {
+    "use strict";
 
     _pageSpec.addRuleProcessor(ruleExpression, new RuleProcessor({
         callback: callback,
@@ -37,60 +42,66 @@ this.rule = function (ruleExpression, callback) {
         processRule: function (object, ruleText, varsContext, section, properties, contextPath, pageSpecReader) {
 
             var addedObjectSpecs = {
-                objects: [],
-                add: function (name, specs) {
-                    for (var i = 0; i < this.objects.length; i += 1) {
-                        if (this.objects[i].name === name) {
-                            for (var j = 0; j < specs.length; j += 1) {
-                                this.objects[i].specs.push(specs[j]);
+                    objects: [],
+                    add: function (name, specs) {
+                        var i, j;
+                        for (i = 0; i < this.objects.length; i += 1) {
+                            if (this.objects[i].name === name) {
+                                for (j = 0; j < specs.length; j += 1) {
+                                    this.objects[i].specs.push(specs[j]);
+                                }
+                                return;
                             }
-                            return;
                         }
+
+                        this.objects.push({
+                            name: name,
+                            specs: specs
+                        });
                     }
-
-                    this.objects.push({
-                        name: name,
-                        specs: specs
-                    });
-                }
-            };
-
-            var currentObjectName = object != null? object.getObjectName() : null,
+                },
+                currentObjectName = object !== null ? object.getObjectName() : null,
                 data = _readDataFromProperties(varsContext.getProperties()),
                 processor = {
                     addSpecs: function (specs) {
+                        var i, specGroup;
+
                         if (object === null) {
                             throw new Error("The rule was used not on the object level");
                         }
 
-                        var specGroup = new SpecGroup();
+                        specGroup = new SpecGroup();
                         specGroup.setName(ruleText);
                         object.getSpecGroups().add(specGroup);
 
-                        for (var i = 0; i < specs.length; i += 1) {
+                        for (i = 0; i < specs.length; i += 1) {
                             specGroup.getSpecs().add(_readSpec(specs[i]));
                         }
                     },
                     addObjectSpecs: function (objectName, specs) {
                         addedObjectSpecs.add(objectName, specs);
                     }
-                };
+                },
+                ruleSection,
+                i,
+                j,
+                objectSpecs;
 
             callback.call(processor, currentObjectName, data);
 
 
             if (addedObjectSpecs.objects.length > 0) {
-                var ruleSection = new PageSection();
+                ruleSection = new PageSection();
                 ruleSection.setName(ruleText);
 
-                for (var i = 0; i < addedObjectSpecs.objects.length; i += 1) {
-                    var object = new ObjectSpecs(addedObjectSpecs.objects[i].name);
+                for (i = 0; i < addedObjectSpecs.objects.length; i += 1) {
+                    objectSpecs = new ObjectSpecs(addedObjectSpecs.objects[i].name);
 
-                    for (var j = 0; j < addedObjectSpecs.objects[i].specs.length; j += 1) {
-                        object.getSpecs().add(_readSpec(addedObjectSpecs.objects[i].specs[j]));
+                    for (j = 0; j < addedObjectSpecs.objects[i].specs.length; j += 1) {
+                        objectSpecs.getSpecs().add(_readSpec(addedObjectSpecs.objects[i].specs[j]));
                     }
 
-                    ruleSection.getObjects().add(object);
+                    ruleSection.getObjects().add(objectSpecs);
                 }
 
                 section.addSubSection(ruleSection);
