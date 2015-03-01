@@ -15,6 +15,8 @@
 ******************************************************************************/
 package net.mindengine.galen.specs.page;
 
+import net.mindengine.galen.specs.reader.page.TaggedPageSection;
+
 import java.util.LinkedList;
 import java.util.List;
 
@@ -53,5 +55,27 @@ public class PageSection {
 
     public void addSubSection(PageSection subSection) {
         getSections().add(subSection);
+    }
+
+    public void mergeSection(TaggedPageSection section) {
+        if (section.getObjects() != null) {
+            if (this.objects == null) {
+                this.objects = new LinkedList<ObjectSpecs>();
+            }
+
+            for (ObjectSpecs object : section.getObjects()) {
+                this.objects.add(object);
+            }
+        }
+
+        if (section.getSections() != null) {
+            if (this.sections == null) {
+                this.sections = new LinkedList<PageSection>();
+            }
+
+            for (PageSection subSection : section.getSections()) {
+                this.sections.add(subSection);
+            }
+        }
     }
 }
