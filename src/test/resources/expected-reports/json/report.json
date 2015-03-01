@@ -11,6 +11,9 @@
       "total" : 13
     },
     "testId" : "1-home-page-test",
+    "includedTags":[],
+    "excludedTags":[],
+    "tagsPretty":"",
     "failed" : true,
     "duration" : 70000,
     "durationPretty" : "1m 10s"
