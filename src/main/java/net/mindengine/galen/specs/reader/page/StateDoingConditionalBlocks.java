@@ -20,6 +20,7 @@ import java.util.LinkedList;
 import java.util.Properties;
 
 import net.mindengine.galen.parser.SyntaxException;
+import net.mindengine.galen.parser.VarsContext;
 import net.mindengine.galen.specs.page.ConditionalBlock;
 import net.mindengine.galen.specs.page.ConditionalBlockStatement;
 import net.mindengine.galen.specs.page.PageSection;
@@ -55,8 +56,8 @@ public class StateDoingConditionalBlocks extends State {
     }
 
     @Override
-    public void process(String line, Place place) throws IOException {
-        currentSectionState.process(line, place);
+    public void process(VarsContext varsContext, String line, Place place) throws IOException {
+        currentSectionState.process(varsContext, line, place);
     }
 
     public void startNewStatement(boolean inverted) {
@@ -71,7 +72,7 @@ public class StateDoingConditionalBlocks extends State {
         PageSection currentSection = new PageSection();
         currentSectionState = new StateDoingSection(getProperties(), currentSection, getContextPath(), getPageSpecReader());
         
-        currentStatement.setObjects(currentSection.getObjects());
+        currentStatement.setSection(currentSection);
     }
 
     public void startBody() {
@@ -82,7 +83,7 @@ public class StateDoingConditionalBlocks extends State {
         PageSection currentSection = new PageSection();
         currentSectionState = new StateDoingSection(getProperties(), currentSection, getContextPath(), getPageSpecReader());
         
-        conditionalBlock.setBodyObjects(currentSection.getObjects());
+        conditionalBlock.setBodyObjects(currentSection);
         state = STATE.BODY;
     }
 
@@ -95,7 +96,7 @@ public class StateDoingConditionalBlocks extends State {
         currentSectionState = new StateDoingSection(getProperties(), currentSection, contextPath, getPageSpecReader());
         state = STATE.BODY;
         
-        conditionalBlock.setOtherwiseObjects(currentSection.getObjects());
+        conditionalBlock.setOtherwiseObjects(currentSection);
     }
 
     public ConditionalBlock build() {

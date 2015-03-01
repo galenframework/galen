@@ -20,8 +20,8 @@ import java.util.List;
 public class ConditionalBlock {
 
     private List<ConditionalBlockStatement> statements;
-    private List<ObjectSpecs> otherwiseObjects;
-    private List<ObjectSpecs> bodyObjects;
+    private PageSection otherwiseObjects;
+    private PageSection bodyObjects;
 
     public List<ConditionalBlockStatement> getStatements() {
         return this.statements;
@@ -31,20 +31,20 @@ public class ConditionalBlock {
         this.statements = statements;
     }
 
-    public List<ObjectSpecs> getOtherwiseObjects() {
-        return this.otherwiseObjects;
+
+    public PageSection getOtherwiseObjects() {
+        return otherwiseObjects;
     }
 
-    public void setOtherwiseObjects(List<ObjectSpecs> otherwiseObjects) {
+    public void setOtherwiseObjects(PageSection otherwiseObjects) {
         this.otherwiseObjects = otherwiseObjects;
     }
 
-    public List<ObjectSpecs> getBodyObjects() {
-        return this.bodyObjects;
+    public PageSection getBodyObjects() {
+        return bodyObjects;
     }
 
-    public void setBodyObjects(List<ObjectSpecs> bodyObjects) {
+    public void setBodyObjects(PageSection bodyObjects) {
         this.bodyObjects = bodyObjects;
     }
-
 }

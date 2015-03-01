@@ -47,7 +47,9 @@ public class HtmlReportBuilder {
         for (GalenTestAggregatedInfo aggregatedInfo : reportOverview.getTests()) {
             String testReportJson = jsonBuilder.exportTestReportToJsonString(aggregatedInfo);
             FileUtils.writeStringToFile(new File(reportFolderPath + File.separator + aggregatedInfo.getTestId() + ".html"),
-                    testReportTemplate.replace("##REPORT-DATA##", testReportJson));
+                    testReportTemplate
+                            .replace("##REPORT-TEST-NAME##", aggregatedInfo.getTestInfo().getName())
+                            .replace("##REPORT-DATA##", testReportJson));
 
             aggregatedInfo.getTestInfo().getReport().getFileStorage().copyAllFilesTo(new File(reportFolderPath));
         }

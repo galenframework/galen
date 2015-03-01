@@ -81,6 +81,16 @@ public class DummyCompleteListener implements CompleteListener {
     }
 
     @Override
+    public void onSpecGroup(PageValidation pageValidation, String specGroupName) {
+
+    }
+
+    @Override
+    public void onAfterSpecGroup(PageValidation pageValidation, String specGroupName) {
+
+    }
+
+    @Override
     public void onTestFinished(GalenTest test) {
     }
 

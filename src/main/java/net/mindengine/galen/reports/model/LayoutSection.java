@@ -23,6 +23,7 @@ public class LayoutSection {
     private String name;
     
     private List<LayoutObject> objects = new LinkedList<LayoutObject>();
+    private List<LayoutSection> sections;
 
     public LayoutSection(){
     }
@@ -56,5 +57,20 @@ public class LayoutSection {
             }
         }
         return null;
+    }
+
+    public List<LayoutSection> getSections() {
+        return sections;
+    }
+
+    public void setSections(List<LayoutSection> sections) {
+        this.sections = sections;
+    }
+
+    public void addSection(LayoutSection section) {
+        if (sections == null) {
+            sections = new LinkedList<LayoutSection>();
+        }
+        sections.add(section);
     }
 }

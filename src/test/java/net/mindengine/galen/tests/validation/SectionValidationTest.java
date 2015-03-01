@@ -126,6 +126,16 @@ public class SectionValidationTest {
             public void onAfterSubLayout(PageValidation pageValidation, String objectName) {
 
             }
+
+            @Override
+            public void onSpecGroup(PageValidation pageValidation, String specGroupName) {
+
+            }
+
+            @Override
+            public void onAfterSpecGroup(PageValidation pageValidation, String specGroupName) {
+
+            }
         };
 
     }

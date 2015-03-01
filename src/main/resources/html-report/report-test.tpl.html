@@ -100,13 +100,21 @@ var reportData = ##REPORT-DATA##;
         <script id="report-layout-object-tpl" type="text/x-handlebars-template">
             <li>
                 <a class="layout-object icon-sprite-before expand-link contains-children-true" href="#">{{name}}</a>
-                {{#if specs}}
-                    <ul class="layout-checks expand-container">
-                        {{#each specs}}
-                            {{renderLayoutCheck this}}
-                        {{/each}}
-                    </ul>
-                {{/if}}
+                <ul class="layout-checks expand-container">
+                    {{#each specs}}
+                        {{renderLayoutCheck this}}
+                    {{/each}}
+                    {{#each specGroups}}
+                    <li>
+                        <a class="layout-specgroup icon-sprite-before expand-link contains-children-true" href="#">{{name}}</a>
+                        <ul class="layout-checks expand-container">
+                            {{#each specs}}
+                                {{renderLayoutCheck this}}
+                            {{/each}}
+                        </ul>
+                    </li>
+                    {{/each}}
+                </ul>
             </li>
         </script>
         <script id="report-layout-check-tpl" type="text/x-handlebars-template">
@@ -173,7 +181,7 @@ var reportData = ##REPORT-DATA##;
                 <li><a class="menu-op-expand-errors" href="#">Expand Errors</a></li>
             </ul>
         </div>
-        <h2>Some test</h2>
+        <h2>##REPORT-TEST-NAME##</h2>
         <div id="main"></div>
         <div id="screen-shadow"></div>
         <div id="popup" class="popup">

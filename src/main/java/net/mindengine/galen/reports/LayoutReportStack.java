@@ -32,6 +32,7 @@ public class LayoutReportStack {
     private final LayoutReport layoutReport;
     private final Stack<LayoutSection> sectionStack = new Stack<LayoutSection>();
     private LayoutSpec currentSpec;
+    private List<LayoutSpec> currentSpecCollector;
 
 
     public LayoutReportStack(LayoutReport layoutReport) {
@@ -40,7 +41,13 @@ public class LayoutReportStack {
 
     public void pushSection(PageSection pageSection) {
         LayoutSection section = new LayoutSection(pageSection.getName());
-        layoutReport.getSections().add(section);
+
+        if (!sectionStack.isEmpty()) {
+            sectionStack.peek().addSection(section);
+        }
+        else {
+            layoutReport.getSections().add(section);
+        }
         sectionStack.push(section);
     }
 
@@ -58,6 +65,7 @@ public class LayoutReportStack {
 
     public void setCurrentObject(LayoutObject currentObject) {
         this.currentObject = currentObject;
+        this.currentSpecCollector = currentObject.getSpecs();
     }
 
     public void setCurrentSpec(LayoutSpec currentSpec) {
@@ -82,4 +90,11 @@ public class LayoutReportStack {
         }
     }
 
+    public List<LayoutSpec> getCurrentSpecCollector() {
+        return currentSpecCollector;
+    }
+
+    public void setCurrentSpecCollector(List<LayoutSpec> currentSpecCollector) {
+        this.currentSpecCollector = currentSpecCollector;
+    }
 }

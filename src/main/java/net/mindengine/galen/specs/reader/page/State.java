@@ -16,14 +16,16 @@
 package net.mindengine.galen.specs.reader.page;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Properties;
 
+import net.mindengine.galen.parser.VarsContext;
 import net.mindengine.galen.specs.page.PageSection;
 import net.mindengine.galen.specs.reader.Place;
 
 public abstract class State {
 
-    public abstract void process(String line, Place place) throws IOException;
+    public abstract void process(VarsContext varsContext, String line, Place place) throws IOException;
     private Properties properties;
 
     public boolean isObjectDefinition() {

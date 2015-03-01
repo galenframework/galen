@@ -22,9 +22,9 @@ import net.mindengine.galen.page.PageElement;
 import net.mindengine.galen.page.Rect;
 import net.mindengine.galen.reports.LayoutReportListener;
 import net.mindengine.galen.reports.model.LayoutReport;
-import net.mindengine.galen.specs.page.PageSection;
 import net.mindengine.galen.specs.reader.page.PageSpec;
 import net.mindengine.galen.specs.reader.page.PageSpecReader;
+import net.mindengine.galen.specs.reader.page.TaggedPageSection;
 import net.mindengine.galen.specs.reader.page.SectionFilter;
 import net.mindengine.galen.validation.*;
 
@@ -86,10 +86,10 @@ public class Galen {
         for (PageSpec spec : specs) {
 
             SectionFilter sectionFilter = new SectionFilter(includedTags, excludedTags);
-            List<PageSection> pageSections = spec.findSections(sectionFilter);
+            List<TaggedPageSection> pageSections = mergeSectionsWithSameName(spec.findSections(sectionFilter));
             SectionValidation sectionValidation = new SectionValidation(pageSections, new PageValidation(browser, page, spec, listener, sectionFilter), listener);
 
-            List<ValidationResult> results= sectionValidation.check();
+            List<ValidationResult> results = sectionValidation.check();
             for (ValidationResult result : results) {
                 if (result.getError() != null) {
                     allValidationErrorResults.add(result);
@@ -100,6 +100,34 @@ public class Galen {
         layoutReport.setValidationErrorResults(allValidationErrorResults);
 
         return layoutReport;
+    }
+
+    private static List<TaggedPageSection> mergeSectionsWithSameName(List<TaggedPageSection> sections) {
+        List<TaggedPageSection> mergedSections = new LinkedList<TaggedPageSection>();
+
+
+        for (TaggedPageSection section : sections) {
+            TaggedPageSection sectionWithSameName = findSectionWithName(section.getName(), mergedSections);
+
+            if (sectionWithSameName != null) {
+                sectionWithSameName.mergeSection(section);
+            }
+            else {
+                mergedSections.add(section);
+            }
+        }
+
+        return mergedSections;
+    }
+
+    private static TaggedPageSection findSectionWithName(String name, List<TaggedPageSection> sections) {
+        for (TaggedPageSection section : sections) {
+            if (section.getName().equals(name)) {
+                return section;
+            }
+        }
+
+        return null;
     }
 
     public static LayoutReport checkLayout(WebDriver driver, List<String> specPath,
