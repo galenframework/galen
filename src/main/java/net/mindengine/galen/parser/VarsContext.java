@@ -17,6 +17,8 @@ package net.mindengine.galen.parser;
 
 import java.util.Properties;
 
+import net.mindengine.galen.specs.reader.page.PageSpec;
+import net.mindengine.galen.specs.reader.page.PageSpecReader;
 import net.mindengine.galen.suite.reader.Context;
 
 public class VarsContext extends Context {
@@ -44,8 +46,8 @@ public class VarsContext extends Context {
         this.varsParser = new VarsParser(this, properties, jsProcessor);
     }
 
-    public VarsContext(Properties properties, VarsParserJsFunctions jsFunctions) {
-        this.jsProcessor = new VarsParserJsProcessor(this, jsFunctions);
+    public VarsContext(Properties properties, VarsParserJsFunctions jsFunctions, PageSpecReader pageSpecReader) {
+        this.jsProcessor = new VarsParserJsProcessor(this, jsFunctions, pageSpecReader);
         this.properties = properties;
         this.varsParser = new VarsParser(this, properties, jsProcessor);
     }
@@ -78,5 +80,9 @@ public class VarsContext extends Context {
         if (jsProcessor != null) {
             jsProcessor.runJavascriptFromFile(filePath, contextPath);
         }
+    }
+
+    public VarsContext copy() {
+        return new VarsContext(this.properties, this);
     }
 }

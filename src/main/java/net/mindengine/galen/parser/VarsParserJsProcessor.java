@@ -16,8 +16,11 @@
 package net.mindengine.galen.parser;
 
 import net.mindengine.galen.javascript.JsFunctionLoad;
+import net.mindengine.galen.specs.reader.page.PageSpec;
+import net.mindengine.galen.specs.reader.page.PageSpecReader;
 import net.mindengine.galen.suite.reader.Context;
 
+import org.apache.commons.io.IOUtils;
 import org.mozilla.javascript.BaseFunction;
 import org.mozilla.javascript.ImporterTopLevel;
 import org.mozilla.javascript.Scriptable;
@@ -26,6 +29,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.Map;
 
 public class VarsParserJsProcessor {
@@ -38,10 +42,12 @@ public class VarsParserJsProcessor {
     private org.mozilla.javascript.Context cx;
     private ImporterTopLevel scope;
     private JsFunctionLoad jsFunctionLoad = new JsFunctionLoad();
+    private final PageSpecReader pageSpecReader;
 
-    public VarsParserJsProcessor(Context varsContext, VarsParserJsFunctions jsFunctions) {
+    public VarsParserJsProcessor(Context varsContext, VarsParserJsFunctions jsFunctions, PageSpecReader pageSpecReader) {
         this.varsContext = varsContext;
         this.jsFunctions = jsFunctions;
+        this.pageSpecReader = pageSpecReader;
         initJsProcessor();
     }
 
@@ -49,6 +55,9 @@ public class VarsParserJsProcessor {
     private void initJsProcessor() {
         this.cx = org.mozilla.javascript.Context.enter();
         this.scope = new ImporterTopLevel(cx);
+
+        ScriptableObject.putProperty(scope, "_pageSpec", org.mozilla.javascript.Context.javaToJS(pageSpecReader, scope));
+        executeScript(readScriptFromResources(("/js/GalenSpecProcessing.js")));
 
         if (jsFunctions != null) {
             scope.defineProperty("count", new BaseFunction() {
@@ -76,11 +85,17 @@ public class VarsParserJsProcessor {
 
     }
 
-    public String process(String expression) {
-        resetAllVariablesFromContext();
-
+    private String readScriptFromResources(String path) {
         try {
-            Object returnedObject = cx.evaluateString(scope, expression, "<cmd>", 1, null);
+            return IOUtils.toString(getClass().getResourceAsStream(path));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private String executeScript(String script) {
+        try {
+            Object returnedObject = cx.evaluateString(scope, script, "<cmd>", 1, null);
             if (returnedObject != null) {
                 if (returnedObject instanceof Double) {
                     return Integer.toString(((Double) returnedObject).intValue());
@@ -90,9 +105,14 @@ public class VarsParserJsProcessor {
             } else return null;
         }
         catch (Exception ex) {
-            LOG.error("Unkown error during processing javascript expressions.", ex);
+            LOG.error("Unknown error during processing javascript expressions.", ex);
             return null;
         }
+    }
+
+    public String process(String expression) {
+        resetAllVariablesFromContext();
+        return executeScript(expression);
     }
 
     private void resetAllVariablesFromContext() {

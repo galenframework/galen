@@ -18,10 +18,13 @@ package net.mindengine.galen.specs.reader.page;
 import static net.mindengine.galen.suite.reader.Line.UNKNOWN_LINE;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Properties;
+import java.util.regex.Matcher;
 
 import net.mindengine.galen.parser.MathParser;
 import net.mindengine.galen.parser.SyntaxException;
+import net.mindengine.galen.parser.VarsContext;
 import net.mindengine.galen.specs.Spec;
 import net.mindengine.galen.specs.page.ObjectSpecs;
 import net.mindengine.galen.specs.page.PageSection;
@@ -40,7 +43,11 @@ public class StateDoingSection extends State {
     private String contextPath = ".";
     private PageSpecReader pageSpecReader;
     private Place place;
-    
+
+    public void setCurrentObject(ObjectSpecs objectSpecs) {
+        this.currentObjectSpecs = objectSpecs;
+    }
+
     private class Parameterization {
         private String[] parameters;
         private ObjectSpecs[] objectSpecs;
@@ -80,18 +87,29 @@ public class StateDoingSection extends State {
     }
 
     @Override
-    public void process(String line, Place place) throws IOException {
+    public void process(VarsContext varsContext, String line, Place place) throws IOException {
+        line = varsContext.process(line);
+
         this.place = place;
         if (startsWithIndentation(line)) {
-            if (currentParameterization != null) {
+            if (line.trim().startsWith("|")) {
+                if (currentObjectSpecs == null) {
+                    throw new SyntaxException("There was no object defined before this rule");
+                }
+                processRule(varsContext, line.trim().substring(1).trim(), currentObjectSpecs);
+            }
+            else if (currentParameterization != null) {
                 currentParameterization.processObject(line);
             }
             else {
-                processSpecForSimpleObject(line);
+                processSpecForSimpleObject(varsContext, line);
             }
         }
         else {
-            if (toParameterize != null) {
+            if (line.trim().startsWith("|")) {
+                processRule(varsContext, line.trim().substring(1).trim(), null);
+            }
+            else if (toParameterize != null) {
                 beginParameterizedObject(line, toParameterize);
                 toParameterize = null;
             }
@@ -102,8 +120,33 @@ public class StateDoingSection extends State {
         }
     }
 
-    
-    private void processSpecForSimpleObject(String line) {
+    private void processRule(VarsContext originalVarsContext, String ruleText, ObjectSpecs object) throws IOException {
+        VarsContext varsContext = originalVarsContext.copy();
+
+
+        if (object != null) {
+            varsContext.getProperties().setProperty("objectName", object.getObjectName());
+        }
+
+
+        for (PageSpecRule rule : getPageSpecReader().getRules()) {
+            Matcher matcher = rule.getRule().getPattern().matcher(ruleText);
+            if (matcher.matches()) {
+                int index = 1;
+                for (String parameterName : rule.getRule().getParameters()) {
+                    varsContext.getProperties().setProperty(parameterName, matcher.group(index));
+                    index += 1;
+                }
+
+                rule.getRuleProcessor().processRule(object, ruleText, varsContext, section, getProperties(), contextPath, pageSpecReader);
+                return;
+            }
+        }
+        throw new SyntaxException("There are no rules matching: " + ruleText);
+    }
+
+
+    private void processSpecForSimpleObject(VarsContext varsContext, String line) {
         if (currentObjectSpecs == null) {
             throw new SyntaxException(UNKNOWN_LINE,"There is no object defined in section");
         }

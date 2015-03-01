@@ -151,7 +151,7 @@ a.node-expand-button.contains-children-true.collapsed:before {
 ul.layout-sections > li, ul.layout-objects > li, ul.layout-checks > li {
     margin:5px 5px 5px 7px;
 }
-a.layout-section, a.layout-object, a.layout-check {
+a.layout-section, a.layout-object, a.layout-check, a.layout-specgroup {
     padding: 2px;
     position: relative;
     color: #555;
@@ -186,6 +186,11 @@ a.layout-section, a.layout-object, a.layout-check {
     width: 16px;
     height: 16px;
     background-position: -31px -5px;
+}
+.layout-specgroup.icon-sprite-before:before {
+    width: 16px;
+    height: 16px;
+    background-position: -147px -5px;
 }
 .layout-check.layout-check-status-warn.icon-sprite-before:before {
     width: 16px;

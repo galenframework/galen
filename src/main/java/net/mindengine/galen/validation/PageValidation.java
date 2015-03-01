@@ -58,16 +58,20 @@ public class PageValidation {
     public ValidationResult check(String objectName, Spec spec) {
         SpecValidation specValidation = ValidationFactory.getValidation(spec, this);
 
+        ValidationResult result = check(specValidation, objectName, spec);
+
+        if (spec.isOnlyWarn()) {
+            result.getError().setOnlyWarn(true);
+        }
+        return result;
+    }
+
+    private ValidationResult check(SpecValidation specValidation, String objectName, Spec spec) {
         try {
             return specValidation.check(this, objectName, spec);
         }
         catch (ValidationErrorException ex) {
-
-            ValidationResult result = ex.asValidationResult();
-            if (spec.isOnlyWarn()) {
-                result.getError().setOnlyWarn(true);
-            }
-            return result;
+            return ex.asValidationResult();
         }
     }
 

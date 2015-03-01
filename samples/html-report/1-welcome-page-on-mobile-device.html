@@ -18,15 +18,19 @@ var reportData = {
         "name" : "Header",
         "objects" : [ {
           "name" : "header",
+          "specGroups": [ {
+              "name" : "Header should be displayed properly",
+              "specs" : [ {
+                "status" : "info",
+                "place" : {
+                  "filePath" : "specs/common.spec",
+                  "lineNumber" : 22
+                },
+                "name" : "inside: screen 0px top",
+                "highlight" : [ "header", "screen" ]
+              } ]
+          }],
           "specs" : [ {
-            "status" : "info",
-            "place" : {
-              "filePath" : "specs/common.spec",
-              "lineNumber" : 22
-            },
-            "name" : "inside: screen 0px top",
-            "highlight" : [ "header", "screen" ]
-          }, {
             "status" : "info",
             "place" : {
               "filePath" : "specs/common.spec",
@@ -521,13 +525,21 @@ var reportData = {
         <script id="report-layout-object-tpl" type="text/x-handlebars-template">
             <li>
                 <a class="layout-object icon-sprite-before expand-link contains-children-true" href="#">{{name}}</a>
-                {{#if specs}}
-                    <ul class="layout-checks expand-container">
-                        {{#each specs}}
-                            {{renderLayoutCheck this}}
-                        {{/each}}
-                    </ul>
-                {{/if}}
+                <ul class="layout-checks expand-container">
+                    {{#each specs}}
+                        {{renderLayoutCheck this}}
+                    {{/each}}
+                    {{#each specGroups}}
+                    <li>
+                        <a class="layout-specgroup icon-sprite-before expand-link contains-children-true" href="#">{{name}}</a>
+                        <ul class="layout-checks expand-container">
+                            {{#each specs}}
+                                {{renderLayoutCheck this}}
+                            {{/each}}
+                        </ul>
+                    </li>
+                    {{/each}}
+                </ul>
             </li>
         </script>
         <script id="report-layout-check-tpl" type="text/x-handlebars-template">

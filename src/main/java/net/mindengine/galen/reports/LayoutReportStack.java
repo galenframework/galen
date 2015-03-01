@@ -15,6 +15,7 @@
 ******************************************************************************/
 package net.mindengine.galen.reports;
 
+import net.mindengine.galen.page.Rect;
 import net.mindengine.galen.reports.model.*;
 import net.mindengine.galen.specs.page.PageSection;
 import net.mindengine.galen.validation.ValidationObject;
@@ -31,6 +32,7 @@ public class LayoutReportStack {
     private final LayoutReport layoutReport;
     private final Stack<LayoutSection> sectionStack = new Stack<LayoutSection>();
     private LayoutSpec currentSpec;
+    private List<LayoutSpec> currentSpecCollector;
 
 
     public LayoutReportStack(LayoutReport layoutReport) {
@@ -39,7 +41,13 @@ public class LayoutReportStack {
 
     public void pushSection(PageSection pageSection) {
         LayoutSection section = new LayoutSection(pageSection.getName());
-        layoutReport.getSections().add(section);
+
+        if (!sectionStack.isEmpty()) {
+            sectionStack.peek().addSection(section);
+        }
+        else {
+            layoutReport.getSections().add(section);
+        }
         sectionStack.push(section);
     }
 
@@ -57,6 +65,7 @@ public class LayoutReportStack {
 
     public void setCurrentObject(LayoutObject currentObject) {
         this.currentObject = currentObject;
+        this.currentSpecCollector = currentObject.getSpecs();
     }
 
     public void setCurrentSpec(LayoutSpec currentSpec) {
@@ -68,9 +77,24 @@ public class LayoutReportStack {
     }
 
     public void putObjects(List<ValidationObject> validationObjects) {
-        for (ValidationObject validationObject : validationObjects) {
-            layoutReport.getObjects().put(validationObject.getName(), new LayoutObjectDetails(validationObject.getArea().toIntArray()));
+        if (validationObjects != null) {
+            for (ValidationObject validationObject : validationObjects) {
+                int[] area = null;
+                Rect rectArea = validationObject.getArea();
+                if (rectArea != null) {
+                    area = rectArea.toIntArray();
+                }
+
+                layoutReport.getObjects().put(validationObject.getName(), new LayoutObjectDetails(area));
+            }
         }
     }
 
+    public List<LayoutSpec> getCurrentSpecCollector() {
+        return currentSpecCollector;
+    }
+
+    public void setCurrentSpecCollector(List<LayoutSpec> currentSpecCollector) {
+        this.currentSpecCollector = currentSpecCollector;
+    }
 }

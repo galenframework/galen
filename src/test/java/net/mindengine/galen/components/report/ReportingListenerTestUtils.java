@@ -22,7 +22,6 @@ import static net.mindengine.galen.specs.Side.LEFT;
 
 import java.io.IOException;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import net.mindengine.galen.components.MockedPageValidation;
@@ -76,16 +75,18 @@ public class ReportingListenerTestUtils {
             validationListener.onBeforeSection(pageRunner, pageValidation, section1);
             
             validationListener.onObject(pageRunner, pageValidation, "objectA1"); {
-                validationListener.onSpecError(pageRunner, pageValidation, 
-                        "objectA1", 
-                        new SpecInside("other-object", asList(new Location(exact(10), asList(LEFT)))).withOriginalText("inside: other-object 10px left")
-                            .withPlace(new Place("specs.spec", 12)),
-                        new ValidationResult(
-                                asList(
-                                        new ValidationObject(new Rect(10, 10, 100, 50), "objectA1"),
-                                        new ValidationObject(new Rect(1, 1, 90, 100), "other-object")),
-                                new ValidationError(asList("objectA1 is not inside other-object"))
-                        ));
+                validationListener.onSpecGroup(pageValidation, "some spec group");
+                    validationListener.onSpecError(pageRunner, pageValidation,
+                            "objectA1",
+                            new SpecInside("other-object", asList(new Location(exact(10), asList(LEFT)))).withOriginalText("inside: other-object 10px left")
+                                .withPlace(new Place("specs.spec", 12)),
+                            new ValidationResult(
+                                    asList(
+                                            new ValidationObject(new Rect(10, 10, 100, 50), "objectA1"),
+                                            new ValidationObject(new Rect(1, 1, 90, 100), "other-object")),
+                                    new ValidationError(asList("objectA1 is not inside other-object"))
+                            ));
+                validationListener.onAfterSpecGroup(pageValidation, "some spec group");
                 
                 validationListener.onSpecSuccess(pageRunner, pageValidation, "objectA1",
                         new SpecWidth(between(10, 20))
@@ -102,8 +103,8 @@ public class ReportingListenerTestUtils {
                                 .withPlace(new Place("specs.spec", 12)),
                         new ValidationResult(asList(new ValidationObject(new Rect(200, 300, 50, 30), "objectA2"))));
 
-                validationListener.onSpecError(pageRunner, pageValidation, 
-                        "objectA2", 
+                validationListener.onSpecError(pageRunner, pageValidation,
+                        "objectA2",
                         new SpecWidth(exact(10)).withOriginalText("width: 10px")
                             .withPlace(new Place("specs.spec", 12)),
                         new ValidationResult(asList(new ValidationObject(new Rect(200, 300, 50, 30), "objectA2")),

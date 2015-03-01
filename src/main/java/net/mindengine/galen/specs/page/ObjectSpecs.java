@@ -25,6 +25,8 @@ public class ObjectSpecs {
     private String objectName;
     private List<Spec> specs = new LinkedList<Spec>();
 
+    private List<SpecGroup> specGroups = new LinkedList<SpecGroup>();
+
     public ObjectSpecs(String objectName) {
         this.objectName = objectName;
     }
@@ -45,4 +47,11 @@ public class ObjectSpecs {
         this.specs = specs;
     }
 
+    public List<SpecGroup> getSpecGroups() {
+        return specGroups;
+    }
+
+    public void setSpecGroups(List<SpecGroup> specGroups) {
+        this.specGroups = specGroups;
+    }
 }

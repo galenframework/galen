@@ -23,7 +23,8 @@ import java.util.regex.Pattern;
 
 import net.mindengine.galen.page.Page;
 import net.mindengine.galen.specs.page.Locator;
-import net.mindengine.galen.specs.page.PageSection;
+import net.mindengine.galen.specs.reader.page.rules.Rule;
+import net.mindengine.galen.specs.reader.page.rules.RuleParser;
 
 
 public class PageSpec {
@@ -31,7 +32,8 @@ public class PageSpec {
     private static final List<String> EMPTY_TAGS = new LinkedList<String>();
     private Map<String, Locator> objects = new HashMap<String, Locator>();
     private Map<String, Locator> multiObjects = new HashMap<String, Locator>();
-    private List<PageSection> sections = new LinkedList<PageSection>();
+    private List<TaggedPageSection> sections = new LinkedList<TaggedPageSection>();
+    private List<PageSpecRule> pageSpecRules = new LinkedList<PageSpecRule>();
 
     public Map<String, Locator> getObjects() {
         return this.objects;
@@ -41,15 +43,15 @@ public class PageSpec {
         this.objects = objects;
     }
 
-    public List<PageSection> getSections() {
+    public List<TaggedPageSection> getSections() {
         return this.sections;
     }
 
-    public void setSections(List<PageSection> sections) {
+    public void setSections(List<TaggedPageSection> sections) {
         this.sections = sections;
     }
 
-    public void addSection(PageSection section) {
+    public void addSection(TaggedPageSection section) {
         sections.add(section);
     }
 
@@ -61,14 +63,14 @@ public class PageSpec {
         return objects.get(objectName);
     }
 
-    public List<PageSection> findSections(List<String> includedTags) {
+    public List<TaggedPageSection> findSections(List<String> includedTags) {
         return findSections(includedTags, EMPTY_TAGS);
     }
 
-    public List<PageSection> findSections(List<String> includedTags, List<String> excludedTags) {
-        List<PageSection> filteredSections = new LinkedList<PageSection>();
+    public List<TaggedPageSection> findSections(List<String> includedTags, List<String> excludedTags) {
+        List<TaggedPageSection> filteredSections = new LinkedList<TaggedPageSection>();
         
-        for (PageSection section : sections) {
+        for (TaggedPageSection section : sections) {
             
             if (section.appliesToTags(includedTags)) {
                 if ( !(excludedTags != null && excludedTags.size() > 0 && section.hasAnyTag(excludedTags))) {
@@ -133,15 +135,25 @@ public class PageSpec {
 		objects.putAll(spec.getObjects());
 		multiObjects.putAll(spec.getMultiObjects());
 		sections.addAll(spec.getSections());
+        pageSpecRules.addAll(spec.getRules());
 	}
 
-    public List<PageSection> findSections(SectionFilter sectionFilter) {
+    public List<TaggedPageSection> findSections(SectionFilter sectionFilter) {
         if (sectionFilter != null) {
             return findSections(sectionFilter.getIncludedTags(), sectionFilter.getExcludedTags());
         }
         else {
             return getSections();
         }
+    }
+
+    public void addRuleProcessor(Rule rule, RuleProcessor ruleProcessor) {
+        this.pageSpecRules.add(new PageSpecRule(rule, ruleProcessor));
+    }
+
+
+    public List<PageSpecRule> getRules() {
+        return this.pageSpecRules;
     }
 
 }

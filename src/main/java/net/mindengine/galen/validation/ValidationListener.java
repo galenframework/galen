@@ -43,5 +43,9 @@ public interface ValidationListener {
     void onSubLayout(PageValidation pageValidation, String objectName);
 
     void onAfterSubLayout(PageValidation pageValidation, String objectName);
-    
+
+    void onSpecGroup(PageValidation pageValidation, String specGroupName);
+
+    void onAfterSpecGroup(PageValidation pageValidation, String specGroupName);
+
 }

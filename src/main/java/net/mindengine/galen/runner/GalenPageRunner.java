@@ -22,7 +22,6 @@ import net.mindengine.galen.specs.page.PageSection;
 import net.mindengine.galen.suite.GalenPageAction;
 import net.mindengine.galen.suite.GalenPageTest;
 import net.mindengine.galen.validation.PageValidation;
-import net.mindengine.galen.validation.ValidationError;
 import net.mindengine.galen.validation.ValidationListener;
 import net.mindengine.galen.validation.ValidationResult;
 
@@ -166,6 +165,20 @@ public class GalenPageRunner implements ValidationListener {
     public void onAfterSubLayout(PageValidation pageValidation, String objectName) {
         if (validationListener != null) {
             validationListener.onAfterSubLayout(pageValidation, objectName);
+        }
+    }
+
+    @Override
+    public void onSpecGroup(PageValidation pageValidation, String specGroupName) {
+        if (validationListener != null) {
+            validationListener.onSpecGroup(pageValidation, specGroupName);
+        }
+    }
+
+    @Override
+    public void onAfterSpecGroup(PageValidation pageValidation, String specGroupName) {
+        if (validationListener != null) {
+            validationListener.onAfterSpecGroup(pageValidation, specGroupName);
         }
     }
 

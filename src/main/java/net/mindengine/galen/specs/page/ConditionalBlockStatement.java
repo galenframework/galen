@@ -15,12 +15,11 @@
 ******************************************************************************/
 package net.mindengine.galen.specs.page;
 
-import java.util.List;
 
 public class ConditionalBlockStatement {
 
     private boolean inverted = false;
-    private List<ObjectSpecs> objects;
+    private PageSection section;
 
     public boolean isInverted() {
         return inverted;
@@ -30,12 +29,12 @@ public class ConditionalBlockStatement {
         this.inverted = inverted;
     }
 
-    public List<ObjectSpecs> getObjects() {
-        return this.objects;
+
+    public PageSection getSection() {
+        return section;
     }
 
-    public void setObjects(List<ObjectSpecs> objects) {
-        this.objects = objects;
+    public void setSection(PageSection section) {
+        this.section = section;
     }
-
 }

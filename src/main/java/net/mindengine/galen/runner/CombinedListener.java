@@ -28,7 +28,6 @@ import net.mindengine.galen.specs.page.PageSection;
 import net.mindengine.galen.suite.GalenPageAction;
 import net.mindengine.galen.tests.GalenTest;
 import net.mindengine.galen.validation.PageValidation;
-import net.mindengine.galen.validation.ValidationError;
 
 public class CombinedListener implements CompleteListener {
 
@@ -204,6 +203,30 @@ public class CombinedListener implements CompleteListener {
             }
             catch (Exception ex) {
                 LOG.trace("Unknown error during after section", ex);
+            }
+        }
+    }
+
+    @Override
+    public void onSpecGroup(PageValidation pageValidation, String specGroupName) {
+        for (CompleteListener listener : listeners) {
+            try {
+                listener.onSpecGroup(pageValidation, specGroupName);
+            }
+            catch (Exception ex) {
+                LOG.trace("Unknown error during spec group event", ex);
+            }
+        }
+    }
+
+    @Override
+    public void onAfterSpecGroup(PageValidation pageValidation, String specGroupName) {
+        for (CompleteListener listener : listeners) {
+            try {
+                listener.onAfterSpecGroup(pageValidation, specGroupName);
+            }
+            catch (Exception ex) {
+                LOG.trace("Unknown error during after spec group event", ex);
             }
         }
     }

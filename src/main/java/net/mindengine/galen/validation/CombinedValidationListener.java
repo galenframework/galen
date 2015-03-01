@@ -22,31 +22,49 @@ import net.mindengine.galen.runner.GalenPageRunner;
 import net.mindengine.galen.specs.Spec;
 import net.mindengine.galen.specs.page.PageSection;
 import net.mindengine.galen.suite.GalenPageAction;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class CombinedValidationListener implements ValidationListener {
 
-    
+    private final static Logger LOG = LoggerFactory.getLogger(CombinedValidationListener.class);
+
     private List<ValidationListener> listeners = new LinkedList<ValidationListener>();
     
     
     @Override
     public void onObject(GalenPageRunner pageRunner, PageValidation pageValidation, String objectName) {
-        for (ValidationListener listener: listeners) {
-            listener.onObject(pageRunner, pageValidation, objectName);
+        for (ValidationListener listener : listeners) {
+            try {
+                listener.onObject(pageRunner, pageValidation, objectName);
+            }
+            catch (Exception ex) {
+                LOG.error("Unknown error during finishing test", ex);
+            }
         }
     }
 
     @Override
     public void onAfterObject(GalenPageRunner pageRunner, PageValidation pageValidation, String objectName) {
         for (ValidationListener listener: listeners) {
-            listener.onAfterObject(pageRunner, pageValidation, objectName);
+            try {
+                listener.onAfterObject(pageRunner, pageValidation, objectName);
+            }
+            catch (Exception ex) {
+                LOG.error("Unknown error during finishing test", ex);
+            }
         }
     }
 
     @Override
     public void onSpecError(GalenPageRunner pageRunner, PageValidation pageValidation, String objectName, Spec spec, ValidationResult result) {
         for (ValidationListener listener: listeners) {
-            listener.onSpecError(pageRunner, pageValidation, objectName, spec, result);
+            try {
+                listener.onSpecError(pageRunner, pageValidation, objectName, spec, result);
+            }
+            catch (Exception ex) {
+                LOG.error("Unknown error during finishing test", ex);
+            }
         }
     }
 
@@ -54,56 +72,121 @@ public class CombinedValidationListener implements ValidationListener {
     @Override
     public void onSpecSuccess(GalenPageRunner pageRunner, PageValidation pageValidation, String objectName, Spec spec, ValidationResult result) {
         for (ValidationListener listener: listeners) {
-            listener.onSpecSuccess(pageRunner, pageValidation, objectName, spec, result);
+            try {
+                listener.onSpecSuccess(pageRunner, pageValidation, objectName, spec, result);
+            }
+            catch (Exception ex) {
+                LOG.error("Unknown error during finishing test", ex);
+            }
         }
     }
 
     @Override
     public void onGlobalError(GalenPageRunner pageRunner, Exception e) {
         for (ValidationListener listener: listeners) {
-            listener.onGlobalError(pageRunner, e);
+            try {
+                listener.onGlobalError(pageRunner, e);
+            }
+            catch (Exception ex) {
+                LOG.error("Unknown error during finishing test", ex);
+            }
         }
     }
 
     @Override
     public void onBeforePageAction(GalenPageRunner pageRunner, GalenPageAction action) {
         for (ValidationListener listener: listeners) {
-            listener.onBeforePageAction(pageRunner, action);
+            try {
+                listener.onBeforePageAction(pageRunner, action);
+            }
+            catch (Exception ex) {
+                LOG.error("Unknown error during finishing test", ex);
+            }
         }
     }
 
     @Override
     public void onAfterPageAction(GalenPageRunner pageRunner, GalenPageAction action) {
         for (ValidationListener listener: listeners) {
-            listener.onAfterPageAction(pageRunner, action);
+            try {
+                listener.onAfterPageAction(pageRunner, action);
+            }
+            catch (Exception ex) {
+                LOG.error("Unknown error during finishing test", ex);
+            }
         }
     }
 
     @Override
     public void onBeforeSection(GalenPageRunner pageRunner, PageValidation pageValidation, PageSection pageSection) {
         for (ValidationListener listener: listeners) {
-            listener.onBeforeSection(pageRunner, pageValidation, pageSection);
+            try {
+                listener.onBeforeSection(pageRunner, pageValidation, pageSection);
+            }
+            catch (Exception ex) {
+                LOG.error("Unknown error during finishing test", ex);
+            }
         }
     }
 
     @Override
     public void onAfterSection(GalenPageRunner pageRunner, PageValidation pageValidation, PageSection pageSection) {
         for (ValidationListener listener: listeners) {
-            listener.onAfterSection(pageRunner, pageValidation, pageSection);
+            try {
+                listener.onAfterSection(pageRunner, pageValidation, pageSection);
+            }
+            catch (Exception ex) {
+                LOG.error("Unknown error during finishing test", ex);
+            }
         }
     }
 
     @Override
     public void onSubLayout(PageValidation pageValidation, String objectName) {
         for (ValidationListener listener: listeners) {
-            listener.onSubLayout(pageValidation, objectName);
+            try {
+                listener.onSubLayout(pageValidation, objectName);
+            }
+            catch (Exception ex) {
+                LOG.error("Unknown error during finishing test", ex);
+            }
         }
     }
 
     @Override
     public void onAfterSubLayout(PageValidation pageValidation, String objectName) {
         for (ValidationListener listener: listeners) {
-            listener.onAfterSubLayout(pageValidation, objectName);
+            try {
+                listener.onAfterSubLayout(pageValidation, objectName);
+            }
+            catch (Exception ex) {
+                LOG.error("Unknown error during finishing test", ex);
+            }
+        }
+
+    }
+
+    @Override
+    public void onSpecGroup(PageValidation pageValidation, String specGroupName) {
+        for (ValidationListener listener: listeners) {
+            try {
+                listener.onSpecGroup(pageValidation, specGroupName);
+            }
+            catch (Exception ex) {
+                LOG.error("Unknown error during finishing test", ex);
+            }
+        }
+    }
+
+    @Override
+    public void onAfterSpecGroup(PageValidation pageValidation, String specGroupName) {
+        for (ValidationListener listener: listeners) {
+            try {
+                listener.onAfterSpecGroup(pageValidation, specGroupName);
+            }
+            catch (Exception ex) {
+                LOG.error("Unknown error during finishing test", ex);
+            }
         }
 
     }

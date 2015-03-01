@@ -90,4 +90,5 @@ public class StringCharReader {
     public boolean hasMoreNormalSymbols() {
         return firstNonWhiteSpaceSymbol() != 0;
     }
+
 }
