@@ -30,7 +30,6 @@ import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import com.sun.org.apache.xml.internal.utils.XMLString;
 import net.mindengine.galen.config.GalenConfig;
 import net.mindengine.galen.page.Rect;
 import net.mindengine.galen.parser.*;

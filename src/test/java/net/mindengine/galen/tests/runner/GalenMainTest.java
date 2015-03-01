@@ -19,7 +19,6 @@ import static java.util.Arrays.asList;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 
-import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 import java.util.LinkedList;
@@ -38,10 +37,11 @@ import org.testng.annotations.Test;
 
 import com.google.common.io.Files;
 
-
+@Test(singleThreaded = true)
 public class GalenMainTest {
 
-    @Test public void shouldRun_javascriptTest_andGenerateReports() throws Exception {
+    @Test
+    public void shouldRun_javascriptTest_andGenerateReports() throws Exception {
         File reportsDir = Files.createTempDir();
         String htmlReportPath = reportsDir.getAbsolutePath();
         String testngReportPath = reportsDir.getAbsolutePath() + "/testng-report.html";
@@ -63,9 +63,8 @@ public class GalenMainTest {
         assertThat(JsTestRegistry.get().getEvents().get(1), is("Test #2 was invoked"));
         assertThat(JsTestRegistry.get().getEvents().get(2), is("Test #3 was invoked"));
         
-        
         String testngReportContent = FileUtils.readFileToString(new File(testngReportPath));
-        
+                
         assertThat(testngReportContent, containsString("<test name=\"Test number 1\">"));
         assertThat(testngReportContent, containsString("<class name=\"Test number 1\">"));
         
@@ -94,7 +93,8 @@ public class GalenMainTest {
                 "report.json"));
     }
     
-    @Test public void shouldRun_javascriptTestWithEvents() throws Exception {
+    @Test 
+    public void shouldRun_javascriptTestWithEvents() throws Exception {
         JsTestRegistry.get().clear();
         
         new GalenMain().execute(new GalenArguments()
@@ -113,7 +113,8 @@ public class GalenMainTest {
                 "After test suite"));
     }
 
-    @Test public void shouldRunJavascriptTests_andFilterThem() throws Exception {
+    @Test 
+    public void shouldRunJavascriptTests_andFilterThem() throws Exception {
         JsTestRegistry.get().clear();
 
         new GalenMain().execute(new GalenArguments()
@@ -187,13 +188,15 @@ public class GalenMainTest {
         assertThat("Amount of reported tests should be", amountOfReportedTests, is(3));
     }
     
-    @Test public void shouldGenerate_configFile() throws IOException {
+    @Test 
+    public void shouldGenerate_configFile() throws IOException {
         new GalenMain().performConfig();
         assertThat("config file should exist", new File("config").exists(), is(true));
         new File("config").delete();
     }
     
-    @Test public void shouldNot_overrideExistingConfigFile() throws IOException {
+    @Test 
+    public void shouldNot_overrideExistingConfigFile() throws IOException {
         File file = new File("config");
         file.createNewFile();
         FileUtils.writeStringToFile(file, "someTestDate = qwertyuiop");
@@ -206,7 +209,8 @@ public class GalenMainTest {
         file.delete();
     }
     
-    @Test public void shouldRun_filteredTestInSuite() throws Exception {
+    @Test 
+    public void shouldRun_filteredTestInSuite() throws Exception {
         String testUrl = getClass().getResource("/suites/suite-for-filtering.test").getFile();
         GalenMain galen = new GalenMain();
         

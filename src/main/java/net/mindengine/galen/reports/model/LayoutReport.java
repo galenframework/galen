@@ -16,24 +16,24 @@
 package net.mindengine.galen.reports.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import net.mindengine.galen.validation.ValidationResult;
 import net.mindengine.rainbow4j.Rainbow4J;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
 public class LayoutReport {
-
-    private final static Logger LOG = LoggerFactory.getLogger(LayoutReport.class);
-
+    
     private String title;
+    private List<String> includedTags = new ArrayList<String>();
+    private List<String> excludedTags = new ArrayList<String>();
     
     private List<LayoutSection> sections = new LinkedList<LayoutSection>();
     private Map<String, LayoutObjectDetails> objects = new HashMap<String, LayoutObjectDetails>();
@@ -116,6 +116,22 @@ public class LayoutReport {
 
     public void setObjects(Map<String, LayoutObjectDetails> objects) {
         this.objects = objects;
+    }
+
+    public List<String> getIncludedTags() {
+        return includedTags;
+    }
+
+    public void setIncludedTags(List<String> includedTags) {
+        this.includedTags = includedTags;
+    }
+
+    public List<String> getExcludedTags() {
+        return excludedTags;
+    }
+
+    public void setExcludedTags(List<String> excludedTags) {
+        this.excludedTags = excludedTags;
     }
 
     public FileTempStorage getFileStorage() {

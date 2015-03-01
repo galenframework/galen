@@ -67,8 +67,8 @@ Default Theme
 .tablesorter-default td {
 	background-color: #fff;
 	border-bottom: #ccc 1px solid;
-	padding: 4px;
-	vertical-align: top;
+	padding: 0px;
+  	vertical-align: middle;
 }
 
 /* hovered row colors */

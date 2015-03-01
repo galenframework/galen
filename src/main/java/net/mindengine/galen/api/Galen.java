@@ -68,6 +68,8 @@ public class Galen {
         listener.add(validationListener);
 
         LayoutReport layoutReport = new LayoutReport();
+        layoutReport.setIncludedTags(includedTags);
+        layoutReport.setExcludedTags(excludedTags);
         try {
             File screenshot = page.createScreenshot();
             if (screenshot != null) {

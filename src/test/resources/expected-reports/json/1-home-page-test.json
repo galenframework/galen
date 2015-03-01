@@ -14,6 +14,8 @@
             "name" : "check layout",
             "status" : "info",
             "time" : 1404681346002,
+		    "includedTags":[],
+		    "excludedTags":[],
             "sections" : [ {
                 "name" : "",
                 "objects" : [ {
@@ -86,6 +88,8 @@
                         "name" : "height: 10 to 20px",
                         "highlight" : [ "objectA1" ],
                         "subLayout" : {
+						    "includedTags":[],
+						    "excludedTags":[],
                             "sections" : [ {
                                 "name" : "Sub section",
                                 "objects" : [ {
