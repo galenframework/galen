@@ -9,4 +9,8 @@ login-button  .login-button
         visible
 @@ end
 
+
+@ Header | *
+--------------------
+
 | Login button should be visible

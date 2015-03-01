@@ -45,6 +45,9 @@ public class PageSpecsWithRulesReaderTest {
 
         PageSection ruleSection = pageSpec.getSections().get(0).getSections().get(0);
 
+
+        assertThat(pageSpec.getSections().get(0).getName(), is("Header"));
+
         assertThat(ruleSection.getName(), is("Login button should be visible"));
         assertThat(ExpectedSpecObject.convertSection(ruleSection),
                 contains(new ExpectedSpecObject("login-button")
