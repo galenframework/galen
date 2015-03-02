@@ -41,7 +41,7 @@ public class RootNode extends Node<List<GalenBasicTest>> {
             throw new SyntaxException(line, "Should not start with space");
         }
         
-        SuiteNode suiteNode = new SuiteNode(line);
+        TestNode suiteNode = new TestNode(line);
         add(suiteNode);
         return suiteNode;
     }
@@ -53,8 +53,8 @@ public class RootNode extends Node<List<GalenBasicTest>> {
         
         List<GalenBasicTest> suites = new LinkedList<GalenBasicTest>();
         for (Node<?> childNode : getChildNodes()) {
-            if (childNode instanceof SuiteNode) {
-                SuiteNode suiteNode = (SuiteNode)childNode;
+            if (childNode instanceof TestNode) {
+                TestNode suiteNode = (TestNode)childNode;
                 if (suiteNode.isEnabled()) {
                     suites.add(suiteNode.build(context));
                 }
@@ -91,7 +91,7 @@ public class RootNode extends Node<List<GalenBasicTest>> {
                     currentParameterizedNode = (ParameterizedNode) node;
                 }
             }
-            else if (node instanceof SuiteNode) {
+            else if (node instanceof TestNode) {
                 if (currentParameterizedNode != null) {
                     currentParameterizedNode.setToParameterize(node);
                     it.remove();
