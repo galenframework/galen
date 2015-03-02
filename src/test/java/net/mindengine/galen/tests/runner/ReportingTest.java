@@ -42,6 +42,7 @@ import net.mindengine.galen.reports.model.LayoutReport;
 import net.mindengine.galen.reports.nodes.LayoutReportNode;
 import net.mindengine.galen.reports.LayoutReportListener;
 
+import net.mindengine.galen.tests.GalenEmptyTest;
 import org.apache.commons.io.IOUtils;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
@@ -113,7 +114,7 @@ public class ReportingTest {
     public void shouldReport_inJsonFormat() throws Exception {
         String reportPath = Files.createTempDir().getAbsolutePath() + "/json-report";
         List<GalenTestInfo> testInfos = new LinkedList<GalenTestInfo>();
-        GalenTestInfo testInfo = new GalenTestInfo("Home page test", null);
+        GalenTestInfo testInfo = new GalenTestInfo("Home page test", new GalenEmptyTest("Home page test", asList("mobile", "HOMEPAGE")));
         TestReport report = new TestReport();
         LayoutReport layoutReport = new LayoutReport();
         layoutReport.setScreenshot(layoutReport.getFileStorage().registerFile("screenshot.png", File.createTempFile("screenshot", ".png")));

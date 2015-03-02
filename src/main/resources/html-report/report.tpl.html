@@ -33,7 +33,7 @@ var reportData = ##REPORT-DATA##;
                             <th>Failed</th>
                             <th>Warnings</th>
                             <th>Total</th>
-                            <th>Tags</th>
+                            <th>Groups</th>
                             <th>Started</th>
                             <th>Duration</th>
                             <th></th>
@@ -49,9 +49,9 @@ var reportData = ##REPORT-DATA##;
                             <td class="status failed">{{statistic.errors}}</td>
                             <td class="status warnings">{{statistic.warnings}}</td>
                             <td class="status total">{{statistic.total}}</td>
-                            <td class="tags">{{tagsPretty}}</td>
+                            <td class="tags">{{formatGroupsPretty groups}}</td>
                             <td class="time">{{formatDateTime startedAt}}</td>
-                            <td class="time">{{durationPretty}}</td>
+                            <td class="time">{{formatDurationHumanReadable duration}}</td>
                             <td class="progressbar">
                                 {{renderProgressBar statistic}}
                             </td>

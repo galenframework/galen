@@ -43,6 +43,7 @@ public class GalenSuiteReaderTest {
 
     private static final Object EMPTY_TAGS = new LinkedList<String>();
 
+
     @Test public void shouldRead_simpleSuite_successfully() throws IOException {
         GalenSuiteReader reader = new GalenSuiteReader();
         

@@ -97,7 +97,7 @@ public class GalenTestInfo {
     }
 
     public static GalenTestInfo fromString(final String name) {
-        return new GalenTestInfo(name, new GalenEmptyTest(name));
+        return new GalenTestInfo(name, new GalenEmptyTest(name, null));
     }
 
     public static GalenTestInfo fromMethod(Method method) {

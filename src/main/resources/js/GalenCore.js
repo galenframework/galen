@@ -236,6 +236,9 @@
             getName: function () {
                 return this.testName;
             },
+            getGroups: function () {
+                return [];
+            },
             beforeTest: function () {
                 return;
             },
