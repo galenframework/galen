@@ -18,8 +18,13 @@ package net.mindengine.galen.tests;
 import net.mindengine.galen.reports.TestReport;
 import net.mindengine.galen.runner.CompleteListener;
 
+import java.util.List;
+
 public interface GalenTest {
 
     public String getName();
+
     public void execute(TestReport report, CompleteListener listener) throws Exception;
+
+    public List<String> getGroups();
 }

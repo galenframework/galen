@@ -20,9 +20,6 @@ import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
-import net.mindengine.galen.reports.model.LayoutReport;
-import net.mindengine.galen.reports.nodes.LayoutReportNode;
-import net.mindengine.galen.reports.nodes.TestReportNode;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
@@ -36,27 +33,11 @@ public class GalenTestAggregatedInfo {
     private GalenTestInfo testInfo;
     private TestStatistic statistic;
     private String testId;
-    private Set<String> includedTags = new TreeSet<String>();
-    private Set<String> excludedTags = new TreeSet<String>();
+
 
 
     public GalenTestAggregatedInfo(String testId, GalenTestInfo test) {
         this.setTestInfo(test);
-        
-        final List<TestReportNode> reportNodes= test.getReport().getNodes();
-        if (!CollectionUtils.isEmpty(reportNodes)) {
-            for (final TestReportNode testReportNode : reportNodes) {
-                if (testReportNode instanceof LayoutReportNode) {
-                    final LayoutReport layoutReport = ((LayoutReportNode) testReportNode).getLayoutReport();
-                    if (!CollectionUtils.isEmpty(layoutReport.getIncludedTags())) {
-                        this.includedTags.addAll(layoutReport.getIncludedTags());
-                    }
-                    if (!CollectionUtils.isEmpty(layoutReport.getExcludedTags())) {
-                        this.excludedTags.addAll(layoutReport.getExcludedTags());
-                    }
-                }
-            }
-        }
         this.setStatistic(test.getReport().fetchStatistic());
         this.setTestId(testId);
     }
@@ -108,78 +89,10 @@ public class GalenTestAggregatedInfo {
         return testInfo.getEndedAt().getTime() - testInfo.getStartedAt().getTime();
     }
 
-    public Set<String> getIncludedTags() {
-        return includedTags;
-    }
-
-    public void setIncludedTags(Set<String> includedTags) {
-        this.includedTags = includedTags;
-    }
-
-    public Set<String> getExcludedTags() {
-        return excludedTags;
-    }
-
-    public void setExcludedTags(Set<String> excludedTags) {
-        this.excludedTags = excludedTags;
-    }
-
-    public String getTagsPretty() {
-        final StringBuffer tagsPretty = new StringBuffer();
-        if (!CollectionUtils.isEmpty(this.includedTags)) {
-            final Set<String> allUsedTags = new TreeSet<String>(this.includedTags);
-            if (!CollectionUtils.isEmpty(this.excludedTags)) {
-                allUsedTags.removeAll(this.excludedTags);
-            }
-            final Iterator<String> it = allUsedTags.iterator();
-            for (;;) {
-                final String tag  = it.next();
-                tagsPretty.append(tag);
-                if (! it.hasNext()){
-                    return tagsPretty.toString();
-                } else {
-                    tagsPretty.append(", ");
-                }
-            }
+    public List<String> getGroups() {
+        if (testInfo.getTest() != null) {
+            return testInfo.getTest().getGroups();
         }
-        // fallback on empty
-        return tagsPretty.toString();
-    }
-    
-    public String getDurationPretty() {
-        if (testInfo.getStartedAt() != null && testInfo.getEndedAt() != null) {
-            Long durationInSeconds = (testInfo.getEndedAt().getTime() - testInfo.getStartedAt().getTime())/1000;
-
-            if (durationInSeconds > 0) {
-                Long hours = durationInSeconds / 3600;
-                Long minutes = (durationInSeconds - hours * 3600) / 60;
-                Long seconds = durationInSeconds - hours * 3600 - minutes * 60;
-
-                StringBuilder builder = new StringBuilder();
-                if (hours > 0) {
-                    builder.append(Long.toString(hours));
-                    builder.append('h');
-                }
-
-                if (minutes > 0 || hours > 0) {
-                    if (hours > 0) {
-                        builder.append(' ');
-                    }
-                    builder.append(Long.toString(minutes));
-                    builder.append('m');
-                }
-
-                if (seconds > 0) {
-                    if (hours > 0 || minutes > 0) {
-                        builder.append(' ');
-                    }
-                    builder.append(Long.toString(seconds));
-                    builder.append('s');
-                }
-
-                return builder.toString();
-            }
-        }
-        return "-";
+        return null;
     }
 }

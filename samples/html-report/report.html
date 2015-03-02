@@ -20,6 +20,7 @@ var reportData = {
       "warnings" : 0,
       "total" : 35
     },
+    "groups" : ["mobile", "WELCOME_PAGE"],
     "testId" : "1-welcome-page-on-mobile-device",
     "failed" : false,
     "durationPretty" : "5s",
@@ -35,6 +36,7 @@ var reportData = {
       "warnings" : 0,
       "total" : 48
     },
+    "groups" : ["tablet", "WELCOME_PAGE"],
     "testId" : "2-welcome-page-on-tablet-device",
     "failed" : true,
     "durationPretty" : "5s",
@@ -230,6 +232,7 @@ var reportData = {
                         <th>Failed</th>
                         <th>Warnings</th>
                         <th>Total</th>
+                        <th>Groups</th>
                         <th>Started</th>
                         <th>Duration</th>
                         <th></th>
@@ -245,8 +248,9 @@ var reportData = {
                         <td class="status failed">{{statistic.errors}}</td>
                         <td class="status warnings">{{statistic.warnings}}</td>
                         <td class="status total">{{statistic.total}}</td>
+                        <td class="tags">{{formatGroupsPretty groups}}</td>
                         <td class="time">{{formatDateTime startedAt}}</td>
-                        <td class="time">{{durationPretty}}</td>
+                        <td class="time">{{formatDurationHumanReadable duration}}</td>
                         <td class="progressbar">
                             {{renderProgressBar statistic}}
                         </td>

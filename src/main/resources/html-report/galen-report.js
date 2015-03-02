@@ -334,6 +334,55 @@ Handlebars.registerHelper("formatReportTime", function (time) {
     return "";
 });
 
+Handlebars.registerHelper("formatGroupsPretty", function (groups) {
+    if (groups !== null && groups !== undefined) {
+        var text = "";
+
+        for (var i = 0; i < groups.length; i++) {
+            if (i > 0) {
+                text += ", ";
+            }
+            text = text + groups[i];
+        }
+        return text;
+    }
+    return "";
+});
+
+Handlebars.registerHelper("formatDurationHumanReadable", function (durationInMillis) {
+    var durationInSeconds = Math.floor(durationInMillis / 1000);
+    if (durationInSeconds > 0) {
+        var hours = Math.floor(durationInSeconds / 3600);
+        var minutes = Math.floor((durationInSeconds - hours * 3600) / 60);
+        var seconds = Math.floor(durationInSeconds - hours * 3600 - minutes * 60);
+
+        var text = "";
+        if (hours > 0) {
+            text += hours + "h";
+        }
+
+        if (minutes > 0 || hours > 0) {
+            if (hours > 0) {
+                text += " ";
+            }
+            text += minutes;
+            text += "m";
+        }
+
+        if (seconds > 0) {
+            if (hours > 0 || minutes > 0) {
+                text += " ";
+            }
+            text += seconds;
+            text += "s";
+        }
+
+        return text;
+    }
+
+    else return "0";
+});
+
 function toStringWithLeadingZero(number) {
     if (number < 10) {
         return "0" + number;

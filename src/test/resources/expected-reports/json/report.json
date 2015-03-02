@@ -11,11 +11,8 @@
       "total" : 13
     },
     "testId" : "1-home-page-test",
-    "includedTags":[],
-    "excludedTags":[],
-    "tagsPretty":"",
+    "groups":["mobile", "HOMEPAGE"],
     "failed" : true,
-    "duration" : 70000,
-    "durationPretty" : "1m 10s"
+    "duration" : 70000
   } ]
 }

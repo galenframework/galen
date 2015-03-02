@@ -26,7 +26,8 @@ public class GalenBasicTest implements GalenTest {
     
     private String name;
     private List<GalenPageTest> pageTests;
-    
+    private List<String> groups;
+
 
     public String getName() {
         return name;
@@ -51,6 +52,15 @@ public class GalenBasicTest implements GalenTest {
         testRunner.setValidationListener(listener);
         testRunner.runTest(report, this);
     }
-    
+
+    @Override
+    public List<String> getGroups() {
+        return this.groups;
+    }
+
+    public void setGroups(List<String> groups) {
+        this.groups = groups;
+    }
+
 
 }

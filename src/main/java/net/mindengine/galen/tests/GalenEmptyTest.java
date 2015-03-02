@@ -18,11 +18,15 @@ package net.mindengine.galen.tests;
 import net.mindengine.galen.reports.TestReport;
 import net.mindengine.galen.runner.CompleteListener;
 
+import java.util.List;
+
 public class GalenEmptyTest implements GalenTest {
     private final String testName;
+    private final List<String> groups;
 
-    public GalenEmptyTest(String testName) {
+    public GalenEmptyTest(String testName, List<String> groups) {
         this.testName = testName;
+        this.groups = groups;
     }
 
     @Override
@@ -32,5 +36,10 @@ public class GalenEmptyTest implements GalenTest {
     @Override
     public void execute(TestReport report, CompleteListener listener) throws Exception {
         throw new RuntimeException("Cannot execute test: " + testName);
+    }
+
+    @Override
+    public List<String> getGroups() {
+        return this.groups;
     }
 }
