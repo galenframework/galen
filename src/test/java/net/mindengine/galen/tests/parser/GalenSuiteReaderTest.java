@@ -17,9 +17,7 @@ package net.mindengine.galen.tests.parser;
 
 import static java.util.Arrays.asList;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.notNullValue;
-import static org.hamcrest.Matchers.nullValue;
+import static org.hamcrest.Matchers.*;
 
 import java.awt.Dimension;
 import java.io.File;
@@ -44,7 +42,8 @@ public class GalenSuiteReaderTest {
     private static final Object EMPTY_TAGS = new LinkedList<String>();
 
 
-    @Test public void shouldRead_simpleSuite_successfully() throws IOException {
+    @Test
+    public void shouldRead_simpleSuite_successfully() throws IOException {
         GalenSuiteReader reader = new GalenSuiteReader();
         
         List<GalenBasicTest> galenSuites = reader.read(new File(getClass().getResource("/suites/suite-simple.test").getFile()));
@@ -96,7 +95,8 @@ public class GalenSuiteReaderTest {
         }
     }
     
-    @Test public void shouldRead_allPageActions() throws IOException {
+    @Test
+    public void shouldRead_allPageActions() throws IOException {
         GalenSuiteReader reader = new GalenSuiteReader();
         List<GalenBasicTest> galenSuites = reader.read(new File(getClass().getResource("/suites/suite-all-page-actions.test").getFile()));
         assertThat(galenSuites.size(), is(1));
@@ -114,7 +114,8 @@ public class GalenSuiteReaderTest {
     }
     
         
-    @Test public void shouldRead_suiteWithVariables_successfully() throws IOException {
+    @Test
+    public void shouldRead_suiteWithVariables_successfully() throws IOException {
         
         System.setProperty("some.system.property", "custom property");
         
@@ -159,7 +160,8 @@ public class GalenSuiteReaderTest {
     
     
     @SuppressWarnings("unchecked")
-    @Test public void shouldRead_suiteWithParameterizations_successfully() throws IOException {
+    @Test
+    public void shouldRead_suiteWithParameterizations_successfully() throws IOException {
         GalenSuiteReader reader = new GalenSuiteReader();
         
         List<GalenBasicTest> galenSuites = reader.read(new File(getClass().getResource("/suites/suite-parameterized.test").getFile()));
@@ -292,6 +294,29 @@ public class GalenSuiteReaderTest {
         assertThat(galenSuites.get(0).getName(), is("Suite 1"));
         assertThat(galenSuites.get(1).getName(), is("Suite 2"));
         assertThat(galenSuites.get(2).getName(), is("Suite 3 imported test suite name"));
+    }
+
+    @Test
+    public void shouldRead_testGroups() throws IOException {
+        GalenSuiteReader reader = new GalenSuiteReader();
+
+        List<GalenBasicTest> galenTests = reader.read(new File(getClass().getResource("/suites/suite-with-groups.test").getFile()));
+
+        assertThat("Amount of tests should be", galenTests.size(), is(5));
+        assertThat(galenTests.get(0).getName(), is("Test 1"));
+        assertThat(galenTests.get(0).getGroups(), contains("mobile"));
+
+        assertThat(galenTests.get(1).getName(), is("Test 2"));
+        assertThat(galenTests.get(1).getGroups(), is(nullValue()));
+
+        assertThat(galenTests.get(2).getName(), is("Test 3"));
+        assertThat(galenTests.get(2).getGroups(), contains("tablet", "desktop", "HOMEPAGE"));
+
+        assertThat(galenTests.get(3).getName(), is("Test on firefox browser"));
+        assertThat(galenTests.get(3).getGroups(), contains("mobile", "tablet"));
+
+        assertThat(galenTests.get(4).getName(), is("Test on chrome browser"));
+        assertThat(galenTests.get(4).getGroups(), contains("mobile", "tablet"));
     }
     
     

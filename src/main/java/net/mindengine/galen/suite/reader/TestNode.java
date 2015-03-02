@@ -22,11 +22,12 @@ import net.mindengine.galen.parser.VarsContext;
 import net.mindengine.galen.suite.GalenPageTest;
 import net.mindengine.galen.tests.GalenBasicTest;
 
-public class SuiteNode extends Node<GalenBasicTest> {
+public class TestNode extends Node<GalenBasicTest> {
 
     private boolean disabled = false;
+    private List<String> groups;
 
-    public SuiteNode(Line line) {
+    public TestNode(Line line) {
         super(line);
     }
 
@@ -39,11 +40,13 @@ public class SuiteNode extends Node<GalenBasicTest> {
 
     @Override
     public GalenBasicTest build(VarsContext context) {
-        GalenBasicTest suite = new GalenBasicTest();
+        GalenBasicTest test = new GalenBasicTest();
         List<GalenPageTest> pageTests = new LinkedList<GalenPageTest>();
        
-        suite.setName(context.process(getArguments()));
-        suite.setPageTests(pageTests);
+        test.setName(context.process(getArguments()));
+        test.setPageTests(pageTests);
+
+        test.setGroups(groups);
         
         for (Node<?> childNode : getChildNodes()) {
             if (childNode instanceof PageNode) {
@@ -52,7 +55,7 @@ public class SuiteNode extends Node<GalenBasicTest> {
             }
         }
         
-        return suite;
+        return test;
     }
 
     public boolean isDisabled() {
@@ -66,6 +69,13 @@ public class SuiteNode extends Node<GalenBasicTest> {
     public boolean isEnabled() {
         return !disabled;
     }
-    
 
+
+    public void setGroups(List<String> groups) {
+        this.groups = groups;
+    }
+
+    public List<String> getGroups() {
+        return groups;
+    }
 }

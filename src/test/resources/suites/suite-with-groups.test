@@ -1,0 +1,23 @@
+
+
+
+@@ groups mobile
+Test 1
+
+
+
+Test 2
+
+
+@@ groups tablet, desktop, HOMEPAGE
+Test 3
+
+
+
+
+@@ groups mobile, tablet
+@@ parameterized
+    | browser |
+    | firefox |
+    | chrome  |
+Test on ${browser} browser

@@ -17,10 +17,7 @@ package net.mindengine.galen.suite.reader;
 
 import static java.lang.String.format;
 
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
+import java.util.*;
 
 import net.mindengine.galen.parser.VarsContext;
 import net.mindengine.galen.parser.SyntaxException;
@@ -31,6 +28,7 @@ public class ParameterizedNode extends Node<List<GalenBasicTest>>{
     private Node<?> toParameterize;
     
     private boolean disabled = false;
+    private List<String> groups;
 
     public ParameterizedNode(Line line) {
         super(line);
@@ -42,7 +40,7 @@ public class ParameterizedNode extends Node<List<GalenBasicTest>>{
         Table table = createTable(context);
         
         final VarsContext parameterizedContext = new VarsContext(new Properties(), context);
-        final List<GalenBasicTest> suites = new LinkedList<GalenBasicTest>();
+        final List<GalenBasicTest> tests = new LinkedList<GalenBasicTest>();
         
         table.forEach(new RowVisitor() {
             @Override
@@ -51,16 +49,38 @@ public class ParameterizedNode extends Node<List<GalenBasicTest>>{
                 
                 if (toParameterize instanceof ParameterizedNode) {
                     ParameterizedNode parameterizedNode = (ParameterizedNode)toParameterize;
-                    suites.addAll(parameterizedNode.build(parameterizedContext));
+                    tests.addAll(wrapTestsWithGroups(parameterizedNode.build(parameterizedContext), groups));
                 }
-                else if (toParameterize instanceof SuiteNode) {
-                    SuiteNode suiteNode = (SuiteNode) toParameterize;
-                    suites.add(suiteNode.build(parameterizedContext));
+                else if (toParameterize instanceof TestNode) {
+                    TestNode suiteNode = (TestNode) toParameterize;
+                    tests.add(wrapTestWithGroups(suiteNode.build(parameterizedContext), groups));
                 }
             }
         });
         
-        return suites;
+        return tests;
+    }
+
+    private List<GalenBasicTest> wrapTestsWithGroups(List<GalenBasicTest> tests, List<String> groups) {
+        if (groups != null) {
+            for (GalenBasicTest test : tests) {
+                wrapTestWithGroups(test, groups);
+            }
+        }
+        return tests;
+    }
+
+    private GalenBasicTest wrapTestWithGroups(GalenBasicTest test, List<String> groups) {
+        if (groups != null) {
+            if (test.getGroups() != null) {
+                test.getGroups().addAll(groups);
+            }
+            else {
+                test.setGroups(groups);
+            }
+        }
+
+        return test;
     }
 
     private Table createTable(VarsContext context) {
@@ -160,4 +180,11 @@ public class ParameterizedNode extends Node<List<GalenBasicTest>>{
         return !disabled;
     }
 
+    public void setGroups(List<String> groups) {
+        this.groups = groups;
+    }
+
+    public List<String> getGroups() {
+        return groups;
+    }
 }

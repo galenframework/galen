@@ -22,6 +22,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Properties;
 
@@ -36,13 +37,14 @@ public class GalenSuiteLineProcessor {
     private boolean disableNextSuite = false;
     private String contextPath;
     private Properties properties;
+    private List<String> groupsForNextTest;
 
     public GalenSuiteLineProcessor(Properties properties, String contextPath) {
         this.contextPath = contextPath;
         this.properties = properties;
     }
 
-    public void processLine(String line, int number) throws FileNotFoundException, IOException {
+    public void processLine(String line, int number) throws IOException {
         if (!isBlank(line) && !isCommented(line) && !isSeparator(line)) {
             if (line.startsWith("@@")) {
                 Node<?> node = processSpecialInstruction(new Line(line.substring(2).trim(), number));
@@ -56,10 +58,15 @@ public class GalenSuiteLineProcessor {
                 Node<?> processingNode = currentNode.findProcessingNodeByIndentation(spaces);
                 Node<?> newNode = processingNode.processNewNode(new Line(line, number));
                 
-                if (newNode instanceof SuiteNode) {
+                if (newNode instanceof TestNode) {
                     if (disableNextSuite) {
                         disableNextSuite = false; 
-                        ((SuiteNode)newNode).setDisabled(true);
+                        ((TestNode)newNode).setDisabled(true);
+                    }
+
+                    if (groupsForNextTest != null) {
+                        ((TestNode)newNode).setGroups(groupsForNextTest);
+                        groupsForNextTest = null;
                     }
                 }
                 
@@ -99,6 +106,10 @@ public class GalenSuiteLineProcessor {
             markNextSuiteAsDisabled();
             return null;
         }
+        else if (firstWord.equals("groups")) {
+            markNextSuiteGroupedWith(leftover);
+            return null;
+        }
         else if (firstWord.equals("import")) {
             List<Node<?>> nodes = importSuite(leftover, line);
             rootNode.getChildNodes().addAll(nodes);
@@ -124,6 +135,21 @@ public class GalenSuiteLineProcessor {
         return childProcessor.rootNode.getChildNodes();
     }
 
+    private void markNextSuiteGroupedWith(String commaSeparatedGroups) {
+
+        String[] groupsArray = commaSeparatedGroups.split(",");
+
+        List<String> groups = new LinkedList<String>();
+        for (String group : groupsArray) {
+            String trimmedGroup = group.trim();
+            if (!trimmedGroup.isEmpty()) {
+                groups.add(trimmedGroup);
+            }
+        }
+
+        this.groupsForNextTest = groups;
+    }
+
     private void markNextSuiteAsDisabled() {
         this.disableNextSuite = true;
     }
@@ -134,6 +160,11 @@ public class GalenSuiteLineProcessor {
         if (disableNextSuite) {
             parameterizedNode.setDisabled(true);
             disableNextSuite = false;
+        }
+
+        if (groupsForNextTest != null) {
+            parameterizedNode.setGroups(groupsForNextTest);
+            groupsForNextTest = null;
         }
         
         currentNode.add(parameterizedNode);
