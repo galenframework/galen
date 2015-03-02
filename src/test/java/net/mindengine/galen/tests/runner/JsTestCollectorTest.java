@@ -109,7 +109,25 @@ public class JsTestCollectorTest {
         assertThat("Events amount should be", events.size(), is(2));
 
         assertThat("Events should be", events, contains("included.js was loaded", "From main name is visible as Included object"));
+    }
 
 
+    @Test
+    public void shouldAllow_toGroupTests() throws IOException {
+        JsTestCollector testCollector = new JsTestCollector();
+        JsTestRegistry.get().clear();
+        testCollector.execute(new File(getClass().getResource("/js-tests/testgroups.test.js").getFile()));
+
+        List<GalenTest> tests = testCollector.getCollectedTests();
+        assertThat(tests.get(0).getName(), is("Test A"));
+        assertThat(tests.get(0).getGroups(), contains("mobile"));
+
+        assertThat(tests.get(1).getName(), is("Test B"));
+        assertThat(tests.get(1).getGroups(), contains("mobile", "tablet", "desktop"));
+
+        assertThat(tests.get(2).getName(), is("Test C"));
+        assertThat(tests.get(2).getGroups(), contains("mobile", "tablet", "desktop"));
+
+        assertThat(tests.get(3).getName(), is("Test D"));
     }
 }

@@ -70,6 +70,34 @@
                 stackBackwards: false
             }
         },
+        futureGroups: {
+            stack: [],
+            push: function (value) {
+                if (Array.isArray(value)) {
+                    this.stack.push(value);
+                } else {
+                    this.stack.push(value);
+                }
+            },
+            pop: function () {
+                if (this.stack.length > 0) {
+                    this.stack.pop();
+                }
+            },
+            fetchAll: function () {
+                var groups = [],
+                    i,
+                    k;
+
+                for (i = 0; i < this.stack.length; i += 1) {
+                    for (k = 0; k < this.stack[i].length; k += 1) {
+                        groups.push(this.stack[i][k]);
+                    }
+                }
+
+                return groups;
+            }
+        },
         futureData: {
             stack: [],
             push: function (name, value) {
@@ -217,6 +245,7 @@
             callbacks: callbacks,
             arguments: GalenCore.parametersStack.fetchAll(),
             data: GalenCore.futureData.fetchAll(),
+            testGroups: GalenCore.futureGroups.fetchAll(),
             on: function (args, callback) {
                 if (Array.isArray(args)) {
                     this.arguments = args;
@@ -237,7 +266,7 @@
                 return this.testName;
             },
             getGroups: function () {
-                return [];
+                return this.testGroups;
             },
             beforeTest: function () {
                 return;
@@ -361,6 +390,12 @@
         };
     }
 
+    function grouped(groups, callback) {
+        GalenCore.futureGroups.push(groups);
+        callback();
+        GalenCore.futureGroups.pop();
+    }
+
     function testFilter(callback) {
         _galenCore.addTestFilterEvent(new TestFilterEvent({
             callback: {
@@ -395,4 +430,5 @@
     exports.GalenCore = GalenCore;
     exports.testFilter = testFilter;
     exports.testRetry = testRetry;
+    exports.grouped = grouped;
 }(this));
