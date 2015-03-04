@@ -35,17 +35,17 @@ public class HtmlReportBuilder {
     };
 
 
-    public void build(List<GalenTestInfo> tests, String reportFolderPath) throws IOException {
+    public void build(final List<GalenTestInfo> tests, final String reportFolderPath) throws IOException {
         makeSureReportFolderExists(reportFolderPath);
 
-        JsonReportBuilder jsonBuilder = new JsonReportBuilder();
-        ReportOverview reportOverview = jsonBuilder.createReportOverview(tests);
+        final JsonReportBuilder jsonBuilder = new JsonReportBuilder();
+        final ReportOverview reportOverview = jsonBuilder.createReportOverview(tests);
 
-        String overviewTemplate = IOUtils.toString(getClass().getResourceAsStream("/html-report/report.tpl.html"));
-        String testReportTemplate = IOUtils.toString(getClass().getResourceAsStream("/html-report/report-test.tpl.html"));
+        final String overviewTemplate = IOUtils.toString(getClass().getResourceAsStream("/html-report/report.tpl.html"));
+        final String testReportTemplate = IOUtils.toString(getClass().getResourceAsStream("/html-report/report-test.tpl.html"));
 
-        for (GalenTestAggregatedInfo aggregatedInfo : reportOverview.getTests()) {
-            String testReportJson = jsonBuilder.exportTestReportToJsonString(aggregatedInfo);
+        for (final GalenTestAggregatedInfo aggregatedInfo : reportOverview.getTests()) {
+            final String testReportJson = jsonBuilder.exportTestReportToJsonString(aggregatedInfo);
             FileUtils.writeStringToFile(new File(reportFolderPath + File.separator + aggregatedInfo.getTestId() + ".html"),
                     testReportTemplate
                             .replace("##REPORT-TEST-NAME##", aggregatedInfo.getTestInfo().getName())
@@ -54,7 +54,7 @@ public class HtmlReportBuilder {
             aggregatedInfo.getTestInfo().getReport().getFileStorage().copyAllFilesTo(new File(reportFolderPath));
         }
 
-        String overviewJson = jsonBuilder.exportReportOverviewToJsonAsString(reportOverview);
+        final String overviewJson = jsonBuilder.exportReportOverviewToJsonAsString(reportOverview);
 
         FileUtils.writeStringToFile(new File(reportFolderPath + File.separator + "report.html"),
                 overviewTemplate.replace("##REPORT-DATA##", overviewJson));
@@ -62,19 +62,19 @@ public class HtmlReportBuilder {
         copyHtmlResources(reportFolderPath);
     }
 
-    private void makeSureReportFolderExists(String reportFolderPath) throws IOException {
+    private void makeSureReportFolderExists(final String reportFolderPath) throws IOException {
         FileUtils.forceMkdir(new File(reportFolderPath));
     }
 
-    private void copyHtmlResources(String reportFolderPath) throws IOException {
+    private void copyHtmlResources(final String reportFolderPath) throws IOException {
 
-        for (String resourceName : resources) {
+        for (final String resourceName : resources) {
             copyResourceToFolder("/html-report/" + resourceName, reportFolderPath + File.separator + resourceName);
         }
     }
 
-    private void copyResourceToFolder(String resourcePath, String destFileName) throws IOException {
-        File destFile = new File(destFileName);
+    private void copyResourceToFolder(final String resourcePath, final String destFileName) throws IOException {
+        final File destFile = new File(destFileName);
 
         if (!destFile.exists()) {
             if (!destFile.createNewFile()) {

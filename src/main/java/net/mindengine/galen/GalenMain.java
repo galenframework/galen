@@ -48,7 +48,6 @@ import net.mindengine.galen.runner.GalenArguments;
 import net.mindengine.galen.runner.JsTestCollector;
 import net.mindengine.galen.runner.SuiteListener;
 import net.mindengine.galen.runner.events.TestFilterEvent;
-import net.mindengine.galen.suite.GalenPageAction;
 import net.mindengine.galen.suite.GalenPageTest;
 import net.mindengine.galen.suite.actions.GalenPageActionCheck;
 import net.mindengine.galen.suite.reader.GalenSuiteReader;
@@ -56,7 +55,9 @@ import net.mindengine.galen.tests.GalenBasicTest;
 import net.mindengine.galen.tests.GalenTest;
 import net.mindengine.galen.validation.FailureListener;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -66,11 +67,11 @@ public class GalenMain {
 
     private CompleteListener listener;
 
-    public void execute(GalenArguments arguments) throws Exception {
+    public void execute(final GalenArguments arguments) throws Exception {
         if (arguments.getAction() != null) {
 
-            FailureListener failureListener = new FailureListener();
-            CombinedListener combinedListener = createListeners(arguments);
+            final FailureListener failureListener = new FailureListener();
+            final CombinedListener combinedListener = createListeners(arguments);
             combinedListener.add(failureListener);
             if (listener != null) {
                 combinedListener.add(listener);
@@ -107,19 +108,19 @@ public class GalenMain {
         }
     }
 
-    private void performPageDump(GalenArguments arguments) throws Exception {
-        SeleniumBrowserFactory browserFactory = new SeleniumBrowserFactory();
-        Browser browser = browserFactory.openBrowser();
+    private void performPageDump(final GalenArguments arguments) throws SyntaxException {
+        final SeleniumBrowserFactory browserFactory = new SeleniumBrowserFactory();
+        final Browser browser = browserFactory.openBrowser();
 
         try {
 
-            if (arguments.getUrl() == null || arguments.getUrl().isEmpty()) {
+            if (StringUtils.isEmpty(arguments.getUrl())) {
                 throw new SyntaxException("--url parameter is not defined");
             }
-            if (arguments.getPaths() == null || arguments.getPaths().size() == 0) {
+            if (CollectionUtils.isEmpty(arguments.getPaths())) {
                 throw new SyntaxException("You should specify a spec file with which you want to make a page dump");
             }
-            if (arguments.getExport() == null || arguments.getExport().isEmpty()) {
+            if (StringUtils.isEmpty(arguments.getExport())) {
                 throw new SyntaxException("--export parameter is not defined");
             }
 
@@ -131,21 +132,21 @@ public class GalenMain {
 
             Galen.dumpPage(browser, arguments.getUrl(), arguments.getPaths().get(0), arguments.getExport(), arguments.getMaxWidth(), arguments.getMaxHeight());
             System.out.println("Done!");
-        } catch (Exception ex) {
-            throw ex;
+        } catch (final Exception ex) {
+            throw new RuntimeException(ex);
         } finally {
             browser.quit();
         }
     }
 
     public void performConfig() throws IOException {
-        File file = new File("config");
+        final File file = new File("config");
 
         if (!file.exists()) {
             file.createNewFile();
-            FileOutputStream fos = new FileOutputStream(file);
+            final FileOutputStream fos = new FileOutputStream(file);
 
-            StringWriter writer = new StringWriter();
+            final StringWriter writer = new StringWriter();
             IOUtils.copy(getClass().getResourceAsStream("/config-template.conf"), writer, "UTF-8");
             IOUtils.write(writer.toString(), fos, "UTF-8");
             fos.flush();
@@ -156,14 +157,14 @@ public class GalenMain {
         }
     }
 
-    private CombinedListener createListeners(GalenArguments arguments) throws IOException, SecurityException, IllegalArgumentException, ClassNotFoundException,
+    private CombinedListener createListeners(final GalenArguments arguments) throws IOException, SecurityException, IllegalArgumentException, ClassNotFoundException,
             NoSuchMethodException, InstantiationException, IllegalAccessException, InvocationTargetException {
-        CombinedListener combinedListener = new CombinedListener();
+        final CombinedListener combinedListener = new CombinedListener();
         combinedListener.add(new ConsoleReportingListener(System.out, System.out));
 
         // Adding all user defined listeners
-        List<CompleteListener> configuredListeners = getConfiguredListeners();
-        for (CompleteListener configuredListener : configuredListeners) {
+        final List<CompleteListener> configuredListeners = getConfiguredListeners();
+        for (final CompleteListener configuredListener : configuredListeners) {
             combinedListener.add(configuredListener);
         }
         return combinedListener;
@@ -172,23 +173,23 @@ public class GalenMain {
     @SuppressWarnings("unchecked")
     public List<CompleteListener> getConfiguredListeners() throws ClassNotFoundException, SecurityException, NoSuchMethodException, IllegalArgumentException,
             InstantiationException, IllegalAccessException, InvocationTargetException {
-        List<CompleteListener> configuredListeners = new LinkedList<CompleteListener>();
-        List<String> classNames = GalenConfig.getConfig().getReportingListeners();
+        final List<CompleteListener> configuredListeners = new LinkedList<CompleteListener>();
+        final List<String> classNames = GalenConfig.getConfig().getReportingListeners();
 
-        for (String className : classNames) {
-            Constructor<CompleteListener> constructor = (Constructor<CompleteListener>) Class.forName(className).getConstructor();
+        for (final String className : classNames) {
+            final Constructor<CompleteListener> constructor = (Constructor<CompleteListener>) Class.forName(className).getConstructor();
             configuredListeners.add(constructor.newInstance());
         }
         return configuredListeners;
     }
 
-    private void performCheck(GalenArguments arguments, CombinedListener listener) throws IOException {
+    private void performCheck(final GalenArguments arguments, final CombinedListener listener) throws IOException {
         verifyArgumentsForPageCheck(arguments);
 
-        List<GalenTest> galenTests = new LinkedList<GalenTest>();
+        final List<GalenTest> galenTests = new LinkedList<GalenTest>();
 
-        for (String pageSpecPath : arguments.getPaths()) {
-            GalenBasicTest test = new GalenBasicTest();
+        for (final String pageSpecPath : arguments.getPaths()) {
+            final GalenBasicTest test = new GalenBasicTest();
             test.setName(pageSpecPath);
             test.setPageTests(asList(new GalenPageTest()
                     .withTitle("Simple check")
@@ -196,7 +197,7 @@ public class GalenMain {
                     .withSize(arguments.getScreenSize())
                     .withBrowserFactory(new SeleniumBrowserFactory(SeleniumBrowserFactory.FIREFOX))
                     .withActions(
-                            asList((GalenPageAction) new GalenPageActionCheck().withSpecs(asList(pageSpecPath)).withIncludedTags(arguments.getIncludedTags())
+                            asList(new GalenPageActionCheck().withSpecs(asList(pageSpecPath)).withIncludedTags(arguments.getIncludedTags())
                                     .withExcludedTags(arguments.getExcludedTags()).withOriginalCommand(arguments.getOriginal())))));
             galenTests.add(test);
         }
@@ -204,7 +205,7 @@ public class GalenMain {
         runTests(new EventHandler(), arguments, galenTests, listener);
     }
 
-    private void verifyArgumentsForPageCheck(GalenArguments arguments) {
+    private void verifyArgumentsForPageCheck(final GalenArguments arguments) {
         if (arguments.getUrl() == null) {
             throw new IllegalArgumentException("Url is not specified");
         }
@@ -213,27 +214,27 @@ public class GalenMain {
             throw new IllegalArgumentException("Screen size is not specified");
         }
 
-        if (arguments.getPaths().size() < 1) {
+        if (CollectionUtils.isEmpty(arguments.getPaths())) {
             throw new IllegalArgumentException("There are no specs specified");
         }
 
     }
 
-    public static void main(String[] args) throws Exception {
+    public static void main(final String[] args) throws Exception {
         new GalenMain().execute(GalenArguments.parse(args));
     }
 
-    private void runTests(GalenArguments arguments, CompleteListener listener) throws IOException {
-        List<File> basicTestFiles = new LinkedList<File>();
-        List<File> jsTestFiles = new LinkedList<File>();
+    private void runTests(final GalenArguments arguments, final CompleteListener listener) throws IOException {
+        final List<File> basicTestFiles = new LinkedList<File>();
+        final List<File> jsTestFiles = new LinkedList<File>();
 
-        for (String path : arguments.getPaths()) {
-            File file = new File(path);
+        for (final String path : arguments.getPaths()) {
+            final File file = new File(path);
             if (file.exists()) {
                 if (file.isDirectory()) {
                     searchForTests(file, arguments.getRecursive(), basicTestFiles, jsTestFiles);
                 } else if (file.isFile()) {
-                    String name = file.getName().toLowerCase();
+                    final String name = file.getName().toLowerCase();
                     if (name.endsWith(".test")) {
                         basicTestFiles.add(file);
                     } else if (name.endsWith(".test.js")) {
@@ -252,16 +253,16 @@ public class GalenMain {
         }
     }
 
-    private void runTestFiles(List<File> basicTestFiles, List<File> jsTestFiles, CompleteListener listener, GalenArguments arguments) throws IOException {
-        GalenSuiteReader reader = new GalenSuiteReader();
+    private void runTestFiles(final List<File> basicTestFiles, final List<File> jsTestFiles, final CompleteListener listener, final GalenArguments arguments) throws IOException {
+        final GalenSuiteReader reader = new GalenSuiteReader();
 
-        List<GalenTest> tests = new LinkedList<GalenTest>();
-        for (File file : basicTestFiles) {
+        final List<GalenTest> tests = new LinkedList<GalenTest>();
+        for (final File file : basicTestFiles) {
             tests.addAll(reader.read(file));
         }
 
-        JsTestCollector testCollector = new JsTestCollector(tests);
-        for (File jsFile : jsTestFiles) {
+        final JsTestCollector testCollector = new JsTestCollector(tests);
+        for (final File jsFile : jsTestFiles) {
             testCollector.execute(jsFile);
         }
 
@@ -272,7 +273,7 @@ public class GalenMain {
         testCollector.getEventHandler().invokeAfterTestSuiteEvents();
     }
 
-    private void runTests(EventHandler eventHandler, GalenArguments arguments, List<GalenTest> tests, CompleteListener listener) {
+    private void runTests(final EventHandler eventHandler, final GalenArguments arguments, final List<GalenTest> tests, final CompleteListener listener) {
 
         if (arguments.getParallelSuites() > 1) {
             runTestsInThreads(eventHandler, tests, arguments, listener, arguments.getParallelSuites());
@@ -281,19 +282,19 @@ public class GalenMain {
         }
     }
 
-    private void runTestsInThreads(final EventHandler eventHandler, List<GalenTest> tests, GalenArguments arguments, final CompleteListener listener,
-                                   int amountOfThreads) {
-        ExecutorService executor = Executors.newFixedThreadPool(amountOfThreads);
+    private void runTestsInThreads(final EventHandler eventHandler,final List<GalenTest> tests,final GalenArguments arguments, final CompleteListener listener,
+                                   final int amountOfThreads) {
+        final ExecutorService executor = Executors.newFixedThreadPool(amountOfThreads);
 
-        Pattern filterPattern = createTestFilter(arguments.getFilter());
+        final Pattern filterPattern = createTestFilter(arguments.getFilter());
 
-        tests = filterTests(tests, eventHandler);
+        final List<GalenTest> filteredTests = filterTests(tests, eventHandler);
 
-        tellBeforeTestSuite(listener, tests);
+        tellBeforeTestSuite(listener, filteredTests);
 
-        List<GalenTestInfo> testInfos = Collections.synchronizedList(new LinkedList<GalenTestInfo>());
+        final List<GalenTestInfo> testInfos = Collections.synchronizedList(new LinkedList<GalenTestInfo>());
 
-        for (final GalenTest test : tests) {
+        for (final GalenTest test : filteredTests) {
             if (matchesPattern(test.getName(), filterPattern)) {
                 executor.execute(new TestRunnable(test, listener, eventHandler, testInfos));
             }
@@ -307,12 +308,12 @@ public class GalenMain {
         createAllReports(testInfos, arguments);
     }
 
-    private List<GalenTest> filterTests(List<GalenTest> tests, EventHandler eventHandler) {
-        List<TestFilterEvent> filters = eventHandler.getTestFilterEvents();
-        if (filters != null && filters.size() > 0) {
+    private List<GalenTest> filterTests(final List<GalenTest> tests,final  EventHandler eventHandler) {
+        final List<TestFilterEvent> filters = eventHandler.getTestFilterEvents();
+        if (CollectionUtils.isNotEmpty(filters)) {
             GalenTest[] arrTests = tests.toArray(new GalenTest[]{});
 
-            for (TestFilterEvent filter : filters) {
+            for (final TestFilterEvent filter : filters) {
                 arrTests = filter.execute(arrTests);
             }
 
@@ -325,27 +326,27 @@ public class GalenMain {
         return tests;
     }
 
-    private void tellBeforeTestSuite(CompleteListener listener, List<GalenTest> tests) {
+    private void tellBeforeTestSuite(final CompleteListener listener, final List<GalenTest> tests) {
         if (listener != null) {
             try {
                 listener.beforeTestSuite(tests);
-            } catch (Exception ex) {
+            } catch (final Exception ex) {
                 LOG.error("Unknow error before running testsuites.", ex);
             }
         }
     }
 
-    private void tellAfterTestSuite(SuiteListener listener, List<GalenTestInfo> testInfos) {
+    private void tellAfterTestSuite(final SuiteListener listener, final List<GalenTestInfo> testInfos) {
         if (listener != null) {
             try {
                 listener.afterTestSuite(testInfos);
-            } catch (Exception ex) {
+            } catch (final Exception ex) {
                 LOG.error("Unknow error after running testsuites.", ex);
             }
         }
     }
 
-    private void createAllReports(List<GalenTestInfo> testInfos, GalenArguments arguments) {
+    private void createAllReports(final List<GalenTestInfo> testInfos, final GalenArguments arguments) {
         if (arguments.getTestngReport() != null) {
             createTestngReport(arguments.getTestngReport(), testInfos);
         }
@@ -357,44 +358,45 @@ public class GalenMain {
         }
     }
 
-    private void createJsonReport(String jsonReport, List<GalenTestInfo> testInfos) {
+    private void createJsonReport(final String jsonReport, final List<GalenTestInfo> testInfos) {
         try {
             new JsonReportBuilder().build(testInfos, jsonReport);
-        } catch (IOException e) {
+        } catch (final IOException e) {
             LOG.trace("Failed generating json report", e);
         }
     }
 
-    private void createHtmlReport(String htmlReportPath, List<GalenTestInfo> testInfos) {
+    private void createHtmlReport(final String htmlReportPath, final List<GalenTestInfo> testInfos) {
         try {
             new HtmlReportBuilder().build(testInfos, htmlReportPath);
-        } catch (Exception ex) {
+        } catch (final Exception ex) {
             LOG.error("Unknow error during creating HTML report.", ex);
         }
     }
 
-    private void createTestngReport(String testngReport, List<GalenTestInfo> testInfos) {
+    private void createTestngReport(final String testngReport, final List<GalenTestInfo> testInfos) {
         try {
             new TestNgReportBuilder().build(testInfos, testngReport);
-        } catch (Exception ex) {
+        } catch (final Exception ex) {
             LOG.error("Unknow error during creating TestNG report.", ex);
         }
     }
 
-    private boolean matchesPattern(String name, Pattern filterPattern) {
+    private boolean matchesPattern(final String name, final Pattern filterPattern) {
         if (filterPattern != null) {
             return filterPattern.matcher(name).matches();
-        } else
+        } else {
             return true;
+        }
     }
 
-    private Pattern createTestFilter(String filter) {
+    private Pattern createTestFilter(final String filter) {
         return filter != null ? Pattern.compile(filter.replace("*", ".*")) : null;
     }
 
-    private void searchForTests(File file, boolean recursive, List<File> files, List<File> jsFiles) {
+    private void searchForTests(final File file, final boolean recursive, final List<File> files, final List<File> jsFiles) {
 
-        String fileName = file.getName().toLowerCase();
+        final String fileName = file.getName().toLowerCase();
         if (file.isFile()) {
             if (fileName.endsWith(".test")) {
                 files.add(file);
@@ -402,7 +404,7 @@ public class GalenMain {
                 jsFiles.add(file);
             }
         } else if (file.isDirectory()) {
-            for (File childFile : file.listFiles()) {
+            for (final File childFile : file.listFiles()) {
                 searchForTests(childFile, recursive, files, jsFiles);
             }
         }
@@ -412,7 +414,7 @@ public class GalenMain {
         return listener;
     }
 
-    public void setListener(CompleteListener listener) {
+    public void setListener(final CompleteListener listener) {
         this.listener = listener;
     }
 
