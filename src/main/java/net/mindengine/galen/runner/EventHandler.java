@@ -1,18 +1,18 @@
 /*******************************************************************************
-* Copyright 2015 Ivan Shubin http://mindengine.net
-* 
-* Licensed under the Apache License, Version 2.0 (the "License");
-* you may not use this file except in compliance with the License.
-* You may obtain a copy of the License at
-* 
-*   http://www.apache.org/licenses/LICENSE-2.0
-* 
-* Unless required by applicable law or agreed to in writing, software
-* distributed under the License is distributed on an "AS IS" BASIS,
-* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-* See the License for the specific language governing permissions and
-* limitations under the License.
-******************************************************************************/
+ * Copyright 2015 Ivan Shubin http://mindengine.net
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ******************************************************************************/
 package net.mindengine.galen.runner;
 
 import java.util.LinkedList;
@@ -43,7 +43,7 @@ public class EventHandler {
         return beforeTestEvents;
     }
 
-    public void setBeforeTestEvents(List<TestEvent> beforeTestEvents) {
+    public void setBeforeTestEvents(final List<TestEvent> beforeTestEvents) {
         this.beforeTestEvents = beforeTestEvents;
     }
 
@@ -51,7 +51,7 @@ public class EventHandler {
         return afterTestEvents;
     }
 
-    public void setAfterTestEvents(List<TestEvent> afterTestEvents) {
+    public void setAfterTestEvents(final List<TestEvent> afterTestEvents) {
         this.afterTestEvents = afterTestEvents;
     }
 
@@ -59,7 +59,7 @@ public class EventHandler {
         return afterTestSuiteEvents;
     }
 
-    public void setAfterTestSuiteEvents(List<TestSuiteEvent> afterTestSuiteEvents) {
+    public void setAfterTestSuiteEvents(final List<TestSuiteEvent> afterTestSuiteEvents) {
         this.afterTestSuiteEvents = afterTestSuiteEvents;
     }
 
@@ -67,7 +67,7 @@ public class EventHandler {
         return beforeTestSuiteEvents;
     }
 
-    public void setBeforeTestSuiteEvents(List<TestSuiteEvent> beforeTestSuiteEvents) {
+    public void setBeforeTestSuiteEvents(final List<TestSuiteEvent> beforeTestSuiteEvents) {
         this.beforeTestSuiteEvents = beforeTestSuiteEvents;
     }
 
@@ -79,13 +79,13 @@ public class EventHandler {
         execute(getAfterTestSuiteEvents());
     }
 
-    private void execute(List<TestSuiteEvent> events) {
+    private void execute(final List<TestSuiteEvent> events) {
         if (events != null) {
-            for (TestSuiteEvent event : events) {
+            for (final TestSuiteEvent event : events) {
                 if (event != null) {
                     try {
                         event.execute();
-                    } catch (Throwable ex) {
+                    } catch (final Exception ex) {
                         LOG.error("Unknow error during executing test suites.", ex);
                     }
                 }
@@ -93,21 +93,21 @@ public class EventHandler {
         }
     }
 
-    public void invokeBeforeTestEvents(GalenTestInfo testInfo) {
+    public void invokeBeforeTestEvents(final GalenTestInfo testInfo) {
         execute(getBeforeTestEvents(), testInfo);
     }
 
-    public void invokeAfterTestEvents(GalenTestInfo testInfo) {
+    public void invokeAfterTestEvents(final GalenTestInfo testInfo) {
         execute(getAfterTestEvents(), testInfo);
     }
 
-    private void execute(List<TestEvent> events, GalenTestInfo testInfo) {
+    private void execute(final List<TestEvent> events, final GalenTestInfo testInfo) {
         if (events != null) {
-            for (TestEvent event : events) {
+            for (final TestEvent event : events) {
                 if (event != null) {
                     try {
                         event.execute(testInfo);
-                    } catch (Throwable ex) {
+                    } catch (final Exception ex) {
                         LOG.error("Unknow error during executing test events.", ex);
                     }
                 }
@@ -119,7 +119,7 @@ public class EventHandler {
         return testFilterEvents;
     }
 
-    public void setTestFilterEvents(List<TestFilterEvent> testFilterEvents) {
+    public void setTestFilterEvents(final List<TestFilterEvent> testFilterEvents) {
         this.testFilterEvents = testFilterEvents;
     }
 
@@ -127,7 +127,7 @@ public class EventHandler {
         return testRetryEvents;
     }
 
-    public void setTestRetryEvents(List<TestRetryEvent> testRetryEvents) {
+    public void setTestRetryEvents(final List<TestRetryEvent> testRetryEvents) {
         this.testRetryEvents = testRetryEvents;
     }
 }

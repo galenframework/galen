@@ -15,24 +15,18 @@
 ******************************************************************************/
 package net.mindengine.galen.tests.reports;
 
-import net.mindengine.galen.reports.GalenTestInfo;
-import org.testng.*;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
-import org.testng.internal.ConstructorOrMethod;
-import org.testng.xml.XmlClass;
-import org.testng.xml.XmlTest;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.greaterThan;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.notNullValue;
 
 import java.lang.reflect.Method;
 import java.util.Date;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.greaterThan;
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.notNullValue;
+import net.mindengine.galen.reports.GalenTestInfo;
+
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Test;
 
 public class GalenTestInfoTest {
 
@@ -58,10 +52,10 @@ public class GalenTestInfoTest {
 
 
     private void verifyTestInfo(GalenTestInfo testInfo, String name) {
-        assertThat(testInfo.getName(), is(name));
-        assertThat(testInfo.getStartedAt().getTime(), is(greaterThan(startDate)));
-        assertThat(testInfo.getEndedAt().getTime(), is(greaterThan(startDate)));
-        assertThat(testInfo.getReport(), is(notNullValue()));
-        assertThat(testInfo.getTest(), is(notNullValue()));
+        assertThat(testInfo.getName(), equalTo(name));
+        assertThat(testInfo.getStartedAt().getTime(), greaterThan(startDate));
+        assertThat(testInfo.getEndedAt().getTime(), greaterThan(startDate));
+        assertThat(testInfo.getReport(), notNullValue());
+        assertThat(testInfo.getTest(), notNullValue());
     }
 }

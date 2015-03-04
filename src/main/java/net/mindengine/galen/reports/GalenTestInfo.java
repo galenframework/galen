@@ -19,7 +19,7 @@ import java.lang.reflect.Method;
 import java.util.Date;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+
 import net.mindengine.galen.tests.GalenEmptyTest;
 import net.mindengine.galen.tests.GalenTest;
 
@@ -42,7 +42,7 @@ public class GalenTestInfo {
     public GalenTestInfo(String name, GalenTest test) {
         setName(name);
         setTest(test);
-    }
+    }    
     
     public boolean isFailed() {
         return exception != null || report.fetchStatistic().getErrors() > 0;
@@ -96,7 +96,7 @@ public class GalenTestInfo {
         this.test = test;
     }
 
-    public static GalenTestInfo fromString(String name) {
+    public static GalenTestInfo fromString(final String name) {
         return new GalenTestInfo(name, new GalenEmptyTest(name));
     }
 

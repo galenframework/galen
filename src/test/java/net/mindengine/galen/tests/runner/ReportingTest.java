@@ -67,6 +67,49 @@ public class ReportingTest {
 
 
     @Test
+    public void shouldReportWithNoScreenshot_inJsonFormat() throws Exception {
+        String reportPath = Files.createTempDir().getAbsolutePath() + "/json-report";
+        List<GalenTestInfo> testInfos = new LinkedList<GalenTestInfo>();
+        GalenTestInfo testInfo = new GalenTestInfo("Home page test", null);
+        TestReport report = new TestReport();
+        LayoutReport layoutReport = new LayoutReport();
+        layoutReport.setScreenshot(null);
+        ReportingListenerTestUtils.performSampleReporting("Home page test", null, new LayoutReportListener(layoutReport), null);
+
+        report.info("Just a simple info node with attachment")
+                .withAttachment("some-file.txt", File.createTempFile("some-file", ".txt"))
+                .setTime(new Date(1404681346001L));
+
+        report.addNode(new LayoutReportNode(report.getFileStorage(), layoutReport, "check layout"))
+                .setTime(new Date(1404681346002L));
+
+
+        testInfo.setReport(report);
+        testInfo.setStartedAt(new Date(1404681346000L));
+        testInfo.setEndedAt(new Date(1404681416000L));
+        testInfos.add(testInfo);
+
+
+        new JsonReportBuilder().build(testInfos, reportPath);
+
+        assertJsonFileContents("Report overview", reportPath + "/report.json", "/expected-reports/json/report.json");
+        assertJsonFileContents("Test report", reportPath + "/1-home-page-test.json", "/expected-reports/json/2-home-page-test.json");
+
+
+        // Check that all files from storage were saved in report folder
+
+        assertThat("Report folder contains files", asList(new File(reportPath).list()), containsInAnyOrder(
+                "1-home-page-test.json",
+                "file-4-some-file.txt",
+                "layout-1-objectB1-actual.png",
+                "layout-2-objectB1-expected.png",
+                "layout-3-objectB1-map.png",
+                "report.json"
+        ));
+    }
+
+
+    @Test
     public void shouldReport_inJsonFormat() throws Exception {
         String reportPath = Files.createTempDir().getAbsolutePath() + "/json-report";
         List<GalenTestInfo> testInfos = new LinkedList<GalenTestInfo>();

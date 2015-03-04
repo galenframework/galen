@@ -6,7 +6,7 @@
             "name" : "Just a simple info node with attachment",
             "status" : "info",
             "attachments": [
-                "file-5-some-file.txt"
+                "file-4-some-file.txt"
             ],
             "time" : 1404681346001,
             "type" : "node"
@@ -152,9 +152,9 @@
                         "errors" : [ "objectB1 is not inside other-object", "second error message with <xml> &tags" ],
                         "highlight" : [ "objectB1" ],
                         "imageComparison" : {
-                            "actualImage" : "layout-2-objectB1-actual.png",
-                            "expectedImage" : "layout-3-objectB1-expected.png",
-                            "comparisonMapImage" : "layout-4-objectB1-map.png"
+                            "actualImage" : "layout-1-objectB1-actual.png",
+                            "expectedImage" : "layout-2-objectB1-expected.png",
+                            "comparisonMapImage" : "layout-3-objectB1-map.png"
                         }
                     } ]
                 }, {
@@ -179,13 +179,10 @@
                 } ]
             } ],
             "objects" : {
-                "objectA2" : {
-                    "area" : [ 200, 300, 50, 30 ]
-                },
                 "other-object" : {
                     "area" : [ 1, 1, 90, 100 ]
                 },
-                "objectB2" : {
+                "objectA2" : {
                     "area" : [ 200, 300, 50, 30 ]
                 },
                 "objectB1" : {
@@ -193,9 +190,11 @@
                 },
                 "objectA1" : {
                     "area" : [ 10, 10, 100, 50 ]
+                },
+                "objectB2" : {
+                    "area" : [ 200, 300, 50, 30 ]
                 }
             },
-            "screenshot" : "layout-1-screenshot.png",
             "type" : "layout"
         } ]
     }
