@@ -343,10 +343,25 @@ public class GalenArguments {
 
     @Override
     public String toString() {
-        return new ToStringBuilder(this).append("action", action).append("paths", paths).append("recursive", recursive).append("javascript", javascript)
-                .append("includedTags", includedTags).append("excludedTags", excludedTags).append("screenSize", screenSize).append("htmlReport", htmlReport)
-                .append("testngReport", testngReport).append("url", url).append("filter", filter).append("parallelSuites", parallelSuites)
-                .append("export", export).append("maxWidth", maxWidth).append("maxHeight", maxHeight).append("jsonReport", jsonReport).toString();
+        //@formatter:off
+        return new ToStringBuilder(this)
+            .append("action", action)
+            .append("paths", paths)
+            .append("recursive", recursive)
+            .append("javascript", javascript)
+            .append("includedTags", includedTags)
+            .append("excludedTags", excludedTags)
+            .append("screenSize", screenSize)
+            .append("htmlReport", htmlReport)
+            .append("testngReport", testngReport)
+            .append("url", url)
+            .append("filter", filter)
+            .append("parallelSuites", parallelSuites)
+            .append("export", export)
+            .append("maxWidth", maxWidth)
+            .append("maxHeight", maxHeight)
+            .append("jsonReport", jsonReport).toString();
+        //@formatter:on
     }
 
     public String getTestngReport() {
