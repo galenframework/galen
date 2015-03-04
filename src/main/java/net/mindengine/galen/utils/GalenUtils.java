@@ -328,25 +328,10 @@ public class GalenUtils {
 
         if (GalenConfig.getConfig().shouldAutoresizeScreenshots()) {
             BufferedImage image = Rainbow4J.loadImage(file.getAbsolutePath());
-
             final Path path = Files.createTempFile("screenshot", ".png");
             final File newFile = path.toFile();
             image = GalenUtils.resizeScreenshotIfNeeded(driver, image);
-
             Rainbow4J.saveImage(image, newFile);
-            // remove temp file when VM terminates
-            newFile.deleteOnExit();
-            Runtime.getRuntime().addShutdownHook(new Thread() {
-                @Override
-                public void run() {
-                    try {
-                        Files.delete(path);
-                        LOG.debug("deleted file at " + path);
-                    } catch (final IOException e) {
-                        LOG.error("Unkown error during deleting temporary file.", e);
-                    }
-                }
-            });
             return newFile;
         } else {
             return file;
