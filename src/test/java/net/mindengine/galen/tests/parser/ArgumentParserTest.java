@@ -64,10 +64,20 @@ public class ArgumentParserTest {
                     .withJsonReport("json-reports")
                     .withIncludedTags(EMPTY_TAGS)
                     .withExcludedTags(EMPTY_TAGS)},
-                    
-            {args("test", "mysuite", 
-                            "--htmlreport", "some.html",
-                            "--testngreport", "testng.xml"), 
+
+            {args("test", "mysuite",
+                    "--groups", "mobile,tablet,homepage"),
+                    new GalenArguments()
+                            .withAction("test")
+                            .withPaths(asList("mysuite"))
+                            .withGroups(asList("mobile", "tablet", "homepage"))
+                            .withRecursive(false)
+                            .withIncludedTags(EMPTY_TAGS)
+                            .withExcludedTags(EMPTY_TAGS)},
+
+            {args("test", "mysuite",
+                        "--htmlreport", "some.html",
+                        "--testngreport", "testng.xml"),
                 new GalenArguments()
                     .withAction("test")
                     .withPaths(asList("mysuite"))

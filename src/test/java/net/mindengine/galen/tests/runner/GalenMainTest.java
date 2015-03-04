@@ -129,6 +129,40 @@ public class GalenMainTest {
                 ));
     }
 
+
+    @Test
+    public void shouldRunJavascriptTests_onlyForSpecifiedGroups_withTwoGroups() throws Exception {
+        JsTestRegistry.get().clear();
+
+        new GalenMain().execute(new GalenArguments()
+                        .withAction("test")
+                        .withPaths(asList(getClass().getResource("/js-tests/testgroups.test.js").getFile()))
+                        .withGroups(asList("mobile", "tablet"))
+        );
+
+        assertThat(JsTestRegistry.get().getEvents(), contains(
+                "Test A invoked",
+                "Test B invoked",
+                "Test C invoked"
+        ));
+    }
+
+    @Test
+    public void shouldRunJavascriptTests_onlyForSpecifiedGroups_withOneGroup() throws Exception {
+        JsTestRegistry.get().clear();
+
+        new GalenMain().execute(new GalenArguments()
+                        .withAction("test")
+                        .withPaths(asList(getClass().getResource("/js-tests/testgroups.test.js").getFile()))
+                        .withGroups(asList("tablet"))
+        );
+
+        assertThat(JsTestRegistry.get().getEvents(), contains(
+                "Test B invoked",
+                "Test C invoked"
+        ));
+    }
+
     /**
      * Comes from https://github.com/galenframework/galen/issues/184
      * Test Retry Handler

@@ -54,6 +54,7 @@ public class GalenArguments {
     private Integer maxWidth;
     private Integer maxHeight;
     private String jsonReport;
+    private List<String> groups;
 
     public GalenArguments withAction(String action) {
         this.setAction(action);
@@ -160,6 +161,7 @@ public class GalenArguments {
         options.addOption("E", "export", true, "Export path for page dump");
         options.addOption("W", "max-width", true, "Maximum width for page dump");
         options.addOption("H", "max-height", true, "Maximum height for page dump");
+        options.addOption("G", "groups", true, "Test groups");
 
         
         CommandLineParser parser = new PosixParser();
@@ -208,7 +210,8 @@ public class GalenArguments {
         galen.setMaxWidth(parseOptionalInt(cmd.getOptionValue("W")));
         galen.setMaxHeight(parseOptionalInt(cmd.getOptionValue("H")));
         galen.setJsonReport(cmd.getOptionValue("J"));
-        
+        galen.setGroups(convertTags(cmd.getOptionValue("G")));
+
         verifyArguments(galen);
         return galen;
     }
@@ -300,17 +303,20 @@ public class GalenArguments {
     }
 
     private static List<String> convertTags(String optionValue) {
-        List<String> tags = new LinkedList<String>();
-        String[] array = optionValue.split(",");
-        
-        for (String item : array) {
-            String tag = item.trim();
-            
-            if (!tag.isEmpty()) {
-                tags.add(tag);
+        if (optionValue != null) {
+            List<String> tags = new LinkedList<String>();
+            String[] array = optionValue.split(",");
+
+            for (String item : array) {
+                String tag = item.trim();
+
+                if (!tag.isEmpty()) {
+                    tags.add(tag);
+                }
             }
+            return tags;
         }
-        return tags;
+        return null;
     }
 
     public String getUrl() {
@@ -341,6 +347,7 @@ public class GalenArguments {
             .append(maxWidth)
             .append(maxHeight)
             .append(jsonReport)
+            .append(groups)
             .toHashCode();
     }
     
@@ -374,6 +381,7 @@ public class GalenArguments {
             .append(maxWidth, rhs.maxWidth)
             .append(maxHeight, rhs.maxHeight)
             .append(jsonReport, rhs.jsonReport)
+            .append(groups, rhs.groups)
             .isEquals();
     }
     
@@ -396,6 +404,7 @@ public class GalenArguments {
             .append("maxWidth", maxWidth)
             .append("maxHeight", maxHeight)
             .append("jsonReport", jsonReport)
+            .append("groups", groups)
             .toString();
     }
 
@@ -535,5 +544,18 @@ public class GalenArguments {
 
     public String getJsonReport() {
         return jsonReport;
+    }
+
+    public GalenArguments withGroups(List<String> groups) {
+        this.groups = groups;
+        return this;
+    }
+
+    public List<String> getGroups() {
+        return this.groups;
+    }
+
+    public void setGroups(List<String> groups) {
+        this.groups = groups;
     }
 }

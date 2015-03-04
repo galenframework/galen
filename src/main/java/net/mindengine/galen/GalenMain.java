@@ -294,7 +294,7 @@ public class GalenMain {
         List<GalenTestInfo> testInfos = Collections.synchronizedList(new LinkedList<GalenTestInfo>());
 
         for (final GalenTest test : tests) {
-            if (matchesPattern(test.getName(), filterPattern)) {
+            if (matchesPattern(test.getName(), filterPattern) && matchesSelectedGroups(test, arguments.getGroups())) {
                 executor.execute(new TestRunnable(test, listener, eventHandler, testInfos));
             }
         }
@@ -305,6 +305,22 @@ public class GalenMain {
         tellAfterTestSuite(listener, testInfos);
 
         createAllReports(testInfos, arguments);
+    }
+
+    private boolean matchesSelectedGroups(GalenTest test, List<String> selectedGroups) {
+        if (selectedGroups != null && selectedGroups.size() > 0) {
+            List<String> testGroups = test.getGroups();
+
+            if (testGroups != null && testGroups.size() > 0) {
+                for (String testGroup : testGroups) {
+                    if (selectedGroups.contains(testGroup)) {
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
+        return true;
     }
 
     private List<GalenTest> filterTests(List<GalenTest> tests, EventHandler eventHandler) {
