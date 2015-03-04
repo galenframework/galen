@@ -1,52 +1,49 @@
 /*******************************************************************************
-* Copyright 2015 Ivan Shubin http://mindengine.net
-* 
-* Licensed under the Apache License, Version 2.0 (the "License");
-* you may not use this file except in compliance with the License.
-* You may obtain a copy of the License at
-* 
-*   http://www.apache.org/licenses/LICENSE-2.0
-* 
-* Unless required by applicable law or agreed to in writing, software
-* distributed under the License is distributed on an "AS IS" BASIS,
-* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-* See the License for the specific language governing permissions and
-* limitations under the License.
-******************************************************************************/
+ * Copyright 2015 Ivan Shubin http://mindengine.net
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ******************************************************************************/
 package net.mindengine.galen.parser;
 
 import net.mindengine.galen.specs.reader.StringCharReader;
 
-public class ExpectString implements Expectation<String>{
+public class ExpectString implements Expectation<String> {
 
     private char quotesSymbol = '"';
 
     @Override
-    public String read(StringCharReader reader) {
-        StringBuffer buffer = new StringBuffer();
-        while(reader.hasMore()) {
-            char symbol = reader.next();
-            
+    public String read(final StringCharReader reader) {
+        final StringBuilder builder = new StringBuilder();
+        while (reader.hasMore()) {
+            final char symbol = reader.next();
+
             if (symbol == quotesSymbol) {
                 break;
-            }
-            else if (symbol == '\\') {
+            } else if (symbol == '\\') {
                 if (reader.hasMore()) {
-                    buffer.append(asEscapeSymbol(reader.next()));
-                }
-                else {
-                    buffer.append("\\");
+                    builder.append(asEscapeSymbol(reader.next()));
+                } else {
+                    builder.append("\\");
                     break;
                 }
-            }
-            else {
-                buffer.append(symbol);
+            } else {
+                builder.append(symbol);
             }
         }
-        return buffer.toString();
+        return builder.toString();
     }
 
-    private char asEscapeSymbol(char symbol) {
+    private char asEscapeSymbol(final char symbol) {
         if (symbol == 'n') {
             return '\n';
         }
@@ -61,11 +58,12 @@ public class ExpectString implements Expectation<String>{
         }
         if (symbol == 'f') {
             return '\f';
+        } else {
+            return symbol;
         }
-        else return symbol;
     }
 
-    public ExpectString setQuotesSymbol(char symbol) {
+    public ExpectString setQuotesSymbol(final char symbol) {
         this.quotesSymbol = symbol;
         return this;
     }

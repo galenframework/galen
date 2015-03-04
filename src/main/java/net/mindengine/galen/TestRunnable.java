@@ -41,7 +41,7 @@ public class TestRunnable implements Runnable {
     private final EventHandler eventHandler;
     private final List<GalenTestInfo> testInfos;
 
-    public TestRunnable(GalenTest test, CompleteListener listener, EventHandler eventHandler, List<GalenTestInfo> testInfos) {
+    public TestRunnable(final GalenTest test, final CompleteListener listener, final EventHandler eventHandler, final List<GalenTestInfo> testInfos) {
         this.test = test;
         this.listener = listener;
         this.eventHandler = eventHandler;
@@ -50,14 +50,14 @@ public class TestRunnable implements Runnable {
 
 
     private GalenTestInfo runTest() {
-        GalenTestInfo info = new GalenTestInfo(test.getName(), test);
-        TestReport report = new TestReport();
+        final GalenTestInfo info = new GalenTestInfo(test.getName(), test);
+        final TestReport report = new TestReport();
 
         info.setStartedAt(new Date());
         info.setReport(report);
 
 
-        TestSession session = TestSession.register(info);
+        final TestSession session = TestSession.register(info);
         session.setReport(report);
         session.setListener(listener);
 
@@ -67,7 +67,7 @@ public class TestRunnable implements Runnable {
         try {
             test.execute(report, listener);
         }
-        catch(Throwable ex) {
+        catch(final Exception ex) {
             info.setException(ex);
             report.error(ex);
             LOG.trace("Reporting test exception", ex);
@@ -102,8 +102,8 @@ public class TestRunnable implements Runnable {
         testInfos.add(info);
     }
 
-    private boolean checkIfShouldRetry(GalenTest test, int tries) {
-        for (TestRetryEvent retryEvent : eventHandler.getTestRetryEvents()) {
+    private boolean checkIfShouldRetry(final GalenTest test, final int tries) {
+        for (final TestRetryEvent retryEvent : eventHandler.getTestRetryEvents()) {
             if (retryEvent.shouldRetry(test, tries)) {
                 return true;
             }
@@ -111,24 +111,24 @@ public class TestRunnable implements Runnable {
         return false;
     }
 
-    private void tellTestFinished(TestListener testListener, GalenTest test) {
+    private void tellTestFinished(final TestListener testListener, final GalenTest test) {
         try {
             if (testListener != null) {
                 testListener.onTestFinished(test);
             }
         }
-        catch (Exception e) {
+        catch (final Exception e) {
             LOG.error("Unkown error during test finishing", e);
         }
     }
 
-    private void tellTestStarted(TestListener testListener, GalenTest test) {
+    private void tellTestStarted(final TestListener testListener, final GalenTest test) {
         try {
             if (testListener != null) {
                 testListener.onTestStarted(test);
             }
         }
-        catch (Exception e) {
+        catch (final Exception e) {
             LOG.error("Unkown error during test start", e);
         }
     }

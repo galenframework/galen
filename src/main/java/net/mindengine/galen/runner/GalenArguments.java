@@ -1,18 +1,18 @@
 /*******************************************************************************
-* Copyright 2015 Ivan Shubin http://mindengine.net
-* 
-* Licensed under the Apache License, Version 2.0 (the "License");
-* you may not use this file except in compliance with the License.
-* You may obtain a copy of the License at
-* 
-*   http://www.apache.org/licenses/LICENSE-2.0
-* 
-* Unless required by applicable law or agreed to in writing, software
-* distributed under the License is distributed on an "AS IS" BASIS,
-* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-* See the License for the specific language governing permissions and
-* limitations under the License.
-******************************************************************************/
+ * Copyright 2015 Ivan Shubin http://mindengine.net
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ******************************************************************************/
 package net.mindengine.galen.runner;
 
 import static java.lang.Integer.parseInt;
@@ -55,7 +55,7 @@ public class GalenArguments {
     private Integer maxHeight;
     private String jsonReport;
 
-    public GalenArguments withAction(String action) {
+    public GalenArguments withAction(final String action) {
         this.setAction(action);
         return this;
     }
@@ -64,11 +64,11 @@ public class GalenArguments {
         return action;
     }
 
-    public void setAction(String action) {
+    public void setAction(final String action) {
         this.action = action;
     }
 
-    public GalenArguments withJavascript(String javascript) {
+    public GalenArguments withJavascript(final String javascript) {
         this.setJavascript(javascript);
         return this;
     }
@@ -77,16 +77,16 @@ public class GalenArguments {
         return javascript;
     }
 
-    public void setJavascript(String javascript) {
+    public void setJavascript(final String javascript) {
         this.javascript = javascript;
     }
 
-    public GalenArguments withIncludedTags(String...tags) {
+    public GalenArguments withIncludedTags(final String... tags) {
         this.setIncludedTags(Arrays.asList(tags));
         return this;
     }
 
-    public GalenArguments withExcludedTags(String...excludedTags) {
+    public GalenArguments withExcludedTags(final String... excludedTags) {
         this.setExcludedTags(Arrays.asList(excludedTags));
         return this;
     }
@@ -95,7 +95,7 @@ public class GalenArguments {
         return includedTags;
     }
 
-    public void setIncludedTags(List<String> includedTags) {
+    public void setIncludedTags(final List<String> includedTags) {
         this.includedTags = includedTags;
     }
 
@@ -103,11 +103,11 @@ public class GalenArguments {
         return excludedTags;
     }
 
-    public void setExcludedTags(List<String> excludedTags) {
+    public void setExcludedTags(final List<String> excludedTags) {
         this.excludedTags = excludedTags;
     }
 
-    public GalenArguments withScreenSize(Dimension size) {
+    public GalenArguments withScreenSize(final Dimension size) {
         this.setScreenSize(size);
         return this;
     }
@@ -116,11 +116,11 @@ public class GalenArguments {
         return screenSize;
     }
 
-    public void setScreenSize(Dimension screenSize) {
+    public void setScreenSize(final Dimension screenSize) {
         this.screenSize = screenSize;
     }
 
-    public GalenArguments withHtmlReport(String htmlReport) {
+    public GalenArguments withHtmlReport(final String htmlReport) {
         this.setHtmlReport(htmlReport);
         return this;
     }
@@ -129,22 +129,22 @@ public class GalenArguments {
         return htmlReport;
     }
 
-    public void setHtmlReport(String htmlReport) {
+    public void setHtmlReport(final String htmlReport) {
         this.htmlReport = htmlReport;
     }
 
-    public GalenArguments withUrl(String url) {
+    public GalenArguments withUrl(final String url) {
         this.setUrl(url);
         return this;
     }
 
     public static GalenArguments parse(String[] args) throws ParseException {
-        
+
         args = processSystemProperties(args);
-        
-        //TODO Refactor this ugly way of handling command line arguments. It should be separate per action.
-        
-        Options options = new Options();
+
+        // TODO Refactor this ugly way of handling command line arguments. It should be separate per action.
+
+        final Options options = new Options();
         options.addOption("u", "url", true, "Url for test page");
         options.addOption("j", "javascript", true, "Path to javascript file which will be executed after test page loads");
         options.addOption("i", "include", true, "Tags for sections that should be included in test run");
@@ -161,39 +161,36 @@ public class GalenArguments {
         options.addOption("W", "max-width", true, "Maximum width for page dump");
         options.addOption("H", "max-height", true, "Maximum height for page dump");
 
-        
-        CommandLineParser parser = new PosixParser();
-        
+        final CommandLineParser parser = new PosixParser();
+
         CommandLine cmd = null;
-        
+
         try {
             cmd = parser.parse(options, args);
-        }
-        catch (MissingArgumentException e) {
+        } catch (final MissingArgumentException e) {
             throw new IllegalArgumentException("Missing value for " + e.getOption().getLongOpt(), e);
         }
-        
-        
-        GalenArguments galen = new GalenArguments();
-        
+
+        final GalenArguments galen = new GalenArguments();
+
         galen.setOriginal(merge(args));
-        String[] leftovers = cmd.getArgs();
-        
+        final String[] leftovers = cmd.getArgs();
+
         if (leftovers.length > 0) {
-            String action = leftovers[0];
+            final String action = leftovers[0];
             galen.setAction(action);
-            
+
             if (leftovers.length > 1) {
-                List<String> paths = new LinkedList<String>();
-                for (int i=1; i<leftovers.length; i++) {
+                final List<String> paths = new LinkedList<String>();
+                for (int i = 1; i < leftovers.length; i++) {
                     paths.add(leftovers[i]);
                 }
                 galen.setPaths(paths);
             }
         }
-        
+
         galen.setUrl(cmd.getOptionValue("u"));
-        
+
         galen.setIncludedTags(convertTags(cmd.getOptionValue("i", "")));
         galen.setExcludedTags(convertTags(cmd.getOptionValue("e", "")));
         galen.setScreenSize(convertScreenSize(cmd.getOptionValue("s")));
@@ -208,104 +205,101 @@ public class GalenArguments {
         galen.setMaxWidth(parseOptionalInt(cmd.getOptionValue("W")));
         galen.setMaxHeight(parseOptionalInt(cmd.getOptionValue("H")));
         galen.setJsonReport(cmd.getOptionValue("J"));
-        
+
         verifyArguments(galen);
         return galen;
     }
 
-    private static Integer parseOptionalInt(String valueText) {
+    private static Integer parseOptionalInt(final String valueText) {
         if (valueText != null && !valueText.trim().isEmpty()) {
             return Integer.parseInt(valueText);
+        } else {
+            return null;
         }
-        else return null;
     }
 
-    private static String[] processSystemProperties(String[] args) {
-        ArrayList<String> list = new ArrayList<String>();
-        
-        for (String arg : args) {
+    private static String[] processSystemProperties(final String[] args) {
+        final ArrayList<String> list = new ArrayList<String>();
+
+        for (final String arg : args) {
             if (arg.startsWith("-D")) {
                 setSystemProperty(arg);
-            }
-            else {
+            } else {
                 list.add(arg);
             }
         }
-        return list.toArray(new String[]{});
+        return list.toArray(new String[] {});
     }
 
-    private static void setSystemProperty(String systemPropertyDefinition) {
-        String pairKeyAndValue = systemPropertyDefinition.substring(2);
-        int equalSignPosition = pairKeyAndValue.indexOf('=');
+    private static void setSystemProperty(final String systemPropertyDefinition) {
+        final String pairKeyAndValue = systemPropertyDefinition.substring(2);
+        final int equalSignPosition = pairKeyAndValue.indexOf('=');
         if (equalSignPosition > 0) {
-            System.setProperty(pairKeyAndValue.substring(0, equalSignPosition), pairKeyAndValue.substring(equalSignPosition+1));
-        }
-        else {
+            System.setProperty(pairKeyAndValue.substring(0, equalSignPosition), pairKeyAndValue.substring(equalSignPosition + 1));
+        } else {
             throw new IllegalArgumentException("Cannot parse: " + systemPropertyDefinition);
         }
     }
 
-    private static void verifyArguments(GalenArguments galen) {
+    private static void verifyArguments(final GalenArguments galen) {
         if (galen.getAction() != null) {
             if ("test".equals(galen.getAction())) {
                 verifyTestAction(galen);
-            }
-            else if ("check".equals(galen.getAction())) {
+            } else if ("check".equals(galen.getAction())) {
                 verifyCheckAction(galen);
-            }
-            else if ("config".equals(galen.getAction())) {
+            } else if ("config".equals(galen.getAction())) {
                 return;
-            }
-            else if ("dump".equals(galen.getAction())) {
+            } else if ("dump".equals(galen.getAction())) {
                 return;
+            } else {
+                throw new IllegalArgumentException("Unknown action: " + galen.getAction());
             }
-            else throw new IllegalArgumentException("Unknown action: " + galen.getAction());
         }
     }
 
-    private static void verifyCheckAction(GalenArguments galen) {
+    private static void verifyCheckAction(final GalenArguments galen) {
         if (galen.getPaths() == null || galen.getPaths().isEmpty()) {
             throw new IllegalArgumentException("Missing spec files");
         }
     }
 
-    private static void verifyTestAction(GalenArguments galen) {
+    private static void verifyTestAction(final GalenArguments galen) {
         if (galen.getPaths() == null || galen.getPaths().isEmpty()) {
             throw new IllegalArgumentException("Missing test files");
         }
     }
 
-    private static String merge(String[] args) {
-        StringBuffer buffer = new StringBuffer();
-        for (String arg : args) {
+    private static String merge(final String[] args) {
+        final StringBuilder buffer = new StringBuilder();
+        for (final String arg : args) {
             buffer.append(arg);
             buffer.append(" ");
         }
         return buffer.toString();
     }
 
-    private static Dimension convertScreenSize(String text) {
+    private static Dimension convertScreenSize(final String text) {
         if (text == null) {
             return null;
         }
-        
+
         if (Pattern.matches("[0-9]+x[0-9]+", text)) {
-            String[] values = text.split("x");
+            final String[] values = text.split("x");
             if (values.length == 2) {
                 return new Dimension(parseInt(values[0]), parseInt(values[1]));
             }
         }
-        
+
         throw new IllegalArgumentException("Incorrect size: " + text);
     }
 
-    private static List<String> convertTags(String optionValue) {
-        List<String> tags = new LinkedList<String>();
-        String[] array = optionValue.split(",");
-        
-        for (String item : array) {
-            String tag = item.trim();
-            
+    private static List<String> convertTags(final String optionValue) {
+        final List<String> tags = new LinkedList<String>();
+        final String[] array = optionValue.split(",");
+
+        for (final String item : array) {
+            final String tag = item.trim();
+
             if (!tag.isEmpty()) {
                 tags.add(tag);
             }
@@ -317,35 +311,19 @@ public class GalenArguments {
         return url;
     }
 
-    public void setUrl(String url) {
+    public void setUrl(final String url) {
         this.url = url;
     }
 
-    
     @Override
     public int hashCode() {
-        return new HashCodeBuilder(13, 19)
-            .append(action)
-            .append(paths)
-            .append(recursive)
-            .append(javascript)
-            .append(includedTags)
-            .append(excludedTags)
-            .append(screenSize)
-            .append(htmlReport)
-            .append(testngReport)
-            .append(url)
-            .append(parallelSuites)
-            .append(filter)
-            .append(export)
-            .append(maxWidth)
-            .append(maxHeight)
-            .append(jsonReport)
-            .toHashCode();
+        return new HashCodeBuilder(13, 19).append(action).append(paths).append(recursive).append(javascript).append(includedTags).append(excludedTags)
+                .append(screenSize).append(htmlReport).append(testngReport).append(url).append(parallelSuites).append(filter).append(export).append(maxWidth)
+                .append(maxHeight).append(jsonReport).toHashCode();
     }
-    
+
     @Override
-    public boolean equals(Object obj) {
+    public boolean equals(final Object obj) {
         if (obj == null) {
             return false;
         }
@@ -355,59 +333,31 @@ public class GalenArguments {
         if (!(obj instanceof GalenArguments)) {
             return false;
         }
-        GalenArguments rhs = (GalenArguments)obj;
-        return new EqualsBuilder()
-            .append(action, rhs.action)
-            .append(paths, rhs.paths)
-            .append(recursive, rhs.recursive)
-            .append(javascript, rhs.javascript)
-            .append(includedTags, rhs.includedTags)
-            .append(excludedTags, rhs.excludedTags)
-            .append(screenSize, rhs.screenSize)
-            .append(htmlReport, rhs.htmlReport)
-            .append(testngReport, rhs.testngReport)
-            .append(url, rhs.url)
-            .append(filter, rhs.filter)
-            .append(parallelSuites, rhs.parallelSuites)
-            .append(excludedTags, rhs.excludedTags)
-            .append(export, rhs.export)
-            .append(maxWidth, rhs.maxWidth)
-            .append(maxHeight, rhs.maxHeight)
-            .append(jsonReport, rhs.jsonReport)
-            .isEquals();
+        final GalenArguments rhs = (GalenArguments) obj;
+        return new EqualsBuilder().append(action, rhs.action).append(paths, rhs.paths).append(recursive, rhs.recursive).append(javascript, rhs.javascript)
+                .append(includedTags, rhs.includedTags).append(excludedTags, rhs.excludedTags).append(screenSize, rhs.screenSize)
+                .append(htmlReport, rhs.htmlReport).append(testngReport, rhs.testngReport).append(url, rhs.url).append(filter, rhs.filter)
+                .append(parallelSuites, rhs.parallelSuites).append(excludedTags, rhs.excludedTags).append(export, rhs.export).append(maxWidth, rhs.maxWidth)
+                .append(maxHeight, rhs.maxHeight).append(jsonReport, rhs.jsonReport).isEquals();
     }
-    
+
     @Override
     public String toString() {
-        return new ToStringBuilder(this)
-            .append("action", action)
-            .append("paths", paths)
-            .append("recursive", recursive)
-            .append("javascript", javascript)
-            .append("includedTags", includedTags)
-            .append("excludedTags", excludedTags)
-            .append("screenSize", screenSize)
-            .append("htmlReport", htmlReport)
-            .append("testngReport", testngReport)
-            .append("url", url)
-            .append("filter", filter)
-            .append("parallelSuites", parallelSuites)
-            .append("export", export)
-            .append("maxWidth", maxWidth)
-            .append("maxHeight", maxHeight)
-            .append("jsonReport", jsonReport)
-            .toString();
+        return new ToStringBuilder(this).append("action", action).append("paths", paths).append("recursive", recursive).append("javascript", javascript)
+                .append("includedTags", includedTags).append("excludedTags", excludedTags).append("screenSize", screenSize).append("htmlReport", htmlReport)
+                .append("testngReport", testngReport).append("url", url).append("filter", filter).append("parallelSuites", parallelSuites)
+                .append("export", export).append("maxWidth", maxWidth).append("maxHeight", maxHeight).append("jsonReport", jsonReport).toString();
     }
 
     public String getTestngReport() {
         return testngReport;
     }
 
-    public void setTestngReport(String testngReport) {
+    public void setTestngReport(final String testngReport) {
         this.testngReport = testngReport;
     }
 
-    public GalenArguments withTestngReport(String testngReport) {
+    public GalenArguments withTestngReport(final String testngReport) {
         this.testngReport = testngReport;
         return this;
     }
@@ -416,7 +366,7 @@ public class GalenArguments {
         return paths;
     }
 
-    public void setPaths(List<String> paths) {
+    public void setPaths(final List<String> paths) {
         this.paths = paths;
     }
 
@@ -424,16 +374,16 @@ public class GalenArguments {
         return recursive;
     }
 
-    public void setRecursive(Boolean recursive) {
+    public void setRecursive(final Boolean recursive) {
         this.recursive = recursive;
     }
 
-    public GalenArguments withPaths(List<String> paths) {
+    public GalenArguments withPaths(final List<String> paths) {
         this.paths = paths;
         return this;
     }
 
-    public GalenArguments withRecursive(Boolean recursive) {
+    public GalenArguments withRecursive(final Boolean recursive) {
         this.recursive = recursive;
         return this;
     }
@@ -442,11 +392,11 @@ public class GalenArguments {
         return parallelSuites;
     }
 
-    public void setParallelSuites(int parallelSuites) {
+    public void setParallelSuites(final int parallelSuites) {
         this.parallelSuites = parallelSuites;
     }
 
-    public GalenArguments withParallelSuites(int parallelSuites) {
+    public GalenArguments withParallelSuites(final int parallelSuites) {
         setParallelSuites(parallelSuites);
         return this;
     }
@@ -455,11 +405,11 @@ public class GalenArguments {
         return this.original;
     }
 
-    public void setOriginal(String original) {
+    public void setOriginal(final String original) {
         this.original = original;
     }
 
-    public GalenArguments withOriginal(String original) {
+    public GalenArguments withOriginal(final String original) {
         this.setOriginal(original);
         return this;
     }
@@ -468,11 +418,11 @@ public class GalenArguments {
         return printVersion;
     }
 
-    public void setPrintVersion(Boolean printVersion) {
+    public void setPrintVersion(final Boolean printVersion) {
         this.printVersion = printVersion;
     }
 
-    public GalenArguments withFilter(String filter) {
+    public GalenArguments withFilter(final String filter) {
         this.setFilter(filter);
         return this;
     }
@@ -481,16 +431,16 @@ public class GalenArguments {
         return filter;
     }
 
-    public void setFilter(String filter) {
+    public void setFilter(final String filter) {
         this.filter = filter;
     }
 
-    public GalenArguments withExport(String export) {
+    public GalenArguments withExport(final String export) {
         setExport(export);
         return this;
     }
 
-    public void setExport(String export) {
+    public void setExport(final String export) {
         this.export = export;
     }
 
@@ -498,12 +448,12 @@ public class GalenArguments {
         return export;
     }
 
-    public GalenArguments withMaxWidth(Integer maxWidth) {
+    public GalenArguments withMaxWidth(final Integer maxWidth) {
         setMaxWidth(maxWidth);
         return this;
     }
 
-    public void setMaxWidth(Integer maxWidth) {
+    public void setMaxWidth(final Integer maxWidth) {
         this.maxWidth = maxWidth;
     }
 
@@ -511,12 +461,12 @@ public class GalenArguments {
         return maxWidth;
     }
 
-    public GalenArguments withMaxHeight(Integer maxHeight) {
+    public GalenArguments withMaxHeight(final Integer maxHeight) {
         setMaxHeight(maxHeight);
         return this;
     }
 
-    public void setMaxHeight(Integer maxHeight) {
+    public void setMaxHeight(final Integer maxHeight) {
         this.maxHeight = maxHeight;
     }
 
@@ -524,12 +474,12 @@ public class GalenArguments {
         return maxHeight;
     }
 
-    public GalenArguments withJsonReport(String jsonReportPath) {
+    public GalenArguments withJsonReport(final String jsonReportPath) {
         setJsonReport(jsonReportPath);
         return this;
     }
 
-    public void setJsonReport(String jsonReport) {
+    public void setJsonReport(final String jsonReport) {
         this.jsonReport = jsonReport;
     }
 

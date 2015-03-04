@@ -1,18 +1,18 @@
 /*******************************************************************************
-* Copyright 2015 Ivan Shubin http://mindengine.net
-* 
-* Licensed under the Apache License, Version 2.0 (the "License");
-* you may not use this file except in compliance with the License.
-* You may obtain a copy of the License at
-* 
-*   http://www.apache.org/licenses/LICENSE-2.0
-* 
-* Unless required by applicable law or agreed to in writing, software
-* distributed under the License is distributed on an "AS IS" BASIS,
-* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-* See the License for the specific language governing permissions and
-* limitations under the License.
-******************************************************************************/
+ * Copyright 2015 Ivan Shubin http://mindengine.net
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ******************************************************************************/
 package net.mindengine.galen.suite.actions;
 
 import java.util.LinkedList;
@@ -36,29 +36,27 @@ public class GalenPageActionWait extends GalenPageAction {
 
     private int timeout;
     private List<Until> untilElements;
-    
+
     public enum UntilType {
         EXIST, GONE, VISIBLE, HIDDEN;
 
-        public static UntilType parseNonStrict(String text) {
+        public static UntilType parseNonStrict(final String text) {
             if ("visible".equals(text)) {
                 return VISIBLE;
-            }
-            else if ("hidden".equals(text)) {
+            } else if ("hidden".equals(text)) {
                 return HIDDEN;
-            }
-            else if ("exist".equals(text)) {
+            } else if ("exist".equals(text)) {
                 return EXIST;
-            }
-            else if ("gone".equals(text)) {
+            } else if ("gone".equals(text)) {
                 return GONE;
+            } else {
+                return null;
             }
-            else return null;
         }
-        
+
         @Override
         public String toString() {
-            switch(this) {
+            switch (this) {
             case EXIST:
                 return "exist";
             case GONE:
@@ -72,96 +70,93 @@ public class GalenPageActionWait extends GalenPageAction {
             }
         }
     }
-    
+
     public static class Until {
         private UntilType type;
         private Locator locator;
-        
-        public Until(UntilType type, Locator locator) {
+
+        public Until(final UntilType type, final Locator locator) {
             this.type = type;
             this.locator = locator;
         }
-        
+
         public UntilType getType() {
             return type;
         }
-        public void setType(UntilType type) {
+
+        public void setType(final UntilType type) {
             this.type = type;
         }
+
         public Locator getLocator() {
             return locator;
         }
-        public void setLocator(Locator locator) {
+
+        public void setLocator(final Locator locator) {
             this.locator = locator;
         }
-        
+
         @Override
-        public boolean equals(Object obj) {
-            if (obj == null)
+        public boolean equals(final Object obj) {
+            if (obj == null) {
                 return false;
-            if (obj == this)
+            }
+            if (obj == this) {
                 return true;
-            if (!(obj instanceof Until))
+            }
+            if (!(obj instanceof Until)) {
                 return false;
-            
-            Until rhs = (Until)obj;
-            
-            return new EqualsBuilder()
-                .append(this.type, rhs.type)
-                .append(this.locator, rhs.locator)
-                .isEquals();
+            }
+
+            final Until rhs = (Until) obj;
+
+            return new EqualsBuilder().append(this.type, rhs.type).append(this.locator, rhs.locator).isEquals();
         }
-        
+
         @Override
         public int hashCode() {
-            return new HashCodeBuilder()
-                .append(this.type)
-                .append(this.locator)
-                .toHashCode();
+            return new HashCodeBuilder().append(this.type).append(this.locator).toHashCode();
         }
-        
+
         @Override
         public String toString() {
-            return new ToStringBuilder(this)
-                .append("type", this.type)
-                .append("locator", this.locator)
-                .toString();
+            return new ToStringBuilder(this).append("type", this.type).append("locator", this.locator).toString();
         }
     }
 
     @Override
-    public void execute(TestReport report, Browser browser, GalenPageTest pageTest, ValidationListener validationListener) throws Exception {
-        Page page = browser.getPage();
-        
+    public void execute(final TestReport report, final Browser browser, final GalenPageTest pageTest, final ValidationListener validationListener)
+            throws Exception {
+        final Page page = browser.getPage();
+
         if (untilElements == null || untilElements.isEmpty()) {
             Thread.sleep(timeout);
-        }
-        else  {
+        } else {
             // waiting for elements
-            int period = 500;
+            final int period = 500;
             int tries = timeout / period;
-            while(tries-- > 0) {
+            while (tries-- > 0) {
                 Thread.sleep(period);
                 if (checkAllConditions(page, null)) {
                     return;
                 }
             }
-            
-            StringBuffer results = new StringBuffer();
+
+            final StringBuilder results = new StringBuilder();
             if (!checkAllConditions(page, results)) {
                 throw new TimeoutException("Failed waiting for:\n" + results.toString());
             }
         }
     }
 
-    private boolean checkAllConditions(Page page, StringBuffer result) {
-        
+    private boolean checkAllConditions(final Page page, final StringBuilder result) {
+
         boolean state = true;
-        
-        for (Until until : untilElements) {
-            
-            PageElement element = page.getObject(until.getLocator());
-            
+
+        for (final Until until : untilElements) {
+
+            final PageElement element = page.getObject(until.getLocator());
+
             if (!checkElement(element, until)) {
                 state = false;
                 if (result != null) {
@@ -172,23 +167,21 @@ public class GalenPageActionWait extends GalenPageAction {
         return state;
     }
 
-    private boolean checkElement(PageElement element, Until until) {
+    private boolean checkElement(final PageElement element, final Until until) {
         if (until.getType() == UntilType.VISIBLE) {
             return element.isVisible();
-        }
-        else if (until.getType() == UntilType.HIDDEN) {
+        } else if (until.getType() == UntilType.HIDDEN) {
             return !element.isVisible();
-        }
-        else if (until.getType() == UntilType.EXIST) {
+        } else if (until.getType() == UntilType.EXIST) {
             return element.isPresent();
-        }
-        else if (until.getType() == UntilType.GONE) {
+        } else if (until.getType() == UntilType.GONE) {
             return !element.isPresent();
+        } else {
+            return true;
         }
-        else return true;
     }
 
-    public GalenPageActionWait withTimeout(int timeoutInMillis) {
+    public GalenPageActionWait withTimeout(final int timeoutInMillis) {
         this.setTimeout(timeoutInMillis);
         return this;
     }
@@ -197,53 +190,46 @@ public class GalenPageActionWait extends GalenPageAction {
         return timeout;
     }
 
-    public void setTimeout(int timeout) {
+    public void setTimeout(final int timeout) {
         this.timeout = timeout;
     }
 
-    
     @Override
     public String toString() {
-        return new ToStringBuilder(this)
-            .append("timeout", this.timeout)
-            .append("untilElements", this.untilElements)
-            .toString();
+        return new ToStringBuilder(this).append("timeout", this.timeout).append("untilElements", this.untilElements).toString();
     }
-    
+
     @Override
-    public boolean equals(Object obj) {
-        if (obj == null)
+    public boolean equals(final Object obj) {
+        if (obj == null) {
             return false;
-        if (obj == this)
+        }
+        if (obj == this) {
             return true;
-        if (!(obj instanceof GalenPageActionWait))
+        }
+        if (!(obj instanceof GalenPageActionWait)) {
             return false;
-        
-        GalenPageActionWait rhs = (GalenPageActionWait)obj;
-        
-        return new EqualsBuilder()
-            .append(this.timeout, rhs.timeout)
-            .append(this.untilElements, rhs.untilElements)
-            .isEquals();
+        }
+
+        final GalenPageActionWait rhs = (GalenPageActionWait) obj;
+
+        return new EqualsBuilder().append(this.timeout, rhs.timeout).append(this.untilElements, rhs.untilElements).isEquals();
     }
-    
+
     @Override
     public int hashCode() {
-        return new HashCodeBuilder()
-            .append(this.timeout)
-            .append(this.untilElements)
-            .toHashCode();
+        return new HashCodeBuilder().append(this.timeout).append(this.untilElements).toHashCode();
     }
 
     public List<Until> getUntilElements() {
         return untilElements;
     }
 
-    public void setUntilElements(List<Until> untilElements) {
+    public void setUntilElements(final List<Until> untilElements) {
         this.untilElements = untilElements;
     }
 
-    public GalenPageActionWait withUntilElements(List<Until> list) {
+    public GalenPageActionWait withUntilElements(final List<Until> list) {
         if (this.untilElements == null) {
             this.untilElements = new LinkedList<GalenPageActionWait.Until>();
         }
