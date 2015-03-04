@@ -300,6 +300,16 @@
     </plugins>
   </build>
 
+  <reporting>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-surefire-report-plugin</artifactId>
+        <version>${maven-surefire-report-plugin.version}</version>
+      </plugin>
+    </plugins>
+  </reporting>
+
   <repositories>
     <repository>
       <id>sonatype-nexus-snapshots</id>
@@ -344,6 +354,7 @@
     <maven-surefire-plugin.version>2.18.1</maven-surefire-plugin.version>
     <frontend-maven-plugin.version>0.0.20</frontend-maven-plugin.version>
     <maven-eclipse-plugin.version>2.7</maven-eclipse-plugin.version>
+    <maven-surefire-report-plugin.version>2.18.1</maven-surefire-report-plugin.version>
   </properties>
 
   <licenses>
