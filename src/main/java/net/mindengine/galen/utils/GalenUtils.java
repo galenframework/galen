@@ -26,6 +26,8 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.security.DigestInputStream;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -64,21 +66,22 @@ public class GalenUtils {
     public static final String JS_RETRIEVE_DEVICE_PIXEL_RATIO = "var pr = window.devicePixelRatio; if (pr != undefined && pr != null)return pr; else return 1.0;";
 
 
-    public static boolean isUrl(String url) {
+    public static boolean isUrl(final String url) {
         if (url == null) {
             return false;
         }
         return url.matches(URL_REGEX) || url.equals("-");
     }
     
-    public static String formatScreenSize(Dimension screenSize) {
+    public static String formatScreenSize(final Dimension screenSize) {
         if (screenSize != null) {
             return String.format("%dx%d", screenSize.width, screenSize.height);
+        } else {
+            return "0x0";
         }
-        else return "0x0";
     }
 
-    public static Dimension readSize(String sizeText) {
+    public static Dimension readSize(final String sizeText) {
         if (sizeText == null) {
             return null;
         }
@@ -86,52 +89,53 @@ public class GalenUtils {
             throw new RuntimeException("Incorrect screen size: " + sizeText);
         }
         else {
-            String[] arr = sizeText.split("x");
+            final String[] arr = sizeText.split("x");
             return new Dimension(Integer.parseInt(arr[0]), Integer.parseInt(arr[1]));
         }
     }
 
-    public static File findFile(String specFile) {
-        URL resource = GalenUtils.class.getResource(specFile);
+    public static File findFile(final String specFile) {
+        final URL resource = GalenUtils.class.getResource(specFile);
         if (resource != null) {
             return new File(resource.getFile());
+        } else {
+            return new File(specFile);
         }
-        else return new File(specFile);
     }
     
     
-    public static File makeFullScreenshot(WebDriver driver) throws IOException, InterruptedException {
-        byte[] bytes = ((TakesScreenshot)driver).getScreenshotAs(OutputType.BYTES);
-        BufferedImage image = ImageIO.read(new ByteArrayInputStream(bytes));
-        int capturedWidth = image.getWidth();
-        int capturedHeight = image.getHeight();
+    public static File makeFullScreenshot(final WebDriver driver) throws IOException, InterruptedException {
+        final byte[] bytes = ((TakesScreenshot)driver).getScreenshotAs(OutputType.BYTES);
+        final BufferedImage image = ImageIO.read(new ByteArrayInputStream(bytes));
+        final int capturedWidth = image.getWidth();
+        final int capturedHeight = image.getHeight();
 
         // TODO Chop of the header and footer for Safari on iOS.
 
-        long longScrollHeight = (Long)((JavascriptExecutor)driver).executeScript("return Math.max(" + 
+        final long longScrollHeight = (Long)((JavascriptExecutor)driver).executeScript("return Math.max(" + 
                 "document.body.scrollHeight, document.documentElement.scrollHeight," +
                 "document.body.offsetHeight, document.documentElement.offsetHeight," +
                 "document.body.clientHeight, document.documentElement.clientHeight);"
             );
 
-        Double devicePixelRatio = ((Number)((JavascriptExecutor)driver).executeScript(JS_RETRIEVE_DEVICE_PIXEL_RATIO)).doubleValue();
+        final Double devicePixelRatio = ((Number)((JavascriptExecutor)driver).executeScript(JS_RETRIEVE_DEVICE_PIXEL_RATIO)).doubleValue();
 
-        int scrollHeight = (int)longScrollHeight;
+        final int scrollHeight = (int)longScrollHeight;
 
-        File file = File.createTempFile("screenshot", ".png");
+        final File file = File.createTempFile("screenshot", ".png");
 
-        int adaptedCapturedHeight = (int)(((double)capturedHeight) / devicePixelRatio);
+        final int adaptedCapturedHeight = (int)((capturedHeight) / devicePixelRatio);
 
         BufferedImage resultingImage;
 
         if (Math.abs(adaptedCapturedHeight - scrollHeight) > 40) {
-            int scrollOffset = adaptedCapturedHeight;
+            final int scrollOffset = adaptedCapturedHeight;
             
-            int times = scrollHeight / adaptedCapturedHeight;
-            int leftover = scrollHeight % adaptedCapturedHeight;
+            final int times = scrollHeight / adaptedCapturedHeight;
+            final int leftover = scrollHeight % adaptedCapturedHeight;
 
-            final BufferedImage tiledImage = new BufferedImage(capturedWidth, (int)(((double)scrollHeight) * devicePixelRatio), BufferedImage.TYPE_INT_RGB);
-            Graphics2D g2dTile = tiledImage.createGraphics();
+            final BufferedImage tiledImage = new BufferedImage(capturedWidth, (int)((scrollHeight) * devicePixelRatio), BufferedImage.TYPE_INT_RGB);
+            final Graphics2D g2dTile = tiledImage.createGraphics();
             g2dTile.drawImage(image, 0,0, null);
 
             
@@ -139,14 +143,14 @@ public class GalenUtils {
             for (int i = 0; i < times - 1; i++) {
                 scroll += scrollOffset;
                 scrollVerticallyTo(driver, scroll);
-                BufferedImage nextImage = ImageIO.read(new ByteArrayInputStream(((TakesScreenshot)driver).getScreenshotAs(OutputType.BYTES)));
+                final BufferedImage nextImage = ImageIO.read(new ByteArrayInputStream(((TakesScreenshot)driver).getScreenshotAs(OutputType.BYTES)));
                 g2dTile.drawImage(nextImage, 0, (i+1) * capturedHeight, null);
             }
             if (leftover > 0) {
                 scroll += scrollOffset;
                 scrollVerticallyTo(driver, scroll);
-                BufferedImage nextImage = ImageIO.read(new ByteArrayInputStream(((TakesScreenshot)driver).getScreenshotAs(OutputType.BYTES)));
-                BufferedImage lastPart = nextImage.getSubimage(0, nextImage.getHeight() - (int)(((double)leftover) * devicePixelRatio), nextImage.getWidth(), leftover);
+                final BufferedImage nextImage = ImageIO.read(new ByteArrayInputStream(((TakesScreenshot)driver).getScreenshotAs(OutputType.BYTES)));
+                final BufferedImage lastPart = nextImage.getSubimage(0, nextImage.getHeight() - (int)((leftover) * devicePixelRatio), nextImage.getWidth(), leftover);
                 g2dTile.drawImage(lastPart, 0, times * capturedHeight, null);
             }
             
@@ -173,48 +177,50 @@ public class GalenUtils {
      * @param screenshotImage
      * @return
      */
-    public static BufferedImage resizeScreenshotIfNeeded(WebDriver driver, BufferedImage screenshotImage) {
-        Double devicePixelRatio = ((Number)((JavascriptExecutor)driver).executeScript(JS_RETRIEVE_DEVICE_PIXEL_RATIO)).doubleValue();
+    public static BufferedImage resizeScreenshotIfNeeded(final WebDriver driver, final BufferedImage screenshotImage) {
+        final Double devicePixelRatio = ((Number)((JavascriptExecutor)driver).executeScript(JS_RETRIEVE_DEVICE_PIXEL_RATIO)).doubleValue();
 
         if (devicePixelRatio > 1.0 && screenshotImage.getWidth() > 0) {
-            Long screenSize = (Long) ((JavascriptExecutor) driver).executeScript("return Math.max(" +
+            final Long screenSize = (Long) ((JavascriptExecutor) driver).executeScript("return Math.max(" +
                             "document.body.scrollWidth, document.documentElement.scrollWidth," +
                             "document.body.offsetWidth, document.documentElement.offsetWidth," +
                             "document.body.clientWidth, document.documentElement.clientWidth);"
             );
 
-            Double estimatedPixelRatio = ((double)screenshotImage.getWidth()) / ((double)screenSize);
+            final Double estimatedPixelRatio = ((double)screenshotImage.getWidth()) / ((double)screenSize);
 
             if (estimatedPixelRatio > 1.0) {
 
-                int newWidth = (int) (screenshotImage.getWidth() / estimatedPixelRatio);
-                int newHeight = (int) (screenshotImage.getHeight() / estimatedPixelRatio);
+                final int newWidth = (int) (screenshotImage.getWidth() / estimatedPixelRatio);
+                final int newHeight = (int) (screenshotImage.getHeight() / estimatedPixelRatio);
 
-                Image tmp = screenshotImage.getScaledInstance(newWidth, newHeight, Image.SCALE_SMOOTH);
-                BufferedImage scaledImage = new BufferedImage(newWidth, newHeight, BufferedImage.TYPE_INT_RGB);
+                final Image tmp = screenshotImage.getScaledInstance(newWidth, newHeight, Image.SCALE_SMOOTH);
+                final BufferedImage scaledImage = new BufferedImage(newWidth, newHeight, BufferedImage.TYPE_INT_RGB);
 
-                Graphics2D g2d = scaledImage.createGraphics();
+                final Graphics2D g2d = scaledImage.createGraphics();
                 g2d.drawImage(tmp, 0, 0, null);
                 g2d.dispose();
 
                 return scaledImage;
+            } else {
+                return screenshotImage;
             }
-            else return screenshotImage;
+        } else {
+            return screenshotImage;
         }
-        else return screenshotImage;
     }
 
-    public static void scrollVerticallyTo(WebDriver driver, int scroll) {
+    public static void scrollVerticallyTo(final WebDriver driver, final int scroll) {
         ((JavascriptExecutor)driver).executeScript("window.scrollTo(0, " + scroll + ");");
         try {
             waitUntilItIsScrolledToPosition(driver, scroll);
-        } catch (InterruptedException e) {
+        } catch (final InterruptedException e) {
             LOG.trace("Interrupt error during scrolling occurred.", e);
         }
     }
 
-    private static void waitUntilItIsScrolledToPosition(WebDriver driver, int scrollPosition) throws InterruptedException {
-        int hardTime = GalenConfig.getConfig().getIntProperty(GalenConfig.SCREENSHOT_FULLPAGE_SCROLLWAIT, 0);
+    private static void waitUntilItIsScrolledToPosition(final WebDriver driver, final int scrollPosition) throws InterruptedException {
+        final int hardTime = GalenConfig.getConfig().getIntProperty(GalenConfig.SCREENSHOT_FULLPAGE_SCROLLWAIT, 0);
         if (hardTime > 0) {
             Thread.sleep(hardTime);
         }
@@ -228,12 +234,12 @@ public class GalenUtils {
         }
     }
 
-    private static int obtainVerticalScrollPosition(WebDriver driver) {
-        Long scrollLong = (Long) ((JavascriptExecutor)driver).executeScript("return (window.pageYOffset !== undefined) ? window.pageYOffset : (document.documentElement || document.body.parentNode || document.body).scrollTop;");
+    private static int obtainVerticalScrollPosition(final WebDriver driver) {
+        final Long scrollLong = (Long) ((JavascriptExecutor)driver).executeScript("return (window.pageYOffset !== undefined) ? window.pageYOffset : (document.documentElement || document.body.parentNode || document.body).scrollTop;");
         return scrollLong.intValue();
     }
 
-    public static String convertToFileName(String name) {
+    public static String convertToFileName(final String name) {
         return name.toLowerCase().replaceAll("[^\\dA-Za-z\\.\\-]", " ").replaceAll("\\s+", "-");
     }
 
@@ -243,12 +249,12 @@ public class GalenUtils {
      * @param browserType
      * @return
      */
-    public static WebDriver createDriver(String browserType, String url, String size) {
+    public static WebDriver createDriver(String browserType, final String url, final String size) {
         if (browserType == null) { 
             browserType = GalenConfig.getConfig().getDefaultBrowser();
         }
         
-        SeleniumBrowser browser = (SeleniumBrowser) new SeleniumBrowserFactory(browserType).openBrowser();
+        final SeleniumBrowser browser = (SeleniumBrowser) new SeleniumBrowserFactory(browserType).openBrowser();
         
         if (url != null && !url.trim().isEmpty()) {
             browser.load(url);    
@@ -261,8 +267,8 @@ public class GalenUtils {
         return browser.getDriver();
     }
     
-    public static WebDriver createGridDriver(String gridUrl, String browserName, String browserVersion, String platform, Map<String, String> desiredCapabilities, String size) {
-        SeleniumGridBrowserFactory factory = new SeleniumGridBrowserFactory(gridUrl);
+    public static WebDriver createGridDriver(final String gridUrl, final String browserName, final String browserVersion, final String platform, final Map<String, String> desiredCapabilities, final String size) {
+        final SeleniumGridBrowserFactory factory = new SeleniumGridBrowserFactory(gridUrl);
         factory.setBrowser(browserName);
         factory.setBrowserVersion(browserVersion);
         
@@ -274,15 +280,15 @@ public class GalenUtils {
             factory.setDesiredCapabilites(desiredCapabilities);
         }
         
-        WebDriver driver = ((SeleniumBrowser)factory.openBrowser()).getDriver();
+        final WebDriver driver = ((SeleniumBrowser)factory.openBrowser()).getDriver();
         
         GalenUtils.resizeDriver(driver, size);
         return driver;
     }
     
-    public static void resizeDriver(WebDriver driver, String sizeText) {
+    public static void resizeDriver(final WebDriver driver, final String sizeText) {
         if (sizeText != null && !sizeText.trim().isEmpty()) {
-            Dimension size = GalenUtils.readSize(sizeText);
+            final Dimension size = GalenUtils.readSize(sizeText);
             driver.manage().window().setSize(new org.openqa.selenium.Dimension(size.width, size.height));
         }
     }
@@ -295,8 +301,8 @@ public class GalenUtils {
      * @param excludedTags
      * @throws IOException 
      */
-    public static void checkLayout(WebDriver driver, String fileName, String[]includedTags, String[]excludedTags) throws IOException {
-        GalenPageActionCheck action = new GalenPageActionCheck();
+    public static void checkLayout(final WebDriver driver, final String fileName, final String[]includedTags, final String[]excludedTags) throws IOException {
+        final GalenPageActionCheck action = new GalenPageActionCheck();
         action.setSpecs(Arrays.asList(fileName));
         if (includedTags != null) {
             action.setIncludedTags(Arrays.asList(includedTags));
@@ -305,73 +311,92 @@ public class GalenUtils {
             action.setExcludedTags(Arrays.asList(excludedTags));
         }
 
-        TestSession session = TestSession.current();
+        final TestSession session = TestSession.current();
         if (session == null) {
             throw new UnregisteredTestSession("Cannot check layout as there was no TestSession created");
         }
 
-        TestReport report = session.getReport();
-        CompleteListener listener = session.getListener();
+        final TestReport report = session.getReport();
+        final CompleteListener listener = session.getListener();
         action.execute(report, new SeleniumBrowser(driver), null, listener);
     }
     
-    public static File takeScreenshot(WebDriver driver) throws IOException {
-        File file = ((TakesScreenshot)driver).getScreenshotAs(OutputType.FILE);
 
+
+    public static File takeScreenshot(final WebDriver driver) throws IOException {
+        final File file = ((TakesScreenshot) driver).getScreenshotAs(OutputType.FILE);
 
         if (GalenConfig.getConfig().shouldAutoresizeScreenshots()) {
             BufferedImage image = Rainbow4J.loadImage(file.getAbsolutePath());
-            File newFile = File.createTempFile("screenshot", ".png");
+
+            final Path path = Files.createTempFile("screenshot", ".png");
+            final File newFile = path.toFile();
             image = GalenUtils.resizeScreenshotIfNeeded(driver, image);
 
             Rainbow4J.saveImage(image, newFile);
+            // remove temp file when VM terminates
+            newFile.deleteOnExit();
+            Runtime.getRuntime().addShutdownHook(new Thread() {
+                @Override
+                public void run() {
+                    try {
+                        Files.delete(path);
+                        LOG.debug("deleted file at " + path);
+                    } catch (final IOException e) {
+                        LOG.error("Unkown error during deleting temporary file.", e);
+                    }
+                }
+            });
             return newFile;
+        } else {
+            return file;
         }
-        else return file;
     }
     
-    public static Properties loadProperties(String fileName) throws IOException {
+    public static Properties loadProperties(final String fileName) throws IOException {
         
         GalenProperties properties = null;
         if (TestSession.current() != null) {
             properties = TestSession.current().getProperties();
+        } else {
+            properties = new GalenProperties();
         }
-        else properties = new GalenProperties();
         
         properties.load(new File(fileName));
         return properties.getProperties();
     }
     
-    public static void cookie(WebDriver driver, String cookie) {
-        String script = "document.cookie=\"" + StringEscapeUtils.escapeJava(cookie) + "\";";
+    public static void cookie(final WebDriver driver, final String cookie) {
+        final String script = "document.cookie=\"" + StringEscapeUtils.escapeJava(cookie) + "\";";
         injectJavascript(driver, script);
     }
     
-    public static Object injectJavascript(WebDriver driver, String script) {
+    public static Object injectJavascript(final WebDriver driver, final String script) {
         return ((JavascriptExecutor)driver).executeScript(script);
     }
     
-    public static String readFile(String fileName) throws IOException {
+    public static String readFile(final String fileName) throws IOException {
         return FileUtils.readFileToString(new File(fileName));
     }
     
-    public static Object[] listToArray(List<?> list) {
+    public static Object[] listToArray(final List<?> list) {
         if (list == null) {
             return new Object[]{};
         }
-        Object[] arr = new Object[list.size()];
+        final Object[] arr = new Object[list.size()];
         return list.toArray(arr);
     }
 
-    public static String getParentForFile(String filePath) {
+    public static String getParentForFile(final String filePath) {
         if (filePath != null) {
             return new File(filePath).getParent();
+        } else {
+            return null;
         }
-        else return null;
     }
 
     public static InputStream findFileOrResourceAsStream(String filePath) throws FileNotFoundException {
-        File file = new File(filePath);
+        final File file = new File(filePath);
 
         if (file.exists()) {
             return new FileInputStream(file);
@@ -380,38 +405,38 @@ public class GalenUtils {
             if (!filePath.startsWith("/")) {
                 filePath = "/" + filePath;
             }
-            InputStream stream = GalenUtils.class.getResourceAsStream(filePath);
+            final InputStream stream = GalenUtils.class.getResourceAsStream(filePath);
             if (stream != null) {
                 return stream;
             }
             else {
-                String windowsFilePath = filePath.replace("\\", "/");
+                final String windowsFilePath = filePath.replace("\\", "/");
                 return GalenUtils.class.getResourceAsStream(windowsFilePath);
             }
         }
     }
 
-    public static String calculateFileId(String fullPath) throws NoSuchAlgorithmException, FileNotFoundException {
-        String fileName = new File(fullPath).getName();
-        MessageDigest md = MessageDigest.getInstance("MD5");
-        InputStream is = GalenUtils.findFileOrResourceAsStream(fullPath);
+    public static String calculateFileId(final String fullPath) throws NoSuchAlgorithmException, FileNotFoundException {
+        final String fileName = new File(fullPath).getName();
+        final MessageDigest md = MessageDigest.getInstance("MD5");
+        final InputStream is = GalenUtils.findFileOrResourceAsStream(fullPath);
         new DigestInputStream(is, md);
-        byte [] hashBytes = md.digest();
+        final byte [] hashBytes = md.digest();
         
         return fileName + convertHashBytesToString(hashBytes);
     }
 
-    private static String convertHashBytesToString(byte[] hashBytes) {
-        StringBuilder builder = new StringBuilder();
-        for (byte b : hashBytes) {
+    private static String convertHashBytesToString(final byte[] hashBytes) {
+        final StringBuilder builder = new StringBuilder();
+        for (final byte b : hashBytes) {
             builder.append(Integer.toHexString(0xFF & b));
         }
         return builder.toString();
     }
 
 
-    public static Pattern convertObjectNameRegex(String regex) {
-        String jRegex = regex.replace("#", "[0-9]+").replace("*", ".*");
+    public static Pattern convertObjectNameRegex(final String regex) {
+        final String jRegex = regex.replace("#", "[0-9]+").replace("*", ".*");
         return Pattern.compile(jRegex);
     }
 }
