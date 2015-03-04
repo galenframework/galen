@@ -52,6 +52,7 @@ import com.google.common.io.Files;
 
 import freemarker.template.TemplateException;
 
+@Test(singleThreaded=true)
 public class ReportingTest {
     
     private static final String GALEN_LOG_LEVEL = "galen.log.level";
@@ -66,12 +67,11 @@ public class ReportingTest {
         resetUniqueIdForFileTempStorage();
     }
 
-
     @Test
-    public void shouldReportWithNoScreenshot_inJsonFormat() throws Exception {
+    public void shouldReportWithEmptyScreenshot_inJsonFormat() throws Exception {
         String reportPath = Files.createTempDir().getAbsolutePath() + "/json-report";
         List<GalenTestInfo> testInfos = new LinkedList<GalenTestInfo>();
-        GalenTestInfo testInfo = new GalenTestInfo("Home page test", null);
+        GalenTestInfo testInfo = new GalenTestInfo("Home page test", new GalenEmptyTest("Home page test", asList("mobile", "HOMEPAGE")));
         TestReport report = new TestReport();
         LayoutReport layoutReport = new LayoutReport();
         layoutReport.setScreenshot(null);
@@ -86,9 +86,9 @@ public class ReportingTest {
 
 
         testInfo.setReport(report);
+        testInfos.add(testInfo);
         testInfo.setStartedAt(new Date(1404681346000L));
         testInfo.setEndedAt(new Date(1404681416000L));
-        testInfos.add(testInfo);
 
 
         new JsonReportBuilder().build(testInfos, reportPath);
@@ -108,7 +108,6 @@ public class ReportingTest {
                 "report.json"
         ));
     }
-
 
     @Test
     public void shouldReport_inJsonFormat() throws Exception {

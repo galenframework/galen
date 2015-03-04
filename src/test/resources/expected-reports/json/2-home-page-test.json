@@ -179,10 +179,13 @@
                 } ]
             } ],
             "objects" : {
+                "objectA2" : {
+                    "area" : [ 200, 300, 50, 30 ]
+                },
                 "other-object" : {
                     "area" : [ 1, 1, 90, 100 ]
                 },
-                "objectA2" : {
+                "objectB2" : {
                     "area" : [ 200, 300, 50, 30 ]
                 },
                 "objectB1" : {
@@ -190,9 +193,6 @@
                 },
                 "objectA1" : {
                     "area" : [ 10, 10, 100, 50 ]
-                },
-                "objectB2" : {
-                    "area" : [ 200, 300, 50, 30 ]
                 }
             },
             "type" : "layout"
