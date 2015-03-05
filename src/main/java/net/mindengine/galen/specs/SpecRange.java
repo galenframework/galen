@@ -55,8 +55,8 @@ public abstract class SpecRange extends Spec {
     
     @Override
     public String toString() {
-        return new ToStringBuilder(this)
+        return new ToStringBuilder(this) //@formatter:off
             .append("range", range)
-            .toString();
+            .toString(); //@formatter:on
     }
 }

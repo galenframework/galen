@@ -98,11 +98,11 @@ public class ExpectedSpecObject {
 
     @Override
     public int hashCode() {
-        return new HashCodeBuilder()
+        return new HashCodeBuilder() //@formatter:off
                 .append(expectedName)
                 .append(specs)
                 .append(specGroups)
-                .toHashCode();
+                .toHashCode(); //@formatter:on
     }
 
     @Override
@@ -118,20 +118,20 @@ public class ExpectedSpecObject {
         }
         ExpectedSpecObject rhs = (ExpectedSpecObject)obj;
 
-        return new EqualsBuilder()
+        return new EqualsBuilder() //@formatter:off
                 .append(expectedName, rhs.expectedName)
                 .append(specs, rhs.specs)
                 .append(specGroups, rhs.specGroups)
-                .isEquals();
+                .isEquals(); //@formatter:on
     }
 
     @Override
     public String toString() {
-        return new ToStringBuilder(this)
+        return new ToStringBuilder(this) //@formatter:off
                 .append("expectedName", expectedName)
                 .append("specs", specs)
                 .append("specGroups", specGroups)
-                .toString();
+                .toString(); //@formatter:on
     }
 
     public void setSpecGroups(Map<String, List<String>> specGroups) {

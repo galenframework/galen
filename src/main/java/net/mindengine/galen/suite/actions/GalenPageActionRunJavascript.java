@@ -97,10 +97,10 @@ public class GalenPageActionRunJavascript extends GalenPageAction{
     
     @Override
     public int hashCode() {
-        return new HashCodeBuilder()
+        return new HashCodeBuilder() //@formatter:off
             .append(javascriptPath)
             .append(jsonArguments)
-            .toHashCode();
+            .toHashCode(); //@formatter:on
     }
     
     @Override
@@ -114,17 +114,17 @@ public class GalenPageActionRunJavascript extends GalenPageAction{
         
         GalenPageActionRunJavascript rhs = (GalenPageActionRunJavascript)obj;
         
-        return new EqualsBuilder()
+        return new EqualsBuilder() //@formatter:off
             .append(javascriptPath, rhs.javascriptPath)
             .append(jsonArguments, rhs.jsonArguments)
-            .isEquals();
+            .isEquals(); //@formatter:on
     }
     
     @Override
     public String toString() {
-        return new ToStringBuilder(this)
+        return new ToStringBuilder(this) //@formatter:off
             .append("javascriptPath", javascriptPath)
             .append("jsonArguments", jsonArguments)
-            .toString();
+            .toString(); //@formatter:on
     }
 }

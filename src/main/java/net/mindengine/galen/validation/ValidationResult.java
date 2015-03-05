@@ -69,10 +69,10 @@ public class ValidationResult {
 
     @Override
     public int hashCode() {
-        return new HashCodeBuilder()
+        return new HashCodeBuilder() //@formatter:off
                 .append(validationObjects)
                 .append(error)
-                .toHashCode();
+                .toHashCode(); //@formatter:on
     }
 
 
@@ -86,19 +86,19 @@ public class ValidationResult {
             return false;
 
         ValidationResult rhs = (ValidationResult)obj;
-        return new EqualsBuilder()
+        return new EqualsBuilder() //@formatter:off
                 .append(this.error, rhs.error)
                 .append(this.validationObjects, rhs.validationObjects)
-                .isEquals();
+                .isEquals(); //@formatter:on
 
     }
 
     @Override
     public String toString() {
-        return new ToStringBuilder(this)
+        return new ToStringBuilder(this) //@formatter:off
                 .append("objects", validationObjects)
                 .append("error", error)
-                .toString();
+                .toString(); //@formatter:on
     }
 
     public static List<ValidationResult> filterOnlyErrorResults(List<ValidationResult> results) {

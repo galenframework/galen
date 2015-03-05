@@ -120,24 +120,24 @@ public class SeleniumGridBrowserFactory implements BrowserFactory {
     
     @Override
     public int hashCode() {
-        return new HashCodeBuilder()
+        return new HashCodeBuilder() //@formatter:off
             .append(this.browser)
             .append(this.browserVersion)
             .append(this.gridUrl)
             .append(this.platform)
             .append(this.desiredCapabilities)
-            .toHashCode();
+            .toHashCode(); //@formatter:on
     }
     
     @Override
     public String toString() {
-        return new ToStringBuilder(this)
+        return new ToStringBuilder(this) //@formatter:off
             .append("browser", this.browser)
             .append("browserVersion", this.browserVersion)
             .append("gridUrl", this.gridUrl)
             .append("platform", this.platform)
             .append("desiredCapabilities", this.desiredCapabilities)
-            .toString();
+            .toString(); //@formatter:on
     }
     
     @Override
@@ -153,13 +153,13 @@ public class SeleniumGridBrowserFactory implements BrowserFactory {
         }
         SeleniumGridBrowserFactory rhs = (SeleniumGridBrowserFactory)obj;
         
-        return new EqualsBuilder()
+        return new EqualsBuilder() //@formatter:off
             .append(this.browser, rhs.browser)
             .append(this.browserVersion, rhs.browserVersion)
             .append(this.gridUrl, rhs.gridUrl)
             .append(this.platform, rhs.platform)
             .append(this.desiredCapabilities, desiredCapabilities)
-            .isEquals();
+            .isEquals(); //@formatter:on
     }
 
     public SeleniumGridBrowserFactory withDesiredCapability(String name, String value) {

@@ -52,9 +52,9 @@ public class GalenPageActionInjectJavascript extends GalenPageAction{
     
     @Override
     public int hashCode() {
-        return new HashCodeBuilder()
+        return new HashCodeBuilder() //@formatter:off
             .append(javascriptFilePath)
-            .toHashCode();
+            .toHashCode(); //@formatter:on
     }
     
     @Override
@@ -68,15 +68,15 @@ public class GalenPageActionInjectJavascript extends GalenPageAction{
         
         GalenPageActionInjectJavascript rhs = (GalenPageActionInjectJavascript)obj;
         
-        return new EqualsBuilder()
+        return new EqualsBuilder() //@formatter:off
             .append(javascriptFilePath, rhs.javascriptFilePath)
-            .isEquals();
+            .isEquals(); //@formatter:on
     }
 
     @Override
     public String toString() {
-        return new ToStringBuilder(this)
+        return new ToStringBuilder(this) //@formatter:off
             .append("javascriptFilePath", javascriptFilePath)
-            .toString();
+            .toString(); //@formatter:on
     }
 }

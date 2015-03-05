@@ -45,10 +45,10 @@ public class ValidationError {
 
     @Override
     public int hashCode() {
-        return new HashCodeBuilder(17, 31)
+        return new HashCodeBuilder(17, 31) //@formatter:off
                 .append(messages)
                 .append(onlyWarn)
-                .toHashCode();
+                .toHashCode(); //@formatter:on
     }
     
     @Override
@@ -61,10 +61,10 @@ public class ValidationError {
             return false;
         
         ValidationError rhs = (ValidationError)obj;
-        return new EqualsBuilder()
+        return new EqualsBuilder() //@formatter:off
                 .append(messages, rhs.messages)
                 .append(onlyWarn, rhs.onlyWarn)
-                .isEquals();
+                .isEquals(); //@formatter:on
     }
     
     @Override

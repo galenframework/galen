@@ -114,13 +114,13 @@ public class GalenPageActionDumpPage extends GalenPageAction {
 
     @Override
     public int hashCode() {
-        return new HashCodeBuilder()
+        return new HashCodeBuilder() //@formatter:off
                 .append(this.specPath)
                 .append(this.pageName)
                 .append(this.pageDumpPath)
                 .append(this.maxWidth)
                 .append(this.maxHeight)
-                .toHashCode();
+                .toHashCode(); //@formatter:on
     }
 
     @Override
@@ -133,23 +133,23 @@ public class GalenPageActionDumpPage extends GalenPageAction {
             return false;
 
         GalenPageActionDumpPage rhs = (GalenPageActionDumpPage)obj;
-        return new EqualsBuilder()
+        return new EqualsBuilder() //@formatter:off
                 .append(specPath, rhs.specPath)
                 .append(pageName, rhs.pageName)
                 .append(pageDumpPath, rhs.pageDumpPath)
                 .append(maxWidth, rhs.maxWidth)
                 .append(maxHeight, rhs.maxHeight)
-                .isEquals();
+                .isEquals(); //@formatter:on
     }
 
     @Override
     public String toString() {
-        return new ToStringBuilder(this)
+        return new ToStringBuilder(this) //@formatter:off
                 .append("specPath", specPath)
                 .append("pageName", pageName)
                 .append("pageDumpPath", pageDumpPath)
                 .append("maxWidth", maxWidth)
                 .append("maxHeight", maxHeight)
-                .toString();
+                .toString(); //@formatter:on
     }
 }

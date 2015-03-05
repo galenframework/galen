@@ -81,16 +81,16 @@ public class GalenPageActionProperties extends GalenPageAction {
         
         GalenPageActionProperties rhs = (GalenPageActionProperties)obj;
         
-        return new EqualsBuilder()
+        return new EqualsBuilder() //@formatter:off
             .append(this.files, rhs.files)
-            .isEquals();
+            .isEquals(); //@formatter:on
         
     }
     
     @Override
-    public String toString() {
+    public String toString() { //@formatter:off
         return new ToStringBuilder(this)
         .append("files", files)
-        .toString();
+        .toString(); //@formatter:on
     }
 }
