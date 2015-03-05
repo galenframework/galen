@@ -47,10 +47,10 @@ public class Place {
 
     @Override
     public int hashCode() {
-        return new HashCodeBuilder()
+        return new HashCodeBuilder() //@formatter:off
         .append(this.filePath)
         .append(this.lineNumber)
-        .toHashCode();
+        .toHashCode(); //@formatter:on
     }
     
     @Override
@@ -68,10 +68,10 @@ public class Place {
     
     @Override
     public String toString() {
-        return new ToStringBuilder(this)
+        return new ToStringBuilder(this) //@formatter:off
         .append("filePath", filePath)
         .append("lineNumber", lineNumber)
-        .toString();
+        .toString(); //@formatter:on
     }
     
 }

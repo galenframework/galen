@@ -52,10 +52,10 @@ public class ValidationObject {
 
     @Override
     public int hashCode() {
-        return new HashCodeBuilder()
+        return new HashCodeBuilder() //@formatter:off
                 .append(name)
                 .append(area)
-                .toHashCode();
+                .toHashCode(); //@formatter:on
     }
 
     @Override
@@ -68,10 +68,10 @@ public class ValidationObject {
             return false;
 
         ValidationObject rhs = (ValidationObject)obj;
-        return new EqualsBuilder()
+        return new EqualsBuilder() //@formatter:off
                 .append(name, rhs.name)
                 .append(area, rhs.area)
-                .isEquals();
+                .isEquals(); //@formatter:on
     }
 
     @Override

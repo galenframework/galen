@@ -50,11 +50,11 @@ public class SpecOn extends SpecComplex {
     
     @Override
     public String toString() {
-        return new ToStringBuilder(this)
+        return new ToStringBuilder(this) //@formatter:off
             .append("sideVertical", sideVertical)
             .append("sideHorizontal", sideHorizontal)
             .append("object", getObject())
             .append("locations", getLocations())
-            .toString();
+            .toString(); //@formatter:on
     }
 }

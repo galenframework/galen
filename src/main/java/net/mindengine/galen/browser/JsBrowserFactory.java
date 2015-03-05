@@ -80,18 +80,18 @@ public class JsBrowserFactory implements BrowserFactory {
     
     @Override
     public String toString() {
-        return new ToStringBuilder(this)
+        return new ToStringBuilder(this) //@formatter:off
             .append("scriptPath", this.scriptPath)
             .append("args", this.args)
-            .toString();
+            .toString(); //@formatter:on
     }
     
     @Override
     public int hashCode() {
-        return new HashCodeBuilder()
+        return new HashCodeBuilder() //@formatter:off
         .append(this.scriptPath)
         .append(this.args)
-        .toHashCode();
+        .toHashCode(); //@formatter:on
     }
     
     @Override
@@ -107,10 +107,10 @@ public class JsBrowserFactory implements BrowserFactory {
         }
         
         JsBrowserFactory rhs = (JsBrowserFactory)obj;
-        return new EqualsBuilder()
+        return new EqualsBuilder() //@formatter:off
             .append(this.scriptPath, rhs.scriptPath)
             .append(this.args, rhs.args)
-            .isEquals();
+            .isEquals(); //@formatter:on
     }
 
 }

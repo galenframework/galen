@@ -65,10 +65,10 @@ public class Location {
     
     @Override
     public String toString() {
-        return new ToStringBuilder(this)
+        return new ToStringBuilder(this) //@formatter:off
             .append("range", range)
             .append("sides", sides)
-            .toString();
+            .toString(); //@formatter:on
     }
     
     public static List<Location> locations(Location...locations) {

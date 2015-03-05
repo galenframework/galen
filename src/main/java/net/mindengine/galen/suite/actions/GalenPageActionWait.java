@@ -106,26 +106,26 @@ public class GalenPageActionWait extends GalenPageAction {
             
             Until rhs = (Until)obj;
             
-            return new EqualsBuilder()
+            return new EqualsBuilder() //@formatter:off
                 .append(this.type, rhs.type)
                 .append(this.locator, rhs.locator)
-                .isEquals();
+                .isEquals(); //@formatter:on
         }
         
         @Override
-        public int hashCode() {
+        public int hashCode() { //@formatter:off
             return new HashCodeBuilder()
                 .append(this.type)
                 .append(this.locator)
-                .toHashCode();
+                .toHashCode(); //@formatter:on
         }
         
         @Override
         public String toString() {
-            return new ToStringBuilder(this)
+            return new ToStringBuilder(this) //@formatter:off
                 .append("type", this.type)
                 .append("locator", this.locator)
-                .toString();
+                .toString(); //@formatter:on
         }
     }
 
@@ -204,10 +204,10 @@ public class GalenPageActionWait extends GalenPageAction {
     
     @Override
     public String toString() {
-        return new ToStringBuilder(this)
+        return new ToStringBuilder(this) //@formatter:off
             .append("timeout", this.timeout)
             .append("untilElements", this.untilElements)
-            .toString();
+            .toString(); //@formatter:on
     }
     
     @Override
@@ -221,18 +221,18 @@ public class GalenPageActionWait extends GalenPageAction {
         
         GalenPageActionWait rhs = (GalenPageActionWait)obj;
         
-        return new EqualsBuilder()
+        return new EqualsBuilder() //@formatter:off
             .append(this.timeout, rhs.timeout)
             .append(this.untilElements, rhs.untilElements)
-            .isEquals();
+            .isEquals(); //@formatter:on
     }
     
     @Override
     public int hashCode() {
-        return new HashCodeBuilder()
+        return new HashCodeBuilder() //@formatter:off
             .append(this.timeout)
             .append(this.untilElements)
-            .toHashCode();
+            .toHashCode(); //@formatter:on
     }
 
     public List<Until> getUntilElements() {

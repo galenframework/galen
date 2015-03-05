@@ -64,9 +64,9 @@ public abstract class SpecComplex extends Spec {
     
     @Override
     public String toString() {
-        return new ToStringBuilder(this)
+        return new ToStringBuilder(this) //@formatter:off
             .append("object", object)
             .append("locations", locations)
-            .toString();
+            .toString(); //@formatter:on
     }
 }

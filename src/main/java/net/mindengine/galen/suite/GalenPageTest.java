@@ -81,22 +81,22 @@ public class GalenPageTest {
     
     @Override
     public int hashCode() {
-        return new HashCodeBuilder()
+        return new HashCodeBuilder() //@formatter:off
             .append(this.actions)
             .append(this.browserFactory)
             .append(this.screenSize)
             .append(this.url)
-            .toHashCode();
+            .toHashCode(); //@formatter:on
     }
     
     @Override
     public String toString() {
-        return new ToStringBuilder(this)
+        return new ToStringBuilder(this) //@formatter:off
             .append("url", this.url)
             .append("screenSize", this.screenSize)
             .append("browserFactory", this.browserFactory)
             .append("actions", this.actions)
-            .toString();
+            .toString(); //@formatter:on
     }
     
     @Override
@@ -112,12 +112,12 @@ public class GalenPageTest {
         }
         GalenPageTest rhs = (GalenPageTest)obj;
         
-        return new EqualsBuilder()
+        return new EqualsBuilder() //@formatter:off
             .append(this.actions, rhs.actions)
             .append(this.browserFactory, rhs.browserFactory)
             .append(this.screenSize, rhs.screenSize)
             .append(this.url, rhs.url)
-            .isEquals();
+            .isEquals(); //@formatter:on
     }
     public String getTitle() {
         return title;

@@ -95,16 +95,16 @@ public class SeleniumBrowserFactory implements BrowserFactory {
 
     @Override
     public int hashCode() {
-        return new HashCodeBuilder()
+        return new HashCodeBuilder() //@formatter:off
             .append(browserType)
-            .toHashCode();
+            .toHashCode(); //@formatter:on
     }
     
     @Override
     public String toString() {
-        return new ToStringBuilder(this)
+        return new ToStringBuilder(this) //@formatter:off
             .append("browserType", this.browserType)
-            .toString();
+            .toString(); //@formatter:on
     }
     
     @Override
