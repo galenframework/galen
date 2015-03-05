@@ -13,6 +13,10 @@ function setHtml(id, html) {
     document.getElementById(id).innerHTML = html;
 }
 
+function haveSimilarElements(array1, array2) {
+    return $(array1).filter(array2).length > 0;
+}
+
 function createTemplate(templateId) {
     var source = document.getElementById(templateId).innerHTML;
     return Handlebars.compile(source);
@@ -342,9 +346,9 @@ Handlebars.registerHelper("formatGroupsPretty", function (groups) {
             if (i > 0) {
                 text += ", ";
             }
-            text = text + groups[i];
+            text = text + '<a href="#tests|grouped|' + encodeURIComponent(groups[i]) + '">' + groups[i] + '</a>';
         }
-        return text;
+        return safeHtml(text);
     }
     return "";
 });
@@ -414,6 +418,14 @@ Handlebars.registerHelper("renderProgressBar", function (statistic) {
     return new Handlebars.SafeString("<table class='progress'><tr><td class='passed' style='width:" + passedPercent + "%;'></td><td style='width:" + failedPercent + "%;' class='failed'></td><td                 style='width:" + warningPercent + "%;' class='warning'></td></tr></table>");
 });
 
+Handlebars.registerHelper("renderGroupsProgressBar", function (group) {
+    var total = group.tests;
+    var passedPercent = Math.round(group.passed * 100 / total);
+    var failedPercent = Math.round(group.failed * 100 / total);
+
+    return new Handlebars.SafeString("<table class='progress'><tr><td class='passed' style='width:" + passedPercent + "%;'></td><td style='width:" + failedPercent + "%;' class='failed'></td></tr></table>");
+});
+
 Handlebars.registerHelper("commaSeparated", function (items) {
     if (items !== null && items !== undefined && items.length > 0) {
         var text = "";
@@ -432,15 +444,126 @@ Handlebars.registerHelper("commaSeparated", function (items) {
 
 
 function createGalenTestOverview() {
+    $.extend($.tablesorter.themes.jui, {
+        table: 'ui-widget ui-widget-content ui-corner-all', 
+        header: 'ui-widget-header ui-corner-all ui-state-default',
+        icons: 'ui-icon', 
+        sortNone: 'ui-icon-carat-2-n-s',
+        sortAsc: 'ui-icon-carat-1-n',
+        sortDesc: 'ui-icon-carat-1-s',
+        active: 'ui-state-active',
+        hover: 'ui-state-hover', 
+        filterRow: '',
+        even: 'ui-widget-content',
+        odd: 'ui-state-default'
+    });
+
     return  {
+        testsTableId: null,
+        groupsTableId: null,
         tpl: {
-            main: createTemplate("main-overview")
+            tests: createTemplate("tests-table-tpl"),
+            groups: createTemplate("groups-table-tpl")
         },
 
-        render: function (id, data) {
-            setHtml(id, this.tpl.main(data));
 
-            $('table.tests').tablesorter({
+        handleHash: function (hash) {
+            $(".tabs .tab-selected").each(function () {
+                $(this).removeClass("tab-selected");
+            });
+
+            if (hash.indexOf("groups") === 0) {
+                $("#" + this.testsTableId).hide();
+                $("#" + this.groupsTableId).show();
+                $(".tabs .tab-groups").addClass("tab-selected");
+
+                this.handleGroupsHash(hash);
+            } else {
+                $("#" + this.groupsTableId).hide();
+                $("#" + this.testsTableId).show();
+
+                $(".tabs .tab-tests").addClass("tab-selected");
+                this.handleTestsHash(hash);
+            }
+        },
+
+
+        handleGroupsHash: function (hash) {
+        },
+        handleTestsHash: function (hash) {
+            var arguments = hash.split("|");
+            if (arguments.length > 1 && arguments[1] === "grouped") {
+                var selectedGroups = arguments[2].split(",");
+                if (selectedGroups.length > 0) {
+                    $(".tests.tablesorter > tbody > tr").each(function () {
+                        var $this = $(this);
+                        var groupsAttr = $this.attr("data-groups");
+                        var groups = groupsAttr.split(",");
+                        if(haveSimilarElements(groups, selectedGroups)) {
+                            $this.show();
+                        } else {
+                            $this.hide();
+                        }
+                    });
+
+                    return;
+                }
+            }
+            $(".tests.tablesorter tbody tr").each(function () {
+                $(this).show();
+            });
+        },
+
+        renderGroupsTable: function (id, testData) {
+            this.groupsTableId = id;
+            var tests = testData.tests;
+            var groups = {};
+
+            for (var i = 0; i < tests.length; i++) {
+                var test = tests[i];
+                var testGroups = tests[i].groups;
+
+                if (testGroups !== null && testGroups !== undefined && Array.isArray(testGroups)) {
+                    for (var j = 0; j < testGroups.length; j++) {
+                        var groupName = testGroups[j];
+                        if (groupName in groups) {
+                            groups[groupName].tests += 1;
+                            groups[groupName].failed += test.failed ? 1 : 0;
+                            groups[groupName].passed += test.failed ? 0 : 1;
+                        }
+                        else {
+                            groups[groupName] = {
+                                name: groupName,
+                                tests: 1,
+                                failed: test.failed ? 1 : 0,
+                                passed: test.failed ? 0 : 1
+                            };
+                        }
+                    }
+                }
+            }
+
+            var groupsArray = [];
+
+            for (name in groups) {
+                if (groups.hasOwnProperty(name)) {
+                    groupsArray.push(groups[name]);
+                }
+            }
+
+            setHtml(id, this.tpl.groups(groupsArray));
+            this.createTableSorter("#" + id + " table");
+        },
+
+        renderTestsTable: function (id, data) {
+            this.testsTableId = id;
+            setHtml(id, this.tpl.tests(data));
+
+            this.createTableSorter('#' + id + " table");
+        },
+
+        createTableSorter: function (selector) {
+            $(selector).tablesorter({
                 theme: 'default',
                 widthFixed: false,
                 showProcessing: false,
@@ -538,19 +661,6 @@ function createGalenTestOverview() {
 
             });
 
-            $.extend($.tablesorter.themes.jui, {
-                table: 'ui-widget ui-widget-content ui-corner-all', 
-                header: 'ui-widget-header ui-corner-all ui-state-default',
-                icons: 'ui-icon', 
-                sortNone: 'ui-icon-carat-2-n-s',
-                sortAsc: 'ui-icon-carat-1-n',
-                sortDesc: 'ui-icon-carat-1-s',
-                active: 'ui-state-active',
-                hover: 'ui-state-hover', 
-                filterRow: '',
-                even: 'ui-widget-content',
-                odd: 'ui-state-default'
-            });
         }
     };
 }

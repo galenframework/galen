@@ -14,17 +14,32 @@ var reportData = ##REPORT-DATA##;
         <script>
             $(function () {
                 var galenReport = createGalenTestOverview();
-                galenReport.render("main", reportData);
+                galenReport.renderTestsTable("tests-table", reportData);
+                galenReport.renderGroupsTable("groups-table", reportData);
+
+                window.onhashchange = function () {
+                    galenReport.handleHash(window.location.hash.substr(1));
+                };
+
+                galenReport.handleHash(window.location.hash.substr(1));
             });
         </script>
     </head>
     <body>
 
-        <div id="main">
-        </div>
-        <script id="main-overview" type="text/x-handlebars-template">
-            <div class="tests-overview">
-                <h2>Galen Test Report</h2>
+
+        <div class="tests-overview">
+            <h2>Galen Test Report</h2>
+            <div class="tabs">
+                <a class="tab tab-tests" href="#tests">Tests</a>
+                <a class="tab tab-groups" href="#groups">Groups</a>
+            </div>
+            <div id="tests-table">
+            </div>
+            <div id="groups-table">
+            </div>
+
+            <script id="tests-table-tpl" type="text/x-handlebars-template">
                 <table class="tests tablesorter">
                     <thead>
                         <tr>
@@ -41,7 +56,7 @@ var reportData = ##REPORT-DATA##;
                     </thead>
                     <tbody>
                         {{#each tests}}
-                        <tr class="test">
+                        <tr data-groups="{{groups}}">
                             <td class="suite-link">
                                 <a href="{{testId}}.html">{{name}}</a>
                             </td>
@@ -59,7 +74,35 @@ var reportData = ##REPORT-DATA##;
                         {{/each}}
                     </tbody>
                 </table>
-            </div>
-        </script>
+            </script>
+            <script id="groups-table-tpl" type="text/x-handlebars-template">
+                <table class="groups tablesorter">
+                    <thead>
+                        <tr>
+                            <th>Group</th>
+                            <th>Passed</th>
+                            <th>Failed</th>
+                            <th>Tests</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {{#each this}}
+                        <tr>
+                            <td class="group-link">
+                                <a href="#tests|grouped|{{name}}">{{name}}</a>
+                            </td>
+                            <td class="status passed">{{passed}}</td>
+                            <td class="status failed">{{failed}}</td>
+                            <td class="status total">{{tests}}</td>
+                            <td class="progressbar">
+                                {{renderGroupsProgressBar this}}
+                            </td>
+                        </tr>
+                        {{/each}}
+                    </tbody>
+                </table>
+            </script>
+        </div>
     </body>
 </html>

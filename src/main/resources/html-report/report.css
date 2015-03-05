@@ -381,40 +381,40 @@ a.layout-check-status-warn {
     padding: 10px;
 }
 
-.tests-overview .tests .test {
+.tests-overview .tablesorter tbody tr {
     clear: both;
 }
-.tests-overview .tests .test > div.status {
+.tests-overview .tablesorter tbody tr > div.status {
     float: left;
     padding: 10px;
     width: 71px;
 }
-.tests-overview .tests .test > div.time{
+.tests-overview .tablesorter tbody tr > div.time{
     float: left;
     padding: 10px;
     width: 71px;
     font-size: 0.8em;
 }
-.tests-overview .tests .test > div.test-link {
+.tests-overview .tablesorter tbody tr > div.test-link {
     float: left;
     padding: 10px;
 }
-.tests-overview .tests .test > div.test-link a {
+.tests-overview .tablesorter tbody tr > div.test-link a {
     color: #1271C4;
 }
-.tests-overview .tests .test > div.test-link a:hover {
+.tests-overview .tablesorter tbody tr > div.test-link a:hover {
     text-decoration: none;
 }
-.tests-overview .tests .failed {
+.tests-overview .tablesorter .failed {
     color: #D60F26;
 }
-.tests-overview .tests .passed {
+.tests-overview .tablesorter .passed {
     color: #229605;
 }
-.tests-overview .tests .warnings {
+.tests-overview .tablesorter .warnings {
     color: #D6A502;
 }
-.tests-overview .tests .progress {
+.tests-overview .tablesorter .progress {
     border: none;
     border-collapse: collapse;
     clear: both;
@@ -427,19 +427,41 @@ a.layout-check-status-warn {
     border-spacing: 0;
     max-width: 100%;
 }
-.tests-overview .tests .progress td {
+.tests-overview .tablesorter .progress td {
     height: 10px;
     padding: 0;
     margin: 0;
     border: none;
 }
-.tests-overview .tests .progress td.failed {
+.tests-overview .tablesorter .progress td.failed {
     background: #FA644D;
 }
-.tests-overview .tests .progress td.passed {
+.tests-overview .tablesorter .progress td.passed {
     background: #71E854;
 }
-.tests-overview .tests .progress td.warning {
+.tests-overview .tablesorter .progress td.warning {
     background: #FFC400;
+}
+
+
+
+/* Tabs */
+.tabs {
+    padding: 0;
+    border-bottom: 2px solid #444;
+}
+.tabs .tab {
+    display: inline-block;
+    padding: 10px 20px 8px 20px;
+    background: #eee;
+    text-decoration: none;
+    color: #777;
+}
+.tabs a.tab:hover {
+    background: #bbb;
+}
+.tabs .tab.tab-selected, .tabs a.tab.tab-selected:hover {
+    color: white;
+    background: #444;
 }
 

@@ -7,8 +7,8 @@
         <script src="galen-report.js"></script>
         <script>
 var reportData = {
-  "testId" : "9-login-page-on-tablet-device",
-  "name" : "Login page on tablet device",
+  "testId" : "1-login-page-on-mobile-device",
+  "name" : "Login page on mobile device",
   "report" : {
     "nodes" : [ {
       "name" : "Basic layout check",
@@ -20,12 +20,13 @@ var reportData = {
           "name" : "css: #welcome-page .button-login",
           "type" : "text"
         } ],
-        "time" : 1424509219218,
+        "time" : 1425503396799,
         "type" : "node"
       }, {
-        "name" : "Check layout: specs/loginPage.spec included tags: tablet",
+        "name" : "Check layout: specs/loginPage.spec included tags: mobile",
         "status" : "error",
-        "time" : 1424509221077,
+        "time" : 1425503399277,
+        "includedTags" : [ "mobile" ],
         "sections" : [ {
           "name" : "Header",
           "objects" : [ {
@@ -84,13 +85,7 @@ var reportData = {
               },
               "name" : "inside: header 10 to 25px top",
               "highlight" : [ "header-text", "header" ]
-            } ]
-          } ]
-        }, {
-          "name" : "Header",
-          "objects" : [ {
-            "name" : "header-text",
-            "specs" : [ {
+            }, {
               "status" : "info",
               "place" : {
                 "filePath" : "specs/common.spec",
@@ -121,116 +116,51 @@ var reportData = {
               "name" : "below: header ~ 0px",
               "highlight" : [ "menu", "header" ]
             } ]
-          } ]
-        }, {
-          "name" : "Menu",
-          "objects" : [ {
+          }, {
             "name" : "menu-item-1",
             "specs" : [ {
               "status" : "info",
               "place" : {
                 "filePath" : "specs/common.spec",
-                "lineNumber" : 67
+                "lineNumber" : 87
               },
-              "name" : "inside: menu ~ 0px top left bottom",
-              "highlight" : [ "menu-item-1", "menu" ]
-            }, {
-              "status" : "info",
-              "place" : {
-                "filePath" : "specs/common.spec",
-                "lineNumber" : 74
-              },
-              "name" : "width: 90 to 130px",
+              "name" : "width: 48 to 50% of screen/width",
               "highlight" : [ "menu-item-1" ]
             }, {
               "status" : "info",
               "place" : {
                 "filePath" : "specs/common.spec",
-                "lineNumber" : 75
+                "lineNumber" : 91
               },
-              "name" : "height: ~ 64px",
-              "highlight" : [ "menu-item-1" ]
+              "name" : "above: menu-item-3 0 to 5px",
+              "highlight" : [ "menu-item-1", "menu-item-3" ]
             }, {
               "status" : "info",
               "place" : {
                 "filePath" : "specs/common.spec",
-                "lineNumber" : 76
+                "lineNumber" : 95
               },
-              "name" : "inside: menu ~ 0px top",
-              "highlight" : [ "menu-item-1", "menu" ]
-            }, {
-              "status" : "info",
-              "place" : {
-                "filePath" : "specs/common.spec",
-                "lineNumber" : 80
-              },
-              "name" : "near: menu-item-2 0 to 5px left",
-              "highlight" : [ "menu-item-1", "menu-item-2" ]
-            }, {
-              "status" : "info",
-              "place" : {
-                "filePath" : "specs/common.spec",
-                "lineNumber" : 81
-              },
-              "name" : "aligned horizontally all: menu-item-2",
+              "name" : "near: menu-item-2  0 to 5 px left",
               "highlight" : [ "menu-item-1", "menu-item-2" ]
             } ]
           }, {
             "name" : "menu-item-2",
             "specs" : [ {
-              "status" : "error",
-              "place" : {
-                "filePath" : "specs/common.spec",
-                "lineNumber" : 70
-              },
-              "name" : "image: file menu-item-1.png",
-              "errors" : [ "Element does not look like \"specs/menu-item-1.png\". There are 1130 mismatching pixels but max allowed is 0" ],
-              "highlight" : [ "menu-item-2" ],
-              "imageComparison" : {
-                "actualImage" : "layout-29-menu-item-2-actual.png",
-                "expectedImage" : "layout-30-menu-item-2-expected.png",
-                "comparisonMapImage" : "layout-31-menu-item-2-map.png"
-              }
-            }, {
               "status" : "info",
               "place" : {
                 "filePath" : "specs/common.spec",
-                "lineNumber" : 74
+                "lineNumber" : 87
               },
-              "name" : "width: 90 to 130px",
+              "name" : "width: 48 to 50% of screen/width",
               "highlight" : [ "menu-item-2" ]
             }, {
               "status" : "info",
               "place" : {
                 "filePath" : "specs/common.spec",
-                "lineNumber" : 75
+                "lineNumber" : 91
               },
-              "name" : "height: ~ 64px",
-              "highlight" : [ "menu-item-2" ]
-            }, {
-              "status" : "info",
-              "place" : {
-                "filePath" : "specs/common.spec",
-                "lineNumber" : 76
-              },
-              "name" : "inside: menu ~ 0px top",
-              "highlight" : [ "menu-item-2", "menu" ]
-            }, {
-              "status" : "info",
-              "place" : {
-                "filePath" : "specs/common.spec",
-                "lineNumber" : 80
-              },
-              "name" : "near: menu-item-3 0 to 5px left",
-              "highlight" : [ "menu-item-2", "menu-item-3" ]
-            }, {
-              "status" : "info",
-              "place" : {
-                "filePath" : "specs/common.spec",
-                "lineNumber" : 81
-              },
-              "name" : "aligned horizontally all: menu-item-3",
-              "highlight" : [ "menu-item-2", "menu-item-3" ]
+              "name" : "above: menu-item-4 0 to 5px",
+              "highlight" : [ "menu-item-2", "menu-item-4" ]
             } ]
           }, {
             "name" : "menu-item-3",
@@ -238,41 +168,17 @@ var reportData = {
               "status" : "info",
               "place" : {
                 "filePath" : "specs/common.spec",
-                "lineNumber" : 74
+                "lineNumber" : 87
               },
-              "name" : "width: 90 to 130px",
+              "name" : "width: 48 to 50% of screen/width",
               "highlight" : [ "menu-item-3" ]
             }, {
               "status" : "info",
               "place" : {
                 "filePath" : "specs/common.spec",
-                "lineNumber" : 75
+                "lineNumber" : 95
               },
-              "name" : "height: ~ 64px",
-              "highlight" : [ "menu-item-3" ]
-            }, {
-              "status" : "info",
-              "place" : {
-                "filePath" : "specs/common.spec",
-                "lineNumber" : 76
-              },
-              "name" : "inside: menu ~ 0px top",
-              "highlight" : [ "menu-item-3", "menu" ]
-            }, {
-              "status" : "info",
-              "place" : {
-                "filePath" : "specs/common.spec",
-                "lineNumber" : 80
-              },
-              "name" : "near: menu-item-4 0 to 5px left",
-              "highlight" : [ "menu-item-3", "menu-item-4" ]
-            }, {
-              "status" : "info",
-              "place" : {
-                "filePath" : "specs/common.spec",
-                "lineNumber" : 81
-              },
-              "name" : "aligned horizontally all: menu-item-4",
+              "name" : "near: menu-item-4  0 to 5 px left",
               "highlight" : [ "menu-item-3", "menu-item-4" ]
             } ]
           }, {
@@ -281,26 +187,10 @@ var reportData = {
               "status" : "info",
               "place" : {
                 "filePath" : "specs/common.spec",
-                "lineNumber" : 74
+                "lineNumber" : 87
               },
-              "name" : "width: 90 to 130px",
+              "name" : "width: 48 to 50% of screen/width",
               "highlight" : [ "menu-item-4" ]
-            }, {
-              "status" : "info",
-              "place" : {
-                "filePath" : "specs/common.spec",
-                "lineNumber" : 75
-              },
-              "name" : "height: ~ 64px",
-              "highlight" : [ "menu-item-4" ]
-            }, {
-              "status" : "info",
-              "place" : {
-                "filePath" : "specs/common.spec",
-                "lineNumber" : 76
-              },
-              "name" : "inside: menu ~ 0px top",
-              "highlight" : [ "menu-item-4", "menu" ]
             } ]
           } ]
         }, {
@@ -311,7 +201,7 @@ var reportData = {
               "status" : "info",
               "place" : {
                 "filePath" : "specs/common.spec",
-                "lineNumber" : 105
+                "lineNumber" : 104
               },
               "name" : "below: menu ~ 0px",
               "highlight" : [ "content", "menu" ]
@@ -319,7 +209,7 @@ var reportData = {
               "status" : "info",
               "place" : {
                 "filePath" : "specs/common.spec",
-                "lineNumber" : 106
+                "lineNumber" : 105
               },
               "name" : "centered horizontally inside: screen 1px",
               "highlight" : [ "content", "screen" ]
@@ -333,7 +223,7 @@ var reportData = {
               "status" : "info",
               "place" : {
                 "filePath" : "specs/common.spec",
-                "lineNumber" : 118
+                "lineNumber" : 117
               },
               "name" : "height: ~ 200px",
               "highlight" : [ "footer" ]
@@ -341,7 +231,7 @@ var reportData = {
               "status" : "info",
               "place" : {
                 "filePath" : "specs/common.spec",
-                "lineNumber" : 119
+                "lineNumber" : 118
               },
               "name" : "below: content 0px",
               "highlight" : [ "footer", "content" ]
@@ -367,6 +257,14 @@ var reportData = {
               },
               "name" : "below: menu 20 to 45px",
               "highlight" : [ "login-box", "menu" ]
+            }, {
+              "status" : "info",
+              "place" : {
+                "filePath" : "specs/loginPage.spec",
+                "lineNumber" : 74
+              },
+              "name" : "inside: screen ~ 20px left right",
+              "highlight" : [ "login-box", "screen" ]
             } ]
           }, {
             "name" : "login-caption",
@@ -386,6 +284,14 @@ var reportData = {
               },
               "name" : "text is: Login",
               "highlight" : [ "login-caption" ]
+            }, {
+              "status" : "info",
+              "place" : {
+                "filePath" : "specs/loginPage.spec",
+                "lineNumber" : 80
+              },
+              "name" : "inside: login-box 0px top, 0px left",
+              "highlight" : [ "login-caption", "login-box" ]
             } ]
           }, {
             "name" : "username-textfield",
@@ -413,6 +319,14 @@ var reportData = {
               },
               "name" : "aligned vertically all: password-textfield",
               "highlight" : [ "username-textfield", "password-textfield" ]
+            }, {
+              "status" : "info",
+              "place" : {
+                "filePath" : "specs/loginPage.spec",
+                "lineNumber" : 77
+              },
+              "name" : "inside: login-box 0px left right",
+              "highlight" : [ "username-textfield", "login-box" ]
             } ]
           }, {
             "name" : "password-textfield",
@@ -433,32 +347,70 @@ var reportData = {
               "name" : "below: username-textfield 5 to 15px",
               "highlight" : [ "password-textfield", "username-textfield" ]
             }, {
-              "status" : "info",
+              "status" : "error",
               "place" : {
                 "filePath" : "specs/loginPage.spec",
                 "lineNumber" : 37
               },
               "name" : "aligned vertically left: login-button",
-              "highlight" : [ "password-textfield", "login-button" ]
+              "errors" : [ "\"login-button\" is absent on page" ],
+              "highlight" : [ ]
+            }, {
+              "status" : "info",
+              "place" : {
+                "filePath" : "specs/loginPage.spec",
+                "lineNumber" : 77
+              },
+              "name" : "inside: login-box 0px left right",
+              "highlight" : [ "password-textfield", "login-box" ]
             } ]
           }, {
             "name" : "login-button",
             "specs" : [ {
-              "status" : "info",
+              "status" : "error",
               "place" : {
                 "filePath" : "specs/loginPage.spec",
                 "lineNumber" : 40
               },
               "name" : "height: 40 to 50 px",
-              "highlight" : [ "login-button" ]
+              "errors" : [ "\"login-button\" is absent on page" ],
+              "highlight" : [ ]
             }, {
-              "status" : "info",
+              "status" : "error",
               "place" : {
                 "filePath" : "specs/loginPage.spec",
                 "lineNumber" : 43
               },
               "name" : "text is: Login",
-              "highlight" : [ "login-button" ]
+              "errors" : [ "\"login-button\" is absent on page" ],
+              "highlight" : [ ]
+            }, {
+              "status" : "error",
+              "place" : {
+                "filePath" : "specs/loginPage.spec",
+                "lineNumber" : 83
+              },
+              "name" : "inside: login-box 0px left right",
+              "errors" : [ "\"login-button\" is absent on page" ],
+              "highlight" : [ ]
+            }, {
+              "status" : "error",
+              "place" : {
+                "filePath" : "specs/loginPage.spec",
+                "lineNumber" : 84
+              },
+              "name" : "above: cancel-button  4 to 10px",
+              "errors" : [ "\"login-button\" is absent on page" ],
+              "highlight" : [ ]
+            }, {
+              "status" : "error",
+              "place" : {
+                "filePath" : "specs/loginPage.spec",
+                "lineNumber" : 85
+              },
+              "name" : "aligned vertically all: cancel-button",
+              "errors" : [ "\"login-button\" is absent on page" ],
+              "highlight" : [ ]
             } ]
           }, {
             "name" : "cancel-button",
@@ -480,157 +432,61 @@ var reportData = {
               "highlight" : [ "cancel-button" ]
             } ]
           } ]
-        }, {
-          "name" : "Login box",
-          "objects" : [ {
-            "name" : "login-box",
-            "specs" : [ {
-              "status" : "info",
-              "place" : {
-                "filePath" : "specs/loginPage.spec",
-                "lineNumber" : 52
-              },
-              "name" : "width: 400px",
-              "highlight" : [ "login-box" ]
-            } ]
-          }, {
-            "name" : "login-caption",
-            "specs" : [ {
-              "status" : "info",
-              "place" : {
-                "filePath" : "specs/loginPage.spec",
-                "lineNumber" : 56
-              },
-              "name" : "inside: login-box ~ 40px top, ~ 20px left",
-              "highlight" : [ "login-caption", "login-box" ]
-            } ]
-          }, {
-            "name" : "username-textfield",
-            "specs" : [ {
-              "status" : "info",
-              "place" : {
-                "filePath" : "specs/loginPage.spec",
-                "lineNumber" : 59
-              },
-              "name" : "inside: login-box ~ 20px left right",
-              "highlight" : [ "username-textfield", "login-box" ]
-            } ]
-          }, {
-            "name" : "password-textfield",
-            "specs" : [ {
-              "status" : "info",
-              "place" : {
-                "filePath" : "specs/loginPage.spec",
-                "lineNumber" : 59
-              },
-              "name" : "inside: login-box ~ 20px left right",
-              "highlight" : [ "password-textfield", "login-box" ]
-            } ]
-          }, {
-            "name" : "login-button",
-            "specs" : [ {
-              "status" : "info",
-              "place" : {
-                "filePath" : "specs/loginPage.spec",
-                "lineNumber" : 62
-              },
-              "name" : "below: password-textfield 5 to 15px",
-              "highlight" : [ "login-button", "password-textfield" ]
-            }, {
-              "status" : "info",
-              "place" : {
-                "filePath" : "specs/loginPage.spec",
-                "lineNumber" : 63
-              },
-              "name" : "width: 70 to 90 px",
-              "highlight" : [ "login-button" ]
-            }, {
-              "status" : "info",
-              "place" : {
-                "filePath" : "specs/loginPage.spec",
-                "lineNumber" : 64
-              },
-              "name" : "aligned horizontally all: cancel-button",
-              "highlight" : [ "login-button", "cancel-button" ]
-            } ]
-          }, {
-            "name" : "cancel-button",
-            "specs" : [ {
-              "status" : "info",
-              "place" : {
-                "filePath" : "specs/loginPage.spec",
-                "lineNumber" : 67
-              },
-              "name" : "width: 80 to 100 px",
-              "highlight" : [ "cancel-button" ]
-            }, {
-              "status" : "info",
-              "place" : {
-                "filePath" : "specs/loginPage.spec",
-                "lineNumber" : 68
-              },
-              "name" : "near: login-button 3 to 8px right",
-              "highlight" : [ "cancel-button", "login-button" ]
-            } ]
-          } ]
         } ],
         "objects" : {
           "menu-item-4" : {
-            "area" : [ 322, 70, 100, 64 ]
+            "area" : [ 217, 134, 213, 64 ]
           },
           "screen" : {
-            "area" : [ 0, 0, 585, 734 ]
-          },
-          "login-button" : {
-            "area" : [ 114, 326, 78, 46 ]
+            "area" : [ 0, 0, 435, 798 ]
           },
           "menu" : {
-            "area" : [ 0, 70, 585, 64 ]
+            "area" : [ 0, 70, 435, 128 ]
           },
           "cancel-button" : {
-            "area" : [ 196, 326, 90, 46 ]
+            "area" : [ 20, 435, 395, 46 ]
           },
           "password-textfield" : {
-            "area" : [ 114, 282, 358, 34 ]
+            "area" : [ 20, 325, 395, 34 ]
           },
           "login-caption" : {
-            "area" : [ 114, 195, 358, 33 ]
+            "area" : [ 20, 238, 395, 33 ]
           },
           "menu-item-1" : {
-            "area" : [ 0, 70, 100, 64 ]
+            "area" : [ 0, 70, 213, 64 ]
           },
           "header" : {
-            "area" : [ 0, 0, 585, 70 ]
+            "area" : [ 0, 0, 435, 70 ]
           },
           "menu-item-2" : {
-            "area" : [ 104, 70, 110, 64 ]
+            "area" : [ 217, 70, 213, 64 ]
           },
           "menu-item-3" : {
-            "area" : [ 218, 70, 100, 64 ]
+            "area" : [ 0, 134, 213, 64 ]
           },
           "content" : {
-            "area" : [ 0, 134, 585, 400 ]
+            "area" : [ 0, 198, 435, 400 ]
           },
           "footer" : {
-            "area" : [ 0, 534, 585, 200 ]
+            "area" : [ 0, 598, 435, 200 ]
           },
           "header-logo" : {
             "area" : [ 0, 13, 48, 48 ]
           },
           "username-textfield" : {
-            "area" : [ 114, 238, 358, 34 ]
+            "area" : [ 20, 281, 395, 34 ]
           },
           "header-text" : {
-            "area" : [ 70, 20, 262, 40 ]
+            "area" : [ 70, 20, 270, 40 ]
           },
           "login-box" : {
-            "area" : [ 93, 154, 400, 249 ]
+            "area" : [ 20, 238, 395, 243 ]
           }
         },
-        "screenshot" : "layout-28-screenshot.png",
+        "screenshot" : "layout-1-screenshot.png",
         "type" : "layout"
       } ],
-      "time" : 1424509219140,
+      "time" : 1425503396727,
       "type" : "node"
     }, {
       "name" : "Checking error box",
@@ -642,7 +498,7 @@ var reportData = {
           "name" : "css: input[name='login.username']",
           "type" : "text"
         } ],
-        "time" : 1424509221077,
+        "time" : 1425503399278,
         "type" : "node"
       }, {
         "name" : "Click loginButton",
@@ -651,12 +507,13 @@ var reportData = {
           "name" : "css: button.button-login",
           "type" : "text"
         } ],
-        "time" : 1424509221124,
+        "time" : 1425503399347,
         "type" : "node"
       }, {
-        "name" : "Check layout: specs/loginPage-withErrorMessage.spec included tags: tablet",
+        "name" : "Check layout: specs/loginPage-withErrorMessage.spec included tags: mobile",
         "status" : "info",
-        "time" : 1424509221482,
+        "time" : 1425503399826,
+        "includedTags" : [ "mobile" ],
         "sections" : [ {
           "name" : "Error message",
           "objects" : [ {
@@ -693,30 +550,38 @@ var reportData = {
               },
               "name" : "above: login-button 10 to 30px",
               "highlight" : [ "error-message", "login-button" ]
+            }, {
+              "status" : "info",
+              "place" : {
+                "filePath" : "specs/loginPage-withErrorMessage.spec",
+                "lineNumber" : 25
+              },
+              "name" : "aligned vertically all: login-button",
+              "highlight" : [ "error-message", "login-button" ]
             } ]
           } ]
         } ],
         "objects" : {
           "login-button" : {
-            "area" : [ 114, 398, 78, 46 ]
+            "area" : [ 20, 451, 395, 46 ]
           },
           "error-message" : {
-            "area" : [ 114, 326, 358, 52 ]
+            "area" : [ 20, 369, 395, 52 ]
           },
           "password-textfield" : {
-            "area" : [ 114, 282, 358, 34 ]
+            "area" : [ 20, 325, 395, 34 ]
           }
         },
-        "screenshot" : "layout-32-screenshot.png",
+        "screenshot" : "layout-2-screenshot.png",
         "type" : "layout"
       } ],
-      "time" : 1424509221077,
+      "time" : 1425503399278,
       "type" : "node"
     }, {
       "name" : "Screenshot",
       "status" : "info",
-      "attachments" : [ "file-33-Screenshot" ],
-      "time" : 1424509221482,
+      "attachments" : [ "file-3-Screenshot" ],
+      "time" : 1425503399827,
       "type" : "node"
     } ]
   }
@@ -814,13 +679,21 @@ var reportData = {
         <script id="report-layout-object-tpl" type="text/x-handlebars-template">
             <li>
                 <a class="layout-object icon-sprite-before expand-link contains-children-true" href="#">{{name}}</a>
-                {{#if specs}}
-                    <ul class="layout-checks expand-container">
-                        {{#each specs}}
-                            {{renderLayoutCheck this}}
-                        {{/each}}
-                    </ul>
-                {{/if}}
+                <ul class="layout-checks expand-container">
+                    {{#each specs}}
+                        {{renderLayoutCheck this}}
+                    {{/each}}
+                    {{#each specGroups}}
+                    <li>
+                        <a class="layout-specgroup icon-sprite-before expand-link contains-children-true" href="#">{{name}}</a>
+                        <ul class="layout-checks expand-container">
+                            {{#each specs}}
+                                {{renderLayoutCheck this}}
+                            {{/each}}
+                        </ul>
+                    </li>
+                    {{/each}}
+                </ul>
             </li>
         </script>
         <script id="report-layout-check-tpl" type="text/x-handlebars-template">
@@ -887,7 +760,7 @@ var reportData = {
                 <li><a class="menu-op-expand-errors" href="#">Expand Errors</a></li>
             </ul>
         </div>
-        <h2>Some test</h2>
+        <h2>Login page on mobile device</h2>
         <div id="main"></div>
         <div id="screen-shadow"></div>
         <div id="popup" class="popup">
