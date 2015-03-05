@@ -107,7 +107,7 @@ public class GalenMain {
         }
     }
 
-    private void performPageDump(GalenArguments arguments) throws Exception {
+    private void performPageDump(GalenArguments arguments) throws SyntaxException {
         SeleniumBrowserFactory browserFactory = new SeleniumBrowserFactory();
         Browser browser = browserFactory.openBrowser();
 
@@ -132,7 +132,7 @@ public class GalenMain {
             Galen.dumpPage(browser, arguments.getUrl(), arguments.getPaths().get(0), arguments.getExport(), arguments.getMaxWidth(), arguments.getMaxHeight());
             System.out.println("Done!");
         } catch (Exception ex) {
-            throw ex;
+            throw new RuntimeException(ex);
         } finally {
             browser.quit();
         }
@@ -287,13 +287,13 @@ public class GalenMain {
 
         Pattern filterPattern = createTestFilter(arguments.getFilter());
 
-        tests = filterTests(tests, eventHandler);
+        List<GalenTest> filteredTests = filterTests(tests, eventHandler);
 
-        tellBeforeTestSuite(listener, tests);
+        tellBeforeTestSuite(listener, filteredTests);
 
         List<GalenTestInfo> testInfos = Collections.synchronizedList(new LinkedList<GalenTestInfo>());
 
-        for (final GalenTest test : tests) {
+        for (final GalenTest test : filteredTests) {
             if (matchesPattern(test.getName(), filterPattern) && matchesSelectedGroups(test, arguments.getGroups())) {
                 executor.execute(new TestRunnable(test, listener, eventHandler, testInfos));
             }
@@ -337,8 +337,9 @@ public class GalenMain {
             }
 
             return asList(arrTests);
+        } else {
+            return tests;
         }
-        return tests;
     }
 
     private void tellBeforeTestSuite(CompleteListener listener, List<GalenTest> tests) {

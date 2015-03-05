@@ -61,9 +61,9 @@ public class GalenPageActionCookie extends GalenPageAction {
     
     @Override
     public int hashCode() {
-        return new HashCodeBuilder()
+        return new HashCodeBuilder() //@formatter:off
                 .append(cookies)
-                .toHashCode();
+                .toHashCode(); //@formatter:on
     }
     
     @Override
@@ -76,9 +76,9 @@ public class GalenPageActionCookie extends GalenPageAction {
             return false;
         
         GalenPageActionCookie rhs = (GalenPageActionCookie) obj;
-        return new EqualsBuilder()
+        return new EqualsBuilder() //@formatter:off
             .append(cookies, rhs.cookies)
-            .isEquals();
+            .isEquals(); //@formatter:on
     }
     
     @Override

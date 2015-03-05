@@ -330,7 +330,7 @@ public class GalenArguments {
     
     @Override
     public int hashCode() {
-        return new HashCodeBuilder(13, 19)
+        return new HashCodeBuilder(13, 19) //@formatter:off
             .append(action)
             .append(paths)
             .append(recursive)
@@ -348,7 +348,7 @@ public class GalenArguments {
             .append(maxHeight)
             .append(jsonReport)
             .append(groups)
-            .toHashCode();
+            .toHashCode(); //@formatter:on
     }
     
     @Override
@@ -363,7 +363,7 @@ public class GalenArguments {
             return false;
         }
         GalenArguments rhs = (GalenArguments)obj;
-        return new EqualsBuilder()
+        return new EqualsBuilder() //@formatter:off
             .append(action, rhs.action)
             .append(paths, rhs.paths)
             .append(recursive, rhs.recursive)
@@ -382,12 +382,12 @@ public class GalenArguments {
             .append(maxHeight, rhs.maxHeight)
             .append(jsonReport, rhs.jsonReport)
             .append(groups, rhs.groups)
-            .isEquals();
+            .isEquals(); //@formatter:on
     }
     
     @Override
     public String toString() {
-        return new ToStringBuilder(this)
+        return new ToStringBuilder(this) //@formatter:off
             .append("action", action)
             .append("paths", paths)
             .append("recursive", recursive)
@@ -405,7 +405,7 @@ public class GalenArguments {
             .append("maxHeight", maxHeight)
             .append("jsonReport", jsonReport)
             .append("groups", groups)
-            .toString();
+            .toString(); //@formatter:on
     }
 
     public String getTestngReport() {

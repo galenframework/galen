@@ -57,12 +57,12 @@ public class Range {
     
     @Override
     public int hashCode() {
-        return new HashCodeBuilder(13, 19)
+        return new HashCodeBuilder(13, 19) //@formatter:off
             .append(from)
             .append(to)
             .append(percentageOfValue)
             .append(rangeType)
-            .toHashCode();
+            .toHashCode(); //@formatter:on
     }
     
     @Override
@@ -77,12 +77,12 @@ public class Range {
             return false;
         }
         Range rhs = (Range)obj;
-        return new EqualsBuilder()
+        return new EqualsBuilder() //@formatter:off
             .append(from, rhs.from)
             .append(to, rhs.to)
             .append(percentageOfValue, rhs.percentageOfValue)
             .append(rangeType, rhs.rangeType)
-            .isEquals();
+            .isEquals(); //@formatter:on
     }
     
     @Override

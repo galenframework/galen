@@ -44,18 +44,18 @@ public class GalenPageActionResize extends GalenPageAction {
     
     @Override
     public String toString() {
-        return new ToStringBuilder(this)
+        return new ToStringBuilder(this) //@formatter:off
             .append("width", width)
             .append("height", height)
-            .toString();
+            .toString(); //@formatter:on
     }
     
     @Override
     public int hashCode() {
-        return new HashCodeBuilder()
+        return new HashCodeBuilder() //@formatter:off
             .append(width)
             .append(height)
-            .toHashCode();
+            .toHashCode(); //@formatter:on
     }
     
     @Override
@@ -68,10 +68,10 @@ public class GalenPageActionResize extends GalenPageAction {
             return false;
         GalenPageActionResize rhs = (GalenPageActionResize)obj;
         
-        return new EqualsBuilder()
+        return new EqualsBuilder() //@formatter:off
         .append(width, rhs.width)
         .append(height, rhs.height)
-        .isEquals();
+        .isEquals(); //@formatter:on
     }
 
 }

@@ -70,26 +70,26 @@ public class CorrectionsRect {
                 return false;
             
             Correction rhs = (Correction)obj;
-            return new EqualsBuilder()
+            return new EqualsBuilder() //@formatter:off
                 .append(this.value, rhs.value)
                 .append(this.type, rhs.type)
-                .isEquals();
+                .isEquals(); //@formatter:on
         }
         
         @Override
         public int hashCode() {
-            return new HashCodeBuilder()
+            return new HashCodeBuilder() //@formatter:off
                 .append(value)
                 .append(type)
-                .toHashCode();
+                .toHashCode(); //@formatter:on
         }
         
         @Override
         public String toString() {
-            return new ToStringBuilder(this)
+            return new ToStringBuilder(this) //@formatter:off
                 .append("value", value)
                 .append("type", type)
-                .toString();
+                .toString(); //@formatter:on
         }
     }
     
@@ -159,31 +159,31 @@ public class CorrectionsRect {
             return false;
         
         CorrectionsRect rhs = (CorrectionsRect)obj;
-        return new EqualsBuilder()
+        return new EqualsBuilder() //@formatter:off
             .append(this.left, rhs.left)
             .append(this.top, rhs.top)
             .append(this.width, rhs.width)
             .append(this.height, rhs.height)
-            .isEquals();
+            .isEquals(); //@formatter:on
     }
     
     @Override
     public int hashCode() {
-        return new HashCodeBuilder()
+        return new HashCodeBuilder() //@formatter:off
             .append(this.left)
             .append(this.top)
             .append(this.width)
             .append(this.height)
-            .toHashCode();
+            .toHashCode(); //@formatter:on
     }
     
     @Override
     public String toString() {
-        return new ToStringBuilder(this)
+        return new ToStringBuilder(this) //@formatter:off
             .append("left", this.left)
             .append("top", this.top)
             .append("width", this.width)
             .append("height", this.height)
-            .toString();
+            .toString(); //@formatter:on
     }
 }

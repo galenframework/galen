@@ -72,11 +72,11 @@ public class Locator {
     }
     @Override
     public String toString() {
-        return new ToStringBuilder(this)
+        return new ToStringBuilder(this) //@formatter:off
             .append("locatorType", locatorType)
             .append("locatorValue", locatorValue)
             .append("corrections", getCorrections())
-            .toString();
+            .toString(); //@formatter:on
     }
 
     public String prettyString() {

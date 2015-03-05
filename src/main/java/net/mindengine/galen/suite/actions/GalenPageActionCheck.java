@@ -96,11 +96,11 @@ public class GalenPageActionCheck extends GalenPageAction {
     
     @Override
     public int hashCode() {
-        return new HashCodeBuilder()
+        return new HashCodeBuilder() //@formatter:off
             .append(specs)
             .append(includedTags)
             .append(excludedTags)
-            .toHashCode();
+            .toHashCode(); //@formatter:on
     }
     
     @Override
@@ -114,20 +114,20 @@ public class GalenPageActionCheck extends GalenPageAction {
         
         GalenPageActionCheck rhs = (GalenPageActionCheck)obj;
         
-        return new EqualsBuilder()
+        return new EqualsBuilder() //@formatter:off
             .append(specs, rhs.specs)
             .append(includedTags, rhs.includedTags)
             .append(excludedTags, rhs.excludedTags)
-            .isEquals();
+            .isEquals(); //@formatter:on
     }
     
     @Override
     public String toString() {
-        return new ToStringBuilder(this)
+        return new ToStringBuilder(this) //@formatter:off
             .append("specs", specs)
             .append("includedTags", includedTags)
             .append("excludedTags", excludedTags)
-            .toString();
+            .toString(); //@formatter:on
     }
 
     public GalenPageAction withOriginalCommand(String originalCommand) {
