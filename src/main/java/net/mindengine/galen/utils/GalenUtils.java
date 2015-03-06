@@ -25,6 +25,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -379,16 +380,21 @@ public class GalenUtils {
             return new FileInputStream(file);
         }
         else {
-            if (!filePath.startsWith("/")) {
-                filePath = "/" + filePath;
+            if (!filePath.startsWith(File.separator)) {
+                filePath = File.separator + filePath;
             }
             InputStream stream = GalenUtils.class.getResourceAsStream(filePath);
             if (stream != null) {
                 return stream;
             }
             else {
-                String windowsFilePath = filePath.replace("\\", "/");
-                return GalenUtils.class.getResourceAsStream(windowsFilePath);
+                try {
+                    String path= GalenUtils.class.getResource(filePath).toURI().getPath();
+                    return GalenUtils.class.getResourceAsStream(path);
+                } catch (URISyntaxException e) {
+                    LOG.error("Could not find path: " + filePath, e);
+                    throw new FileNotFoundException(filePath);
+                }
             }
         }
     }
