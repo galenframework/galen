@@ -220,8 +220,7 @@ public class GalenUtils {
         if (hardTime > 0) {
             Thread.sleep(hardTime);
         }
-
-        int time = 250;
+        int time = GalenConfig.getConfig().getIntProperty(GalenConfig.SCREENSHOT_FULLPAGE_SCROLLTIMEOUT, 250);
         boolean isScrolledToPosition = false;
         while(time >= 0 && !isScrolledToPosition) {
             Thread.sleep(50);
