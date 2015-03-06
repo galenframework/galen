@@ -17,6 +17,7 @@ package net.mindengine.galen.reports;
 
 import java.lang.reflect.Method;
 import java.util.Date;
+import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -98,6 +99,10 @@ public class GalenTestInfo {
 
     public static GalenTestInfo fromString(final String name) {
         return new GalenTestInfo(name, new GalenEmptyTest(name, null));
+    }
+
+    public static GalenTestInfo fromString(final String name, final List<String> groups) {
+        return new GalenTestInfo(name, new GalenEmptyTest(name, groups));
     }
 
     public static GalenTestInfo fromMethod(Method method) {
