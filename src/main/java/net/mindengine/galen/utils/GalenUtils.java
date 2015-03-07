@@ -26,8 +26,6 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.security.DigestInputStream;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -323,8 +321,7 @@ public class GalenUtils {
 
         if (GalenConfig.getConfig().shouldAutoresizeScreenshots()) {
             BufferedImage image = Rainbow4J.loadImage(file.getAbsolutePath());
-            final Path path = Files.createTempFile("screenshot", ".png");
-            final File newFile = path.toFile();
+            File newFile = File.createTempFile("screenshot", ".png");
             image = GalenUtils.resizeScreenshotIfNeeded(driver, image);
 
             Rainbow4J.saveImage(image, newFile);
