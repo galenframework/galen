@@ -87,7 +87,14 @@ public class ReportingListenerTestUtils {
                                     new ValidationError(asList("objectA1 is not inside other-object"))
                             ));
                 validationListener.onAfterSpecGroup(pageValidation, "some spec group");
-                
+
+                validationListener.onSpecSuccess(pageRunner, pageValidation, "objectA1",
+                        new SpecWidth(between(10, 20))
+                                .withOriginalText("width: 10 to 20px")
+                                .withPlace(new Place("specs.spec", 12))
+                                .withAlias("Some alias"),
+                        new ValidationResult(asList(new ValidationObject(new Rect(10, 10, 100, 50), "objectA1"))));
+
                 validationListener.onSpecSuccess(pageRunner, pageValidation, "objectA1",
                         new SpecWidth(between(10, 20))
                                 .withOriginalText("width: 10 to 20px")

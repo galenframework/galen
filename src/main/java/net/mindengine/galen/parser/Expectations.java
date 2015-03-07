@@ -106,4 +106,17 @@ public class Expectations {
 
         return words;
     }
+
+    public static Expectation<String> doubleQuotedText() {
+        return new Expectation<String>() {
+            @Override
+            public String read(StringCharReader charReader) {
+                if (charReader.firstNonWhiteSpaceSymbol() == '\"') {
+                    charReader.readUntilSymbol('\"');
+                    return charReader.readUntilSymbol('\"');
+                }
+                else return null;
+            }
+        };
+    }
 }

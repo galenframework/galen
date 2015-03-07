@@ -8,6 +8,7 @@ check homepage.spec --include all,mobile
 ->      inside: other-object 10px left
 ->      :   objectA1 is not inside other-object
         width: 10 to 20px
+        width: 10 to 20px
 
     objectA2
         width: 10 to 20px

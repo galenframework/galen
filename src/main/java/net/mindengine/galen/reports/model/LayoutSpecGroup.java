@@ -25,4 +25,11 @@ public class LayoutSpecGroup {
     public void setName(String name) {
         this.name = name;
     }
+
+    public void addSpec(LayoutSpec spec) {
+        if (specs == null) {
+            specs = new LinkedList<LayoutSpec>();
+        }
+        specs.add(spec);
+    }
 }

@@ -950,7 +950,6 @@ public class SpecsReaderTest {
     }
 
 
-
     @Test(expectedExceptions={SyntaxException.class}, expectedExceptionsMessageRegExp="Cannot parse number: \"\"")
     public void givesError_specImage_withIncorrectArea() throws IOException {
         readSpec("image: file /imgs/path, area 10 10");
@@ -996,7 +995,8 @@ public class SpecsReaderTest {
     public void givesSyntaxException_imageWithoutFileParameterName() throws IOException {
         readSpec("image: imgs/file.png");
     }
-    
+
+
     private Spec readSpec(String specText) throws IOException {
         return new SpecReader(EMPTY_PROPERTIES).read(specText);
     }

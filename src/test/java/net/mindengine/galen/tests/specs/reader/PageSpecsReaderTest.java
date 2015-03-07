@@ -844,6 +844,29 @@ public class PageSpecsReaderTest {
         assertThat("Text should be", objectSpecs.get(1).getOriginalText(), is("text is: With star 6"));
     }
 
+
+    /**
+     * https://github.com/galenframework/galen/issues/108
+     * @throws IOException
+     */
+    @Test
+    public void shouldReadSpecs_withAliases() throws IOException {
+        PageSpec pageSpec = readSpec("/specs/spec-with-aliases.spec");
+
+        List<Spec> objectSpecs = pageSpec.getSections().get(0).getObjects().get(0).getSpecs();
+
+        assertThat("Amount of specs should be", objectSpecs.size(), is(3));
+
+        assertThat("Alias should be", objectSpecs.get(0).getAlias(), is("Should have normal width"));
+        assertThat("Spec should be", objectSpecs.get(0).getOriginalText(), is("width: 100px"));
+
+        assertThat("Alias should be", objectSpecs.get(1).getAlias(), is("Should have normal height"));
+        assertThat("Spec should be", objectSpecs.get(1).getOriginalText(), is("height: 50px"));
+
+        assertThat("Alias should be", objectSpecs.get(2).getAlias(), is("Should be inside container"));
+        assertThat("Spec should be", objectSpecs.get(2).getOriginalText(), is("inside: container 10px left"));
+    }
+
     private PageSpec readSpec(String path) throws IOException {
         PageSpecReader specReader = new PageSpecReader(new Properties(), EMPTY_PAGE);
         return specReader.read(getClass().getResource(path).getFile());

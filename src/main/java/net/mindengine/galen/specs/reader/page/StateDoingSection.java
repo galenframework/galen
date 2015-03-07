@@ -22,6 +22,7 @@ import java.util.List;
 import java.util.Properties;
 import java.util.regex.Matcher;
 
+import net.mindengine.galen.parser.Expectations;
 import net.mindengine.galen.parser.MathParser;
 import net.mindengine.galen.parser.SyntaxException;
 import net.mindengine.galen.parser.VarsContext;
@@ -30,6 +31,7 @@ import net.mindengine.galen.specs.page.ObjectSpecs;
 import net.mindengine.galen.specs.page.PageSection;
 import net.mindengine.galen.specs.reader.Place;
 import net.mindengine.galen.specs.reader.SpecReader;
+import net.mindengine.galen.specs.reader.StringCharReader;
 
 public class StateDoingSection extends State {
 
@@ -73,8 +75,18 @@ public class StateDoingSection extends State {
             specText = specText.substring(1);
             onlyWarn = true;
         }
+
+        StringCharReader charReader = new StringCharReader(specText);
+
+        String alias = null;
+        if (charReader.firstNonWhiteSpaceSymbol() == '\"') {
+            alias = Expectations.doubleQuotedText().read(charReader);
+            specText = charReader.getTheRest();
+        }
+
         Spec spec = specReader.read(specText, contextPath, place);
         spec.setOnlyWarn(onlyWarn);
+        spec.setAlias(alias);
 
         return spec;
     }

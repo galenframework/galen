@@ -24,6 +24,7 @@ public abstract class Spec {
     private Properties properties;
     private Place place;
     private boolean onlyWarn = false;
+    private String alias;
 
     public String getOriginalText() {
         return originalText;
@@ -73,6 +74,19 @@ public abstract class Spec {
 
     public Spec withOnlyWarn(boolean onlyWarn) {
         setOnlyWarn(onlyWarn);
+        return this;
+    }
+
+    public String getAlias() {
+        return alias;
+    }
+
+    public void setAlias(String alias) {
+        this.alias = alias;
+    }
+
+    public Spec withAlias(String alias) {
+        setAlias(alias);
         return this;
     }
 }

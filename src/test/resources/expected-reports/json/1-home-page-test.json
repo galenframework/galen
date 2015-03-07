@@ -44,6 +44,17 @@
                                 "other-object"
                             ]
                         } ]
+                    }, {
+                        "name" : "Some alias",
+                        "specs" : [ {
+                            "status": "info",
+                            "place" : {
+                                "filePath" : "specs.spec",
+                                "lineNumber" : 12
+                            },
+                            "name" : "width: 10 to 20px",
+                            "highlight" : [ "objectA1" ]
+                        } ]
                     } ]
                 }, {
                     "name" : "objectA2",
