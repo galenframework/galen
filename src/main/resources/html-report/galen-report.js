@@ -107,9 +107,15 @@ function onLayoutCheckClick() {
         if (layout !== null) {
             var objects = collectObjectsToHighlight(layout.objects, objectNames);
 
-            loadImage(layout.screenshot, function () {
+            var screenshot = layout.screenshot;
+
+            if (screenshot === null || screenshot === undefined) {
+                screenshot = _GalenReport.layouts[0].screenshot;
+            }
+
+            loadImage(screenshot, function () {
                 _GalenReport.showNotification(checkText, errorText);
-                _GalenReport.showScreenshotWithObjects(layout.screenshot, this.width, this.height, objects);
+                _GalenReport.showScreenshotWithObjects(screenshot, this.width, this.height, objects);
             });
 
         } else {
