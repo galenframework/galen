@@ -64,6 +64,11 @@ public class TestValidationListener implements ValidationListener {
     }
 
     @Override
+    public void onBeforeSpec(GalenPageRunner pageRunner, PageValidation pageValidation, String objectName, Spec spec) {
+
+    }
+
+    @Override
     public void onGlobalError(GalenPageRunner pageRunner, Exception e) {
         invokations.append("<global-error " + e.getClass().getSimpleName() + ">" + e.getMessage() + "</global-error>");
     }

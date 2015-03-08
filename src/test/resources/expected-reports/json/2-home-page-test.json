@@ -1,212 +1,287 @@
 {
-    "testId" : "1-home-page-test",
-    "name" : "Home page test",
-    "report" : {
-        "nodes" : [ {
-            "name" : "Just a simple info node with attachment",
-            "status" : "info",
-            "attachments": [
-                "file-4-some-file.txt"
-            ],
-            "time" : 1404681346001,
-            "type" : "node"
-        }, {
-            "name" : "check layout",
-            "status" : "info",
-            "time" : 1404681346002,
-		    "includedTags":[],
-		    "excludedTags":[],
-            "sections" : [ {
-                "name" : "",
-                "objects" : [ {
-                    "name" : "objectA1",
-                    "specs" : [ {
-                        "status" : "info",
-                        "place" : {
-                            "filePath" : "specs.spec",
-                            "lineNumber" : 12
+  "testId": "1-home-page-test",
+  "name": "Home page test",
+  "report": {
+    "nodes": [
+      {
+        "name": "Just a simple info node with attachment",
+        "status": "info",
+        "attachments": ["file-4-some-file.txt"],
+        "time": 1404681346001,
+        "type": "node"
+      },
+      {
+        "name": "check layout",
+        "status": "info",
+        "time": 1404681346002,
+        "includedTags": [],
+        "excludedTags": [],
+        "sections": [
+          {
+            "name": "",
+            "objects": [
+              {
+                "name": "objectA1",
+                "specs": [
+                  {
+                    "status": "info",
+                    "place": {
+                      "filePath": "specs.spec",
+                      "lineNumber": 12
+                    },
+                    "name": "width: 10 to 20px",
+                    "highlight": ["objectA1"]
+                  }
+                ],
+                "specGroups": [
+                  {
+                    "name": "some spec group",
+                    "specs": [
+                      {
+                        "status": "error",
+                        "place": {
+                          "filePath": "specs.spec",
+                          "lineNumber": 12
                         },
-                        "name" : "width: 10 to 20px",
-                        "highlight" : [ "objectA1" ]
-                    } ],
-                    "specGroups": [ {
-                        "name" : "some spec group",
-                        "specs" : [ {
-                            "status": "error",
-                            "place": {
-                                "filePath": "specs.spec",
-                                "lineNumber": 12
-                            },
-                            "name": "inside: other-object 10px left",
-                            "errors": ["objectA1 is not inside other-object"],
-                            "highlight": [
-                                "objectA1",
-                                "other-object"
-                            ]
-                        } ]
-                    }, {
-                        "name" : "Some alias",
-                        "specs" : [ {
-                            "status": "info",
-                            "place" : {
-                                "filePath" : "specs.spec",
-                                "lineNumber" : 12
-                            },
-                            "name" : "width: 10 to 20px",
-                            "highlight" : [ "objectA1" ]
-                        } ]
-                    } ]
-                }, {
-                    "name" : "objectA2",
-                    "specs" : [ {
-                        "status" : "info",
-                        "place" : {
-                            "filePath" : "specs.spec",
-                            "lineNumber" : 12
+                        "name": "inside: other-object 10px left",
+                        "errors": ["objectA1 is not inside other-object"],
+                        "highlight": [
+                          "objectA1",
+                          "other-object"
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "name": "Some alias",
+                    "specs": [
+                      {
+                        "status": "info",
+                        "place": {
+                          "filePath": "specs.spec",
+                          "lineNumber": 12
                         },
-                        "name" : "width: 10 to 20px",
-                        "highlight" : [ "objectA2" ]
-                    }, {
-                        "status" : "error",
-                        "place" : {
-                            "filePath" : "specs.spec",
-                            "lineNumber" : 12
-                        },
-                        "name" : "width: 10px",
-                        "errors" : [ "objectA2 width is 20px instead of 10px" ],
-                        "highlight" : [ "objectA2" ]
-                    }, {
-                        "status" : "warn",
-                        "place" : {
-                            "filePath" : "specs.spec",
-                            "lineNumber" : 12
-                        },
-                        "name" : "text is: Login",
-                        "errors" : [ "objectA2 text is \"Logout\" instead of \"Login\"" ],
-                        "highlight" : [ "objectA2" ]
-                    } ]
-                } ]
-            }, {
-                "name" : "some section 2",
-                "objects" : [ {
-                    "name" : "objectA1",
-                    "specs" : [ {
-                        "status" : "info",
-                        "place" : {
-                            "filePath" : "specs.spec",
-                            "lineNumber" : 12
-                        },
-                        "name" : "height: 10 to 20px",
-                        "highlight" : [ "objectA1" ],
-                        "subLayout" : {
-						    "includedTags":[],
-						    "excludedTags":[],
-                            "sections" : [ {
-                                "name" : "Sub section",
-                                "objects" : [ {
-                                    "name" : "sub-objectA1",
-                                    "specs" : [ {
-                                        "status" : "info",
-                                        "place" : {
-                                            "filePath" : "specs.spec",
-                                            "lineNumber" : 12
-                                        },
-                                        "name" : "height: 10 to 20px",
-                                        "highlight" : [ "sub-objectA1" ]
-                                    }, {
-                                        "status" : "error",
-                                        "place" : {
-                                            "filePath" : "specs.spec",
-                                            "lineNumber" : 12
-                                        },
-                                        "name" : "width: 10px",
-                                        "errors" : [ "sub-objectA1 width is 20px instead of 10px" ],
-                                        "highlight" : [ "sub-objectA1" ]
-                                    } ]
-                                } ]
-                            } ],
-                            "objects" : {
-                                "sub-objectA1" : {
-                                    "area" : [ 200, 300, 50, 30 ]
+                        "name": "width: 10 to 20px",
+                        "highlight": ["objectA1"]
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "name": "objectA2",
+                "specs": [
+                  {
+                    "status": "info",
+                    "place": {
+                      "filePath": "specs.spec",
+                      "lineNumber": 12
+                    },
+                    "name": "width: 10 to 20px",
+                    "highlight": ["objectA2"]
+                  },
+                  {
+                    "status": "error",
+                    "place": {
+                      "filePath": "specs.spec",
+                      "lineNumber": 12
+                    },
+                    "name": "width: 10px",
+                    "errors": ["objectA2 width is 20px instead of 10px"],
+                    "highlight": ["objectA2"]
+                  },
+                  {
+                    "status": "warn",
+                    "place": {
+                      "filePath": "specs.spec",
+                      "lineNumber": 12
+                    },
+                    "name": "text is: Login",
+                    "errors": ["objectA2 text is \"Logout\" instead of \"Login\""],
+                    "highlight": ["objectA2"]
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "name": "some section 2",
+            "objects": [
+              {
+                "name": "objectA1",
+                "specs": [
+                  {
+                    "status": "info",
+                    "place": {
+                      "filePath": "specs.spec",
+                      "lineNumber": 12
+                    },
+                    "name": "height: 10 to 20px",
+                    "highlight": ["objectA1"]
+                  },
+                  {
+                    "status": "info",
+                    "place": {
+                      "filePath": "specs.spec",
+                      "lineNumber": 12
+                    },
+                    "name": "component: some-component.spec",
+                    "highlight": ["objectA1"],
+                    "subLayout": {
+                      "includedTags": [],
+                      "excludedTags": [],
+                      "sections": [
+                        {
+                          "name": "Sub section",
+                          "objects": [
+                            {
+                              "name": "sub-objectA1",
+                              "specs": [
+                                {
+                                  "status": "info",
+                                  "place": {
+                                    "filePath": "specs.spec",
+                                    "lineNumber": 12
+                                  },
+                                  "name": "height: 10 to 20px",
+                                  "highlight": ["sub-objectA1"]
+                                },
+                                {
+                                  "status": "error",
+                                  "place": {
+                                    "filePath": "specs.spec",
+                                    "lineNumber": 12
+                                  },
+                                  "name": "width: 10px",
+                                  "errors": ["sub-objectA1 width is 20px instead of 10px"],
+                                  "highlight": ["sub-objectA1"]
                                 }
+                              ]
                             }
+                          ]
                         }
-                    }, {
-                        "status" : "info",
-                        "place" : {
-                            "filePath" : "specs.spec",
-                            "lineNumber" : 12
-                        },
-                        "name" : "component: some-component.spec",
-                        "highlight" : [ "objectA1" ]
-                    } ]
-                } ]
-            }, {
-                "name" : "some section 1",
-                "objects" : [ {
-                    "name" : "objectB1",
-                    "specs" : [ {
-                        "status" : "info",
-                        "place" : {
-                            "filePath" : "specs.spec",
-                            "lineNumber" : 12
-                        },
-                        "name" : "width: 10 to 20px",
-                        "highlight" : [ "objectB1" ]
-                    }, {
-                        "status" : "error",
-                        "place" : {
-                            "filePath" : "specs.spec",
-                            "lineNumber" : 12
-                        },
-                        "name" : "inside: other-object 10px left",
-                        "errors" : [ "objectB1 is not inside other-object", "second error message with <xml> &tags" ],
-                        "highlight" : [ "objectB1" ],
-                        "imageComparison" : {
-                            "actualImage" : "layout-1-objectB1-actual.png",
-                            "expectedImage" : "layout-2-objectB1-expected.png",
-                            "comparisonMapImage" : "layout-3-objectB1-map.png"
+                      ],
+                      "objects": {
+                        "sub-objectA1": {
+                          "area": [
+                            200,
+                            300,
+                            50,
+                            30
+                          ]
                         }
-                    } ]
-                }, {
-                    "name" : "objectB2",
-                    "specs" : [ {
-                        "status" : "info",
-                        "place" : {
-                            "filePath" : "specs.spec",
-                            "lineNumber" : 12
-                        },
-                        "name" : "height: 100px",
-                        "highlight" : [ "objectB2" ]
-                    }, {
-                        "status" : "info",
-                        "place" : {
-                            "filePath" : "specs.spec",
-                            "lineNumber" : 13
-                        },
-                        "name" : "width: 100px",
-                        "highlight" : [ "objectB2" ]
-                    } ]
-                } ]
-            } ],
-            "objects" : {
-                "objectA2" : {
-                    "area" : [ 200, 300, 50, 30 ]
-                },
-                "other-object" : {
-                    "area" : [ 1, 1, 90, 100 ]
-                },
-                "objectB2" : {
-                    "area" : [ 200, 300, 50, 30 ]
-                },
-                "objectB1" : {
-                    "area" : [ 10, 10, 100, 50 ]
-                },
-                "objectA1" : {
-                    "area" : [ 10, 10, 100, 50 ]
-                }
-            },
-            "type" : "layout"
-        } ]
-    }
+                      }
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "name": "some section 1",
+            "objects": [
+              {
+                "name": "objectB1",
+                "specs": [
+                  {
+                    "status": "info",
+                    "place": {
+                      "filePath": "specs.spec",
+                      "lineNumber": 12
+                    },
+                    "name": "width: 10 to 20px",
+                    "highlight": ["objectB1"]
+                  },
+                  {
+                    "status": "error",
+                    "place": {
+                      "filePath": "specs.spec",
+                      "lineNumber": 12
+                    },
+                    "name": "inside: other-object 10px left",
+                    "errors": [
+                      "objectB1 is not inside other-object",
+                      "second error message with <xml> &tags"
+                    ],
+                    "highlight": ["objectB1"],
+                    "imageComparison": {
+                      "actualImage": "layout-1-objectB1-actual.png",
+                      "expectedImage": "layout-2-objectB1-expected.png",
+                      "comparisonMapImage": "layout-3-objectB1-map.png"
+                    }
+                  }
+                ]
+              },
+              {
+                "name": "objectB2",
+                "specs": [
+                  {
+                    "status": "info",
+                    "place": {
+                      "filePath": "specs.spec",
+                      "lineNumber": 12
+                    },
+                    "name": "height: 100px",
+                    "highlight": ["objectB2"]
+                  },
+                  {
+                    "status": "info",
+                    "place": {
+                      "filePath": "specs.spec",
+                      "lineNumber": 13
+                    },
+                    "name": "width: 100px",
+                    "highlight": ["objectB2"]
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "objects": {
+          "objectA2": {
+            "area": [
+              200,
+              300,
+              50,
+              30
+            ]
+          },
+          "other-object": {
+            "area": [
+              1,
+              1,
+              90,
+              100
+            ]
+          },
+          "objectB2": {
+            "area": [
+              200,
+              300,
+              50,
+              30
+            ]
+          },
+          "objectB1": {
+            "area": [
+              10,
+              10,
+              100,
+              50
+            ]
+          },
+          "objectA1": {
+            "area": [
+              10,
+              10,
+              100,
+              50
+            ]
+          }
+        },
+        "type": "layout"
+      }
+    ]
+  }
 }

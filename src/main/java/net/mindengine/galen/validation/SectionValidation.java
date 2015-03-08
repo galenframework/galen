@@ -277,6 +277,10 @@ public class SectionValidation {
     private List<ValidationResult> checkObject(String objectName, List<Spec> specs, boolean shouldReport) {
         List<ValidationResult> validationResults = new LinkedList<ValidationResult>();
         for (Spec spec : specs) {
+
+            if (shouldReport) {
+                tellBeforeSpec(pageValidation, objectName, spec);
+            }
             
             ValidationResult result = pageValidation.check(objectName, spec);
             if (result.getError()!= null) {
@@ -291,6 +295,16 @@ public class SectionValidation {
         }
 
         return validationResults;
+    }
+
+    private void tellBeforeSpec(PageValidation pageValidation, String objectName, Spec spec) {
+        try {
+            if (validationListener != null) {
+                validationListener.onBeforeSpec(UNKNOWN_PAGE_RUNNER, pageValidation, objectName, spec);
+            }
+        } catch (Exception e) {
+            LOG.trace("Unknown error during before spec event", e);
+        }
     }
 
     private void tellOnSpecError(PageValidation pageValidation, String objectName, Spec spec, ValidationResult result) {

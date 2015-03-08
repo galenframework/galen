@@ -83,6 +83,11 @@ public class SectionValidationTest {
             }
 
             @Override
+            public void onBeforeSpec(GalenPageRunner pageRunner, PageValidation pageValidation, String objectName, Spec spec) {
+
+            }
+
+            @Override
             public void onSpecError(GalenPageRunner pageRunner, PageValidation pageValidation, String objectName, Spec spec, ValidationResult result) {
 
             }

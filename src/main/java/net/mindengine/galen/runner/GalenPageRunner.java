@@ -106,6 +106,13 @@ public class GalenPageRunner implements ValidationListener {
     }
 
     @Override
+    public void onBeforeSpec(GalenPageRunner pageRunner, PageValidation pageValidation, String objectName, Spec spec) {
+        if (validationListener != null) {
+            validationListener.onBeforeSpec(pageRunner, pageValidation, objectName, spec);
+        }
+    }
+
+    @Override
     public void onSpecError(GalenPageRunner pageRunner, PageValidation pageValidation, String objectName, Spec spec, ValidationResult result) {
         if (validationListener != null) {
             validationListener.onSpecError(this, pageValidation, objectName, spec, result);

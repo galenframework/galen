@@ -87,6 +87,11 @@ public class ConsoleReportingListener implements CompleteListener {
         }
     }
 
+    @Override
+    public void onBeforeSpec(GalenPageRunner pageRunner, PageValidation pageValidation, String objectName, Spec spec) {
+
+    }
+
     private void decreaseCurrentObjectLevel() {
         Integer value = currentObjectLevel.get();
         if (value != null) {

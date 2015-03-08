@@ -88,6 +88,18 @@ public class CombinedListener implements CompleteListener {
     }
 
     @Override
+    public void onBeforeSpec(GalenPageRunner pageRunner, PageValidation pageValidation, String objectName, Spec spec) {
+        for (CompleteListener listener : listeners) {
+            try {
+                listener.onBeforeSpec(pageRunner, pageValidation, objectName, spec);
+            }
+            catch (Exception ex) {
+                LOG.trace("Unknown error during test execution", ex);
+            }
+        }
+    }
+
+    @Override
     public void onSpecError(GalenPageRunner pageRunner, PageValidation pageValidation, String objectName, Spec spec, ValidationResult result) {
         for (CompleteListener listener : listeners) {
             try {

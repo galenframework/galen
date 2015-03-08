@@ -57,6 +57,18 @@ public class CombinedValidationListener implements ValidationListener {
     }
 
     @Override
+    public void onBeforeSpec(GalenPageRunner pageRunner, PageValidation pageValidation, String objectName, Spec spec) {
+        for (ValidationListener listener: listeners) {
+            try {
+                listener.onBeforeSpec(pageRunner, pageValidation, objectName, spec);
+            }
+            catch (Exception ex) {
+                LOG.error("Unknown error during finishing test", ex);
+            }
+        }
+    }
+
+    @Override
     public void onSpecError(GalenPageRunner pageRunner, PageValidation pageValidation, String objectName, Spec spec, ValidationResult result) {
         for (ValidationListener listener: listeners) {
             try {

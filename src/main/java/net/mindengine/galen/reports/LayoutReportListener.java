@@ -78,7 +78,17 @@ public class LayoutReportListener implements ValidationListener {
     }
 
 
-    public LayoutSpec addSpecToReport(Spec originalSpec, ValidationResult result) {
+    public void addResultToSpec(LayoutSpec spec, ValidationResult result) {
+        currentReport().putObjects(result.getValidationObjects());
+        spec.setHighlight(convertToObjectNames(result.getValidationObjects()));
+
+        if (result.getError() != null) {
+            spec.setErrors(result.getError().getMessages());
+        }
+    }
+
+    @Override
+    public void onBeforeSpec(GalenPageRunner unknownPageRunner, PageValidation pageValidation, String objectName, Spec originalSpec) {
         LayoutSpec spec = new LayoutSpec();
         spec.setPlace(originalSpec.getPlace());
         spec.setName(originalSpec.getOriginalText());
@@ -92,20 +102,19 @@ public class LayoutReportListener implements ValidationListener {
             currentReport().getCurrentSpecCollector().add(spec);
         }
 
-        currentReport().putObjects(result.getValidationObjects());
-        spec.setHighlight(convertToObjectNames(result.getValidationObjects()));
-
-        if (result.getError() != null) {
-            spec.setErrors(result.getError().getMessages());
-        }
-
         currentReport().setCurrentSpec(spec);
-
-        return spec;
     }
+
+    @Override
+    public void onSpecSuccess(GalenPageRunner pageRunner, PageValidation pageValidation, String objectName, Spec originalSpec, ValidationResult result) {
+        LayoutSpec spec = currentReport().getCurrentSpec();
+        addResultToSpec(spec, result);
+    }
+
     @Override
     public void onSpecError(GalenPageRunner pageRunner, PageValidation pageValidation, String objectName, Spec originalSpec, ValidationResult result) {
-        LayoutSpec spec = addSpecToReport(originalSpec, result);
+        LayoutSpec spec = currentReport().getCurrentSpec();
+        addResultToSpec(spec, result);
 
         if (originalSpec.isOnlyWarn()) {
             spec.setStatus(TestReportNode.Status.WARN);
@@ -137,11 +146,6 @@ public class LayoutReportListener implements ValidationListener {
         currentReport().setCurrentSpecCollector(currentReport().getCurrentObject().getSpecs());
     }
 
-
-    @Override
-    public void onSpecSuccess(GalenPageRunner pageRunner, PageValidation pageValidation, String objectName, Spec originalSpec, ValidationResult result) {
-        addSpecToReport(originalSpec, result);
-    }
 
     private LayoutImageComparison convertImageComparison(String objectName, ImageComparison imageComparison) throws IOException {
         LayoutImageComparison layoutImageComparison = new LayoutImageComparison();

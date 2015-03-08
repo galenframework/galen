@@ -25,7 +25,6 @@ import net.mindengine.galen.specs.page.PageSection;
 import net.mindengine.galen.suite.GalenPageAction;
 import net.mindengine.galen.tests.GalenTest;
 import net.mindengine.galen.validation.PageValidation;
-import net.mindengine.galen.validation.ValidationError;
 import net.mindengine.galen.validation.ValidationResult;
 
 public class DummyCompleteListener implements CompleteListener {
@@ -36,6 +35,11 @@ public class DummyCompleteListener implements CompleteListener {
 
     @Override
     public void onAfterObject(GalenPageRunner pageRunner, PageValidation pageValidation, String objectName) {
+    }
+
+    @Override
+    public void onBeforeSpec(GalenPageRunner pageRunner, PageValidation pageValidation, String objectName, Spec spec) {
+
     }
 
     @Override
