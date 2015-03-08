@@ -19,13 +19,11 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.regex.Pattern;
 
-import net.mindengine.galen.page.Page;
 import net.mindengine.galen.specs.page.*;
 import net.mindengine.galen.specs.reader.page.TaggedPageSection;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import net.mindengine.galen.runner.GalenPageRunner;
 import net.mindengine.galen.specs.Spec;
 
 import static net.mindengine.galen.validation.ValidationResult.doesNotHaveErrors;
@@ -34,7 +32,6 @@ public class SectionValidation {
     
     private final static Logger LOG = LoggerFactory.getLogger(SectionValidation.class);
 
-    private static final GalenPageRunner UNKNOWN_PAGE_RUNNER = null;
     private static final boolean SHOULD_REPORT = true;
     private static final boolean SHOULD_NOT_REPORT = false;
     private static final List<ValidationResult> EMPTY_RESULTS = new LinkedList<ValidationResult>();
@@ -81,13 +78,13 @@ public class SectionValidation {
 
     private void tellAfterSection(PageSection section) {
         if (validationListener != null) {
-            validationListener.onAfterSection(UNKNOWN_PAGE_RUNNER, pageValidation, section);
+            validationListener.onAfterSection(pageValidation, section);
         }
     }
 
     private void tellBeforeSection(PageSection section) {
         if (validationListener != null) {
-            validationListener.onBeforeSection(UNKNOWN_PAGE_RUNNER, pageValidation, section);
+            validationListener.onBeforeSection(pageValidation, section);
         }
     }
 
@@ -234,7 +231,7 @@ public class SectionValidation {
     private void tellOnAfterObject(String objectName) {
         if (validationListener != null) {
             try {
-                validationListener.onAfterObject(UNKNOWN_PAGE_RUNNER, pageValidation, objectName);
+                validationListener.onAfterObject(pageValidation, objectName);
             }
             catch (Exception e) {
                 LOG.trace("Unknown error during validation after object", e);
@@ -245,7 +242,7 @@ public class SectionValidation {
     private void tellOnObject(String objectName) {
         if (validationListener != null) {
             try {
-                validationListener.onObject(UNKNOWN_PAGE_RUNNER, pageValidation, objectName);
+                validationListener.onObject(pageValidation, objectName);
             }
             catch (Exception e) {
                 LOG.trace("Unknown error during validation on object", e);
@@ -300,7 +297,7 @@ public class SectionValidation {
     private void tellBeforeSpec(PageValidation pageValidation, String objectName, Spec spec) {
         try {
             if (validationListener != null) {
-                validationListener.onBeforeSpec(UNKNOWN_PAGE_RUNNER, pageValidation, objectName, spec);
+                validationListener.onBeforeSpec(pageValidation, objectName, spec);
             }
         } catch (Exception e) {
             LOG.trace("Unknown error during before spec event", e);
@@ -310,7 +307,7 @@ public class SectionValidation {
     private void tellOnSpecError(PageValidation pageValidation, String objectName, Spec spec, ValidationResult result) {
         try {
             if (validationListener != null) {
-                validationListener.onSpecError(UNKNOWN_PAGE_RUNNER, pageValidation, objectName, spec, result);
+                validationListener.onSpecError(pageValidation, objectName, spec, result);
             }
         }
         catch (Exception e) {
@@ -321,7 +318,7 @@ public class SectionValidation {
     private void tellOnSpecSuccess(PageValidation pageValidation, String objectName, Spec spec, ValidationResult result) {
         try {
             if (validationListener != null) {
-                validationListener.onSpecSuccess(UNKNOWN_PAGE_RUNNER, pageValidation, objectName, spec, result);
+                validationListener.onSpecSuccess(pageValidation, objectName, spec, result);
             }
         }
         catch (Exception e) {

@@ -22,7 +22,6 @@ import java.util.Stack;
 
 import net.mindengine.galen.reports.model.*;
 import net.mindengine.galen.reports.nodes.TestReportNode;
-import net.mindengine.galen.runner.GalenPageRunner;
 import net.mindengine.galen.specs.Spec;
 import net.mindengine.galen.specs.page.PageSection;
 import net.mindengine.galen.suite.GalenPageAction;
@@ -40,12 +39,12 @@ public class LayoutReportListener implements ValidationListener {
 
 
     @Override
-    public void onBeforeSection(GalenPageRunner pageRunner, PageValidation pageValidation, PageSection pageSection) {
+    public void onBeforeSection(PageValidation pageValidation, PageSection pageSection) {
         currentReport().pushSection(pageSection);
     }
 
     @Override
-    public void onAfterSection(GalenPageRunner pageRunner, PageValidation pageValidation, PageSection pageSection) {
+    public void onAfterSection(PageValidation pageValidation, PageSection pageSection) {
         currentReport().popSection();
     }
 
@@ -62,7 +61,7 @@ public class LayoutReportListener implements ValidationListener {
     }
 
     @Override
-    public void onObject(GalenPageRunner pageRunner, PageValidation pageValidation, String objectName) {
+    public void onObject(PageValidation pageValidation, String objectName) {
         // Searching for the same object if it was already reported
         LayoutObject object = currentSection().findObject(objectName);
         if (object == null) {
@@ -74,7 +73,7 @@ public class LayoutReportListener implements ValidationListener {
     }
 
     @Override
-    public void onAfterObject(GalenPageRunner pageRunner, PageValidation pageValidation, String objectName) {
+    public void onAfterObject(PageValidation pageValidation, String objectName) {
     }
 
 
@@ -88,7 +87,7 @@ public class LayoutReportListener implements ValidationListener {
     }
 
     @Override
-    public void onBeforeSpec(GalenPageRunner unknownPageRunner, PageValidation pageValidation, String objectName, Spec originalSpec) {
+    public void onBeforeSpec(PageValidation pageValidation, String objectName, Spec originalSpec) {
         LayoutSpec spec = new LayoutSpec();
         spec.setPlace(originalSpec.getPlace());
         spec.setName(originalSpec.getOriginalText());
@@ -106,13 +105,13 @@ public class LayoutReportListener implements ValidationListener {
     }
 
     @Override
-    public void onSpecSuccess(GalenPageRunner pageRunner, PageValidation pageValidation, String objectName, Spec originalSpec, ValidationResult result) {
+    public void onSpecSuccess(PageValidation pageValidation, String objectName, Spec originalSpec, ValidationResult result) {
         LayoutSpec spec = currentReport().getCurrentSpec();
         addResultToSpec(spec, result);
     }
 
     @Override
-    public void onSpecError(GalenPageRunner pageRunner, PageValidation pageValidation, String objectName, Spec originalSpec, ValidationResult result) {
+    public void onSpecError(PageValidation pageValidation, String objectName, Spec originalSpec, ValidationResult result) {
         LayoutSpec spec = currentReport().getCurrentSpec();
         addResultToSpec(spec, result);
 
@@ -169,17 +168,17 @@ public class LayoutReportListener implements ValidationListener {
 
 
     @Override
-    public void onGlobalError(GalenPageRunner pageRunner, Exception e) {
+    public void onGlobalError(Exception e) {
         // not needed here
     }
 
     @Override
-    public void onBeforePageAction(GalenPageRunner pageRunner, GalenPageAction action) {
+    public void onBeforePageAction(GalenPageAction action) {
         // not needed here
     }
 
     @Override
-    public void onAfterPageAction(GalenPageRunner pageRunner, GalenPageAction action) {
+    public void onAfterPageAction(GalenPageAction action) {
         // not needed here
     }
 

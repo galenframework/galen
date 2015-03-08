@@ -33,10 +33,10 @@ public class CombinedValidationListener implements ValidationListener {
     
     
     @Override
-    public void onObject(GalenPageRunner pageRunner, PageValidation pageValidation, String objectName) {
+    public void onObject(PageValidation pageValidation, String objectName) {
         for (ValidationListener listener : listeners) {
             try {
-                listener.onObject(pageRunner, pageValidation, objectName);
+                listener.onObject(pageValidation, objectName);
             }
             catch (Exception ex) {
                 LOG.error("Unknown error during finishing test", ex);
@@ -45,10 +45,10 @@ public class CombinedValidationListener implements ValidationListener {
     }
 
     @Override
-    public void onAfterObject(GalenPageRunner pageRunner, PageValidation pageValidation, String objectName) {
+    public void onAfterObject(PageValidation pageValidation, String objectName) {
         for (ValidationListener listener: listeners) {
             try {
-                listener.onAfterObject(pageRunner, pageValidation, objectName);
+                listener.onAfterObject(pageValidation, objectName);
             }
             catch (Exception ex) {
                 LOG.error("Unknown error during finishing test", ex);
@@ -57,10 +57,10 @@ public class CombinedValidationListener implements ValidationListener {
     }
 
     @Override
-    public void onBeforeSpec(GalenPageRunner pageRunner, PageValidation pageValidation, String objectName, Spec spec) {
+    public void onBeforeSpec(PageValidation pageValidation, String objectName, Spec spec) {
         for (ValidationListener listener: listeners) {
             try {
-                listener.onBeforeSpec(pageRunner, pageValidation, objectName, spec);
+                listener.onBeforeSpec(pageValidation, objectName, spec);
             }
             catch (Exception ex) {
                 LOG.error("Unknown error during finishing test", ex);
@@ -69,10 +69,10 @@ public class CombinedValidationListener implements ValidationListener {
     }
 
     @Override
-    public void onSpecError(GalenPageRunner pageRunner, PageValidation pageValidation, String objectName, Spec spec, ValidationResult result) {
+    public void onSpecError(PageValidation pageValidation, String objectName, Spec spec, ValidationResult result) {
         for (ValidationListener listener: listeners) {
             try {
-                listener.onSpecError(pageRunner, pageValidation, objectName, spec, result);
+                listener.onSpecError(pageValidation, objectName, spec, result);
             }
             catch (Exception ex) {
                 LOG.error("Unknown error during finishing test", ex);
@@ -82,10 +82,10 @@ public class CombinedValidationListener implements ValidationListener {
 
 
     @Override
-    public void onSpecSuccess(GalenPageRunner pageRunner, PageValidation pageValidation, String objectName, Spec spec, ValidationResult result) {
+    public void onSpecSuccess(PageValidation pageValidation, String objectName, Spec spec, ValidationResult result) {
         for (ValidationListener listener: listeners) {
             try {
-                listener.onSpecSuccess(pageRunner, pageValidation, objectName, spec, result);
+                listener.onSpecSuccess(pageValidation, objectName, spec, result);
             }
             catch (Exception ex) {
                 LOG.error("Unknown error during finishing test", ex);
@@ -94,10 +94,10 @@ public class CombinedValidationListener implements ValidationListener {
     }
 
     @Override
-    public void onGlobalError(GalenPageRunner pageRunner, Exception e) {
+    public void onGlobalError(Exception e) {
         for (ValidationListener listener: listeners) {
             try {
-                listener.onGlobalError(pageRunner, e);
+                listener.onGlobalError(e);
             }
             catch (Exception ex) {
                 LOG.error("Unknown error during finishing test", ex);
@@ -106,10 +106,10 @@ public class CombinedValidationListener implements ValidationListener {
     }
 
     @Override
-    public void onBeforePageAction(GalenPageRunner pageRunner, GalenPageAction action) {
+    public void onBeforePageAction(GalenPageAction action) {
         for (ValidationListener listener: listeners) {
             try {
-                listener.onBeforePageAction(pageRunner, action);
+                listener.onBeforePageAction(action);
             }
             catch (Exception ex) {
                 LOG.error("Unknown error during finishing test", ex);
@@ -118,10 +118,10 @@ public class CombinedValidationListener implements ValidationListener {
     }
 
     @Override
-    public void onAfterPageAction(GalenPageRunner pageRunner, GalenPageAction action) {
+    public void onAfterPageAction(GalenPageAction action) {
         for (ValidationListener listener: listeners) {
             try {
-                listener.onAfterPageAction(pageRunner, action);
+                listener.onAfterPageAction(action);
             }
             catch (Exception ex) {
                 LOG.error("Unknown error during finishing test", ex);
@@ -130,10 +130,10 @@ public class CombinedValidationListener implements ValidationListener {
     }
 
     @Override
-    public void onBeforeSection(GalenPageRunner pageRunner, PageValidation pageValidation, PageSection pageSection) {
+    public void onBeforeSection(PageValidation pageValidation, PageSection pageSection) {
         for (ValidationListener listener: listeners) {
             try {
-                listener.onBeforeSection(pageRunner, pageValidation, pageSection);
+                listener.onBeforeSection(pageValidation, pageSection);
             }
             catch (Exception ex) {
                 LOG.error("Unknown error during finishing test", ex);
@@ -142,10 +142,10 @@ public class CombinedValidationListener implements ValidationListener {
     }
 
     @Override
-    public void onAfterSection(GalenPageRunner pageRunner, PageValidation pageValidation, PageSection pageSection) {
+    public void onAfterSection(PageValidation pageValidation, PageSection pageSection) {
         for (ValidationListener listener: listeners) {
             try {
-                listener.onAfterSection(pageRunner, pageValidation, pageSection);
+                listener.onAfterSection(pageValidation, pageSection);
             }
             catch (Exception ex) {
                 LOG.error("Unknown error during finishing test", ex);

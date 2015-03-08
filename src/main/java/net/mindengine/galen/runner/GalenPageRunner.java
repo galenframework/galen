@@ -81,83 +81,83 @@ public class GalenPageRunner implements ValidationListener {
    
     private void tellAfterAction(GalenPageAction action) {
         if (validationListener != null) {
-            validationListener.onAfterPageAction(this, action);
+            validationListener.onAfterPageAction(action);
         }
     }
 
     private void tellBeforeAction(GalenPageAction action) {
         if (validationListener != null) {
-            validationListener.onBeforePageAction(this, action);
+            validationListener.onBeforePageAction(action);
         } 
     }
 
     @Override
-    public void onObject(GalenPageRunner pageRunner, PageValidation pageValidation, String objectName) {
+    public void onObject(PageValidation pageValidation, String objectName) {
         if (validationListener != null) {
-            validationListener.onObject(this, pageValidation, objectName);     
+            validationListener.onObject(pageValidation, objectName);
         }
     }
 
     @Override
-    public void onAfterObject(GalenPageRunner pageRunner, PageValidation pageValidation, String objectName) {
+    public void onAfterObject(PageValidation pageValidation, String objectName) {
         if (validationListener != null) {
-            validationListener.onAfterObject(this, pageValidation, objectName);
+            validationListener.onAfterObject(pageValidation, objectName);
         }
     }
 
     @Override
-    public void onBeforeSpec(GalenPageRunner pageRunner, PageValidation pageValidation, String objectName, Spec spec) {
+    public void onBeforeSpec(PageValidation pageValidation, String objectName, Spec spec) {
         if (validationListener != null) {
-            validationListener.onBeforeSpec(pageRunner, pageValidation, objectName, spec);
+            validationListener.onBeforeSpec(pageValidation, objectName, spec);
         }
     }
 
     @Override
-    public void onSpecError(GalenPageRunner pageRunner, PageValidation pageValidation, String objectName, Spec spec, ValidationResult result) {
+    public void onSpecError(PageValidation pageValidation, String objectName, Spec spec, ValidationResult result) {
         if (validationListener != null) {
-            validationListener.onSpecError(this, pageValidation, objectName, spec, result);
+            validationListener.onSpecError(pageValidation, objectName, spec, result);
         }
     }
 
     @Override
-    public void onSpecSuccess(GalenPageRunner pageRunner, PageValidation pageValidation, String objectName, Spec spec, ValidationResult result) {
+    public void onSpecSuccess(PageValidation pageValidation, String objectName, Spec spec, ValidationResult result) {
         if (validationListener != null) {
-            validationListener.onSpecSuccess(this, pageValidation, objectName, spec, result);
+            validationListener.onSpecSuccess(pageValidation, objectName, spec, result);
         }
     }
 
     @Override
-    public void onGlobalError(GalenPageRunner pageRunner, Exception e) {
+    public void onGlobalError(Exception e) {
         if (validationListener != null) {
-            validationListener.onGlobalError(this, e);
+            validationListener.onGlobalError(e);
         }
     }
 
     @Override
-    public void onBeforePageAction(GalenPageRunner pageRunner, GalenPageAction action) {
+    public void onBeforePageAction(GalenPageAction action) {
         if (validationListener != null) {
-            this.onBeforePageAction(this, action);
+            this.onBeforePageAction(action);
         }
     }
 
     @Override
-    public void onAfterPageAction(GalenPageRunner pageRunner, GalenPageAction action) {
+    public void onAfterPageAction(GalenPageAction action) {
         if (validationListener != null) {
-            this.onAfterPageAction(this, action);
+            this.onAfterPageAction(action);
         }
     }
 
     @Override
-    public void onBeforeSection(GalenPageRunner pageRunner, PageValidation pageValidation, PageSection pageSection) {
+    public void onBeforeSection(PageValidation pageValidation, PageSection pageSection) {
         if (validationListener != null) {
-            validationListener.onBeforeSection(this, pageValidation, pageSection);
+            validationListener.onBeforeSection(pageValidation, pageSection);
         }
     }
 
     @Override
-    public void onAfterSection(GalenPageRunner pageRunner, PageValidation pageValidation, PageSection pageSection) {
+    public void onAfterSection(PageValidation pageValidation, PageSection pageSection) {
         if (validationListener != null) {
-            validationListener.onAfterSection(this, pageValidation, pageSection);
+            validationListener.onAfterSection(pageValidation, pageSection);
         }
     }
 

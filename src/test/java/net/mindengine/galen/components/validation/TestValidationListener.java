@@ -15,7 +15,6 @@
 ******************************************************************************/
 package net.mindengine.galen.components.validation;
 
-import net.mindengine.galen.runner.GalenPageRunner;
 import net.mindengine.galen.specs.Spec;
 import net.mindengine.galen.specs.page.PageSection;
 import net.mindengine.galen.suite.GalenPageAction;
@@ -28,7 +27,7 @@ public class TestValidationListener implements ValidationListener {
     private StringBuffer invokations = new StringBuffer();
 
     @Override
-    public void onSpecError(GalenPageRunner pageRunner, PageValidation pageValidation, String objectName, Spec spec, ValidationResult result) {
+    public void onSpecError(PageValidation pageValidation, String objectName, Spec spec, ValidationResult result) {
         append("<" + spec.getClass().getSimpleName() + " " + objectName + ">");
         StringBuffer buffer = new StringBuffer();
         for (String message : result.getError().getMessages()) {
@@ -40,12 +39,12 @@ public class TestValidationListener implements ValidationListener {
     }
 
     @Override
-    public void onSpecSuccess(GalenPageRunner pageRunner, PageValidation pageValidation, String objectName, Spec spec, ValidationResult result) {
+    public void onSpecSuccess(PageValidation pageValidation, String objectName, Spec spec, ValidationResult result) {
         append("<" + spec.getClass().getSimpleName() + " " + objectName + ">");
     }
 
     @Override
-    public void onObject(GalenPageRunner pageRunner, PageValidation pageValidation, String objectName) {
+    public void onObject(PageValidation pageValidation, String objectName) {
         append("<o " + objectName + ">");
     }
 
@@ -59,35 +58,35 @@ public class TestValidationListener implements ValidationListener {
     }
 
     @Override
-    public void onAfterObject(GalenPageRunner pageRunner, PageValidation pageValidation, String objectName) {
+    public void onAfterObject(PageValidation pageValidation, String objectName) {
         append("</o " + objectName + ">");
     }
 
     @Override
-    public void onBeforeSpec(GalenPageRunner pageRunner, PageValidation pageValidation, String objectName, Spec spec) {
+    public void onBeforeSpec(PageValidation pageValidation, String objectName, Spec spec) {
 
     }
 
     @Override
-    public void onGlobalError(GalenPageRunner pageRunner, Exception e) {
+    public void onGlobalError(Exception e) {
         invokations.append("<global-error " + e.getClass().getSimpleName() + ">" + e.getMessage() + "</global-error>");
     }
 
     @Override
-    public void onBeforePageAction(GalenPageRunner pageRunner, GalenPageAction action) {
+    public void onBeforePageAction(GalenPageAction action) {
     }
 
     @Override
-    public void onAfterPageAction(GalenPageRunner pageRunner, GalenPageAction action) {
+    public void onAfterPageAction(GalenPageAction action) {
     }
 
     
     @Override
-    public void onBeforeSection(GalenPageRunner pageRunner, PageValidation pageValidation, PageSection pageSection) {
+    public void onBeforeSection(PageValidation pageValidation, PageSection pageSection) {
     }
 
     @Override
-    public void onAfterSection(GalenPageRunner pageRunner, PageValidation pageValidation, PageSection pageSection) {
+    public void onAfterSection(PageValidation pageValidation, PageSection pageSection) {
     }
 
     @Override

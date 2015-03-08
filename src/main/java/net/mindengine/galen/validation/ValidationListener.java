@@ -15,32 +15,31 @@
 ******************************************************************************/
 package net.mindengine.galen.validation;
 
-import net.mindengine.galen.runner.GalenPageRunner;
 import net.mindengine.galen.specs.Spec;
 import net.mindengine.galen.specs.page.PageSection;
 import net.mindengine.galen.suite.GalenPageAction;
 
 public interface ValidationListener {
     
-    void onObject(GalenPageRunner pageRunner, PageValidation pageValidation, String objectName);
+    void onObject(PageValidation pageValidation, String objectName);
     
-    void onAfterObject(GalenPageRunner pageRunner, PageValidation pageValidation, String objectName);
+    void onAfterObject(PageValidation pageValidation, String objectName);
 
-    void onBeforeSpec(GalenPageRunner pageRunner, PageValidation pageValidation, String objectName, Spec spec);
+    void onBeforeSpec(PageValidation pageValidation, String objectName, Spec spec);
 
-    void onSpecError(GalenPageRunner pageRunner, PageValidation pageValidation, String objectName, Spec spec, ValidationResult validationResult);
+    void onSpecError(PageValidation pageValidation, String objectName, Spec spec, ValidationResult validationResult);
 
-    void onSpecSuccess(GalenPageRunner pageRunner, PageValidation pageValidation, String objectName, Spec spec, ValidationResult validationResult);
+    void onSpecSuccess(PageValidation pageValidation, String objectName, Spec spec, ValidationResult validationResult);
 
-    void onGlobalError(GalenPageRunner pageRunner, Exception e);
+    void onGlobalError(Exception e);
 
-    void onBeforePageAction(GalenPageRunner pageRunner, GalenPageAction action);
+    void onBeforePageAction(GalenPageAction action);
 
-    void onAfterPageAction(GalenPageRunner pageRunner, GalenPageAction action);
+    void onAfterPageAction(GalenPageAction action);
     
-    void onBeforeSection(GalenPageRunner pageRunner, PageValidation pageValidation, PageSection pageSection);
+    void onBeforeSection(PageValidation pageValidation, PageSection pageSection);
     
-    void onAfterSection(GalenPageRunner pageRunner, PageValidation pageValidation, PageSection pageSection);
+    void onAfterSection(PageValidation pageValidation, PageSection pageSection);
 
     void onSubLayout(PageValidation pageValidation, String objectName);
 

@@ -64,10 +64,10 @@ public class CombinedListener implements CompleteListener {
     }
 
     @Override
-    public void onObject(GalenPageRunner pageRunner, PageValidation pageValidation, String objectName) {
+    public void onObject(PageValidation pageValidation, String objectName) {
         for (CompleteListener listener : listeners) {
             try {
-                listener.onObject(pageRunner, pageValidation, objectName);
+                listener.onObject(pageValidation, objectName);
             }
             catch (Exception ex) {
                 LOG.trace("Unknown error during test execution", ex);
@@ -76,10 +76,10 @@ public class CombinedListener implements CompleteListener {
     }
 
     @Override
-    public void onAfterObject(GalenPageRunner pageRunner, PageValidation pageValidation, String objectName) {
+    public void onAfterObject(PageValidation pageValidation, String objectName) {
         for (CompleteListener listener : listeners) {
             try {
-                listener.onAfterObject(pageRunner, pageValidation, objectName);
+                listener.onAfterObject(pageValidation, objectName);
             }
             catch (Exception ex) {
                 LOG.trace("Unknown error during test execution", ex);
@@ -88,10 +88,10 @@ public class CombinedListener implements CompleteListener {
     }
 
     @Override
-    public void onBeforeSpec(GalenPageRunner pageRunner, PageValidation pageValidation, String objectName, Spec spec) {
+    public void onBeforeSpec(PageValidation pageValidation, String objectName, Spec spec) {
         for (CompleteListener listener : listeners) {
             try {
-                listener.onBeforeSpec(pageRunner, pageValidation, objectName, spec);
+                listener.onBeforeSpec(pageValidation, objectName, spec);
             }
             catch (Exception ex) {
                 LOG.trace("Unknown error during test execution", ex);
@@ -100,10 +100,10 @@ public class CombinedListener implements CompleteListener {
     }
 
     @Override
-    public void onSpecError(GalenPageRunner pageRunner, PageValidation pageValidation, String objectName, Spec spec, ValidationResult result) {
+    public void onSpecError(PageValidation pageValidation, String objectName, Spec spec, ValidationResult result) {
         for (CompleteListener listener : listeners) {
             try {
-                listener.onSpecError(pageRunner, pageValidation, objectName, spec, result);
+                listener.onSpecError(pageValidation, objectName, spec, result);
             }
             catch (Exception ex) {
                 LOG.trace("Unknown error when checking spec errors", ex);
@@ -112,10 +112,10 @@ public class CombinedListener implements CompleteListener {
     }
 
     @Override
-    public void onSpecSuccess(GalenPageRunner pageRunner, PageValidation pageValidation, String objectName, Spec spec, ValidationResult result) {
+    public void onSpecSuccess(PageValidation pageValidation, String objectName, Spec spec, ValidationResult result) {
         for (CompleteListener listener : listeners) {
             try {
-                listener.onSpecSuccess(pageRunner, pageValidation, objectName, spec, result);
+                listener.onSpecSuccess(pageValidation, objectName, spec, result);
             }
             catch (Exception ex) {
                 LOG.trace("Unknown error when checking spec success", ex);
@@ -136,10 +136,10 @@ public class CombinedListener implements CompleteListener {
     }
 
     @Override
-    public void onGlobalError(GalenPageRunner pageRunner, Exception e) {
+    public void onGlobalError(Exception e) {
         for (CompleteListener listener : listeners) {
             try {
-                listener.onGlobalError(pageRunner, e);
+                listener.onGlobalError(e);
             }
             catch (Exception ex) {
                 LOG.trace("Unknown error when checking global errors", ex);
@@ -148,10 +148,10 @@ public class CombinedListener implements CompleteListener {
     }
 
     @Override
-    public void onBeforePageAction(GalenPageRunner pageRunner, GalenPageAction action) {
+    public void onBeforePageAction(GalenPageAction action) {
         for (CompleteListener listener : listeners) {
             try {
-                listener.onBeforePageAction(pageRunner, action);
+                listener.onBeforePageAction(action);
             }
             catch (Exception ex) {
                 LOG.trace("Unknown error during before page action", ex);
@@ -160,10 +160,10 @@ public class CombinedListener implements CompleteListener {
     }
 
     @Override
-    public void onAfterPageAction(GalenPageRunner pageRunner, GalenPageAction action) {
+    public void onAfterPageAction(GalenPageAction action) {
         for (CompleteListener listener : listeners) {
             try {
-                listener.onAfterPageAction(pageRunner, action);
+                listener.onAfterPageAction(action);
             }
             catch (Exception ex) {
                 LOG.trace("Unknown error during after page action", ex);
@@ -172,10 +172,10 @@ public class CombinedListener implements CompleteListener {
     }
 
     @Override
-    public void onBeforeSection(GalenPageRunner pageRunner, PageValidation pageValidation, PageSection pageSection) {
+    public void onBeforeSection(PageValidation pageValidation, PageSection pageSection) {
         for (CompleteListener listener : listeners) {
             try {
-                listener.onBeforeSection(pageRunner, pageValidation, pageSection);
+                listener.onBeforeSection(pageValidation, pageSection);
             }
             catch (Exception ex) {
                 LOG.trace("Unknown error during before section", ex);
@@ -184,10 +184,10 @@ public class CombinedListener implements CompleteListener {
     }
 
     @Override
-    public void onAfterSection(GalenPageRunner pageRunner, PageValidation pageValidation, PageSection pageSection) {
+    public void onAfterSection(PageValidation pageValidation, PageSection pageSection) {
         for (CompleteListener listener : listeners) {
             try {
-                listener.onAfterSection(pageRunner, pageValidation, pageSection);
+                listener.onAfterSection(pageValidation, pageSection);
             }
             catch (Exception ex) {
                 LOG.trace("Unknown error during after section", ex);
