@@ -413,6 +413,9 @@
         this._report("Type text \"" + text + "\" to " + this.name);
         this.getWebElement().sendKeys(text);
     };
+    GalenPages.PageElement.prototype.getText = function () {
+        return this.getWebElement().getText();
+    };
     GalenPages.PageElement.prototype.clear = function () {
         this._report("Clear " + this.name);
         this.getWebElement().clear();
