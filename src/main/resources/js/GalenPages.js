@@ -50,6 +50,14 @@
             this.type = type;
             this.value = value;
         },
+        identifyLocatorType: function (locatorText) {
+            var symbol = locatorText.trim().charAt(0);
+
+            if (symbol === "/") {
+                return "xpath";
+            }
+            return "css";
+        },
         parseLocator: function (locatorText) {
             var index = locatorText.indexOf(":"),
                 typeText,
@@ -72,7 +80,7 @@
                 return new this.Locator(type, value);
             }
             return {
-                type: "css",
+                type: this.identifyLocatorType(locatorText),
                 value: locatorText
             };
         },

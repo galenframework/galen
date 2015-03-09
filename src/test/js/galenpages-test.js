@@ -276,6 +276,21 @@ describe("GalenPages", function (){
             toJson(page.button.locator).should.equal(toJson({type: "xpath", value: "//some-button"}));
         });
 
+        it("Should identify css and xpath locators based on their first character", function () {
+            var page = $.page({
+                css01: ".some label",
+                css02: "#id",
+                xpath01: "//some-button",
+                xpath02: "/some-button"
+            });
+
+            toJson(page.css01.locator).should.equal(toJson({type: "css", value: ".some label"}));
+            toJson(page.css02.locator).should.equal(toJson({type: "css", value: "#id"}));
+
+            toJson(page.xpath01.locator).should.equal(toJson({type: "xpath", value: "//some-button"}));
+            toJson(page.xpath02.locator).should.equal(toJson({type: "xpath", value: "/some-button"}));
+        });
+
         it("should create a page and use functions as-is with fields", function () {
             var page = $.page({
                 label: ".some label",
