@@ -85,7 +85,7 @@ public class SpecValidationImage extends SpecValidation<SpecImage> {
         Iterator<String> it = spec.getImagePaths().iterator();
 
         if (!it.hasNext()) {
-            throw new ValidationErrorException("There are now images defined to compare with").withErrorArea(new ErrorArea(pageElement.getArea(), objectName));
+            throw new ValidationErrorException("There are no images defined to compare with").withErrorArea(new ErrorArea(pageElement.getArea(), objectName));
         }
 
         try {
