@@ -35,6 +35,7 @@ import net.mindengine.galen.api.Galen;
 import net.mindengine.galen.browser.Browser;
 import net.mindengine.galen.browser.SeleniumBrowserFactory;
 import net.mindengine.galen.config.GalenConfig;
+import net.mindengine.galen.javascript.GalenJsExecutor;
 import net.mindengine.galen.parser.SyntaxException;
 import net.mindengine.galen.reports.ConsoleReportingListener;
 import net.mindengine.galen.reports.GalenTestInfo;
@@ -103,6 +104,7 @@ public class GalenMain {
                     version = version.replace("-SNAPSHOT", "");
                 }
                 System.out.println("Version: " + version);
+                System.out.println("JavaScript executor: " + GalenJsExecutor.getVersion());
             }
         }
     }

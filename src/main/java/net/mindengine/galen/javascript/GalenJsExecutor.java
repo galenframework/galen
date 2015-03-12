@@ -32,6 +32,7 @@ import net.mindengine.galen.utils.GalenUtils;
 
 import org.apache.commons.io.IOUtils;
 import org.mozilla.javascript.Context;
+import org.mozilla.javascript.ContextFactory;
 import org.mozilla.javascript.ImporterTopLevel;
 import org.mozilla.javascript.ScriptableObject;
 import org.openqa.selenium.By;
@@ -108,4 +109,7 @@ public class GalenJsExecutor {
     }
 
 
+    public static String getVersion() {
+        return ContextFactory.getGlobal().enterContext().getImplementationVersion();
+    }
 }
