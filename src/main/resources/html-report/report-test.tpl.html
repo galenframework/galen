@@ -29,6 +29,9 @@ var reportData = ##REPORT-DATA##;
                 <span class="report-time">{{formatReportTime time}}</span>
                 <a class="expand-link node-expand-button node-status-{{status}} contains-children-{{hasChildElements nodes}} collapsed" href="#">{{status}}</a>
                 <div class="node-name node-status-{{status}}">{{name}}</div>
+                {{#if stacktrace}}
+                    <div class="stacktrace">{{stacktrace}}</div>
+                {{/if}}
                 {{#if attachments}}
                     <ul class="report-node-attachments">
                         {{#each attachments}}

@@ -38,19 +38,19 @@ assertEvents = function (callback) {
 
 
 
-GalenUtils = {
-    checkLayout: registerFunction("GalenUtils.checkLayout", 4),
-    resizeDriver: registerFunction("GalenUtils.resizeDriver", 2)
+GalenJsApi = {
+    checkLayout: registerFunction("GalenJsApi.checkLayout", 6),
+    resizeDriver: registerFunction("GalenJsApi.resizeDriver", 2)
 };
 
-describe("GalenUtils", function () {
+describe("GalenJsApi", function () {
     describe("#checkLayout", function () {
-        it("should call GalenUtils.checkLayout", function () {
+        it("should call GalenJsApi.checkLayout", function () {
             assertEvents(function () {
                 _.checkLayout("driver", "page.spec", ["mobile", "desktop"], ["nomobile"]);
             }).shouldBe([{
-                name: "GalenUtils.checkLayout",
-                args: ["driver", "page.spec", ["mobile", "desktop"], ["nomobile"]]
+                name: "GalenJsApi.checkLayout",
+                args: ["driver", "page.spec", ["mobile", "desktop"], ["nomobile"], null, null]
             }]);
         });
 
@@ -58,19 +58,35 @@ describe("GalenUtils", function () {
             assertEvents(function () {
                 _.checkLayout("driver", "page.spec", "mobile", "nomobile");
             }).shouldBe([{
-                name: "GalenUtils.checkLayout",
-                args: ["driver", "page.spec", ["mobile"], ["nomobile"]]
+                name: "GalenJsApi.checkLayout",
+                args: ["driver", "page.spec", ["mobile"], ["nomobile"], null, null]
             }]);
         });
 
-    }); 
+        it("should call GalenJsApi.checkLayout when calling checkLayout with single argument", function () {
+            assertEvents(function () {
+                _.checkLayout({
+                    driver: "driver1",
+                    spec: "page.spec",
+                    tags: ["mobile"],
+                    excludedTags: ["nomobile"],
+                    screenshot: "screenshotFile.png"
+                });
+
+            }).shouldBe([{
+                name: "GalenJsApi.checkLayout",
+                args: ["driver1", "page.spec", ["mobile"], ["nomobile"], null, "screenshotFile.png"]
+            }]);
+
+        });
+    });
 
     describe("#resize", function () {
-        it("should call GalenUtils.resize", function () {
+        it("should call GalenJsApi.resize", function () {
             assertEvents(function () {
                 _.resize({d: "driver"}, "1024x768");
             }).shouldBe([{
-                name: "GalenUtils.resizeDriver",
+                name: "GalenJsApi.resizeDriver",
                 args: [{d: "driver"}, "1024x768"]
             }]);
         });

@@ -287,34 +287,6 @@ public class GalenUtils {
         }
     }
 
-    /**
-     * Needed for Javascript based tests
-     * @param driver
-     * @param fileName
-     * @param includedTags
-     * @param excludedTags
-     * @throws IOException 
-     */
-    public static void checkLayout(WebDriver driver, String fileName, String[]includedTags, String[]excludedTags) throws IOException {
-        GalenPageActionCheck action = new GalenPageActionCheck();
-        action.setSpecs(Arrays.asList(fileName));
-        if (includedTags != null) {
-            action.setIncludedTags(Arrays.asList(includedTags));
-        }
-        if (excludedTags != null) {
-            action.setExcludedTags(Arrays.asList(excludedTags));
-        }
-
-        TestSession session = TestSession.current();
-        if (session == null) {
-            throw new UnregisteredTestSession("Cannot check layout as there was no TestSession created");
-        }
-
-        TestReport report = session.getReport();
-        CompleteListener listener = session.getListener();
-        action.execute(report, new SeleniumBrowser(driver), null, listener);
-    }
-    
     public static File takeScreenshot(WebDriver driver) throws IOException {
         File file = ((TakesScreenshot)driver).getScreenshotAs(OutputType.FILE);
 
@@ -377,23 +349,19 @@ public class GalenUtils {
             return new FileInputStream(file);
         }
         else {
-            if (!filePath.startsWith(File.separator)) {
-                filePath = File.separator + filePath;
+            if (!filePath.startsWith("/")) {
+                filePath = "/" + filePath;
             }
             InputStream stream = GalenUtils.class.getResourceAsStream(filePath);
             if (stream != null) {
                 return stream;
             }
             else {
-                try {
-                    String path= GalenUtils.class.getResource(filePath).toURI().getPath();
-                    return GalenUtils.class.getResourceAsStream(path);
-                } catch (URISyntaxException e) {
-                    LOG.error("Could not find path: " + filePath, e);
-                    throw new FileNotFoundException(filePath);
-                }
+                String windowsFilePath = filePath.replace("\\", "/");
+                return GalenUtils.class.getResourceAsStream(windowsFilePath);
             }
         }
+
     }
 
     public static String calculateFileId(String fullPath) throws NoSuchAlgorithmException, FileNotFoundException {
@@ -418,5 +386,22 @@ public class GalenUtils {
     public static Pattern convertObjectNameRegex(String regex) {
         String jRegex = regex.replace("#", "[0-9]+").replace("*", ".*");
         return Pattern.compile(jRegex);
+    }
+
+
+    public static String toCommaSeparated(List<String> list) {
+        if (list != null) {
+            StringBuffer buff = new StringBuffer();
+            boolean comma = false;
+            for (String item : list) {
+                if (comma) {
+                    buff.append(',');
+                }
+                comma = true;
+                buff.append(item);
+            }
+            return buff.toString();
+        }
+        return "";
     }
 }

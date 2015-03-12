@@ -82,6 +82,11 @@ public class MockedPage implements Page {
         return null;
     }
 
+
+    @Override
+    public void setScreenshot(File screenshotFile) {
+    }
+
     @Override
     public BufferedImage getScreenshotImage() {
         return screenshotImage;

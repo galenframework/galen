@@ -32,6 +32,8 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
+import static net.mindengine.galen.utils.GalenUtils.toCommaSeparated;
+
 public class GalenPageActionCheck extends GalenPageAction {
 
     private List<String> specs;
@@ -136,20 +138,5 @@ public class GalenPageActionCheck extends GalenPageAction {
     }
 
 
-    private static String toCommaSeparated(List<String> list) {
-        if (list != null) {
-            StringBuffer buff = new StringBuffer();
-            boolean comma = false;
-            for (String item : list) {
-                if (comma) {
-                    buff.append(',');
-                }
-                comma = true;
-                buff.append(item);
-            }
-            return buff.toString();
-        }
-        return "";
-    }
-   
+
 }

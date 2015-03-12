@@ -235,6 +235,11 @@ public class SeleniumPage implements Page {
     }
 
     @Override
+    public void setScreenshot(File screenshotFile) {
+        this.cachedScreenshotFile = screenshotFile;
+    }
+
+    @Override
     public BufferedImage getScreenshotImage() {
         if (this.cachedScreenshotImage == null) {
             try {

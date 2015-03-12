@@ -32,8 +32,23 @@ public interface Page {
 
     Page createObjectContextPage(Locator mainObjectLocator);
 
+    /**
+     * Saves a screenshot file for the specific page, so later it will be returned in createScreenshot or getScreenshotImage methods
+     * @param screenshotFile
+     */
+    void setScreenshot(File screenshotFile);
+
+
+    /**
+     * Takes a screenshot and reads it inot BufferedImage
+     * @return
+     */
     BufferedImage getScreenshotImage();
 
+    /**
+     * Creates a new screenshot and returns it if there was no screenshot provided via setScreenshot method.
+     * @return
+     */
     File createScreenshot();
 
     String getTitle();

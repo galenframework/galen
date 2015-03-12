@@ -15,7 +15,7 @@
  * ******************************************************************************/
 
 
-/*global GalenUtils, TestSession, System, Galen*/
+/*global GalenJsApi, GalenUtils, TestSession, System, Galen*/
 /*jslint nomen: true*/
 
 (function (exports) {
@@ -56,6 +56,20 @@
 
 
     function checkLayout(driver, pageSpecFile, includedTags, excludedTags) {
+        var settings,
+            screenshotFile = null,
+            properties = null;
+
+        if (arguments.length === 1) {
+            settings = driver;
+
+            driver = settings.driver;
+            pageSpecFile = settings.spec;
+            includedTags = settings.tags;
+            excludedTags = settings.excludedTags;
+            screenshotFile = settings.screenshot;
+            properties = settings.properties;
+        }
 
         if (includedTags === undefined) {
             includedTags = null;
@@ -63,6 +77,14 @@
         if (excludedTags === undefined) {
             excludedTags = null;
         }
+        if (properties === undefined) {
+            properties = null;
+        }
+        if (screenshotFile === undefined) {
+            screenshotFile = null;
+        }
+
+
         if (!Array.isArray(includedTags) && includedTags !== null) {
             includedTags = [includedTags];
         }
@@ -70,7 +92,7 @@
             excludedTags = [excludedTags];
         }
 
-        GalenUtils.checkLayout(driver, pageSpecFile, includedTags, excludedTags);
+        GalenJsApi.checkLayout(driver, pageSpecFile, includedTags, excludedTags, properties, screenshotFile);
     }
 
 
@@ -107,7 +129,7 @@
     }
 
     function resize(driver, size) {
-        GalenUtils.resizeDriver(driver, size);
+        GalenJsApi.resizeDriver(driver, size);
     }
 
 

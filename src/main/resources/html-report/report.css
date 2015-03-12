@@ -102,6 +102,15 @@ a.node-expand-button.contains-children-true.collapsed:before {
 .node-name.node-status-error {
     color: #DB4B4B;
 }
+
+.stacktrace {
+    white-space: pre;
+    color: #8C1919;
+    font-family: Courier New;
+    font-size: 0.8em;
+}
+
+
 .node-expand-button.node-status-warn {
     background: #D66C0F;
     color: #fff;

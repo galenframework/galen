@@ -67,6 +67,7 @@ public class GalenJsExecutor {
                 GalenTest.class,
                 TestSession.class,
                 GalenUtils.class,
+                GalenJsApi.class,
                 TestEvent.class,
                 TestSuiteEvent.class,
                 TestFilterEvent.class,

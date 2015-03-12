@@ -67,10 +67,12 @@ public class TestRunnable implements Runnable {
         try {
             test.execute(report, listener);
         }
-        catch(Throwable ex) {
+        catch(Exception ex) {
             info.setException(ex);
             report.error(ex);
-            LOG.trace("Reporting test exception", ex);
+            if (listener != null) {
+                listener.onGlobalError(ex);
+            }
         }
         info.setEndedAt(new Date());
 

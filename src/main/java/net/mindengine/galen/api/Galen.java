@@ -43,10 +43,17 @@ import static java.util.Arrays.asList;
 public class Galen {
 
     private final static Logger LOG = LoggerFactory.getLogger(Galen.class);
+    private final static File EMPTY_SCREENSHOT_FILE = null;
 
     public static LayoutReport checkLayout(Browser browser, List<String> specPaths,
                                            List<String> includedTags, List<String> excludedTags,
                                            Properties properties, ValidationListener validationListener) throws IOException {
+        return checkLayout(browser, specPaths, includedTags, excludedTags, properties, validationListener, null);
+    }
+
+    public static LayoutReport checkLayout(Browser browser, List<String> specPaths,
+                                           List<String> includedTags, List<String> excludedTags,
+                                           Properties properties, ValidationListener validationListener, File screenshotFile) throws IOException {
         PageSpecReader reader = new PageSpecReader(properties, browser.getPage());
 
         List<PageSpec> specs = new LinkedList<PageSpec>();
@@ -55,14 +62,28 @@ public class Galen {
             specs.add(reader.read(specPath));
         }
 
-        return checkLayout(browser, specs, includedTags, excludedTags, validationListener);
+        return checkLayout(browser, specs, includedTags, excludedTags, validationListener, screenshotFile);
+    }
+
+    public static LayoutReport checkLayout(Browser browser, List<PageSpec> specs,
+                                           List<String> includedTags, List<String> excludedTags,
+                                           ValidationListener validationListener) throws IOException {
+        return checkLayout(browser, specs, includedTags, excludedTags, validationListener, EMPTY_SCREENSHOT_FILE);
     }
 
     public static LayoutReport checkLayout(Browser browser, List<PageSpec> specs,
                                    List<String> includedTags, List<String> excludedTags,
-                                   ValidationListener validationListener) throws IOException {
+                                   ValidationListener validationListener, File screenshotFile) throws IOException {
 
         Page page = browser.getPage();
+        page.setScreenshot(screenshotFile);
+
+        return checkLayoutForPage(page, browser, specs, includedTags, excludedTags, validationListener);
+    }
+
+    private static LayoutReport checkLayoutForPage(Page page, Browser browser, List<PageSpec> specs,
+                                           List<String> includedTags, List<String> excludedTags,
+                                           ValidationListener validationListener) throws IOException {
 
         CombinedValidationListener listener = new CombinedValidationListener();
         listener.add(validationListener);
@@ -142,6 +163,12 @@ public class Galen {
                                            List<String> includedTags, List<String> excludedTags,
                                            Properties properties, ValidationListener validationListener) throws IOException {
         return checkLayout(new SeleniumBrowser(driver), asList(specPath), includedTags, excludedTags, properties, validationListener);
+    }
+
+    public static LayoutReport checkLayout(WebDriver driver, String specPath,
+                                           List<String> includedTags, List<String> excludedTags,
+                                           Properties properties, ValidationListener validationListener, File screenshotFile) throws IOException {
+        return checkLayout(new SeleniumBrowser(driver), asList(specPath), includedTags, excludedTags, properties, validationListener, screenshotFile);
     }
 
     public static void dumpPage(WebDriver driver, String pageName, String specPath, String pageDumpPath) throws IOException {

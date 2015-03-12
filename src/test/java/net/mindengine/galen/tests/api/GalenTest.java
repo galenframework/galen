@@ -102,7 +102,9 @@ public class GalenTest {
         assertFileExists(pageDumpPath + "/objects/menu-item-3.png");
         assertFileDoesNotExist(pageDumpPath + "/objects/big-container.png");
     }
-    
+
+
+
     private void assertJSONContent(String pathForRealContent, String pathForExpectedContent) throws IOException {
         Assert.assertEquals(String.format("Content of \"%s\" should be the same as in \"%s\"", pathForRealContent, pathForExpectedContent),
                 new JsonParser().parse(readFileToString(new File(pathForRealContent)).replaceAll("\\s+", "")),
