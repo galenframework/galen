@@ -19,7 +19,6 @@ import static java.util.Arrays.asList;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 
-import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 import java.util.LinkedList;
@@ -113,6 +112,20 @@ public class GalenMainTest {
                 "Test #2 was invoked",
                 "After test: Test number 2",
                 "After test suite"));
+    }
+
+
+    @Test
+    public void shouldRun_javascriptTest_regardlessOfItsSuffix() throws Exception {
+        JsTestRegistry.get().clear();
+
+        new GalenMain().execute(new GalenArguments()
+                        .withAction("test")
+                        .withPaths(asList(getClass().getResource("/js-tests/test-without-galen-suffix.js").getFile()))
+        );
+
+        assertThat(JsTestRegistry.get().getEvents(), contains(
+                "Test #1 was invoked"));
     }
 
     @Test 

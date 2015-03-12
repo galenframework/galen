@@ -238,7 +238,7 @@ public class GalenMain {
                     String name = file.getName().toLowerCase();
                     if (name.endsWith(".test")) {
                         basicTestFiles.add(file);
-                    } else if (name.endsWith(".test.js")) {
+                    } else if (name.endsWith(".js")) {
                         jsTestFiles.add(file);
                     }
                 }
