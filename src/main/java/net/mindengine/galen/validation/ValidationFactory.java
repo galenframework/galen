@@ -52,6 +52,8 @@ public class ValidationFactory {
         validations.put(SpecText.class, new SpecValidationText());
         validations.put(SpecAbove.class, new SpecValidationDirectionPosition(SpecValidationDirectionPosition.Direction.ABOVE));
         validations.put(SpecBelow.class, new SpecValidationDirectionPosition(SpecValidationDirectionPosition.Direction.BELOW));
+        validations.put(SpecLeftOf.class, new SpecValidationDirectionPosition(SpecValidationDirectionPosition.Direction.LEFT_OF));
+        validations.put(SpecRightOf.class, new SpecValidationDirectionPosition(SpecValidationDirectionPosition.Direction.RIGHT_OF));
         validations.put(SpecCentered.class, new SpecValidationCentered());
         validations.put(SpecOn.class, new SpecValidationOn());
         validations.put(SpecComponent.class, new SpecValidationComponent());

@@ -389,7 +389,32 @@ public class ValidationTest {
               put("object", element(10, 42, 10, 10));
               put("button",  element(10, 10, 10, 10));
           }})),
-          
+
+
+            // Left of
+
+            row(specLeftOf("button", Range.exact(20)), page(new HashMap<String, PageElement>(){{
+                put("object", element(10, 10, 10, 10));
+                put("button",  element(40, 10, 10, 10));
+            }})),
+
+            row(specLeftOf("button", Range.between(20, 25)), page(new HashMap<String, PageElement>(){{
+                put("object", element(10, 10, 10, 10));
+                put("button",  element(43, 10, 10, 10));
+            }})),
+
+            // Right of
+
+            row(specRightOf("button", Range.exact(20)), page(new HashMap<String, PageElement>(){{
+                put("object", element(40, 10, 10, 10));
+                put("button",  element(10, 10, 10, 10));
+            }})),
+
+            row(specRightOf("button", Range.between(20, 25)), page(new HashMap<String, PageElement>(){{
+                put("object", element(43, 10, 10, 10));
+                put("button",  element(10, 10, 10, 10));
+            }})),
+
           
           // Centered Inside 
           
@@ -1185,9 +1210,79 @@ public class ValidationTest {
                       put("object", element(10, 60, 10, 10));
                       put("button", element(10, 40, 10, 10));
               }})),
-              
-      
-          // Centered
+
+
+            // Left of
+
+            row(validationResult(NO_AREA, messages("\"object\" is not visible on page")),
+                    specLeftOf("button", exact(20)), page(new HashMap<String, PageElement>(){{
+                        put("object", invisibleElement(10, 40, 10, 10));
+                        put("button", element(10, 60, 10, 10));
+                    }})),
+            row(validationResult(NO_AREA, messages("\"object\" is absent on page")),
+                    specLeftOf("button", exact(20)), page(new HashMap<String, PageElement>(){{
+                        put("object", absentElement(10, 40, 10, 10));
+                        put("button", element(10, 60, 10, 10));
+                    }})),
+            row(validationResult(NO_AREA, messages("\"button\" is not visible on page")),
+                    specLeftOf("button", exact(20)), page(new HashMap<String, PageElement>(){{
+                        put("object", element(10, 40, 10, 10));
+                        put("button", invisibleElement(10, 60, 10, 10));
+                    }})),
+            row(validationResult(NO_AREA, messages("\"button\" is absent on page")),
+                    specLeftOf("button", exact(20)), page(new HashMap<String, PageElement>(){{
+                        put("object", element(10, 40, 10, 10));
+                        put("button", absentElement(10, 60, 10, 10));
+                    }})),
+            row(validationResult(areas(new ValidationObject(new Rect(10, 60, 10, 10), "object"), new ValidationObject(new Rect(10, 40, 10, 10), "button")),
+                            messages("\"object\" is 40px left of \"button\" instead of 20px")),
+                    specLeftOf("button", exact(20)), page(new HashMap<String, PageElement>(){{
+                        put("object", element(10, 10, 10, 10));
+                        put("button", element(60, 10, 10, 10));
+                    }})),
+            row(validationResult(areas(new ValidationObject(new Rect(10, 60, 10, 10), "object"), new ValidationObject(new Rect(10, 40, 10, 10), "button")),
+                            messages("\"object\" is 40px left of \"button\" which is not in range of 20 to 30px")),
+                    specLeftOf("button", between(20, 30)), page(new HashMap<String, PageElement>(){{
+                        put("object", element(10, 10, 10, 10));
+                        put("button", element(60, 10, 10, 10));
+                    }})),
+
+            // Left of
+
+            row(validationResult(NO_AREA, messages("\"object\" is not visible on page")),
+                    specRightOf("button", exact(20)), page(new HashMap<String, PageElement>(){{
+                        put("object", invisibleElement(10, 40, 10, 10));
+                        put("button", element(10, 60, 10, 10));
+                    }})),
+            row(validationResult(NO_AREA, messages("\"object\" is absent on page")),
+                    specRightOf("button", exact(20)), page(new HashMap<String, PageElement>(){{
+                        put("object", absentElement(10, 40, 10, 10));
+                        put("button", element(10, 60, 10, 10));
+                    }})),
+            row(validationResult(NO_AREA, messages("\"button\" is not visible on page")),
+                    specRightOf("button", exact(20)), page(new HashMap<String, PageElement>(){{
+                        put("object", element(10, 40, 10, 10));
+                        put("button", invisibleElement(10, 60, 10, 10));
+                    }})),
+            row(validationResult(NO_AREA, messages("\"button\" is absent on page")),
+                    specRightOf("button", exact(20)), page(new HashMap<String, PageElement>(){{
+                        put("object", element(10, 40, 10, 10));
+                        put("button", absentElement(10, 60, 10, 10));
+                    }})),
+            row(validationResult(areas(new ValidationObject(new Rect(10, 60, 10, 10), "object"), new ValidationObject(new Rect(10, 40, 10, 10), "button")),
+                            messages("\"object\" is 40px right of \"button\" instead of 20px")),
+                    specRightOf("button", exact(20)), page(new HashMap<String, PageElement>(){{
+                        put("object", element(60, 10, 10, 10));
+                        put("button", element(10, 10, 10, 10));
+                    }})),
+            row(validationResult(areas(new ValidationObject(new Rect(10, 60, 10, 10), "object"), new ValidationObject(new Rect(10, 40, 10, 10), "button")),
+                            messages("\"object\" is 40px right of \"button\" which is not in range of 20 to 30px")),
+                    specRightOf("button", between(20, 30)), page(new HashMap<String, PageElement>(){{
+                        put("object", element(60, 10, 10, 10));
+                        put("button", element(10, 10, 10, 10));
+                    }})),
+
+            // Centered
       
           row(validationResult(NO_AREA, messages("\"object\" is not visible on page")),
                   specCenteredInside("container", SpecCentered.Alignment.ALL), page(new HashMap<String, PageElement>(){{
@@ -1500,6 +1595,14 @@ public class ValidationTest {
     
     private SpecCentered specCenteredInside(String object, SpecCentered.Alignment alignment, int errorRate) {
         return new SpecCentered(object, alignment, SpecCentered.Location.INSIDE).withErrorRate(errorRate);
+    }
+
+    private SpecLeftOf specLeftOf(String object, Range range) {
+        return new SpecLeftOf(object, range);
+    }
+
+    private SpecRightOf specRightOf(String object, Range range) {
+        return new SpecRightOf(object, range);
     }
 
     private SpecColorScheme specColorScheme(ColorRange...colorRanges) {

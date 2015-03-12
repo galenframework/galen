@@ -17,6 +17,7 @@ package net.mindengine.galen.validation.specs;
 
 import net.mindengine.galen.page.PageElement;
 import net.mindengine.galen.page.Rect;
+import net.mindengine.galen.parser.SyntaxException;
 import net.mindengine.galen.specs.Range;
 import net.mindengine.galen.specs.SpecDirectionPosition;
 import net.mindengine.galen.validation.*;
@@ -28,16 +29,18 @@ import static java.util.Arrays.asList;
 public class SpecValidationDirectionPosition extends SpecValidation<SpecDirectionPosition> {
 	
 	public enum Direction {
-		ABOVE, BELOW;
-		
-		public String toString() {
-			switch(this) {
-			case ABOVE:
-				return "above";
-			case BELOW:
-				return "below";
-			}
-			return null;
+		ABOVE("above"),
+        BELOW("below"),
+        LEFT_OF("left of"),
+        RIGHT_OF("right of");
+        private final String reportingName;
+
+        Direction(String reportingName) {
+            this.reportingName = reportingName;
+        }
+
+        public String toString() {
+            return this.reportingName;
 		}
 	}
 
@@ -90,9 +93,18 @@ public class SpecValidationDirectionPosition extends SpecValidation<SpecDirectio
 		if (direction == Direction.ABOVE) {
 			return secondArea.getTop() - mainArea.getTop() - mainArea.getHeight();
 		}
-		else {
+        else if (direction == Direction.BELOW) {
 			return mainArea.getTop() - secondArea.getTop() - secondArea.getHeight();
 		}
+        else if (direction == Direction.LEFT_OF) {
+            return secondArea.getLeft() - mainArea.getLeft() - mainArea.getWidth();
+        }
+        else if (direction == Direction.RIGHT_OF) {
+            return mainArea.getLeft() - secondArea.getLeft() - secondArea.getWidth();
+        }
+        else {
+            throw new SyntaxException("Unknown direction: " + direction.name());
+        }
 	}
 
 }

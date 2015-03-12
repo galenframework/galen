@@ -102,7 +102,7 @@ public class SpecReader {
             }
         });
 
-        putSpec("css\\s+.*", new SpecProcessor() {
+        putSpec("css.*", new SpecProcessor() {
             @Override
             public Spec processSpec(String specName, String paramsText, String contextPath) {
                 String arguments = specName.substring("css".length()).trim();
@@ -175,6 +175,33 @@ public class SpecReader {
 				else return new SpecBelow(objectName, range);
 			}
         });
+
+        putSpec("(left\\s+of|right\\s+of)", new SpecProcessor() {
+            @Override
+            public Spec processSpec(String specName, String paramsText, String contextPath) throws IOException {
+
+                String direction = Expectations.word().read(new StringCharReader(specName));
+
+                StringCharReader reader = new StringCharReader(paramsText.trim());
+                String objectName = new ExpectWord().read(reader);
+
+                Range range;
+                if (reader.hasMore()) {
+                    range = Expectations.range().read(reader);
+                }
+                else {
+                    range = Range.greaterThan(-1.0);
+                }
+
+				if (direction.equals("left")) {
+					return new SpecLeftOf(objectName, range);
+				} else {
+                    return new SpecRightOf(objectName, range);
+                }
+
+            }
+        });
+
         
         putSpec("aligned\\s+.*", new SpecObjectAndErrorRateProcessor(new SpecObjectAndErrorRateInit() {
             
@@ -487,7 +514,7 @@ public class SpecReader {
             }
         }
         
-        Spec spec = readSpecWithParams(statement, paramsText, contextPath);
+        Spec spec = readSpecWithParams(statement.replace("\t", " ").trim(), paramsText, contextPath);
         if (spec != null) {
             spec.setOriginalText(specText);
             spec.setProperties(properties);

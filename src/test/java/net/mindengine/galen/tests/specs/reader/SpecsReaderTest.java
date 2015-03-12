@@ -586,7 +586,65 @@ public class SpecsReaderTest {
     	assertThat(spec.getObject(), is("object"));
     	assertThat(spec.getRange(), is(Range.between(10, 20)));
     }
-    
+
+
+    @Test
+    public void shouldReadSpec_left_of_object_10px() throws IOException {
+        SpecLeftOf specLeftOf = (SpecLeftOf)readSpec("left of: object 10px");
+        assertThat(specLeftOf.getObject(), is("object"));
+        assertThat(specLeftOf.getRange(), is(Range.exact(10)));
+    }
+
+    @Test
+    public void shouldReadSpec_left_of_object_10_to_20px() throws IOException {
+        SpecLeftOf specLeftOf = (SpecLeftOf)readSpec("left of: object 10 to 20px");
+        assertThat(specLeftOf.getObject(), is("object"));
+        assertThat(specLeftOf.getRange(), is(Range.between(10, 20)));
+    }
+
+    @Test
+    public void shouldReadSpec_left___of_object_10px() throws IOException {
+        SpecLeftOf specLeftOf = (SpecLeftOf)readSpec("left   \tof  : object 10px");
+        assertThat(specLeftOf.getObject(), is("object"));
+        assertThat(specLeftOf.getRange(), is(Range.exact(10)));
+    }
+
+    @Test
+    public void shouldReadSpec_left_of_object() throws IOException {
+        SpecLeftOf specLeftOf = (SpecLeftOf)readSpec("left of: object");
+        assertThat(specLeftOf.getObject(), is("object"));
+        assertThat(specLeftOf.getRange(), is(Range.greaterThan(-1.0)));
+    }
+
+
+    @Test
+    public void shouldReadSpec_right_of_object_10px() throws IOException {
+        SpecRightOf specRightOf = (SpecRightOf)readSpec("right of: object 10px");
+        assertThat(specRightOf.getObject(), is("object"));
+        assertThat(specRightOf.getRange(), is(Range.exact(10)));
+    }
+
+    @Test
+    public void shouldReadSpec_right_of_object_10_to_20px() throws IOException {
+        SpecRightOf specRightOf = (SpecRightOf)readSpec("right of: object 10 to 20px");
+        assertThat(specRightOf.getObject(), is("object"));
+        assertThat(specRightOf.getRange(), is(Range.between(10, 20)));
+    }
+
+    @Test
+    public void shouldReadSpec_right___of_object_10px() throws IOException {
+        SpecRightOf specRightOf = (SpecRightOf)readSpec("right   \tof  : object 10px");
+        assertThat(specRightOf.getObject(), is("object"));
+        assertThat(specRightOf.getRange(), is(Range.exact(10)));
+    }
+
+    @Test
+    public void shouldReadSpec_right_of_object() throws IOException {
+        SpecRightOf specRightOf = (SpecRightOf)readSpec("right of: object");
+        assertThat(specRightOf.getObject(), is("object"));
+        assertThat(specRightOf.getRange(), is(Range.greaterThan(-1.0)));
+    }
+
     @Test 
     public void shouldReadSpec_centered_inside_object()  throws IOException {
     	SpecCentered spec = (SpecCentered)readSpec("centered inside: object");
