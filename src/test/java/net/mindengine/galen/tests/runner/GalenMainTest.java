@@ -43,16 +43,6 @@ public class GalenMainTest {
 
 
     @Test
-    public void temp() throws  Exception {
-        new GalenMain().execute(new GalenArguments()
-                .withAction("test")
-                .withPaths(asList("/Users/ishubin/workspace/my/galen-sample-tests/tests"))
-                .withFilter("Login*mobile*")
-        );
-
-    }
-
-    @Test
     public void shouldRun_javascriptTest_andGenerateReports() throws Exception {
         File reportsDir = Files.createTempDir();
         String htmlReportPath = reportsDir.getAbsolutePath();
