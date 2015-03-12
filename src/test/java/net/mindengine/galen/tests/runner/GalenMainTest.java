@@ -27,18 +27,26 @@ import java.util.List;
 import net.mindengine.galen.GalenMain;
 import net.mindengine.galen.components.DummyCompleteListener;
 import net.mindengine.galen.components.JsTestRegistry;
+import net.mindengine.galen.config.GalenConfig;
 import net.mindengine.galen.runner.CompleteListener;
 import net.mindengine.galen.runner.GalenArguments;
 import net.mindengine.galen.tests.GalenTest;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.testng.annotations.AfterMethod;
 import org.testng.annotations.Test;
 
 import com.google.common.io.Files;
 
 @Test(singleThreaded = true)
 public class GalenMainTest {
+
+
+    @AfterMethod
+    public void resetConfigToDefaults() throws IOException {
+        GalenConfig.getConfig().reset();
+    }
 
 
     @Test
@@ -127,6 +135,25 @@ public class GalenMainTest {
         assertThat(JsTestRegistry.get().getEvents(), contains(
                 "Test #1 was invoked"));
     }
+
+    @Test
+    public void shouldFind_javascriptTests_basedOnConfigProperty() throws Exception {
+        JsTestRegistry.get().clear();
+
+        GalenConfig.getConfig().setProperty(GalenConfig.TEST_JS_SUFFIX, ".blahblah.js");
+
+        new GalenMain().execute(new GalenArguments()
+                        .withAction("test")
+                        .withPaths(asList(getClass().getResource("/js-tests/tests-with-custom-suffix").getFile()))
+        );
+
+        assertThat(JsTestRegistry.get().getEvents(), containsInAnyOrder(
+                "Test #1 was invoked",
+                "Test #2 was invoked"
+        ));
+
+    }
+
 
     @Test 
     public void shouldRunJavascriptTests_andFilterThem() throws Exception {

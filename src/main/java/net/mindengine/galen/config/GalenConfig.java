@@ -33,16 +33,19 @@ public class GalenConfig {
 
     private final static Logger LOG = LoggerFactory.getLogger(GalenConfig.class);
     
-    private final static GalenConfig instance = new GalenConfig();
+    public final static GalenConfig instance = new GalenConfig();
     public static final String SCREENSHOT_AUTORESIZE = "galen.screenshot.autoresize";
     public static final String SCREENSHOT_FULLPAGE = "galen.browser.screenshots.fullPage";
     // smart waiting for scroll position, but with a timeout, set to zero to turn off smart wait
     public static final String SCREENSHOT_FULLPAGE_SCROLLTIMEOUT= "galen.browser.screenshots.fullPage.scrollTimeout";
     // hard wait during scroll
     public static final String SCREENSHOT_FULLPAGE_SCROLLWAIT = "galen.browser.screenshots.fullPage.scrollWait";
-    private static final String SPEC_IMAGE_TOLERANCE = "galen.spec.image.tolerance";
-    private static final String SPEC_IMAGE_ERROR_RATE = "galen.spec.image.error";
-    private static final String SPEC_GLOBAL_VISIBILITY_CHECK = "galen.spec.global.visibility";
+    public static final String SPEC_IMAGE_TOLERANCE = "galen.spec.image.tolerance";
+    public static final String SPEC_IMAGE_ERROR_RATE = "galen.spec.image.error";
+    public static final String SPEC_GLOBAL_VISIBILITY_CHECK = "galen.spec.global.visibility";
+
+    public static final String TEST_JS_SUFFIX = "galen.test.js.file.suffix";
+    public static final String TEST_SUFFIX = "galen.test.suffix";
     private int rangeApproximation;
     private List<String> reportingListeners;
     private String defaultBrowser;
@@ -181,6 +184,10 @@ public class GalenConfig {
         else return false;
     }
 
+    public String getTestJsSuffix() {
+        return properties.getProperty(TEST_JS_SUFFIX, ".test.js");
+    }
+
     public boolean shouldAutoresizeScreenshots() {
         return getBooleanProperty(GalenConfig.SCREENSHOT_AUTORESIZE, true);
     }
@@ -196,5 +203,13 @@ public class GalenConfig {
     public SpecImage.ErrorRate getImageSpecDefaultErrorRate() {
         String errorRateText = readProperty(SPEC_IMAGE_ERROR_RATE, "0px");
         return SpecImage.ErrorRate.fromString(errorRateText);
+    }
+
+    public void setProperty(String name, String value) {
+        properties.setProperty(name, value);
+    }
+
+    public String getTestSuffix() {
+        return properties.getProperty(TEST_SUFFIX, ".test");
     }
 }

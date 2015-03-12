@@ -236,7 +236,7 @@ public class GalenMain {
                     searchForTests(file, arguments.getRecursive(), basicTestFiles, jsTestFiles);
                 } else if (file.isFile()) {
                     String name = file.getName().toLowerCase();
-                    if (name.endsWith(".test")) {
+                    if (name.endsWith(GalenConfig.getConfig().getTestSuffix())) {
                         basicTestFiles.add(file);
                     } else if (name.endsWith(".js")) {
                         jsTestFiles.add(file);
@@ -415,9 +415,9 @@ public class GalenMain {
 
         String fileName = file.getName().toLowerCase();
         if (file.isFile()) {
-            if (fileName.endsWith(".test")) {
+            if (fileName.endsWith(GalenConfig.getConfig().getTestSuffix())) {
                 files.add(file);
-            } else if (fileName.endsWith(".test.js")) {
+            } else if (fileName.endsWith(GalenConfig.getConfig().getTestJsSuffix())) {
                 jsFiles.add(file);
             }
         } else if (file.isDirectory()) {
