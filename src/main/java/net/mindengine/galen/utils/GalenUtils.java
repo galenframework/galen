@@ -25,7 +25,6 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.URISyntaxException;
 import java.net.URL;
 import java.security.DigestInputStream;
 import java.security.MessageDigest;
@@ -35,14 +34,10 @@ import java.util.regex.Pattern;
 
 import javax.imageio.ImageIO;
 
-import net.mindengine.galen.api.UnregisteredTestSession;
 import net.mindengine.galen.browser.SeleniumBrowser;
 import net.mindengine.galen.browser.SeleniumBrowserFactory;
 import net.mindengine.galen.browser.SeleniumGridBrowserFactory;
 import net.mindengine.galen.config.GalenConfig;
-import net.mindengine.galen.reports.TestReport;
-import net.mindengine.galen.runner.CompleteListener;
-import net.mindengine.galen.suite.actions.GalenPageActionCheck;
 import net.mindengine.galen.tests.GalenProperties;
 import net.mindengine.galen.tests.TestSession;
 import net.mindengine.rainbow4j.Rainbow4J;
@@ -107,9 +102,7 @@ public class GalenUtils {
         int capturedWidth = image.getWidth();
         int capturedHeight = image.getHeight();
 
-        // TODO Chop of the header and footer for Safari on iOS.
-
-        long longScrollHeight = (Long)((JavascriptExecutor)driver).executeScript("return Math.max(" + 
+        long longScrollHeight = (Long)((JavascriptExecutor)driver).executeScript("return Math.max(" +
                 "document.body.scrollHeight, document.documentElement.scrollHeight," +
                 "document.body.offsetHeight, document.documentElement.offsetHeight," +
                 "document.body.clientHeight, document.documentElement.clientHeight);"
