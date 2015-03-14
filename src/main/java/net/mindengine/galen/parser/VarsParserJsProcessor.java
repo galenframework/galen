@@ -21,10 +21,7 @@ import net.mindengine.galen.specs.reader.page.PageSpecReader;
 import net.mindengine.galen.suite.reader.Context;
 
 import org.apache.commons.io.IOUtils;
-import org.mozilla.javascript.BaseFunction;
-import org.mozilla.javascript.ImporterTopLevel;
-import org.mozilla.javascript.Scriptable;
-import org.mozilla.javascript.ScriptableObject;
+import org.mozilla.javascript.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -73,24 +70,39 @@ public class VarsParserJsProcessor {
             scope.defineProperty("find", new BaseFunction() {
                 @Override
                 public Object call(org.mozilla.javascript.Context cx, Scriptable scope, Scriptable thisObj, Object[] args) {
+                    String pattern = null;
+
                     if (args.length == 0) {
-                        throw new IllegalArgumentException("Should take string argument");
+                        throw new IllegalArgumentException("Should take one string argument, got none");
                     } else if (args[0] == null) {
                         throw new IllegalArgumentException("Pattern should not be null");
+                    } else if (args[0] instanceof NativeJavaObject) {
+                        NativeJavaObject njo = (NativeJavaObject)args[0];
+                        pattern = (String) njo.unwrap();
+                    } else {
+                        pattern = (String)args[0];
                     }
-                    return jsFunctions.find(args[0].toString());
+                    return jsFunctions.find(pattern);
                 }
             }, ScriptableObject.DONTENUM);
 
             scope.defineProperty("findAll", new BaseFunction() {
                 @Override
                 public Object call(org.mozilla.javascript.Context cx, Scriptable scope, Scriptable thisObj, Object[] args) {
+                    String pattern = null;
+
                     if (args.length == 0) {
                         throw new IllegalArgumentException("Should take one string argument, got none");
                     } else if (args[0] == null) {
                         throw new IllegalArgumentException("Pattern should not be null");
+                    } else if (args[0] instanceof NativeJavaObject) {
+                        NativeJavaObject njo = (NativeJavaObject)args[0];
+                        pattern = (String) njo.unwrap();
+                    } else {
+                        pattern = (String)args[0];
                     }
-                    return jsFunctions.findAll(args[0].toString());
+
+                    return jsFunctions.findAll(pattern);
                 }
             }, ScriptableObject.DONTENUM);
 

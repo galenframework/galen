@@ -13,14 +13,20 @@ function _readDataFromProperties(properties) {
     "use strict";
     var data = {},
         it,
-        entry;
+        entry,
+        value;
 
     if (properties !== null) {
         it = properties.entrySet().iterator();
 
         while (it.hasNext()) {
             entry = it.next();
-            data[entry.getKey()] = entry.getValue();
+            if (entry.getValue() != null) {
+                value = entry.getValue().toString();
+            } else {
+                value = null;
+            }
+            data[entry.getKey()] = value;
         }
     }
 
