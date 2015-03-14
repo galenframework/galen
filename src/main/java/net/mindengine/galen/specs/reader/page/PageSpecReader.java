@@ -170,7 +170,17 @@ public class PageSpecReader implements VarsParserJsFunctions {
             }
         }
 
-        return list.toArray(new JsPageElement[0]);
+        return orderByNames(list).toArray(new JsPageElement[0]);
+    }
+
+    private ArrayList<JsPageElement> orderByNames(ArrayList<JsPageElement> list) {
+        Collections.sort(list, new Comparator<JsPageElement>() {
+            @Override
+            public int compare(JsPageElement jsPageElement, JsPageElement t1) {
+                return jsPageElement.name.compareTo(t1.name);
+            }
+        });
+        return list;
     }
 
     private List<JsPageElement> findJsPageElements(Pattern pattern) {
