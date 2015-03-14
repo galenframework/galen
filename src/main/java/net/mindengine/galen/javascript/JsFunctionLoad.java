@@ -16,6 +16,7 @@
 package net.mindengine.galen.javascript;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.HashSet;
@@ -93,6 +94,9 @@ public class JsFunctionLoad extends BaseFunction {
                 }
 
                 InputStream is = GalenUtils.findFileOrResourceAsStream(fullPath);
+                if (is == null) {
+                    throw new FileNotFoundException(fullPath);
+                }
 
 
                 cx.evaluateReader(scope, new InputStreamReader(is), file.getAbsolutePath(), 1, null);

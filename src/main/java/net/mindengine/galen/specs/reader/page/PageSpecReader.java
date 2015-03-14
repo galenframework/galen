@@ -224,7 +224,12 @@ public class PageSpecReader implements VarsParserJsFunctions {
     }
 
     public List<PageSpecRule> getRules() {
-        return pageSpec.getRules();
+        List<PageSpecRule> allRules = pageSpec.getRules();
+
+        if (parent != null) {
+            allRules.addAll(parent.getRules());
+        }
+        return allRules;
     }
 
 

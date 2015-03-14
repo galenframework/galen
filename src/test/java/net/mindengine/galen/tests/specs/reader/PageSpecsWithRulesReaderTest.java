@@ -135,6 +135,27 @@ public class PageSpecsWithRulesReaderTest {
                         ));
     }
 
+    @Test
+    public void shouldParsePageSpec_withJsRule_definedInImportedSpec() throws IOException {
+        PageSpec pageSpec = readPageSpec("js-rules-provided-in-imported-spec.spec");
+
+        PageSection globalSection = pageSpec.getSections().get(0);
+        PageSection ruleSection = globalSection.getSections().get(0);
+
+        assertThat(ExpectedSpecObject.convertSection(ruleSection),
+                contains(
+                        new ExpectedSpecObject("login-button")
+                                .withSpecs("aligned horizontally all: cancel-button")
+                ));
+
+
+        assertThat(ExpectedSpecObject.convertSection(globalSection),
+                contains(
+                        new ExpectedSpecObject("cancel-button")
+                                .withSpecGroup("squared", asList("width: 100% of cancel-button/height"))
+                ));
+    }
+
 
     @Test
     public void shouldThrowError_whenRuleIsNotMatched() throws IOException {
