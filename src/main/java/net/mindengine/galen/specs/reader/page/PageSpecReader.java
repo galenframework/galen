@@ -55,7 +55,7 @@ public class PageSpecReader implements VarsParserJsFunctions {
         else {
             this.properties = properties;
         }
-        this.varsContext = new VarsContext(properties, this, this);
+        this.varsContext = new VarsContext(this.properties, this, this);
         this.processedFileIds = new HashSet<String>();
         this.page = page;
     }

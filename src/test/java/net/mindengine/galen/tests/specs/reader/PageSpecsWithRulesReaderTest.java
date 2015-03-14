@@ -36,7 +36,7 @@ import static org.hamcrest.Matchers.is;
  */
 public class PageSpecsWithRulesReaderTest {
 
-    private static final Properties EMPTY_PROPERTIES = new Properties();
+    private static final Properties EMPTY_PROPERTIES = null;
     private static final Page EMPTY_PAGE = null;
 
     @Test
@@ -153,7 +153,7 @@ public class PageSpecsWithRulesReaderTest {
     }
 
     private PageSpec readPageSpec(String specName) throws IOException {
-        return new PageSpecReader(EMPTY_PROPERTIES, EMPTY_PAGE).read("/page-spec-with-rules/" + specName);
+        return new PageSpecReader(null, EMPTY_PAGE).read("/page-spec-with-rules/" + specName);
     }
 
 }
