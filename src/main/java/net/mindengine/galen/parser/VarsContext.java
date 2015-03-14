@@ -17,7 +17,6 @@ package net.mindengine.galen.parser;
 
 import java.util.Properties;
 
-import net.mindengine.galen.specs.reader.page.PageSpec;
 import net.mindengine.galen.specs.reader.page.PageSpecReader;
 import net.mindengine.galen.suite.reader.Context;
 
@@ -84,5 +83,12 @@ public class VarsContext extends Context {
 
     public VarsContext copy() {
         return new VarsContext(this.properties, this);
+    }
+
+    public void setProperty(String name, String value) {
+        if (properties == null) {
+            properties = new Properties();
+        }
+        properties.setProperty(name, value);
     }
 }

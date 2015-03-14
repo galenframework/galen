@@ -114,7 +114,7 @@ public class StateDoingSection extends State {
                 currentParameterization.processObject(line);
             }
             else {
-                processSpecForSimpleObject(varsContext, line);
+                processSpecForSimpleObject(line);
             }
         }
         else {
@@ -137,7 +137,7 @@ public class StateDoingSection extends State {
 
 
         if (object != null) {
-            varsContext.getProperties().setProperty("objectName", object.getObjectName());
+            varsContext.setProperty("objectName", object.getObjectName());
         }
 
 
@@ -146,7 +146,7 @@ public class StateDoingSection extends State {
             if (matcher.matches()) {
                 int index = 1;
                 for (String parameterName : rule.getRule().getParameters()) {
-                    varsContext.getProperties().setProperty(parameterName, matcher.group(index));
+                    varsContext.setProperty(parameterName, matcher.group(index));
                     index += 1;
                 }
 
@@ -158,7 +158,7 @@ public class StateDoingSection extends State {
     }
 
 
-    private void processSpecForSimpleObject(VarsContext varsContext, String line) {
+    private void processSpecForSimpleObject(String line) {
         if (currentObjectSpecs == null) {
             throw new SyntaxException(UNKNOWN_LINE,"There is no object defined in section");
         }
