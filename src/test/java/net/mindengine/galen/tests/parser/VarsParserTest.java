@@ -48,6 +48,11 @@ public class VarsParserTest {
         public JsPageElement find(String name) {
             return null;
         }
+
+        @Override
+        public JsPageElement[] findAll(String regex) {
+            return new JsPageElement[0];
+        }
     };
 
 

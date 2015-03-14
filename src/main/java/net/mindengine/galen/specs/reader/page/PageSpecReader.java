@@ -120,6 +120,7 @@ public class PageSpecReader implements VarsParserJsFunctions {
         return lineProcessor.buildPageSpec();
     }
 
+    @Override
     public int count(String regex) {
         Pattern pattern = GalenUtils.convertObjectNameRegex(regex);
 
@@ -144,38 +145,52 @@ public class PageSpecReader implements VarsParserJsFunctions {
         return collectedNames.size();
     }
 
+    @Override
     public JsPageElement find(String objectName) {
-        JsPageElement pageElement = findJsPageElement(objectName);
-        if (pageElement != null) {
-            return pageElement;
-        }
-        else {
-
-            if (childReaders != null) {
-                for (PageSpecReader childReader : childReaders) {
-                    pageElement = childReader.find(objectName);
-                    if (pageElement != null) {
-                        return pageElement;
-                    }
-                }
-            }
+        JsPageElement[] allElements = findAll(objectName);
+        if (allElements != null && allElements.length > 0) {
+            return allElements[0];
         }
         return null;
     }
 
-    private JsPageElement findJsPageElement(String objectName) {
+    @Override
+    public JsPageElement[] findAll(String regex) {
+        Pattern pattern = GalenUtils.convertObjectNameRegex(regex);
+
+        ArrayList<JsPageElement> list = new ArrayList<JsPageElement>();
+        list.addAll(findJsPageElements(pattern));
+
+        if (childReaders != null) {
+            for (PageSpecReader childReader : childReaders) {
+                JsPageElement[] childReaderPageElements = childReader.findAll(regex);
+                if (childReaderPageElements != null) {
+                    list.addAll(Arrays.asList(childReaderPageElements));
+                }
+            }
+        }
+
+        return list.toArray(new JsPageElement[0]);
+    }
+
+    private List<JsPageElement> findJsPageElements(Pattern pattern) {
+        List<JsPageElement> list = new LinkedList<JsPageElement>();
+
         if (pageSpec != null) {
-            if (pageSpec.getObjects().containsKey(objectName)) {
-                Locator locator = pageSpec.getObjectLocator(objectName);
-                if (locator != null && page != null) {
-                    PageElement pageElement = page.getObject(objectName, locator);
-                    if (pageElement != null) {
-                        return new JsPageElement(pageElement);
+            for (Map.Entry<String, Locator> entry : pageSpec.getObjects().entrySet()) {
+                String objectName = entry.getKey();
+                if (pattern.matcher(objectName).matches()) {
+                    Locator locator = pageSpec.getObjectLocator(objectName);
+                    if (locator != null && page != null) {
+                        PageElement pageElement = page.getObject(objectName, locator);
+                        if (pageElement != null) {
+                            list.add(new JsPageElement(objectName, pageElement));
+                        }
                     }
                 }
             }
         }
-        return null;
+        return list;
     }
 
     public Properties getProperties() {

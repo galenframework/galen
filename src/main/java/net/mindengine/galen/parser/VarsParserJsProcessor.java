@@ -73,10 +73,24 @@ public class VarsParserJsProcessor {
             scope.defineProperty("find", new BaseFunction() {
                 @Override
                 public Object call(org.mozilla.javascript.Context cx, Scriptable scope, Scriptable thisObj, Object[] args) {
-                    if (args.length == 0 || !(args[0] instanceof String)) {
+                    if (args.length == 0) {
                         throw new IllegalArgumentException("Should take string argument");
+                    } else if (args[0] == null) {
+                        throw new IllegalArgumentException("Pattern should not be null");
                     }
-                    return jsFunctions.find((String)args[0]);
+                    return jsFunctions.find(args[0].toString());
+                }
+            }, ScriptableObject.DONTENUM);
+
+            scope.defineProperty("findAll", new BaseFunction() {
+                @Override
+                public Object call(org.mozilla.javascript.Context cx, Scriptable scope, Scriptable thisObj, Object[] args) {
+                    if (args.length == 0) {
+                        throw new IllegalArgumentException("Should take one string argument, got none");
+                    } else if (args[0] == null) {
+                        throw new IllegalArgumentException("Pattern should not be null");
+                    }
+                    return jsFunctions.findAll(args[0].toString());
                 }
             }, ScriptableObject.DONTENUM);
 

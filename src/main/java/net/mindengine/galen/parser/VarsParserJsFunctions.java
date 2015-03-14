@@ -31,4 +31,12 @@ public interface VarsParserJsFunctions {
      * @return
      */
     JsPageElement find(String name);
+
+
+    /**
+     * Finds all page elements matching given regex
+     * @param regex - simple galen regex
+     * @return
+     */
+    JsPageElement[] findAll(String regex);
 }

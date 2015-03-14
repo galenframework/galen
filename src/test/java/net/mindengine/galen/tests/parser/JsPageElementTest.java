@@ -30,7 +30,7 @@ public class JsPageElementTest {
 
     @Test
     public void shouldSupportMethods() {
-        JsPageElement pageElement = new JsPageElement(new MockedPageElement(10, 20, 400, 40));
+        JsPageElement pageElement = new JsPageElement("someobject", new MockedPageElement(10, 20, 400, 40));
 
         assertThat(pageElement.top(), is(20));
         assertThat(pageElement.bottom(), is(60));

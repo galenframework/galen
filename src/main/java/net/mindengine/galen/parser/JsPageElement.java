@@ -24,7 +24,10 @@ import net.mindengine.galen.page.Rect;
 public class JsPageElement {
     private PageElement pageElement;
 
-    public JsPageElement(PageElement pageElement) {
+    public String name;
+
+    public JsPageElement(String name, PageElement pageElement) {
+        this.name = name;
         this.pageElement = pageElement;
     }
 
