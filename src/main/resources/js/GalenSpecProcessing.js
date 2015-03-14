@@ -21,7 +21,7 @@ function _readDataFromProperties(properties) {
 
         while (it.hasNext()) {
             entry = it.next();
-            if (entry.getValue() != null) {
+            if (entry.getValue() !== null) {
                 value = entry.getValue().toString();
             } else {
                 value = null;
