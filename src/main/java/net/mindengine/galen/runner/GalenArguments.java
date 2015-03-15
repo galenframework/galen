@@ -55,6 +55,7 @@ public class GalenArguments {
     private Integer maxHeight;
     private String jsonReport;
     private List<String> groups;
+    private List<String> excludedGroups;
 
     public GalenArguments withAction(String action) {
         this.setAction(action);
@@ -162,6 +163,7 @@ public class GalenArguments {
         options.addOption("W", "max-width", true, "Maximum width for page dump");
         options.addOption("H", "max-height", true, "Maximum height for page dump");
         options.addOption("G", "groups", true, "Test groups");
+        options.addOption("Q", "excluded-groups", true, "Excluded test groups");
 
         
         CommandLineParser parser = new PosixParser();
@@ -211,6 +213,7 @@ public class GalenArguments {
         galen.setMaxHeight(parseOptionalInt(cmd.getOptionValue("H")));
         galen.setJsonReport(cmd.getOptionValue("J"));
         galen.setGroups(convertTags(cmd.getOptionValue("G")));
+        galen.setExcludedGroups(convertTags(cmd.getOptionValue("Q")));
 
         verifyArguments(galen);
         return galen;
@@ -348,6 +351,7 @@ public class GalenArguments {
             .append(maxHeight)
             .append(jsonReport)
             .append(groups)
+            .append(excludedGroups)
             .toHashCode(); //@formatter:on
     }
     
@@ -382,6 +386,7 @@ public class GalenArguments {
             .append(maxHeight, rhs.maxHeight)
             .append(jsonReport, rhs.jsonReport)
             .append(groups, rhs.groups)
+            .append(excludedGroups, rhs.excludedGroups)
             .isEquals(); //@formatter:on
     }
     
@@ -405,6 +410,7 @@ public class GalenArguments {
             .append("maxHeight", maxHeight)
             .append("jsonReport", jsonReport)
             .append("groups", groups)
+            .append("excludedGroups", excludedGroups)
             .toString(); //@formatter:on
     }
 
@@ -557,5 +563,18 @@ public class GalenArguments {
 
     public void setGroups(List<String> groups) {
         this.groups = groups;
+    }
+
+    public GalenArguments withExcludedGroups(List<String> excludedGroups) {
+        this.excludedGroups = excludedGroups;
+        return this;
+    }
+
+    public List<String> getExcludedGroups() {
+        return excludedGroups;
+    }
+
+    public void setExcludedGroups(List<String> excludedGroups) {
+        this.excludedGroups = excludedGroups;
     }
 }

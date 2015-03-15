@@ -76,6 +76,17 @@ public class ArgumentParserTest {
                             .withExcludedTags(EMPTY_TAGS)},
 
             {args("test", "mysuite",
+                    "--excluded-groups", "mobile,tablet,homepage"),
+                    new GalenArguments()
+                            .withAction("test")
+                            .withPaths(asList("mysuite"))
+                            .withExcludedGroups(asList("mobile", "tablet", "homepage"))
+                            .withRecursive(false)
+                            .withIncludedTags(EMPTY_TAGS)
+                            .withExcludedTags(EMPTY_TAGS)},
+
+
+            {args("test", "mysuite",
                         "--htmlreport", "some.html",
                         "--testngreport", "testng.xml"),
                 new GalenArguments()

@@ -205,6 +205,22 @@ public class GalenMainTest {
         ));
     }
 
+    @Test
+    public void shouldRunJavascriptTests_withExcludedGroups() throws Exception {
+        JsTestRegistry.get().clear();
+
+        new GalenMain().execute(new GalenArguments()
+                        .withAction("test")
+                        .withPaths(asList(getClass().getResource("/js-tests/testgroups.test.js").getFile()))
+                        .withExcludedGroups(asList("tablet"))
+        );
+
+        assertThat(JsTestRegistry.get().getEvents(), contains(
+                "Test A invoked",
+                "Test D invoked"
+        ));
+    }
+
     /**
      * Comes from https://github.com/galenframework/galen/issues/184
      * Test Retry Handler
