@@ -285,17 +285,17 @@ Suggest.prototype._suggestions.alignedVertically = function (itemA, itemB) {
     }
     return null;
 };
-Suggest.prototype._suggestions.nearLeft = function (a, b) {
+Suggest.prototype._suggestions.leftOf = function (a, b) {
     var diff = b.area[0] - a.area[0] - a.area[2];
     if (diff >= 0) {
-        return new Spec(a.name, "near: " + b.name + " " + diff + "px left");
+        return new Spec(a.name, "left of: " + b.name + " " + diff + "px");
     }
     return null;
 };
-Suggest.prototype._suggestions.nearRight = function (a, b) {
+Suggest.prototype._suggestions.rightOf = function (a, b) {
     var diff = a.area[0] - b.area[0] - b.area[2];
     if (diff >= 0) {
-        return new Spec(a.name, "near: " + b.name + " " + diff + "px right");
+        return new Spec(a.name, "right of: " + b.name + " " + diff + "px");
     }
     return null;
 };
