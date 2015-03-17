@@ -213,12 +213,6 @@ Suggest.prototype._suggestions.width = function(a, b) {
 Suggest.prototype._suggestions.height = function(a, b) {
           return new Spec(a.name, "height: " + getPercentage(a.area[3], b.area[3]) + "% of " + b.name+"/height");
    };
-Suggest.prototype._suggestions.widthAgainstHeight = function(a, b) {
-    return new Spec(a.name, "width: " + getPercentage(a.area[2], b.area[3]) + "% of " + b.name+"/height");
-};
-Suggest.prototype._suggestions.heightAgainstWidth = function(a, b) {
-    return new Spec(a.name, "height: " + getPercentage(a.area[3], b.area[2]) + "% of " + b.name+"/width");
-};
 
 function getPercentage(a, b) {
     var value = (a / b) * 100;
