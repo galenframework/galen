@@ -207,6 +207,18 @@ Suggest.prototype.generateSuggestions = function (items) {
     return "<pre>" + html + "</pre>";
 };
 Suggest.prototype._suggestions = {};
+Suggest.prototype._suggestions.width = function(a, b) {
+           return new Spec(a.name, "width: " + getPercentage(a.area[2], b.area[2]) + "% of " + b.name+"/width");
+   };
+Suggest.prototype._suggestions.height = function(a, b) {
+          return new Spec(a.name, "height: " + getPercentage(a.area[3], b.area[3]) + "% of " + b.name+"/height");
+   };
+
+function getPercentage(a, b) {
+    var value = (a / b) * 100;
+    return (value).toPrecision(3);
+}
+
 Suggest.prototype._suggestions.inside = function (itemA, itemB){
     var points = areaToPoints(itemA.area); 
     for (var i = 0; i<points.length; i++) {
