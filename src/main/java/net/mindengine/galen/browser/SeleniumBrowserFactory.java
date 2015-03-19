@@ -25,6 +25,7 @@ import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.ie.InternetExplorerDriver;
 import org.openqa.selenium.phantomjs.PhantomJSDriver;
+import org.openqa.selenium.safari.SafariDriver;
 
 /**
  * This is a general browser factory which could also 
@@ -38,6 +39,7 @@ public class SeleniumBrowserFactory implements BrowserFactory {
     public static final String CHROME = "chrome";
     public static final String IE = "ie";
     public static final String PHANTOMJS = "phantomjs";
+    public static final String SAFARI = "safari";
     private String browserType = GalenConfig.getConfig().getDefaultBrowser();
 
     public SeleniumBrowserFactory(String browserType) {
@@ -89,6 +91,9 @@ public class SeleniumBrowserFactory implements BrowserFactory {
         }
         else if (PHANTOMJS.equals(browserType)) {
             return new SeleniumBrowser(new PhantomJSDriver());
+        }
+        else if (SAFARI.equals(browserType)) {
+            return new SeleniumBrowser(new SafariDriver());
         }
         else throw new RuntimeException(String.format("Unknown browser type: \"%s\"", browserType));
     }
