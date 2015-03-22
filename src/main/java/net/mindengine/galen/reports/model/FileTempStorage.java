@@ -58,8 +58,6 @@ public class FileTempStorage {
     public void copyAllFilesTo(File dir) throws IOException {
         for (Map.Entry<String, File> entry : files.entrySet()) {
             FileUtils.copyFile(entry.getValue(), new File(dir.getAbsolutePath() + File.separator + entry.getKey()));
-            // remove temp file after copy
-            FileUtils.deleteQuietly(entry.getValue());
         }
 
         for (FileTempStorage storage : childStorages) {
