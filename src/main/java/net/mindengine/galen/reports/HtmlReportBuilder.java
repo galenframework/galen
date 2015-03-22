@@ -21,6 +21,7 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 
 import java.io.*;
+import java.lang.reflect.Field;
 import java.util.List;
 
 public class HtmlReportBuilder {
@@ -51,6 +52,9 @@ public class HtmlReportBuilder {
                             .replace("##REPORT-TEST-NAME##", aggregatedInfo.getTestInfo().getName())
                             .replace("##REPORT-DATA##", testReportJson));
 
+            FileUtils.writeStringToFile(new File(reportFolderPath + File.separator + aggregatedInfo.getTestId() + ".json"),
+                    testReportJson);
+
             aggregatedInfo.getTestInfo().getReport().getFileStorage().copyAllFilesTo(new File(reportFolderPath));
         }
 
@@ -58,6 +62,8 @@ public class HtmlReportBuilder {
 
         FileUtils.writeStringToFile(new File(reportFolderPath + File.separator + "report.html"),
                 overviewTemplate.replace("##REPORT-DATA##", overviewJson));
+
+        FileUtils.writeStringToFile(new File(reportFolderPath + File.separator + "report.json"), overviewJson);
 
         copyHtmlResources(reportFolderPath);
     }

@@ -210,7 +210,7 @@ public class ReportingTest {
         assertThat("Should place attachment file in same folder", new File(reportDirPath + "/file-1-custom.txt").exists(), is(true));
     }
     
-    @Test public void shouldReport_inHtmlFormat_successfully_andSplitFiles_perTest() throws IOException, TemplateException {
+    @Test public void shouldReport_inHtmlWithJsonFormat_successfully_andSplitFiles_perTest() throws IOException, TemplateException {
         String reportDirPath = Files.createTempDir().getAbsolutePath() + "/reports";
         
         List<GalenTestInfo> testInfos = new LinkedList<GalenTestInfo>();
@@ -241,12 +241,14 @@ public class ReportingTest {
         
         assertThat("Report folder contains files", asList(new File(reportDirPath).list()), containsInAnyOrder(
                 "1-home-page-test.html",
+                "1-home-page-test.json",
                 "file-5-some-file.txt",
                 "layout-1-screenshot.png",
                 "layout-2-objectB1-actual.png",
                 "layout-3-objectB1-expected.png",
                 "layout-4-objectB1-map.png",
                 "report.html",
+                "report.json",
                 "handlebars-v2.0.0.js",
                 "galen-report.js",
                 "report.css",
