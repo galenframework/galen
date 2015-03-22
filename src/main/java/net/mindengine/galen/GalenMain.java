@@ -389,7 +389,7 @@ public class GalenMain {
         try {
             new JsonReportBuilder().build(testInfos, jsonReport);
         } catch (IOException e) {
-            LOG.trace("Failed generating json report", e);
+            LOG.error("Failed generating json report", e);
         }
     }
 
@@ -397,7 +397,7 @@ public class GalenMain {
         try {
             new HtmlReportBuilder().build(testInfos, htmlReportPath);
         } catch (Exception ex) {
-            LOG.error("Unknow error during creating HTML report.", ex);
+            LOG.error("Unknown error during creating HTML report.", ex);
         }
     }
 
@@ -405,7 +405,7 @@ public class GalenMain {
         try {
             new TestNgReportBuilder().build(testInfos, testngReport);
         } catch (Exception ex) {
-            LOG.error("Unknow error during creating TestNG report.", ex);
+            LOG.error("Unknown error during creating TestNG report.", ex);
         }
     }
 
@@ -421,6 +421,10 @@ public class GalenMain {
     }
 
     private void searchForTests(File file, boolean recursive, List<File> files, List<File> jsFiles) {
+        searchForTests(file, recursive, files, jsFiles, 0);
+    }
+
+    private void searchForTests(File file, boolean recursive, List<File> files, List<File> jsFiles, int level) {
 
         String fileName = file.getName().toLowerCase();
         if (file.isFile()) {
@@ -429,9 +433,9 @@ public class GalenMain {
             } else if (fileName.endsWith(GalenConfig.getConfig().getTestJsSuffix())) {
                 jsFiles.add(file);
             }
-        } else if (file.isDirectory()) {
+        } else if (file.isDirectory() && (level == 0 || recursive)) {
             for (File childFile : file.listFiles()) {
-                searchForTests(childFile, recursive, files, jsFiles);
+                searchForTests(childFile, recursive, files, jsFiles, level + 1);
             }
         }
     }
