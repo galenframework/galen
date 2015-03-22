@@ -76,7 +76,7 @@
                 if (Array.isArray(value)) {
                     this.stack.push(value);
                 } else {
-                    this.stack.push(value);
+                    this.stack.push([value]);
                 }
             },
             pop: function () {

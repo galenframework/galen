@@ -1,7 +1,7 @@
 importClass(net.mindengine.galen.components.JsTestRegistry);
 
 
-grouped(["mobile"], function () {
+grouped("mobile", function () {
 
     test("Test A", function (){
         JsTestRegistry.get().registerEvent("Test A invoked");
