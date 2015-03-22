@@ -32,11 +32,11 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="2.8284271"
-     inkscape:cx="296.10795"
-     inkscape:cy="765.13357"
+     inkscape:zoom="1.4142136"
+     inkscape:cx="531.83957"
+     inkscape:cy="775.77714"
      inkscape:document-units="px"
-     inkscape:current-layer="check"
+     inkscape:current-layer="layer1"
      showgrid="true"
      inkscape:snap-global="true"
      objecttolerance="20"
@@ -153,7 +153,10 @@
     <g
        id="check">
       <g
-         id="g4038">
+         id="g4038"
+         inkscape:export-filename="/home/ishubin/workspace/galen/design/check.png"
+         inkscape:export-xdpi="18.626236"
+         inkscape:export-ydpi="18.626236">
         <rect
            style="fill:#000000;fill-opacity:1;stroke:#000000;stroke-opacity:1;stroke-width:6;stroke-miterlimit:4;stroke-dasharray:none"
            id="rect3952"
@@ -173,7 +176,9 @@
       </g>
     </g>
     <g
-       id="download">
+       id="download"
+       inkscape:export-xdpi="18"
+       inkscape:export-ydpi="18">
       <rect
          y="332.36218"
          x="410"
@@ -210,7 +215,10 @@
          style="fill:#000000;fill-opacity:1;stroke:none" />
     </g>
     <g
-       id="g4026">
+       id="g4026"
+       inkscape:export-filename="/home/ishubin/workspace/galen/design/error.png"
+       inkscape:export-xdpi="18"
+       inkscape:export-ydpi="18">
       <path
          sodipodi:open="true"
          transform="translate(471.52513,-4.1819805)"
@@ -237,7 +245,10 @@
            sodipodi:role="line">!</tspan></text>
     </g>
     <g
-       id="g4031">
+       id="g4031"
+       inkscape:export-filename="/home/ishubin/workspace/galen/design/warn.png"
+       inkscape:export-xdpi="18"
+       inkscape:export-ydpi="18">
       <path
          sodipodi:open="true"
          transform="translate(573.65013,-6.556982)"
