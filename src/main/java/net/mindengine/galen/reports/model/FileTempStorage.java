@@ -68,4 +68,22 @@ public class FileTempStorage {
     public void registerStorage(FileTempStorage fileStorage) {
         this.childStorages.add(fileStorage);
     }
+
+    /**
+     * Removes all temporary files from disk.
+     * IMPORTANT! Use this call only in the end
+     * when you are sure you don't need report files anymore
+     */
+    public void cleanup() {
+        if (this.childStorages != null) {
+            for (FileTempStorage storage : this.childStorages) {
+                storage.cleanup();
+            }
+        }
+
+        for (File file : this.files.values()) {
+            FileUtils.deleteQuietly(file);
+        }
+        this.files.clear();
+    }
 }

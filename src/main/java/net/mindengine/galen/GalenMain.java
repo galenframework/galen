@@ -42,6 +42,7 @@ import net.mindengine.galen.reports.GalenTestInfo;
 import net.mindengine.galen.reports.HtmlReportBuilder;
 import net.mindengine.galen.reports.TestNgReportBuilder;
 import net.mindengine.galen.reports.json.JsonReportBuilder;
+import net.mindengine.galen.reports.model.FileTempStorage;
 import net.mindengine.galen.runner.CombinedListener;
 import net.mindengine.galen.runner.CompleteListener;
 import net.mindengine.galen.runner.EventHandler;
@@ -309,6 +310,19 @@ public class GalenMain {
         tellAfterTestSuite(listener, testInfos);
 
         createAllReports(testInfos, arguments);
+
+        cleanData(testInfos);
+    }
+
+    private void cleanData(List<GalenTestInfo> testInfos) {
+        for (GalenTestInfo testInfo : testInfos) {
+            if (testInfo.getReport() != null) {
+                FileTempStorage storage = testInfo.getReport().getFileStorage();
+                if (storage != null) {
+                    storage.cleanup();
+                }
+            }
+        }
     }
 
     private boolean doesNotMatchExcludedGroups(GalenTest test, List<String> excludedGroups) {
