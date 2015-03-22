@@ -45,7 +45,7 @@ public class GalenConfig {
     public static final String SPEC_GLOBAL_VISIBILITY_CHECK = "galen.spec.global.visibility";
 
     public static final String TEST_JS_SUFFIX = "galen.test.js.file.suffix";
-    public static final String TEST_SUFFIX = "galen.test.suffix";
+    public static final String TEST_SUFFIX = "galen.test.file.suffix";
     private int rangeApproximation;
     private List<String> reportingListeners;
     private String defaultBrowser;
