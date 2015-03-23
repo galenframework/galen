@@ -352,7 +352,7 @@ Handlebars.registerHelper("formatGroupsPretty", function (groups) {
             if (i > 0) {
                 text += ", ";
             }
-            text = text + '<a href="#tests|grouped|' + encodeURIComponent(groups[i]) + '">' + groups[i] + '</a>';
+            text = text + '<a href="#tests|grouped|' + groups[i] + '">' + groups[i] + '</a>';
         }
         return safeHtml(text);
     }
