@@ -97,6 +97,8 @@ public class GalenUtils {
     
     
     public static File makeFullScreenshot(WebDriver driver) throws IOException, InterruptedException {
+        // scroll up first
+        scrollVerticallyTo(driver, 0);
         byte[] bytes = ((TakesScreenshot)driver).getScreenshotAs(OutputType.BYTES);
         BufferedImage image = ImageIO.read(new ByteArrayInputStream(bytes));
         int capturedWidth = image.getWidth();
