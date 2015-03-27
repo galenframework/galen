@@ -122,9 +122,8 @@ public class PageSpecReader implements VarsParserJsFunctions {
 
     @Override
     public int count(String regex) {
-        Pattern pattern = GalenUtils.convertObjectNameRegex(regex);
-
-        Set<String> collectedNames = new HashSet<String>();
+        final Pattern pattern = GalenUtils.convertObjectNameRegex(regex);
+        final Set<String> collectedNames = new HashSet<String>();
 
         for (String name : pageSpec.getObjects().keySet()) {
             if (pattern.matcher(name).matches()) {
@@ -132,18 +131,31 @@ public class PageSpecReader implements VarsParserJsFunctions {
             }
         }
 
-        if (childReaders != null) {
-            for (PageSpecReader childReader : childReaders) {
-                for (String name : childReader.pageSpec.getObjects().keySet()) {
+
+        visitAllChildReaders(new Visitor<PageSpec>() {
+            @Override
+            public void visit(PageSpec pageSpec) {
+                for (String name : pageSpec.getObjects().keySet()) {
                     if (pattern.matcher(name).matches()) {
                         collectedNames.add(name);
                     }
                 }
             }
-        }
+        });
 
         return collectedNames.size();
     }
+
+    private void visitAllChildReaders(Visitor<PageSpec> visitor) {
+        if (childReaders != null) {
+            for (PageSpecReader childReader : childReaders) {
+                visitor.visit(childReader.pageSpec);
+
+                childReader.visitAllChildReaders(visitor);
+            }
+        }
+    }
+
 
     @Override
     public JsPageElement find(String objectName) {

@@ -867,6 +867,29 @@ public class PageSpecsReaderTest {
         assertThat("Spec should be", objectSpecs.get(2).getOriginalText(), is("inside: container 10px left"));
     }
 
+    @Test
+    public void shouldReadSpecs_andProcessFunctions_count_and_findAll_fromSubImport() throws IOException {
+        PageSpec pageSpec = readSpec("/specs/specs-from-sub-imports/main.spec");
+
+        List<ObjectSpecs> objectSpecs = pageSpec.getSections().get(0).getObjects();
+
+        assertThat(objectSpecs.size(), is(4));
+
+        assertThat(objectSpecs.get(0).getObjectName(), is("menu"));
+        assertThat(objectSpecs.get(0).getSpecs().get(0).getOriginalText(), is("width: 100px"));
+        assertThat(objectSpecs.get(0).getSpecs().get(1).getOriginalText(), is("text is: there are 3 items"));
+
+        assertThat(objectSpecs.get(1).getObjectName(), is("menu-item-1"));
+        assertThat(objectSpecs.get(1).getSpecs().get(0).getOriginalText(), is("height: 50px"));
+
+        assertThat(objectSpecs.get(2).getObjectName(), is("menu-item-2"));
+        assertThat(objectSpecs.get(2).getSpecs().get(0).getOriginalText(), is("height: 50px"));
+
+        assertThat(objectSpecs.get(3).getObjectName(), is("menu-item-3"));
+        assertThat(objectSpecs.get(3).getSpecs().get(0).getOriginalText(), is("height: 50px"));
+
+    }
+
     private PageSpec readSpec(String path) throws IOException {
         PageSpecReader specReader = new PageSpecReader(new Properties(), EMPTY_PAGE);
         return specReader.read(getClass().getResource(path).getFile());
