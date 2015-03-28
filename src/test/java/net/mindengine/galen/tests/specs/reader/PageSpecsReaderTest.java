@@ -877,7 +877,7 @@ public class PageSpecsReaderTest {
 
         assertThat(objectSpecs.get(0).getObjectName(), is("menu"));
         assertThat(objectSpecs.get(0).getSpecs().get(0).getOriginalText(), is("width: 100px"));
-        assertThat(objectSpecs.get(0).getSpecs().get(1).getOriginalText(), is("text is: there are 3 items"));
+        assertThat(objectSpecs.get(0).getSpecs().get(1).getOriginalText(), is("text is: items are 3:menu-item-1:menu-item-2:menu-item-3"));
 
         assertThat(objectSpecs.get(1).getObjectName(), is("menu-item-1"));
         assertThat(objectSpecs.get(1).getSpecs().get(0).getOriginalText(), is("height: 50px"));

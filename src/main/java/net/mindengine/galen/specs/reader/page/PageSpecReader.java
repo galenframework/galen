@@ -26,6 +26,7 @@ import net.mindengine.galen.specs.reader.Place;
 import net.mindengine.galen.specs.reader.page.rules.Rule;
 import net.mindengine.galen.specs.reader.page.rules.RuleParser;
 import net.mindengine.galen.utils.GalenUtils;
+import net.mindengine.galen.utils.Visitor;
 
 import java.io.*;
 import java.security.NoSuchAlgorithmException;
@@ -125,19 +126,15 @@ public class PageSpecReader implements VarsParserJsFunctions {
         final Pattern pattern = GalenUtils.convertObjectNameRegex(regex);
         final Set<String> collectedNames = new HashSet<String>();
 
-        for (String name : pageSpec.getObjects().keySet()) {
-            if (pattern.matcher(name).matches()) {
-               collectedNames.add(name);
-            }
-        }
 
-
-        visitAllChildReaders(new Visitor<PageSpec>() {
+        visitAllReaders(new Visitor<PageSpecReader>() {
             @Override
-            public void visit(PageSpec pageSpec) {
-                for (String name : pageSpec.getObjects().keySet()) {
-                    if (pattern.matcher(name).matches()) {
-                        collectedNames.add(name);
+            public void visit(PageSpecReader pageSpecReader) {
+                if (pageSpecReader.pageSpec != null) {
+                    for (String name : pageSpecReader.pageSpec.getObjects().keySet()) {
+                        if (pattern.matcher(name).matches()) {
+                            collectedNames.add(name);
+                        }
                     }
                 }
             }
@@ -146,14 +143,15 @@ public class PageSpecReader implements VarsParserJsFunctions {
         return collectedNames.size();
     }
 
-    private void visitAllChildReaders(Visitor<PageSpec> visitor) {
+    private void visitAllReaders(Visitor<PageSpecReader> visitor) {
         if (childReaders != null) {
             for (PageSpecReader childReader : childReaders) {
-                visitor.visit(childReader.pageSpec);
-
-                childReader.visitAllChildReaders(visitor);
+                childReader.visitAllReaders(visitor);
             }
         }
+
+        // Visiting itself
+        visitor.visit(this);
     }
 
 
@@ -168,21 +166,33 @@ public class PageSpecReader implements VarsParserJsFunctions {
 
     @Override
     public JsPageElement[] findAll(String regex) {
-        Pattern pattern = GalenUtils.convertObjectNameRegex(regex);
+        final Pattern pattern = GalenUtils.convertObjectNameRegex(regex);
 
-        ArrayList<JsPageElement> list = new ArrayList<JsPageElement>();
-        list.addAll(findJsPageElements(pattern));
+        final ArrayList<JsPageElement> list = new ArrayList<JsPageElement>();
 
-        if (childReaders != null) {
-            for (PageSpecReader childReader : childReaders) {
-                JsPageElement[] childReaderPageElements = childReader.findAll(regex);
-                if (childReaderPageElements != null) {
-                    list.addAll(Arrays.asList(childReaderPageElements));
+        visitAllReaders(new Visitor<PageSpecReader>() {
+            @Override
+            public void visit(PageSpecReader pageSpecReader) {
+                List<JsPageElement> jsElements = pageSpecReader.findJsPageElements(pattern);
+
+                for (JsPageElement jsPageElement : jsElements) {
+                    if (!containsPageElementWithName(list, jsPageElement.name)) {
+                        list.add(jsPageElement);
+                    }
                 }
             }
-        }
+        });
 
         return orderByNames(list).toArray(new JsPageElement[0]);
+    }
+
+    private boolean containsPageElementWithName(ArrayList<JsPageElement> list, String name) {
+        for (JsPageElement jsPageElement : list) {
+            if (name.equals(jsPageElement.name)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     private ArrayList<JsPageElement> orderByNames(ArrayList<JsPageElement> list) {

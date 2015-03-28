@@ -13,7 +13,7 @@
 * See the License for the specific language governing permissions and
 * limitations under the License.
 ******************************************************************************/
-package net.mindengine.galen.specs.reader.page;
+package net.mindengine.galen.utils;
 
 public interface Visitor<T> {
     void visit(T t);
