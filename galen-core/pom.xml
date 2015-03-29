@@ -110,8 +110,8 @@
     </dependency>
     <dependency>
       <groupId>net.mindengine</groupId>
-      <artifactId>rainbow4j</artifactId>
-      <version>0.5.1</version>
+      <artifactId>galen-rainbow4j</artifactId>
+      <version>1.6.2-SNAPSHOT</version>
     </dependency>
     <dependency>
       <groupId>org.mozilla</groupId>

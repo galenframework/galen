@@ -17,6 +17,7 @@
 
   <modules>
     <module>galen-core</module>
+    <module>galen-rainbow4j</module>
   </modules>
 
   <properties>
