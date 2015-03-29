@@ -8,8 +8,9 @@ build/
 target/
 test-output/
 dist/
-node/*
-node_modules/*
+galen-core/node/
+galen-core/node_modules/
+galen-core/coverage-report/
 .release-notes
 *.swp
 config2
