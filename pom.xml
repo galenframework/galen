@@ -14,16 +14,15 @@
     <url>git@github.com/galenframework/galen.git</url>
   </scm>
 
-
   <modules>
     <module>galen-core</module>
     <module>galen-rainbow4j</module>
+    <module>galen-distribution</module>
   </modules>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <sonatypeOssDistMgmtSnapshotsUrl>https://oss.sonatype.org/content/repositories/snapshots/</sonatypeOssDistMgmtSnapshotsUrl>
-
     <!-- VERSION NUMBERS -->
     <commons-io.version>2.4</commons-io.version>
     <selenium.version>2.45.0</selenium.version>
@@ -41,25 +40,21 @@
   </properties>
 
   <build>
-    <plugins>
-      <plugin>
-        <artifactId>maven-assembly-plugin</artifactId>
-        <configuration>
-          <archive>
-            <manifest>
-              <mainClass>net.mindengine.galen.GalenMain</mainClass>
-              <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
-              <addDefaultSpecificationEntries>true</addDefaultSpecificationEntries>
-            </manifest>
-          </archive>
-          <finalName>galen</finalName>
-          <descriptorRefs>
-            <descriptorRef>jar-with-dependencies</descriptorRef>
-          </descriptorRefs>
-        </configuration>
-      </plugin>
-    </plugins>
+    <pluginManagement>
+      <plugins>
+        <plugin>
+          <artifactId>maven-assembly-plugin</artifactId>
+          <version>2.5.3</version>
+          <configuration>
+            <descriptors>
+              <descriptor>assembly.xml</descriptor>
+            </descriptors>
+          </configuration>
+        </plugin>
+      </plugins>
+    </pluginManagement>
   </build>
+
 
   <repositories>
     <repository>
@@ -74,7 +69,6 @@
       </snapshots>
     </repository>
   </repositories>
-
   <distributionManagement>
     <snapshotRepository>
       <id>sonatype-nexus-snapshots</id>
@@ -87,7 +81,6 @@
       <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
     </repository>
   </distributionManagement>
-
   <licenses>
     <license>
       <name>The Apache Software License, Version 2.0</name>
