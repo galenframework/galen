@@ -7,6 +7,8 @@ if [ -d dist ]; then
 fi
 
 
+modules=(galen-core galen-rainbow4j)
+
 version=$( cat pom.xml | grep "<version>" | head -n 1 | awk -F"[<>]" '/version/{print $3}' | sed "s/-SNAPSHOT//g" )
 
 
@@ -20,14 +22,21 @@ mkdir -p dist/$src
 echo New dist is $version
 echo Assemblying new dist
 
-mvn assembly:assembly -DskipTests=true
+mvn clean package -DskipTests=true
 
-cp target/galen-jar-with-dependencies.jar dist/$bin/galen.jar
+cp galen-distribution/target/galen-bin.jar dist/$bin/galen.jar
 cp -r fordist/* dist/$bin/.
 
 cp LICENSE-2.0.txt dist/$src/.
 cp .README dist/$src/README
-cp -r src dist/$src/src
+
+
+for module in "${modules[@]}" 
+do
+    mkdir dist/$src/$module
+    cp -r $module/src dist/$src/$module/src
+done
+
 
 
 cd dist
