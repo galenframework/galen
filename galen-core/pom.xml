@@ -3,7 +3,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>net.mindengine</groupId>
   <artifactId>galen-core</artifactId>
-  <version>1.6.2-SNAPSHOT</version>
+  <version>1.6.3-SNAPSHOT</version>
   <name>Galen Framework Core</name>
   <packaging>jar</packaging>
   <description>A library for layout testing of websites</description>
@@ -12,7 +12,7 @@
   <parent>
     <groupId>net.mindengine</groupId>
     <artifactId>galen-parent</artifactId>
-    <version>1.6.2-SNAPSHOT</version>
+    <version>1.6.3-SNAPSHOT</version>
   </parent>
   
   <dependencies>
@@ -111,7 +111,7 @@
     <dependency>
       <groupId>net.mindengine</groupId>
       <artifactId>galen-rainbow4j</artifactId>
-      <version>1.6.2-SNAPSHOT</version>
+      <version>1.6.3-SNAPSHOT</version>
     </dependency>
     <dependency>
       <groupId>org.mozilla</groupId>
