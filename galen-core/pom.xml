@@ -93,15 +93,6 @@
     <dependency>
       <groupId>org.freemarker</groupId>
       <artifactId>freemarker</artifactId>
-<<<<<<< HEAD
-      <version>2.3.19</version>
-    </dependency>
-    <dependency>
-      <groupId>net.mindengine</groupId>
-      <artifactId>galen-rainbow4j</artifactId>
-      <version>1.6.3-SNAPSHOT</version>
-=======
->>>>>>> move dependency declaration to parent POM, too
     </dependency>
     <dependency>
       <groupId>org.mozilla</groupId>
