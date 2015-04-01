@@ -1,0 +1,29 @@
+{
+  "name": "galen-integration-tests",
+  "version": "1.5.2",
+  "dependencies": {},
+  "repository": "git://github.com/galenframework/galen",
+  "devDependencies": {
+    "grunt": "~0.4.5",
+    "grunt-cli": "~0.1.13",
+    "grunt-contrib-jshint": "~0.8.0",
+    "grunt-contrib-concat": "~0.3.0",
+    "grunt-contrib-uglify": "~0.2.7",
+    "grunt-simple-mocha": "~0.4.0",
+    "grunt-plato": "~1.2.1",
+    "should": "~4.6.2",
+    "load-grunt-tasks": "~3.1.0",
+    "time-grunt": "~1.0.0",
+    "phantomjs": "~1.9.15",
+    "mocha": "~2.1.0",
+    "grunt-mocha-test": "~0.12.7",
+    "grunt-jslint": "~1.1.12"
+  },
+  "engines": {
+    "node": ">=0.8.0"
+  },
+  "scripts": {
+    "test": "grunt test"
+  },
+  "homepage": "https://github.com/galenframework/galen"
+}
