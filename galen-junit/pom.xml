@@ -3,7 +3,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>net.mindengine</groupId>
   <artifactId>galen-junit</artifactId>
-  <version>1.6.2-SNAPSHOT</version>
+  <version>1.6.3-SNAPSHOT</version>
   <name>Galen Framework Junit Integration</name>
   <packaging>jar</packaging>
   <description>Running integration tests for galen</description>
@@ -12,7 +12,7 @@
   <parent>
     <groupId>net.mindengine</groupId>
     <artifactId>galen-parent</artifactId>
-    <version>1.6.2-SNAPSHOT</version>
+    <version>1.6.3-SNAPSHOT</version>
   </parent>
 
 
