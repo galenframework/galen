@@ -17,3 +17,6 @@ config2
 *.log
 /galen.ipr
 /galen.iws
+/node/
+/node_modules/
+bin
