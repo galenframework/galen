@@ -33,6 +33,7 @@ import net.mindengine.rainbow4j.Rainbow4J;
 import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebDriverException;
 import org.openqa.selenium.WebElement;
 
 public class SeleniumPage implements Page {
@@ -135,7 +136,11 @@ public class SeleniumPage implements Page {
 
     private List<WebElement> driverFindElements(By by) {
         if (objectContext == null) {
-            return driver.findElements(by);
+            try {
+              return driver.findElements(by);
+            } catch (NullPointerException e) {
+              throw new WebDriverException("Element not found", e);
+            }
         }
         else {
             return objectContext.findElements(by);

@@ -33,6 +33,8 @@ import java.security.NoSuchAlgorithmException;
 import java.util.*;
 import java.util.regex.Pattern;
 
+import org.openqa.selenium.WebDriverException;
+
 public class PageSpecReader implements VarsParserJsFunctions {
 
     private Page page;
@@ -114,6 +116,9 @@ public class PageSpecReader implements VarsParserJsFunctions {
                 lineNumber++;
             }
         }
+        catch (WebDriverException webDriverException) {
+          throw webDriverException;
+      }
         catch (Exception exception) {
             throw new FileSyntaxException(exception, fileLocation, lineNumber);
         }
