@@ -69,10 +69,17 @@
       <distribution>repo</distribution>
     </license>
   </licenses>
+
   <developers>
     <developer>
       <id>ishubin</id>
       <name>Ivan Shubin</name>
+      <url>https://github.com/ishubin</url>
+      <roles>
+        <role>architect</role>
+        <role>developer</role>
+        <role>tester</role>
+      </roles>
     </developer>
   </developers>
 </project>
