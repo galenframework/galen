@@ -351,7 +351,7 @@
     <powermock.version>1.5.3</powermock.version>
     <maven-ejb-plugin.version>2.3</maven-ejb-plugin.version>
     <!-- maven plugins -->
-    <frontend-maven-plugin.version>0.0.20</frontend-maven-plugin.version>
+    <frontend-maven-plugin.version>0.0.23</frontend-maven-plugin.version>
     <maven-eclipse-plugin.version>2.7</maven-eclipse-plugin.version>
     <maven-surefire-plugin.version>2.18.1</maven-surefire-plugin.version>
   </properties>
