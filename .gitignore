@@ -11,9 +11,15 @@ dist/
 galen-core/node/
 galen-core/node_modules/
 galen-core/coverage-report/
+galen-integration-tests/node/
+galen-integration-tests/node_modules/
+galen-integration-tests/coverage-report/
 .release-notes
 *.swp
 config2
 *.log
 /galen.ipr
 /galen.iws
+/node/
+/node_modules/
+bin
