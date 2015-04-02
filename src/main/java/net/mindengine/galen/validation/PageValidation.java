@@ -60,7 +60,7 @@ public class PageValidation {
 
         ValidationResult result = check(specValidation, objectName, spec);
 
-        if (spec.isOnlyWarn()) {
+        if (spec.isOnlyWarn() && result.getError() != null) {
             result.getError().setOnlyWarn(true);
         }
         return result;
