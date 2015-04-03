@@ -30,11 +30,7 @@ import net.mindengine.galen.page.Rect;
 import net.mindengine.galen.specs.page.Locator;
 import net.mindengine.rainbow4j.Rainbow4J;
 
-import org.openqa.selenium.By;
-import org.openqa.selenium.NoSuchElementException;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebDriverException;
-import org.openqa.selenium.WebElement;
+import org.openqa.selenium.*;
 
 public class SeleniumPage implements Page {
 
@@ -137,9 +133,11 @@ public class SeleniumPage implements Page {
     private List<WebElement> driverFindElements(By by) {
         if (objectContext == null) {
             try {
-              return driver.findElements(by);
+                return driver.findElements(by);
             } catch (NullPointerException e) {
-              throw new WebDriverException("Element not found", e);
+                throw new WebDriverException(e);
+            } catch (StaleElementReferenceException e) {
+                throw new WebDriverException(e);
             }
         }
         else {

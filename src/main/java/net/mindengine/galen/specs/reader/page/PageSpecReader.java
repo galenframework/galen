@@ -17,10 +17,7 @@ package net.mindengine.galen.specs.reader.page;
 
 import net.mindengine.galen.page.Page;
 import net.mindengine.galen.page.PageElement;
-import net.mindengine.galen.parser.FileSyntaxException;
-import net.mindengine.galen.parser.JsPageElement;
-import net.mindengine.galen.parser.VarsContext;
-import net.mindengine.galen.parser.VarsParserJsFunctions;
+import net.mindengine.galen.parser.*;
 import net.mindengine.galen.specs.page.Locator;
 import net.mindengine.galen.specs.reader.Place;
 import net.mindengine.galen.specs.reader.page.rules.Rule;
@@ -116,11 +113,11 @@ public class PageSpecReader implements VarsParserJsFunctions {
                 lineNumber++;
             }
         }
-        catch (WebDriverException webDriverException) {
-          throw webDriverException;
-      }
-        catch (Exception exception) {
+        catch (SyntaxException exception) {
             throw new FileSyntaxException(exception, fileLocation, lineNumber);
+        }
+        catch (Exception webDriverException) {
+            throw new PageSpecReaderException(webDriverException, fileLocation, lineNumber);
         }
 
         return lineProcessor.buildPageSpec();

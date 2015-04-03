@@ -28,6 +28,7 @@ import net.mindengine.galen.specs.reader.page.StateObjectDefinition;
 import net.mindengine.galen.parser.VarsContext;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.StaleElementReferenceException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebDriverException;
 import org.testng.annotations.Test;
@@ -85,5 +86,23 @@ public class ObjectDefinitionReaderErrorHandlingTest {
       when(pageSpecReader.getPage()).thenReturn(seleniumPage);
       when(varsContext.process(line)).thenReturn(line);
       stateObjectDefinition.process(varsContext, line, place);
+    }
+
+    @Test(expectedExceptions={WebDriverException.class})
+    public void shouldHandleStaleElementReferenceException() throws Exception {
+        // given
+        PageSpecReader pageSpecReader = mock(PageSpecReader.class);
+        WebDriver driver = mock(WebDriver.class);
+        VarsContext varsContext = mock(VarsContext.class);
+        SeleniumPage seleniumPage = new SeleniumPage(driver);
+        PageSpec pageSpec = new PageSpec();
+        StateObjectDefinition stateObjectDefinition = new StateObjectDefinition(pageSpec, pageSpecReader);
+        String line = "myObject-* css .avc";
+        Place place = new Place("", 1);
+        // when
+        when(driver.findElements(any(By.class))).thenThrow(new StaleElementReferenceException(""));
+        when(pageSpecReader.getPage()).thenReturn(seleniumPage);
+        when(varsContext.process(line)).thenReturn(line);
+        stateObjectDefinition.process(varsContext, line, place);
     }
 }
