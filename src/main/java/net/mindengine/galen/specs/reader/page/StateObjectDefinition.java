@@ -18,7 +18,6 @@ package net.mindengine.galen.specs.reader.page;
 import static java.lang.String.format;
 import static net.mindengine.galen.parser.Expectations.word;
 import static net.mindengine.galen.suite.reader.Line.UNKNOWN_LINE;
-
 import net.mindengine.galen.parser.ExpectWord;
 import net.mindengine.galen.parser.Expectations;
 import net.mindengine.galen.parser.SyntaxException;
@@ -29,6 +28,7 @@ import net.mindengine.galen.specs.reader.Place;
 import net.mindengine.galen.specs.reader.StringCharReader;
 
 import org.apache.commons.lang3.StringUtils;
+import org.openqa.selenium.WebDriverException;
 
 public class StateObjectDefinition extends State {
 
@@ -67,6 +67,9 @@ public class StateObjectDefinition extends State {
         }
         catch (SyntaxException e) {
             throw e;
+        }
+        catch (WebDriverException e) {
+          throw e;
         }
         catch (Exception e) {
             throw new SyntaxException(UNKNOWN_LINE, "Object \"" + objectName + "\" has incorrect locator", e);
