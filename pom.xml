@@ -19,6 +19,7 @@
     <module>galen-core</module>
     <module>galen-testng</module>
     <module>galen-junit</module>
+    <module>galen-integration-tests</module>
     <module>galen-distribution</module>
   </modules>
 

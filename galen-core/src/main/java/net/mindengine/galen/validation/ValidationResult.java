@@ -29,6 +29,7 @@ public class ValidationResult {
 
     private List<ValidationObject> validationObjects = new LinkedList<ValidationObject>();
     private ValidationError error;
+    private List<ValidationResult> childValidationResults;
 
     public ValidationResult(List<ValidationObject> validationObjects) {
         this.validationObjects = validationObjects;
@@ -105,9 +106,11 @@ public class ValidationResult {
         List<ValidationResult> filtered = new LinkedList<ValidationResult>();
 
         for (ValidationResult result : results) {
+            if (result.getError() != null)
             filtered.add(result);
         }
 
         return filtered;
     }
+
 }
