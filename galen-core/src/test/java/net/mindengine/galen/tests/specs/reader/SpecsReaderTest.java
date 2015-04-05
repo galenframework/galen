@@ -53,8 +53,6 @@ import org.testng.annotations.Test;
 @Test
 public class SpecsReaderTest {
 
-    
-    private static final Browser NO_BROWSER = null;
     private static final Properties EMPTY_PROPERTIES = new Properties();
 
     @BeforeClass
