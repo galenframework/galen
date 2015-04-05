@@ -26,8 +26,6 @@ import java.util.List;
 
 public class SpecInsideProcessor implements SpecProcessor {
 
-    public static final String MISSING_OBJECT_NAME = "Missing object name";
-
     @Override
     public Spec process(StringCharReader reader) {
         boolean partly = false;

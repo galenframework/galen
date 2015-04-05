@@ -32,6 +32,7 @@ import java.util.Properties;
 
 import junit.framework.Assert;
 import net.mindengine.galen.config.GalenConfig;
+import net.mindengine.galen.parser.SyntaxException;
 import net.mindengine.galen.speclang2.reader.specs.SpecReaderV2;
 import net.mindengine.galen.specs.*;
 
@@ -168,6 +169,58 @@ public class SpecsReaderV2Test {
         assertThat(spec.getOriginalText(), is("inside object 20px left, ~30px top"));
     }
 
+    @Test(expectedExceptions = SyntaxException.class,
+            expectedExceptionsMessageRegExp = "Missing object name"
+    )
+    public void shouldGiveError_inside_withoutObjects() throws IOException {
+        readSpec("inside");
+    }
+
+    @Test(expectedExceptions = SyntaxException.class,
+            expectedExceptionsMessageRegExp = "Missing object name"
+    )
+    public void shouldGiveError_inside_partly_withoutObjects() throws IOException {
+        readSpec("inside partly");
+    }
+
+    @Test
+    public void shouldReadSpec_contains()  throws IOException {
+        Spec spec = readSpec("contains object, menu, button");
+        SpecContains specContains = (SpecContains) spec;
+        assertThat(specContains.getChildObjects(), contains("object", "menu", "button"));
+        assertThat(spec.getOriginalText(), is("contains object, menu, button"));
+    }
+
+    @Test
+    public void shouldReadSpec_contains_with_regex()  throws IOException {
+        Spec spec = readSpec("contains menu-item-*");
+        SpecContains specContains = (SpecContains) spec;
+        assertThat(specContains.getChildObjects(), contains("menu-item-*"));
+        assertThat(spec.getOriginalText(), is("contains menu-item-*"));
+    }
+
+    @Test
+    public void shouldReadSpec_contains_partly()  throws IOException {
+        Spec spec = readSpec("contains partly object, menu, button");
+        SpecContains specContains = (SpecContains) spec;
+        assertThat(specContains.isPartly(), is(true));
+        assertThat(specContains.getChildObjects(), contains("object", "menu", "button"));
+        assertThat(spec.getOriginalText(), is("contains partly object, menu, button"));
+    }
+
+    @Test(expectedExceptions = SyntaxException.class,
+            expectedExceptionsMessageRegExp = "Missing object name"
+    )
+    public void shouldGiveError_contains_withoutObjects() throws IOException {
+        readSpec("contains");
+    }
+
+    @Test(expectedExceptions = SyntaxException.class,
+            expectedExceptionsMessageRegExp = "Missing object name"
+    )
+    public void shouldGiveError_contains_partly_withoutObjects() throws IOException {
+        readSpec("contains partly");
+    }
 
     private Spec readSpec(String specText) throws IOException {
         return new SpecReaderV2(EMPTY_PROPERTIES).read(specText);

@@ -15,16 +15,15 @@
 ******************************************************************************/
 package net.mindengine.galen.speclang2.reader.specs;
 
-import net.mindengine.galen.parser.Expectations;
 import net.mindengine.galen.parser.SyntaxException;
 import net.mindengine.galen.specs.Spec;
+import net.mindengine.galen.specs.SpecContains;
 import net.mindengine.galen.specs.reader.StringCharReader;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 
-import static net.mindengine.galen.parser.Expectations.word;
 
 public class SpecReaderV2 {
     private Properties properties;
@@ -38,6 +37,7 @@ public class SpecReaderV2 {
     private static Map<String, SpecProcessor> initSpecProcessors() {
         return new HashMap<String, SpecProcessor>() {{
             put("inside", new SpecInsideProcessor());
+            put("contains", new SpecContainsProcessor());
         }};
     }
 

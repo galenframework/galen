@@ -15,10 +15,34 @@
 ******************************************************************************/
 package net.mindengine.galen.speclang2.reader.specs;
 
+import net.mindengine.galen.parser.Expectations;
+import net.mindengine.galen.parser.SyntaxException;
 import net.mindengine.galen.specs.Spec;
+import net.mindengine.galen.specs.SpecContains;
 import net.mindengine.galen.specs.reader.StringCharReader;
 
-public interface SpecProcessor {
-    public static final String MISSING_OBJECT_NAME = "Missing object name";
-    public Spec process(StringCharReader reader);
+import java.util.List;
+
+public class SpecContainsProcessor implements SpecProcessor {
+
+    @Override
+    public Spec process(StringCharReader reader) {
+        boolean partly = false;
+
+        int initialCursorPosition = reader.currentCursorPosition();
+
+        if (reader.readWord().equals("partly")) {
+            partly = true;
+        } else {
+            reader.moveCursorTo(initialCursorPosition);
+        }
+
+        List<String> objectNames = Expectations.readAllWords(reader.getTheRest());
+
+        if (objectNames.size() == 0) {
+            throw new SyntaxException(MISSING_OBJECT_NAME);
+        }
+
+        return new SpecContains(objectNames, partly);
+    }
 }

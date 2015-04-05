@@ -96,4 +96,12 @@ public class StringCharReader {
     public String readWord() {
         return Expectations.word().read(this);
     }
+
+    public int currentCursorPosition() {
+        return cursor;
+    }
+
+    public void moveCursorTo(int position) {
+        cursor = position;
+    }
 }
