@@ -38,6 +38,7 @@ public class SpecReaderV2 {
         return new HashMap<String, SpecProcessor>() {{
             put("inside", new SpecInsideProcessor());
             put("contains", new SpecContainsProcessor());
+            put("near", new SpecNearProcessor());
         }};
     }
 

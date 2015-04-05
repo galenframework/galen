@@ -15,12 +15,31 @@
 ******************************************************************************/
 package net.mindengine.galen.speclang2.reader.specs;
 
+import net.mindengine.galen.parser.Expectations;
+import net.mindengine.galen.parser.SyntaxException;
+import net.mindengine.galen.specs.Location;
 import net.mindengine.galen.specs.Spec;
+import net.mindengine.galen.specs.SpecNear;
 import net.mindengine.galen.specs.reader.StringCharReader;
 
-public interface SpecProcessor {
-    public static final String MISSING_OBJECT_NAME = "Missing object name";
-    public static final String MISSING_LOCATION = "Missing location";
+import java.util.List;
 
-    public Spec process(StringCharReader reader);
+public class SpecNearProcessor implements SpecProcessor {
+
+
+    @Override
+    public Spec process(StringCharReader reader) {
+        String objectName = reader.readWord();
+        if (objectName.isEmpty()) {
+            throw new SyntaxException(MISSING_OBJECT_NAME);
+        }
+
+        List<Location> locations = Expectations.locations().read(reader);
+        
+        if (locations.size() == 0) {
+            throw new SyntaxException(MISSING_LOCATION);
+        }
+
+        return new SpecNear(objectName, locations);
+    }
 }

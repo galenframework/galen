@@ -63,7 +63,7 @@ public class SpecsReaderV2Test {
     }
 
     @Test
-    public void shouldReadSpec_inside() throws IOException {
+    public void shouldReadSpec_inside() {
         Spec spec = readSpec("inside object");
         SpecInside specInside = (SpecInside) spec;
 
@@ -75,7 +75,7 @@ public class SpecsReaderV2Test {
     }
 
     @Test
-    public void shouldReadSpec_inside_object_10px_right() throws IOException {
+    public void shouldReadSpec_inside_object_10px_right() {
         Spec spec = readSpec("inside object 10px right");
         SpecInside specInside = (SpecInside) spec;
 
@@ -89,7 +89,7 @@ public class SpecsReaderV2Test {
     }
 
     @Test
-    public void shouldReadSpec_inside_partly_object_10px_right()  throws IOException {
+    public void shouldReadSpec_inside_partly_object_10px_right() {
         Spec spec = readSpec("inside partly object 10px right");
         SpecInside specInside = (SpecInside) spec;
 
@@ -104,7 +104,7 @@ public class SpecsReaderV2Test {
 
 
     @Test
-    public void shouldReadSpec_inside_object_10_to_30px_left()  throws IOException {
+    public void shouldReadSpec_inside_object_10_to_30px_left() {
         Spec spec = readSpec("inside object 10 to 30px left");
         SpecInside specInside = (SpecInside) spec;
 
@@ -117,7 +117,7 @@ public class SpecsReaderV2Test {
     }
 
     @Test
-    public void shouldReadSpec_inside_object_25px_top_left()  throws IOException {
+    public void shouldReadSpec_inside_object_25px_top_left() {
         SpecInside spec = (SpecInside)readSpec("inside object 25px top left");
 
         List<Location> locations = spec.getLocations();
@@ -127,7 +127,7 @@ public class SpecsReaderV2Test {
     }
 
     @Test
-    public void shouldReadSpec_inside_object_25px_top_left_comma_10_to_20px_bottom()  throws IOException {
+    public void shouldReadSpec_inside_object_25px_top_left_comma_10_to_20px_bottom() {
         SpecInside spec = (SpecInside)readSpec("inside object 25px top left, 10 to 20px bottom");
 
         List<Location> locations = spec.getLocations();
@@ -138,7 +138,7 @@ public class SpecsReaderV2Test {
     }
 
     @Test
-    public void shouldReadSpec_inside_object_25px_bottom_right()  throws IOException {
+    public void shouldReadSpec_inside_object_25px_bottom_right()   {
         SpecInside spec = (SpecInside)readSpec("inside object 25px bottom right");
 
         List<Location> locations = spec.getLocations();
@@ -148,7 +148,7 @@ public class SpecsReaderV2Test {
     }
 
     @Test
-    public void shouldReadSpec_inside_object_25px_top_left_right_bottom()  throws IOException {
+    public void shouldReadSpec_inside_object_25px_top_left_right_bottom()   {
         SpecInside spec = (SpecInside)readSpec("inside object 25px top left right bottom ");
 
         List<Location> locations = spec.getLocations();
@@ -157,7 +157,7 @@ public class SpecsReaderV2Test {
         assertThat(spec.getOriginalText(), is("inside object 25px top left right bottom"));
     }
 
-    @Test public void shouldReadSpec_inside_object_20px_left_and_approximate_30px_top()  throws IOException {
+    @Test public void shouldReadSpec_inside_object_20px_left_and_approximate_30px_top()   {
         SpecInside spec = (SpecInside)readSpec("inside object 20px left, ~30px top");
 
         List<Location> locations = spec.getLocations();
@@ -170,21 +170,19 @@ public class SpecsReaderV2Test {
     }
 
     @Test(expectedExceptions = SyntaxException.class,
-            expectedExceptionsMessageRegExp = "Missing object name"
-    )
-    public void shouldGiveError_inside_withoutObjects() throws IOException {
+            expectedExceptionsMessageRegExp = "Missing object name")
+    public void shouldGiveError_inside_withoutObjects()  {
         readSpec("inside");
     }
 
     @Test(expectedExceptions = SyntaxException.class,
-            expectedExceptionsMessageRegExp = "Missing object name"
-    )
-    public void shouldGiveError_inside_partly_withoutObjects() throws IOException {
+            expectedExceptionsMessageRegExp = "Missing object name")
+    public void shouldGiveError_inside_partly_withoutObjects()  {
         readSpec("inside partly");
     }
 
     @Test
-    public void shouldReadSpec_contains()  throws IOException {
+    public void shouldReadSpec_contains()   {
         Spec spec = readSpec("contains object, menu, button");
         SpecContains specContains = (SpecContains) spec;
         assertThat(specContains.getChildObjects(), contains("object", "menu", "button"));
@@ -192,7 +190,7 @@ public class SpecsReaderV2Test {
     }
 
     @Test
-    public void shouldReadSpec_contains_with_regex()  throws IOException {
+    public void shouldReadSpec_contains_with_regex()   {
         Spec spec = readSpec("contains menu-item-*");
         SpecContains specContains = (SpecContains) spec;
         assertThat(specContains.getChildObjects(), contains("menu-item-*"));
@@ -200,7 +198,7 @@ public class SpecsReaderV2Test {
     }
 
     @Test
-    public void shouldReadSpec_contains_partly()  throws IOException {
+    public void shouldReadSpec_contains_partly()   {
         Spec spec = readSpec("contains partly object, menu, button");
         SpecContains specContains = (SpecContains) spec;
         assertThat(specContains.isPartly(), is(true));
@@ -209,20 +207,65 @@ public class SpecsReaderV2Test {
     }
 
     @Test(expectedExceptions = SyntaxException.class,
-            expectedExceptionsMessageRegExp = "Missing object name"
-    )
-    public void shouldGiveError_contains_withoutObjects() throws IOException {
+            expectedExceptionsMessageRegExp = "Missing object name")
+    public void shouldGiveError_contains_withoutObjects()  {
         readSpec("contains");
     }
 
     @Test(expectedExceptions = SyntaxException.class,
-            expectedExceptionsMessageRegExp = "Missing object name"
-    )
-    public void shouldGiveError_contains_partly_withoutObjects() throws IOException {
+            expectedExceptionsMessageRegExp = "Missing object name")
+    public void shouldGiveError_contains_partly_withoutObjects()  {
         readSpec("contains partly");
     }
 
-    private Spec readSpec(String specText) throws IOException {
+    @Test
+    public void shouldReadSpec_near_button_10_to_20px_left()   {
+        SpecNear spec = (SpecNear) readSpec("near button 10 to 20px left");
+
+        assertThat(spec.getObject(), is("button"));
+
+        List<Location> locations = spec.getLocations();
+        assertThat(locations.size(), is(1));
+        assertThat(spec.getLocations(), contains(new Location(Range.between(10, 20), sides(LEFT))));
+        assertThat(spec.getOriginalText(), is("near button 10 to 20px left"));
+    }
+
+    @Test
+    public void shouldReadSpec_near_button_10_to_20px_top_right()   {
+        SpecNear spec = (SpecNear) readSpec("near button 10 to 20px top right");
+        assertThat(spec.getObject(), is("button"));
+
+        List<Location> locations = spec.getLocations();
+        assertThat(locations.size(), is(1));
+        assertThat(spec.getLocations(), contains(new Location(Range.between(10, 20), sides(TOP, RIGHT))));
+        assertThat(spec.getOriginalText(), is("near button 10 to 20px top right"));
+    }
+
+    @Test
+    public void shouldReadSpec_near_button_approx_0px_left() {
+        SpecNear spec = (SpecNear) readSpec("near button ~0px left");
+        assertThat(spec.getObject(), is("button"));
+
+        List<Location> locations = spec.getLocations();
+        assertThat(locations.size(), is(1));
+        assertThat(spec.getLocations(), contains(new Location(Range.between(-2, 2), sides(LEFT))));
+        assertThat(spec.getOriginalText(), is("near button ~0px left"));
+    }
+
+    @Test(expectedExceptions = SyntaxException.class,
+            expectedExceptionsMessageRegExp = "Missing object name")
+    public void shouldGiveError_near()  {
+        readSpec("near");
+    }
+
+    @Test(expectedExceptions = SyntaxException.class,
+        expectedExceptionsMessageRegExp = "Missing location")
+    public void shouldGiveError_near_button()  {
+        readSpec("near button");
+    }
+
+
+    private Spec readSpec(String specText) {
         return new SpecReaderV2(EMPTY_PROPERTIES).read(specText);
     }
 
