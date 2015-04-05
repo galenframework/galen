@@ -264,6 +264,138 @@ public class SpecsReaderV2Test {
         readSpec("near button");
     }
 
+    @Test
+    public void shouldReadSpec_aligned_horizontally_centered()  throws IOException {
+        SpecHorizontally spec = (SpecHorizontally) readSpec("aligned horizontally centered object");
+        assertThat(spec.getAlignment(), is(Alignment.CENTERED));
+        assertThat(spec.getObject(), is("object"));
+        assertThat(spec.getErrorRate(), is(0));
+        assertThat(spec.getOriginalText(), is("aligned horizontally centered object"));
+    }
+
+    @Test
+    public void shouldReadSpec_aligned_horizontally_top()  throws IOException {
+        SpecHorizontally spec = (SpecHorizontally) readSpec("aligned horizontally top object");
+        assertThat(spec.getAlignment(), is(Alignment.TOP));
+        assertThat(spec.getObject(), is("object"));
+        assertThat(spec.getErrorRate(), is(0));
+        assertThat(spec.getOriginalText(), is("aligned horizontally top object"));
+    }
+
+    @Test
+    public void shouldReadSpec_aligned_horizontally_bottom()  throws IOException {
+        SpecHorizontally spec = (SpecHorizontally) readSpec("aligned horizontally bottom object");
+        assertThat(spec.getAlignment(), is(Alignment.BOTTOM));
+        assertThat(spec.getObject(), is("object"));
+        assertThat(spec.getErrorRate(), is(0));
+        assertThat(spec.getOriginalText(), is("aligned horizontally bottom object"));
+    }
+
+
+    @Test
+    public void shouldReadSpec_aligned_horizontally_all()  throws IOException {
+        SpecHorizontally spec = (SpecHorizontally) readSpec("aligned horizontally all object");
+        assertThat(spec.getAlignment(), is(Alignment.ALL));
+        assertThat(spec.getObject(), is("object"));
+        assertThat(spec.getErrorRate(), is(0));
+        assertThat(spec.getOriginalText(), is("aligned horizontally all object"));
+    }
+
+    @Test
+    public void shouldReadSpec_aligned_vertically_centered()  throws IOException {
+        SpecVertically spec = (SpecVertically) readSpec("aligned  vertically  centered object");
+        assertThat(spec.getAlignment(), is(Alignment.CENTERED));
+        assertThat(spec.getObject(), is("object"));
+        assertThat(spec.getErrorRate(), is(0));
+        assertThat(spec.getOriginalText(), is("aligned  vertically  centered object"));
+    }
+
+    @Test
+    public void shouldReadSpec_aligned_vertically_left()  throws IOException {
+        SpecVertically spec = (SpecVertically) readSpec("aligned vertically left object");
+        assertThat(spec.getAlignment(), is(Alignment.LEFT));
+        assertThat(spec.getObject(), is("object"));
+        assertThat(spec.getErrorRate(), is(0));
+        assertThat(spec.getOriginalText(), is("aligned vertically left object"));
+    }
+
+    @Test
+    public void shouldReadSpec_aligned_vertically_right()  throws IOException {
+        SpecVertically spec = (SpecVertically) readSpec("aligned vertically right object");
+        assertThat(spec.getAlignment(), is(Alignment.RIGHT));
+        assertThat(spec.getObject(), is("object"));
+        assertThat(spec.getErrorRate(), is(0));
+        assertThat(spec.getOriginalText(), is("aligned vertically right object"));
+    }
+
+    @Test
+    public void shouldReadSpec_aligned_vertically_all()  throws IOException {
+        SpecVertically spec = (SpecVertically) readSpec("aligned vertically all object");
+        assertThat(spec.getAlignment(), is(Alignment.ALL));
+        assertThat(spec.getObject(), is("object"));
+        assertThat(spec.getErrorRate(), is(0));
+        assertThat(spec.getOriginalText(), is("aligned vertically all object"));
+    }
+
+    @Test
+    public void shouldReadSpec_aligned_vertically_with_error_rate_10px()  throws IOException {
+        SpecVertically spec = (SpecVertically) readSpec("aligned vertically all object 10px");
+        assertThat(spec.getAlignment(), is(Alignment.ALL));
+        assertThat(spec.getObject(), is("object"));
+        assertThat(spec.getErrorRate(), is(10));
+        assertThat(spec.getOriginalText(), is("aligned vertically all object 10px"));
+    }
+
+    @Test
+    public void shouldReadSpec_aligned_vertically_with_error_rate_10_px()  throws IOException {
+        SpecVertically spec = (SpecVertically) readSpec("aligned vertically all object 10  px");
+        assertThat(spec.getAlignment(), is(Alignment.ALL));
+        assertThat(spec.getObject(), is("object"));
+        assertThat(spec.getErrorRate(), is(10));
+        assertThat(spec.getOriginalText(), is("aligned vertically all object 10  px"));
+    }
+
+    @Test
+    public void shouldReadSpec_aligned_horizontally_with_error_rate_10px()  throws IOException {
+        SpecHorizontally spec = (SpecHorizontally) readSpec("aligned horizontally all object 10px");
+        assertThat(spec.getAlignment(), is(Alignment.ALL));
+        assertThat(spec.getObject(), is("object"));
+        assertThat(spec.getErrorRate(), is(10));
+        assertThat(spec.getOriginalText(), is("aligned horizontally all object 10px"));
+    }
+
+    @Test
+    public void shouldReadSpec_aligned_horizontally_with_error_rate_10_px()  throws IOException {
+        SpecHorizontally spec = (SpecHorizontally) readSpec("aligned horizontally all object 10 px");
+        assertThat(spec.getAlignment(), is(Alignment.ALL));
+        assertThat(spec.getObject(), is("object"));
+        assertThat(spec.getErrorRate(), is(10));
+        assertThat(spec.getOriginalText(), is("aligned horizontally all object 10 px"));
+    }
+
+    @Test(expectedExceptions = SyntaxException.class,
+        expectedExceptionsMessageRegExp = "Incorrect alignment direction. Expected 'vertically' or 'horizontally' but got: object")
+    public void shouldGiveError_aligned_object() {
+        readSpec("aligned object");
+    }
+
+    @Test(expectedExceptions = SyntaxException.class,
+            expectedExceptionsMessageRegExp = "Incorrect side for vertical alignment: top")
+    public void shouldGiveError_aligned_vertically_top_object() {
+        readSpec("aligned vertically top object");
+    }
+
+    @Test(expectedExceptions = SyntaxException.class,
+            expectedExceptionsMessageRegExp = "Incorrect side for horizontal alignment: left")
+    public void shouldGiveError_aligned_horizontally_left_object() {
+        readSpec("aligned horizontally left object");
+    }
+
+    @Test(expectedExceptions = SyntaxException.class,
+            expectedExceptionsMessageRegExp = "Missing object name")
+    public void shouldGiveError_aligned_horizontally_left() {
+        readSpec("aligned horizontally left");
+    }
 
     private Spec readSpec(String specText) {
         return new SpecReaderV2(EMPTY_PROPERTIES).read(specText);

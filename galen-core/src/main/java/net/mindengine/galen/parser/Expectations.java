@@ -119,4 +119,8 @@ public class Expectations {
             }
         };
     }
+
+    public static ExpectationErrorRate errorRate() {
+        return new ExpectationErrorRate();
+    }
 }

@@ -39,6 +39,7 @@ public class SpecReaderV2 {
             put("inside", new SpecInsideProcessor());
             put("contains", new SpecContainsProcessor());
             put("near", new SpecNearProcessor());
+            put("aligned", new SpecAlignedProcessor());
         }};
     }
 
