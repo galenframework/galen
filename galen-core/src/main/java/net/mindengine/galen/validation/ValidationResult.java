@@ -73,6 +73,7 @@ public class ValidationResult {
         return new HashCodeBuilder() //@formatter:off
                 .append(validationObjects)
                 .append(error)
+                .append(childValidationResults)
                 .toHashCode(); //@formatter:on
     }
 
@@ -90,6 +91,7 @@ public class ValidationResult {
         return new EqualsBuilder() //@formatter:off
                 .append(this.error, rhs.error)
                 .append(this.validationObjects, rhs.validationObjects)
+                .append(this.childValidationResults, rhs.childValidationResults)
                 .isEquals(); //@formatter:on
 
     }
@@ -99,6 +101,7 @@ public class ValidationResult {
         return new ToStringBuilder(this) //@formatter:off
                 .append("objects", validationObjects)
                 .append("error", error)
+                .append("childValidationResults", childValidationResults)
                 .toString(); //@formatter:on
     }
 
@@ -113,4 +116,24 @@ public class ValidationResult {
         return filtered;
     }
 
+    public List<ValidationResult> getChildValidationResults() {
+        return childValidationResults;
+    }
+
+    public void setChildValidationResults(List<ValidationResult> childValidationResults) {
+        this.childValidationResults = childValidationResults;
+    }
+
+    public ValidationResult withObjects(List<ValidationObject> objects) {
+        setValidationObjects(objects);
+        return this;
+    }
+    public ValidationResult withError(ValidationError error) {
+        setError(error);
+        return this;
+    }
+    public ValidationResult withChildValidationResults(List<ValidationResult> childValidationResults) {
+        setChildValidationResults(childValidationResults);
+        return this;
+    }
 }
