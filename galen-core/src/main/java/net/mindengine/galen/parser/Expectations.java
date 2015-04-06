@@ -108,7 +108,18 @@ public class Expectations {
     }
 
     public static Expectation<String> doubleQuotedText() {
-        return new ExpectString();
+        return new Expectation<String>() {
+            @Override
+            public String read(StringCharReader charReader) {
+                char firstNonWhiteSpaceSymbol = charReader.firstNonWhiteSpaceSymbol();
+                if (firstNonWhiteSpaceSymbol == '"') {
+                    charReader.readUntilSymbol('"');
+                    return new ExpectString().read(charReader);
+                } else {
+                    throw new SyntaxException("Expected \" symbol, got: " + firstNonWhiteSpaceSymbol);
+                }
+            }
+        };
     }
 
     public static ExpectationErrorRate errorRate() {

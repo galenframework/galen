@@ -48,12 +48,6 @@ public class SpecTextProcessor implements SpecProcessor {
             }
         }
 
-        char firstNonWhiteSpaceSymbol = reader.firstNonWhiteSpaceSymbol();
-        if (firstNonWhiteSpaceSymbol != '\"') {
-            throw new SyntaxException("Expected \" symbol, got: " + firstNonWhiteSpaceSymbol + "");
-        }
-
-        reader.readUntilSymbol('\"');
         String expectedText = Expectations.doubleQuotedText().read(reader);
 
         if (reader.hasMoreNormalSymbols()) {
