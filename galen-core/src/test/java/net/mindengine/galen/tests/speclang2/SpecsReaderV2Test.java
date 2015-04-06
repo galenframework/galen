@@ -454,6 +454,71 @@ public class SpecsReaderV2Test {
         readSpec("width 10 to 40 px 1234 px ");
     }
 
+    @Test
+    public void shouldReadSpec_text_is_some_text()  throws IOException {
+        SpecText spec = (SpecText)readSpec("text is  \"Some text\"");
+        assertThat(spec.getText(), is("Some text"));
+        assertThat(spec.getType(), is(SpecText.Type.IS));
+    }
+
+    @Test
+    public void shouldReadSpec_text_is_some_text_2()  throws IOException {
+        SpecText spec = (SpecText)readSpec("text is \"Some text\\\" with \\t special \\n symbols\"");
+        assertThat(spec.getText(), is("Some text\" with \t special \n symbols"));
+        assertThat(spec.getType(), is(SpecText.Type.IS));
+    }
+
+    @Test
+    public void shouldReadSpec_text_is_empty()  throws IOException {
+        SpecText spec = (SpecText)readSpec("text is \"\"");
+        assertThat(spec.getText(), is(""));
+        assertThat(spec.getType(), is(SpecText.Type.IS));
+    }
+
+    @Test
+    public void shouldReadSpec_text_contains_some_text()  throws IOException {
+        SpecText spec = (SpecText)readSpec("text contains \"Some text\" ");
+        assertThat(spec.getText(), is("Some text"));
+        assertThat(spec.getType(), is(SpecText.Type.CONTAINS));
+    }
+
+    @Test
+    public void shouldReadSpec_text_startsWith_some_text()  throws IOException {
+        SpecText spec = (SpecText)readSpec("text starts  \"Some text\" ");
+        assertThat(spec.getText(), is("Some text"));
+        assertThat(spec.getType(), is(SpecText.Type.STARTS));
+    }
+
+    @Test
+    public void shouldReadSpec_text_endssWith_some_text()  throws IOException {
+        SpecText spec = (SpecText)readSpec("text ends \"Some text\" ");
+        assertThat(spec.getText(), is("Some text"));
+        assertThat(spec.getType(), is(SpecText.Type.ENDS));
+    }
+
+    @Test
+    public void shouldReadSpec_text_matches_some_text()  throws IOException {
+        SpecText spec = (SpecText)readSpec("text matches  \"Some * text\" ");
+        assertThat(spec.getText(), is("Some * text"));
+        assertThat(spec.getType(), is(SpecText.Type.MATCHES));
+    }
+
+    @Test
+    public void shouldReadSpec_text_lowercase_is() throws IOException {
+        SpecText spec = (SpecText)readSpec("text lowercase is \"some text\"");
+        assertThat(spec.getText(), is("some text"));
+        assertThat(spec.getType(), is(SpecText.Type.IS));
+        assertThat(spec.getOperations(), contains("lowercase"));
+    }
+
+    @Test
+    public void shouldReadSpec_text_lowercase_uppercase_is() throws IOException {
+        SpecText spec = (SpecText)readSpec("text lowercase uppercase is \"SOME TEXT\"");
+        assertThat(spec.getText(), is("SOME TEXT"));
+        assertThat(spec.getType(), is(SpecText.Type.IS));
+        assertThat(spec.getOperations(), contains("lowercase", "uppercase"));
+    }
+
     private Spec readSpec(String specText) {
         return new SpecReaderV2(EMPTY_PROPERTIES).read(specText);
     }

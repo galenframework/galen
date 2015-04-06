@@ -63,6 +63,7 @@ public class SpecReaderV2 {
                     return new SpecHeight(range);
                 }
             });
+            put("text", new SpecTextProcessor());
         }};
     }
 
