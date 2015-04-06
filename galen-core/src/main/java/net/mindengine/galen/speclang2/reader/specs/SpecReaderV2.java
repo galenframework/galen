@@ -17,7 +17,9 @@ package net.mindengine.galen.speclang2.reader.specs;
 
 import net.mindengine.galen.parser.SyntaxException;
 import net.mindengine.galen.specs.Spec;
+import net.mindengine.galen.specs.SpecAbsent;
 import net.mindengine.galen.specs.SpecContains;
+import net.mindengine.galen.specs.SpecVisible;
 import net.mindengine.galen.specs.reader.StringCharReader;
 
 import java.util.HashMap;
@@ -40,6 +42,18 @@ public class SpecReaderV2 {
             put("contains", new SpecContainsProcessor());
             put("near", new SpecNearProcessor());
             put("aligned", new SpecAlignedProcessor());
+            put("absent", new SingleWordSpecProcessor() {
+                @Override
+                public Spec createSpec() {
+                    return new SpecAbsent();
+                }
+            });
+            put("visible", new SingleWordSpecProcessor() {
+                @Override
+                public Spec createSpec() {
+                    return new SpecVisible();
+                }
+            });
         }};
     }
 

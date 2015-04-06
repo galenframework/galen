@@ -23,6 +23,7 @@ import static net.mindengine.galen.specs.Side.RIGHT;
 import static net.mindengine.galen.specs.Side.TOP;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.contains;
+import static org.hamcrest.Matchers.instanceOf;
 import static org.hamcrest.Matchers.is;
 
 import java.io.IOException;
@@ -36,6 +37,7 @@ import net.mindengine.galen.parser.SyntaxException;
 import net.mindengine.galen.speclang2.reader.specs.SpecReaderV2;
 import net.mindengine.galen.specs.*;
 
+import org.hamcrest.Matchers;
 import org.junit.BeforeClass;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
@@ -395,6 +397,20 @@ public class SpecsReaderV2Test {
             expectedExceptionsMessageRegExp = "Missing object name")
     public void shouldGiveError_aligned_horizontally_left() {
         readSpec("aligned horizontally left");
+    }
+
+    @Test
+    public void shouldReadSpec_absent()  throws IOException {
+        Spec spec = readSpec("absent");
+        assertThat(spec, instanceOf(SpecAbsent.class));
+        assertThat(spec.getOriginalText(), is("absent"));
+    }
+
+    @Test
+    public void shouldReadSpec_visible()  throws IOException {
+        Spec spec = readSpec("visible");
+        assertThat(spec, instanceOf(SpecVisible.class));
+        assertThat(spec.getOriginalText(), is("visible"));
     }
 
     private Spec readSpec(String specText) {
