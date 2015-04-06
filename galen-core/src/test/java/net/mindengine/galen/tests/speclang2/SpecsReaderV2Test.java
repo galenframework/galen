@@ -413,6 +413,47 @@ public class SpecsReaderV2Test {
         assertThat(spec.getOriginalText(), is("visible"));
     }
 
+    @Test
+    public void shouldReadSpec_width_10px()  throws IOException {
+        SpecWidth spec = (SpecWidth) readSpec("width 10px");
+        assertThat(spec.getRange(), is(Range.exact(10)));
+        assertThat(spec.getOriginalText(), is("width 10px"));
+    }
+
+    @Test
+    public void shouldReadSpec_width_5_to_8px()  throws IOException {
+        SpecWidth spec = (SpecWidth) readSpec("width 5 to 8px");
+        assertThat(spec.getRange(), is(Range.between(5, 8)));
+        assertThat(spec.getOriginalText(), is("width 5 to 8px"));
+    }
+
+    @Test
+    public void shouldReadSpec_width_100_percent_of_other_object_width()  throws IOException {
+        SpecWidth spec = (SpecWidth) readSpec("width 100% of main-big-container/width");
+        assertThat(spec.getRange(), is(Range.exact(100).withPercentOf("main-big-container/width")));
+        assertThat(spec.getOriginalText(), is("width 100% of main-big-container/width"));
+    }
+
+    @Test
+    public void shouldReadSpec_height_10px()  throws IOException {
+        SpecHeight spec = (SpecHeight) readSpec("height 10px");
+        assertThat(spec.getRange(), is(Range.exact(10)));
+        assertThat(spec.getOriginalText(), is("height 10px"));
+    }
+
+    @Test
+    public void shouldReadSpec_height_5_to_8px()  throws IOException {
+        SpecHeight spec = (SpecHeight) readSpec("height 5 to 8px");
+        assertThat(spec.getRange(), is(Range.between(5, 8)));
+        assertThat(spec.getOriginalText(), is("height 5 to 8px"));
+    }
+
+    @Test(expectedExceptions = SyntaxException.class,
+            expectedExceptionsMessageRegExp = "Unexpected token: 1234 px")
+    public void shouldGiveError_width_unexcpected_token() {
+        readSpec("width 10 to 40 px 1234 px ");
+    }
+
     private Spec readSpec(String specText) {
         return new SpecReaderV2(EMPTY_PROPERTIES).read(specText);
     }
