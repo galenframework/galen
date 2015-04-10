@@ -120,6 +120,8 @@ public class SeleniumPage implements Page {
                     .withOffset(offsetLeft, offsetTop));
                 i++;
             }
+
+            cachedElementsList.put(objectName, pageElements);
         }
         if (index < pageElements.size()) {
              return pageElements.get(index);
