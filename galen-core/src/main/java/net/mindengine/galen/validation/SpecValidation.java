@@ -88,5 +88,18 @@ public abstract class SpecValidation<T extends Spec> {
             throw new ValidationErrorException(format("Cannot convert range: " + ex.getMessage()));
         }
     }
+    
+    protected String getRangeAndValue(Range specRange, Range convertedRange, double realValue) {
+        String dimension = "px";
+        String originalValue = realValue + dimension;
+        String rangeValue = convertedRange.getErrorMessageSuffix();
+        if (specRange.isPercentage()) {
+            double size = convertedRange.getFrom() / specRange.getFrom() * 100.0;
+            dimension = "%";
+            originalValue = format("%f%s [%s]", realValue / size * 100.0, dimension, originalValue);
+            rangeValue = format("%s [%s]", specRange.getErrorMessageSuffix(dimension), convertedRange.toString());
+        }
+        return format("%s %s", originalValue, rangeValue);
+    }
 
 }
