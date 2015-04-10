@@ -42,7 +42,7 @@ public abstract class SpecValidationSize<T extends SpecRange> extends SpecValida
         if (!range.holds(realValue)) {
                 throw new ValidationErrorException()
                     .withValidationObjects(validationObjects)
-                    .withMessage(format("\"%s\" %s is %dpx %s", objectName, getUnitName(), realValue, range.getErrorMessageSuffix()));
+                    .withMessage(format("\"%s\" %s is %s", objectName, getUnitName(), getRangeAndValue(spec.getRange(), range, realValue)));
         }
 
         return new ValidationResult(validationObjects);
