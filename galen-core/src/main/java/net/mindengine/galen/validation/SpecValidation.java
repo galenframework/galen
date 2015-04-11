@@ -17,6 +17,8 @@ package net.mindengine.galen.validation;
 
 import static java.lang.String.format;
 
+import java.math.RoundingMode;
+import java.text.DecimalFormat;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -31,6 +33,10 @@ public abstract class SpecValidation<T extends Spec> {
     protected static final String OBJECT_WITH_NAME_S_IS_NOT_DEFINED_IN_PAGE_SPEC = "Cannot find locator for \"%s\" in page spec";
     protected static final String OBJECT_S_IS_ABSENT_ON_PAGE = "\"%s\" is absent on page";
     protected static final String OBJECT_S_IS_NOT_VISIBLE_ON_PAGE = "\"%s\" is not visible on page";
+
+    private static final DecimalFormat percentageDecimalFormat = new DecimalFormat("#.#"){{
+        setRoundingMode(RoundingMode.HALF_DOWN);
+    }};
 
     /**
      * Checks if object satisfies the specified spec
@@ -88,5 +94,19 @@ public abstract class SpecValidation<T extends Spec> {
             throw new ValidationErrorException(format("Cannot convert range: " + ex.getMessage()));
         }
     }
+    
+     protected String getRangeAndValue(Range specRange, Range convertedRange, int realValue) {
+        String dimension = "px";
+        String originalValue = realValue + dimension;
+        String rangeValue = convertedRange.getErrorMessageSuffix();
 
+        if (specRange.isPercentage()) {
+            double size = convertedRange.getFrom() / specRange.getFrom() * 100.0;
+            dimension = "%";
+            double percent = realValue / size * 100.0;
+            originalValue = format("%s%s [%s]", percentageDecimalFormat.format(percent), dimension, originalValue);
+            rangeValue = format("%s [%s]", specRange.getErrorMessageSuffix(dimension), convertedRange.prettyString());
+        }
+        return format("%s %s", originalValue, rangeValue);
+    }
 }
