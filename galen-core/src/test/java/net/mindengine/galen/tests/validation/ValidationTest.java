@@ -864,13 +864,13 @@ public class ValidationTest {
                       put("object", element(100, 100, 100, 50));
           }})),
           
-          row(validationResult(singleArea(new Rect(100, 100, 100, 50), "object"), messages("\"object\" width is 100px instead of 20px")),
+          row(validationResult(singleArea(new Rect(100, 100, 100, 50), "object"), messages("\"object\" width is 50% [100px] instead of 10% [20px]")),
                   specWidth(exact(10).withPercentOf("container/width")), page(new HashMap<String, PageElement>(){{
                       put("object", element(100, 100, 100, 50));
                       put("container", element(100, 100, 200, 50));
           }})),
           
-          row(validationResult(singleArea(new Rect(100, 100, 100, 50), "object"), messages("\"object\" width is 100px which is not in range of 20 to 40px")),
+          row(validationResult(singleArea(new Rect(100, 100, 100, 50), "object"), messages("\"object\" width is 50% [100px] which is not in range of 10 to 20% [20 to 40px]")),
                   specWidth(between(10, 20).withPercentOf("container/width")), page(new HashMap<String, PageElement>(){{
                       put("object", element(100, 100, 100, 50));
                       put("container", element(100, 100, 200, 50));
@@ -902,13 +902,13 @@ public class ValidationTest {
                       put("object", element(100, 100, 100, 50));
           }})),
           
-          row(validationResult(singleArea(new Rect(100, 100, 100, 50), "object"), messages("\"object\" height is 50px instead of 20px")),
+          row(validationResult(singleArea(new Rect(100, 100, 100, 50), "object"), messages("\"object\" height is 25% [50px] instead of 10% [20px]")),
                   specHeight(exact(10).withPercentOf("container/height")), page(new HashMap<String, PageElement>(){{
                       put("object", element(100, 100, 100, 50));
                       put("container", element(100, 100, 100, 200));
           }})),
           
-          row(validationResult(singleArea(new Rect(100, 100, 100, 50), "object"), messages("\"object\" height is 50px which is not in range of 20 to 30px")),
+          row(validationResult(singleArea(new Rect(100, 100, 100, 50), "object"), messages("\"object\" height is 25% [50px] which is not in range of 10 to 15% [20 to 30px]")),
                   specHeight(between(10, 15).withPercentOf("container/height")), page(new HashMap<String, PageElement>(){{
                       put("object", element(100, 100, 100, 50));
                       put("container", element(100, 100, 100, 200));
