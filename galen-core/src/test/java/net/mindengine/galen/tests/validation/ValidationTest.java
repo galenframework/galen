@@ -247,7 +247,11 @@ public class ValidationTest {
               put("object", element(305, 140, 15, 50));
               put("main-container-1", element(305, 400, 30, 50));
           }})),
-          
+          row(specWidth(Range.exact(33.3).withPercentOf("main-container-1/width")), page(new HashMap<String, PageElement>(){{
+              put("object", element(0, 0, 100, 50));
+              put("main-container-1", element(0, 0, 300, 50));
+          }})),
+
 
           
           // Height 

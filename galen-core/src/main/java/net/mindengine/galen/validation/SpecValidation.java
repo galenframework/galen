@@ -95,7 +95,7 @@ public abstract class SpecValidation<T extends Spec> {
         }
     }
     
-     protected String getRangeAndValue(Range specRange, Range convertedRange, int realValue) {
+    protected String getRangeAndValue(Range specRange, Range convertedRange, int realValue) {
         String dimension = "px";
         String originalValue = realValue + dimension;
         String rangeValue = convertedRange.getErrorMessageSuffix();
@@ -103,8 +103,8 @@ public abstract class SpecValidation<T extends Spec> {
         if (specRange.isPercentage()) {
             double size = convertedRange.getFrom() / specRange.getFrom() * 100.0;
             dimension = "%";
-            double percent = realValue / size * 100.0;
-            originalValue = format("%s%s [%s]", percentageDecimalFormat.format(percent), dimension, originalValue);
+            double actualPercent = realValue / size * 100.0;
+            originalValue = format("%s%s [%s]", percentageDecimalFormat.format(actualPercent), dimension, originalValue);
             rangeValue = format("%s [%s]", specRange.getErrorMessageSuffix(dimension), convertedRange.prettyString());
         }
         return format("%s %s", originalValue, rangeValue);

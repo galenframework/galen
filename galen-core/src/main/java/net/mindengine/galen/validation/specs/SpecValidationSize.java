@@ -35,14 +35,14 @@ public abstract class SpecValidationSize<T extends SpecRange> extends SpecValida
         
         int realValue = getSizeValue(mainObject);
         
-        Range range = convertRange(spec.getRange(), pageValidation);
+        Range convertedRange = convertRange(spec.getRange(), pageValidation);
 
         List<ValidationObject> validationObjects = asList(new ValidationObject(mainObject.getArea(), objectName));
 
-        if (!range.holds(realValue)) {
+        if (!convertedRange.holds(realValue)) {
                 throw new ValidationErrorException()
                     .withValidationObjects(validationObjects)
-                    .withMessage(format("\"%s\" %s is %s", objectName, getUnitName(), getRangeAndValue(spec.getRange(), range, realValue)));
+                    .withMessage(format("\"%s\" %s is %s", objectName, getUnitName(), getRangeAndValue(spec.getRange(), convertedRange, realValue)));
         }
 
         return new ValidationResult(validationObjects);
