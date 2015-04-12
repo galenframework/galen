@@ -19,7 +19,6 @@ import static java.lang.String.format;
 import static java.util.Arrays.asList;
 
 import net.mindengine.galen.page.PageElement;
-import net.mindengine.galen.specs.Range;
 import net.mindengine.galen.specs.SpecRange;
 import net.mindengine.galen.validation.*;
 
@@ -42,7 +41,10 @@ public abstract class SpecValidationSize<T extends SpecRange> extends SpecValida
         if (!spec.getRange().holds(convertedValue)) {
                 throw new ValidationErrorException()
                     .withValidationObjects(validationObjects)
-                    .withMessage(format("\"%s\" %s is %s", objectName, getUnitName(), getRangeAndValue(spec.getRange(), realValue, convertedValue)));
+                    .withMessage(format("\"%s\" %s is %s",
+                            objectName,
+                            getUnitName(),
+                            getReadableRangeAndValue(spec.getRange(), realValue, convertedValue, pageValidation)));
         }
 
         return new ValidationResult(validationObjects);

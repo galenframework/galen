@@ -64,7 +64,7 @@ public class GalenPageActionCheckTest {
                 "</o header-text-1>\n" +
                 "<o menu>\n" +
                 "<SpecWidth menu>\n" +
-                "<e><msg>\"menu\" width is 102.5% [410px] instead of 100% [400px]</msg></e>\n" +
+                "<e><msg>\"menu\" width is 102% [410px] instead of 100% [400px]</msg></e>\n" +
                 "</o menu>\n" +
                 "<o menu>\n" +
                 "<SpecBelow menu>\n" +
@@ -99,7 +99,7 @@ public class GalenPageActionCheckTest {
                 "</o header-text-1>\n" +
                 "<o menu>\n" +
                 "<SpecWidth menu>\n" +
-                "<e><msg>\"menu\" width is 102.5% [410px] instead of 100% [400px]</msg></e>\n" +
+                "<e><msg>\"menu\" width is 102% [410px] instead of 100% [400px]</msg></e>\n" +
                 "</o menu>\n"
         ));
     }

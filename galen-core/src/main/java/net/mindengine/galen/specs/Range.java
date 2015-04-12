@@ -32,6 +32,18 @@ public class Range {
     private String percentageOfValue;
     private RangeType rangeType = RangeType.BETWEEN;
 
+    public int findPrecision() {
+        int precision1 = 0;
+        int precision2 = 0;
+        if (from != null) {
+            precision1 = from.getPrecision();
+        }
+        if (to != null) {
+            precision2 = to.getPrecision();
+        }
+        return Math.max(precision1, precision2);
+    }
+
     public enum RangeType {
         BETWEEN, EXACT, GREATER_THAN, LESS_THAN
     }
@@ -124,7 +136,7 @@ public class Range {
         return prettyString("px");
     }
     
-    private String prettyString(String dimension) {
+    public String prettyString(String dimension) {
         if (isExact()) {
             return String.format("%s%s", from.toString(), dimension);
         }
@@ -171,7 +183,11 @@ public class Range {
     }
     
     public String getErrorMessageSuffix() {
-        return getErrorMessageSuffix("px");
+        if (isPercentage()) {
+            return getErrorMessageSuffix("%");
+        } else {
+            return getErrorMessageSuffix("px");
+        }
     }
     public String getErrorMessageSuffix(String dimension) {
         if (rangeType == RangeType.EXACT) {

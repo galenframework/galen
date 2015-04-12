@@ -161,30 +161,35 @@ public class PageValidation {
         }
     }
 
-    private double calculatePrecentageOfRealValue(String valuePath, double realValue) {
-        int index = valuePath.indexOf("/");
-        if (index > 0 && index < valuePath.length() - 1) {
-            String objectName = valuePath.substring(0, index);
-            String fieldPath = valuePath.substring(index + 1);
+    public int getObjectValue(String objectValuePath) {
+        int index = objectValuePath.indexOf("/");
+        if (index > 0 && index < objectValuePath.length() - 1) {
+            String objectName = objectValuePath.substring(0, index);
+            String fieldPath = objectValuePath.substring(index + 1);
 
             Locator locator = pageSpec.getObjectLocator(objectName);
             PageElement pageElement = findPageElementOnPage(objectName, locator);
 
             if (pageElement != null) {
                 Object objectValue = getObjectValue(pageElement, fieldPath);
-                int value = convertToInt(objectValue);
-
-
-                if (value != 0) {
-                    return (((double)realValue) / ((double)value)) * 100.0;
-                }
-                else {
-                    return 0;
-                }
+                return convertToInt(objectValue);
             }
             else throw new SyntaxException(UNKNOWN_LINE, format("Locator for object \"%s\" is not specified", objectName));
         }
-        else throw new SyntaxException(UNKNOWN_LINE, format("Value path is incorrect %s", valuePath));
+        else throw new SyntaxException(UNKNOWN_LINE, format("Value path is incorrect %s", objectValuePath));
+
+    }
+
+    private double calculatePrecentageOfRealValue(String objectValuePath, double realValue) {
+        int value = getObjectValue(objectValuePath);
+
+
+        if (value != 0) {
+            return (((double)realValue) / ((double)value)) * 100.0;
+        }
+        else {
+            return 0;
+        }
     }
 
     public ValidationListener getValidationListener() {
