@@ -64,15 +64,15 @@ public class SpecValidationDirectionPosition extends SpecValidation<SpecDirectio
         Rect secondArea = secondObject.getArea();
         int offset = getOffset(mainArea, secondArea);
         
-        
-        Range range = convertRange(spec.getRange(), pageValidation);
 
         List<ValidationObject> objects = asList(
                 new ValidationObject(mainArea, objectName),
                 new ValidationObject(secondArea, spec.getObject()));
 
-        
-        if (!range.holds(offset)) {
+
+        double convertedOffset = pageValidation.convertValue(spec.getRange(), offset);
+
+        if (!spec.getRange().holds(convertedOffset)) {
         	throw new ValidationErrorException().withMessage(
                     String.format("\"%s\" is %dpx %s \"%s\" %s",
                             objectName,

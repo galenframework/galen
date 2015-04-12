@@ -88,18 +88,12 @@ public abstract class SpecValidationGeneral<T extends SpecComplex> extends SpecV
 
     protected String verifyLocation(Rect mainArea, Rect secondArea, Location location, PageValidation pageValidation, T spec) {
         List<String> messages = new LinkedList<String>();
-        Range range;
-        
-        try {
-            range = pageValidation.convertRange(location.getRange());
-        }
-        catch (Exception ex) {
-            return format("Cannot convert range: " + ex.getMessage());
-        }
-        
+
         for (Side side : location.getSides()) {
             int offset = getOffsetForSide(mainArea, secondArea, side, spec);
-            if (!range.holds(offset)) {
+            double calculatedOffset = pageValidation.convertValue(location.getRange(), offset);
+
+            if (!location.getRange().holds(calculatedOffset)) {
                 messages.add(format("%dpx %s", offset, side));
             }
         }
@@ -116,7 +110,7 @@ public abstract class SpecValidationGeneral<T extends SpecComplex> extends SpecV
             }
             
             buffer.append(' ');
-            buffer.append(range.getErrorMessageSuffix());
+            buffer.append(location.getRange().getErrorMessageSuffix());
             return buffer.toString(); 
         }
         else return null;

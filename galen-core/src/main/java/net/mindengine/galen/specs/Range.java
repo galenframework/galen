@@ -17,52 +17,66 @@ package net.mindengine.galen.specs;
 
 import static java.lang.String.format;
 
-import java.text.DecimalFormat;
-
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 public class Range {
 
-    public Range(Double from, Double to) {
+    public Range(RangeValue from, RangeValue to) {
         this.from = from;
         this.to = to;
     }
-    
-    private Double from;
-    private Double to;
+
+    private RangeValue from;
+    private RangeValue to;
     private String percentageOfValue;
     private RangeType rangeType = RangeType.BETWEEN;
-    
+
     public enum RangeType {
         BETWEEN, EXACT, GREATER_THAN, LESS_THAN
     }
     
-    public Double getFrom() {
+    public RangeValue getFrom() {
         return from;
     }
-    public Double getTo() {
+    public RangeValue getTo() {
         return to;
     }
-    public static Range exact(double number) {
+    public static Range exact(RangeValue number) {
         return new Range(number, number).withType(RangeType.EXACT);
     }
     public Range withType(RangeType rangeType) {
         setRangeType(rangeType);
         return this;
     }
-    public static Range between(double from, double to) {
-        return new Range(Math.min(from, to), Math.max(from, to)).withType(RangeType.BETWEEN);
+    public static Range between(RangeValue from, RangeValue to) {
+        return new Range(from, to).withType(RangeType.BETWEEN);
     }
-    
+
+    public static Range between(int from, int to) {
+        return between(new RangeValue(from), new RangeValue(to));
+    }
+
+    public static Range exact(int value) {
+        return exact(new RangeValue(value));
+    }
+
+    public static Range greaterThan(int value) {
+        return greaterThan(new RangeValue(value));
+    }
+
+    public static Range lessThan(int value) {
+        return lessThan(new RangeValue(value));
+    }
+
     @Override
     public int hashCode() {
-        return new HashCodeBuilder(13, 19) //@formatter:off
+        return new HashCodeBuilder(13, 19)
             .append(from)
             .append(to)
             .append(percentageOfValue)
             .append(rangeType)
-            .toHashCode(); //@formatter:on
+            .toHashCode();
     }
     
     @Override
@@ -77,12 +91,12 @@ public class Range {
             return false;
         }
         Range rhs = (Range)obj;
-        return new EqualsBuilder() //@formatter:off
+        return new EqualsBuilder()
             .append(from, rhs.from)
             .append(to, rhs.to)
             .append(percentageOfValue, rhs.percentageOfValue)
             .append(rangeType, rhs.rangeType)
-            .isEquals(); //@formatter:on
+            .isEquals();
     }
     
     @Override
@@ -98,18 +112,13 @@ public class Range {
     }
     public boolean holds(double offset) {
     	if (isGreaterThan()) {
-    		return offset > from;
+            return from.isLessThan(offset);
     	}
     	else if (isLessThan()) {
-    		return offset < to;
-    	}
-    	else return offset >= from && offset <= to;
-    }
-    public static String doubleToString(Double value) {
-        if (value != null) {
-            return new DecimalFormat("#.##").format(value);
+    		return to.isGreaterThan(offset);
+    	} else {
+            return from.isLessThanOrEquals(offset) && to.isGreaterThanOrEquals(offset);
         }
-        else return "null";
     }
     public String prettyString() {
         return prettyString("px");
@@ -117,15 +126,15 @@ public class Range {
     
     private String prettyString(String dimension) {
         if (isExact()) {
-            return String.format("%s%s", doubleToString(from), dimension);
+            return String.format("%s%s", from.toString(), dimension);
         }
         else if (isGreaterThan()) {
-            return String.format("> %s%s", doubleToString(from), dimension);
+            return String.format("> %s%s", from.toString(), dimension);
         }
         else if (isLessThan()) {
-            return String.format("< %s%s", doubleToString(to), dimension);
+            return String.format("< %s%s", to.toString(), dimension);
         }
-        else return String.format("%s to %s%s", doubleToString(from), doubleToString(to), dimension);
+        else return String.format("%s to %s%s", from.toString(), to.toString(), dimension);
     }
     
     private boolean isLessThan() {
@@ -148,10 +157,10 @@ public class Range {
     public boolean isPercentage() {
         return percentageOfValue != null && !percentageOfValue.isEmpty();
     }
-	public static Range greaterThan(Double value) {
+	public static Range greaterThan(RangeValue value) {
 		return new Range(value, null).withType(RangeType.GREATER_THAN);
 	}
-	public static Range lessThan(Double value) {
+	public static Range lessThan(RangeValue value) {
 		return new Range(null, value).withType(RangeType.LESS_THAN);
 	}
     public RangeType getRangeType() {
@@ -172,10 +181,10 @@ public class Range {
             return String.format("which is not in range of %s", prettyString(dimension));
         }
         else if (rangeType == RangeType.GREATER_THAN) {
-            return String.format("but it should be greater than %s%s", doubleToString(from), dimension);
+            return String.format("but it should be greater than %s%s", from.toString(), dimension);
         }
         else if (rangeType == RangeType.LESS_THAN) {
-            return String.format("but it should be less than %s%s", doubleToString(to), dimension);
+            return String.format("but it should be less than %s%s", to.toString(), dimension);
         }
         else return "but the expected range is unknown";
     }

@@ -25,6 +25,7 @@ import java.util.List;
 import net.mindengine.galen.config.GalenConfig;
 import net.mindengine.galen.page.PageElement;
 import net.mindengine.galen.specs.Range;
+import net.mindengine.galen.specs.RangeValue;
 import net.mindengine.galen.specs.Spec;
 import net.mindengine.galen.specs.reader.page.PageSpec;
 
@@ -86,26 +87,14 @@ public abstract class SpecValidation<T extends Spec> {
         return resultObjects;
     }
     
-    protected Range convertRange(Range range, PageValidation pageValidation) throws ValidationErrorException {
-    	try {
-            return pageValidation.convertRange(range);
-        }
-        catch (Exception ex) {
-            throw new ValidationErrorException(format("Cannot convert range: " + ex.getMessage()));
-        }
-    }
-    
-    protected String getRangeAndValue(Range specRange, Range convertedRange, int realValue) {
+    protected String getRangeAndValue(Range range, double realValue, double convertedValue) {
         String dimension = "px";
-        String originalValue = realValue + dimension;
-        String rangeValue = convertedRange.getErrorMessageSuffix();
+        String originalValue = ((int)Math.floor(realValue)) + dimension;
+        String rangeValue = range.getErrorMessageSuffix();
 
-        if (specRange.isPercentage()) {
-            double size = convertedRange.getFrom() / specRange.getFrom() * 100.0;
+        if (range.isPercentage()) {
             dimension = "%";
-            double actualPercent = realValue / size * 100.0;
-            originalValue = format("%s%s [%s]", percentageDecimalFormat.format(actualPercent), dimension, originalValue);
-            rangeValue = format("%s [%s]", specRange.getErrorMessageSuffix(dimension), convertedRange.prettyString());
+            return format("%s%s %s", percentageDecimalFormat.format(convertedValue), dimension, rangeValue);
         }
         return format("%s %s", originalValue, rangeValue);
     }

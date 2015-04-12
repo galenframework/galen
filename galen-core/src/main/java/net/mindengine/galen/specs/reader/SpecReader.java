@@ -166,7 +166,7 @@ public class SpecReader {
                     range = Expectations.range().read(reader);
                 }
                 else {
-                    range = Range.greaterThan(-1.0);
+                    range = Range.greaterThan(new RangeValue(-1));
                 }
                 
 				if (specName.equals("above")) {
@@ -190,7 +190,7 @@ public class SpecReader {
                     range = Expectations.range().read(reader);
                 }
                 else {
-                    range = Range.greaterThan(-1.0);
+                    range = Range.greaterThan(new RangeValue(-1));
                 }
 
 				if (direction.equals("left")) {

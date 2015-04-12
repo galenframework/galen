@@ -108,7 +108,7 @@ public class ValidationTest {
     @DataProvider
     public Object[][] provideGoodSamples() {
         return new Object[][] {
-          // Contains 
+          // Contains
           row(specContains(CONTAINS_FULLY, "menu", "button"), page(new HashMap<String, PageElement>(){{
               put("object", element(10, 10, 100, 100));
               put("menu", element(11, 11, 10, 10));
@@ -183,7 +183,7 @@ public class ValidationTest {
               put("object", element(10, 15, 100, 100));
               put("container", element(5, 5, 120, 120));
           }})),
-          
+
           row(specInside("container", location(exact(20).withPercentOf("container/height"), TOP)), page(new HashMap<String, PageElement>(){{
               put("object", element(10, 15, 100, 20));
               put("container", element(5, 5, 120, 50));
@@ -247,7 +247,7 @@ public class ValidationTest {
               put("object", element(305, 140, 15, 50));
               put("main-container-1", element(305, 400, 30, 50));
           }})),
-          row(specWidth(Range.exact(33.3).withPercentOf("main-container-1/width")), page(new HashMap<String, PageElement>(){{
+          row(specWidth(Range.exact(new RangeValue(333, 1)).withPercentOf("main-container-1/width")), page(new HashMap<String, PageElement>(){{
               put("object", element(0, 0, 100, 50));
               put("main-container-1", element(0, 0, 300, 50));
           }})),
@@ -855,11 +855,11 @@ public class ValidationTest {
           }})),
           
           row(validationResult(singleArea(new Rect(100, 100, 100, 50), "object"), messages("\"object\" width is 100px but it should be greater than 110px")),
-                  specWidth(Range.greaterThan(110.0)), page(new HashMap<String, PageElement>(){{
+                  specWidth(Range.greaterThan(110)), page(new HashMap<String, PageElement>(){{
                       put("object", element(100, 100, 100, 50));
           }})),
           row(validationResult(singleArea(new Rect(100, 100, 100, 50), "object"), messages("\"object\" width is 100px but it should be less than 90px")),
-                  specWidth(Range.lessThan(90.0)), page(new HashMap<String, PageElement>(){{
+                  specWidth(Range.lessThan(90)), page(new HashMap<String, PageElement>(){{
                       put("object", element(100, 100, 100, 50));
           }})),
           

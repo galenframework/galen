@@ -34,30 +34,31 @@ public class RangeTest {
 	@DataProvider
 	public Object[][] provideRangeChecks() {
 		return new Object[][]{
-				{Range.exact(10.0), 10.0, true},
-				{Range.exact(10.0), 10.1, false},
-				{Range.exact(10.0), 9.0, false},
-				{Range.exact(-10.0), -10.0, true},
-				{Range.exact(-10.0), -10.1, false},
-				{Range.exact(-10.0), -9.0, false},
+				{Range.exact(10), 10.0, true},
+				{Range.exact(10), 10.1, true},
+				{Range.exact(10), 9.0, false},
+				{Range.exact(-10), -10.0, true},
+				{Range.exact(-10), -10.1, true},
+				{Range.exact(-10), -9.0, false},
 				
-				{Range.between(10.0, 20.0), 10.0, true},
-				{Range.between(10.0, 20.0), 11.0, true},
-				{Range.between(10.0, 20.0), 20.0, true},
-				{Range.between(10.0, 20.0), 10.1, true},
-				{Range.between(10.0, 20.0), 9.9, false},
-				{Range.between(10.0, 20.0), 20.1, false},
-				{Range.between(-10.0, -20.0), -11.0, true},
-				{Range.between(-10.0, -20.0), -9.0, false},
+				{Range.between(10, 20), 10.0, true},
+				{Range.between(10, 20), 11.0, true},
+				{Range.between(10, 20), 20.0, true},
+				{Range.between(10, 20), 10.1, true},
+				{Range.between(10, 20), 9.9, false},
+				{Range.between(10, 20), 20.1, true},
+				{Range.between(-10, -20), -11.0, false},
+				{Range.between(-10, -20), -9.0, false},
 				
-				{Range.greaterThan(10.0), 10.0, false},
-				{Range.greaterThan(10.0), 10.1, true},
-				{Range.greaterThan(10.0), 15.0, true},
-				{Range.greaterThan(10.0), 5.0, false},
+				{Range.greaterThan(10), 10.0, false},
+				{Range.greaterThan(10), 10.1, false},
+                {Range.greaterThan(10), 10.99999, false},
+				{Range.greaterThan(10), 15.0, true},
+				{Range.greaterThan(10), 5.0, false},
 				
-				{Range.lessThan(10.0), 9.0, true},
-				{Range.lessThan(10.0), 10.0, false},
-				{Range.lessThan(10.0), 15.0, false}
+				{Range.lessThan(10), 9.0, true},
+				{Range.lessThan(10), 10.0, false},
+				{Range.lessThan(10), 15.0, false}
 		};
 	}
 }

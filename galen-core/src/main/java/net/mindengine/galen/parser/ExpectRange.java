@@ -20,6 +20,7 @@ import static net.mindengine.galen.parser.Expectations.isNumeric;
 import static net.mindengine.galen.suite.reader.Line.UNKNOWN_LINE;
 import net.mindengine.galen.config.GalenConfig;
 import net.mindengine.galen.specs.Range;
+import net.mindengine.galen.specs.RangeValue;
 import net.mindengine.galen.specs.reader.StringCharReader;
 
 public class ExpectRange implements Expectation<Range>{
@@ -46,7 +47,7 @@ public class ExpectRange implements Expectation<Range>{
         	rangeType = RangeType.LESS_THAN;
         }
         
-        Double firstValue = new ExpectNumber().read(reader);
+        RangeValue firstValue = new ExpectRangeValue().read(reader);
         
         String text = expectNonNumeric(reader);
         if (text.equals(endingWord)) {
@@ -59,7 +60,7 @@ public class ExpectRange implements Expectation<Range>{
             Range range;
 
             if (text.equals("to")) {
-                Double secondValue =  new ExpectNumber().read(reader);
+                RangeValue secondValue =  new ExpectRangeValue().read(reader);
                 range = Range.between(firstValue, secondValue);
             }
             else {
@@ -78,18 +79,22 @@ public class ExpectRange implements Expectation<Range>{
         else throw new SyntaxException(UNKNOWN_LINE, msgFor(text));
     }
 
-    private Range createRange(Double firstValue, RangeType rangeType) {
+    private Range createRange(RangeValue firstValue, RangeType rangeType) {
         if (rangeType == RangeType.APPROXIMATE) {
             Double delta = 0.0;
             int approximationConfig = GalenConfig.getConfig().getRangeApproximation();
-            
-            if (Math.abs(firstValue) > 100) {
-                delta = ((double)approximationConfig) * Math.abs(firstValue) / 100.0;
+
+            Double firstValueAsDouble = firstValue.asDouble();
+            int precision = firstValue.getPrecision();
+
+            if (Math.abs(firstValueAsDouble) > 100) {
+                delta = ((double)approximationConfig) * Math.abs(firstValueAsDouble) / 100.0;
             }
             else {
                 delta = (double) approximationConfig;
             }
-            return Range.between(firstValue - delta, firstValue + delta);
+            return Range.between(new RangeValue(firstValueAsDouble - delta, precision),
+                    new RangeValue(firstValueAsDouble + delta, precision));
         }
         else if (rangeType == RangeType.GREATER_THAN) {
         	return Range.greaterThan(firstValue);
