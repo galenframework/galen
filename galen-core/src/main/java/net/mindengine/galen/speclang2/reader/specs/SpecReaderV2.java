@@ -89,6 +89,7 @@ public class SpecReaderV2 {
                     return new SpecRightOf(objectName, range);
                 }
             });
+            put("centered", new SpecCenteredProcessor());
         }};
     }
 

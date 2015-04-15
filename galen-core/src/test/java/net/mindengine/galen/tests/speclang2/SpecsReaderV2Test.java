@@ -661,6 +661,88 @@ public class SpecsReaderV2Test {
         readSpec("css font-size \"18px\"");
     }
 
+    @Test
+    public void shouldReadSpec_centered_inside_object()  throws IOException {
+        SpecCentered spec = (SpecCentered)readSpec("centered inside object");
+        assertThat(spec.getObject(), is("object"));
+        assertThat(spec.getLocation(), is(SpecCentered.Location.INSIDE));
+        assertThat(spec.getAlignment(), is(SpecCentered.Alignment.ALL));
+    }
+
+    @Test
+    public void shouldReadSpec_centered_horizontally_inside_object()  throws IOException {
+        SpecCentered spec = (SpecCentered)readSpec("centered horizontally inside object");
+        assertThat(spec.getObject(), is("object"));
+        assertThat(spec.getLocation(), is(SpecCentered.Location.INSIDE));
+        assertThat(spec.getAlignment(), is(SpecCentered.Alignment.HORIZONTALLY));
+    }
+
+    @Test
+    public void shouldReadSpec_centered_vertically_inside_object()  throws IOException {
+        SpecCentered spec = (SpecCentered)readSpec("centered vertically inside object");
+        assertThat(spec.getObject(), is("object"));
+        assertThat(spec.getLocation(), is(SpecCentered.Location.INSIDE));
+        assertThat(spec.getAlignment(), is(SpecCentered.Alignment.VERTICALLY));
+    }
+
+    @Test
+    public void shouldReadSpec_centered_all_inside_object()  throws IOException {
+        SpecCentered spec = (SpecCentered)readSpec("centered all inside object");
+        assertThat(spec.getObject(), is("object"));
+        assertThat(spec.getLocation(), is(SpecCentered.Location.INSIDE));
+        assertThat(spec.getAlignment(), is(SpecCentered.Alignment.ALL));
+    }
+
+    @Test
+    public void shouldReadSpec_centered_all_on_object()  throws IOException {
+        SpecCentered spec = (SpecCentered)readSpec("centered all on object");
+        assertThat(spec.getObject(), is("object"));
+        assertThat(spec.getLocation(), is(SpecCentered.Location.ON));
+        assertThat(spec.getAlignment(), is(SpecCentered.Alignment.ALL));
+    }
+
+    @Test
+    public void shouldReadSpec_centered_on_object()  throws IOException {
+        SpecCentered spec = (SpecCentered)readSpec("centered on object");
+        assertThat(spec.getObject(), is("object"));
+        assertThat(spec.getLocation(), is(SpecCentered.Location.ON));
+        assertThat(spec.getAlignment(), is(SpecCentered.Alignment.ALL));
+    }
+
+    @Test
+    public void shouldReadSpec_centered_horizontally_on_object()  throws IOException {
+        SpecCentered spec = (SpecCentered)readSpec("centered horizontally on object");
+        assertThat(spec.getObject(), is("object"));
+        assertThat(spec.getLocation(), is(SpecCentered.Location.ON));
+        assertThat(spec.getAlignment(), is(SpecCentered.Alignment.HORIZONTALLY));
+    }
+
+    @Test
+    public void shouldReadSpec_centered_horizontally_on_object_25px() throws IOException {
+        SpecCentered spec = (SpecCentered)readSpec("centered horizontally on object 25px");
+        assertThat(spec.getObject(), is("object"));
+        assertThat(spec.getLocation(), is(SpecCentered.Location.ON));
+        assertThat(spec.getAlignment(), is(SpecCentered.Alignment.HORIZONTALLY));
+        assertThat(spec.getErrorRate(), is(25));
+    }
+
+    @Test
+    public void shouldReadSpec_centered_horizontally_on_object_25_px() throws IOException {
+        SpecCentered spec = (SpecCentered)readSpec("centered horizontally on object 25 px");
+        assertThat(spec.getObject(), is("object"));
+        assertThat(spec.getLocation(), is(SpecCentered.Location.ON));
+        assertThat(spec.getAlignment(), is(SpecCentered.Alignment.HORIZONTALLY));
+        assertThat(spec.getErrorRate(), is(25));
+    }
+
+    @Test
+    public void shouldReadSpec_centered_vertically_on_object() throws IOException {
+        SpecCentered spec = (SpecCentered)readSpec("centered vertically on object");
+        assertThat(spec.getObject(), is("object"));
+        assertThat(spec.getLocation(), is(SpecCentered.Location.ON));
+        assertThat(spec.getAlignment(), is(SpecCentered.Alignment.VERTICALLY));
+    }
+
 
     private Spec readSpec(String specText) {
         return new SpecReaderV2(EMPTY_PROPERTIES).read(specText);
