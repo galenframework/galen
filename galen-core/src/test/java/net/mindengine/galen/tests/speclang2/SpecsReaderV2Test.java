@@ -519,6 +519,149 @@ public class SpecsReaderV2Test {
         assertThat(spec.getOperations(), contains("lowercase", "uppercase"));
     }
 
+    @Test
+    public void shouldReadSpec_css_fontsize_is_18px() throws IOException {
+        SpecCss spec = (SpecCss)readSpec("css font-size is \"18px\"");
+        assertThat(spec.getCssPropertyName(), is("font-size"));
+        assertThat(spec.getText(), is("18px"));
+        assertThat(spec.getType(), is(SpecText.Type.IS));
+    }
+
+    @Test
+    public void shouldReadSpec_css_fontsize_starts() throws IOException {
+        SpecCss spec = (SpecCss)readSpec("css font-size starts \"18px\"");
+        assertThat(spec.getCssPropertyName(), is("font-size"));
+        assertThat(spec.getText(), is("18px"));
+        assertThat(spec.getType(), is(SpecText.Type.STARTS));
+    }
+
+    @Test
+    public void shouldReadSpec_css_fontsize_ends() throws IOException {
+        SpecCss spec = (SpecCss)readSpec("css font-size ends \"18px\"");
+        assertThat(spec.getCssPropertyName(), is("font-size"));
+        assertThat(spec.getText(), is("18px"));
+        assertThat(spec.getType(), is(SpecText.Type.ENDS));
+    }
+
+    @Test
+    public void shouldReadSpec_css_fontsize_contains() throws IOException {
+        SpecCss spec = (SpecCss)readSpec("css font-size contains \"18px\"");
+        assertThat(spec.getCssPropertyName(), is("font-size"));
+        assertThat(spec.getText(), is("18px"));
+        assertThat(spec.getType(), is(SpecText.Type.CONTAINS));
+    }
+
+    @Test
+    public void shouldReadSpec_css_fontsize_matches() throws IOException {
+        SpecCss spec = (SpecCss)readSpec("css font-size matches \"18px\"");
+        assertThat(spec.getCssPropertyName(), is("font-size"));
+        assertThat(spec.getText(), is("18px"));
+        assertThat(spec.getType(), is(SpecText.Type.MATCHES));
+    }
+
+    @Test
+    public void shouldReadSpec_above_object_20px()  throws IOException {
+        SpecAbove spec = (SpecAbove)readSpec("above object 20px");
+        assertThat(spec.getObject(), is("object"));
+        assertThat(spec.getRange(), is(Range.exact(20)));
+    }
+
+    @Test
+    public void shouldReadSpec_above_object_10_20px()  throws IOException {
+        SpecAbove spec = (SpecAbove)readSpec("above object 10 to 20px");
+        assertThat(spec.getObject(), is("object"));
+        assertThat(spec.getRange(), is(Range.between(10, 20)));
+    }
+
+    @Test
+    public void shouldReadSpec_above()  throws IOException {
+        SpecAbove spec = (SpecAbove)readSpec("above object");
+        assertThat(spec.getObject(), is("object"));
+        assertThat(spec.getRange(), is(Range.greaterThan(-1)));
+    }
+
+    @Test
+    public void shouldReadSpec_below()  throws IOException {
+        SpecBelow spec = (SpecBelow)readSpec("below object");
+        assertThat(spec.getObject(), is("object"));
+        assertThat(spec.getRange(), is(Range.greaterThan(-1)));
+    }
+
+    @Test
+    public void shouldReadSpec_below_object_20px()  throws IOException {
+        SpecBelow spec = (SpecBelow)readSpec("below object 20px");
+        assertThat(spec.getObject(), is("object"));
+        assertThat(spec.getRange(), is(Range.exact(20)));
+    }
+
+    @Test
+    public void shouldReadSpec_below_object_10_to_20px()  throws IOException {
+        SpecBelow spec = (SpecBelow)readSpec("below object 10 to 20px");
+        assertThat(spec.getObject(), is("object"));
+        assertThat(spec.getRange(), is(Range.between(10, 20)));
+    }
+
+
+    @Test
+    public void shouldReadSpec_left_of_object_10px() throws IOException {
+        SpecLeftOf specLeftOf = (SpecLeftOf)readSpec("left-of object 10px");
+        assertThat(specLeftOf.getObject(), is("object"));
+        assertThat(specLeftOf.getRange(), is(Range.exact(10)));
+    }
+
+    @Test
+    public void shouldReadSpec_left_of_object_10_to_20px() throws IOException {
+        SpecLeftOf specLeftOf = (SpecLeftOf)readSpec("left-of object 10 to 20px");
+        assertThat(specLeftOf.getObject(), is("object"));
+        assertThat(specLeftOf.getRange(), is(Range.between(10, 20)));
+    }
+
+    @Test
+    public void shouldReadSpec_left_of_object() throws IOException {
+        SpecLeftOf specLeftOf = (SpecLeftOf)readSpec("left-of object");
+        assertThat(specLeftOf.getObject(), is("object"));
+        assertThat(specLeftOf.getRange(), is(Range.greaterThan(-1)));
+    }
+
+
+    @Test
+    public void shouldReadSpec_right_of_object_10px() throws IOException {
+        SpecRightOf specRightOf = (SpecRightOf)readSpec("right-of object 10px");
+        assertThat(specRightOf.getObject(), is("object"));
+        assertThat(specRightOf.getRange(), is(Range.exact(10)));
+    }
+
+    @Test
+    public void shouldReadSpec_right_of_object_10_to_20px() throws IOException {
+        SpecRightOf specRightOf = (SpecRightOf)readSpec("right-of object 10 to 20px");
+        assertThat(specRightOf.getObject(), is("object"));
+        assertThat(specRightOf.getRange(), is(Range.between(10, 20)));
+    }
+
+
+    @Test
+    public void shouldReadSpec_right_of_object() throws IOException {
+        SpecRightOf specRightOf = (SpecRightOf)readSpec("right-of object");
+        assertThat(specRightOf.getObject(), is("object"));
+        assertThat(specRightOf.getRange(), is(Range.greaterThan(-1)));
+    }
+
+
+    @Test(expectedExceptions = {SyntaxException.class},
+            expectedExceptionsMessageRegExp = "Missing validation type \\(is, contains, starts, ends, matches\\)"
+    )
+    public void shouldGiveException_empty_css_spec() throws IOException {
+        readSpec("css  \"18px\"");
+    }
+
+    @Test(expectedExceptions = {SyntaxException.class},
+            expectedExceptionsMessageRegExp = "Unknown validation type: \"18px\""
+    )
+    public void shouldGiveException_css_without_type() throws IOException {
+        readSpec("css font-size \"18px\"");
+    }
+
+
     private Spec readSpec(String specText) {
         return new SpecReaderV2(EMPTY_PROPERTIES).read(specText);
     }

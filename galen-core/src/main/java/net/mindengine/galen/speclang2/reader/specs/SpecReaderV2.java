@@ -64,6 +64,31 @@ public class SpecReaderV2 {
                 }
             });
             put("text", new SpecTextProcessor());
+            put("css", new SpecCssProcessor());
+            put("above", new SpecWithObjectAndRangeProcessor() {
+                @Override
+                public Spec createSpec(String objectName, Range range) {
+                    return new SpecAbove(objectName, range);
+                }
+            });
+            put("below", new SpecWithObjectAndRangeProcessor() {
+                @Override
+                public Spec createSpec(String objectName, Range range) {
+                    return new SpecBelow(objectName, range);
+                }
+            });
+            put("left-of", new SpecWithObjectAndRangeProcessor() {
+                @Override
+                public Spec createSpec(String objectName, Range range) {
+                    return new SpecLeftOf(objectName, range);
+                }
+            });
+            put("right-of", new SpecWithObjectAndRangeProcessor() {
+                @Override
+                public Spec createSpec(String objectName, Range range) {
+                    return new SpecRightOf(objectName, range);
+                }
+            });
         }};
     }
 
