@@ -28,7 +28,7 @@ public class SpecNearProcessor implements SpecProcessor {
 
 
     @Override
-    public Spec process(StringCharReader reader) {
+    public Spec process(StringCharReader reader, String contextPath) {
         String objectName = reader.readWord();
         if (objectName.isEmpty()) {
             throw new SyntaxException(MISSING_OBJECT_NAME);

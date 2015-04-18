@@ -26,7 +26,7 @@ public abstract class SpecWithRangeProcessor implements SpecProcessor {
     public abstract Spec createSpec(Range range);
 
     @Override
-    public Spec process(StringCharReader reader) {
+    public Spec process(StringCharReader reader, String contextPath) {
         Range range = Expectations.range().read(reader);
 
         String theRest = reader.getTheRest().trim();

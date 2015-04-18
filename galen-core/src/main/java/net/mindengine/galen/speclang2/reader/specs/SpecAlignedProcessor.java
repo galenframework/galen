@@ -27,7 +27,7 @@ public class SpecAlignedProcessor implements SpecProcessor {
 
 
     @Override
-    public Spec process(StringCharReader reader) {
+    public Spec process(StringCharReader reader, String contextPath) {
         String direction = reader.readWord();
         boolean vertically;
 

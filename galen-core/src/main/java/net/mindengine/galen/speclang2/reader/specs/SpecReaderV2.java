@@ -92,6 +92,7 @@ public class SpecReaderV2 {
             put("centered", new SpecCenteredProcessor());
             put("on", new SpecOnProcessor());
             put("color-scheme", new SpecColorSchemeProcessor());
+            put("image", new SpecImageProcessor());
         }};
     }
 
@@ -104,7 +105,7 @@ public class SpecReaderV2 {
     }
 
 
-    public Spec read(String specText) {
+    public Spec read(String specText, String contextPath) {
         if (specText == null) {
             throw new IllegalArgumentException("specText argument should not be null");
         }
@@ -121,11 +122,15 @@ public class SpecReaderV2 {
         SpecProcessor specProcessor = specProcessors.get(firstWord);
 
         if (specProcessor != null) {
-            Spec spec = specProcessor.process(reader);
+            Spec spec = specProcessor.process(reader, contextPath);
             spec.setOriginalText(specText);
             return spec;
         } else {
             throw new SyntaxException("Unknown spec: " + firstWord);
         }
+    }
+
+    public Spec read(String specText) {
+        return read(specText, ".");
     }
 }

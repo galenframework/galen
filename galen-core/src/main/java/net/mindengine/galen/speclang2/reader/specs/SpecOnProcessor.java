@@ -28,7 +28,7 @@ import java.util.List;
 
 public class SpecOnProcessor implements SpecProcessor {
     @Override
-    public Spec process(StringCharReader reader) {
+    public Spec process(StringCharReader reader, String contextPath) {
 
         List<String> allEdges = new LinkedList<String>();
 

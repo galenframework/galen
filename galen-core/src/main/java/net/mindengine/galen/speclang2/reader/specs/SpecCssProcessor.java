@@ -24,7 +24,7 @@ import net.mindengine.galen.specs.reader.StringCharReader;
 
 public class SpecCssProcessor implements SpecProcessor {
     @Override
-    public Spec process(StringCharReader reader) {
+    public Spec process(StringCharReader reader, String contextPath) {
 
         String cssPropertyName = reader.readWord();
         String validationTypeString = reader.readWord();

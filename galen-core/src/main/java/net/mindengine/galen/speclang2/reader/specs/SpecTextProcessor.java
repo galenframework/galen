@@ -28,7 +28,7 @@ public class SpecTextProcessor implements SpecProcessor {
 
 
     @Override
-    public Spec process(StringCharReader reader) {
+    public Spec process(StringCharReader reader, String contextPath) {
 
         /* first building up a list of text operations */
 

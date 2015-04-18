@@ -23,7 +23,7 @@ import net.mindengine.galen.specs.reader.StringCharReader;
 
 public class SpecCenteredProcessor implements SpecProcessor {
     @Override
-    public Spec process(StringCharReader reader) {
+    public Spec process(StringCharReader reader, String contextPath) {
 
         SpecCentered.Alignment alignment = SpecCentered.Alignment.ALL;
         SpecCentered.Location location = null;

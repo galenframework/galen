@@ -27,7 +27,7 @@ import java.util.List;
 public class SpecInsideProcessor implements SpecProcessor {
 
     @Override
-    public Spec process(StringCharReader reader) {
+    public Spec process(StringCharReader reader, String contextPath) {
         boolean partly = false;
         String name;
 

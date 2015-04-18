@@ -24,7 +24,7 @@ public abstract class SingleWordSpecProcessor implements SpecProcessor {
     public abstract Spec createSpec();
 
     @Override
-    public Spec process(StringCharReader reader) {
+    public Spec process(StringCharReader reader, String contextPath) {
         String theRest = reader.getTheRest().trim();
         if (!theRest.isEmpty()) {
             throw new SyntaxException("This spec doesn't take any arguments");

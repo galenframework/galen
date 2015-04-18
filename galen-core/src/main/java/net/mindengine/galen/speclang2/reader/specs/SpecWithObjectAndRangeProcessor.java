@@ -27,7 +27,7 @@ public abstract class SpecWithObjectAndRangeProcessor implements SpecProcessor {
     public abstract Spec createSpec(String objectName, Range range);
 
     @Override
-    public Spec process(StringCharReader reader) {
+    public Spec process(StringCharReader reader, String contextPath) {
 
         String objectName = reader.readWord();
         if (objectName.isEmpty()) {

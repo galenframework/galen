@@ -26,7 +26,7 @@ import java.util.List;
 public class SpecContainsProcessor implements SpecProcessor {
 
     @Override
-    public Spec process(StringCharReader reader) {
+    public Spec process(StringCharReader reader, String contextPath) {
         boolean partly = false;
 
         int initialCursorPosition = reader.currentCursorPosition();

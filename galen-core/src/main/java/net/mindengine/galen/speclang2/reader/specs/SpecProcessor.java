@@ -22,5 +22,5 @@ public interface SpecProcessor {
     public static final String MISSING_OBJECT_NAME = "Missing object name";
     public static final String MISSING_LOCATION = "Missing location";
 
-    public Spec process(StringCharReader reader);
+    public Spec process(StringCharReader reader, String contextPath);
 }

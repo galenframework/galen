@@ -26,7 +26,7 @@ import java.util.List;
 
 public class SpecColorSchemeProcessor implements SpecProcessor {
     @Override
-    public Spec process(StringCharReader reader) {
+    public Spec process(StringCharReader reader, String contextPath) {
         List<ColorRange> colorRanges = Expectations.colorRanges().read(reader);
 
         if (colorRanges.size() == 0) {
