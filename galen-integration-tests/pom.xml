@@ -4,7 +4,7 @@
   <groupId>net.mindengine</groupId>
   <artifactId>galen-integration-tests</artifactId>
   <version>1.6.3-SNAPSHOT</version>
-  <name>Galen Framework Core</name>
+  <name>Galen Framework Integration tests</name>
   <packaging>jar</packaging>
   <description>Integration tests for Galen Framework</description>
   <url>http://galenframework.com</url>
@@ -58,6 +58,24 @@
         <configuration>
           <!-- Sets the VM argument line used when unit tests are run. -->
           <argLine>${surefireArgLine}</argLine>
+          <!-- Skips unit tests if the value of skip.unit.tests property is true -->
+          <skipTests>${skipTests}</skipTests>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-failsafe-plugin</artifactId>
+        <executions>
+          <execution>
+            <goals>
+              <goal>integration-test</goal>
+              <goal>verify</goal>
+            </goals>
+          </execution>
+        </executions>
+        <configuration>
+          <!-- Sets the VM argument line used when unit tests are run. -->
+          <argLine>${failsafeArgLine}</argLine>
           <!-- Skips unit tests if the value of skip.unit.tests property is true -->
           <skipTests>${skipTests}</skipTests>
         </configuration>
@@ -126,7 +144,7 @@
       </roles>
     </developer>
   </developers>
-  
+
   <contributors>
     <contributor>
       <name>Martin Reinhardt</name>
