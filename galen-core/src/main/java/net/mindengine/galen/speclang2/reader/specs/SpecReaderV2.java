@@ -90,6 +90,7 @@ public class SpecReaderV2 {
                 }
             });
             put("centered", new SpecCenteredProcessor());
+            put("on", new SpecOnProcessor());
         }};
     }
 

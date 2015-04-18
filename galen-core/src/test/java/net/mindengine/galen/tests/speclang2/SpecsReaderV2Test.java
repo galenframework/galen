@@ -743,7 +743,82 @@ public class SpecsReaderV2Test {
         assertThat(spec.getAlignment(), is(SpecCentered.Alignment.VERTICALLY));
     }
 
+    @Test
+    public void shoulReadSpec_on_object_10px_left() throws IOException {
+        SpecOn spec = (SpecOn)readSpec("on edge object 10px left");
 
+        assertThat(spec.getSideHorizontal(), is(TOP));
+        assertThat(spec.getSideVertical(), is(LEFT));
+        assertThat(spec.getObject(), is("object"));
+
+        List<Location> locations = spec.getLocations();
+        assertThat(locations.size(), is(1));
+        assertThat(spec.getLocations(), contains(new Location(Range.exact(10), sides(LEFT))));
+        assertThat(spec.getOriginalText(), is("on edge object 10px left"));
+    }
+
+    @Test
+    public void shoulReadSpec_on_object_10px_left_20px_top() throws IOException {
+        SpecOn spec = (SpecOn)readSpec("on edge object 10px left, 20px top");
+
+        assertThat(spec.getSideHorizontal(), is(TOP));
+        assertThat(spec.getSideVertical(), is(LEFT));
+        assertThat(spec.getObject(), is("object"));
+
+        List<Location> locations = spec.getLocations();
+        assertThat(locations.size(), is(2));
+        assertThat(spec.getLocations(), contains(new Location(Range.exact(10), sides(LEFT)), new Location(Range.exact(20), sides(TOP))));
+        assertThat(spec.getOriginalText(), is("on edge object 10px left, 20px top"));
+    }
+
+    @Test
+    public void shouldReadSpec_on_top_object_10px_top_right() throws Exception {
+        SpecOn spec = (SpecOn)readSpec("on top edge object 10px top right");
+
+        assertThat(spec.getSideHorizontal(), is(TOP));
+        assertThat(spec.getSideVertical(), is(LEFT));
+        assertThat(spec.getObject(), is("object"));
+
+        List<Location> locations = spec.getLocations();
+        assertThat(locations.size(), is(1));
+        assertThat(spec.getLocations(), contains(new Location(Range.exact(10), sides(TOP, RIGHT))));
+        assertThat(spec.getOriginalText(), is("on top edge object 10px top right"));
+    }
+
+    @Test
+    public void shouldReadSpec_on_left_object_10px_top_right() throws Exception {
+        SpecOn spec = (SpecOn)readSpec("on left edge object 10px top right");
+
+        assertThat(spec.getSideHorizontal(), is(TOP));
+        assertThat(spec.getSideVertical(), is(LEFT));
+        assertThat(spec.getObject(), is("object"));
+
+        List<Location> locations = spec.getLocations();
+        assertThat(locations.size(), is(1));
+        assertThat(spec.getLocations(), contains(new Location(Range.exact(10), sides(TOP, RIGHT))));
+        assertThat(spec.getOriginalText(), is("on left edge object 10px top right"));
+    }
+
+    @Test
+    public void shouldReadSpec_on_bottom_right_object_10px_top_right() throws Exception {
+        SpecOn spec = (SpecOn)readSpec("on right bottom edge object 10px top right");
+
+        assertThat(spec.getSideHorizontal(), is(BOTTOM));
+        assertThat(spec.getSideVertical(), is(RIGHT));
+        assertThat(spec.getObject(), is("object"));
+
+        List<Location> locations = spec.getLocations();
+        assertThat(locations.size(), is(1));
+        assertThat(spec.getLocations(), contains(new Location(Range.exact(10), sides(TOP, RIGHT))));
+        assertThat(spec.getOriginalText(), is("on right bottom edge object 10px top right"));
+    }
+
+
+    @Test(expectedExceptions = SyntaxException.class,
+        expectedExceptionsMessageRegExp = "Missing \"edge\"")
+    public void shouldGiveError_missingEdges_forSpec_on() throws Exception {
+        readSpec("on top left object 10px");
+    }
     private Spec readSpec(String specText) {
         return new SpecReaderV2(EMPTY_PROPERTIES).read(specText);
     }
