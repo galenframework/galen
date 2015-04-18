@@ -91,6 +91,7 @@ public class SpecReaderV2 {
             });
             put("centered", new SpecCenteredProcessor());
             put("on", new SpecOnProcessor());
+            put("color-scheme", new SpecColorSchemeProcessor());
         }};
     }
 

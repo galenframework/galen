@@ -26,6 +26,7 @@ import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.instanceOf;
 import static org.hamcrest.Matchers.is;
 
+import java.awt.*;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
@@ -37,6 +38,7 @@ import net.mindengine.galen.parser.SyntaxException;
 import net.mindengine.galen.speclang2.reader.specs.SpecReaderV2;
 import net.mindengine.galen.specs.*;
 
+import net.mindengine.galen.specs.colors.ColorRange;
 import org.hamcrest.Matchers;
 import org.junit.BeforeClass;
 import org.testng.annotations.AfterMethod;
@@ -819,6 +821,41 @@ public class SpecsReaderV2Test {
     public void shouldGiveError_missingEdges_forSpec_on() throws Exception {
         readSpec("on top left object 10px");
     }
+
+    @Test
+    public void shouldReadSpec_color_scheme_40percent_black_approx_30percent_white() throws Exception {
+        SpecColorScheme spec = (SpecColorScheme)readSpec("color-scheme 40% black  , ~30% white");
+        List<ColorRange> colors = spec.getColorRanges();
+        assertThat(colors.size(), is(2));
+
+        assertThat(colors.get(0).getRange(), is(Range.exact(40)));
+        assertThat(colors.get(0).getColor(), is(new Color(0, 0, 0)));
+        assertThat(colors.get(1).getRange(), is(Range.between(28, 32)));
+        assertThat(colors.get(1).getColor(), is(new Color(255, 255, 255)));
+    }
+
+    @Test
+    public void shouldReadSpec_color_scheme_greater_than_40percent_ffaa03() throws Exception {
+        SpecColorScheme spec = (SpecColorScheme)readSpec("color-scheme > 40% #ffaa03");
+        List<ColorRange> colors = spec.getColorRanges();
+        assertThat(colors.size(), is(1));
+
+        assertThat(colors.get(0).getRange(), is(Range.greaterThan(40)));
+        assertThat(colors.get(0).getColor(), is(new Color(255, 170, 3)));
+    }
+
+    @Test
+    public void shouldReadSpec_color_scheme_40_to_50percent_ffaa03() throws Exception {
+        SpecColorScheme spec = (SpecColorScheme)readSpec("color-scheme 40 to 50% red");
+        List<ColorRange> colors = spec.getColorRanges();
+        assertThat(colors.size(), is(1));
+
+        assertThat(colors.get(0).getRange(), is(Range.between(40, 50)));
+        assertThat(colors.get(0).getColor(), is(new Color(255, 0, 0)));
+    }
+
+
+
     private Spec readSpec(String specText) {
         return new SpecReaderV2(EMPTY_PROPERTIES).read(specText);
     }
