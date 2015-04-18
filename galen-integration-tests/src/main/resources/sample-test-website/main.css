@@ -1,0 +1,117 @@
+body {
+    background: url('images/header-background.png');
+}
+.middle-wrapper {
+    position: relative;
+    max-width: 900px;
+    margin: auto;
+}
+#menu {
+    background: url("images/menu-background.png");
+    margin: 0;
+    color: white;
+}
+#menu ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+#menu li {
+    display: inline-block;
+}
+#menu ul:after {
+    clear: both;
+}
+#menu li a {
+    min-width: 100px;
+    font-size: 1.2em;
+    color: white;
+    padding: 20px;
+    display: inline-block;
+}
+#menu li a:hover {
+    background: url('images/menu-highlight.png');
+}
+
+#header {
+    position: relative;
+    color: white;
+    min-height: 70px;
+}
+
+#header h1 {
+    display: inline-block;
+    position: relative;
+    margin-left: 70px;
+    text-shadow: 1px 1px 1px #000000;
+}
+
+#header img {
+    display: inline-block;
+    position: absolute;
+    top: 13px;
+    left: 0px;
+}
+
+
+#middle {
+    background: #fff;
+}
+
+#content {
+    padding: 20px;
+    min-height: 400px;
+}
+.error-message {
+    color: red;
+    margin: 20px;
+}
+
+
+#footer {
+    background: #333;
+    color: white;
+    min-height: 200px;
+}
+
+@media (min-width: 501px) {
+    .dialog-panel {
+        width: 400px;
+        border: 1px solid #ccc;
+        padding: 20px;
+        margin: auto;
+        border-radius: 10px;
+        box-shadow: 1px 3px 3px #ddd;
+    }
+}
+
+@media (max-width: 500px) {
+    .not-on-mobile {
+        display: none;
+    }
+    button {
+        width: 100%;
+        margin-top: 10px;
+    }
+    #menu {
+        width: 100%;
+    }
+    #menu li {
+        width: 49%;
+    }
+    #menu li a {
+        width: 100%;
+    }
+}
+@media (max-width: 800px) {
+    .not-on-tablet {
+        display: none;
+    }
+}
+
+
+.btn-primary:hover {
+    background: #22A30B;
+    color: #fff;
+    border-color: #1A7509;
+}
