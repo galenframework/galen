@@ -34,6 +34,7 @@ public class GalenConfig {
     private final static Logger LOG = LoggerFactory.getLogger(GalenConfig.class);
     
     public final static GalenConfig instance = new GalenConfig();
+    public static final String DEFAULT_BROWSER = "galen.default.browser";
     public static final String SCREENSHOT_AUTORESIZE = "galen.screenshot.autoresize";
     public static final String SCREENSHOT_FULLPAGE = "galen.browser.screenshots.fullPage";
     // smart waiting for scroll position, but with a timeout, set to zero to turn off smart wait
@@ -75,7 +76,7 @@ public class GalenConfig {
         // TODO use constant
         rangeApproximation = Integer.parseInt(readProperty("galen.range.approximation", "2"));
         reportingListeners = converCommaSeparatedList(readProperty("galen.reporting.listeners", ""));
-        defaultBrowser = readProperty("galen.default.browser", "firefox");
+        defaultBrowser = readProperty(DEFAULT_BROWSER, "firefox");
     }
 
     private List<String> converCommaSeparatedList(String text) {
