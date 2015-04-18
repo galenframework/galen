@@ -23,14 +23,17 @@ import java.util.List;
 import net.mindengine.galen.config.GalenConfig;
 import net.mindengine.galen.page.PageElement;
 import net.mindengine.galen.specs.Range;
+import net.mindengine.galen.specs.RangeValue;
 import net.mindengine.galen.specs.Spec;
 import net.mindengine.galen.specs.reader.page.PageSpec;
+import net.mindengine.galen.validation.specs.SpecValidationGeneral;
 
 public abstract class SpecValidation<T extends Spec> {
     
     protected static final String OBJECT_WITH_NAME_S_IS_NOT_DEFINED_IN_PAGE_SPEC = "Cannot find locator for \"%s\" in page spec";
     protected static final String OBJECT_S_IS_ABSENT_ON_PAGE = "\"%s\" is absent on page";
     protected static final String OBJECT_S_IS_NOT_VISIBLE_ON_PAGE = "\"%s\" is not visible on page";
+
 
     /**
      * Checks if object satisfies the specified spec
@@ -80,13 +83,44 @@ public abstract class SpecValidation<T extends Spec> {
         return resultObjects;
     }
     
-    protected Range convertRange(Range range, PageValidation pageValidation) throws ValidationErrorException {
-    	try {
-            return pageValidation.convertRange(range);
-        }
-        catch (Exception ex) {
-            throw new ValidationErrorException(format("Cannot convert range: " + ex.getMessage()));
+    protected String getReadableRangeAndValue(Range range, double realValue, double convertedValue, PageValidation pageValidation) {
+        if (range.isPercentage()) {
+            int objectValue = pageValidation.getObjectValue(range.getPercentageOfValue());
+
+            return format("%s%% [%dpx] %s %s",
+                    new RangeValue(convertedValue, range.findPrecision()).toString(),
+                    (int)realValue,
+                    range.getErrorMessageSuffix(),
+                    rangeCalculatedFromPercentage(range, objectValue));
+        } else {
+            return format("%spx %s",
+                    new RangeValue(realValue, range.findPrecision()).toString(),
+                    range.getErrorMessageSuffix());
         }
     }
+
+    protected String rangeCalculatedFromPercentage(Range range, int objectValue) {
+        if (range.getRangeType() == Range.RangeType.BETWEEN) {
+            int from = (int)((objectValue * range.getFrom().asDouble()) / 100.0);
+            int to = (int)((objectValue * range.getTo().asDouble()) / 100.0);
+
+            return String.format("[%d to %dpx]", from, to);
+        } else {
+            RangeValue rangeValue = takeNonNullValue(range.getFrom(), range.getTo());
+            int converted = (int)((objectValue * rangeValue.asDouble()) / 100.0);
+            return "[" + converted + "px]";
+        }
+    }
+
+    private static RangeValue takeNonNullValue(RangeValue from, RangeValue to) {
+        if (from != null) {
+            return from;
+        } else if (to != null) {
+            return to;
+        } else {
+            throw new NullPointerException("Both range values are null");
+        }
+    }
+
 
 }

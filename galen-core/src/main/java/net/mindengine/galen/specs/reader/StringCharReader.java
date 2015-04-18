@@ -15,6 +15,8 @@
 ******************************************************************************/
 package net.mindengine.galen.specs.reader;
 
+import net.mindengine.galen.parser.Expectations;
+
 public class StringCharReader {
 
     private String text;
@@ -91,4 +93,15 @@ public class StringCharReader {
         return firstNonWhiteSpaceSymbol() != 0;
     }
 
+    public String readWord() {
+        return Expectations.word().read(this);
+    }
+
+    public int currentCursorPosition() {
+        return cursor;
+    }
+
+    public void moveCursorTo(int position) {
+        cursor = position;
+    }
 }

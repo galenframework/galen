@@ -44,6 +44,10 @@ public class Galen {
 
     private final static Logger LOG = LoggerFactory.getLogger(Galen.class);
     private final static File EMPTY_SCREENSHOT_FILE = null;
+    private static final Properties EMPTY_PROPERTIES = new Properties();
+    private static final ValidationListener EMPTY_VALIDATION_LISTENER = null;
+    private static final List<String> EMPTY_TAGS = Collections.emptyList();
+
 
     public static LayoutReport checkLayout(Browser browser, List<String> specPaths,
                                            List<String> includedTags, List<String> excludedTags,
@@ -99,7 +103,7 @@ public class Galen {
         }
         catch (Exception ex) {
             LOG.error("Error during setting screenshot.", ex);
-        
+
         }
         listener.add(new LayoutReportListener(layoutReport));
 
@@ -151,6 +155,10 @@ public class Galen {
         }
 
         return null;
+    }
+
+    public static LayoutReport checkLayout(WebDriver driver, String spec, List<String> includedTags) throws IOException {
+        return checkLayout(driver, spec, includedTags, EMPTY_TAGS, EMPTY_PROPERTIES, EMPTY_VALIDATION_LISTENER, EMPTY_SCREENSHOT_FILE);
     }
 
     public static LayoutReport checkLayout(WebDriver driver, List<String> specPath,
@@ -243,4 +251,5 @@ public class Galen {
         }
         else return true;
     }
+
 }

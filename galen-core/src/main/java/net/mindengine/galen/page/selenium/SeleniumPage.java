@@ -30,10 +30,7 @@ import net.mindengine.galen.page.Rect;
 import net.mindengine.galen.specs.page.Locator;
 import net.mindengine.rainbow4j.Rainbow4J;
 
-import org.openqa.selenium.By;
-import org.openqa.selenium.NoSuchElementException;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
+import org.openqa.selenium.*;
 
 public class SeleniumPage implements Page {
 
@@ -123,6 +120,8 @@ public class SeleniumPage implements Page {
                     .withOffset(offsetLeft, offsetTop));
                 i++;
             }
+
+            cachedElementsList.put(objectName, pageElements);
         }
         if (index < pageElements.size()) {
              return pageElements.get(index);
@@ -135,7 +134,13 @@ public class SeleniumPage implements Page {
 
     private List<WebElement> driverFindElements(By by) {
         if (objectContext == null) {
-            return driver.findElements(by);
+            try {
+                return driver.findElements(by);
+            } catch (NullPointerException e) {
+                throw new WebDriverException(e);
+            } catch (StaleElementReferenceException e) {
+                throw new WebDriverException(e);
+            }
         }
         else {
             return objectContext.findElements(by);

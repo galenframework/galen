@@ -17,6 +17,12 @@
 
   <dependencies>
     <dependency>
+      <groupId>org.testng</groupId>
+      <artifactId>testng</artifactId>
+      <version>${testng.version}</version>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
       <groupId>net.mindengine</groupId>
       <artifactId>galen-rainbow4j</artifactId>
       <version>${project.version}</version>
@@ -154,14 +160,29 @@
       <distribution>manual</distribution>
     </license>
   </licenses>
+
   <developers>
     <developer>
       <id>ishubin</id>
       <name>Ivan Shubin</name>
-    </developer>
-    <developer>
-      <id>hypery2k</id>
-      <name>Martin Reinhardt</name>
+      <url>https://github.com/ishubin</url>
+      <roles>
+        <role>architect</role>
+        <role>developer</role>
+        <role>tester</role>
+      </roles>
     </developer>
   </developers>
+
+  <contributors>
+    <contributor>
+      <name>Martin Reinhardt</name>
+      <email>galen@martinreinhardt-online.de</email>
+      <url>https://github.com/hypery2k</url>
+      <roles>
+        <role>developer</role>
+        <role>tester</role>
+      </roles>
+    </contributor>
+  </contributors>
 </project>

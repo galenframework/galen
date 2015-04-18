@@ -15,6 +15,7 @@
 ******************************************************************************/
 package net.mindengine.galen.validation.specs;
 
+import static java.lang.String.copyValueOf;
 import static java.lang.String.format;
 
 import java.util.LinkedList;
@@ -22,10 +23,7 @@ import java.util.List;
 
 import net.mindengine.galen.page.PageElement;
 import net.mindengine.galen.page.Rect;
-import net.mindengine.galen.specs.Location;
-import net.mindengine.galen.specs.Range;
-import net.mindengine.galen.specs.Side;
-import net.mindengine.galen.specs.SpecComplex;
+import net.mindengine.galen.specs.*;
 import net.mindengine.galen.validation.*;
 
 /**
@@ -88,19 +86,22 @@ public abstract class SpecValidationGeneral<T extends SpecComplex> extends SpecV
 
     protected String verifyLocation(Rect mainArea, Rect secondArea, Location location, PageValidation pageValidation, T spec) {
         List<String> messages = new LinkedList<String>();
-        Range range;
-        
-        try {
-            range = pageValidation.convertRange(location.getRange());
-        }
-        catch (Exception ex) {
-            return format("Cannot convert range: " + ex.getMessage());
-        }
-        
+
+
+        Range range = location.getRange();
+
         for (Side side : location.getSides()) {
             int offset = getOffsetForSide(mainArea, secondArea, side, spec);
-            if (!range.holds(offset)) {
-                messages.add(format("%dpx %s", offset, side));
+            double calculatedOffset = pageValidation.convertValue(range, offset);
+
+            if (!range.holds(calculatedOffset)) {
+                if (range.isPercentage()) {
+                    int precision = range.findPrecision();
+
+                    messages.add(format("%s%% [%dpx] %s", new RangeValue(calculatedOffset, precision).toString(), offset, side));
+                } else {
+                    messages.add(format("%dpx %s", offset, side));
+                }
             }
         }
         
@@ -117,7 +118,12 @@ public abstract class SpecValidationGeneral<T extends SpecComplex> extends SpecV
             
             buffer.append(' ');
             buffer.append(range.getErrorMessageSuffix());
-            return buffer.toString(); 
+            if (range.isPercentage()) {
+                int objectValue = pageValidation.getObjectValue(range.getPercentageOfValue());
+                buffer.append(' ');
+                buffer.append(rangeCalculatedFromPercentage(range, objectValue));
+            }
+            return buffer.toString();
         }
         else return null;
     }

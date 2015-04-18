@@ -25,6 +25,8 @@ public class ValidationErrorException extends Exception {
 	private List<String> errorMessages;
     private ImageComparison imageComparison;
     private List<ValidationObject> validationObjects;
+    private List<ValidationResult> childValidationResults;
+
 
     public ValidationErrorException() {
 		super();
@@ -95,7 +97,12 @@ public class ValidationErrorException extends Exception {
     }
 
     public ValidationResult asValidationResult() {
-        return new ValidationResult(this.getValidationObjects(), new ValidationError(this.getErrorMessages(), this.getImageComparison()));
+        ValidationResult validationResult = new ValidationResult(
+                this.getValidationObjects(),
+                new ValidationError(this.getErrorMessages(), this.getImageComparison()));
+
+        validationResult.setChildValidationResults(childValidationResults);
+        return validationResult;
     }
 
     public ImageComparison getImageComparison() {
@@ -118,5 +125,18 @@ public class ValidationErrorException extends Exception {
             this.validationObjects.addAll(validationObjects);
         }
         return this;
+    }
+
+    public ValidationErrorException withChildValidationResults(List<ValidationResult> childValidationResults) {
+        setChildValidationResults(childValidationResults);
+        return this;
+    }
+
+    public void setChildValidationResults(List<ValidationResult> childValidationResults) {
+        this.childValidationResults = childValidationResults;
+    }
+
+    public List<ValidationResult> getChildValidationResults() {
+        return childValidationResults;
     }
 }

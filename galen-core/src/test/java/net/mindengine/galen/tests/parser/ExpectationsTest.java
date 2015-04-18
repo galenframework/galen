@@ -35,6 +35,7 @@ import net.mindengine.galen.config.GalenConfig;
 import net.mindengine.galen.parser.*;
 import net.mindengine.galen.specs.Location;
 import net.mindengine.galen.specs.Range;
+import net.mindengine.galen.specs.RangeValue;
 import net.mindengine.galen.specs.Side;
 import net.mindengine.galen.specs.reader.StringCharReader;
 
@@ -57,6 +58,27 @@ public class ExpectationsTest {
         GalenConfig.getConfig().reset();
     }
 
+
+    @Test(dataProvider = "rangeValueTestData")
+    public void rangeValueTest(String textForParsing, RangeValue expected) {
+        RangeValue rangeValue = new ExpectRangeValue().read(new StringCharReader(textForParsing));
+        MatcherAssert.assertThat(rangeValue, is(expected));
+    }
+
+    @DataProvider
+    public Object[][] rangeValueTestData() {
+        return new Object[][] {
+                {"0", new RangeValue(0, 0)},
+                {"123", new RangeValue(123, 0)},
+                {"0.0", new RangeValue(0, 1)},
+                {"1.0", new RangeValue(10, 1)},
+                {"-1.0", new RangeValue(-10, 1)},
+                {"-15.04567", new RangeValue(-1504567, 5)},
+                {"15.04567", new RangeValue(1504567, 5)}
+        };
+    }
+
+
     @Test(dataProvider = "rangeTestData")
     public void expectRangeTest(String textForParsing, Range expected) {
         StringCharReader stringCharReader = new StringCharReader(textForParsing);
@@ -68,37 +90,37 @@ public class ExpectationsTest {
     @DataProvider
     public Object[][] rangeTestData() {
         return new Object[][]{
-           {"10 to 15 px", Range.between(10.0, 15.0)},
-           {"10.0 to 15.4 px", Range.between(10.0, 15.4)},
-           {"10 to 15px", Range.between(10.0, 15.0)},
-           {"10to15px", Range.between(10.0, 15.0)},
-           {"-10to-15px", Range.between(-15.0, -10.0)},
-           {"-10to-15.04px", Range.between(-15.04, -10.0)},
-           {"10to15 px", Range.between(10.0, 15.0)},
-           {"9 px", Range.exact(9.0)},
-           {"9px", Range.exact(9.0)},
-           {"9.01px", Range.exact(9.01)},
-           {"   9px", Range.exact(9.0)},
-           {"\t9px", Range.exact(9.0)},
-           {"\t9\t\tpx", Range.exact(9.0)},
-           {"-49px", Range.exact(-49.0)},
-           {"~100px", Range.between(98.0, 102.0)},
-           {"~1000px", Range.between(980.0, 1020.0)},
-           {"~1px", Range.between(-1.0, 3.0)},
-           {"~0px", Range.between(-2.0, 2.0)},
-           {" ~0px", Range.between(-2.0, 2.0)},
-           {">10px", Range.greaterThan(10.0)},
-           {"> 10px", Range.greaterThan(10.0)},
-           {"<10px", Range.lessThan(10.0)},
-           {"< 10px", Range.lessThan(10.0)},
-           {"15% of screen/width", Range.exact(15.0).withPercentOf("screen/width")},
-           {"15.05% of screen/width", Range.exact(15.05).withPercentOf("screen/width")},
-           {"15 to 40% of   screen/height", Range.between(15.0, 40.0).withPercentOf("screen/height")},
-           {"15 to 40% of item-1/some-other-stuff/a/b/c2", Range.between(15.0, 40.0).withPercentOf("item-1/some-other-stuff/a/b/c2")},
-           {"~40% of item-1/some-other-stuff/a/b/c2", Range.between(38.0, 42.0).withPercentOf("item-1/some-other-stuff/a/b/c2")},
-           {"> 67 % of object/width", Range.greaterThan(67.0).withPercentOf("object/width")},
-           {" < 30% of object/width", Range.lessThan(30.0).withPercentOf("object/width")},
-           {" > 70% of parent/width", Range.greaterThan(70.0).withPercentOf("parent/width")}
+           {"10 to 15 px", Range.between(10, 15)},
+           {"10.0 to 15.4 px", Range.between(new RangeValue(100, 1), new RangeValue(154, 1))},
+           {"10 to 15px", Range.between(10, 15)},
+           {"10to15px", Range.between(10, 15)},
+           {"-15to-10px", Range.between(-15, -10)},
+           {"-15.04to-10px", Range.between(new RangeValue(-1504, 2), new RangeValue(-10))},
+           {"10to15 px", Range.between(10, 15)},
+           {"9 px", Range.exact(9)},
+           {"9px", Range.exact(9)},
+           {"9.01px", Range.exact(new RangeValue(901, 2))},
+           {"   9px", Range.exact(new RangeValue(9))},
+           {"\t9px", Range.exact(9)},
+           {"\t9\t\tpx", Range.exact(9)},
+           {"-49px", Range.exact(-49)},
+           {"~100px", Range.between(98, 102)},
+           {"~1000px", Range.between(980, 1020)},
+           {"~1px", Range.between(-1, 3)},
+           {"~0px", Range.between(-2, 2)},
+           {" ~0px", Range.between(-2, 2)},
+           {">10px", Range.greaterThan(10)},
+           {"> 10px", Range.greaterThan(10)},
+           {"<10px", Range.lessThan(10)},
+           {"< 10px", Range.lessThan(10)},
+           {"15% of screen/width", Range.exact(15).withPercentOf("screen/width")},
+           {"15.05% of screen/width", Range.exact(new RangeValue(1505, 2)).withPercentOf("screen/width")},
+           {"15 to 40% of   screen/height", Range.between(15, 40).withPercentOf("screen/height")},
+           {"15 to 40% of item-1/some-other-stuff/a/b/c2", Range.between(15, 40).withPercentOf("item-1/some-other-stuff/a/b/c2")},
+           {"~40% of item-1/some-other-stuff/a/b/c2", Range.between(38, 42).withPercentOf("item-1/some-other-stuff/a/b/c2")},
+           {"> 67 % of object/width", Range.greaterThan(67).withPercentOf("object/width")},
+           {" < 30% of object/width", Range.lessThan(30).withPercentOf("object/width")},
+           {" > 70% of parent/width", Range.greaterThan(70).withPercentOf("parent/width")}
         };
     }
     
@@ -234,14 +256,14 @@ public class ExpectationsTest {
     @DataProvider
     public Object[][] provideBadLocations() {
         return new Object[][]{
-            {"left", "Cannot parse number: \"\""},
+            {"left", "Cannot parse range value: \"\""},
             {"10px qwe", "Unknown side: \"qwe\""},
             {"10 to 30px qwe", "Unknown side: \"qwe\""},
             {"10 to 30% of screen/width qwe", "Unknown side: \"qwe\""},
             {"10px left qwe", "Unknown side: \"qwe\""},
             {"10px left, 20px qwe", "Unknown side: \"qwe\""},
             {"10px left, 20px left qwe", "Unknown side: \"qwe\""},
-            {"10px left, right, top", "Cannot parse number: \"\""},
+            {"10px left, right, top", "Cannot parse range value: \"\""},
         };
     }
 

@@ -111,12 +111,18 @@ public class Expectations {
         return new Expectation<String>() {
             @Override
             public String read(StringCharReader charReader) {
-                if (charReader.firstNonWhiteSpaceSymbol() == '\"') {
-                    charReader.readUntilSymbol('\"');
-                    return charReader.readUntilSymbol('\"');
+                char firstNonWhiteSpaceSymbol = charReader.firstNonWhiteSpaceSymbol();
+                if (firstNonWhiteSpaceSymbol == '"') {
+                    charReader.readUntilSymbol('"');
+                    return new ExpectString().read(charReader);
+                } else {
+                    throw new SyntaxException("Expected \" symbol, got: " + firstNonWhiteSpaceSymbol);
                 }
-                else return null;
             }
         };
+    }
+
+    public static ExpectationErrorRate errorRate() {
+        return new ExpectationErrorRate();
     }
 }

@@ -93,37 +93,6 @@ public class PageValidation {
         }
     }
     
-    public Range convertRangeFromPercentageToPixels(Range range) {
-        String valuePath = range.getPercentageOfValue();
-        int index = valuePath.indexOf("/");
-        if (index > 0 && index < valuePath.length() - 1) {
-            String objectName = valuePath.substring(0, index);
-            String fieldPath = valuePath.substring(index + 1);
-            
-            Locator locator = pageSpec.getObjectLocator(objectName);
-            PageElement pageElement = findPageElementOnPage(objectName, locator);
-            
-            if (pageElement != null) {
-                Object objectValue = getObjectValue(pageElement, fieldPath);
-                int value = convertToInt(objectValue);
-                
-                
-                Double valueA = range.getFrom();
-                Double valueB = range.getTo();
-                if (valueA != null) {
-                    valueA = valueA * value / 100.0;
-                }
-                if (valueB != null) {
-                    valueB = valueB * value / 100.0;
-                }
-                
-                return new Range(valueA, valueB).withType(range.getRangeType());
-            }
-            else throw new SyntaxException(UNKNOWN_LINE, format("Locator for object \"%s\" is not specified", objectName));
-        }
-        else throw new SyntaxException(UNKNOWN_LINE, format("Value path is incorrect %s", valuePath));
-    }
-
     private PageElement findPageElementOnPage(String objectName, Locator locator) {
         if (locator != null) {
             return page.getObject(objectName, locator);
@@ -184,13 +153,43 @@ public class PageValidation {
         return "get" + fieldName.substring(0, 1).toUpperCase() + fieldName.substring(1);
     }
 
-    public Range convertRange(Range range) {
-        if (range != null) {
-            if (range.isPercentage()) {
-                return convertRangeFromPercentageToPixels(range);
-            }
+    public double convertValue(Range range, double realValue) {
+        if (range.isPercentage()) {
+            return calculatePrecentageOfRealValue(range.getPercentageOfValue(), realValue);
+        } else {
+            return realValue;
         }
-        return range;
+    }
+
+    public int getObjectValue(String objectValuePath) {
+        int index = objectValuePath.indexOf("/");
+        if (index > 0 && index < objectValuePath.length() - 1) {
+            String objectName = objectValuePath.substring(0, index);
+            String fieldPath = objectValuePath.substring(index + 1);
+
+            Locator locator = pageSpec.getObjectLocator(objectName);
+            PageElement pageElement = findPageElementOnPage(objectName, locator);
+
+            if (pageElement != null) {
+                Object objectValue = getObjectValue(pageElement, fieldPath);
+                return convertToInt(objectValue);
+            }
+            else throw new SyntaxException(UNKNOWN_LINE, format("Locator for object \"%s\" is not specified", objectName));
+        }
+        else throw new SyntaxException(UNKNOWN_LINE, format("Value path is incorrect %s", objectValuePath));
+
+    }
+
+    private double calculatePrecentageOfRealValue(String objectValuePath, double realValue) {
+        int value = getObjectValue(objectValuePath);
+
+
+        if (value != 0) {
+            return (((double)realValue) / ((double)value)) * 100.0;
+        }
+        else {
+            return 0;
+        }
     }
 
     public ValidationListener getValidationListener() {

@@ -35,18 +35,32 @@ public class SpecCentered extends SpecObjectWithErrorRate {
 	}
 	
 	public enum Location {
-		ON, INSIDE;
+		ON("on"), INSIDE("inside");
+
+        private String name;
+        private Location(String name) {
+            this.name = name;
+        }
 
 		public static Location fromString(String locationText) {
-			if ("on".equals(locationText)) {
-				return ON;
-			}
-			else if ("inside".equals(locationText)) {
-				return INSIDE;
-			}
-			else throw new IllegalArgumentException("Can't read location: " + locationText);
+            for (Location location: Location.values()) {
+                if (location.name.equals(locationText)) {
+                    return location;
+                }
+            }
+
+			throw new IllegalArgumentException("Can't read location: " + locationText);
 		}
-	}
+
+        public static boolean isValid(String locationText) {
+            for (Location location: Location.values()) {
+                if (location.name.equals(locationText)) {
+                    return true;
+                }
+            }
+            return false;
+        }
+    }
 	
 	private Alignment alignment;
 	private Location location;

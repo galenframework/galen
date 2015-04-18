@@ -37,25 +37,29 @@ public class SpecText extends Spec {
     }
 
     public enum Type {
-        IS, CONTAINS, STARTS, ENDS, MATCHES;
+        IS("is"), CONTAINS("contains"), STARTS("starts"), ENDS("ends"), MATCHES("matches");
+
+        private final String operationName;
+        private Type(String operationName) {
+            this.operationName = operationName;
+        }
 
         public static Type fromString(String typeString) {
-            if (typeString.equals("is")) {
-                return SpecText.Type.IS;
+            for (Type type : Type.values()) {
+                if (type.operationName.equals(typeString)) {
+                    return type;
+                }
             }
-            else if (typeString.equals("contains")) {
-                return SpecText.Type.CONTAINS;
+            throw new SyntaxException("Unknown validation type: " + typeString);
+        }
+
+        public static boolean isValid(String typeString) {
+            for (Type type : Type.values()) {
+                if (type.operationName.equals(typeString)) {
+                    return true;
+                }
             }
-            else if (typeString.equals("starts")) {
-                return SpecText.Type.STARTS;
-            }
-            else if (typeString.equals("ends")) {
-                return SpecText.Type.ENDS;
-            }
-            else if (typeString.equals("matches")) {
-                return SpecText.Type.MATCHES;
-            }
-            else throw new SyntaxException("Unknown validation type: " + typeString);
+            return false;
         }
     }
     
@@ -65,6 +69,12 @@ public class SpecText extends Spec {
     public SpecText(Type type, String text) {
         this.setType(type);
         this.setText(text);
+    }
+
+    public SpecText(Type type, String text, List<String> operations) {
+        this.setType(type);
+        this.setText(text);
+        this.setOperations(operations);
     }
 
     public Type getType() {

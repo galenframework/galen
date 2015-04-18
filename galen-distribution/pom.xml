@@ -18,9 +18,6 @@
   
   <!-- NOTE: These dependency declarations are only required to sort this project to the 
        end of the line in the multimodule build. 
-       
-       Since we only include the child1 module in our assembly, we only need to ensure this
-       distribution project builds AFTER that one...
   -->
   <dependencies>
     <dependency>

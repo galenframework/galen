@@ -56,7 +56,8 @@ public class SpecValidationComponent extends SpecValidation<SpecComponent> {
         List<ValidationResult> errorResults = ValidationResult.filterOnlyErrorResults(results);
         if (errorResults.size() > 0) {
             throw new ValidationErrorException("Child component spec contains " + errorResults.size() + " errors")
-                    .withValidationObjects(objects);
+                    .withValidationObjects(objects)
+                    .withChildValidationResults(errorResults);
         }
 
         return new ValidationResult(objects);

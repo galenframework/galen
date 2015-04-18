@@ -108,7 +108,7 @@ public class ValidationTest {
     @DataProvider
     public Object[][] provideGoodSamples() {
         return new Object[][] {
-          // Contains 
+          // Contains
           row(specContains(CONTAINS_FULLY, "menu", "button"), page(new HashMap<String, PageElement>(){{
               put("object", element(10, 10, 100, 100));
               put("menu", element(11, 11, 10, 10));
@@ -183,7 +183,7 @@ public class ValidationTest {
               put("object", element(10, 15, 100, 100));
               put("container", element(5, 5, 120, 120));
           }})),
-          
+
           row(specInside("container", location(exact(20).withPercentOf("container/height"), TOP)), page(new HashMap<String, PageElement>(){{
               put("object", element(10, 15, 100, 20));
               put("container", element(5, 5, 120, 50));
@@ -247,7 +247,11 @@ public class ValidationTest {
               put("object", element(305, 140, 15, 50));
               put("main-container-1", element(305, 400, 30, 50));
           }})),
-          
+          row(specWidth(Range.exact(new RangeValue(333, 1)).withPercentOf("main-container-1/width")), page(new HashMap<String, PageElement>(){{
+              put("object", element(0, 0, 100, 50));
+              put("main-container-1", element(0, 0, 300, 50));
+          }})),
+
 
           
           // Height 
@@ -714,13 +718,16 @@ public class ValidationTest {
                   put("object", element(30, 5, 50, 50));
                   put("container", element(0, 0, 130, 120));
           }})),
-          
-          row(validationResult(areas(new ValidationObject(new Rect(30, 5, 10, 50), "object"), new ValidationObject(new Rect(0, 0, 50, 120), "container")), messages("\"object\" is 30px left instead of 10px")),
+
+
+          row(validationResult(areas(new ValidationObject(new Rect(30, 5, 10, 50), "object"), new ValidationObject(new Rect(0, 0, 50, 120), "container")),
+                          messages("\"object\" is 60% [30px] left instead of 20% [10px]")),
                   specInside("container", location(exact(20).withPercentOf("container/width"), LEFT)), page(new HashMap<String, PageElement>(){{
                       put("object", element(30, 5, 10, 50));
                       put("container", element(0, 0, 50, 120));
           }})),
-          row(validationResult(areas(new ValidationObject(new Rect(30, 5, 10, 50), "object"), new ValidationObject(new Rect(0, 0, 50, 120), "container")), messages("\"object\" is 30px left which is not in range of 10 to 20px")),
+          row(validationResult(areas(new ValidationObject(new Rect(30, 5, 10, 50), "object"), new ValidationObject(new Rect(0, 0, 50, 120), "container")),
+                          messages("\"object\" is 60% [30px] left which is not in range of 20 to 40% [10 to 20px]")),
                   specInside("container", location(between(20, 40).withPercentOf("container/width"), LEFT)), page(new HashMap<String, PageElement>(){{
                       put("object", element(30, 5, 10, 50));
                       put("container", element(0, 0, 50, 120));
@@ -780,16 +787,16 @@ public class ValidationTest {
                       put("button", element(200, 200, 100, 50));
           }})),
           
-          
+
           row(validationResult(areas(new ValidationObject(new Rect(90, 130, 100, 50), "object"), new ValidationObject(new Rect(200, 200, 50, 50), "button")),
-                  messages("\"object\" is 10px left instead of 20px")),
+                  messages("\"object\" is 20% [10px] left instead of 40% [20px]")),
                   specNear("button", location(exact(40).withPercentOf("button/width"), LEFT)), page(new HashMap<String, PageElement>(){{
                       put("object", element(90, 130, 100, 50));
                       put("button", element(200, 200, 50, 50));
           }})),
           
           row(validationResult(areas(new ValidationObject(new Rect(90, 130, 100, 50), "object"), new ValidationObject(new Rect(200, 200, 50, 50), "button")),
-                  messages("\"object\" is 10px left which is not in range of 20 to 25px")),
+                  messages("\"object\" is 20% [10px] left which is not in range of 40 to 50% [20 to 25px]")),
                   specNear("button", location(between(40, 50).withPercentOf("button/area/width"), LEFT)), page(new HashMap<String, PageElement>(){{
                       put("object", element(90, 130, 100, 50));
                       put("button", element(200, 200, 50, 50));
@@ -851,11 +858,11 @@ public class ValidationTest {
           }})),
           
           row(validationResult(singleArea(new Rect(100, 100, 100, 50), "object"), messages("\"object\" width is 100px but it should be greater than 110px")),
-                  specWidth(Range.greaterThan(110.0)), page(new HashMap<String, PageElement>(){{
+                  specWidth(Range.greaterThan(110)), page(new HashMap<String, PageElement>(){{
                       put("object", element(100, 100, 100, 50));
           }})),
           row(validationResult(singleArea(new Rect(100, 100, 100, 50), "object"), messages("\"object\" width is 100px but it should be less than 90px")),
-                  specWidth(Range.lessThan(90.0)), page(new HashMap<String, PageElement>(){{
+                  specWidth(Range.lessThan(90)), page(new HashMap<String, PageElement>(){{
                       put("object", element(100, 100, 100, 50));
           }})),
           
@@ -863,14 +870,14 @@ public class ValidationTest {
                   specWidth(Range.between(10, 40)), page(new HashMap<String, PageElement>(){{
                       put("object", element(100, 100, 100, 50));
           }})),
-          
-          row(validationResult(singleArea(new Rect(100, 100, 100, 50), "object"), messages("\"object\" width is 100px instead of 20px")),
+
+          row(validationResult(singleArea(new Rect(100, 100, 100, 50), "object"), messages("\"object\" width is 50% [100px] instead of 10% [20px]")),
                   specWidth(exact(10).withPercentOf("container/width")), page(new HashMap<String, PageElement>(){{
                       put("object", element(100, 100, 100, 50));
                       put("container", element(100, 100, 200, 50));
           }})),
           
-          row(validationResult(singleArea(new Rect(100, 100, 100, 50), "object"), messages("\"object\" width is 100px which is not in range of 20 to 40px")),
+          row(validationResult(singleArea(new Rect(100, 100, 100, 50), "object"), messages("\"object\" width is 50% [100px] which is not in range of 10 to 20% [20 to 40px]")),
                   specWidth(between(10, 20).withPercentOf("container/width")), page(new HashMap<String, PageElement>(){{
                       put("object", element(100, 100, 100, 50));
                       put("container", element(100, 100, 200, 50));
@@ -902,13 +909,13 @@ public class ValidationTest {
                       put("object", element(100, 100, 100, 50));
           }})),
           
-          row(validationResult(singleArea(new Rect(100, 100, 100, 50), "object"), messages("\"object\" height is 50px instead of 20px")),
+          row(validationResult(singleArea(new Rect(100, 100, 100, 50), "object"), messages("\"object\" height is 25% [50px] instead of 10% [20px]")),
                   specHeight(exact(10).withPercentOf("container/height")), page(new HashMap<String, PageElement>(){{
                       put("object", element(100, 100, 100, 50));
                       put("container", element(100, 100, 100, 200));
           }})),
           
-          row(validationResult(singleArea(new Rect(100, 100, 100, 50), "object"), messages("\"object\" height is 50px which is not in range of 20 to 30px")),
+          row(validationResult(singleArea(new Rect(100, 100, 100, 50), "object"), messages("\"object\" height is 25% [50px] which is not in range of 10 to 15% [20 to 30px]")),
                   specHeight(between(10, 15).withPercentOf("container/height")), page(new HashMap<String, PageElement>(){{
                       put("object", element(100, 100, 100, 50));
                       put("container", element(100, 100, 100, 200));
