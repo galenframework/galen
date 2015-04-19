@@ -46,6 +46,12 @@ public class GalenConfig {
 
     public static final String TEST_JS_SUFFIX = "galen.test.js.file.suffix";
     public static final String TEST_SUFFIX = "galen.test.file.suffix";
+    public static final String GALEN_CONFIG_FILE = "galen.config.file";
+    public static final String GALEN_RANGE_APPROXIMATION = "galen.range.approximation";
+    public static final String GALEN_REPORTING_LISTENERS = "galen.reporting.listeners";
+    public static final String GALEN_DEFAULT_BROWSER = "galen.default.browser";
+    public static final String GALEN_LOG_LEVEL = "galen.log.level";
+    public static final String GALEN_USE_FAIL_EXIT_CODE = "galen.use.fail.exit.code";
     private int rangeApproximation;
     private List<String> reportingListeners;
     private String defaultBrowser;
@@ -63,8 +69,7 @@ public class GalenConfig {
     private void loadConfig() throws IOException {
         this.properties = new Properties();
 
-        // TODO use constant
-        File configFile = new File(System.getProperty("galen.config.file", "config"));
+        File configFile = new File(System.getProperty(GALEN_CONFIG_FILE, "config"));
         
         if (configFile.exists() && configFile.isFile()) {
             InputStream in = new FileInputStream(configFile);
@@ -72,10 +77,9 @@ public class GalenConfig {
             in.close();
         }
 
-        // TODO use constant
-        rangeApproximation = Integer.parseInt(readProperty("galen.range.approximation", "2"));
-        reportingListeners = converCommaSeparatedList(readProperty("galen.reporting.listeners", ""));
-        defaultBrowser = readProperty("galen.default.browser", "firefox");
+        rangeApproximation = Integer.parseInt(readProperty(GALEN_RANGE_APPROXIMATION, "2"));
+        reportingListeners = converCommaSeparatedList(readProperty(GALEN_REPORTING_LISTENERS, ""));
+        defaultBrowser = readProperty(GALEN_DEFAULT_BROWSER, "firefox");
     }
 
     private List<String> converCommaSeparatedList(String text) {
@@ -166,8 +170,7 @@ public class GalenConfig {
 
     public int getLogLevel() {
 
-        // TODO use constant
-        String value = readProperty("galen.log.level", "10");
+        String value = readProperty(GALEN_LOG_LEVEL, "10");
         if (StringUtils.isNumeric(value)) {
             return Integer.parseInt(value);
         }
@@ -176,8 +179,7 @@ public class GalenConfig {
     
     public boolean getUseFailExitCode() {
 
-        // TODO use constant
-        String value = readProperty("galen.use.fail.exit.code");
+        String value = readProperty(GALEN_USE_FAIL_EXIT_CODE);
         if (value != null && !value.trim().isEmpty()) {
             return Boolean.parseBoolean(value);
         }
