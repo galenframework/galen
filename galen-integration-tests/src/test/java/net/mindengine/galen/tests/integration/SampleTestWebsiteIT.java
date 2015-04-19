@@ -1,4 +1,4 @@
-package net.mindengine.galen;
+package net.mindengine.galen.tests.integration;
 
 import net.mindengine.galen.util.GalenBaseTest;
 

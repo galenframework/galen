@@ -38,7 +38,7 @@ public abstract class GalenBaseTest {
 
     public void verifyPage(final String uri, final TestDevice pDevice, final String specPath) throws Exception {
         String projectPath = new File("").getAbsolutePath();
-        String completeUrl = uri.startsWith("http://") ? uri : "file://" + new File("").getAbsolutePath() + "/src/main/resources/" + uri;
+        String completeUrl = uri.startsWith("http://") ? uri : "file://" + new File("").getAbsolutePath() + "/src/test/resources/" + uri;
         String defaultBrowser = System.getProperty(GalenConfig.DEFAULT_BROWSER, "firefox");
         LOG.info("Opening url " + completeUrl + " in browser " + defaultBrowser);
         new GalenMain().execute(new GalenArguments().withUrl(completeUrl).withPaths(Arrays.asList(specPath)).withAction("check")
