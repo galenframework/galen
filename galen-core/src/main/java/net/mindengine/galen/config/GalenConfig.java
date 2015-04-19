@@ -32,29 +32,9 @@ import org.slf4j.LoggerFactory;
 public class GalenConfig {
 
     private final static Logger LOG = LoggerFactory.getLogger(GalenConfig.class);
-    
-    public final static GalenConfig instance = new GalenConfig();
-    public static final String SCREENSHOT_AUTORESIZE = "galen.screenshot.autoresize";
-    public static final String SCREENSHOT_FULLPAGE = "galen.browser.screenshots.fullPage";
-    // smart waiting for scroll position, but with a timeout, set to zero to turn off smart wait
-    public static final String SCREENSHOT_FULLPAGE_SCROLLTIMEOUT= "galen.browser.screenshots.fullPage.scrollTimeout";
-    // hard wait during scroll
-    public static final String SCREENSHOT_FULLPAGE_SCROLLWAIT = "galen.browser.screenshots.fullPage.scrollWait";
-    public static final String SPEC_IMAGE_TOLERANCE = "galen.spec.image.tolerance";
-    public static final String SPEC_IMAGE_ERROR_RATE = "galen.spec.image.error";
-    public static final String SPEC_GLOBAL_VISIBILITY_CHECK = "galen.spec.global.visibility";
 
-    public static final String TEST_JS_SUFFIX = "galen.test.js.file.suffix";
-    public static final String TEST_SUFFIX = "galen.test.file.suffix";
-    public static final String GALEN_CONFIG_FILE = "galen.config.file";
-    public static final String GALEN_RANGE_APPROXIMATION = "galen.range.approximation";
-    public static final String GALEN_REPORTING_LISTENERS = "galen.reporting.listeners";
-    public static final String GALEN_DEFAULT_BROWSER = "galen.default.browser";
-    public static final String GALEN_LOG_LEVEL = "galen.log.level";
-    public static final String GALEN_USE_FAIL_EXIT_CODE = "galen.use.fail.exit.code";
-    private int rangeApproximation;
-    private List<String> reportingListeners;
-    private String defaultBrowser;
+
+    public final static GalenConfig instance = new GalenConfig();
     private Properties properties;
     
     private GalenConfig() {
@@ -69,7 +49,7 @@ public class GalenConfig {
     private void loadConfig() throws IOException {
         this.properties = new Properties();
 
-        File configFile = new File(System.getProperty(GALEN_CONFIG_FILE, "config"));
+        File configFile = new File(readProperty(GalenProperty.GALEN_CONFIG_FILE));
         
         if (configFile.exists() && configFile.isFile()) {
             InputStream in = new FileInputStream(configFile);
@@ -77,12 +57,9 @@ public class GalenConfig {
             in.close();
         }
 
-        rangeApproximation = Integer.parseInt(readProperty(GALEN_RANGE_APPROXIMATION, "2"));
-        reportingListeners = converCommaSeparatedList(readProperty(GALEN_REPORTING_LISTENERS, ""));
-        defaultBrowser = readProperty(GALEN_DEFAULT_BROWSER, "firefox");
     }
 
-    private List<String> converCommaSeparatedList(String text) {
+    private List<String> convertCommaSeparatedList(String text) {
         String[] arr = text.split(",");
         
         List<String> list = new LinkedList<String>();
@@ -95,18 +72,16 @@ public class GalenConfig {
         return list;
     }
 
-    public String readProperty(String name, String defaultValue) {
-        return properties.getProperty(name, System.getProperty(name, defaultValue));
+    public String readProperty(GalenProperty property) {
+        return properties.getProperty(property.propertyName,
+                System.getProperty(property.propertyName, property.defaultValue));
     }
     
-    public String readProperty(String name) {
-        return properties.getProperty(name, System.getProperty(name));
-    }
-    
-    public String readMandatoryProperty(String name) {
-        String value = properties.getProperty(name, System.getProperty(name));
+    public String readMandatoryProperty(GalenProperty property) {
+        String value = properties.getProperty(property.propertyName, System.getProperty(property.propertyName));
+
         if (value == null || value.trim().isEmpty()) {
-            throw new RuntimeException("Missing property: " + name);
+            throw new RuntimeException("Missing property: " + property.propertyName);
         }
         return value;
     }
@@ -121,56 +96,45 @@ public class GalenConfig {
     }
 
     public int getRangeApproximation() {
-        return this.rangeApproximation;
+        return Integer.parseInt(readProperty(GalenProperty.GALEN_RANGE_APPROXIMATION));
     }
 
     public List<String> getReportingListeners() {
-        return this.reportingListeners;
+        return convertCommaSeparatedList(readProperty(GalenProperty.GALEN_REPORTING_LISTENERS));
     }
 
     public String getDefaultBrowser() {
-        return defaultBrowser;
+        return readProperty(GalenProperty.GALEN_DEFAULT_BROWSER);
     }
 
-    public Integer getIntProperty(String name, int defaultValue) {
-        String value = readProperty(name);
-        if (value == null) {
-            return defaultValue;
+    public Integer getIntProperty(GalenProperty property) {
+        String value = readProperty(property);
+        try {
+            return Integer.parseInt(value);
         }
-        else {
-            try {
-                return Integer.parseInt(value);
-            }
-            catch (Exception e) {
-                throw new RuntimeException(String.format("Couldn't parse property \"%s\" from config file", name));
-            }
+        catch (Exception e) {
+            throw new RuntimeException(String.format("Couldn't parse property \"%s\" from config file", property.propertyName));
         }
     }
 
     
-    public int getIntProperty(String name, int defaultValue, int min, int max) {
-        int value = getIntProperty(name, defaultValue);
+    public int getIntProperty(GalenProperty property, int min, int max) {
+        int value = getIntProperty(property);
         if (value >= min && value <=max) {
             return value;
-        }
-        else {
-            throw new RuntimeException(String.format("Property \"%s\"=%d in config file is not in allowed range [%d, %d]", name, value, min, max));
+        } else {
+            throw new RuntimeException(String.format("Property \"%s\"=%d in config file is not in allowed range [%d, %d]",
+                    property.propertyName, value, min, max));
         }
     }
 
-    public boolean getBooleanProperty(String name, boolean defaultValue) {
-        String value = readProperty(name);
-        if (value == null) {
-            return defaultValue;
-        }
-        else {
-            return Boolean.parseBoolean(value);
-        }
+    public boolean getBooleanProperty(GalenProperty property) {
+        String value = readProperty(property);
+        return Boolean.parseBoolean(value);
     }
 
     public int getLogLevel() {
-
-        String value = readProperty(GALEN_LOG_LEVEL, "10");
+        String value = readProperty(GalenProperty.GALEN_LOG_LEVEL);
         if (StringUtils.isNumeric(value)) {
             return Integer.parseInt(value);
         }
@@ -178,40 +142,34 @@ public class GalenConfig {
     }
     
     public boolean getUseFailExitCode() {
-
-        String value = readProperty(GALEN_USE_FAIL_EXIT_CODE);
-        if (value != null && !value.trim().isEmpty()) {
-            return Boolean.parseBoolean(value);
-        }
-        else return false;
+        return getBooleanProperty(GalenProperty.GALEN_USE_FAIL_EXIT_CODE);
     }
 
     public String getTestJsSuffix() {
-        return properties.getProperty(TEST_JS_SUFFIX, ".test.js");
+        return readProperty(GalenProperty.TEST_JS_SUFFIX);
     }
 
     public boolean shouldAutoresizeScreenshots() {
-        return getBooleanProperty(GalenConfig.SCREENSHOT_AUTORESIZE, true);
+        return getBooleanProperty(GalenProperty.SCREENSHOT_AUTORESIZE);
     }
 
     public boolean shouldCheckVisibilityGlobally() {
-        return getBooleanProperty(GalenConfig.SPEC_GLOBAL_VISIBILITY_CHECK, true);
+        return getBooleanProperty(GalenProperty.SPEC_GLOBAL_VISIBILITY_CHECK);
     }
 
     public int getImageSpecDefaultTolerance() {
-        return getIntProperty(GalenConfig.SPEC_IMAGE_TOLERANCE, 25);
+        return getIntProperty(GalenProperty.SPEC_IMAGE_TOLERANCE);
     }
 
     public SpecImage.ErrorRate getImageSpecDefaultErrorRate() {
-        String errorRateText = readProperty(SPEC_IMAGE_ERROR_RATE, "0px");
-        return SpecImage.ErrorRate.fromString(errorRateText);
+        return SpecImage.ErrorRate.fromString(readProperty(GalenProperty.SPEC_IMAGE_ERROR_RATE));
     }
 
-    public void setProperty(String name, String value) {
-        properties.setProperty(name, value);
+    public void setProperty(GalenProperty property, String value) {
+        properties.setProperty(property.propertyName, value);
     }
 
     public String getTestSuffix() {
-        return properties.getProperty(TEST_SUFFIX, ".test");
+        return readProperty(GalenProperty.TEST_SUFFIX);
     }
 }

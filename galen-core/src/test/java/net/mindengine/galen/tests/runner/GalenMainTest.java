@@ -28,6 +28,7 @@ import net.mindengine.galen.GalenMain;
 import net.mindengine.galen.components.DummyCompleteListener;
 import net.mindengine.galen.components.JsTestRegistry;
 import net.mindengine.galen.config.GalenConfig;
+import net.mindengine.galen.config.GalenProperty;
 import net.mindengine.galen.runner.CompleteListener;
 import net.mindengine.galen.runner.GalenArguments;
 import net.mindengine.galen.tests.GalenTest;
@@ -140,7 +141,7 @@ public class GalenMainTest {
     public void shouldFind_javascriptTests_basedOnConfigProperty() throws Exception {
         JsTestRegistry.get().clear();
 
-        GalenConfig.getConfig().setProperty(GalenConfig.TEST_JS_SUFFIX, ".blahblah.js");
+        GalenConfig.getConfig().setProperty(GalenProperty.TEST_JS_SUFFIX, ".blahblah.js");
 
         new GalenMain().execute(new GalenArguments()
                         .withAction("test")

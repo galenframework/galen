@@ -21,6 +21,7 @@ import java.io.IOException;
 
 
 import net.mindengine.galen.config.GalenConfig;
+import net.mindengine.galen.config.GalenProperty;
 import net.mindengine.galen.page.Page;
 import net.mindengine.galen.page.selenium.SeleniumPage;
 import net.mindengine.galen.utils.GalenUtils;
@@ -79,7 +80,7 @@ public class SeleniumBrowser implements Browser {
     @Override
     public File createScreenshot() {
         try {
-            if (GalenConfig.getConfig().getBooleanProperty(GalenConfig.SCREENSHOT_FULLPAGE, false)) {
+            if (GalenConfig.getConfig().getBooleanProperty(GalenProperty.SCREENSHOT_FULLPAGE)) {
                 return GalenUtils.makeFullScreenshot(driver);
             }
             else return makeSimpleScreenshot();
