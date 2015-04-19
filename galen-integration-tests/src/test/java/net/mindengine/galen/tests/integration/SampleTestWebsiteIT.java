@@ -1,10 +1,10 @@
 package net.mindengine.galen.tests.integration;
 
-import net.mindengine.galen.util.GalenBaseTest;
+import net.mindengine.galen.util.GalenBaseTestRunner;
 
 import org.testng.annotations.Test;
 
-public class SampleTestWebsiteIT extends GalenBaseTest {
+public class SampleTestWebsiteIT extends GalenBaseTestRunner {
 
     @Test(dataProvider = "devices")
     public void welcomePage_shouldLookGood_onDevice(final TestDevice device) throws Exception {

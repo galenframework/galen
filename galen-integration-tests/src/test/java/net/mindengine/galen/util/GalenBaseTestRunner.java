@@ -22,7 +22,7 @@ import org.testng.annotations.DataProvider;
  * mvn verify -Dselenium.grid=http://grid-ip:4444/wd/hub or <br>
  * mvn verify -Dselenium.browser=safari
  */
-public abstract class GalenBaseTest {
+public abstract class GalenBaseTestRunner {
 
     private static final Logger LOG = LoggerFactory.getLogger("GalenBaseLayoutTests");
 
