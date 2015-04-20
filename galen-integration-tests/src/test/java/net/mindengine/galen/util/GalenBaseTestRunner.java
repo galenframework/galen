@@ -1,3 +1,18 @@
+/*******************************************************************************
+ * Copyright 2015 Ivan Shubin http://mindengine.net
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ******************************************************************************/
 package net.mindengine.galen.util;
 
 import static java.util.Arrays.asList;
@@ -15,13 +30,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.testng.annotations.DataProvider;
 
-/**
- * Base class for all Galen tests. <br>
- * <br>
- * To run with maven against Selenium grid use: <br>
- * mvn verify -Dselenium.grid=http://grid-ip:4444/wd/hub or <br>
- * mvn verify -Dselenium.browser=safari
- */
 public abstract class GalenBaseTestRunner {
 
     private static final Logger LOG = LoggerFactory.getLogger("GalenBaseLayoutTests");
@@ -40,6 +48,7 @@ public abstract class GalenBaseTestRunner {
         String projectPath = new File("").getAbsolutePath();
         String completeUrl = uri.startsWith("http://") ? uri : "file://" + new File("").getAbsolutePath() + "/src/test/resources/" + uri;
         String defaultBrowser = System.getProperty(GalenConfig.DEFAULT_BROWSER, "firefox");
+        GalenConfig.getConfig().setProperty(GalenConfig.DEFAULT_BROWSER, defaultBrowser);
         LOG.info("Opening url " + completeUrl + " in browser " + defaultBrowser);
         new GalenMain().execute(new GalenArguments().withUrl(completeUrl).withPaths(Arrays.asList(specPath)).withAction("check")
                 .withIncludedTags(pDevice.getTags().toString()).withHtmlReport(projectPath + "/target/galen-html")
@@ -51,10 +60,9 @@ public abstract class GalenBaseTestRunner {
         return new Object[][] {// @formatter:off
               { SMALL_PHONE },
               { NORMAL_PHONE },
-              {  TABLET},
-              { DESKTOP},
-              {  FULLHD},
-              // @formatter:on
+              { TABLET },
+              { DESKTOP },
+              { FULLHD }, // @formatter:on
         };
     }
 
