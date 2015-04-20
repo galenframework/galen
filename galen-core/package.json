@@ -1,6 +1,6 @@
 {
   "name": "galen",
-  "version": "1.5.2",
+  "version": "1.6.3",
   "dependencies": {},
   "repository": "git://github.com/galenframework/galen",
   "devDependencies": {
