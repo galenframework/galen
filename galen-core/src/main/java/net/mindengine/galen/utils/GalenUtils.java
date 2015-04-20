@@ -38,6 +38,7 @@ import net.mindengine.galen.browser.SeleniumBrowser;
 import net.mindengine.galen.browser.SeleniumBrowserFactory;
 import net.mindengine.galen.browser.SeleniumGridBrowserFactory;
 import net.mindengine.galen.config.GalenConfig;
+import net.mindengine.galen.config.GalenProperty;
 import net.mindengine.galen.tests.GalenProperties;
 import net.mindengine.galen.tests.TestSession;
 import net.mindengine.rainbow4j.Rainbow4J;
@@ -210,11 +211,11 @@ public class GalenUtils {
     }
 
     private static void waitUntilItIsScrolledToPosition(WebDriver driver, int scrollPosition) throws InterruptedException {
-        int hardTime = GalenConfig.getConfig().getIntProperty(GalenConfig.SCREENSHOT_FULLPAGE_SCROLLWAIT, 0);
+        int hardTime = GalenConfig.getConfig().getIntProperty(GalenProperty.SCREENSHOT_FULLPAGE_SCROLLWAIT);
         if (hardTime > 0) {
             Thread.sleep(hardTime);
         }
-        int time = GalenConfig.getConfig().getIntProperty(GalenConfig.SCREENSHOT_FULLPAGE_SCROLLTIMEOUT, 250);
+        int time = GalenConfig.getConfig().getIntProperty(GalenProperty.SCREENSHOT_FULLPAGE_SCROLLTIMEOUT);
         boolean isScrolledToPosition = false;
         while(time >= 0 && !isScrolledToPosition) {
             Thread.sleep(50);

@@ -18,6 +18,7 @@ package net.mindengine.galen.browser;
 import net.mindengine.galen.config.GalenConfig;
 
 import org.apache.commons.lang3.StringUtils;
+import net.mindengine.galen.config.GalenProperty;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -63,12 +64,12 @@ public class SeleniumBrowserFactory implements BrowserFactory {
 
     private Browser createSeleniumGridBrowser() {
         
-        String gridUrl = GalenConfig.getConfig().readMandatoryProperty("galen.browserFactory.selenium.grid.url");
+        String gridUrl = GalenConfig.getConfig().readMandatoryProperty(GalenProperty.GALEN_BROWSERFACTORY_SELENIUM_GRID_URL);
         SeleniumGridBrowserFactory gridFactory = new SeleniumGridBrowserFactory(gridUrl);
         
-        gridFactory.setBrowser(GalenConfig.getConfig().readProperty("galen.browserFactory.selenium.grid.browser"));
-        gridFactory.setBrowserVersion(GalenConfig.getConfig().readProperty("galen.browserFactory.selenium.grid.browserVersion"));
-        String platform = GalenConfig.getConfig().readProperty("galen.browserFactory.selenium.grid.platform");
+        gridFactory.setBrowser(GalenConfig.getConfig().readProperty(GalenProperty.GALEN_BROWSERFACTORY_SELENIUM_GRID_BROWSER));
+        gridFactory.setBrowserVersion(GalenConfig.getConfig().readProperty(GalenProperty.GALEN_BROWSERFACTORY_SELENIUM_GRID_BROWSERVERSION));
+        String platform = GalenConfig.getConfig().readProperty(GalenProperty.GALEN_BROWSERFACTORY_SELENIUM_GRID_PLATFORM);
         if (platform != null && !platform.trim().isEmpty()) {
             gridFactory.setPlatform(Platform.valueOf(platform.toUpperCase()));
         }
@@ -77,7 +78,7 @@ public class SeleniumBrowserFactory implements BrowserFactory {
     }
 
     private boolean shouldBeUsingGrid() {
-        return GalenConfig.getConfig().getBooleanProperty("galen.browserFactory.selenium.runInGrid", false);
+        return GalenConfig.getConfig().getBooleanProperty(GalenProperty.GALEN_BROWSERFACTORY_SELENIUM_RUNINGRID);
     }
 
     private Browser createLocalBrowser() {

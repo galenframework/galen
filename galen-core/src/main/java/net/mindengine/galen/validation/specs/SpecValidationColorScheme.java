@@ -22,6 +22,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import net.mindengine.galen.config.GalenConfig;
+import net.mindengine.galen.config.GalenProperty;
 import net.mindengine.galen.page.PageElement;
 import net.mindengine.galen.page.Rect;
 import net.mindengine.galen.specs.SpecColorScheme;
@@ -33,12 +34,12 @@ import net.mindengine.rainbow4j.Spectrum;
 import static java.util.Arrays.asList;
 
 public class SpecValidationColorScheme extends SpecValidation<SpecColorScheme> {
-    
-    private static final int PRECISION = GalenConfig.getConfig().getIntProperty("spec.colorscheme.precision", 256, 8, 256);
-    private static final int TEST_RANGE = GalenConfig.getConfig().getIntProperty("spec.colorscheme.testrange", 6, 0, 256);
 
     @Override
     public ValidationResult check(PageValidation pageValidation, String objectName, SpecColorScheme spec) throws ValidationErrorException {
+        int colorPrecision = GalenConfig.getConfig().getIntProperty(GalenProperty.SPEC_COLORSCHEME_PRECISON, 8, 256);
+        int colorTestRange = GalenConfig.getConfig().getIntProperty(GalenProperty.SPEC_COLORSCHEME_TESTRANGE, 0, 256);
+
         PageElement mainObject = pageValidation.findPageElement(objectName);
         checkAvailability(mainObject, objectName);
 
@@ -58,7 +59,7 @@ public class SpecValidationColorScheme extends SpecValidation<SpecColorScheme> {
         
         Spectrum spectrum;
         try {
-            spectrum = Rainbow4J.readSpectrum(pageImage, new Rectangle(area.getLeft(), area.getTop(), area.getWidth(), area.getHeight()), PRECISION);
+            spectrum = Rainbow4J.readSpectrum(pageImage, new Rectangle(area.getLeft(), area.getTop(), area.getWidth(), area.getHeight()), colorPrecision);
         } catch (Exception e) {
             throw new ValidationErrorException(String.format("Couldn't fetch spectrum for \"%s\"", objectName));
         }
@@ -67,7 +68,7 @@ public class SpecValidationColorScheme extends SpecValidation<SpecColorScheme> {
         
         for (ColorRange colorRange : spec.getColorRanges()) {
             Color color = colorRange.getColor();
-            int percentage = (int)spectrum.getPercentage(color.getRed(), color.getGreen(), color.getBlue(), TEST_RANGE);
+            int percentage = (int)spectrum.getPercentage(color.getRed(), color.getGreen(), color.getBlue(), colorTestRange);
             
             if (!colorRange.getRange().holds(percentage)) {
                 messages.add(String.format("color %s on \"%s\" is %d%% %s", toHexColor(color), objectName, (int)percentage, colorRange.getRange().getErrorMessageSuffix("%")));
