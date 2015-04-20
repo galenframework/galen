@@ -197,7 +197,7 @@ public class GalenMain {
                     .withTitle("Simple check")
                     .withUrl(arguments.getUrl())
                     .withSize(arguments.getScreenSize())
-                    .withBrowserFactory(new SeleniumBrowserFactory(SeleniumBrowserFactory.FIREFOX))
+                    .withBrowserFactory(new SeleniumBrowserFactory())
                     .withActions(
                             asList((GalenPageAction) new GalenPageActionCheck().withSpecs(asList(pageSpecPath)).withIncludedTags(arguments.getIncludedTags())
                                     .withExcludedTags(arguments.getExcludedTags()).withOriginalCommand(arguments.getOriginal())))));

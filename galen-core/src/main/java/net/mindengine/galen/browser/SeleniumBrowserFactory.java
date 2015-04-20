@@ -17,6 +17,7 @@ package net.mindengine.galen.browser;
 
 import net.mindengine.galen.config.GalenConfig;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -80,7 +81,8 @@ public class SeleniumBrowserFactory implements BrowserFactory {
     }
 
     private Browser createLocalBrowser() {
-        if (FIREFOX.equals(browserType)) {
+        // default is firefox
+        if ( StringUtils.isEmpty(browserType) || FIREFOX.equals(browserType)) {
             return new SeleniumBrowser(new FirefoxDriver());
         }
         else if (CHROME.equals(browserType)) {
