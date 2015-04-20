@@ -23,6 +23,7 @@ import java.util.List;
 
 import net.mindengine.galen.GalenMain;
 import net.mindengine.galen.config.GalenConfig;
+import net.mindengine.galen.config.GalenProperty;
 import net.mindengine.galen.runner.GalenArguments;
 
 import org.openqa.selenium.Dimension;
@@ -47,8 +48,8 @@ public abstract class GalenBaseTestRunner {
     public void verifyPage(final String uri, final TestDevice pDevice, final String specPath) throws Exception {
         String projectPath = new File("").getAbsolutePath();
         String completeUrl = uri.startsWith("http://") ? uri : "file://" + new File("").getAbsolutePath() + "/src/test/resources/" + uri;
-        String defaultBrowser = System.getProperty(GalenConfig.DEFAULT_BROWSER, "firefox");
-        GalenConfig.getConfig().setProperty(GalenConfig.DEFAULT_BROWSER, defaultBrowser);
+        String defaultBrowser = System.getProperty(GalenProperty.GALEN_DEFAULT_BROWSER.name(), "firefox");
+        GalenConfig.getConfig().setProperty(GalenProperty.GALEN_DEFAULT_BROWSER, defaultBrowser);
         LOG.info("Opening url " + completeUrl + " in browser " + defaultBrowser);
         new GalenMain().execute(new GalenArguments().withUrl(completeUrl).withPaths(Arrays.asList(specPath)).withAction("check")
                 .withIncludedTags(pDevice.getTags().toString()).withHtmlReport(projectPath + "/target/galen-html")
