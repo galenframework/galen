@@ -23,13 +23,16 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.testng.IReporter;
 import org.testng.ISuite;
+import org.testng.ITestContext;
+import org.testng.ITestListener;
+import org.testng.ITestResult;
 import org.testng.xml.XmlSuite;
 
 import java.util.List;
 
-public class GalenReportingListener implements IReporter {
+public class GalenListener implements IReporter, ITestListener {
 
-    private static final Logger LOG = LoggerFactory.getLogger(GalenReportingListener.class);
+    private static final Logger LOG = LoggerFactory.getLogger(GalenListener.class);
 
     @Override
     public void generateReport(List<XmlSuite> xmlSuites, List<ISuite> iSuites, String s) {
@@ -57,5 +60,47 @@ public class GalenReportingListener implements IReporter {
                 }
             }
         }
+    }
+
+    @Override
+    public void onTestStart(ITestResult result) {
+        // TODO Auto-generated method stub
+        
+    }
+
+    @Override
+    public void onTestSuccess(ITestResult result) {
+        // TODO Auto-generated method stub
+        
+    }
+
+    @Override
+    public void onTestFailure(ITestResult result) {
+        // TODO Auto-generated method stub
+        
+    }
+
+    @Override
+    public void onTestSkipped(ITestResult result) {
+        // TODO Auto-generated method stub
+        
+    }
+
+    @Override
+    public void onTestFailedButWithinSuccessPercentage(ITestResult result) {
+        // TODO Auto-generated method stub
+        
+    }
+
+    @Override
+    public void onStart(ITestContext context) {
+        // TODO Auto-generated method stub
+        
+    }
+
+    @Override
+    public void onFinish(ITestContext context) {
+        // TODO Auto-generated method stub
+        
     }
 }
