@@ -17,6 +17,10 @@ package net.mindengine.galen.testng;
 
 import net.mindengine.galen.reports.GalenTestInfo;
 import net.mindengine.galen.reports.HtmlReportBuilder;
+import net.mindengine.galen.reports.model.FileTempStorage;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.testng.IReporter;
 import org.testng.ISuite;
 import org.testng.xml.XmlSuite;
@@ -25,15 +29,33 @@ import java.util.List;
 
 public class GalenReportingListener implements IReporter {
 
+    private static final Logger LOG = LoggerFactory.getLogger(GalenReportingListener.class);
+
     @Override
     public void generateReport(List<XmlSuite> xmlSuites, List<ISuite> iSuites, String s) {
-        System.out.println("Generating Galen Html reports");
+        LOG.info("Generating Galen Html reports");
         List<GalenTestInfo> tests = GalenReportsContainer.get().getAllTests();
-
         try {
             new HtmlReportBuilder().build(tests, "target/galen-html-reports");
+            cleanData(tests);
         } catch (Exception e) {
-            e.printStackTrace();
+            throw new RuntimeException(e);
+        }
+    }
+
+    /**
+     * Removes temporary test data
+     * 
+     * @param testInfos
+     */
+    private void cleanData(List<GalenTestInfo> testInfos) {
+        for (GalenTestInfo testInfo : testInfos) {
+            if (testInfo.getReport() != null) {
+                FileTempStorage storage = testInfo.getReport().getFileStorage();
+                if (storage != null) {
+                    storage.cleanup();
+                }
+            }
         }
     }
 }
