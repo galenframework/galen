@@ -1,36 +1,31 @@
 /*******************************************************************************
-* Copyright 2015 Ivan Shubin http://mindengine.net
-* 
-* Licensed under the Apache License, Version 2.0 (the "License");
-* you may not use this file except in compliance with the License.
-* You may obtain a copy of the License at
-* 
-*   http://www.apache.org/licenses/LICENSE-2.0
-* 
-* Unless required by applicable law or agreed to in writing, software
-* distributed under the License is distributed on an "AS IS" BASIS,
-* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-* See the License for the specific language governing permissions and
-* limitations under the License.
-******************************************************************************/
+ * Copyright 2015 Ivan Shubin http://mindengine.net
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ******************************************************************************/
 package net.mindengine.galen.testng;
-
-import net.mindengine.galen.api.Galen;
-import net.mindengine.galen.reports.TestReport;
-import net.mindengine.galen.reports.model.LayoutReport;
-import org.openqa.selenium.Dimension;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.firefox.FirefoxDriver;
-import org.testng.annotations.AfterMethod;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.DataProvider;
 
 import java.io.IOException;
 import java.lang.reflect.Method;
 import java.util.List;
 import java.util.Properties;
 
-import static java.util.Arrays.asList;
+import net.mindengine.galen.api.Galen;
+import net.mindengine.galen.reports.TestReport;
+import net.mindengine.galen.reports.model.LayoutReport;
+
+import org.openqa.selenium.WebDriver;
+import org.testng.annotations.BeforeMethod;
 
 public abstract class GalenTestBase {
 
@@ -46,35 +41,9 @@ public abstract class GalenTestBase {
         }
     }
 
-
     @BeforeMethod
     public void initReport(Method method) {
         report.set(GalenReportsContainer.get().registerTest(method));
     }
 
-
-    public static class TestDevice {
-        private final String name;
-        private final Dimension screenSize;
-        private final List<String> tags;
-
-        public TestDevice(String name, Dimension screenSize, List<String> tags) {
-            this.name = name;
-            this.screenSize = screenSize;
-            this.tags = tags;
-        }
-
-
-        public String getName() {
-            return name;
-        }
-
-        public Dimension getScreenSize() {
-            return screenSize;
-        }
-
-        public List<String> getTags() {
-            return tags;
-        }
-    }
 }
