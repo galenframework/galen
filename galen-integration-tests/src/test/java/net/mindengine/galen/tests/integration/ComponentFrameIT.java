@@ -24,44 +24,27 @@ import static org.hamcrest.Matchers.is;
 import java.io.IOException;
 
 import net.mindengine.galen.api.Galen;
-import net.mindengine.galen.config.GalenConfig;
 import net.mindengine.galen.page.Rect;
 import net.mindengine.galen.reports.model.LayoutReport;
+import net.mindengine.galen.util.DriverTestFactory;
 import net.mindengine.galen.validation.ValidationError;
 import net.mindengine.galen.validation.ValidationObject;
 import net.mindengine.galen.validation.ValidationResult;
 
-import org.apache.commons.lang3.StringUtils;
 import org.openqa.selenium.Dimension;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.firefox.FirefoxDriver;
-import org.openqa.selenium.ie.InternetExplorerDriver;
-import org.openqa.selenium.safari.SafariDriver;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 public class ComponentFrameIT {
 
-
     private WebDriver driver;
 
     @BeforeMethod
     public void createDriver() {
-        if (StringUtils.equalsIgnoreCase(GalenConfig.getConfig().getDefaultBrowser(), "chrome")) {
-            driver = new ChromeDriver();
-        } else {
-            if (StringUtils.equalsIgnoreCase(GalenConfig.getConfig().getDefaultBrowser(), "safari")) {
-                driver = new SafariDriver();
-            } else {
-                if (StringUtils.equalsIgnoreCase(GalenConfig.getConfig().getDefaultBrowser(), "iexplore")) {
-                    driver = new InternetExplorerDriver();
-                } else {
-                    // default to firefox
-                    driver = new FirefoxDriver();
-                }
-            }
+        if (driver == null) {
+            driver = DriverTestFactory.getDriver();
         }
         driver.get(toFileProtocol(getClass().getResource("/frame-page/main.html").getPath()));
         driver.manage().window().setSize(new Dimension(1024,768));
