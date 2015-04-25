@@ -216,7 +216,7 @@ Suggest.prototype._suggestions.height = function(a, b) {
 
 function getPercentage(a, b) {
     var value = (a / b) * 100;
-    return (value).toPrecision(3);
+    return parseFloat(value.toPrecision(3));
 }
 
 Suggest.prototype._suggestions.inside = function (itemA, itemB){
