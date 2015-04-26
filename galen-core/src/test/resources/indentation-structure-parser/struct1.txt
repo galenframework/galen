@@ -1,0 +1,22 @@
+
+# Should ignore comments
+# and process mixed indentation (tabs and spaces)
+
+
+Node A 0
+
+Node A 1
+ Node A 1 1
+   Node A 1 1 1
+   Node A 1 1 2
+ Node A 1 2
+        Node A 1 2 1
+
+
+
+
+Node B 1
+\tNode B 1 1
+\t\tNode B 1 1 1
+\tNode B 1 2
+    Node B 1 3

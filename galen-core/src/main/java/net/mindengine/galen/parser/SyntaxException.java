@@ -57,4 +57,5 @@ public class SyntaxException extends RuntimeException {
     public void setLine(Line line) {
         this.line = line;
     }
+
 }
