@@ -19,6 +19,7 @@ import net.mindengine.galen.parser.IndentationStructureParser;
 import net.mindengine.galen.parser.StructNode;
 import net.mindengine.galen.parser.SyntaxException;
 import org.apache.commons.io.FileUtils;
+import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
 import java.io.File;
@@ -62,11 +63,20 @@ public class IndentationStructureParserTest {
     }
 
     @Test(expectedExceptions = SyntaxException.class,
-    expectedExceptionsMessageRegExp = "Inconsistent indentation")
-    public void shouldGiveError_forInconsistentIndentation() throws IOException {
+        expectedExceptionsMessageRegExp = "Inconsistent indentation",
+        dataProvider = "provideWrongIndentSamples")
+    public void shouldGiveError_forInconsistentIndentation(String filePath) throws IOException {
         IndentationStructureParser parser = new IndentationStructureParser();
-        String content = FileUtils.readFileToString(new File(getClass().getResource("/indentation-structure-parser/struct-wrong-indent.txt").getFile()));
+        String content = FileUtils.readFileToString(new File(getClass().getResource(filePath).getFile()));
         parser.parse(content);
+    }
+
+    @DataProvider
+    public Object[][] provideWrongIndentSamples() {
+        return new Object[][] {
+                {"/indentation-structure-parser/struct-wrong-indent.txt"},
+                {"/indentation-structure-parser/struct-wrong-indent-2.txt"}
+        };
     }
 
     private StructNode node(String name) {
