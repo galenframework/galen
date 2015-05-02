@@ -15,6 +15,7 @@
 ******************************************************************************/
 package net.mindengine.galen.speclang2.reader.pagespec;
 
+import net.mindengine.galen.browser.Browser;
 import net.mindengine.galen.parser.StructNode;
 import net.mindengine.galen.parser.SyntaxException;
 import net.mindengine.galen.specs.page.Locator;
@@ -24,9 +25,11 @@ import net.mindengine.galen.suite.reader.Line;
 
 public class PageSpecProcessor {
     private final PageSpec pageSpec;
+    private final Browser browser;
 
-    public PageSpecProcessor(PageSpec pageSpec) {
+    public PageSpecProcessor(PageSpec pageSpec, Browser browser) {
         this.pageSpec = pageSpec;
+        this.browser = browser;
     }
 
     public PageSpec buildPageSpec() {
@@ -47,5 +50,9 @@ public class PageSpecProcessor {
 
     public void addObjectToSpec(String objectName, Locator locator) {
         pageSpec.getObjects().put(objectName, locator);
+    }
+
+    public Browser getBrowser() {
+        return browser;
     }
 }

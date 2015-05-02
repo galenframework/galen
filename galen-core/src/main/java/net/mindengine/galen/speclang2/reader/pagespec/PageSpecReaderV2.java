@@ -15,6 +15,7 @@
 ******************************************************************************/
 package net.mindengine.galen.speclang2.reader.pagespec;
 
+import net.mindengine.galen.browser.Browser;
 import net.mindengine.galen.parser.IndentationStructureParser;
 import net.mindengine.galen.parser.StructNode;
 import net.mindengine.galen.specs.reader.page.PageSpec;
@@ -25,13 +26,13 @@ import java.util.List;
 
 public class PageSpecReaderV2 {
 
-    public PageSpec read(String path) throws IOException {
+    public PageSpec read(String path, Browser browser) throws IOException {
         IndentationStructureParser structParser = new IndentationStructureParser();
         List<StructNode> structs = structParser.parse(GalenUtils.findFileOrResourceAsStream(path), path);
 
         PageSpec pageSpec = new PageSpec();
 
-        PageSpecProcessor pageSpecProcessor = new PageSpecProcessor(pageSpec);
+        PageSpecProcessor pageSpecProcessor = new PageSpecProcessor(pageSpec, browser);
 
         for (StructNode structNode : structs) {
             if (structNode.getName().startsWith("@")) {
