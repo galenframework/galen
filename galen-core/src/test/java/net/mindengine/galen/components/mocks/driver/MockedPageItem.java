@@ -26,6 +26,7 @@ public class MockedPageItem {
     private String locator;
     private String text;
     private Integer[] area;
+    private List<MockedPageItem> subItems;
 
     private String locatorType;
     private String locatorValue;
@@ -119,5 +120,13 @@ public class MockedPageItem {
 
     public List<String> getMockedEvents() {
         return this.mockedEvents;
+    }
+
+    public List<MockedPageItem> getSubItems() {
+        return subItems;
+    }
+
+    public void setSubItems(List<MockedPageItem> subItems) {
+        this.subItems = subItems;
     }
 }

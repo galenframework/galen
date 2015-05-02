@@ -1,0 +1,8 @@
+
+
+@objects
+    header  #header
+        icon img
+
+    box-*   .box
+        caption  .caption

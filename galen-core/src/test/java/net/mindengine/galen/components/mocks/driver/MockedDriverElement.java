@@ -20,7 +20,9 @@ import org.openqa.selenium.Dimension;
 import org.openqa.selenium.Point;
 import org.openqa.selenium.WebElement;
 
+import java.util.LinkedList;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 public class MockedDriverElement implements WebElement {
     private final MockedPageItem item;
@@ -85,12 +87,29 @@ public class MockedDriverElement implements WebElement {
 
     @Override
     public List<WebElement> findElements(By by) {
-        return null;
+        List<WebElement> webElements = new LinkedList<WebElement>();
+        if (item.getSubItems() != null) {
+            for (MockedPageItem subItem : item.getSubItems()) {
+                if (subItem.matches(by)) {
+                    webElements.add(subItem.asWebElement());
+                }
+            }
+        }
+
+        return webElements;
     }
 
     @Override
     public WebElement findElement(By by) {
-        return null;
+        if (item.getSubItems() != null) {
+            for (MockedPageItem subItem : item.getSubItems()) {
+                if (subItem.matches(by)) {
+                    return subItem.asWebElement();
+                }
+            }
+        }
+
+        throw new NoSuchElementException(by.toString());
     }
 
     @Override
