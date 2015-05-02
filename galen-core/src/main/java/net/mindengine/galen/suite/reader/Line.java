@@ -43,5 +43,5 @@ public class Line {
     public boolean startsWith(String string) {
         return text.startsWith(string);
     }
-    
+
 }

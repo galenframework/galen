@@ -32,7 +32,7 @@ public class IndentationStructureParser {
     private static final int TAB_SIZE = 4;
 
     public List<StructNode> parse(String contentWithTabs) throws IOException {
-        return parse(new ByteArrayInputStream(contentWithTabs.getBytes()));
+        return parse(new ByteArrayInputStream(contentWithTabs.getBytes()), "<unknown source>");
     }
 
 
@@ -53,7 +53,7 @@ public class IndentationStructureParser {
         }
     }
 
-    public List<StructNode> parse(InputStream stream) throws IOException {
+    public List<StructNode> parse(InputStream stream, String source) throws IOException {
         Stack<IndentationNode> nodeStack = new Stack<IndentationNode>();
 
 
@@ -66,15 +66,17 @@ public class IndentationStructureParser {
         for (String line : lines) {
             lineNumber++;
             if (isProcessable(line)) {
-                processLine(nodeStack, line, lineNumber);
+                processLine(nodeStack, line, lineNumber, source);
             }
         }
 
         return rootNode.getChildNodes();
     }
 
-    private void processLine(Stack<IndentationNode> stack, String line, int lineNumber) {
+    private void processLine(Stack<IndentationNode> stack, String line, int lineNumber, String source) {
         StructNode newStructNode = new StructNode(line.trim());
+        newStructNode.setFileLineNumber(lineNumber);
+        newStructNode.setSource(source);
 
         int calculatedIndentation = calculateIndentation(line, lineNumber);
 

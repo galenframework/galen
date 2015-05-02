@@ -15,6 +15,7 @@
 ******************************************************************************/
 package net.mindengine.galen.parser;
 
+import net.mindengine.galen.suite.reader.Line;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -25,6 +26,8 @@ import java.util.List;
 public class StructNode {
     private String name;
     private List<StructNode> childNodes;
+    private int fileLineNumber = -1;
+    private String source = "<unknown source>";
 
     public StructNode(String name) {
         this.name = name;
@@ -72,6 +75,8 @@ public class StructNode {
         return new EqualsBuilder()
                 .append(this.name, rhs.name)
                 .append(this.childNodes, rhs.childNodes)
+                .append(this.fileLineNumber, rhs.fileLineNumber)
+                .append(this.source, rhs.source)
                 .isEquals();
     }
 
@@ -80,6 +85,8 @@ public class StructNode {
         return new HashCodeBuilder()
                 .append(name)
                 .append(childNodes)
+                .append(fileLineNumber)
+                .append(source)
                 .toHashCode();
     }
 
@@ -88,6 +95,24 @@ public class StructNode {
         return new ToStringBuilder(this)
                 .append("name", name)
                 .append("childNodes", childNodes)
+                .append("fileLineNumber", fileLineNumber)
+                .append("source", source)
                 .toString();
+    }
+
+    public int getFileLineNumber() {
+        return fileLineNumber;
+    }
+
+    public void setFileLineNumber(int fileLineNumber) {
+        this.fileLineNumber = fileLineNumber;
+    }
+
+    public String getSource() {
+        return source;
+    }
+
+    public void setSource(String source) {
+        this.source = source;
     }
 }

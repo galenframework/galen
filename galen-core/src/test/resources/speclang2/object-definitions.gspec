@@ -1,0 +1,17 @@
+
+
+# This is a comment
+
+@objects
+    header          css #header
+    header-icon         #header img
+
+# You can do this many times
+
+@objects
+    button          xpath //div[@id='button']
+    cancel-link     id  cancel
+
+
+@objects
+    caption @(0, 100, -5, 7)      #wrapper
