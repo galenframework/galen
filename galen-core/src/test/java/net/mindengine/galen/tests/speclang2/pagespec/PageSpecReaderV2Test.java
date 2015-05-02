@@ -69,6 +69,30 @@ public class PageSpecReaderV2Test {
         }}));
     }
 
+    @Test
+    public void shouldRead_objectDefinitions_withMultiLevelObjects() throws IOException {
+        PageSpec pageSpec = readPageSpec("speclang2/object-definitions-multi-level-objects.gspec",
+                new SeleniumBrowser(new MockedDriver("/speclang2/mocks/multi-level-objects.json")));
+
+        assertThat(pageSpec.getObjects(), is((Map<String, Locator>)new HashMap<String, Locator>(){{
+            put("header", new Locator("css", "#header"));
+            put("header.icon", new Locator("css", "img")
+                    .withParent(new Locator("css", "#header")));
+
+            put("box-1", new Locator("css", ".box", 1));
+            put("box-1.caption", new Locator("css", ".caption")
+                    .withParent(new Locator("css", ".box", 1)));
+
+            put("box-2", new Locator("css", ".box", 2));
+            put("box-2.caption", new Locator("css", ".caption")
+                    .withParent(new Locator("css", ".box", 2)));
+
+            put("box-3", new Locator("css", ".box", 3));
+            put("box-3.caption", new Locator("css", ".caption")
+                    .withParent(new Locator("css", ".box", 3)));
+        }}));
+    }
+
     private PageSpec readPageSpec(String resource) throws IOException {
         return readPageSpec(resource, NO_BROWSER);
     }

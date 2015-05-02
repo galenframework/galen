@@ -25,6 +25,7 @@ public class Locator {
     private String locatorValue;
     private CorrectionsRect corrections;
     private int index = 0;
+    private Locator parent;
 
     public Locator(String locatorType, String locatorValue) {
         this(locatorType, locatorValue, 0);
@@ -53,7 +54,12 @@ public class Locator {
 
     @Override
     public int hashCode() {
-        return new HashCodeBuilder(13, 19).append(locatorType).append(locatorValue).append(getCorrections()).toHashCode();
+        return new HashCodeBuilder(13, 19)
+                .append(locatorType)
+                .append(locatorValue)
+                .append(parent)
+                .append(getCorrections())
+                .toHashCode();
     }
     
     @Override
@@ -68,15 +74,21 @@ public class Locator {
             return false;
         }
         Locator rhs = (Locator)obj;
-        return new EqualsBuilder().append(locatorType, rhs.locatorType).append(locatorValue, rhs.locatorValue).append(getCorrections(), rhs.getCorrections()).isEquals();
+        return new EqualsBuilder()
+                .append(locatorType, rhs.locatorType)
+                .append(locatorValue, rhs.locatorValue)
+                .append(parent, rhs.parent)
+                .append(getCorrections(), rhs.getCorrections())
+                .isEquals();
     }
     @Override
     public String toString() {
-        return new ToStringBuilder(this) //@formatter:off
+        return new ToStringBuilder(this)
             .append("locatorType", locatorType)
             .append("locatorValue", locatorValue)
+            .append("parent", parent)
             .append("corrections", getCorrections())
-            .toString(); //@formatter:on
+            .toString();
     }
 
     public String prettyString() {
@@ -131,4 +143,16 @@ public class Locator {
         return css(text);
     }
 
+    public Locator withParent(Locator parent) {
+        this.parent = parent;
+        return this;
+    }
+
+    public Locator getParent() {
+        return parent;
+    }
+
+    public void setParent(Locator parent) {
+        this.parent = parent;
+    }
 }

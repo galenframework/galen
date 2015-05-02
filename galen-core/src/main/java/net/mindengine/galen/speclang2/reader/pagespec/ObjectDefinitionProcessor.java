@@ -48,12 +48,21 @@ public class ObjectDefinitionProcessor {
         }
     }
 
-    private void parseObject(StructNode childNode) {
-        StringCharReader reader = new StringCharReader(childNode.getName());
+
+    private void parseObject(StructNode objectNode) {
+        parseObject(objectNode, null, null);
+    }
+
+    private void parseObject(StructNode objectNode, String parentName, Locator parentLocator) {
+        StringCharReader reader = new StringCharReader(objectNode.getName());
 
         String objectName = reader.readWord();
 
-        String word = expectCorrectionsOrId(childNode, reader, objectName);
+        if (parentName != null) {
+            objectName = parentName + "." + objectName;
+        }
+
+        String word = expectCorrectionsOrId(objectNode, reader, objectName);
         String locatorText;
 
         CorrectionsRect corrections = null;
@@ -65,25 +74,36 @@ public class ObjectDefinitionProcessor {
             locatorText = word + reader.getTheRest();
         }
 
-        Locator locator = readLocatorFromString(childNode, objectName, locatorText.trim());
+        Locator locator = readLocatorFromString(objectNode, objectName, locatorText.trim());
         locator.setCorrections(corrections);
-        addObjectsToSpec(objectName, locator);
-    }
 
-    private void addObjectsToSpec(String objectName, Locator locator) {
+        if (parentLocator != null) {
+            locator.setParent(parentLocator);
+        }
+
         if (objectName.contains("*")) {
-            addMultiObjectsToSpec(objectName, locator);
+            addMultiObjectsToSpec(objectNode, objectName, locator);
         } else {
-            pageSpecProcessor.addObjectToSpec(objectName, locator);
+            addObjectToSpec(objectNode, objectName, locator);
         }
     }
 
-    private void addMultiObjectsToSpec(String objectName, Locator locator) {
+    private void addObjectToSpec(StructNode objectNode, String objectName, Locator locator) {
+        pageSpecProcessor.addObjectToSpec(objectName, locator);
+
+        if (objectNode.getChildNodes() != null && objectNode.getChildNodes().size() > 0) {
+            for (StructNode subObjectNode : objectNode.getChildNodes()) {
+                parseObject(subObjectNode, objectName, locator);
+            }
+        }
+    }
+
+    private void addMultiObjectsToSpec(StructNode objectNode, String objectName, Locator locator) {
         Page page = pageSpecProcessor.getBrowser().getPage();
         int count = page.getObjectCount(locator);
 
         for (int index = 1; index <= count; index++) {
-            pageSpecProcessor.addObjectToSpec(objectName.replace("*", Integer.toString(index)),
+            addObjectToSpec(objectNode, objectName.replace("*", Integer.toString(index)),
                     new Locator(locator.getLocatorType(), locator.getLocatorValue(), index));
         }
     }

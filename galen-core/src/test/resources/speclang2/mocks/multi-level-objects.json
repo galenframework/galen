@@ -1,0 +1,31 @@
+{
+  "items": [ {
+    "locator": "css: #header",
+    "area": [0,0,100,10],
+    "subItems": [ {
+      "locator": "css: img",
+      "area": [0, 0, 10, 10]
+    } ]
+  }, {
+    "locator": "css: .box",
+    "area": [0,0,100,30],
+    "subItems": [ {
+      "locator": "css: .caption",
+      "area": [0, 0, 10, 10]
+    } ]
+  }, {
+    "locator": "css: .box",
+    "area": [0,0,100,30],
+    "subItems": [ {
+      "locator": "css: .caption",
+      "area": [0, 0, 10, 10]
+    } ]
+  }, {
+    "locator": "css: .box",
+    "area": [0,0,100,30],
+    "subItems": [ {
+      "locator": "css: .caption",
+      "area": [0, 0, 10, 10]
+    } ]
+  } ]
+}
