@@ -15,6 +15,9 @@
 ******************************************************************************/
 package net.mindengine.galen.tests.speclang2.pagespec;
 
+import net.mindengine.galen.browser.Browser;
+import net.mindengine.galen.browser.SeleniumBrowser;
+import net.mindengine.galen.components.mocks.driver.MockedDriver;
 import net.mindengine.galen.speclang2.reader.pagespec.PageSpecReaderV2;
 import net.mindengine.galen.specs.page.CorrectionsRect;
 import net.mindengine.galen.specs.page.Locator;
@@ -29,6 +32,8 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 
 public class PageSpecReaderV2Test {
+
+    private static final Browser NO_BROWSER = null;
 
     @Test
     public void shouldRead_objectDefinitions() throws IOException {
@@ -50,8 +55,26 @@ public class PageSpecReaderV2Test {
         }}));
     }
 
+
+    @Test
+    public void shouldRead_objectDefinitions_withMultiObjects() throws IOException {
+        PageSpec pageSpec = readPageSpec("speclang2/object-definitions-multi-objects.gspec",
+                new SeleniumBrowser(new MockedDriver("/speclang2/mocks/menu-items.json")));
+
+        assertThat(pageSpec.getObjects(), is((Map<String, Locator>)new HashMap<String, Locator>(){{
+            put("menu-item-1", new Locator("css", "#menu li", 1));
+            put("menu-item-2", new Locator("css", "#menu li", 2));
+            put("menu-item-3", new Locator("css", "#menu li", 3));
+            put("menu-item-4", new Locator("css", "#menu li", 4));
+        }}));
+    }
+
     private PageSpec readPageSpec(String resource) throws IOException {
-        return new PageSpecReaderV2().read(resource);
+        return readPageSpec(resource, NO_BROWSER);
+    }
+
+    private PageSpec readPageSpec(String resource, Browser browser) throws IOException {
+        return new PageSpecReaderV2().read(resource, browser);
     }
 
 }

@@ -1,0 +1,15 @@
+{
+  "items": [ {
+    "locator": "css: #menu li",
+    "area": [0,0,100,10]
+  }, {
+    "locator": "css: #menu li",
+    "area": [0,10,100,10]
+  }, {
+    "locator": "css: #menu li",
+    "area": [0,20,100,10]
+  }, {
+    "locator": "css: #menu li",
+    "area": [0,30,100,10]
+  } ]
+}

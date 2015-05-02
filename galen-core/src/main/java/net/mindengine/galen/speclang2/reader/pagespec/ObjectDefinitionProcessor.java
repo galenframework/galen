@@ -15,6 +15,7 @@
 ******************************************************************************/
 package net.mindengine.galen.speclang2.reader.pagespec;
 
+import net.mindengine.galen.page.Page;
 import net.mindengine.galen.parser.ExpectWord;
 import net.mindengine.galen.parser.Expectations;
 import net.mindengine.galen.parser.StructNode;
@@ -66,8 +67,25 @@ public class ObjectDefinitionProcessor {
 
         Locator locator = readLocatorFromString(childNode, objectName, locatorText.trim());
         locator.setCorrections(corrections);
-        pageSpecProcessor.addObjectToSpec(objectName, locator);
+        addObjectsToSpec(objectName, locator);
+    }
 
+    private void addObjectsToSpec(String objectName, Locator locator) {
+        if (objectName.contains("*")) {
+            addMultiObjectsToSpec(objectName, locator);
+        } else {
+            pageSpecProcessor.addObjectToSpec(objectName, locator);
+        }
+    }
+
+    private void addMultiObjectsToSpec(String objectName, Locator locator) {
+        Page page = pageSpecProcessor.getBrowser().getPage();
+        int count = page.getObjectCount(locator);
+
+        for (int index = 1; index <= count; index++) {
+            pageSpecProcessor.addObjectToSpec(objectName.replace("*", Integer.toString(index)),
+                    new Locator(locator.getLocatorType(), locator.getLocatorValue(), index));
+        }
     }
 
     private Locator readLocatorFromString(StructNode structNode, String objectName, String locatorText) {
