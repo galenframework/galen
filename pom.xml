@@ -3,7 +3,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>net.mindengine</groupId>
   <artifactId>galen-parent</artifactId>
-  <version>1.6.3</version>
+  <version>1.6.4-SNAPSHOT</version>
   <name>Galen Framework Parent</name>
   <packaging>pom</packaging>
   <description>A library for layout testing of websites</description>
