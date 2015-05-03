@@ -22,9 +22,9 @@ import net.mindengine.galen.page.PageElement;
 import net.mindengine.galen.page.Rect;
 import net.mindengine.galen.reports.LayoutReportListener;
 import net.mindengine.galen.reports.model.LayoutReport;
+import net.mindengine.galen.specs.page.PageSection;
 import net.mindengine.galen.specs.reader.page.PageSpec;
 import net.mindengine.galen.specs.reader.page.PageSpecReader;
-import net.mindengine.galen.specs.reader.page.TaggedPageSection;
 import net.mindengine.galen.specs.reader.page.SectionFilter;
 import net.mindengine.galen.validation.*;
 
@@ -113,7 +113,7 @@ public class Galen {
         for (PageSpec spec : specs) {
 
             SectionFilter sectionFilter = new SectionFilter(includedTags, excludedTags);
-            List<TaggedPageSection> pageSections = mergeSectionsWithSameName(spec.findSections(sectionFilter));
+            List<PageSection> pageSections = mergeSectionsWithSameName(spec.findSections(sectionFilter));
             SectionValidation sectionValidation = new SectionValidation(pageSections, new PageValidation(browser, page, spec, listener, sectionFilter), listener);
 
             List<ValidationResult> results = sectionValidation.check();
@@ -129,12 +129,12 @@ public class Galen {
         return layoutReport;
     }
 
-    private static List<TaggedPageSection> mergeSectionsWithSameName(List<TaggedPageSection> sections) {
-        List<TaggedPageSection> mergedSections = new LinkedList<TaggedPageSection>();
+    private static List<PageSection> mergeSectionsWithSameName(List<PageSection> sections) {
+        List<PageSection> mergedSections = new LinkedList<PageSection>();
 
 
-        for (TaggedPageSection section : sections) {
-            TaggedPageSection sectionWithSameName = findSectionWithName(section.getName(), mergedSections);
+        for (PageSection section : sections) {
+            PageSection sectionWithSameName = findSectionWithName(section.getName(), mergedSections);
 
             if (sectionWithSameName != null) {
                 sectionWithSameName.mergeSection(section);
@@ -147,8 +147,8 @@ public class Galen {
         return mergedSections;
     }
 
-    private static TaggedPageSection findSectionWithName(String name, List<TaggedPageSection> sections) {
-        for (TaggedPageSection section : sections) {
+    private static PageSection findSectionWithName(String name, List<PageSection> sections) {
+        for (PageSection section : sections) {
             if (section.getName().equals(name)) {
                 return section;
             }

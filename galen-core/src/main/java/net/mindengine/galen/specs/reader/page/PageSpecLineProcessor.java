@@ -26,6 +26,7 @@ import net.mindengine.galen.parser.ExpectWord;
 import net.mindengine.galen.parser.SyntaxException;
 import net.mindengine.galen.parser.VarsContext;
 import net.mindengine.galen.specs.page.ConditionalBlock;
+import net.mindengine.galen.specs.page.PageSection;
 import net.mindengine.galen.specs.reader.Place;
 import net.mindengine.galen.specs.reader.StringCharReader;
 
@@ -41,7 +42,7 @@ public class PageSpecLineProcessor {
     private State state;
 	private PageSpecReader pageSpecReader;
     private State previousState;
-    private TaggedPageSection currentSection;
+    private PageSection currentSection;
     
     private String contextPath = null;
     private PageSpec pageSpec;
@@ -292,9 +293,9 @@ public class PageSpecLineProcessor {
     }
 
     public PageSpec buildPageSpec() {
-        Iterator<TaggedPageSection> it = pageSpec.getSections().iterator();
+        Iterator<PageSection> it = pageSpec.getSections().iterator();
         while(it.hasNext()) {
-            TaggedPageSection section = it.next();
+            PageSection section = it.next();
             if (section.getObjects().size() == 0 && !hasConditionalBlocks(section) && section.getSections().size() == 0) {
                 it.remove();
             }
@@ -302,7 +303,7 @@ public class PageSpecLineProcessor {
         return this.pageSpec;
     }
 
-    private boolean hasConditionalBlocks(TaggedPageSection section) {
+    private boolean hasConditionalBlocks(PageSection section) {
         return section.getConditionalBlocks() != null && section.getConditionalBlocks().size() > 0;
     }
 
@@ -333,8 +334,8 @@ public class PageSpecLineProcessor {
 
     private void startNewSection(String sectionDeclaration) {
         
-        TaggedPageSection previousSection = currentSection;
-        currentSection = new TaggedPageSection();
+        PageSection previousSection = currentSection;
+        currentSection = new PageSection();
         
         sectionDeclaration = sectionDeclaration.trim();
         

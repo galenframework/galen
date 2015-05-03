@@ -18,7 +18,9 @@ package net.mindengine.galen.speclang2.reader.pagespec;
 import net.mindengine.galen.browser.Browser;
 import net.mindengine.galen.parser.StructNode;
 import net.mindengine.galen.parser.SyntaxException;
+import net.mindengine.galen.speclang2.reader.specs.SpecReaderV2;
 import net.mindengine.galen.specs.page.Locator;
+import net.mindengine.galen.specs.page.PageSection;
 import net.mindengine.galen.specs.reader.StringCharReader;
 import net.mindengine.galen.specs.reader.page.PageSpec;
 import net.mindengine.galen.suite.reader.Line;
@@ -26,6 +28,8 @@ import net.mindengine.galen.suite.reader.Line;
 public class PageSpecProcessor {
     private final PageSpec pageSpec;
     private final Browser browser;
+    private SpecReaderV2 specReaderV2 = new SpecReaderV2();
+
 
     public PageSpecProcessor(PageSpec pageSpec, Browser browser) {
         this.pageSpec = pageSpec;
@@ -48,11 +52,24 @@ public class PageSpecProcessor {
 
     }
 
-    public void addObjectToSpec(String objectName, Locator locator) {
-        pageSpec.getObjects().put(objectName, locator);
-    }
-
     public Browser getBrowser() {
         return browser;
+    }
+
+
+    public void addSection(PageSection section) {
+        pageSpec.addSection(section);
+    }
+
+    public SpecReaderV2 getSpecReaderV2() {
+        return specReaderV2;
+    }
+
+    public void setSpecReaderV2(SpecReaderV2 specReaderV2) {
+        this.specReaderV2 = specReaderV2;
+    }
+
+    public void addObjectToSpec(String objectName, Locator locator) {
+        pageSpec.addObject(objectName, locator);
     }
 }

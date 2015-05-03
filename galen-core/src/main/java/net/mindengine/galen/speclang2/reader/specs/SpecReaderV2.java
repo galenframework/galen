@@ -25,11 +25,9 @@ import java.util.Properties;
 
 
 public class SpecReaderV2 {
-    private Properties properties;
     public static Map<String, SpecProcessor> specProcessors = initSpecProcessors();
 
-    public SpecReaderV2(Properties properties) {
-        this.properties = properties;
+    public SpecReaderV2() {
         initSpecProcessors();
     }
 
@@ -96,15 +94,6 @@ public class SpecReaderV2 {
             put("component", new SpecComponentProcessor());
         }};
     }
-
-    public Properties getProperties() {
-        return properties;
-    }
-
-    public void setProperties(Properties properties) {
-        this.properties = properties;
-    }
-
 
     public Spec read(String specText, String contextPath) {
         if (specText == null) {
