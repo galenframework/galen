@@ -1,0 +1,21 @@
+
+
+
+
+= Header =
+    header:
+        height 100px
+
+    = User info =
+        login-link:
+            height 30px
+
+        register-link:
+            right-of login-link 10 to 30px
+
+
+= Main section =
+    main-section:
+        below header 0 to 5px
+        inside screen 0px left right
+

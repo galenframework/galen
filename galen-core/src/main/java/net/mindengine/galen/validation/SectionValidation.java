@@ -20,7 +20,6 @@ import java.util.List;
 import java.util.regex.Pattern;
 
 import net.mindengine.galen.specs.page.*;
-import net.mindengine.galen.specs.reader.page.TaggedPageSection;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -37,11 +36,11 @@ public class SectionValidation {
     private static final List<ValidationResult> EMPTY_RESULTS = new LinkedList<ValidationResult>();
     private static final boolean DONT_TELL_FOR_ITSELF = false;
     private static final boolean TELL_FOR_ITSELF = true;
-    private List<TaggedPageSection> pageSections;
+    private List<PageSection> pageSections;
     private PageValidation pageValidation;
     private ValidationListener validationListener;
 
-    public SectionValidation(List<TaggedPageSection> pageSections, PageValidation pageValidation, ValidationListener validationListener) {
+    public SectionValidation(List<PageSection> pageSections, PageValidation pageValidation, ValidationListener validationListener) {
         this.pageSections = pageSections;
         this.pageValidation = pageValidation;
         this.validationListener = validationListener;
@@ -54,13 +53,13 @@ public class SectionValidation {
         
         List<ValidationResult> validationResults = new LinkedList<ValidationResult>();
         
-        for (TaggedPageSection section : pageSections) {
+        for (PageSection section : pageSections) {
             validationResults.addAll(checkTaggedSection(section));
         }
         return validationResults;
     }
 
-    private List<ValidationResult> checkTaggedSection(TaggedPageSection section) {
+    private List<ValidationResult> checkTaggedSection(PageSection section) {
         tellBeforeSection(section);
         List<ValidationResult> validationResult= new LinkedList<ValidationResult>();
         validationResult.addAll(checkSection(section, DONT_TELL_FOR_ITSELF));

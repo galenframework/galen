@@ -21,6 +21,7 @@ import net.mindengine.galen.components.mocks.driver.MockedDriver;
 import net.mindengine.galen.speclang2.reader.pagespec.PageSpecReaderV2;
 import net.mindengine.galen.specs.page.CorrectionsRect;
 import net.mindengine.galen.specs.page.Locator;
+import net.mindengine.galen.specs.page.PageSection;
 import net.mindengine.galen.specs.reader.page.PageSpec;
 import org.testng.annotations.Test;
 
@@ -91,6 +92,38 @@ public class PageSpecReaderV2Test {
             put("box-3.caption", new Locator("css", ".caption")
                     .withParent(new Locator("css", ".box", 3)));
         }}));
+    }
+
+
+    @Test
+    public void shouldRead_sectionsWithObjectSpecs() throws  IOException {
+        PageSpec pageSpec = readPageSpec("speclang2/sections-with-object-specs.gspec");
+
+        assertThat(pageSpec.getSections().size(), is(2));
+
+        PageSection section1 = pageSpec.getSections().get(0);
+        assertThat(section1.getObjects().size(), is(1));
+        assertThat(section1.getObjects().get(0).getObjectName(), is("header"));
+        assertThat(section1.getObjects().get(0).getSpecs().size(), is(1));
+        assertThat(section1.getObjects().get(0).getSpecs().get(0).getOriginalText(), is("height 100px"));
+
+        assertThat(section1.getSections().size(), is(1));
+        PageSection subSection = section1.getSections().get(0);
+        assertThat(subSection.getObjects().size(), is(2));
+        assertThat(subSection.getObjects().get(0).getObjectName(), is("login-link"));
+        assertThat(subSection.getObjects().get(0).getSpecs().size(), is(1));
+        assertThat(subSection.getObjects().get(0).getSpecs().get(0).getOriginalText(), is("height 30px"));
+        assertThat(subSection.getObjects().get(1).getObjectName(), is("register-link"));
+        assertThat(subSection.getObjects().get(1).getSpecs().size(), is(1));
+        assertThat(subSection.getObjects().get(1).getSpecs().get(0).getOriginalText(), is("right-of login-link 10 to 30px"));
+
+        PageSection section2 = pageSpec.getSections().get(1);
+        assertThat(section2.getName(), is("Main section"));
+        assertThat(section2.getObjects().size(), is(1));
+        assertThat(section2.getObjects().get(0).getObjectName(), is("main-section"));
+        assertThat(section2.getObjects().get(0).getSpecs().size(), is(2));
+        assertThat(section2.getObjects().get(0).getSpecs().get(0).getOriginalText(), is("below header 0 to 5px"));
+        assertThat(section2.getObjects().get(0).getSpecs().get(1).getOriginalText(), is("inside screen 0px left right"));
     }
 
     private PageSpec readPageSpec(String resource) throws IOException {

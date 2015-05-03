@@ -115,4 +115,8 @@ public class StructNode {
     public void setSource(String source) {
         this.source = source;
     }
+
+    public SyntaxException createSyntaxException(String message) {
+        return new SyntaxException(new Line(source, fileLineNumber), message);
+    }
 }

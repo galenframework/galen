@@ -15,7 +15,6 @@
 ******************************************************************************/
 package net.mindengine.galen.specs.page;
 
-import net.mindengine.galen.specs.reader.page.TaggedPageSection;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -25,6 +24,49 @@ public class PageSection {
     private List<ObjectSpecs> objects = new LinkedList<ObjectSpecs>();
     private String name;
     private List<PageSection> sections = new LinkedList<PageSection>();
+    private List<String> tags;
+    private List<ConditionalBlock> conditionalBlocks;
+
+    public List<ConditionalBlock> getConditionalBlocks() {
+        return this.conditionalBlocks;
+    }
+
+    public void setConditionalBlocks(List<ConditionalBlock> conditionalBlocks) {
+        this.conditionalBlocks = conditionalBlocks;
+    }
+
+    public void addConditionalBlock(ConditionalBlock conditionalBlock) {
+        if (conditionalBlocks == null) {
+            conditionalBlocks = new LinkedList<ConditionalBlock>();
+        }
+        conditionalBlocks.add(conditionalBlock);
+    }
+
+    public List<String> getTags() {
+        return this.tags;
+    }
+
+    public void setTags(List<String> tags) {
+        this.tags = tags;
+    }
+
+    public boolean appliesToTags(List<String> includedTags) {
+        return tags.contains("*") || hasAnyTag(includedTags);
+    }
+
+    public boolean hasAnyTag(List<String> includedTags) {
+        if (includedTags != null && includedTags.size() > 0) {
+            if (tags != null) {
+                for (String tag : includedTags) {
+                    if (tags.contains(tag)) {
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
+        else return true;
+    }
 
     public List<ObjectSpecs> getObjects() {
         return this.objects;
@@ -57,7 +99,7 @@ public class PageSection {
         getSections().add(subSection);
     }
 
-    public void mergeSection(TaggedPageSection section) {
+    public void mergeSection(PageSection section) {
         if (section.getObjects() != null) {
             if (this.objects == null) {
                 this.objects = new LinkedList<ObjectSpecs>();
@@ -77,5 +119,13 @@ public class PageSection {
                 this.sections.add(subSection);
             }
         }
+    }
+
+    public void addObjects(ObjectSpecs objectSpecs) {
+        if (objects == null) {
+            objects = new LinkedList<ObjectSpecs>();
+        }
+
+        objects.add(objectSpecs);
     }
 }

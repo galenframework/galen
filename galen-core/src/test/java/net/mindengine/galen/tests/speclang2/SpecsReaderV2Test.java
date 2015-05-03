@@ -30,7 +30,6 @@ import java.awt.*;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Properties;
 
 import junit.framework.Assert;
 import net.mindengine.galen.config.GalenConfig;
@@ -43,15 +42,12 @@ import net.mindengine.galen.specs.colors.ColorRange;
 import net.mindengine.rainbow4j.filters.BlurFilter;
 import net.mindengine.rainbow4j.filters.DenoiseFilter;
 import net.mindengine.rainbow4j.filters.SaturationFilter;
-import org.hamcrest.Matchers;
 import org.junit.BeforeClass;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 public class SpecsReaderV2Test {
-
-    private static final Properties EMPTY_PROPERTIES = new Properties();
 
     @BeforeClass
     public void init() throws IOException {
@@ -1037,11 +1033,11 @@ public class SpecsReaderV2Test {
     }
 
     private Spec readSpec(String specText) {
-        return new SpecReaderV2(EMPTY_PROPERTIES).read(specText);
+        return new SpecReaderV2().read(specText);
     }
 
     private Spec readSpec(String specText, String contextPath) {
-        return new SpecReaderV2(EMPTY_PROPERTIES).read(specText, contextPath);
+        return new SpecReaderV2().read(specText, contextPath);
     }
 
     private List<Side> sides(Side...sides) {
