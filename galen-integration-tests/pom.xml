@@ -3,7 +3,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>net.mindengine</groupId>
   <artifactId>galen-integration-tests</artifactId>
-  <version>1.6.3-SNAPSHOT</version>
+  <version>1.6.4-SNAPSHOT</version>
   <name>Galen Framework Integration tests</name>
   <packaging>jar</packaging>
   <description>Integration tests for Galen Framework</description>
@@ -12,7 +12,7 @@
   <parent>
     <groupId>net.mindengine</groupId>
     <artifactId>galen-parent</artifactId>
-    <version>1.6.3-SNAPSHOT</version>
+    <version>1.6.4-SNAPSHOT</version>
   </parent>
 
   <dependencies>
