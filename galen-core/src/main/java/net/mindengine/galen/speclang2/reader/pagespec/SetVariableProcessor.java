@@ -15,7 +15,6 @@
 ******************************************************************************/
 package net.mindengine.galen.speclang2.reader.pagespec;
 
-import net.mindengine.galen.parser.ProcessedStructNode;
 import net.mindengine.galen.parser.StructNode;
 import net.mindengine.galen.specs.reader.StringCharReader;
 
@@ -29,7 +28,7 @@ public class SetVariableProcessor {
     public void process(StringCharReader reader, StructNode structNode) {
         if (reader.hasMore()) {
             structNode.setName(reader.getTheRest());
-            processVariableStatement(pageSpecProcessor.processExpressionsIn(structNode));
+            processVariableStatement(structNode);
         }
         if (structNode.getChildNodes() != null) {
             for (StructNode childNode : structNode.getChildNodes()) {
@@ -38,7 +37,7 @@ public class SetVariableProcessor {
         }
     }
 
-    private void processVariableStatement(ProcessedStructNode structNode) {
+    private void processVariableStatement(StructNode structNode) {
         StringCharReader reader = new StringCharReader(structNode.getName());
         String name = reader.readWord();
 
