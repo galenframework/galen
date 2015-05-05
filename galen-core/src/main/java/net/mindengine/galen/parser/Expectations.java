@@ -113,7 +113,7 @@ public class Expectations {
             public String read(StringCharReader charReader) {
                 char firstNonWhiteSpaceSymbol = charReader.firstNonWhiteSpaceSymbol();
                 if (firstNonWhiteSpaceSymbol == '"') {
-                    charReader.readUntilSymbol('"');
+                    charReader.readSafeUntilSymbol('"');
                     return new ExpectString().read(charReader);
                 } else {
                     throw new SyntaxException("Expected \" symbol, got: " + firstNonWhiteSpaceSymbol);

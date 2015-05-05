@@ -21,14 +21,17 @@ import net.mindengine.galen.components.mocks.driver.MockedDriver;
 import net.mindengine.galen.speclang2.reader.pagespec.PageSpecReaderV2;
 import net.mindengine.galen.specs.page.CorrectionsRect;
 import net.mindengine.galen.specs.page.Locator;
+import net.mindengine.galen.specs.page.ObjectSpecs;
 import net.mindengine.galen.specs.page.PageSection;
 import net.mindengine.galen.specs.reader.page.PageSpec;
 import org.testng.annotations.Test;
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
+import static java.util.Arrays.asList;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 
@@ -140,6 +143,50 @@ public class PageSpecReaderV2Test {
         assertThat(pageSpec.getSections().get(0).getObjects().get(0).getObjectName(), is("welcome-message"));
         assertThat(pageSpec.getSections().get(0).getObjects().get(0).getSpecs().get(0).getOriginalText(), is("text is \"Welcome, Johny\""));
 
+    }
+
+    @Test
+    public void shouldRead_simpleForLoop_andProcessIt() throws IOException {
+        PageSpec pageSpec = readPageSpec("speclang2/for-loop.gspec");
+
+        assertThat(pageSpec.getSections().size(), is(1));
+        assertThat(pageSpec.getSections().get(0).getName(), is("Main section"));
+        assertThat(pageSpec.getSections().get(0).getObjects().size(), is(13));
+
+
+        List<ObjectSpecs> objects = pageSpec.getSections().get(0).getObjects();
+
+        int objectIndex = 0;
+        for (int i = 1; i <= 3; i++) {
+            for (Integer j : asList(5, 7, 9)) {
+                assertThat("Object #" + objectIndex + " name should be",
+                        objects.get(objectIndex).getObjectName(),
+                        is("box-" + i + "-" + j));
+
+                assertThat("Object #" + objectIndex + " spec should be",
+                        objects.get(objectIndex).getSpecs().get(0).getOriginalText(),
+                        is("text is \"" + i + " and " + j + "\""));
+                objectIndex++;
+            }
+
+            assertThat("Object #" + objectIndex + " name should be",
+                    objects.get(objectIndex).getObjectName(),
+                    is("label-" + i));
+
+            assertThat("Object #" + objectIndex + " spec should be",
+                    objects.get(objectIndex).getSpecs().get(0).getOriginalText(),
+                    is("height 10px"));
+
+            objectIndex++;
+        }
+
+        assertThat("Object #11 name should be",
+                objects.get(objectIndex).getObjectName(),
+                is("caption"));
+
+        assertThat("Object #11 spec should be",
+                objects.get(objectIndex).getSpecs().get(0).getOriginalText(),
+                is("width 50px"));
     }
 
     private PageSpec readPageSpec(String resource) throws IOException {

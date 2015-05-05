@@ -52,7 +52,7 @@ public class ExpectColorRanges implements Expectation<List<ColorRange>> {
             
             Range range = expectRange.read(reader);
             
-            String colorText = reader.readUntilSymbol(',').trim();
+            String colorText = reader.readSafeUntilSymbol(',').trim();
             
             if (colorText.isEmpty()) {
                 throw new SyntaxException("No color defined");

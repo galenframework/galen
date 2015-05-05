@@ -16,6 +16,7 @@
 package net.mindengine.galen.specs.reader;
 
 import net.mindengine.galen.parser.Expectations;
+import net.mindengine.galen.parser.SyntaxException;
 
 public class StringCharReader {
 
@@ -73,7 +74,15 @@ public class StringCharReader {
         return 0;
     }
 
-	public String readUntilSymbol(char breakingSymbol) {
+    public String readUntilSymbol(char breakingSymbol) {
+        return readUntilSymbol(breakingSymbol, true);
+    }
+
+    public String readSafeUntilSymbol(char breakingSymbol) {
+        return readUntilSymbol(breakingSymbol, false);
+    }
+
+	private String readUntilSymbol(char breakingSymbol, boolean failIfSymbolNotFound) {
 		StringBuffer buffer = new StringBuffer();
 		
 		while(hasMore()) {
@@ -85,6 +94,10 @@ public class StringCharReader {
 				buffer.append(ch);
 			}
 		}
+
+        if (failIfSymbolNotFound) {
+            throw new SyntaxException("Missing symbol: " + breakingSymbol);
+        }
 		
 		return buffer.toString();
 	}
@@ -104,4 +117,5 @@ public class StringCharReader {
     public void moveCursorTo(int position) {
         cursor = position;
     }
+
 }

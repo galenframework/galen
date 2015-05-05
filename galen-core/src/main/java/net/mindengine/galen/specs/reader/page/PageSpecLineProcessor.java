@@ -102,7 +102,7 @@ public class PageSpecLineProcessor {
 		    setVariables(varsContext.process(reader.getTheRest().trim()));
 		}
         else if (firstWord.equals("rule")) {
-            if (!reader.readUntilSymbol(':').trim().isEmpty()) {
+            if (!reader.readSafeUntilSymbol(':').trim().isEmpty()) {
                 throw new SyntaxException("Incorrect rule declaration. ':' is in the wrong place");
             }
 
