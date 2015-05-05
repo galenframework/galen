@@ -22,6 +22,8 @@ import java.io.Reader;
 
 import net.mindengine.galen.api.Galen;
 import net.mindengine.galen.browser.WebDriverWrapper;
+import net.mindengine.galen.parser.VarsParserJsProcessable;
+import net.mindengine.galen.parser.VarsParserJsProcessor;
 import net.mindengine.galen.runner.events.TestEvent;
 import net.mindengine.galen.runner.events.TestFilterEvent;
 import net.mindengine.galen.runner.events.TestRetryEvent;
@@ -39,10 +41,13 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
-public class GalenJsExecutor {
-    
+public class GalenJsExecutor implements VarsParserJsProcessable {
+    private final static Logger LOG = LoggerFactory.getLogger(VarsParserJsProcessor.class);
+
     private Context context;
     private ImporterTopLevel scope;
     private JsFunctionLoad scriptExecutor;
@@ -96,6 +101,30 @@ public class GalenJsExecutor {
         File file = new File(javascriptPath);
         scriptExecutor.putContextPath(file.getParent());
         return context.evaluateReader(scope, scriptFileReader, javascriptPath, 1, null);
+    }
+
+
+    /**
+     * Used for processing js expressions in page spec reader. In case of failure in script returns null
+     * @param script - JavaScript code
+     * @return result of JavaScript code execution
+     */
+    @Override
+    public String evalSafeToString(String script) {
+        try {
+            Object returnedObject = context.evaluateString(scope, script, "<cmd>", 1, null);
+            if (returnedObject != null) {
+                if (returnedObject instanceof Double) {
+                    return Integer.toString(((Double) returnedObject).intValue());
+                } else if (returnedObject instanceof Float) {
+                    return Integer.toString(((Float) returnedObject).intValue());
+                } else return returnedObject.toString();
+            } else return null;
+        }
+        catch (Exception ex) {
+            LOG.error("Unknown error during processing javascript expressions.", ex);
+            return null;
+        }
     }
 
     public static String loadJsFromLibrary(String path) {

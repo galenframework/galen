@@ -1,0 +1,12 @@
+
+
+
+@set username   Johny
+
+@set
+    welcomeMessage   Welcome, ${username}
+    welcomeObject    welcome-message
+
+= Section for user ${username} =
+    ${welcomeObject}:
+        text is "${welcomeMessage}"

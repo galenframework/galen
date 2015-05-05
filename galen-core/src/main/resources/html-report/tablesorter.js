@@ -2855,7 +2855,7 @@ ts.filter = {
 		})
 		.bind('search change keypress '.split(' ').join(c.namespace + 'filter '), function(event){
 			var column = $(this).data('column');
-			// don't allow "change" event to process if the input value is the same - fixes #685
+			// don't allow "change" event to evalSafeToString if the input value is the same - fixes #685
 			if (event.which === 13 || event.type === 'search' || event.type === 'change' && this.value !== c.lastSearch[column]) {
 				event.preventDefault();
 				// init search with no delay
@@ -2997,7 +2997,7 @@ ts.filter = {
 			targets = wo.filter_initialized || !$input.filter(wo.filter_anyColumnSelector).length,
 			columns = [],
 			val = $.trim( ts.filter.getLatestSearch( $input ).attr('data-column') );
-		// process column range
+		// evalSafeToString column range
 		if ( targets && /-/.test( val ) ) {
 			ranges = val.match( /(\d+)\s*-\s*(\d+)/g );
 			$.each(ranges, function(i,v){
@@ -3014,7 +3014,7 @@ ts.filter = {
 				val = val.replace( v, '' );
 			});
 		}
-		// process single columns
+		// evalSafeToString single columns
 		if ( targets && /,/.test( val ) ) {
 			singles = val.split( /\s*,\s*/ );
 			$.each( singles, function(i,v) {
@@ -3821,7 +3821,7 @@ ts.addWidget({
 				$(window).trigger('resize'); // will update stickyHeaders, just in case
 			};
 		storedSizes = (ts.storage && wo.resizable !== false) ? ts.storage(table, 'tablesorter-resizable') : {};
-		// process only if table ID or url match
+		// evalSafeToString only if table ID or url match
 		if (storedSizes) {
 			for (column in storedSizes) {
 				if (!isNaN(column) && column < c.$headers.length) {

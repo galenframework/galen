@@ -29,7 +29,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Map;
 
-public class VarsParserJsProcessor {
+public class VarsParserJsProcessor implements VarsParserJsProcessable {
 
     private final static Logger LOG = LoggerFactory.getLogger(VarsParserJsProcessor.class);
 
@@ -136,7 +136,8 @@ public class VarsParserJsProcessor {
         }
     }
 
-    public String process(String expression) {
+    @Override
+    public String evalSafeToString(String expression) {
         resetAllVariablesFromContext();
         return executeScript(expression);
     }

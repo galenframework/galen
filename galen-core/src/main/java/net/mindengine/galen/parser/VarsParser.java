@@ -24,7 +24,7 @@ public class VarsParser {
 
     private static final int PARSING_TEXT = 0;
     private static final int PARSING_PARAM = 1;
-    private final VarsParserJsProcessor jsProcessor;
+    private final VarsParserJsProcessable jsProcessor;
 
     private Context context;
 
@@ -32,7 +32,7 @@ public class VarsParser {
     private Properties properties;
    
 
-    public VarsParser(Context context, Properties properties, VarsParserJsProcessor jsProcessor) {
+    public VarsParser(Context context, Properties properties, VarsParserJsProcessable jsProcessor) {
         this.context = context;
         this.properties = properties;
         this.jsProcessor = jsProcessor;
@@ -110,19 +110,10 @@ public class VarsParser {
 
     private String readJsExpression(String expression, Context context) {
         if (jsProcessor != null) {
-            return jsProcessor.process(expression);
+            return jsProcessor.evalSafeToString(expression);
         }
         else return null;
     }
-
-
-    private boolean conflictsWithFunctionNames(String name) {
-        if (name.equals("count")) {
-            return true;
-        }
-        return false;
-    }
-
 
     public Properties getProperties() {
         return properties;

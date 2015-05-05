@@ -16,10 +16,7 @@
 package net.mindengine.galen.speclang2.reader.pagespec;
 
 import net.mindengine.galen.page.Page;
-import net.mindengine.galen.parser.ExpectWord;
-import net.mindengine.galen.parser.Expectations;
-import net.mindengine.galen.parser.StructNode;
-import net.mindengine.galen.parser.SyntaxException;
+import net.mindengine.galen.parser.*;
 import net.mindengine.galen.specs.page.CorrectionsRect;
 import net.mindengine.galen.specs.page.Locator;
 import net.mindengine.galen.specs.reader.StringCharReader;
@@ -43,17 +40,17 @@ public class ObjectDefinitionProcessor {
 
         if (structNode.getChildNodes() != null) {
             for (StructNode childNode : structNode.getChildNodes()) {
-                parseObject(childNode);
+                parseObject(pageSpecProcessor.processExpressionsIn(childNode));
             }
         }
     }
 
 
-    private void parseObject(StructNode objectNode) {
+    private void parseObject(ProcessedStructNode objectNode) {
         parseObject(objectNode, null, null);
     }
 
-    private void parseObject(StructNode objectNode, String parentName, Locator parentLocator) {
+    private void parseObject(ProcessedStructNode objectNode, String parentName, Locator parentLocator) {
         StringCharReader reader = new StringCharReader(objectNode.getName());
 
         String objectName = reader.readWord();
@@ -88,17 +85,17 @@ public class ObjectDefinitionProcessor {
         }
     }
 
-    private void addObjectToSpec(StructNode objectNode, String objectName, Locator locator) {
+    private void addObjectToSpec(ProcessedStructNode objectNode, String objectName, Locator locator) {
         pageSpecProcessor.addObjectToSpec(objectName, locator);
 
         if (objectNode.getChildNodes() != null && objectNode.getChildNodes().size() > 0) {
             for (StructNode subObjectNode : objectNode.getChildNodes()) {
-                parseObject(subObjectNode, objectName, locator);
+                parseObject(pageSpecProcessor.processExpressionsIn(subObjectNode), objectName, locator);
             }
         }
     }
 
-    private void addMultiObjectsToSpec(StructNode objectNode, String objectName, Locator locator) {
+    private void addMultiObjectsToSpec(ProcessedStructNode objectNode, String objectName, Locator locator) {
         Page page = pageSpecProcessor.getBrowser().getPage();
         int count = page.getObjectCount(locator);
 
