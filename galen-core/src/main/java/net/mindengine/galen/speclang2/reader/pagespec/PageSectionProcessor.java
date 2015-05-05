@@ -15,6 +15,7 @@
 ******************************************************************************/
 package net.mindengine.galen.speclang2.reader.pagespec;
 
+import net.mindengine.galen.parser.ProcessedStructNode;
 import net.mindengine.galen.parser.StructNode;
 import net.mindengine.galen.specs.page.ObjectSpecs;
 import net.mindengine.galen.specs.page.PageSection;
@@ -36,18 +37,20 @@ public class PageSectionProcessor {
     }
 
 
-    public void process(StructNode structNode, String contextPath) throws IOException {
+    public void process(ProcessedStructNode structNode, String contextPath) throws IOException {
         PageSection section = new PageSection();
         section.setName(structNode.getName().substring(1, structNode.getName().length() - 1).trim());
 
         if (structNode.getChildNodes() != null) {
             for (StructNode childNode : structNode.getChildNodes()) {
-                String childLine = childNode.getName();
+
+                ProcessedStructNode processedChildNode = pageSpecProcessor.processExpressionsIn(childNode);
+                String childLine = processedChildNode.getName();
 
                 if (isSectionDefinition(childLine)) {
-                    new PageSectionProcessor(pageSpecProcessor, section).process(childNode, contextPath);
+                    new PageSectionProcessor(pageSpecProcessor, section).process(processedChildNode, contextPath);
                 } else if (isObject(childLine)) {
-                    processObject(childLine, section, childNode, contextPath);
+                    processObject(section, processedChildNode, contextPath);
                 } else {
                     throw childNode.createSyntaxException("Unknown statement: " + childLine);
                 }
@@ -61,15 +64,17 @@ public class PageSectionProcessor {
         }
     }
 
-    private void processObject(String childLine, PageSection section, StructNode objectNode, String contextPath) throws IOException {
-        String objectName = childLine.substring(0, childLine.length() - 1).trim();
+    private void processObject(PageSection section, ProcessedStructNode objectNode, String contextPath) throws IOException {
+        String name = objectNode.getName();
+        String objectName = name.substring(0, name.length() - 1).trim();
 
         ObjectSpecs objectSpecs = new ObjectSpecs(objectName);
 
         if (objectNode.getChildNodes() != null && objectNode.getChildNodes().size() > 0) {
 
             for (StructNode specNode : objectNode.getChildNodes()) {
-                String specText = specNode.getName();
+                ProcessedStructNode processedSpecNode = pageSpecProcessor.processExpressionsIn(specNode);
+                String specText = processedSpecNode.getName();
                 objectSpecs.getSpecs().add(pageSpecProcessor.getSpecReaderV2().read(specText, contextPath));
             }
 

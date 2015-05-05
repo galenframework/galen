@@ -260,7 +260,7 @@ describe("GalenPages", function (){
             assertThat("somePropery of page should be equal", page.someProperty).is("some value");
         });
 
-        it("should create a page with fields and process id css xpath locators", function (){
+        it("should create a page with fields and evalSafeToString id css xpath locators", function (){
             var page = $.page({
                 label: ".some label",
                 link: "id:  some-link",

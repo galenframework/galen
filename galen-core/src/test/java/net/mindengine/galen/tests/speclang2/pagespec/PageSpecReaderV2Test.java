@@ -126,6 +126,22 @@ public class PageSpecReaderV2Test {
         assertThat(section2.getObjects().get(0).getSpecs().get(1).getOriginalText(), is("inside screen 0px left right"));
     }
 
+
+    /**
+     * Purpose of this test is to check that "${}" expressions could be processed everywhere
+     */
+    @Test
+    public void shouldRead_variablesDefinition_andProcessThem() throws IOException {
+        PageSpec pageSpec = readPageSpec("speclang2/variables-and-processing.gspec");
+
+
+        assertThat(pageSpec.getSections().size(), is(1));
+        assertThat(pageSpec.getSections().get(0).getName(), is("Section for user Johny"));
+        assertThat(pageSpec.getSections().get(0).getObjects().get(0).getObjectName(), is("welcome-message"));
+        assertThat(pageSpec.getSections().get(0).getObjects().get(0).getSpecs().get(0).getOriginalText(), is("text is \"Welcome, Johny\""));
+
+    }
+
     private PageSpec readPageSpec(String resource) throws IOException {
         return readPageSpec(resource, NO_BROWSER);
     }

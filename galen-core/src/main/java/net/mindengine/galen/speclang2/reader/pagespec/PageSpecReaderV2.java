@@ -17,6 +17,7 @@ package net.mindengine.galen.speclang2.reader.pagespec;
 
 import net.mindengine.galen.browser.Browser;
 import net.mindengine.galen.parser.IndentationStructureParser;
+import net.mindengine.galen.parser.ProcessedStructNode;
 import net.mindengine.galen.parser.StructNode;
 import net.mindengine.galen.parser.SyntaxException;
 import net.mindengine.galen.specs.reader.page.PageSpec;
@@ -43,17 +44,21 @@ public class PageSpecReaderV2 {
         PageSpecProcessor pageSpecProcessor = new PageSpecProcessor(pageSpec, browser);
 
         for (StructNode structNode : structs) {
-            if (structNode.getName().startsWith("@")) {
-                pageSpecProcessor.processSpecialInstruction(structNode);
-            } else if (PageSectionProcessor.isSectionDefinition(structNode.getName())) {
-                new PageSectionProcessor(pageSpecProcessor).process(structNode, contextPath);
-            } else {
-                throw new SyntaxException(new Line(structNode.getSource(), structNode.getFileLineNumber()),
-                        "Unknown statement: " + structNode.getName());
-            }
+            ProcessedStructNode processedStructNode = pageSpecProcessor.processExpressionsIn(structNode);
+            processNode(processedStructNode, pageSpecProcessor, contextPath);
         }
 
         return pageSpecProcessor.buildPageSpec();
+    }
+
+    private void processNode(ProcessedStructNode processedStructNode, PageSpecProcessor pageSpecProcessor, String contextPath) throws IOException {
+        if (processedStructNode.getName().startsWith("@")) {
+            pageSpecProcessor.processSpecialInstruction(processedStructNode);
+        } else if (PageSectionProcessor.isSectionDefinition(processedStructNode.getName())) {
+            new PageSectionProcessor(pageSpecProcessor).process(processedStructNode, contextPath);
+        } else {
+            throw processedStructNode.createSyntaxException("Unknown statement: " + processedStructNode.getName());
+        }
     }
 
 }
