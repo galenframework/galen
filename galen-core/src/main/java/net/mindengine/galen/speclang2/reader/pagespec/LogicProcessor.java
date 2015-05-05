@@ -15,7 +15,6 @@
 ******************************************************************************/
 package net.mindengine.galen.speclang2.reader.pagespec;
 
-import net.mindengine.galen.parser.ProcessedStructNode;
 import net.mindengine.galen.parser.StructNode;
 import net.mindengine.galen.specs.reader.StringCharReader;
 
@@ -34,11 +33,11 @@ public class LogicProcessor {
         this.pageSpecProcessor = pageSpecProcessor;
     }
 
-    public List<ProcessedStructNode> process(List<StructNode> nodes) {
-        List<ProcessedStructNode> resultingNodes = new LinkedList<ProcessedStructNode>();
+    public List<StructNode> process(List<StructNode> nodes) {
+        List<StructNode> resultingNodes = new LinkedList<StructNode>();
 
         for (StructNode node : nodes) {
-            ProcessedStructNode processedNode = pageSpecProcessor.processExpressionsIn(node);
+            StructNode processedNode = pageSpecProcessor.processExpressionsIn(node);
 
             if (isLogicStatement(processedNode.getName())) {
                 resultingNodes.addAll(processLogicStatement(processedNode));
@@ -50,27 +49,20 @@ public class LogicProcessor {
         return resultingNodes;
     }
 
-    private ProcessedStructNode processNonLogicStatement(ProcessedStructNode processedNode) {
+    private StructNode processNonLogicStatement(StructNode processedNode) {
         if (processedNode.getChildNodes() != null) {
-            ProcessedStructNode fullyProcessed = new ProcessedStructNode(processedNode.getName(), processedNode);
+            StructNode fullyProcessed = new StructNode(processedNode.getName());
+            fullyProcessed.setFileLineNumber(processedNode.getFileLineNumber());
+            fullyProcessed.setSource(processedNode.getSource());
 
-            fullyProcessed.setChildNodes(convertList(process(processedNode.getChildNodes())));
+            fullyProcessed.setChildNodes(process(processedNode.getChildNodes()));
             return fullyProcessed;
         } else {
             return processedNode;
         }
     }
 
-    private List<StructNode> convertList(List<ProcessedStructNode> processed) {
-        List<StructNode> list = new LinkedList<StructNode>();
-        for (ProcessedStructNode item: processed) {
-            list.add(item);
-        }
-        return list;
-    }
-
-
-    private List<ProcessedStructNode> processLogicStatement(final ProcessedStructNode logicStatementNode) {
+    private List<StructNode> processLogicStatement(final StructNode logicStatementNode) {
         StringCharReader reader = new StringCharReader(logicStatementNode.getName());
         String firstWord = reader.readWord();
         if ("@for".equals(firstWord)) {
@@ -78,7 +70,7 @@ public class LogicProcessor {
 
             return forLoop.apply(new LoopVisitor() {
                 @Override
-                public List<ProcessedStructNode> visitLoop(Map<String, String> variables) {
+                public List<StructNode> visitLoop(Map<String, String> variables) {
                     pageSpecProcessor.setGlobalVariables(variables, logicStatementNode);
                     return process(logicStatementNode.getChildNodes());
                 }

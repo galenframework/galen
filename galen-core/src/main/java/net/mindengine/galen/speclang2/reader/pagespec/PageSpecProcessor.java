@@ -128,12 +128,17 @@ public class PageSpecProcessor implements VarsParserJsFunctions {
         this.varsParser = varsParser;
     }
 
-    public ProcessedStructNode processExpressionsIn(StructNode structNode) {
-        String result = getVarsParser().parse(structNode.getName());
-        return new ProcessedStructNode(result, structNode);
+    public StructNode processExpressionsIn(StructNode originNode) {
+        String result = getVarsParser().parse(originNode.getName());
+
+        StructNode processedNode = new StructNode(result);
+        processedNode.setFileLineNumber(originNode.getFileLineNumber());
+        processedNode.setSource(originNode.getSource());
+        processedNode.setChildNodes(originNode.getChildNodes());
+        return processedNode;
     }
 
-    public void setGlobalVariables(Map<String, String> variables, ProcessedStructNode originNode) {
+    public void setGlobalVariables(Map<String, String> variables, StructNode originNode) {
         for(Map.Entry<String, String> variable : variables.entrySet()) {
             setGlobalVariable(variable.getKey(), variable.getValue(), originNode);
         }

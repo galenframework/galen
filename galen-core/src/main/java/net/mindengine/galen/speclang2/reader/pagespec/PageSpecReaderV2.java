@@ -17,7 +17,6 @@ package net.mindengine.galen.speclang2.reader.pagespec;
 
 import net.mindengine.galen.browser.Browser;
 import net.mindengine.galen.parser.IndentationStructureParser;
-import net.mindengine.galen.parser.ProcessedStructNode;
 import net.mindengine.galen.parser.StructNode;
 import net.mindengine.galen.specs.reader.StringCharReader;
 import net.mindengine.galen.specs.reader.page.PageSpec;
@@ -42,7 +41,7 @@ public class PageSpecReaderV2 {
 
         PageSpecProcessor pageSpecProcessor = new PageSpecProcessor(pageSpec, browser);
 
-        List<ProcessedStructNode> allProcessedChildNodes = new LogicProcessor(pageSpecProcessor).process(structs);
+        List<StructNode> allProcessedChildNodes = new LogicProcessor(pageSpecProcessor).process(structs);
 
         for (StructNode structNode : allProcessedChildNodes) {
             processNode(structNode, pageSpecProcessor, contextPath);
@@ -64,9 +63,7 @@ public class PageSpecReaderV2 {
     private boolean isSpecialInstruction(String name) {
         String firstWord = new StringCharReader(name).readWord();
 
-        return firstWord.equals("@objects")
-                || firstWord.equals("@set");
-
+        return firstWord.equals("@objects");
     }
 
 }

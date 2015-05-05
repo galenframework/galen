@@ -123,8 +123,8 @@ public class ForLoop {
         }
     }
 
-    public List<ProcessedStructNode> apply(LoopVisitor loopVisitor) {
-        List<ProcessedStructNode> resultingNodes = new LinkedList<ProcessedStructNode>();
+    public List<StructNode> apply(LoopVisitor loopVisitor) {
+        List<StructNode> resultingNodes = new LinkedList<StructNode>();
 
         for (final String sequenceValue : sequence) {
             resultingNodes.addAll(loopVisitor.visitLoop(new HashMap<String, String>(){{

@@ -40,17 +40,17 @@ public class ObjectDefinitionProcessor {
 
         if (structNode.getChildNodes() != null) {
             for (StructNode childNode : structNode.getChildNodes()) {
-                parseObject(pageSpecProcessor.processExpressionsIn(childNode));
+                parseObject(childNode);
             }
         }
     }
 
 
-    private void parseObject(ProcessedStructNode objectNode) {
+    private void parseObject(StructNode objectNode) {
         parseObject(objectNode, null, null);
     }
 
-    private void parseObject(ProcessedStructNode objectNode, String parentName, Locator parentLocator) {
+    private void parseObject(StructNode objectNode, String parentName, Locator parentLocator) {
         StringCharReader reader = new StringCharReader(objectNode.getName());
 
         String objectName = reader.readWord();
@@ -85,7 +85,7 @@ public class ObjectDefinitionProcessor {
         }
     }
 
-    private void addObjectToSpec(ProcessedStructNode objectNode, String objectName, Locator locator) {
+    private void addObjectToSpec(StructNode objectNode, String objectName, Locator locator) {
         pageSpecProcessor.addObjectToSpec(objectName, locator);
 
         if (objectNode.getChildNodes() != null && objectNode.getChildNodes().size() > 0) {
@@ -95,7 +95,7 @@ public class ObjectDefinitionProcessor {
         }
     }
 
-    private void addMultiObjectsToSpec(ProcessedStructNode objectNode, String objectName, Locator locator) {
+    private void addMultiObjectsToSpec(StructNode objectNode, String objectName, Locator locator) {
         Page page = pageSpecProcessor.getBrowser().getPage();
         int count = page.getObjectCount(locator);
 

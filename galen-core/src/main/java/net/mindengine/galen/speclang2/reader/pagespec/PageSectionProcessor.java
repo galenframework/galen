@@ -15,7 +15,6 @@
 ******************************************************************************/
 package net.mindengine.galen.speclang2.reader.pagespec;
 
-import net.mindengine.galen.parser.ProcessedStructNode;
 import net.mindengine.galen.parser.StructNode;
 import net.mindengine.galen.specs.page.ObjectSpecs;
 import net.mindengine.galen.specs.page.PageSection;

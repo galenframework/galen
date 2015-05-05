@@ -15,11 +15,11 @@
 ******************************************************************************/
 package net.mindengine.galen.speclang2.reader.pagespec;
 
-import net.mindengine.galen.parser.ProcessedStructNode;
+import net.mindengine.galen.parser.StructNode;
 
 import java.util.List;
 import java.util.Map;
 
 public interface LoopVisitor {
-    List<ProcessedStructNode> visitLoop(Map<String, String> variables);
+    List<StructNode> visitLoop(Map<String, String> variables);
 }
