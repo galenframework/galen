@@ -21,8 +21,14 @@ import net.mindengine.galen.specs.reader.StringCharReader;
 
 import java.util.*;
 
+import static java.util.Arrays.asList;
+
 public class LogicProcessor {
     private final PageSpecProcessor pageSpecProcessor;
+    private List<String> logicOperators = asList(
+            "@for",
+            "@set"
+    );
 
     public LogicProcessor(PageSpecProcessor pageSpecProcessor) {
         this.pageSpecProcessor = pageSpecProcessor;
@@ -67,7 +73,7 @@ public class LogicProcessor {
     private List<ProcessedStructNode> processLogicStatement(final ProcessedStructNode logicStatementNode) {
         StringCharReader reader = new StringCharReader(logicStatementNode.getName());
         String firstWord = reader.readWord();
-        if (firstWord.equals("@for")) {
+        if ("@for".equals(firstWord)) {
             ForLoop forLoop = ForLoop.read(reader, logicStatementNode);
 
             return forLoop.apply(new LoopVisitor() {
@@ -77,13 +83,16 @@ public class LogicProcessor {
                     return process(logicStatementNode.getChildNodes());
                 }
             });
-
+        } else if ("@set".equals(firstWord)) {
+            new SetVariableProcessor(pageSpecProcessor).process(reader, logicStatementNode);
+            return Collections.emptyList();
         } else {
             throw logicStatementNode.createSyntaxException("Invalid statement: " + firstWord);
         }
     }
 
     private boolean isLogicStatement(String name) {
-        return name.startsWith("@");
+        String firstWord = new StringCharReader(name).readWord();
+        return logicOperators.contains(firstWord);
     }
 }

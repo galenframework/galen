@@ -42,21 +42,22 @@ public class PageSpecReaderV2 {
 
         PageSpecProcessor pageSpecProcessor = new PageSpecProcessor(pageSpec, browser);
 
-        for (StructNode structNode : structs) {
-            ProcessedStructNode processedStructNode = pageSpecProcessor.processExpressionsIn(structNode);
-            processNode(processedStructNode, pageSpecProcessor, contextPath);
+        List<ProcessedStructNode> allProcessedChildNodes = new LogicProcessor(pageSpecProcessor).process(structs);
+
+        for (StructNode structNode : allProcessedChildNodes) {
+            processNode(structNode, pageSpecProcessor, contextPath);
         }
 
         return pageSpecProcessor.buildPageSpec();
     }
 
-    private void processNode(ProcessedStructNode processedStructNode, PageSpecProcessor pageSpecProcessor, String contextPath) throws IOException {
-        if (isSpecialInstruction(processedStructNode.getName())) {
-            pageSpecProcessor.processSpecialInstruction(processedStructNode);
-        } else if (PageSectionProcessor.isSectionDefinition(processedStructNode.getName())) {
-            new PageSectionProcessor(pageSpecProcessor).process(processedStructNode, contextPath);
+    private void processNode(StructNode node, PageSpecProcessor pageSpecProcessor, String contextPath) throws IOException {
+        if (isSpecialInstruction(node.getName())) {
+            pageSpecProcessor.processSpecialInstruction(node);
+        } else if (PageSectionProcessor.isSectionDefinition(node.getName())) {
+            new PageSectionProcessor(pageSpecProcessor).process(node, contextPath);
         } else {
-            throw processedStructNode.createSyntaxException("Unknown statement: " + processedStructNode.getName());
+            throw node.createSyntaxException("Unknown statement: " + node.getName());
         }
     }
 

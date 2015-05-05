@@ -46,14 +46,12 @@ public class PageSpecProcessor implements VarsParserJsFunctions {
         return pageSpec;
     }
 
-    public void processSpecialInstruction(ProcessedStructNode structNode) {
+    public void processSpecialInstruction(StructNode structNode) {
         StringCharReader reader = new StringCharReader(structNode.getName());
         String name = reader.readWord();
 
         if ("@objects".equals(name)) {
             new ObjectDefinitionProcessor(this).process(reader, structNode);
-        } else if ("@set".equals(name)) {
-            new SetVariableProcessor(this).process(reader, structNode);
         } else {
             throw  new SyntaxException(new Line(structNode.getSource(), structNode.getFileLineNumber()), "Unknown special instruction: " + name);
         }
