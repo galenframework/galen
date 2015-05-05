@@ -40,7 +40,7 @@ public class ExpectCommaSeparatedKeyValue implements Expectation<List<Pair<Strin
                 }
             }
             else {
-                final String value = charReader.readUntilSymbol(',').trim();
+                final String value = charReader.readSafeUntilSymbol(',').trim();
                 currentParam.setValue(value);
                 currentParam = null;
             }

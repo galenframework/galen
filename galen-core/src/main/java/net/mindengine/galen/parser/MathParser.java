@@ -39,7 +39,7 @@ public class MathParser {
 	                    text.append(mathSymbol);
 	                }
 	                else if (nextCh == '{') {
-	                     String expression = reader.readUntilSymbol('}').replace(" ", "");
+	                     String expression = reader.readSafeUntilSymbol('}').replace(" ", "");
 	                     if (expression.length() < 2) {
 	                         throw new SyntaxException("Can't parse expression: " + expression);
 	                     }

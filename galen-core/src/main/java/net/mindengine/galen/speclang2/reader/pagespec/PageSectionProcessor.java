@@ -21,6 +21,7 @@ import net.mindengine.galen.specs.page.ObjectSpecs;
 import net.mindengine.galen.specs.page.PageSection;
 
 import java.io.IOException;
+import java.util.List;
 
 public class PageSectionProcessor {
     private final PageSpecProcessor pageSpecProcessor;
@@ -37,14 +38,15 @@ public class PageSectionProcessor {
     }
 
 
-    public void process(ProcessedStructNode structNode, String contextPath) throws IOException {
+    public void process(ProcessedStructNode sectionNode, String contextPath) throws IOException {
         PageSection section = new PageSection();
-        section.setName(structNode.getName().substring(1, structNode.getName().length() - 1).trim());
+        section.setName(sectionNode.getName().substring(1, sectionNode.getName().length() - 1).trim());
 
-        if (structNode.getChildNodes() != null) {
-            for (StructNode childNode : structNode.getChildNodes()) {
+        if (sectionNode.getChildNodes() != null) {
+            List<ProcessedStructNode> allProcessedChildNodes = new LogicProcessor(pageSpecProcessor).process(sectionNode.getChildNodes());
 
-                ProcessedStructNode processedChildNode = pageSpecProcessor.processExpressionsIn(childNode);
+            for (ProcessedStructNode processedChildNode : allProcessedChildNodes) {
+
                 String childLine = processedChildNode.getName();
 
                 if (isSectionDefinition(childLine)) {
@@ -52,7 +54,7 @@ public class PageSectionProcessor {
                 } else if (isObject(childLine)) {
                     processObject(section, processedChildNode, contextPath);
                 } else {
-                    throw childNode.createSyntaxException("Unknown statement: " + childLine);
+                    throw processedChildNode.createSyntaxException("Unknown statement: " + childLine);
                 }
             }
         }

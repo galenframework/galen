@@ -26,6 +26,7 @@ import net.mindengine.galen.specs.reader.page.PageSpec;
 import net.mindengine.galen.suite.reader.Context;
 import net.mindengine.galen.suite.reader.Line;
 
+import java.util.Map;
 import java.util.Properties;
 
 
@@ -132,5 +133,11 @@ public class PageSpecProcessor implements VarsParserJsFunctions {
     public ProcessedStructNode processExpressionsIn(StructNode structNode) {
         String result = getVarsParser().parse(structNode.getName());
         return new ProcessedStructNode(result, structNode);
+    }
+
+    public void setGlobalVariables(Map<String, String> variables, ProcessedStructNode originNode) {
+        for(Map.Entry<String, String> variable : variables.entrySet()) {
+            setGlobalVariable(variable.getKey(), variable.getValue(), originNode);
+        }
     }
 }
