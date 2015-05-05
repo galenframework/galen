@@ -19,9 +19,8 @@ import net.mindengine.galen.browser.Browser;
 import net.mindengine.galen.parser.IndentationStructureParser;
 import net.mindengine.galen.parser.ProcessedStructNode;
 import net.mindengine.galen.parser.StructNode;
-import net.mindengine.galen.parser.SyntaxException;
+import net.mindengine.galen.specs.reader.StringCharReader;
 import net.mindengine.galen.specs.reader.page.PageSpec;
-import net.mindengine.galen.suite.reader.Line;
 import net.mindengine.galen.utils.GalenUtils;
 
 import java.io.IOException;
@@ -52,13 +51,21 @@ public class PageSpecReaderV2 {
     }
 
     private void processNode(ProcessedStructNode processedStructNode, PageSpecProcessor pageSpecProcessor, String contextPath) throws IOException {
-        if (processedStructNode.getName().startsWith("@")) {
+        if (isSpecialInstruction(processedStructNode.getName())) {
             pageSpecProcessor.processSpecialInstruction(processedStructNode);
         } else if (PageSectionProcessor.isSectionDefinition(processedStructNode.getName())) {
             new PageSectionProcessor(pageSpecProcessor).process(processedStructNode, contextPath);
         } else {
             throw processedStructNode.createSyntaxException("Unknown statement: " + processedStructNode.getName());
         }
+    }
+
+    private boolean isSpecialInstruction(String name) {
+        String firstWord = new StringCharReader(name).readWord();
+
+        return firstWord.equals("@objects")
+                || firstWord.equals("@set");
+
     }
 
 }
