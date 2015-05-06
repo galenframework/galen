@@ -1,0 +1,19 @@
+
+
+
+= Some section =
+    @on mobile, tablet
+        header:
+            height 100px
+
+
+
+    @on desktop
+        header:
+            height 200px
+
+
+    @on *
+        header-icon:
+            inside header 5px top left
+
