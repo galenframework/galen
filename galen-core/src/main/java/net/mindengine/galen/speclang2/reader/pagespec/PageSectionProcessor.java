@@ -16,22 +16,23 @@
 package net.mindengine.galen.speclang2.reader.pagespec;
 
 import net.mindengine.galen.parser.StructNode;
+import net.mindengine.galen.parser.SyntaxException;
 import net.mindengine.galen.specs.page.ObjectSpecs;
 import net.mindengine.galen.specs.page.PageSection;
 
 import java.io.IOException;
 
 public class PageSectionProcessor {
-    private final PageSpecProcessor pageSpecProcessor;
+    private final PageSpecHandler pageSpecHandler;
     private final PageSection parentSection;
 
-    public PageSectionProcessor(PageSpecProcessor pageSpecProcessor) {
-        this.pageSpecProcessor = pageSpecProcessor;
+    public PageSectionProcessor(PageSpecHandler pageSpecHandler) {
+        this.pageSpecHandler = pageSpecHandler;
         this.parentSection = null;
     }
 
-    public PageSectionProcessor(PageSpecProcessor pageSpecProcessor, PageSection parentSection) {
-        this.pageSpecProcessor = pageSpecProcessor;
+    public PageSectionProcessor(PageSpecHandler pageSpecHandler, PageSection parentSection) {
+        this.pageSpecHandler = pageSpecHandler;
         this.parentSection = parentSection;
     }
 
@@ -44,11 +45,11 @@ public class PageSectionProcessor {
             for (StructNode sectionChildNode : sectionNode.getChildNodes()) {
                 String childLine = sectionChildNode.getName();
                 if (isSectionDefinition(childLine)) {
-                    new PageSectionProcessor(pageSpecProcessor, section).process(sectionChildNode, contextPath);
+                    new PageSectionProcessor(pageSpecHandler, section).process(sectionChildNode, contextPath);
                 } else if (isObject(childLine)) {
                     processObject(section, sectionChildNode, contextPath);
                 } else {
-                    throw sectionChildNode.createSyntaxException("Unknown statement: " + childLine);
+                    throw new SyntaxException(sectionChildNode, "Unknown statement: " + childLine);
                 }
             }
         }
@@ -56,7 +57,7 @@ public class PageSectionProcessor {
         if (parentSection != null) {
             parentSection.addSubSection(section);
         } else {
-            pageSpecProcessor.addSection(section);
+            pageSpecHandler.addSection(section);
         }
     }
 
@@ -70,7 +71,7 @@ public class PageSectionProcessor {
 
             for (StructNode specNode : objectNode.getChildNodes()) {
                 String specText = specNode.getName();
-                objectSpecs.getSpecs().add(pageSpecProcessor.getSpecReaderV2().read(specText, contextPath));
+                objectSpecs.getSpecs().add(pageSpecHandler.getSpecReaderV2().read(specText, contextPath));
             }
 
             section.addObjects(objectSpecs);

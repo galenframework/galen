@@ -1,0 +1,26 @@
+
+
+
+
+@objects
+    menu-item-1     #item-1
+    menu-item-2     #item-2
+    menu-item-3     #item-3
+    menu-item-4     #item-3
+
+
+= Check all items =
+    @forEach [menu-item-*] as itemName
+        ${itemName} :
+            width 100px
+
+= Check items with previous =
+    @forEach [menu-item-*] as itemName, prev as previousItem
+        ${itemName} :
+            right-of ${previousItem} 10px
+
+= Check items with next =
+    @forEach [menu-item-*] as itemName, next as nextItem
+        ${itemName} :
+            left-of ${nextItem} 10px
+

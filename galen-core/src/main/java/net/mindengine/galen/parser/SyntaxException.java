@@ -23,6 +23,7 @@ public class SyntaxException extends RuntimeException {
      * 
      */
     private static final long serialVersionUID = 421348434010710101L;
+    private static final Line NULL_LINE = null;
 
     private Line line;
     
@@ -47,10 +48,14 @@ public class SyntaxException extends RuntimeException {
     }
     
     public SyntaxException(String message) {
-		this(null, message);
+		this(NULL_LINE, message);
 	}
 
-	public Line getLine() {
+    public SyntaxException(StructNode originNode, String message) {
+        this(new Line(originNode.getSource(), originNode.getFileLineNumber()), message);
+    }
+
+    public Line getLine() {
         return line;
     }
 

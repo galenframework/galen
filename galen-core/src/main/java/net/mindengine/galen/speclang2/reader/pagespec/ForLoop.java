@@ -15,16 +15,15 @@
 ******************************************************************************/
 package net.mindengine.galen.speclang2.reader.pagespec;
 
-import net.mindengine.galen.parser.ProcessedStructNode;
 import net.mindengine.galen.parser.StructNode;
 import net.mindengine.galen.parser.SyntaxException;
 import net.mindengine.galen.specs.reader.StringCharReader;
 import net.mindengine.galen.suite.reader.Line;
+import net.mindengine.galen.utils.GalenUtils;
+import org.apache.commons.lang3.tuple.ImmutablePair;
+import org.apache.commons.lang3.tuple.Pair;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 import java.util.regex.Pattern;
 
 import static net.mindengine.galen.suite.reader.Line.UNKNOWN_LINE;
@@ -32,24 +31,39 @@ import static net.mindengine.galen.suite.reader.Line.UNKNOWN_LINE;
 public class ForLoop {
 
     public static final String INDEX_DEFAULT_NAME = "index";
-    private List<String> sequence;
+    private String previousMapping;
+    private String nextMapping;
+    private String[] sequence;
     private String indexName;
 
-    public ForLoop(List<String> sequence, String indexName) {
+    public ForLoop(String[] sequence, String indexName, String previousMapping, String nextMapping) {
         this.sequence = sequence;
         this.indexName = indexName;
+        this.previousMapping = previousMapping;
+        this.nextMapping = nextMapping;
     }
 
-    public static ForLoop read(StringCharReader reader, StructNode originNode) {
+
+
+    public static ForLoop read(boolean isSimpleLoop, PageSpecHandler pageSpecHandler, StringCharReader reader, StructNode originNode) {
         try {
             String emptyness = reader.readUntilSymbol('[').trim();
             if (!emptyness.isEmpty()) {
-                throw originNode.createSyntaxException("Unexpected token: " + emptyness);
+                throw new SyntaxException(originNode, "Unexpected token: " + emptyness);
             }
 
-            String parameterizations = reader.readUntilSymbol(']');
-            List<String> sequence = readSequence(parameterizations);
+            String sequenceStatement = reader.readUntilSymbol(']');
+            String[] sequence;
+            if (isSimpleLoop) {
+                sequence = readSequenceForSimpleLoop(sequenceStatement);
+            } else {
+                sequence = readSequenceFromPageObjects(sequenceStatement, pageSpecHandler);
+            }
+
             String indexName = INDEX_DEFAULT_NAME;
+
+            String previousMapping = null;
+            String nextMapping = null;
 
             if (reader.hasMoreNormalSymbols()) {
                 String as = reader.readWord();
@@ -66,24 +80,74 @@ public class ForLoop {
                 }
 
                 if (reader.hasMoreNormalSymbols()) {
-                    throw new SyntaxException("Unknown statement: " + reader.getTheRest().trim());
+                    reader.readUntilSymbol(',');
+
+                    Pair<String, String> extraMappings = parseExtraMapping(reader);
+                    if ("prev".equals(extraMappings.getKey())) {
+                        previousMapping = extraMappings.getValue();
+                    } else if ("next".equals(extraMappings.getKey())) {
+                        nextMapping = extraMappings.getValue();
+                    } else {
+                        throw new SyntaxException("Unknown loop mapping: " + extraMappings.getKey());
+                    }
                 }
             }
-            return new ForLoop(sequence, indexName);
+            return new ForLoop(sequence, indexName, previousMapping, nextMapping);
         } catch (SyntaxException ex) {
             ex.setLine(new Line(originNode.getSource(), originNode.getFileLineNumber()));
             throw ex;
         }
     }
 
-    private static List<String> readSequence(String sequenceText) {
-        sequenceText = sequenceText.replace(" ", "");
-        sequenceText = sequenceText.replace("\t", "");
+    private static Pair<String, String> parseExtraMapping(StringCharReader reader) {
+        String type = reader.readWord();
+        String as = reader.readWord();
+        String varName = reader.readWord();
+
+        if (type.isEmpty()) {
+            throw new SyntaxException("Missing type. Expected 'prev' or 'next'");
+        }
+        if (!"as".equals(as)) {
+            throw new SyntaxException("Incorrect statement. Use 'as'");
+        }
+        if (varName.isEmpty()) {
+            throw new SyntaxException("Missing mapping name for '" + type + "'");
+        }
+
+        String theRest = reader.getTheRest().trim();
+        if (!theRest.isEmpty()) {
+            throw new SyntaxException("Cannot process: " + theRest);
+        }
+
+        return new ImmutablePair<String, String>(type, varName);
+    }
+
+    private static String[] readSequenceFromPageObjects(String sequenceStatement, PageSpecHandler pageSpecHandler) {
+        String[] objectPatterns = sequenceStatement.split(",");
+
+        ArrayList<String> matchingObjects = new ArrayList<String>();
+        List<String> allObjectNames = pageSpecHandler.getSortedObjectNames();
+
+        for (String objectPattern : objectPatterns) {
+            Pattern regex = GalenUtils.convertObjectNameRegex(objectPattern);
+            for (String objectName : allObjectNames) {
+                if (regex.matcher(objectName).matches()) {
+                    matchingObjects.add(objectName);
+                }
+            }
+        }
+
+        return matchingObjects.toArray(new String[]{});
+    }
+
+    private static String[] readSequenceForSimpleLoop(String sequenceStatement) {
+        sequenceStatement = sequenceStatement.replace(" ", "");
+        sequenceStatement = sequenceStatement.replace("\t", "");
         Pattern sequencePattern = Pattern.compile(".*\\-.*");
         try {
-            String[] values = sequenceText.split(",");
+            String[] values = sequenceStatement.split(",");
 
-            List<String> sequence = new LinkedList<String>();
+            ArrayList<String> sequence = new ArrayList<String>();
 
             for (String value : values) {
                 if (sequencePattern.matcher(value).matches()) {
@@ -94,10 +158,10 @@ public class ForLoop {
                 }
             }
 
-            return sequence;
+            return sequence.toArray(new String[]{});
         }
         catch (Exception ex) {
-            throw new SyntaxException(UNKNOWN_LINE, "Incorrect sequence syntax: " + sequenceText, ex);
+            throw new SyntaxException(UNKNOWN_LINE, "Incorrect sequence syntax: " + sequenceStatement, ex);
         }
     }
 
@@ -126,11 +190,31 @@ public class ForLoop {
     public List<StructNode> apply(LoopVisitor loopVisitor) {
         List<StructNode> resultingNodes = new LinkedList<StructNode>();
 
-        for (final String sequenceValue : sequence) {
-            resultingNodes.addAll(loopVisitor.visitLoop(new HashMap<String, String>(){{
-                put(indexName, sequenceValue);
-            }}));
+        int begin = 0;
+        int end = sequence.length;
+
+        if (previousMapping != null) {
+            begin = 1;
         }
+        if (nextMapping != null) {
+            end = end - 1;
+        }
+
+        for (int i = begin; i < end; i++) {
+
+            Map<String, String> vars = new HashMap<String, String>();
+            vars.put(indexName, sequence[i]);
+
+            if (previousMapping != null) {
+                vars.put(previousMapping, sequence[i-1]);
+            }
+            if (nextMapping != null) {
+                vars.put(nextMapping, sequence[i+1]);
+            }
+
+            resultingNodes.addAll(loopVisitor.visitLoop(vars));
+        }
+
 
         return resultingNodes;
     }

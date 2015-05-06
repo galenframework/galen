@@ -189,6 +189,45 @@ public class PageSpecReaderV2Test {
                 is("width 50px"));
     }
 
+
+    @Test
+    public void shouldRead_eachLoop_andProcessIt() throws IOException {
+        PageSpec pageSpec = readPageSpec("speclang2/foreach-loop.gspec");
+
+        assertThat(pageSpec.getSections().size(), is(3));
+
+        List<ObjectSpecs> objects = pageSpec.getSections().get(0).getObjects();
+        assertThat(objects.size(), is(4));
+        for (int i = 0; i < 4; i++) {
+            assertThat("Section 1. Object #" + i + " name should be", objects.get(i).getObjectName(),
+                    is("menu-item-" + (i+1)));
+
+            assertThat("Section 1. Object #" + i + " spec should be", objects.get(i).getSpecs().get(0).getOriginalText(),
+                    is("width 100px"));
+        }
+
+        List<ObjectSpecs> objects2 = pageSpec.getSections().get(1).getObjects();
+        assertThat(objects2.size(), is(3));
+        for (int i = 0; i < 3; i++) {
+            assertThat("Section 2. Object #" + i + " name should be", objects2.get(i).getObjectName(),
+                    is("menu-item-" + (i+2)));
+
+            assertThat("Section 2. Object #" + i + " spec should be", objects2.get(i).getSpecs().get(0).getOriginalText(),
+                    is("right-of menu-item-" + (i+1) + " 10px"));
+        }
+
+        List<ObjectSpecs> objects3 = pageSpec.getSections().get(2).getObjects();
+        assertThat(objects3.size(), is(3));
+        for (int i = 0; i < 3; i++) {
+            assertThat("Section 3. Object #" + i + " name should be", objects3.get(i).getObjectName(),
+                    is("menu-item-" + (i+1)));
+
+            assertThat("Section 3. Object #" + i + " spec should be", objects3.get(i).getSpecs().get(0).getOriginalText(),
+                    is("left-of menu-item-" + (i + 2) + " 10px"));
+        }
+
+    }
+
     private PageSpec readPageSpec(String resource) throws IOException {
         return readPageSpec(resource, NO_BROWSER);
     }

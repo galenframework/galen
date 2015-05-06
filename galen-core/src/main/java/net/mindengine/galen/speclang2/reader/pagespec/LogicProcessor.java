@@ -16,6 +16,7 @@
 package net.mindengine.galen.speclang2.reader.pagespec;
 
 import net.mindengine.galen.parser.StructNode;
+import net.mindengine.galen.parser.SyntaxException;
 import net.mindengine.galen.specs.reader.StringCharReader;
 
 import java.util.*;
@@ -23,21 +24,29 @@ import java.util.*;
 import static java.util.Arrays.asList;
 
 public class LogicProcessor {
-    private final PageSpecProcessor pageSpecProcessor;
+    public static final String FOR_LOOP_KEYWORD = "@for";
+    public static final String FOR_EACH_LOOP_KEYWORD = "@forEach";
+    public static final String SET_KEYWORD = "@set";
+    public static final String OBJECTS_KEYWORD = "@objects";
+
+    private final PageSpecHandler pageSpecHandler;
+
     private List<String> logicOperators = asList(
-            "@for",
-            "@set"
+            FOR_LOOP_KEYWORD,
+            FOR_EACH_LOOP_KEYWORD,
+            SET_KEYWORD,
+            OBJECTS_KEYWORD
     );
 
-    public LogicProcessor(PageSpecProcessor pageSpecProcessor) {
-        this.pageSpecProcessor = pageSpecProcessor;
+    public LogicProcessor(PageSpecHandler pageSpecHandler) {
+        this.pageSpecHandler = pageSpecHandler;
     }
 
     public List<StructNode> process(List<StructNode> nodes) {
         List<StructNode> resultingNodes = new LinkedList<StructNode>();
 
         for (StructNode node : nodes) {
-            StructNode processedNode = pageSpecProcessor.processExpressionsIn(node);
+            StructNode processedNode = pageSpecHandler.processExpressionsIn(node);
 
             if (isLogicStatement(processedNode.getName())) {
                 resultingNodes.addAll(processLogicStatement(processedNode));
@@ -65,21 +74,25 @@ public class LogicProcessor {
     private List<StructNode> processLogicStatement(final StructNode logicStatementNode) {
         StringCharReader reader = new StringCharReader(logicStatementNode.getName());
         String firstWord = reader.readWord();
-        if ("@for".equals(firstWord)) {
-            ForLoop forLoop = ForLoop.read(reader, logicStatementNode);
+        if (FOR_LOOP_KEYWORD.equals(firstWord)
+                || FOR_EACH_LOOP_KEYWORD.equals(firstWord)) {
+            ForLoop forLoop = ForLoop.read(FOR_LOOP_KEYWORD.equals(firstWord), pageSpecHandler, reader, logicStatementNode);
 
             return forLoop.apply(new LoopVisitor() {
                 @Override
                 public List<StructNode> visitLoop(Map<String, String> variables) {
-                    pageSpecProcessor.setGlobalVariables(variables, logicStatementNode);
+                    pageSpecHandler.setGlobalVariables(variables, logicStatementNode);
                     return process(logicStatementNode.getChildNodes());
                 }
             });
-        } else if ("@set".equals(firstWord)) {
-            new SetVariableProcessor(pageSpecProcessor).process(reader, logicStatementNode);
+        } else if (SET_KEYWORD.equals(firstWord)) {
+            new SetVariableProcessor(pageSpecHandler).process(reader, logicStatementNode);
+            return Collections.emptyList();
+        } else if (OBJECTS_KEYWORD.equals(firstWord)) {
+            new ObjectDefinitionProcessor(pageSpecHandler).process(reader, logicStatementNode);
             return Collections.emptyList();
         } else {
-            throw logicStatementNode.createSyntaxException("Invalid statement: " + firstWord);
+            throw new SyntaxException(logicStatementNode, "Invalid statement: " + firstWord);
         }
     }
 

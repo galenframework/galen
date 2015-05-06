@@ -16,13 +16,14 @@
 package net.mindengine.galen.speclang2.reader.pagespec;
 
 import net.mindengine.galen.parser.StructNode;
+import net.mindengine.galen.parser.SyntaxException;
 import net.mindengine.galen.specs.reader.StringCharReader;
 
 public class SetVariableProcessor {
-    private final PageSpecProcessor pageSpecProcessor;
+    private final PageSpecHandler pageSpecHandler;
 
-    public SetVariableProcessor(PageSpecProcessor pageSpecProcessor) {
-        this.pageSpecProcessor = pageSpecProcessor;
+    public SetVariableProcessor(PageSpecHandler pageSpecHandler) {
+        this.pageSpecHandler = pageSpecHandler;
     }
 
     public void process(StringCharReader reader, StructNode structNode) {
@@ -32,7 +33,7 @@ public class SetVariableProcessor {
         }
         if (structNode.getChildNodes() != null) {
             for (StructNode childNode : structNode.getChildNodes()) {
-                processVariableStatement(pageSpecProcessor.processExpressionsIn(childNode));
+                processVariableStatement(pageSpecHandler.processExpressionsIn(childNode));
             }
         }
     }
@@ -42,10 +43,10 @@ public class SetVariableProcessor {
         String name = reader.readWord();
 
         if (name.isEmpty()) {
-            throw structNode.createSyntaxException("Missing variable name");
+            throw new SyntaxException(structNode, "Missing variable name");
         }
 
         String value = reader.getTheRest().trim();
-        this.pageSpecProcessor.setGlobalVariable(name, value, structNode);
+        this.pageSpecHandler.setGlobalVariable(name, value, structNode);
     }
 }

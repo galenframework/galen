@@ -21,41 +21,26 @@ import net.mindengine.galen.parser.*;
 import net.mindengine.galen.speclang2.reader.specs.SpecReaderV2;
 import net.mindengine.galen.specs.page.Locator;
 import net.mindengine.galen.specs.page.PageSection;
-import net.mindengine.galen.specs.reader.StringCharReader;
 import net.mindengine.galen.specs.reader.page.PageSpec;
 import net.mindengine.galen.suite.reader.Context;
-import net.mindengine.galen.suite.reader.Line;
 
-import java.util.Map;
-import java.util.Properties;
+import java.util.*;
 
 
-public class PageSpecProcessor implements VarsParserJsFunctions {
+public class PageSpecHandler implements VarsParserJsFunctions {
     private final PageSpec pageSpec;
     private final Browser browser;
     private SpecReaderV2 specReaderV2 = new SpecReaderV2();
     private GalenJsExecutor jsExecutor = new GalenJsExecutor();
     private VarsParser varsParser = new VarsParser(new Context(), new Properties(), jsExecutor);
 
-    public PageSpecProcessor(PageSpec pageSpec, Browser browser) {
+    public PageSpecHandler(PageSpec pageSpec, Browser browser) {
         this.pageSpec = pageSpec;
         this.browser = browser;
     }
 
     public PageSpec buildPageSpec() {
         return pageSpec;
-    }
-
-    public void processSpecialInstruction(StructNode structNode) {
-        StringCharReader reader = new StringCharReader(structNode.getName());
-        String name = reader.readWord();
-
-        if ("@objects".equals(name)) {
-            new ObjectDefinitionProcessor(this).process(reader, structNode);
-        } else {
-            throw  new SyntaxException(new Line(structNode.getSource(), structNode.getFileLineNumber()), "Unknown special instruction: " + name);
-        }
-
     }
 
     public Browser getBrowser() {
@@ -79,6 +64,12 @@ public class PageSpecProcessor implements VarsParserJsFunctions {
         pageSpec.addObject(objectName, locator);
     }
 
+    public List<String> getSortedObjectNames() {
+        List<String> list = new ArrayList<String>(pageSpec.getObjects().keySet());
+        Collections.sort(list);
+        return list;
+    }
+
 
     @Override
     public int count(String regex) {
@@ -97,7 +88,7 @@ public class PageSpecProcessor implements VarsParserJsFunctions {
 
     public void setGlobalVariable(String name, String value, StructNode source) {
         if (!isValidVariableName(name)) {
-            throw source.createSyntaxException("Invalid name for variable");
+            throw new SyntaxException(source, "Invalid name for variable");
         }
         jsExecutor.putObject(name, value);
     }
