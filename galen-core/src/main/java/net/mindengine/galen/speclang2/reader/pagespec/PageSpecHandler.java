@@ -33,10 +33,12 @@ public class PageSpecHandler implements VarsParserJsFunctions {
     private SpecReaderV2 specReaderV2 = new SpecReaderV2();
     private GalenJsExecutor jsExecutor = new GalenJsExecutor();
     private VarsParser varsParser = new VarsParser(new Context(), new Properties(), jsExecutor);
+    private List<String> tags;
 
-    public PageSpecHandler(PageSpec pageSpec, Browser browser) {
+    public PageSpecHandler(PageSpec pageSpec, Browser browser, List<String> tags) {
         this.pageSpec = pageSpec;
         this.browser = browser;
+        this.tags = tags;
     }
 
     public PageSpec buildPageSpec() {
@@ -133,5 +135,13 @@ public class PageSpecHandler implements VarsParserJsFunctions {
         for(Map.Entry<String, String> variable : variables.entrySet()) {
             setGlobalVariable(variable.getKey(), variable.getValue(), originNode);
         }
+    }
+
+    public List<String> getTags() {
+        return tags;
+    }
+
+    public void setTags(List<String> tags) {
+        this.tags = tags;
     }
 }

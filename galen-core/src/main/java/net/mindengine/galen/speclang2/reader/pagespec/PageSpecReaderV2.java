@@ -28,18 +28,18 @@ import java.util.List;
 
 public class PageSpecReaderV2 {
 
-    public PageSpec read(String path, Browser browser) throws IOException {
+    public PageSpec read(String path, Browser browser, List<String> tags) throws IOException {
         String contextPath = GalenUtils.getParentForFile(path);
-        return read(GalenUtils.findFileOrResourceAsStream(path), path, contextPath, browser);
+        return read(GalenUtils.findFileOrResourceAsStream(path), path, contextPath, browser, tags);
     }
 
-    public PageSpec read(InputStream inputStream, String source, String contextPath, Browser browser) throws IOException {
+    public PageSpec read(InputStream inputStream, String source, String contextPath, Browser browser, List<String> tags) throws IOException {
         IndentationStructureParser structParser = new IndentationStructureParser();
         List<StructNode> structs = structParser.parse(inputStream, source);
 
         PageSpec pageSpec = new PageSpec();
 
-        PageSpecHandler pageSpecHandler = new PageSpecHandler(pageSpec, browser);
+        PageSpecHandler pageSpecHandler = new PageSpecHandler(pageSpec, browser, tags);
 
         List<StructNode> allProcessedChildNodes = new LogicProcessor(pageSpecHandler).process(structs);
 

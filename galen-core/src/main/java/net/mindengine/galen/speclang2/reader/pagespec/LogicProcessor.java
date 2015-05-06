@@ -28,6 +28,8 @@ public class LogicProcessor {
     public static final String FOR_EACH_LOOP_KEYWORD = "@forEach";
     public static final String SET_KEYWORD = "@set";
     public static final String OBJECTS_KEYWORD = "@objects";
+    public static final String ON_KEYWORD = "@on";
+
 
     private final PageSpecHandler pageSpecHandler;
 
@@ -35,7 +37,8 @@ public class LogicProcessor {
             FOR_LOOP_KEYWORD,
             FOR_EACH_LOOP_KEYWORD,
             SET_KEYWORD,
-            OBJECTS_KEYWORD
+            OBJECTS_KEYWORD,
+            ON_KEYWORD
     );
 
     public LogicProcessor(PageSpecHandler pageSpecHandler) {
@@ -71,28 +74,30 @@ public class LogicProcessor {
         }
     }
 
-    private List<StructNode> processLogicStatement(final StructNode logicStatementNode) {
-        StringCharReader reader = new StringCharReader(logicStatementNode.getName());
+    private List<StructNode> processLogicStatement(final StructNode statementNode) {
+        StringCharReader reader = new StringCharReader(statementNode.getName());
         String firstWord = reader.readWord();
         if (FOR_LOOP_KEYWORD.equals(firstWord)
                 || FOR_EACH_LOOP_KEYWORD.equals(firstWord)) {
-            ForLoop forLoop = ForLoop.read(FOR_LOOP_KEYWORD.equals(firstWord), pageSpecHandler, reader, logicStatementNode);
+            ForLoop forLoop = ForLoop.read(FOR_LOOP_KEYWORD.equals(firstWord), pageSpecHandler, reader, statementNode);
 
             return forLoop.apply(new LoopVisitor() {
                 @Override
                 public List<StructNode> visitLoop(Map<String, String> variables) {
-                    pageSpecHandler.setGlobalVariables(variables, logicStatementNode);
-                    return process(logicStatementNode.getChildNodes());
+                    pageSpecHandler.setGlobalVariables(variables, statementNode);
+                    return process(statementNode.getChildNodes());
                 }
             });
         } else if (SET_KEYWORD.equals(firstWord)) {
-            new SetVariableProcessor(pageSpecHandler).process(reader, logicStatementNode);
+            new SetVariableProcessor(pageSpecHandler).process(reader, statementNode);
             return Collections.emptyList();
         } else if (OBJECTS_KEYWORD.equals(firstWord)) {
-            new ObjectDefinitionProcessor(pageSpecHandler).process(reader, logicStatementNode);
+            new ObjectDefinitionProcessor(pageSpecHandler).process(reader, statementNode);
             return Collections.emptyList();
+        } else if (ON_KEYWORD.equals(firstWord)) {
+            return process(new OnFilterProcessor(pageSpecHandler).process(reader, statementNode));
         } else {
-            throw new SyntaxException(logicStatementNode, "Invalid statement: " + firstWord);
+            throw new SyntaxException(statementNode, "Invalid statement: " + firstWord);
         }
     }
 

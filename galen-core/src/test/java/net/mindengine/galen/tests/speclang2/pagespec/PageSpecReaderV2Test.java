@@ -27,6 +27,7 @@ import net.mindengine.galen.specs.reader.page.PageSpec;
 import org.testng.annotations.Test;
 
 import java.io.IOException;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -38,6 +39,7 @@ import static org.hamcrest.Matchers.*;
 public class PageSpecReaderV2Test {
 
     private static final Browser NO_BROWSER = null;
+    private static final List<String> EMPTY_TAGS = Collections.emptyList();
 
     @Test
     public void shouldRead_objectDefinitions() throws IOException {
@@ -63,7 +65,7 @@ public class PageSpecReaderV2Test {
     @Test
     public void shouldRead_objectDefinitions_withMultiObjects() throws IOException {
         PageSpec pageSpec = readPageSpec("speclang2/object-definitions-multi-objects.gspec",
-                new SeleniumBrowser(new MockedDriver("/speclang2/mocks/menu-items.json")));
+                new SeleniumBrowser(new MockedDriver("/speclang2/mocks/menu-items.json")), asList("mobile"));
 
         assertThat(pageSpec.getObjects(), is((Map<String, Locator>)new HashMap<String, Locator>(){{
             put("menu-item-1", new Locator("css", "#menu li", 1));
@@ -76,7 +78,7 @@ public class PageSpecReaderV2Test {
     @Test
     public void shouldRead_objectDefinitions_withMultiLevelObjects() throws IOException {
         PageSpec pageSpec = readPageSpec("speclang2/object-definitions-multi-level-objects.gspec",
-                new SeleniumBrowser(new MockedDriver("/speclang2/mocks/multi-level-objects.json")));
+                new SeleniumBrowser(new MockedDriver("/speclang2/mocks/multi-level-objects.json")), asList("mobile"));
 
         assertThat(pageSpec.getObjects(), is((Map<String, Locator>)new HashMap<String, Locator>(){{
             put("header", new Locator("css", "#header"));
@@ -225,15 +227,57 @@ public class PageSpecReaderV2Test {
             assertThat("Section 3. Object #" + i + " spec should be", objects3.get(i).getSpecs().get(0).getOriginalText(),
                     is("left-of menu-item-" + (i + 2) + " 10px"));
         }
+    }
 
+
+    @Test
+    public void shouldRead_taggedSections_andProcessOnlyThose_thatMatchGivenTags_1() throws IOException {
+        PageSpec pageSpec = readPageSpec("speclang2/tagged-sections.gspec", NO_BROWSER, asList("mobile"));
+
+        assertThat(pageSpec.getSections().size(), is(1));
+
+        List<ObjectSpecs> objects = pageSpec.getSections().get(0).getObjects();
+        assertThat(objects.size(), is(2));
+        assertThat(objects.get(0).getObjectName(), is("header"));
+        assertThat(objects.get(0).getSpecs().get(0).getOriginalText(), is("height 100px"));
+        assertThat(objects.get(1).getObjectName(), is("header-icon"));
+        assertThat(objects.get(1).getSpecs().get(0).getOriginalText(), is("inside header 5px top left"));
+    }
+
+    @Test
+    public void shouldRead_taggedSections_andProcessOnlyThose_thatMatchGivenTags_2() throws IOException {
+        PageSpec pageSpec = readPageSpec("speclang2/tagged-sections.gspec", NO_BROWSER, asList("tablet"));
+
+        assertThat(pageSpec.getSections().size(), is(1));
+
+        List<ObjectSpecs> objects = pageSpec.getSections().get(0).getObjects();
+        assertThat(objects.size(), is(2));
+        assertThat(objects.get(0).getObjectName(), is("header"));
+        assertThat(objects.get(0).getSpecs().get(0).getOriginalText(), is("height 100px"));
+        assertThat(objects.get(1).getObjectName(), is("header-icon"));
+        assertThat(objects.get(1).getSpecs().get(0).getOriginalText(), is("inside header 5px top left"));
+    }
+
+    @Test
+    public void shouldRead_taggedSections_andProcessOnlyThose_thatMatchGivenTags_3() throws IOException {
+        PageSpec pageSpec = readPageSpec("speclang2/tagged-sections.gspec", NO_BROWSER, asList("desktop"));
+
+        assertThat(pageSpec.getSections().size(), is(1));
+
+        List<ObjectSpecs> objects = pageSpec.getSections().get(0).getObjects();
+        assertThat(objects.size(), is(2));
+        assertThat(objects.get(0).getObjectName(), is("header"));
+        assertThat(objects.get(0).getSpecs().get(0).getOriginalText(), is("height 200px"));
+        assertThat(objects.get(1).getObjectName(), is("header-icon"));
+        assertThat(objects.get(1).getSpecs().get(0).getOriginalText(), is("inside header 5px top left"));
     }
 
     private PageSpec readPageSpec(String resource) throws IOException {
-        return readPageSpec(resource, NO_BROWSER);
+        return readPageSpec(resource, NO_BROWSER, EMPTY_TAGS);
     }
 
-    private PageSpec readPageSpec(String resource, Browser browser) throws IOException {
-        return new PageSpecReaderV2().read(resource, browser);
+    private PageSpec readPageSpec(String resource, Browser browser, List<String> tags) throws IOException {
+        return new PageSpecReaderV2().read(resource, browser, tags);
     }
 
 }
