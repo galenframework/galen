@@ -1,0 +1,16 @@
+
+
+@import for-import/spec-for-import.gspec
+
+
+@objects
+    main-container       #main
+
+
+= Header section =
+    header:
+        height 100px
+
+= Main section =
+    main-container:
+        below header 0px

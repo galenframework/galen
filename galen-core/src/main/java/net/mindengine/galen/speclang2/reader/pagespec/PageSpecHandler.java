@@ -30,15 +30,30 @@ import java.util.*;
 public class PageSpecHandler implements VarsParserJsFunctions {
     private final PageSpec pageSpec;
     private final Browser browser;
-    private SpecReaderV2 specReaderV2 = new SpecReaderV2();
-    private GalenJsExecutor jsExecutor = new GalenJsExecutor();
-    private VarsParser varsParser = new VarsParser(new Context(), new Properties(), jsExecutor);
-    private List<String> tags;
+    private final String contextPath;
+    private final SpecReaderV2 specReaderV2;
+    private final GalenJsExecutor jsExecutor;
+    private final VarsParser varsParser;
+    private final List<String> tags;
 
-    public PageSpecHandler(PageSpec pageSpec, Browser browser, List<String> tags) {
+    public PageSpecHandler(PageSpec pageSpec, Browser browser, List<String> tags, String contextPath) {
         this.pageSpec = pageSpec;
         this.browser = browser;
         this.tags = tags;
+        this.contextPath = contextPath;
+        this.specReaderV2 = new SpecReaderV2();
+        this.jsExecutor  = new GalenJsExecutor();
+        this.varsParser = new VarsParser(new Context(), new Properties(), jsExecutor);
+    }
+
+    public PageSpecHandler(PageSpecHandler copy, String contextPath) {
+        this.pageSpec = copy.pageSpec;
+        this.browser = copy.browser;
+        this.contextPath = contextPath;
+        this.specReaderV2 = copy.specReaderV2;
+        this.jsExecutor = copy.jsExecutor;
+        this.varsParser = copy.varsParser;
+        this.tags = copy.tags;
     }
 
     public PageSpec buildPageSpec() {
@@ -51,15 +66,25 @@ public class PageSpecHandler implements VarsParserJsFunctions {
 
 
     public void addSection(PageSection section) {
-        pageSpec.addSection(section);
+        PageSection sameSection = findSection(section.getName());
+        if (sameSection != null) {
+            sameSection.mergeSection(section);
+        } else {
+            pageSpec.addSection(section);
+        }
+    }
+
+    private PageSection findSection(String name) {
+        for (PageSection pageSection : pageSpec.getSections()) {
+            if (pageSection.getName().equals(name)) {
+                return pageSection;
+            }
+        }
+        return null;
     }
 
     public SpecReaderV2 getSpecReaderV2() {
         return specReaderV2;
-    }
-
-    public void setSpecReaderV2(SpecReaderV2 specReaderV2) {
-        this.specReaderV2 = specReaderV2;
     }
 
     public void addObjectToSpec(String objectName, Locator locator) {
@@ -117,9 +142,6 @@ public class PageSpecHandler implements VarsParserJsFunctions {
         return varsParser;
     }
 
-    public void setVarsParser(VarsParser varsParser) {
-        this.varsParser = varsParser;
-    }
 
     public StructNode processExpressionsIn(StructNode originNode) {
         String result = getVarsParser().parse(originNode.getName());
@@ -141,7 +163,11 @@ public class PageSpecHandler implements VarsParserJsFunctions {
         return tags;
     }
 
-    public void setTags(List<String> tags) {
-        this.tags = tags;
+    public String getContextPath() {
+        return contextPath;
+    }
+
+    public List<PageSection> getPageSections() {
+        return pageSpec.getSections();
     }
 }

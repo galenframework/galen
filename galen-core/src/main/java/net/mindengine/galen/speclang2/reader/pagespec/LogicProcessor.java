@@ -19,6 +19,7 @@ import net.mindengine.galen.parser.StructNode;
 import net.mindengine.galen.parser.SyntaxException;
 import net.mindengine.galen.specs.reader.StringCharReader;
 
+import java.io.IOException;
 import java.util.*;
 
 import static java.util.Arrays.asList;
@@ -29,6 +30,7 @@ public class LogicProcessor {
     public static final String SET_KEYWORD = "@set";
     public static final String OBJECTS_KEYWORD = "@objects";
     public static final String ON_KEYWORD = "@on";
+    public static final String IMPORT_KEYWORD = "@import";
 
 
     private final PageSpecHandler pageSpecHandler;
@@ -38,14 +40,15 @@ public class LogicProcessor {
             FOR_EACH_LOOP_KEYWORD,
             SET_KEYWORD,
             OBJECTS_KEYWORD,
-            ON_KEYWORD
+            ON_KEYWORD,
+            IMPORT_KEYWORD
     );
 
     public LogicProcessor(PageSpecHandler pageSpecHandler) {
         this.pageSpecHandler = pageSpecHandler;
     }
 
-    public List<StructNode> process(List<StructNode> nodes) {
+    public List<StructNode> process(List<StructNode> nodes) throws IOException {
         List<StructNode> resultingNodes = new LinkedList<StructNode>();
 
         for (StructNode node : nodes) {
@@ -61,7 +64,7 @@ public class LogicProcessor {
         return resultingNodes;
     }
 
-    private StructNode processNonLogicStatement(StructNode processedNode) {
+    private StructNode processNonLogicStatement(StructNode processedNode) throws IOException {
         if (processedNode.getChildNodes() != null) {
             StructNode fullyProcessed = new StructNode(processedNode.getName());
             fullyProcessed.setFileLineNumber(processedNode.getFileLineNumber());
@@ -74,7 +77,7 @@ public class LogicProcessor {
         }
     }
 
-    private List<StructNode> processLogicStatement(final StructNode statementNode) {
+    private List<StructNode> processLogicStatement(final StructNode statementNode) throws IOException {
         StringCharReader reader = new StringCharReader(statementNode.getName());
         String firstWord = reader.readWord();
         if (FOR_LOOP_KEYWORD.equals(firstWord)
@@ -83,7 +86,7 @@ public class LogicProcessor {
 
             return forLoop.apply(new LoopVisitor() {
                 @Override
-                public List<StructNode> visitLoop(Map<String, String> variables) {
+                public List<StructNode> visitLoop(Map<String, String> variables) throws IOException {
                     pageSpecHandler.setGlobalVariables(variables, statementNode);
                     return process(statementNode.getChildNodes());
                 }
@@ -96,6 +99,8 @@ public class LogicProcessor {
             return Collections.emptyList();
         } else if (ON_KEYWORD.equals(firstWord)) {
             return process(new OnFilterProcessor(pageSpecHandler).process(reader, statementNode));
+        } else if (IMPORT_KEYWORD.equals(firstWord)) {
+            return new ImportProcessor(pageSpecHandler).process(reader, statementNode);
         } else {
             throw new SyntaxException(statementNode, "Invalid statement: " + firstWord);
         }

@@ -1,0 +1,11 @@
+
+
+
+@objects
+    header    #header
+
+
+
+= Header section =
+    header:
+        inside screen 0px top left right
