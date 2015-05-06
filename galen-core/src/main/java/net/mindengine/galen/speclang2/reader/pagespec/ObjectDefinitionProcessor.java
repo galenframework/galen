@@ -25,18 +25,17 @@ import net.mindengine.galen.suite.reader.Line;
 import static java.lang.String.format;
 
 public class ObjectDefinitionProcessor {
-    private final PageSpecProcessor pageSpecProcessor;
+    private final PageSpecHandler pageSpecHandler;
     private static final String CORRECTIONS_SYMBOL = "@";
 
-    public ObjectDefinitionProcessor(PageSpecProcessor pageSpecProcessor) {
-        this.pageSpecProcessor = pageSpecProcessor;
+    public ObjectDefinitionProcessor(PageSpecHandler pageSpecHandler) {
+        this.pageSpecHandler = pageSpecHandler;
     }
 
     public void process(StringCharReader reader, StructNode structNode) {
         if (!reader.getTheRest().isEmpty()) {
             throw new SyntaxException(new Line(structNode.getSource(), structNode.getFileLineNumber()), "Objects definition does not take any arguments");
         }
-
 
         if (structNode.getChildNodes() != null) {
             for (StructNode childNode : structNode.getChildNodes()) {
@@ -86,17 +85,17 @@ public class ObjectDefinitionProcessor {
     }
 
     private void addObjectToSpec(StructNode objectNode, String objectName, Locator locator) {
-        pageSpecProcessor.addObjectToSpec(objectName, locator);
+        pageSpecHandler.addObjectToSpec(objectName, locator);
 
         if (objectNode.getChildNodes() != null && objectNode.getChildNodes().size() > 0) {
             for (StructNode subObjectNode : objectNode.getChildNodes()) {
-                parseObject(pageSpecProcessor.processExpressionsIn(subObjectNode), objectName, locator);
+                parseObject(pageSpecHandler.processExpressionsIn(subObjectNode), objectName, locator);
             }
         }
     }
 
     private void addMultiObjectsToSpec(StructNode objectNode, String objectName, Locator locator) {
-        Page page = pageSpecProcessor.getBrowser().getPage();
+        Page page = pageSpecHandler.getBrowser().getPage();
         int count = page.getObjectCount(locator);
 
         for (int index = 1; index <= count; index++) {

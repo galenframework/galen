@@ -18,7 +18,7 @@ package net.mindengine.galen.speclang2.reader.pagespec;
 import net.mindengine.galen.browser.Browser;
 import net.mindengine.galen.parser.IndentationStructureParser;
 import net.mindengine.galen.parser.StructNode;
-import net.mindengine.galen.specs.reader.StringCharReader;
+import net.mindengine.galen.parser.SyntaxException;
 import net.mindengine.galen.specs.reader.page.PageSpec;
 import net.mindengine.galen.utils.GalenUtils;
 
@@ -39,31 +39,23 @@ public class PageSpecReaderV2 {
 
         PageSpec pageSpec = new PageSpec();
 
-        PageSpecProcessor pageSpecProcessor = new PageSpecProcessor(pageSpec, browser);
+        PageSpecHandler pageSpecHandler = new PageSpecHandler(pageSpec, browser);
 
-        List<StructNode> allProcessedChildNodes = new LogicProcessor(pageSpecProcessor).process(structs);
+        List<StructNode> allProcessedChildNodes = new LogicProcessor(pageSpecHandler).process(structs);
 
         for (StructNode structNode : allProcessedChildNodes) {
-            processNode(structNode, pageSpecProcessor, contextPath);
+            processNode(structNode, pageSpecHandler, contextPath);
         }
 
-        return pageSpecProcessor.buildPageSpec();
+        return pageSpecHandler.buildPageSpec();
     }
 
-    private void processNode(StructNode node, PageSpecProcessor pageSpecProcessor, String contextPath) throws IOException {
-        if (isSpecialInstruction(node.getName())) {
-            pageSpecProcessor.processSpecialInstruction(node);
-        } else if (PageSectionProcessor.isSectionDefinition(node.getName())) {
-            new PageSectionProcessor(pageSpecProcessor).process(node, contextPath);
+    private void processNode(StructNode node, PageSpecHandler pageSpecHandler, String contextPath) throws IOException {
+        if (PageSectionProcessor.isSectionDefinition(node.getName())) {
+            new PageSectionProcessor(pageSpecHandler).process(node, contextPath);
         } else {
-            throw node.createSyntaxException("Unknown statement: " + node.getName());
+            throw new SyntaxException(node, "Unknown statement: " + node.getName());
         }
-    }
-
-    private boolean isSpecialInstruction(String name) {
-        String firstWord = new StringCharReader(name).readWord();
-
-        return firstWord.equals("@objects");
     }
 
 }

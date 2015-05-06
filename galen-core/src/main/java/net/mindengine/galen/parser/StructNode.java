@@ -15,7 +15,6 @@
 ******************************************************************************/
 package net.mindengine.galen.parser;
 
-import net.mindengine.galen.suite.reader.Line;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -116,7 +115,4 @@ public class StructNode {
         this.source = source;
     }
 
-    public SyntaxException createSyntaxException(String message) {
-        return new SyntaxException(new Line(source, fileLineNumber), message);
-    }
 }
