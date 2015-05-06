@@ -272,6 +272,31 @@ public class PageSpecReaderV2Test {
         assertThat(objects.get(1).getSpecs().get(0).getOriginalText(), is("inside header 5px top left"));
     }
 
+
+    @Test
+    public void should_importOtherPageSpecs_andMergeSectionsAndObjects() throws IOException {
+        PageSpec pageSpec = readPageSpec("speclang2/import-other-pagespecs.gspec");
+
+        assertThat(pageSpec.getObjects(), is((Map<String, Locator>) new HashMap<String, Locator>() {{
+            put("header", new Locator("css", "#header"));
+            put("main-container", new Locator("css", "#main"));
+        }}));
+
+        assertThat(pageSpec.getSections().size(), is(2));
+        assertThat(pageSpec.getSections().get(0).getName(), is("Header section"));
+        assertThat(pageSpec.getSections().get(0).getObjects().size(), is(1));
+        assertThat(pageSpec.getSections().get(0).getObjects().get(0).getObjectName(), is("header"));
+        assertThat(pageSpec.getSections().get(0).getObjects().get(0).getSpecs().size(), is(2));
+        assertThat(pageSpec.getSections().get(0).getObjects().get(0).getSpecs().get(0).getOriginalText(), is("inside screen 0px top left right"));
+        assertThat(pageSpec.getSections().get(0).getObjects().get(0).getSpecs().get(1).getOriginalText(), is("height 100px"));
+
+        assertThat(pageSpec.getSections().get(1).getName(), is("Main section"));
+        assertThat(pageSpec.getSections().get(1).getObjects().size(), is(1));
+        assertThat(pageSpec.getSections().get(1).getObjects().get(0).getObjectName(), is("main-container"));
+        assertThat(pageSpec.getSections().get(1).getObjects().get(0).getSpecs().size(), is(1));
+        assertThat(pageSpec.getSections().get(1).getObjects().get(0).getSpecs().get(0).getOriginalText(), is("below header 0px"));
+    }
+
     private PageSpec readPageSpec(String resource) throws IOException {
         return readPageSpec(resource, NO_BROWSER, EMPTY_TAGS);
     }

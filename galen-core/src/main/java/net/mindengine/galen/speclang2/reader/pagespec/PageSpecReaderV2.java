@@ -18,7 +18,6 @@ package net.mindengine.galen.speclang2.reader.pagespec;
 import net.mindengine.galen.browser.Browser;
 import net.mindengine.galen.parser.IndentationStructureParser;
 import net.mindengine.galen.parser.StructNode;
-import net.mindengine.galen.parser.SyntaxException;
 import net.mindengine.galen.specs.reader.page.PageSpec;
 import net.mindengine.galen.utils.GalenUtils;
 
@@ -39,23 +38,14 @@ public class PageSpecReaderV2 {
 
         PageSpec pageSpec = new PageSpec();
 
-        PageSpecHandler pageSpecHandler = new PageSpecHandler(pageSpec, browser, tags);
+        PageSpecHandler pageSpecHandler = new PageSpecHandler(pageSpec, browser, tags, contextPath);
 
         List<StructNode> allProcessedChildNodes = new LogicProcessor(pageSpecHandler).process(structs);
+        new PostProcessor(pageSpecHandler).process(allProcessedChildNodes);
 
-        for (StructNode structNode : allProcessedChildNodes) {
-            processNode(structNode, pageSpecHandler, contextPath);
-        }
 
         return pageSpecHandler.buildPageSpec();
     }
 
-    private void processNode(StructNode node, PageSpecHandler pageSpecHandler, String contextPath) throws IOException {
-        if (PageSectionProcessor.isSectionDefinition(node.getName())) {
-            new PageSectionProcessor(pageSpecHandler).process(node, contextPath);
-        } else {
-            throw new SyntaxException(node, "Unknown statement: " + node.getName());
-        }
-    }
 
 }

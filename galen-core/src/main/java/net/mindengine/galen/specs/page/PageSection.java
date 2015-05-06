@@ -27,8 +27,18 @@ public class PageSection {
     private List<String> tags;
     private List<ConditionalBlock> conditionalBlocks;
 
+
+
     public List<ConditionalBlock> getConditionalBlocks() {
         return this.conditionalBlocks;
+    }
+
+
+    public PageSection() {
+    }
+
+    public PageSection(String name) {
+        setName(name);
     }
 
     public void setConditionalBlocks(List<ConditionalBlock> conditionalBlocks) {

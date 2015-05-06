@@ -16,11 +16,29 @@
 package net.mindengine.galen.speclang2.reader.pagespec;
 
 import net.mindengine.galen.parser.StructNode;
+import net.mindengine.galen.parser.SyntaxException;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.Map;
 
-public interface LoopVisitor {
-    List<StructNode> visitLoop(Map<String, String> variables) throws IOException;
+public class PostProcessor {
+    private final PageSpecHandler pageSpecHandler;
+
+    public PostProcessor(PageSpecHandler pageSpecHandler) {
+        this.pageSpecHandler = pageSpecHandler;
+    }
+
+    public void process(List<StructNode> allProcessedChildNodes) throws IOException {
+        for (StructNode structNode : allProcessedChildNodes) {
+            processNode(structNode, pageSpecHandler);
+        }
+    }
+
+    private void processNode(StructNode node, PageSpecHandler pageSpecHandler) throws IOException {
+        if (PageSectionProcessor.isSectionDefinition(node.getName())) {
+            new PageSectionProcessor(pageSpecHandler).process(node);
+        } else {
+            throw new SyntaxException(node, "Unknown statement: " + node.getName());
+        }
+    }
 }

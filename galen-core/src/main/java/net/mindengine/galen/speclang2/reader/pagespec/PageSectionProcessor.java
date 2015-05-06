@@ -21,6 +21,7 @@ import net.mindengine.galen.specs.page.ObjectSpecs;
 import net.mindengine.galen.specs.page.PageSection;
 
 import java.io.IOException;
+import java.util.List;
 
 public class PageSectionProcessor {
     private final PageSpecHandler pageSpecHandler;
@@ -37,45 +38,77 @@ public class PageSectionProcessor {
     }
 
 
-    public void process(StructNode sectionNode, String contextPath) throws IOException {
-        PageSection section = new PageSection();
-        section.setName(sectionNode.getName().substring(1, sectionNode.getName().length() - 1).trim());
-
+    public void process(StructNode sectionNode) throws IOException {
         if (sectionNode.getChildNodes() != null) {
+            String sectionName = sectionNode.getName().substring(1, sectionNode.getName().length() - 1).trim();
+            PageSection section = findSection(sectionName);
+            if (section == null) {
+                section = new PageSection(sectionName);
+                if (parentSection != null) {
+                    parentSection.addSubSection(section);
+                } else {
+                    pageSpecHandler.addSection(section);
+                }
+            }
+
             for (StructNode sectionChildNode : sectionNode.getChildNodes()) {
                 String childLine = sectionChildNode.getName();
                 if (isSectionDefinition(childLine)) {
-                    new PageSectionProcessor(pageSpecHandler, section).process(sectionChildNode, contextPath);
+                    new PageSectionProcessor(pageSpecHandler, section).process(sectionChildNode);
                 } else if (isObject(childLine)) {
-                    processObject(section, sectionChildNode, contextPath);
+                    processObject(section, sectionChildNode);
                 } else {
                     throw new SyntaxException(sectionChildNode, "Unknown statement: " + childLine);
                 }
             }
         }
 
+    }
+
+    private PageSection findSection(String sectionName) {
         if (parentSection != null) {
-            parentSection.addSubSection(section);
+            return findSection(sectionName, parentSection.getSections());
         } else {
-            pageSpecHandler.addSection(section);
+            return findSection(sectionName, pageSpecHandler.getPageSections());
         }
     }
 
-    private void processObject(PageSection section, StructNode objectNode, String contextPath) throws IOException {
+    private PageSection findSection(String sectionName, List<PageSection> sections) {
+        for (PageSection section : sections) {
+            if (section.getName().equals(sectionName)) {
+                return section;
+            }
+        }
+        return null;
+    }
+
+    private void processObject(PageSection section, StructNode objectNode) throws IOException {
         String name = objectNode.getName();
         String objectName = name.substring(0, name.length() - 1).trim();
 
-        ObjectSpecs objectSpecs = new ObjectSpecs(objectName);
-
         if (objectNode.getChildNodes() != null && objectNode.getChildNodes().size() > 0) {
+            ObjectSpecs objectSpecs = findObjectSpecsInSection(section, objectName);
+            if (objectSpecs == null) {
+                objectSpecs = new ObjectSpecs(objectName);
+                section.addObjects(objectSpecs);
+            }
 
             for (StructNode specNode : objectNode.getChildNodes()) {
                 String specText = specNode.getName();
-                objectSpecs.getSpecs().add(pageSpecHandler.getSpecReaderV2().read(specText, contextPath));
+                objectSpecs.getSpecs().add(pageSpecHandler.getSpecReaderV2().read(specText, pageSpecHandler.getContextPath()));
             }
-
-            section.addObjects(objectSpecs);
         }
+    }
+
+    private ObjectSpecs findObjectSpecsInSection(PageSection section, String objectName) {
+        if (section.getObjects() != null) {
+            for (ObjectSpecs objectSpecs : section.getObjects()) {
+                if (objectSpecs.getObjectName().equals(objectName)) {
+                    return objectSpecs;
+                }
+            }
+        }
+        return null;
     }
 
 

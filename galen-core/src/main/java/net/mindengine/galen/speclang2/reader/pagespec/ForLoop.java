@@ -23,6 +23,7 @@ import net.mindengine.galen.utils.GalenUtils;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 
+import java.io.IOException;
 import java.util.*;
 import java.util.regex.Pattern;
 
@@ -187,7 +188,7 @@ public class ForLoop {
         }
     }
 
-    public List<StructNode> apply(LoopVisitor loopVisitor) {
+    public List<StructNode> apply(LoopVisitor loopVisitor) throws IOException {
         List<StructNode> resultingNodes = new LinkedList<StructNode>();
 
         int begin = 0;
