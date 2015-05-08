@@ -13,8 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  ******************************************************************************/
-package net.mindengine.galen.junit;
+package net.mindengine.galen.testng;
 
-public class GalenJUnitRunner {
+import net.mindengine.galen.api.GalenExecutor;
+import net.mindengine.galen.runner.GalenJavaExecutor;
+
+import com.google.inject.AbstractModule;
+
+public class GalenTestNGModule extends AbstractModule {
+
+    @Override
+    protected void configure() {
+        /*
+         * This tells Guice that whenever it sees a dependency on a GalenExecutor, it should satisfy the dependency
+         * using a GalenJunitExecutor.
+         */
+        bind(GalenExecutor.class).to(GalenJavaExecutor.class);
+    }
 
 }
