@@ -229,7 +229,6 @@ public class PageSpecReaderV2Test {
         }
     }
 
-
     @Test
     public void shouldRead_taggedSections_andProcessOnlyThose_thatMatchGivenTags_1() throws IOException {
         PageSpec pageSpec = readPageSpec("speclang2/tagged-sections.gspec", NO_BROWSER, asList("mobile"));
@@ -295,6 +294,19 @@ public class PageSpecReaderV2Test {
         assertThat(pageSpec.getSections().get(1).getObjects().get(0).getObjectName(), is("main-container"));
         assertThat(pageSpec.getSections().get(1).getObjects().get(0).getSpecs().size(), is(1));
         assertThat(pageSpec.getSections().get(1).getObjects().get(0).getSpecs().get(0).getOriginalText(), is("below header 0px"));
+    }
+
+    @Test
+    public void shouldExecute_customJavaScript_fromSeparateFile() throws IOException {
+        PageSpec pageSpec = readPageSpec("speclang2/script-importing.gspec");
+
+        assertThat(pageSpec.getSections().size(), is(1));
+        List<ObjectSpecs> objects = pageSpec.getSections().get(0).getObjects();
+        assertThat(objects.size(), is(2));
+        assertThat(objects.get(0).getObjectName(), is("caption"));
+        assertThat(objects.get(0).getSpecs().get(0).getOriginalText(), is("text is \"Awesome website!\""));
+        assertThat(objects.get(1).getObjectName(), is("caption-2"));
+        assertThat(objects.get(1).getSpecs().get(0).getOriginalText(), is("text is \"Welcome, Johny\""));
     }
 
     private PageSpec readPageSpec(String resource) throws IOException {

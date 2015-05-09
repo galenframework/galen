@@ -1,0 +1,12 @@
+
+
+@script scripts/simple-script.js
+
+= Main section =
+    caption:
+        text is "${captionText}"
+
+    caption-2:
+        text is "${captionFor('Johny')}"
+
+

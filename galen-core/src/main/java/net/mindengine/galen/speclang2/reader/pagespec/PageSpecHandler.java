@@ -170,4 +170,12 @@ public class PageSpecHandler implements VarsParserJsFunctions {
     public List<PageSection> getPageSections() {
         return pageSpec.getSections();
     }
+
+    public void runJavaScriptFromFile(String scriptPath) {
+        jsExecutor.runJavaScriptFromFile(scriptPath);
+    }
+
+    public String getFullPathToResource(String scriptPath) {
+        return contextPath + "/" + scriptPath;
+    }
 }

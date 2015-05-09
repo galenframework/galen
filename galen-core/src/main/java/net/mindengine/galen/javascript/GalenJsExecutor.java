@@ -50,14 +50,14 @@ public class GalenJsExecutor implements VarsParserJsProcessable {
 
     private Context context;
     private ImporterTopLevel scope;
-    private JsFunctionLoad scriptExecutor;
+    private JsFunctionLoad loadFunction;
 
     public GalenJsExecutor() {
         this.context = Context.enter();
         this.scope = new ImporterTopLevel(context);
         
-        this.scriptExecutor = new JsFunctionLoad();
-        scope.defineProperty("load", scriptExecutor, ScriptableObject.DONTENUM);
+        this.loadFunction = new JsFunctionLoad();
+        scope.defineProperty("load", loadFunction, ScriptableObject.DONTENUM);
         importAllMajorClasses();
     }
 
@@ -99,7 +99,7 @@ public class GalenJsExecutor implements VarsParserJsProcessable {
 
     public Object eval(Reader scriptFileReader, String javascriptPath) throws IOException {
         File file = new File(javascriptPath);
-        scriptExecutor.putContextPath(file.getParent());
+        loadFunction.putContextPath(file.getParent());
         return context.evaluateReader(scope, scriptFileReader, javascriptPath, 1, null);
     }
 
@@ -140,5 +140,9 @@ public class GalenJsExecutor implements VarsParserJsProcessable {
 
     public static String getVersion() {
         return ContextFactory.getGlobal().enterContext().getImplementationVersion();
+    }
+
+    public void runJavaScriptFromFile(String scriptPath) {
+        loadFunction.load(scriptPath, context, scope);
     }
 }

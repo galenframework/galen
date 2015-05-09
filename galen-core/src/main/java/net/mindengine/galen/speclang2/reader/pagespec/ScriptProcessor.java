@@ -19,38 +19,26 @@ import net.mindengine.galen.parser.StructNode;
 import net.mindengine.galen.parser.SyntaxException;
 import net.mindengine.galen.specs.reader.StringCharReader;
 
+import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
 
-public class SetVariableProcessor {
+public class ScriptProcessor {
     private final PageSpecHandler pageSpecHandler;
 
-    public SetVariableProcessor(PageSpecHandler pageSpecHandler) {
+    public ScriptProcessor(PageSpecHandler pageSpecHandler) {
         this.pageSpecHandler = pageSpecHandler;
     }
 
-    public List<StructNode> process(StringCharReader reader, StructNode structNode) {
-        if (reader.hasMore()) {
-            structNode.setName(reader.getTheRest());
-            processVariableStatement(structNode);
+    public List<StructNode> process(StringCharReader reader, StructNode statementNode) throws IOException {
+        String scriptPath = reader.getTheRest().trim();
+        if (scriptPath.isEmpty()) {
+            throw new SyntaxException(statementNode, "Missing script path");
         }
-        if (structNode.getChildNodes() != null) {
-            for (StructNode childNode : structNode.getChildNodes()) {
-                processVariableStatement(pageSpecHandler.processExpressionsIn(childNode));
-            }
-        }
+
+        String fullPath = pageSpecHandler.getFullPathToResource(scriptPath);
+        pageSpecHandler.runJavaScriptFromFile(fullPath);
+
         return Collections.emptyList();
-    }
-
-    private void processVariableStatement(StructNode structNode) {
-        StringCharReader reader = new StringCharReader(structNode.getName());
-        String name = reader.readWord();
-
-        if (name.isEmpty()) {
-            throw new SyntaxException(structNode, "Missing variable name");
-        }
-
-        String value = reader.getTheRest().trim();
-        this.pageSpecHandler.setGlobalVariable(name, value, structNode);
     }
 }
