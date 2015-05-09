@@ -31,6 +31,7 @@ public class LogicProcessor {
     public static final String OBJECTS_KEYWORD = "@objects";
     public static final String ON_KEYWORD = "@on";
     public static final String IMPORT_KEYWORD = "@import";
+    public static final String SCRIPT_KEYWORD = "@script";
 
 
     private final PageSpecHandler pageSpecHandler;
@@ -41,7 +42,8 @@ public class LogicProcessor {
             SET_KEYWORD,
             OBJECTS_KEYWORD,
             ON_KEYWORD,
-            IMPORT_KEYWORD
+            IMPORT_KEYWORD,
+            SCRIPT_KEYWORD
     );
 
     public LogicProcessor(PageSpecHandler pageSpecHandler) {
@@ -92,15 +94,15 @@ public class LogicProcessor {
                 }
             });
         } else if (SET_KEYWORD.equals(firstWord)) {
-            new SetVariableProcessor(pageSpecHandler).process(reader, statementNode);
-            return Collections.emptyList();
+            return new SetVariableProcessor(pageSpecHandler).process(reader, statementNode);
         } else if (OBJECTS_KEYWORD.equals(firstWord)) {
-            new ObjectDefinitionProcessor(pageSpecHandler).process(reader, statementNode);
-            return Collections.emptyList();
+            return new ObjectDefinitionProcessor(pageSpecHandler).process(reader, statementNode);
         } else if (ON_KEYWORD.equals(firstWord)) {
             return process(new OnFilterProcessor(pageSpecHandler).process(reader, statementNode));
         } else if (IMPORT_KEYWORD.equals(firstWord)) {
             return new ImportProcessor(pageSpecHandler).process(reader, statementNode);
+        } else if (SCRIPT_KEYWORD.equals(firstWord)) {
+            return new ScriptProcessor(pageSpecHandler).process(reader, statementNode);
         } else {
             throw new SyntaxException(statementNode, "Invalid statement: " + firstWord);
         }

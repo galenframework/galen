@@ -22,6 +22,9 @@ import net.mindengine.galen.specs.page.Locator;
 import net.mindengine.galen.specs.reader.StringCharReader;
 import net.mindengine.galen.suite.reader.Line;
 
+import java.util.Collections;
+import java.util.List;
+
 import static java.lang.String.format;
 
 public class ObjectDefinitionProcessor {
@@ -32,7 +35,7 @@ public class ObjectDefinitionProcessor {
         this.pageSpecHandler = pageSpecHandler;
     }
 
-    public void process(StringCharReader reader, StructNode structNode) {
+    public List<StructNode> process(StringCharReader reader, StructNode structNode) {
         if (!reader.getTheRest().isEmpty()) {
             throw new SyntaxException(new Line(structNode.getSource(), structNode.getFileLineNumber()), "Objects definition does not take any arguments");
         }
@@ -42,6 +45,7 @@ public class ObjectDefinitionProcessor {
                 parseObject(childNode);
             }
         }
+        return Collections.emptyList();
     }
 
 
