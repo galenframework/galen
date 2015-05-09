@@ -17,7 +17,11 @@ package net.mindengine.galen.tests.speclang2.pagespec;
 
 import net.mindengine.galen.browser.Browser;
 import net.mindengine.galen.browser.SeleniumBrowser;
+import net.mindengine.galen.components.MockedBrowser;
 import net.mindengine.galen.components.mocks.driver.MockedDriver;
+import net.mindengine.galen.components.validation.MockedPage;
+import net.mindengine.galen.components.validation.MockedPageElement;
+import net.mindengine.galen.page.PageElement;
 import net.mindengine.galen.speclang2.reader.pagespec.PageSpecReaderV2;
 import net.mindengine.galen.specs.page.CorrectionsRect;
 import net.mindengine.galen.specs.page.Locator;
@@ -26,6 +30,7 @@ import net.mindengine.galen.specs.page.PageSection;
 import net.mindengine.galen.specs.reader.page.PageSpec;
 import org.testng.annotations.Test;
 
+import java.awt.*;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.HashMap;
@@ -337,6 +342,40 @@ public class PageSpecReaderV2Test {
         assertThat(pageSpec.getSections().get(0).getObjects().get(0).getSpecs().get(0).getOriginalText(), is("width 100 % of menu-item-1/height"));
     }
 
+
+    @Test
+    public void shouldRead_customRulesFromJavaScript_andProcessThem() throws IOException {
+        PageSpec pageSpec = readPageSpec("speclang2/custom-js-rules.gspec",
+                new MockedBrowser("", new Dimension(1, 1), new MockedPage(new HashMap<String, PageElement>() {{
+                    put("menu-item-1", element(0, 0, 10, 10));
+                    put("menu-item-2", element(20, 0, 10, 10));
+                    put("menu-item-3", element(40, 0, 10, 10));
+                }})),
+                Collections.<String>emptyList());
+
+        assertThat(pageSpec.getSections().size(), is(1));
+        assertThat(pageSpec.getSections().get(0).getName(), is("Main section"));
+        assertThat(pageSpec.getSections().get(0).getSections().size(), is(1));
+
+        PageSection subSection = pageSpec.getSections().get(0).getSections().get(0);
+        assertThat(subSection.getName(), is("menu-item-* should be aligned horizontally"));
+        assertThat(subSection.getObjects().size(), is(2));
+
+        assertThat(subSection.getObjects().get(0).getObjectName(), is("menu-item-2"));
+        assertThat(subSection.getObjects().get(0).getSpecs().size(), is(1));
+        assertThat(subSection.getObjects().get(0).getSpecs().get(0).getOriginalText(), is("aligned horizontally all menu-item-1"));
+
+        assertThat(subSection.getObjects().get(1).getObjectName(), is("menu-item-3"));
+        assertThat(subSection.getObjects().get(1).getSpecs().size(), is(1));
+        assertThat(subSection.getObjects().get(1).getSpecs().get(0).getOriginalText(), is("aligned horizontally all menu-item-2"));
+
+
+        assertThat(pageSpec.getSections().get(0).getObjects().size(), is(1));
+        assertThat(pageSpec.getSections().get(0).getObjects().get(0).getObjectName(), is("menu-item-1"));
+        assertThat(pageSpec.getSections().get(0).getObjects().get(0).getSpecs().size(), is(1));
+        assertThat(pageSpec.getSections().get(0).getObjects().get(0).getSpecs().get(0).getOriginalText(), is("width 100 % of menu-item-1/height"));
+    }
+
     private PageSpec readPageSpec(String resource) throws IOException {
         return readPageSpec(resource, NO_BROWSER, EMPTY_TAGS);
     }
@@ -345,4 +384,7 @@ public class PageSpecReaderV2Test {
         return new PageSpecReaderV2().read(resource, browser, tags);
     }
 
+    private MockedPageElement element(int left, int top, int width, int height) {
+        return new MockedPageElement(left, top, width, height);
+    }
 }

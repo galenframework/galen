@@ -30,7 +30,6 @@ import java.security.NoSuchAlgorithmException;
 import java.util.*;
 import java.util.regex.Pattern;
 
-import org.openqa.selenium.WebDriverException;
 
 public class PageSpecReader implements VarsParserJsFunctions {
 

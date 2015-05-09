@@ -19,7 +19,8 @@ import net.mindengine.galen.parser.StructNode;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 
 public interface PageRule {
-    List<StructNode> apply(PageSpecHandler pageSpecHandler, String text) throws IOException;
+    List<StructNode> apply(PageSpecHandler pageSpecHandler, String text, String objectName, Map<String, String> parameters) throws IOException;
 }

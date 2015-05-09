@@ -145,4 +145,12 @@ public class GalenJsExecutor implements VarsParserJsProcessable {
     public void runJavaScriptFromFile(String scriptPath) {
         loadFunction.load(scriptPath, context, scope);
     }
+
+    public void evalScriptFromLibrary(String libraryName) {
+        eval(loadJsFromLibrary(libraryName));
+    }
+
+    public ImporterTopLevel getScope() {
+        return scope;
+    }
 }

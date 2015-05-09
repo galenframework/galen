@@ -41,9 +41,7 @@ public class RuleProcessor {
             throw new SyntaxException(statementNode, "A rule is empty");
         }
 
-        Rule rule = new RuleParser().parse(ruleText);
-
-        pageSpecHandler.addRule(rule, new InPageRule(statementNode.getChildNodes()));
+        pageSpecHandler.addRule(ruleText, new InPageRule(statementNode.getChildNodes()));
 
         return Collections.emptyList();
     }
