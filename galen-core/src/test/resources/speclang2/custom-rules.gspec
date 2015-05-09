@@ -13,5 +13,12 @@
 
 
 
+@rule squared
+    width 100 % of ${objectName}/height
+
 = Main section =
     | menu-item-* should be aligned horizontally
+
+
+    menu-item-1 :
+        | squared

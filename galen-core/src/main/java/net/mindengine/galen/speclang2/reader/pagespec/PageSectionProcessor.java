@@ -75,6 +75,16 @@ public class PageSectionProcessor {
     private void processSectionRule(PageSection section, StructNode ruleNode) throws IOException {
         String ruleText = ruleNode.getName().substring(1).trim();
 
+        PageRule pageRule = findAndProcessRule(ruleText, ruleNode);
+
+        PageSection ruleSection = new PageSection(ruleText);
+        section.addSubSection(ruleSection);
+
+        List<StructNode> resultingNodes = pageRule.apply(pageSpecHandler, ruleText);
+        processSection(ruleSection, resultingNodes);
+    }
+
+    private PageRule findAndProcessRule(String ruleText, StructNode ruleNode) {
         for (Pair<Rule, PageRule> rulePair : pageSpecHandler.getPageRules()) {
             Matcher matcher = rulePair.getKey().getPattern().matcher(ruleText);
             if (matcher.matches()) {
@@ -84,17 +94,25 @@ public class PageSectionProcessor {
                     index += 1;
                 }
 
-                rulePair.getValue().apply(pageSpecHandler, ruleText);
-
-                PageSection ruleSection = new PageSection(ruleText);
-                section.addSubSection(ruleSection);
-
-                List<StructNode> resultingNodes = rulePair.getValue().apply(pageSpecHandler, ruleText);
-                processSection(ruleSection, resultingNodes);
-                return;
+                return rulePair.getValue();
             }
         }
+        throw new SyntaxException(ruleNode, "Could find rule matching: " + ruleText);
     }
+
+    private void processObjectLevelRule(ObjectSpecs objectSpecs, StructNode sourceNode) throws IOException {
+        String ruleText = sourceNode.getName().substring(1).trim();
+        PageRule pageRule = findAndProcessRule(ruleText, sourceNode);
+
+        pageSpecHandler.setGlobalVariable("objectName", objectSpecs.getObjectName(), sourceNode);
+
+        List<StructNode> specNodes = pageRule.apply(pageSpecHandler, ruleText);
+        for (StructNode specNode : specNodes) {
+            processSpec(objectSpecs, specNode);
+        }
+    }
+
+
 
     private boolean isRule(String nodeText) {
         return nodeText.startsWith("|");
@@ -129,10 +147,17 @@ public class PageSectionProcessor {
             }
 
             for (StructNode specNode : objectNode.getChildNodes()) {
-                String specText = specNode.getName();
-                objectSpecs.getSpecs().add(pageSpecHandler.getSpecReaderV2().read(specText, pageSpecHandler.getContextPath()));
+                if (isRule(specNode.getName())) {
+                    processObjectLevelRule(objectSpecs, specNode);
+                } else {
+                    processSpec(objectSpecs, specNode);
+                }
             }
         }
+    }
+
+    private void processSpec(ObjectSpecs objectSpecs, StructNode specNode) {
+        objectSpecs.getSpecs().add(pageSpecHandler.getSpecReaderV2().read(specNode.getName(), pageSpecHandler.getContextPath()));
     }
 
     private ObjectSpecs findObjectSpecsInSection(PageSection section, String objectName) {
