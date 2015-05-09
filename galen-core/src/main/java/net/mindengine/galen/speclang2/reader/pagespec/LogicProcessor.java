@@ -32,6 +32,7 @@ public class LogicProcessor {
     public static final String ON_KEYWORD = "@on";
     public static final String IMPORT_KEYWORD = "@import";
     public static final String SCRIPT_KEYWORD = "@script";
+    public static final String RULE_KEYWORD = "@rule";
 
 
     private final PageSpecHandler pageSpecHandler;
@@ -43,7 +44,8 @@ public class LogicProcessor {
             OBJECTS_KEYWORD,
             ON_KEYWORD,
             IMPORT_KEYWORD,
-            SCRIPT_KEYWORD
+            SCRIPT_KEYWORD,
+            RULE_KEYWORD
     );
 
     public LogicProcessor(PageSpecHandler pageSpecHandler) {
@@ -103,6 +105,8 @@ public class LogicProcessor {
             return new ImportProcessor(pageSpecHandler).process(reader, statementNode);
         } else if (SCRIPT_KEYWORD.equals(firstWord)) {
             return new ScriptProcessor(pageSpecHandler).process(reader, statementNode);
+        } else if (RULE_KEYWORD.equals(firstWord)) {
+            return new RuleProcessor(pageSpecHandler).process(reader, statementNode);
         } else {
             throw new SyntaxException(statementNode, "Invalid statement: " + firstWord);
         }

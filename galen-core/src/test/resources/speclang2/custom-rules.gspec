@@ -1,0 +1,17 @@
+
+
+
+@objects
+    menu-item-1    #id1
+    menu-item-2    #id2
+    menu-item-3    #id3
+
+@rule %{objectPattern} should be aligned horizontally
+    @forEach [${objectPattern}] as objectName, prev as prevObject
+        ${objectName} :
+            aligned horizontally all ${prevObject}
+
+
+
+= Main section =
+    | menu-item-* should be aligned horizontally
