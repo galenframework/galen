@@ -309,6 +309,28 @@ public class PageSpecReaderV2Test {
         assertThat(objects.get(1).getSpecs().get(0).getOriginalText(), is("text is \"Welcome, Johny\""));
     }
 
+
+    @Test
+    public void shouldRead_customSpecRules_andProcessThem() throws IOException {
+        PageSpec pageSpec = readPageSpec("speclang2/custom-rules.gspec");
+
+        assertThat(pageSpec.getSections().size(), is(1));
+        assertThat(pageSpec.getSections().get(0).getName(), is("Main section"));
+        assertThat(pageSpec.getSections().get(0).getSections().size(), is(1));
+
+        PageSection subSection = pageSpec.getSections().get(0).getSections().get(0);
+        assertThat(subSection.getName(), is("menu-item-* should be aligned horizontally"));
+        assertThat(subSection.getObjects().size(), is(2));
+
+        assertThat(subSection.getObjects().get(0).getObjectName(), is("menu-item-2"));
+        assertThat(subSection.getObjects().get(0).getSpecs().size(), is(1));
+        assertThat(subSection.getObjects().get(0).getSpecs().get(0).getOriginalText(), is("aligned horizontally all menu-item-1"));
+
+        assertThat(subSection.getObjects().get(1).getObjectName(), is("menu-item-3"));
+        assertThat(subSection.getObjects().get(1).getSpecs().size(), is(1));
+        assertThat(subSection.getObjects().get(1).getSpecs().get(0).getOriginalText(), is("aligned horizontally all menu-item-2"));
+    }
+
     private PageSpec readPageSpec(String resource) throws IOException {
         return readPageSpec(resource, NO_BROWSER, EMPTY_TAGS);
     }

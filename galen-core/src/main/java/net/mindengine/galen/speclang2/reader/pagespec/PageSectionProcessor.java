@@ -19,9 +19,12 @@ import net.mindengine.galen.parser.StructNode;
 import net.mindengine.galen.parser.SyntaxException;
 import net.mindengine.galen.specs.page.ObjectSpecs;
 import net.mindengine.galen.specs.page.PageSection;
+import net.mindengine.galen.specs.reader.page.rules.Rule;
+import org.apache.commons.lang3.tuple.Pair;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.regex.Matcher;
 
 public class PageSectionProcessor {
     private final PageSpecHandler pageSpecHandler;
@@ -50,19 +53,51 @@ public class PageSectionProcessor {
                     pageSpecHandler.addSection(section);
                 }
             }
+            processSection(section, sectionNode.getChildNodes());
+        }
+    }
 
-            for (StructNode sectionChildNode : sectionNode.getChildNodes()) {
-                String childLine = sectionChildNode.getName();
-                if (isSectionDefinition(childLine)) {
-                    new PageSectionProcessor(pageSpecHandler, section).process(sectionChildNode);
-                } else if (isObject(childLine)) {
-                    processObject(section, sectionChildNode);
-                } else {
-                    throw new SyntaxException(sectionChildNode, "Unknown statement: " + childLine);
-                }
+    private void processSection(PageSection section, List<StructNode> childNodes) throws IOException {
+        for (StructNode sectionChildNode : childNodes) {
+            String childLine = sectionChildNode.getName();
+            if (isSectionDefinition(childLine)) {
+                new PageSectionProcessor(pageSpecHandler, section).process(sectionChildNode);
+            } else if (isObject(childLine)) {
+                processObject(section, sectionChildNode);
+            } else if (isRule(childLine)) {
+                processSectionRule(section, sectionChildNode);
+            } else {
+                throw new SyntaxException(sectionChildNode, "Unknown statement: " + childLine);
             }
         }
+    }
 
+    private void processSectionRule(PageSection section, StructNode ruleNode) throws IOException {
+        String ruleText = ruleNode.getName().substring(1).trim();
+
+        for (Pair<Rule, PageRule> rulePair : pageSpecHandler.getPageRules()) {
+            Matcher matcher = rulePair.getKey().getPattern().matcher(ruleText);
+            if (matcher.matches()) {
+                int index = 1;
+                for (String parameterName : rulePair.getKey().getParameters()) {
+                    pageSpecHandler.setGlobalVariable(parameterName, matcher.group(index), ruleNode);
+                    index += 1;
+                }
+
+                rulePair.getValue().apply(pageSpecHandler, ruleText);
+
+                PageSection ruleSection = new PageSection(ruleText);
+                section.addSubSection(ruleSection);
+
+                List<StructNode> resultingNodes = rulePair.getValue().apply(pageSpecHandler, ruleText);
+                processSection(ruleSection, resultingNodes);
+                return;
+            }
+        }
+    }
+
+    private boolean isRule(String nodeText) {
+        return nodeText.startsWith("|");
     }
 
     private PageSection findSection(String sectionName) {

@@ -22,7 +22,10 @@ import net.mindengine.galen.speclang2.reader.specs.SpecReaderV2;
 import net.mindengine.galen.specs.page.Locator;
 import net.mindengine.galen.specs.page.PageSection;
 import net.mindengine.galen.specs.reader.page.PageSpec;
+import net.mindengine.galen.specs.reader.page.rules.Rule;
 import net.mindengine.galen.suite.reader.Context;
+import org.apache.commons.lang3.tuple.ImmutablePair;
+import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.*;
 
@@ -35,6 +38,7 @@ public class PageSpecHandler implements VarsParserJsFunctions {
     private final GalenJsExecutor jsExecutor;
     private final VarsParser varsParser;
     private final List<String> tags;
+    private final List<Pair<Rule, PageRule>> pageRules;
 
     public PageSpecHandler(PageSpec pageSpec, Browser browser, List<String> tags, String contextPath) {
         this.pageSpec = pageSpec;
@@ -44,6 +48,7 @@ public class PageSpecHandler implements VarsParserJsFunctions {
         this.specReaderV2 = new SpecReaderV2();
         this.jsExecutor  = new GalenJsExecutor();
         this.varsParser = new VarsParser(new Context(), new Properties(), jsExecutor);
+        this.pageRules = new LinkedList<Pair<Rule, PageRule>>();
     }
 
     public PageSpecHandler(PageSpecHandler copy, String contextPath) {
@@ -54,6 +59,7 @@ public class PageSpecHandler implements VarsParserJsFunctions {
         this.jsExecutor = copy.jsExecutor;
         this.varsParser = copy.varsParser;
         this.tags = copy.tags;
+        this.pageRules = copy.pageRules;
     }
 
     public PageSpec buildPageSpec() {
@@ -177,5 +183,13 @@ public class PageSpecHandler implements VarsParserJsFunctions {
 
     public String getFullPathToResource(String scriptPath) {
         return contextPath + "/" + scriptPath;
+    }
+
+    public void addRule(Rule rule, PageRule pageRule) {
+        pageRules.add(new ImmutablePair<Rule, PageRule>(rule, pageRule));
+    }
+
+    public List<Pair<Rule, PageRule>> getPageRules() {
+        return pageRules;
     }
 }
