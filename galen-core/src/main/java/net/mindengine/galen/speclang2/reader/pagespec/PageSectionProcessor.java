@@ -20,13 +20,17 @@ import net.mindengine.galen.parser.SyntaxException;
 import net.mindengine.galen.specs.page.ObjectSpecs;
 import net.mindengine.galen.specs.page.PageSection;
 import net.mindengine.galen.specs.reader.page.rules.Rule;
+import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.regex.Matcher;
 
 public class PageSectionProcessor {
+    public static final String NO_OBJECT_NAME = null;
     private final PageSpecHandler pageSpecHandler;
     private final PageSection parentSection;
 
@@ -75,26 +79,37 @@ public class PageSectionProcessor {
     private void processSectionRule(PageSection section, StructNode ruleNode) throws IOException {
         String ruleText = ruleNode.getName().substring(1).trim();
 
-        PageRule pageRule = findAndProcessRule(ruleText, ruleNode);
+        Pair<PageRule, Map<String, String>> rule = findAndProcessRule(ruleText, ruleNode);
 
         PageSection ruleSection = new PageSection(ruleText);
         section.addSubSection(ruleSection);
 
-        List<StructNode> resultingNodes = pageRule.apply(pageSpecHandler, ruleText);
+        List<StructNode> resultingNodes;
+        try {
+            resultingNodes = rule.getKey().apply(pageSpecHandler, ruleText, NO_OBJECT_NAME, rule.getValue());
+        } catch (Exception ex) {
+            throw new SyntaxException(ruleNode, "Error processing custom rule", ex);
+        }
         processSection(ruleSection, resultingNodes);
     }
 
-    private PageRule findAndProcessRule(String ruleText, StructNode ruleNode) {
+    private Pair<PageRule, Map<String, String>> findAndProcessRule(String ruleText, StructNode ruleNode) {
         for (Pair<Rule, PageRule> rulePair : pageSpecHandler.getPageRules()) {
             Matcher matcher = rulePair.getKey().getPattern().matcher(ruleText);
             if (matcher.matches()) {
                 int index = 1;
+
+                Map<String, String> parameters = new HashMap<String, String>();
+
                 for (String parameterName : rulePair.getKey().getParameters()) {
-                    pageSpecHandler.setGlobalVariable(parameterName, matcher.group(index), ruleNode);
+                    String value = matcher.group(index);
+                    pageSpecHandler.setGlobalVariable(parameterName, value, ruleNode);
+
+                    parameters.put(parameterName, value);
                     index += 1;
                 }
 
-                return rulePair.getValue();
+                return new ImmutablePair<PageRule, Map<String, String>>(rulePair.getValue(), parameters);
             }
         }
         throw new SyntaxException(ruleNode, "Could find rule matching: " + ruleText);
@@ -102,11 +117,11 @@ public class PageSectionProcessor {
 
     private void processObjectLevelRule(ObjectSpecs objectSpecs, StructNode sourceNode) throws IOException {
         String ruleText = sourceNode.getName().substring(1).trim();
-        PageRule pageRule = findAndProcessRule(ruleText, sourceNode);
+        Pair<PageRule, Map<String, String>> rule = findAndProcessRule(ruleText, sourceNode);
 
         pageSpecHandler.setGlobalVariable("objectName", objectSpecs.getObjectName(), sourceNode);
 
-        List<StructNode> specNodes = pageRule.apply(pageSpecHandler, ruleText);
+        List<StructNode> specNodes = rule.getKey().apply(pageSpecHandler, ruleText, objectSpecs.getObjectName(), rule.getValue());
         for (StructNode specNode : specNodes) {
             processSpec(objectSpecs, specNode);
         }

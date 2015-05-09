@@ -55,6 +55,10 @@ public class SyntaxException extends RuntimeException {
         this(new Line(originNode.getSource(), originNode.getFileLineNumber()), message);
     }
 
+    public SyntaxException(StructNode originNode, String message, Throwable cause) {
+        this(new Line(originNode.getSource(), originNode.getFileLineNumber()), message, cause);
+    }
+
     public Line getLine() {
         return line;
     }

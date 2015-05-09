@@ -16,7 +16,6 @@
 package net.mindengine.galen.parser;
 
 import net.mindengine.galen.javascript.JsFunctionLoad;
-import net.mindengine.galen.specs.reader.page.PageSpec;
 import net.mindengine.galen.specs.reader.page.PageSpecReader;
 import net.mindengine.galen.suite.reader.Context;
 

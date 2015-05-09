@@ -16,9 +16,11 @@
 package net.mindengine.galen.speclang2.reader.pagespec;
 
 import net.mindengine.galen.parser.StructNode;
+import net.mindengine.galen.specs.reader.StringCharReader;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 
 public class InPageRule implements PageRule {
     private final List<StructNode> nodes;
@@ -28,7 +30,7 @@ public class InPageRule implements PageRule {
     }
 
     @Override
-    public List<StructNode> apply(PageSpecHandler pageSpecHandler, String text) throws IOException {
+    public List<StructNode> apply(PageSpecHandler pageSpecHandler, String text, String objectName, Map<String, String> parameters) throws IOException {
         return new LogicProcessor(pageSpecHandler).process(nodes);
     }
 }
