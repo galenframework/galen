@@ -329,6 +329,12 @@ public class PageSpecReaderV2Test {
         assertThat(subSection.getObjects().get(1).getObjectName(), is("menu-item-3"));
         assertThat(subSection.getObjects().get(1).getSpecs().size(), is(1));
         assertThat(subSection.getObjects().get(1).getSpecs().get(0).getOriginalText(), is("aligned horizontally all menu-item-2"));
+
+
+        assertThat(pageSpec.getSections().get(0).getObjects().size(), is(1));
+        assertThat(pageSpec.getSections().get(0).getObjects().get(0).getObjectName(), is("menu-item-1"));
+        assertThat(pageSpec.getSections().get(0).getObjects().get(0).getSpecs().size(), is(1));
+        assertThat(pageSpec.getSections().get(0).getObjects().get(0).getSpecs().get(0).getOriginalText(), is("width 100 % of menu-item-1/height"));
     }
 
     private PageSpec readPageSpec(String resource) throws IOException {
