@@ -45,47 +45,51 @@ public class GalenJavaExecutor implements GalenExecutor {
     private final ThreadLocal<WebDriver> activeWebDriver = new ThreadLocal<WebDriver>();
 
     private void loadPage(final String uri) throws Exception {
-        getDriver().get(uri);
+        getDriverInstance().get(uri);
         // TODO, maybe more error handling regarding webdriver?
     }
 
+    public WebDriver getDriverInstance() throws MalformedURLException {
+        if (activeWebDriver.get() == null) {
+            activeWebDriver.set(createDriver());
+        }
+        return activeWebDriver.get();
+    }
+
     /**
-     * @see net.mindengine.galen.api.GalenExecutor#getDriver()
+     * @see net.mindengine.galen.api.GalenExecutor#createDriver()
      */
     @Override
-    public WebDriver getDriver() throws MalformedURLException {
+    public WebDriver createDriver() throws MalformedURLException {
         final boolean useGrid = GalenConfig.getConfig().readProperty(GalenProperty.GALEN_BROWSERFACTORY_SELENIUM_RUNINGRID).equalsIgnoreCase("true");
         final String browserType = GalenConfig.getConfig().getDefaultBrowser();
         final String grid = GalenConfig.getConfig().readProperty(GalenProperty.GALEN_BROWSERFACTORY_SELENIUM_GRID_URL);
-        if (activeWebDriver.get() == null) {
-            WebDriver driver;
-            if (useGrid) {
-                LOG.debug("running locally");
-                driver = SeleniumBrowserFactory.getDriver(browserType);
+        WebDriver driver;
+        if (useGrid) {
+            LOG.debug("running locally");
+            driver = SeleniumBrowserFactory.getDriver(browserType);
 
-                final String gridUrl = grid + "/wd/hub";
-                LOG.info("running against a grid ", gridUrl);
-                try {
-                    driver = new RemoteWebDriver(new URL(gridUrl), SeleniumBrowserFactory.getBrowserCapabilities(browserType));
-                    // renew session on error
-                } catch (final WebDriverException e) {
-                    driver = new RemoteWebDriver(new URL(gridUrl), SeleniumBrowserFactory.getBrowserCapabilities(browserType));
-                }
-            } else {
-                LOG.debug("running locally");
-                driver = SeleniumBrowserFactory.getDriver(browserType);
-            }
+            final String gridUrl = grid + "/wd/hub";
+            LOG.info("running against a grid ", gridUrl);
             try {
-                // TODO maybe added to config?
-                driver.manage().timeouts().pageLoadTimeout(20, TimeUnit.SECONDS);
-                // TODO maybe added to config?
-                driver.manage().timeouts().implicitlyWait(1, TimeUnit.SECONDS);
-            } catch (final WebDriverException exception) {
-                LOG.info("Setting timeout not working in some drive", exception);
+                driver = new RemoteWebDriver(new URL(gridUrl), SeleniumBrowserFactory.getBrowserCapabilities(browserType));
+                // renew session on error
+            } catch (final WebDriverException e) {
+                driver = new RemoteWebDriver(new URL(gridUrl), SeleniumBrowserFactory.getBrowserCapabilities(browserType));
             }
-            activeWebDriver.set(driver);
+        } else {
+            LOG.debug("running locally");
+            driver = SeleniumBrowserFactory.getDriver(browserType);
         }
-        return activeWebDriver.get();
+        try {
+            // TODO maybe added to config?
+            driver.manage().timeouts().pageLoadTimeout(20, TimeUnit.SECONDS);
+            // TODO maybe added to config?
+            driver.manage().timeouts().implicitlyWait(1, TimeUnit.SECONDS);
+        } catch (final WebDriverException exception) {
+            LOG.info("Setting timeout not working in some drive", exception);
+        }
+        return driver;
     }
 
     @Override
@@ -183,11 +187,11 @@ public class GalenJavaExecutor implements GalenExecutor {
         LOG.info("Starting layout check of specs " + spec + " at " + startTime);
         loadPage(url);
         final TestReport report = GalenReportsContainer.get().registerTest(methodName, groups);
-        final LayoutReport layoutReport = Galen.checkLayout(getDriver(), spec, includedTags, null, null, null);
+        final LayoutReport layoutReport = Galen.checkLayout(getDriverInstance(), spec, includedTags, null, null, null);
         final Date endDate = new Date();
         LOG.info("Finshed layout check at " + endDate);
         report.layout(layoutReport, spec + " | " + testDevice.getName());
-        ReportUtil.analyzeReport(getDriver(), layoutReport, spec, testDevice);
+        ReportUtil.analyzeReport(getDriverInstance(), layoutReport, spec, testDevice);
     }
 
     /**

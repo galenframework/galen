@@ -13,35 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  ******************************************************************************/
-package net.mindengine.galen.junit;
+package net.mindengine.galen.testng.custom;
 
 import static java.util.Arrays.asList;
-import net.mindengine.galen.api.GalenExecutor;
 import net.mindengine.galen.utils.TestDevice;
 
-import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.openqa.selenium.Dimension;
+import org.testng.annotations.Test;
 
-import com.google.inject.Inject;
-
-@RunWith(GalenRunner.class)
-public class BootstrapIT {
-
-    @Inject
-    private GalenExecutor runner;
+public class CustomizeIT extends CustomGalenBaseIT {
 
     @Test
-    public void simple() throws Exception {
-        runner.checkLayout(new TestDevice("small-phone", new Dimension(280, 800), asList("small-phone", "phone", "mobile")), "http://getbootstrap.com/css/",
-                "/specs/bootstrap/commonLayout.spec", null);
-    }
-
-    @Test
-    public void useDriver() throws Exception {
-        runner.checkLayout(new TestDevice("small-phone", new Dimension(280, 800), asList("small-phone", "phone", "mobile")), "http://getbootstrap.com/css/",
-                "/specs/bootstrap/commonLayout.spec", null);
-        runner.getDriverInstance().get("https://google.de");
+    public void testCssPage() throws Exception {
+        checklayout("http://getbootstrap.com/css/", "/specs/bootstrap/commonLayout.spec",
+                new TestDevice("small-phone", new Dimension(280, 800), asList("small-phone", "phone", "mobile")));
     }
 
 }

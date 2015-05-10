@@ -38,9 +38,10 @@ public class BootstrapIT {
     }
 
     @Test
-    public void anotherTest() throws Exception {
+    public void useDriver() throws Exception {
         runner.checkLayout(new TestDevice("small-phone", new Dimension(280, 800), asList("small-phone", "phone", "mobile")), "http://getbootstrap.com/css/",
                 "/specs/bootstrap/commonLayout.spec", null);
+        runner.getDriverInstance().get("https://google.de");
     }
 
 }

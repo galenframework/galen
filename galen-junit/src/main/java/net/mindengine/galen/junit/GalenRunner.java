@@ -25,9 +25,10 @@ import org.junit.runner.notification.RunNotifier;
 import org.junit.runners.BlockJUnit4ClassRunner;
 import org.junit.runners.model.FrameworkMethod;
 import org.junit.runners.model.InitializationError;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.google.inject.Guice;
-import com.google.inject.Inject;
 import com.google.inject.Injector;
 import com.google.inject.Module;
 
@@ -38,6 +39,8 @@ import com.google.inject.Module;
  *
  */
 public class GalenRunner extends BlockJUnit4ClassRunner {
+
+    private static final Logger LOG = LoggerFactory.getLogger(GalenRunner.class);
 
     private GalenExecutor executor;
 
@@ -52,15 +55,28 @@ public class GalenRunner extends BlockJUnit4ClassRunner {
     public Object createTest() throws Exception {
         Object obj = super.createTest();
         injector.injectMembers(obj);
-        Field[] fields = obj.getClass().getDeclaredFields();
+        scanFieldsForExecutor(obj, obj.getClass().getDeclaredFields());
+        if (this.executor == null) {
+            // search super class too
+            scanFieldsForExecutor(obj, obj.getClass().getSuperclass().getDeclaredFields());
+        }
+        return obj;
+    }
+
+    public void scanFieldsForExecutor(final Object obj, final Field[] fields) {
         for (Field field : fields) {
-            if (field.isAnnotationPresent(Inject.class) && field.getType() == GalenExecutor.class) {
+            if (field.getType() == GalenExecutor.class) {
                 field.setAccessible(true);
-                this.executor = (GalenExecutor) field.get(obj);
+                try {
+                    this.executor = (GalenExecutor) field.get(obj);
+                } catch (IllegalArgumentException e) {
+                    LOG.error("Argument error during preparing injection", e);
+                } catch (IllegalAccessException e) {
+                    LOG.error("Illegal access error during preparing injection", e);
+                }
                 field.setAccessible(false);
             }
         }
-        return obj;
     }
 
     private Injector createInjector() throws InitializationError {

@@ -112,10 +112,20 @@ public interface GalenExecutor {
     void checkLayout(TestDevice testDevice, String url, String spec, List<String> includedTags, List<String> groups) throws Exception;
 
     /**
-     * @return the current used driver instance
+     * Get the current used driver instance
+     * 
+     * @return current instance
      * @throws MalformedURLException
      */
-    WebDriver getDriver() throws MalformedURLException;
+    WebDriver getDriverInstance() throws MalformedURLException;
+
+    /**
+     * Create a WebDriver instance
+     * 
+     * @return the created driver instance
+     * @throws MalformedURLException
+     */
+    abstract WebDriver createDriver() throws MalformedURLException;
 
     /**
      * Closes the current driver instance

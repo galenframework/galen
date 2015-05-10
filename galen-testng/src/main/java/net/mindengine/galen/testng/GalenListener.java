@@ -35,7 +35,6 @@ import org.testng.TestNGException;
 import org.testng.xml.XmlSuite;
 
 import com.google.inject.Guice;
-import com.google.inject.Inject;
 import com.google.inject.Injector;
 import com.google.inject.Module;
 
@@ -98,19 +97,10 @@ public class GalenListener implements IReporter, IInvokedMethodListener {
             injector = createInjector();
             Object obj = method.getTestMethod().getInstance();
             injector.injectMembers(obj);
-            Field[] fields = obj.getClass().getDeclaredFields();
-            for (Field field : fields) {
-                if (field.isAnnotationPresent(Inject.class) && field.getType() == GalenExecutor.class) {
-                    field.setAccessible(true);
-                    try {
-                        this.executor = (GalenExecutor) field.get(obj);
-                    } catch (IllegalArgumentException e) {
-                        LOG.error("Argument error during preparing injection", e);
-                    } catch (IllegalAccessException e) {
-                        LOG.error("Illegal access error during preparing injection", e);
-                    }
-                    field.setAccessible(false);
-                }
+            scanFieldsForExecutor(obj, obj.getClass().getDeclaredFields());
+            if (this.executor == null) {
+                // search super class too
+                scanFieldsForExecutor(obj, obj.getClass().getSuperclass().getDeclaredFields());
             }
         } catch (SecurityException e) {
             LOG.error("Access error during preparing injection", e);
@@ -120,6 +110,22 @@ public class GalenListener implements IReporter, IInvokedMethodListener {
             throw new TestNGException(e);
         }
 
+    }
+
+    public void scanFieldsForExecutor(final Object obj, final Field[] fields) {
+        for (Field field : fields) {
+            if (field.getType() == GalenExecutor.class) {
+                field.setAccessible(true);
+                try {
+                    this.executor = (GalenExecutor) field.get(obj);
+                } catch (IllegalArgumentException e) {
+                    LOG.error("Argument error during preparing injection", e);
+                } catch (IllegalAccessException e) {
+                    LOG.error("Illegal access error during preparing injection", e);
+                }
+                field.setAccessible(false);
+            }
+        }
     }
 
     @Override
