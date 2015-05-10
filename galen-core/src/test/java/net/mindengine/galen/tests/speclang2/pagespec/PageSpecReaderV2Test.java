@@ -346,11 +346,7 @@ public class PageSpecReaderV2Test {
     @Test
     public void shouldRead_customRulesFromJavaScript_andProcessThem() throws IOException {
         PageSpec pageSpec = readPageSpec("speclang2/custom-js-rules.gspec",
-                new MockedBrowser("", new Dimension(1, 1), new MockedPage(new HashMap<String, PageElement>() {{
-                    put("menu-item-1", element(0, 0, 10, 10));
-                    put("menu-item-2", element(20, 0, 10, 10));
-                    put("menu-item-3", element(40, 0, 10, 10));
-                }})),
+                new MockedBrowser("", new Dimension(1, 1), new MockedPage(new HashMap<String, PageElement>())),
                 Collections.<String>emptyList());
 
         assertThat(pageSpec.getSections().size(), is(1));

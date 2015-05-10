@@ -17,6 +17,7 @@ package net.mindengine.galen.speclang2.reader.pagespec;
 
 import net.mindengine.galen.browser.Browser;
 import net.mindengine.galen.javascript.GalenJsExecutor;
+import net.mindengine.galen.page.AbsentPageElement;
 import net.mindengine.galen.page.Page;
 import net.mindengine.galen.page.PageElement;
 import net.mindengine.galen.parser.*;
@@ -175,19 +176,31 @@ public class PageSpecHandler implements VarsParserJsFunctions {
 
     @Override
     public JsPageElement find(String name) {
-        JsPageElement[] allElements = findAll(name);
-        if (allElements != null && allElements.length > 0) {
-            return allElements[0];
+        Pattern pattern = GalenUtils.convertObjectNameRegex(name);
+        Page page = browser.getPage();
+
+        if (pageSpec != null) {
+            for (Map.Entry<String, Locator> entry : pageSpec.getObjects().entrySet()) {
+                String objectName = entry.getKey();
+                if (pattern.matcher(objectName).matches()) {
+                    Locator locator = entry.getValue();
+                    if (locator != null && page != null) {
+                        PageElement pageElement = page.getObject(objectName, locator);
+                        if (pageElement != null) {
+                            return new JsPageElement(objectName, pageElement);
+                        }
+                    }
+                }
+            }
         }
-        return null;
+
+        return new JsPageElement(name, new AbsentPageElement());
     }
 
     @Override
     public JsPageElement[] findAll(String regex) {
         Pattern pattern = GalenUtils.convertObjectNameRegex(regex);
-
-       List<JsPageElement> jsElements = findJsPageElements(pattern);
-
+        List<JsPageElement> jsElements = findJsPageElements(pattern);
         return orderByNames(jsElements).toArray(new JsPageElement[0]);
     }
 
@@ -205,6 +218,8 @@ public class PageSpecHandler implements VarsParserJsFunctions {
                         PageElement pageElement = page.getObject(objectName, locator);
                         if (pageElement != null) {
                             list.add(new JsPageElement(objectName, pageElement));
+                        } else {
+                            list.add(new JsPageElement(objectName, new AbsentPageElement()));
                         }
                     }
                 }
