@@ -376,8 +376,12 @@ public class PageSpecReaderV2Test {
 
         assertThat(pageSpec.getSections().get(0).getObjects().size(), is(1));
         assertThat(pageSpec.getSections().get(0).getObjects().get(0).getObjectName(), is("menu-item-1"));
-        assertThat(pageSpec.getSections().get(0).getObjects().get(0).getSpecs().size(), is(1));
-        assertThat(pageSpec.getSections().get(0).getObjects().get(0).getSpecs().get(0).getOriginalText(), is("width 100 % of menu-item-1/height"));
+        assertThat(pageSpec.getSections().get(0).getObjects().get(0).getSpecs().size(), is(0));
+        assertThat(pageSpec.getSections().get(0).getObjects().get(0).getSpecGroups().size(), is(1));
+        assertThat(pageSpec.getSections().get(0).getObjects().get(0).getSpecGroups().get(0).getSpecs().size(), is(1));
+        assertThat(pageSpec.getSections().get(0).getObjects().get(0).getSpecGroups().get(0).getName(), is("squared"));
+        assertThat(pageSpec.getSections().get(0).getObjects().get(0).getSpecGroups().get(0).getSpecs().get(0).getOriginalText(),
+                is("width 100 % of menu-item-1/height"));
     }
 
 
@@ -406,8 +410,12 @@ public class PageSpecReaderV2Test {
 
         assertThat(pageSpec.getSections().get(0).getObjects().size(), is(1));
         assertThat(pageSpec.getSections().get(0).getObjects().get(0).getObjectName(), is("menu-item-1"));
-        assertThat(pageSpec.getSections().get(0).getObjects().get(0).getSpecs().size(), is(1));
-        assertThat(pageSpec.getSections().get(0).getObjects().get(0).getSpecs().get(0).getOriginalText(), is("width 100 % of menu-item-1/height"));
+        assertThat(pageSpec.getSections().get(0).getObjects().get(0).getSpecs().size(), is(0));
+        assertThat(pageSpec.getSections().get(0).getObjects().get(0).getSpecGroups().size(), is(1));
+        assertThat(pageSpec.getSections().get(0).getObjects().get(0).getSpecGroups().get(0).getSpecs().size(), is(1));
+        assertThat(pageSpec.getSections().get(0).getObjects().get(0).getSpecGroups().get(0).getName(), is("squared"));
+        assertThat(pageSpec.getSections().get(0).getObjects().get(0).getSpecGroups().get(0).getSpecs().get(0).getOriginalText(),
+                is("width 100 % of menu-item-1/height"));
     }
 
 

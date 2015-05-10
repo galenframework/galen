@@ -54,4 +54,11 @@ public class ObjectSpecs {
     public void setSpecGroups(List<SpecGroup> specGroups) {
         this.specGroups = specGroups;
     }
+
+    public void addSpecGroup(SpecGroup specGroup) {
+        if (specGroups == null) {
+            specGroups = new LinkedList<SpecGroup>();
+        }
+        specGroups.add(specGroup);
+    }
 }
