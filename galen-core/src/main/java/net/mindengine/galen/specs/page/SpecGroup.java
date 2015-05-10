@@ -40,4 +40,11 @@ public class SpecGroup {
     public void setSpecs(List<Spec> specs) {
         this.specs = specs;
     }
+
+    public void addSpec(Spec spec) {
+        if (specs == null) {
+            specs = new LinkedList<Spec>();
+        }
+        specs.add(spec);
+    }
 }

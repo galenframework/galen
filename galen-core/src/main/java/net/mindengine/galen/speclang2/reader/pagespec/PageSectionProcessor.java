@@ -19,6 +19,7 @@ import net.mindengine.galen.parser.StructNode;
 import net.mindengine.galen.parser.SyntaxException;
 import net.mindengine.galen.specs.page.ObjectSpecs;
 import net.mindengine.galen.specs.page.PageSection;
+import net.mindengine.galen.specs.page.SpecGroup;
 import net.mindengine.galen.specs.reader.page.rules.Rule;
 import net.mindengine.galen.utils.GalenUtils;
 import org.apache.commons.lang3.tuple.ImmutablePair;
@@ -125,8 +126,14 @@ public class PageSectionProcessor {
         pageSpecHandler.setGlobalVariable("objectName", objectSpecs.getObjectName(), sourceNode);
 
         List<StructNode> specNodes = rule.getKey().apply(pageSpecHandler, ruleText, objectSpecs.getObjectName(), rule.getValue());
+
+
+        SpecGroup specGroup = new SpecGroup();
+        specGroup.setName(ruleText);
+        objectSpecs.addSpecGroup(specGroup);
+
         for (StructNode specNode : specNodes) {
-            processSpec(objectSpecs, specNode);
+            specGroup.addSpec(pageSpecHandler.getSpecReaderV2().read(specNode.getName(), pageSpecHandler.getContextPath()));
         }
     }
 
