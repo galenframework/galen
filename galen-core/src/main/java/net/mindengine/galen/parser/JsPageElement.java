@@ -57,4 +57,12 @@ public class JsPageElement {
     public int height() {
         return pageElement.getArea().getHeight();
     }
+
+    public boolean isVisible() {
+        return pageElement.isVisible();
+    }
+
+    public boolean isPresent() {
+        return pageElement.isPresent();
+    }
 }
