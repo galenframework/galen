@@ -352,6 +352,20 @@ public class PageSpecReaderV2Test {
         assertThat(objects.get(1).getSpecs().get(0).getOriginalText(), is("text is \"Welcome, Johny\""));
     }
 
+    @Test
+    public void shouldExecute_inPageJavaScript() throws IOException {
+        PageSpec pageSpec = readPageSpec("speclang2/script-inpage.gspec");
+
+        assertThat(pageSpec.getSections().size(), is(1));
+        List<ObjectSpecs> objects = pageSpec.getSections().get(0).getObjects();
+        assertThat(objects.size(), is(2));
+        assertThat(objects.get(0).getObjectName(), is("caption"));
+        assertThat(objects.get(0).getSpecs().get(0).getOriginalText(), is("text is \"Awesome website!\""));
+        assertThat(objects.get(1).getObjectName(), is("caption-2"));
+        assertThat(objects.get(1).getSpecs().get(0).getOriginalText(), is("text is \"Welcome, Johny\""));
+
+    }
+
 
     @Test
     public void shouldRead_customSpecRules_andProcessThem() throws IOException {
