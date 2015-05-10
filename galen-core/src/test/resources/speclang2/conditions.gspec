@@ -1,0 +1,27 @@
+
+
+
+
+@objects
+    header      #header
+    header-icon #header img
+
+    header2         #header2
+    header2-icon    #header2 img
+
+    header3     #header3
+
+
+= Main section =
+    @if ${isVisible("header")}
+        header-icon :
+            inside header 10px top left
+
+    @elseif ${isVisible("header2")}
+        header2-icon :
+            inside header2 5px top left
+
+    @else
+        header3 :
+            visible
+

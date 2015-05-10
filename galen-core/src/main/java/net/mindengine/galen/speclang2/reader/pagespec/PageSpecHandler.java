@@ -64,6 +64,17 @@ public class PageSpecHandler implements VarsParserJsFunctions {
         js.putObject("_pageSpecHandler", pageSpecHandler);
         js.evalScriptFromLibrary("GalenSpecProcessingV2.js");
 
+
+        js.getScope().defineProperty("isVisible", new BaseFunction() {
+            @Override
+            public Object call(org.mozilla.javascript.Context cx, Scriptable scope, Scriptable thisObj, Object[] args) {
+                if (args.length == 0 || !(args[0] instanceof String)) {
+                    throw new IllegalArgumentException("Should take string argument");
+                }
+                return pageSpecHandler.isVisible((String) args[0]);
+            }
+        }, ScriptableObject.DONTENUM);
+
         js.getScope().defineProperty("count", new BaseFunction() {
             @Override
             public Object call(org.mozilla.javascript.Context cx, Scriptable scope, Scriptable thisObj, Object[] args) {
@@ -114,6 +125,19 @@ public class PageSpecHandler implements VarsParserJsFunctions {
         }, ScriptableObject.DONTENUM);
 
         return js;
+    }
+
+    public Object isVisible(String objectName) {
+        for (Map.Entry<String, Locator> object : pageSpec.getObjects().entrySet()) {
+            if (object.getKey().equals(objectName)) {
+                Page page = browser.getPage();
+                PageElement pageElement = page.getObject(object.getKey(), object.getValue());
+
+                return pageElement != null && pageElement.isPresent() && pageElement.isVisible();
+            }
+        }
+
+        return Boolean.FALSE;
     }
 
     public PageSpecHandler(PageSpecHandler copy, String contextPath) {
