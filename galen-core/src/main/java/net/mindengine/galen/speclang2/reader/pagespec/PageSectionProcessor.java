@@ -20,14 +20,17 @@ import net.mindengine.galen.parser.SyntaxException;
 import net.mindengine.galen.specs.page.ObjectSpecs;
 import net.mindengine.galen.specs.page.PageSection;
 import net.mindengine.galen.specs.reader.page.rules.Rule;
+import net.mindengine.galen.utils.GalenUtils;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class PageSectionProcessor {
     public static final String NO_OBJECT_NAME = null;
@@ -152,23 +155,53 @@ public class PageSectionProcessor {
 
     private void processObject(PageSection section, StructNode objectNode) throws IOException {
         String name = objectNode.getName();
-        String objectName = name.substring(0, name.length() - 1).trim();
+        String objectExpression = name.substring(0, name.length() - 1).trim();
 
-        if (objectNode.getChildNodes() != null && objectNode.getChildNodes().size() > 0) {
-            ObjectSpecs objectSpecs = findObjectSpecsInSection(section, objectName);
-            if (objectSpecs == null) {
-                objectSpecs = new ObjectSpecs(objectName);
-                section.addObjects(objectSpecs);
-            }
+        List<String> objectNames = findAllMatchingObjectNamesForExpression(objectExpression, objectNode);
 
-            for (StructNode specNode : objectNode.getChildNodes()) {
-                if (isRule(specNode.getName())) {
-                    processObjectLevelRule(objectSpecs, specNode);
-                } else {
-                    processSpec(objectSpecs, specNode);
+        for (String objectName : objectNames) {
+            if (objectNode.getChildNodes() != null && objectNode.getChildNodes().size() > 0) {
+                ObjectSpecs objectSpecs = findObjectSpecsInSection(section, objectName);
+                if (objectSpecs == null) {
+                    objectSpecs = new ObjectSpecs(objectName);
+                    section.addObjects(objectSpecs);
+                }
+
+                for (StructNode specNode : objectNode.getChildNodes()) {
+                    if (isRule(specNode.getName())) {
+                        processObjectLevelRule(objectSpecs, specNode);
+                    } else {
+                        processSpec(objectSpecs, specNode);
+                    }
                 }
             }
         }
+    }
+
+    private List<String> findAllMatchingObjectNamesForExpression(String objectExpression, StructNode source) {
+        String[] parts = objectExpression.split(",");
+
+        List<String> resultingObjectNames = new LinkedList<String>();
+
+        for (String part : parts) {
+            String singleExpression = part.trim();
+
+            if (singleExpression.isEmpty()) {
+                throw new SyntaxException(source, "Incorrect object expression");
+            }
+
+            if (GalenUtils.isObjectExpression(singleExpression)) {
+                Pattern objectPattern = GalenUtils.convertObjectNameRegex(singleExpression);
+                for (String objectName : pageSpecHandler.getSortedObjectNames()) {
+                    if (objectPattern.matcher(objectName).matches()) {
+                        resultingObjectNames.add(objectName);
+                    }
+                }
+            } else {
+                resultingObjectNames.add(singleExpression);
+            }
+        }
+        return resultingObjectNames;
     }
 
     private void processSpec(ObjectSpecs objectSpecs, StructNode specNode) {

@@ -28,6 +28,7 @@ import net.mindengine.galen.specs.page.Locator;
 import net.mindengine.galen.specs.page.ObjectSpecs;
 import net.mindengine.galen.specs.page.PageSection;
 import net.mindengine.galen.specs.reader.page.PageSpec;
+import org.apache.commons.lang3.tuple.Pair;
 import org.testng.annotations.Test;
 
 import java.awt.*;
@@ -135,6 +136,43 @@ public class PageSpecReaderV2Test {
         assertThat(section2.getObjects().get(0).getSpecs().get(0).getOriginalText(), is("below header 0 to 5px"));
         assertThat(section2.getObjects().get(0).getSpecs().get(1).getOriginalText(), is("inside screen 0px left right"));
     }
+
+    @Test
+    public void shouldProcess_complexObjectExpressions_insideSections() throws IOException {
+        PageSpec pageSpec = readPageSpec("speclang2/complex-object-expressions.gspec");
+
+        PageSection section = pageSpec.getSections().get(0);
+
+        assertThat(section.getName(), is("Main section"));
+        assertThat(section.getObjects().size(), is(6));
+
+
+        assertThat(section.getObjects().get(0).getObjectName(), is("header"));
+        assertThat(section.getObjects().get(0).getSpecs().size(), is(1));
+        assertThat(section.getObjects().get(0).getSpecs().get(0).getOriginalText(), is("inside screen 0px left right"));
+
+        assertThat(section.getObjects().get(1).getObjectName(), is("menu"));
+        assertThat(section.getObjects().get(1).getSpecs().size(), is(1));
+        assertThat(section.getObjects().get(1).getSpecs().get(0).getOriginalText(), is("inside screen 0px left right"));
+
+        assertThat(section.getObjects().get(2).getObjectName(), is("main"));
+        assertThat(section.getObjects().get(2).getSpecs().size(), is(1));
+        assertThat(section.getObjects().get(2).getSpecs().get(0).getOriginalText(), is("inside screen 0px left right"));
+
+        assertThat(section.getObjects().get(3).getObjectName(), is("menu-item-1"));
+        assertThat(section.getObjects().get(3).getSpecs().size(), is(1));
+        assertThat(section.getObjects().get(3).getSpecs().get(0).getOriginalText(), is("height 30px"));
+
+        assertThat(section.getObjects().get(4).getObjectName(), is("menu-item-2"));
+        assertThat(section.getObjects().get(4).getSpecs().size(), is(1));
+        assertThat(section.getObjects().get(4).getSpecs().get(0).getOriginalText(), is("height 30px"));
+
+        assertThat(section.getObjects().get(5).getObjectName(), is("menu-item-3"));
+        assertThat(section.getObjects().get(5).getSpecs().size(), is(1));
+        assertThat(section.getObjects().get(5).getSpecs().get(0).getOriginalText(), is("height 30px"));
+
+    }
+
 
 
     /**
@@ -371,6 +409,8 @@ public class PageSpecReaderV2Test {
         assertThat(pageSpec.getSections().get(0).getObjects().get(0).getSpecs().size(), is(1));
         assertThat(pageSpec.getSections().get(0).getObjects().get(0).getSpecs().get(0).getOriginalText(), is("width 100 % of menu-item-1/height"));
     }
+
+
 
     private PageSpec readPageSpec(String resource) throws IOException {
         return readPageSpec(resource, NO_BROWSER, EMPTY_TAGS);

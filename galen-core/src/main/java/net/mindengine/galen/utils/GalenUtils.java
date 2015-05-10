@@ -384,6 +384,16 @@ public class GalenUtils {
         return Pattern.compile(jRegex);
     }
 
+    public static boolean isObjectExpression(String singleExpression) {
+        for (int i = 0; i < singleExpression.length(); i++) {
+            char symbol = singleExpression.charAt(i);
+            if (symbol == '*' || symbol == '#') {
+                return true;
+            }
+        }
+        return false;
+    }
+
 
     public static String toCommaSeparated(List<String> list) {
         if (list != null) {
@@ -400,4 +410,5 @@ public class GalenUtils {
         }
         return "";
     }
+
 }
