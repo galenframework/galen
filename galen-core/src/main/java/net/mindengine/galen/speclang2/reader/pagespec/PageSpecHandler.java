@@ -312,4 +312,8 @@ public class PageSpecHandler implements VarsParserJsFunctions {
     public List<Pair<Rule, PageRule>> getPageRules() {
         return pageRules;
     }
+
+    public void runJavaScript(String completeScript) {
+        jsExecutor.eval(completeScript);
+    }
 }

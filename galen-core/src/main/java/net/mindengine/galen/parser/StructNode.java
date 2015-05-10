@@ -115,4 +115,35 @@ public class StructNode {
         this.source = source;
     }
 
+    public boolean hasChildNodes() {
+        return childNodes != null &&  !childNodes.isEmpty();
+    }
+
+    public String assembleAllNodes() {
+        return assembleAllNodes("");
+    }
+
+    private String assembleAllNodes(String indentation) {
+        StringBuilder builder = new StringBuilder();
+        builder.append(indentation);
+        builder.append(name);
+        builder.append('\n');
+
+        if (childNodes != null) {
+            for (StructNode childNode : childNodes) {
+                builder.append(childNode.assembleAllNodes(indentation + "    "));
+            }
+        }
+        return builder.toString();
+    }
+
+    public String assembleAllChildNodes() {
+        StringBuilder builder = new StringBuilder();
+        if (childNodes != null) {
+            for (StructNode childNode : childNodes) {
+                builder.append(childNode.assembleAllNodes());
+            }
+        }
+        return builder.toString();
+    }
 }

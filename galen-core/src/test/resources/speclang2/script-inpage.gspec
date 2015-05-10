@@ -1,0 +1,16 @@
+
+
+@script
+    this.captionText = "Awesome website!";
+
+    this.captionFor = function (name) {
+        return "Welcome, " + name;
+    };
+
+
+= Main section =
+    caption:
+        text is "${captionText}"
+
+    caption-2:
+        text is "${captionFor('Johny')}"

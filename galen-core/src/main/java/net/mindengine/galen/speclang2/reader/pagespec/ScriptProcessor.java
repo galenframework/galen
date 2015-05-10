@@ -30,14 +30,19 @@ public class ScriptProcessor {
         this.pageSpecHandler = pageSpecHandler;
     }
 
-    public List<StructNode> process(StringCharReader reader, StructNode statementNode) throws IOException {
+    public List<StructNode> process(StringCharReader reader, StructNode scriptNode) throws IOException {
         String scriptPath = reader.getTheRest().trim();
         if (scriptPath.isEmpty()) {
-            throw new SyntaxException(statementNode, "Missing script path");
+            if (scriptNode.hasChildNodes()) {
+                String completeScript = scriptNode.assembleAllChildNodes();
+                pageSpecHandler.runJavaScript(completeScript);
+            } else {
+                throw new SyntaxException(scriptNode, "Missing script");
+            }
+        } else {
+            String fullPath = pageSpecHandler.getFullPathToResource(scriptPath);
+            pageSpecHandler.runJavaScriptFromFile(fullPath);
         }
-
-        String fullPath = pageSpecHandler.getFullPathToResource(scriptPath);
-        pageSpecHandler.runJavaScriptFromFile(fullPath);
 
         return Collections.emptyList();
     }
