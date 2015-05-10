@@ -1,0 +1,21 @@
+
+
+
+
+@objects
+    header  #header
+    menu    #menu
+    main    #main
+
+    menu-item-1     #mi1
+    menu-item-2     #mi2
+    menu-item-3     #mi3
+
+
+
+= Main section =
+    header, menu, main :
+        inside screen 0px left right
+
+    menu-item-* :
+        height 30px
