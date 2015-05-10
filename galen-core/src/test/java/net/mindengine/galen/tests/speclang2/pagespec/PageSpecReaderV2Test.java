@@ -19,6 +19,7 @@ import net.mindengine.galen.browser.Browser;
 import net.mindengine.galen.browser.SeleniumBrowser;
 import net.mindengine.galen.components.MockedBrowser;
 import net.mindengine.galen.components.mocks.driver.MockedDriver;
+import net.mindengine.galen.components.validation.MockedInvisiblePageElement;
 import net.mindengine.galen.components.validation.MockedPage;
 import net.mindengine.galen.components.validation.MockedPageElement;
 import net.mindengine.galen.page.PageElement;
@@ -432,6 +433,59 @@ public class PageSpecReaderV2Test {
                 is("width 100 % of menu-item-1/height"));
     }
 
+    @Test
+    public void shouldRead_conditionsWithMultipleElseBlocks()  throws  IOException {
+        PageSpec pageSpec = readPageSpec("speclang2/conditions.gspec",
+                new MockedBrowser("", new Dimension(1, 1), new MockedPage(new HashMap<String, PageElement>(){{
+                    put("header", element(0, 0, 100, 10));
+                }})),
+                Collections.<String>emptyList());
+
+        assertThat(pageSpec.getSections().size(), is(1));
+
+        PageSection section = pageSpec.getSections().get(0);
+        assertThat(section.getObjects().size(), is(1));
+        assertThat(section.getObjects().get(0).getObjectName(), is("header-icon"));
+        assertThat(section.getObjects().get(0).getSpecs().size(), is(1));
+        assertThat(section.getObjects().get(0).getSpecs().get(0).getOriginalText(), is("inside header 10px top left"));
+    }
+
+    @Test
+    public void shouldRead_conditionsWithMultipleElseBlocks_2()  throws  IOException {
+        PageSpec pageSpec = readPageSpec("speclang2/conditions.gspec",
+                new MockedBrowser("", new Dimension(1, 1), new MockedPage(new HashMap<String, PageElement>(){{
+                    put("header", invisibleElement(0, 0, 100, 10));
+                    put("header2", element(0, 0, 100, 10));
+                }})),
+                Collections.<String>emptyList());
+
+        assertThat(pageSpec.getSections().size(), is(1));
+
+        PageSection section = pageSpec.getSections().get(0);
+        assertThat(section.getObjects().size(), is(1));
+        assertThat(section.getObjects().get(0).getObjectName(), is("header2-icon"));
+        assertThat(section.getObjects().get(0).getSpecs().size(), is(1));
+        assertThat(section.getObjects().get(0).getSpecs().get(0).getOriginalText(), is("inside header2 5px top left"));
+    }
+
+    @Test
+    public void shouldRead_conditionsWithMultipleElseBlocks_3()  throws  IOException {
+        PageSpec pageSpec = readPageSpec("speclang2/conditions.gspec",
+                new MockedBrowser("", new Dimension(1, 1), new MockedPage(new HashMap<String, PageElement>(){{
+                    put("header", invisibleElement(0, 0, 100, 10));
+                    put("header2", invisibleElement(0, 0, 100, 10));
+                }})),
+                Collections.<String>emptyList());
+
+        assertThat(pageSpec.getSections().size(), is(1));
+
+        PageSection section = pageSpec.getSections().get(0);
+        assertThat(section.getObjects().size(), is(1));
+        assertThat(section.getObjects().get(0).getObjectName(), is("header3"));
+        assertThat(section.getObjects().get(0).getSpecs().size(), is(1));
+        assertThat(section.getObjects().get(0).getSpecs().get(0).getOriginalText(), is("visible"));
+    }
+
 
 
     private PageSpec readPageSpec(String resource) throws IOException {
@@ -445,4 +499,9 @@ public class PageSpecReaderV2Test {
     private MockedPageElement element(int left, int top, int width, int height) {
         return new MockedPageElement(left, top, width, height);
     }
+
+    protected PageElement invisibleElement(int left, int top, int width, int height) {
+        return new MockedInvisiblePageElement(left, top, width, height);
+    }
+
 }

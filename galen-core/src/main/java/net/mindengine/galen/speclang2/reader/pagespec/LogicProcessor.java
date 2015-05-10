@@ -33,6 +33,9 @@ public class LogicProcessor {
     public static final String IMPORT_KEYWORD = "@import";
     public static final String SCRIPT_KEYWORD = "@script";
     public static final String RULE_KEYWORD = "@rule";
+    public static final String IF_KEYWORD = "@if";
+    public static final String ELSEIF_KEYWORD = "@elseif";
+    public static final String ELSE_KEYWORD = "@else";
 
 
     private final PageSpecHandler pageSpecHandler;
@@ -55,10 +58,16 @@ public class LogicProcessor {
     public List<StructNode> process(List<StructNode> nodes) throws IOException {
         List<StructNode> resultingNodes = new LinkedList<StructNode>();
 
-        for (StructNode node : nodes) {
+        ListIterator<StructNode> it = nodes.listIterator();
+
+        while (it.hasNext()) {
+            StructNode node = it.next();
             StructNode processedNode = pageSpecHandler.processExpressionsIn(node);
 
-            if (isLogicStatement(processedNode.getName())) {
+            if (isConditionStatement(processedNode.getName())) {
+                resultingNodes.addAll(processConditionStatements(processedNode, it));
+            }
+            else if (isLogicStatement(processedNode.getName())) {
                 resultingNodes.addAll(processLogicStatement(processedNode));
             } else {
                 resultingNodes.add(processNonLogicStatement(processedNode));
@@ -66,6 +75,73 @@ public class LogicProcessor {
         }
 
         return resultingNodes;
+    }
+
+    private List<StructNode> processConditionStatements(StructNode ifNode, ListIterator<StructNode> it) {
+        List<StructNode> elseIfNodes = new LinkedList<StructNode>();
+        StructNode elseNode = null;
+        boolean finishedConditions = false;
+
+        while(it.hasNext() && !finishedConditions) {
+            StructNode processedNode = pageSpecHandler.processExpressionsIn(it.next());
+            String firstWord = new StringCharReader(processedNode.getName()).readWord();
+            if (firstWord.equals(ELSEIF_KEYWORD)) {
+                if (elseNode != null) {
+                    throw new SyntaxException(processedNode, "Cannot use elseif statement after else block");
+                }
+                elseIfNodes.add(processedNode);
+            } else if (firstWord.equals(ELSE_KEYWORD)) {
+                if (elseNode != null) {
+                    throw new SyntaxException(processedNode, "Cannot use else statement after else block");
+                }
+                elseNode = processedNode;
+            } else {
+                finishedConditions = true;
+                it.previous();
+            }
+        }
+
+        return applyConditions(ifNode, elseIfNodes, elseNode);
+    }
+
+    private List<StructNode> applyConditions(StructNode ifNode, List<StructNode> elseIfNodes, StructNode elseNode) {
+        if (isSuccessfullCondition(ifNode)) {
+            return ifNode.getChildNodes();
+        } else if (elseIfNodes != null) {
+
+            for (StructNode node : elseIfNodes) {
+                if (isSuccessfullCondition(node)) {
+                    return node.getChildNodes();
+                }
+            }
+        }
+
+        if (elseNode != null) {
+            return elseNode.getChildNodes();
+        }
+
+        return Collections.emptyList();
+    }
+
+    private boolean isSuccessfullCondition(StructNode node) {
+        StringCharReader reader = new StringCharReader(node.getName());
+
+        reader.readWord();
+
+        String booleanText = reader.readWord();
+        if (booleanText.isEmpty()) {
+            throw new SyntaxException(node, "Missing boolean statement in condition");
+        }
+
+        try {
+            return Boolean.parseBoolean(booleanText);
+        } catch (Exception ex) {
+            throw new SyntaxException(node, "Couldn't parse boolean", ex);
+        }
+    }
+
+    private boolean isConditionStatement(String name) {
+        return IF_KEYWORD.equals(new StringCharReader(name).readWord());
     }
 
     private StructNode processNonLogicStatement(StructNode processedNode) throws IOException {
@@ -107,6 +183,10 @@ public class LogicProcessor {
             return new ScriptProcessor(pageSpecHandler).process(reader, statementNode);
         } else if (RULE_KEYWORD.equals(firstWord)) {
             return new RuleProcessor(pageSpecHandler).process(reader, statementNode);
+        } else if (ELSEIF_KEYWORD.equals(firstWord)) {
+            throw new SyntaxException(statementNode, "elseif statement without if block");
+        } else if (ELSE_KEYWORD.equals(firstWord)) {
+            throw new SyntaxException(statementNode, "else statement without if block");
         } else {
             throw new SyntaxException(statementNode, "Invalid statement: " + firstWord);
         }
