@@ -1,0 +1,52 @@
+{
+    "title": "My page",
+    "items": [
+        {
+            "locator": "css: #header",
+            "area": [10, 10, 100, 50],
+            "subItems": [
+                {
+                    "locator": "css: h1",
+                    "text": "Big Caption"
+                },
+                {
+                    "locator": "css: h2",
+                    "text": "small caption"
+                }
+            ]
+        },
+        {
+            "locator": "id: username",
+            "area": [120, 10, 200, 50],
+            "text": "John"
+        },
+        {
+            "locator": "css: .menu-item",
+            "subItems": [
+                {
+                    "locator": "css: .link",
+                    "text": "Link 1"
+                }
+            ]
+        },
+        {
+            "locator": "css: .menu-item",
+            "subItems": [
+                {
+                    "locator": "css: .link",
+                    "text": "Link 2"
+                }
+            ]
+        },
+        {
+            "locator": "css: .menu-item",
+            "subItems": [
+                {
+                    "locator": "css: .link",
+                    "text": "Link 3"
+                }
+            ]
+        }
+    ]
+}
+

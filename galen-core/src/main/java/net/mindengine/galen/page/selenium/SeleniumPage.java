@@ -34,6 +34,7 @@ import org.openqa.selenium.*;
 
 public class SeleniumPage implements Page {
 
+    public static final String NO_NAME = null;
     private WebDriver driver;
     
     private Map<String, List<PageElement>> cachedElementsList = new HashMap<String, List<PageElement>>();
@@ -60,24 +61,12 @@ public class SeleniumPage implements Page {
     
     private void setObjectContext(Locator objectContextLocator) {
         if (objectContextLocator != null) {
-            By by = by(objectContextLocator);
-            if (by == null) {
+            ByChain byChain = ByChain.fromLocator(objectContextLocator);
+            if (byChain == null) {
                 throw new RuntimeException("Cannot convert locator: " + objectContextLocator.getLocatorType() + " " + objectContextLocator.getLocatorValue());
             }
             
-            int index = objectContextLocator.getIndex();
-            if (index > 1) {
-                index = index - 1;
-                List<WebElement> elements = driver.findElements(by);
-                if (index >= elements.size()) {
-                    throw new RuntimeException("Incorrect locator for object context. Index out of range");
-                }
-                objectContext = elements.get(index);
-            }
-            else {
-                objectContext = driver.findElement(by);
-            }
-
+            objectContext = byChain.findElement(driver);
 
             this.parentObject = new WebPageElement("parent", objectContext, objectContextLocator)
                     .withOffset(offsetLeft, offsetTop);
@@ -87,55 +76,31 @@ public class SeleniumPage implements Page {
 
     @Override
     public PageElement getObject(Locator objectLocator) {
-        return getObject("unnamed", objectLocator);
+        return getObject(NO_NAME, objectLocator);
     }
 
     @Override
     public PageElement getObject(String objectName, Locator objectLocator) {
-        int index = objectLocator.getIndex() - 1;
-        
-        if (index >= 0) {
-            return getWebPageElement(objectName, objectLocator, index);
+        if (objectName != null) {
+            PageElement pageElement = cachedPageElements.get(objectName);
+
+            if (pageElement == null) {
+                pageElement = locatorToElement(objectName, objectLocator);
+                cachedPageElements.put(objectName, pageElement);
+                return pageElement;
+            } else {
+                return pageElement;
+            }
+        } else {
+            return locatorToElement("unnamed", objectLocator);
         }
-        else {
-            return getWebPageElement(objectName, objectLocator);
-        }
+
     }
 
-    private PageElement getWebPageElement(String objectName, Locator objectLocator, int index) {
-        List<PageElement> pageElements = cachedElementsList.get(objectName);
-        
-        if (pageElements == null) {
-            By by = by(objectLocator);
-            if (by == null) {
-                return null;
-            }
-            
-            List<WebElement> webElements = driverFindElements(by);
-            
-            pageElements = new LinkedList<PageElement>();
-            int i = 1;
-            for (WebElement webElement : webElements) {
-                pageElements.add(new WebPageElement(objectName, webElement, new Locator(objectLocator.getLocatorType(), objectLocator.getLocatorValue(), i))
-                    .withOffset(offsetLeft, offsetTop));
-                i++;
-            }
-
-            cachedElementsList.put(objectName, pageElements);
-        }
-        if (index < pageElements.size()) {
-             return pageElements.get(index);
-        }
-        else {
-            return new AbsentPageElement();
-        }
-        
-    }
-
-    private List<WebElement> driverFindElements(By by) {
+    private List<WebElement> driverFindElements(ByChain byChain) {
         if (objectContext == null) {
             try {
-                return driver.findElements(by);
+                return byChain.findElements(driver);
             } catch (NullPointerException e) {
                 throw new WebDriverException(e);
             } catch (StaleElementReferenceException e) {
@@ -143,63 +108,34 @@ public class SeleniumPage implements Page {
             }
         }
         else {
-            return objectContext.findElements(by);
+            return byChain.findElements(objectContext);
         }
     }
 
-    private WebElement driverFindElement(By by) {
+    private WebElement driverFindElement(ByChain byChain) {
         if (objectContext == null) {
-            return driver.findElement(by);
+            return byChain.findElement(driver);
         }
         else {
-            return objectContext.findElement(by);
+            return byChain.findElement(objectContext);
         }
     }
     
 
-    private PageElement getWebPageElement(String objectName, Locator objectLocator) {
-        PageElement pageElement = cachedPageElements.get(objectName);
-        
-        if (pageElement == null) {
-            pageElement = locatorToElement(objectName, objectLocator);
-            
-            cachedPageElements.put(objectName, pageElement);
-            return pageElement;
-        }
-        else {
-            return pageElement;
-        }
-    }
 
     private PageElement locatorToElement(String objectName, Locator objectLocator) {
         PageElement pageElement;
-        By by = by(objectLocator);
-        if (by == null) {
-            return null;
-        }
-        
+        ByChain byChain = ByChain.fromLocator(objectLocator);
+
         try {
-            WebElement webElement = driverFindElement(by);
+            WebElement webElement = driverFindElement(byChain);
             pageElement = new WebPageElement(objectName, webElement, objectLocator).withOffset(offsetLeft, offsetTop);
-        }
-        catch (NoSuchElementException e) {
+        } catch (NoSuchElementException e) {
             pageElement = new AbsentPageElement();
         }
         return pageElement;
     }
 
-    private By by(Locator locator) {
-        if ("xpath".equals(locator.getLocatorType())) {
-            return By.xpath(locator.getLocatorValue());
-        }
-        else if ("id".equals(locator.getLocatorType())) {
-            return By.id(locator.getLocatorValue());
-        }
-        else if ("css".equals(locator.getLocatorType())) {
-            return By.cssSelector(locator.getLocatorValue());
-        }
-        else return null;
-    }
 
 
     @Override
@@ -222,7 +158,8 @@ public class SeleniumPage implements Page {
 
     @Override
     public int getObjectCount(Locator locator) {
-        return driverFindElements(by(locator)).size();
+        ByChain byChain = ByChain.fromLocator(locator);
+        return driverFindElements(byChain).size();
     }
 
     @Override
