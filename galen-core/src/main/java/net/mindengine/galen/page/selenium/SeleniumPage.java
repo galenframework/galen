@@ -18,7 +18,6 @@ package net.mindengine.galen.page.selenium;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -34,7 +33,6 @@ import org.openqa.selenium.*;
 
 public class SeleniumPage implements Page {
 
-    public static final String NO_NAME = null;
     private WebDriver driver;
     
     private Map<String, List<PageElement>> cachedElementsList = new HashMap<String, List<PageElement>>();
@@ -76,7 +74,7 @@ public class SeleniumPage implements Page {
 
     @Override
     public PageElement getObject(Locator objectLocator) {
-        return getObject(NO_NAME, objectLocator);
+        return locatorToElement("unnamed", objectLocator);
     }
 
     @Override
@@ -85,7 +83,7 @@ public class SeleniumPage implements Page {
             PageElement pageElement = cachedPageElements.get(objectName);
 
             if (pageElement == null) {
-                pageElement = locatorToElement(objectName, objectLocator);
+                pageElement = getObject(objectLocator);
                 cachedPageElements.put(objectName, pageElement);
                 return pageElement;
             } else {

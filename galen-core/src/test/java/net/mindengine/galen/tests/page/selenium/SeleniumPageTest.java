@@ -76,6 +76,5 @@ public class SeleniumPageTest {
         PageElement pageElement4 = page.getObject(new Locator("css", ".link")
                 .withParent(new Locator("css", ".menu-item", 4)));
         assertThat(pageElement4, instanceOf(AbsentPageElement.class));
-
     }
 }
