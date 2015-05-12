@@ -373,14 +373,20 @@ public class GalenUtils {
 
     }
 
-    public static String calculateFileId(String fullPath) throws NoSuchAlgorithmException, FileNotFoundException {
-        String fileName = new File(fullPath).getName();
-        MessageDigest md = MessageDigest.getInstance("MD5");
-        InputStream is = GalenUtils.findFileOrResourceAsStream(fullPath);
-        new DigestInputStream(is, md);
-        byte [] hashBytes = md.digest();
-        
-        return fileName + convertHashBytesToString(hashBytes);
+    public static String calculateFileId(String fullPath) {
+        try {
+            String fileName = new File(fullPath).getName();
+            MessageDigest md = MessageDigest.getInstance("MD5");
+            InputStream is = GalenUtils.findFileOrResourceAsStream(fullPath);
+            new DigestInputStream(is, md);
+            byte[] hashBytes = md.digest();
+
+            return fileName + convertHashBytesToString(hashBytes);
+        } catch (NoSuchAlgorithmException e) {
+            throw new SetupException("Cannot use desired algorithm for file id calculation", e);
+        } catch (FileNotFoundException e) {
+            throw new SetupException("Cannot find file", e);
+        }
     }
 
     private static String convertHashBytesToString(byte[] hashBytes) {

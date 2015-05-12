@@ -15,20 +15,38 @@
 ******************************************************************************/
 package net.mindengine.galen.specs.reader.page;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Properties;
+import java.util.Set;
+import java.util.regex.Pattern;
+
+import net.mindengine.galen.exceptions.SetupException;
 import net.mindengine.galen.page.Page;
 import net.mindengine.galen.page.PageElement;
-import net.mindengine.galen.parser.*;
+import net.mindengine.galen.parser.FileSyntaxException;
+import net.mindengine.galen.parser.JsPageElement;
+import net.mindengine.galen.parser.PageSpecReaderException;
+import net.mindengine.galen.parser.SyntaxException;
+import net.mindengine.galen.parser.VarsContext;
+import net.mindengine.galen.parser.VarsParserJsFunctions;
 import net.mindengine.galen.specs.page.Locator;
 import net.mindengine.galen.specs.reader.Place;
 import net.mindengine.galen.specs.reader.page.rules.Rule;
 import net.mindengine.galen.specs.reader.page.rules.RuleParser;
 import net.mindengine.galen.utils.GalenUtils;
 import net.mindengine.galen.utils.Visitor;
-
-import java.io.*;
-import java.security.NoSuchAlgorithmException;
-import java.util.*;
-import java.util.regex.Pattern;
 
 
 public class PageSpecReader implements VarsParserJsFunctions {
@@ -247,23 +265,27 @@ public class PageSpecReader implements VarsParserJsFunctions {
         return parent;
     }
 
-    public void importPageSpec(String filePath, String contextPath) throws IOException, NoSuchAlgorithmException {
-        filePath = filePath.trim();
-        String path;
-        if (contextPath != null && !filePath.startsWith("/")) {
-            path = contextPath + File.separator + filePath;
-        }
-        else {
-            path = filePath;
-        }
-
-        String fileId = GalenUtils.calculateFileId(path);
-        if (!processedFileIds.contains(fileId)) {
-            processedFileIds.add(fileId);
-            PageSpec spec = createNewSubReader().read(path);
-            if (spec != null) {
-                pageSpec.merge(spec);
+    public void importPageSpec(String filePath, String contextPath) {
+        try {
+            filePath = filePath.trim();
+            String path;
+            if (contextPath != null && !filePath.startsWith("/")) {
+                path = contextPath + File.separator + filePath;
             }
+            else {
+                path = filePath;
+            }
+
+            String fileId = GalenUtils.calculateFileId(path);
+            if (!processedFileIds.contains(fileId)) {
+                processedFileIds.add(fileId);
+                PageSpec spec = createNewSubReader().read(path);
+                if (spec != null) {
+                    pageSpec.merge(spec);
+                }
+            }
+        } catch (IOException e) {
+            throw new SetupException("Could not find spec file", e);
         }
     }
 

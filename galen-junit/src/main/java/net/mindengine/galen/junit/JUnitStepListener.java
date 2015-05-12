@@ -18,6 +18,7 @@ package net.mindengine.galen.junit;
 import java.util.List;
 
 import net.mindengine.galen.api.GalenReportsContainer;
+import net.mindengine.galen.exceptions.TestExecutionException;
 import net.mindengine.galen.reports.GalenTestInfo;
 import net.mindengine.galen.reports.HtmlReportBuilder;
 import net.mindengine.galen.reports.model.FileTempStorage;
@@ -47,7 +48,7 @@ public class JUnitStepListener extends RunListener {
             new HtmlReportBuilder().build(tests, "target/galen-html-reports");
             cleanData(tests);
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            throw new TestExecutionException("Error occurred during creating layout reports",e);
         }
     }
 

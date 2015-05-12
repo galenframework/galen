@@ -85,7 +85,7 @@ public class EventHandler {
                 if (event != null) {
                     try {
                         event.execute();
-                    } catch (Throwable ex) {
+                    } catch (Exception ex) {
                         LOG.error("Unknow error during executing test suites.", ex);
                     }
                 }
@@ -107,7 +107,7 @@ public class EventHandler {
                 if (event != null) {
                     try {
                         event.execute(testInfo);
-                    } catch (Throwable ex) {
+                    } catch (Exception ex) {
                         LOG.error("Unknow error during executing test events.", ex);
                     }
                 }

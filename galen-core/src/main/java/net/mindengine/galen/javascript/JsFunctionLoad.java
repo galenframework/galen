@@ -23,6 +23,7 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.Stack;
 
+import net.mindengine.galen.exceptions.SetupException;
 import net.mindengine.galen.utils.GalenUtils;
 
 import org.mozilla.javascript.BaseFunction;
@@ -107,7 +108,7 @@ public class JsFunctionLoad extends BaseFunction {
                 }
             }
         } catch (Exception ex) {
-            throw new RuntimeException("Could not load script: " + fullPath, ex);
+            throw new SetupException("Could not load script: " + fullPath, ex);
         }
     }
 
