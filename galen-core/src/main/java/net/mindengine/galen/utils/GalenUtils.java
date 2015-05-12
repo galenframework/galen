@@ -83,8 +83,9 @@ public class GalenUtils {
     public static String formatScreenSize(Dimension screenSize) {
         if (screenSize != null) {
             return String.format("%dx%d", screenSize.width, screenSize.height);
+        } else {
+            return "0x0";
         }
-        else return "0x0";
     }
 
     public static Dimension readSize(String sizeText) {
@@ -93,8 +94,7 @@ public class GalenUtils {
         }
         if (!sizeText.matches("[0-9]+x[0-9]+")) {
             throw new SetupException("Incorrect screen size: " + sizeText);
-        }
-        else {
+        } else {
             String[] arr = sizeText.split("x");
             return new Dimension(Integer.parseInt(arr[0]), Integer.parseInt(arr[1]));
         }
@@ -104,8 +104,9 @@ public class GalenUtils {
         URL resource = GalenUtils.class.getResource(specFile);
         if (resource != null) {
             return new File(resource.getFile());
+        } else {
+            return new File(specFile);
         }
-        else return new File(specFile);
     }
     
     
@@ -162,8 +163,7 @@ public class GalenUtils {
             scrollVerticallyTo(driver, 0);
 
             resultingImage = tiledImage;
-        }
-        else {
+        } else {
             resultingImage = image;
         }
 
@@ -207,10 +207,12 @@ public class GalenUtils {
                 g2d.dispose();
 
                 return scaledImage;
+            } else {
+                return screenshotImage;
             }
-            else return screenshotImage;
+        } else {
+            return screenshotImage;
         }
-        else return screenshotImage;
     }
 
     public static void scrollVerticallyTo(WebDriver driver, int scroll) {
@@ -252,10 +254,8 @@ public class GalenUtils {
      * @return
      * @throws SetupException 
      */
-    public static WebDriver createDriver(String browserType, String url, String size) throws SetupException {
-        if (browserType == null) { 
-            browserType = GalenConfig.getConfig().getDefaultBrowser();
-        }
+    public static WebDriver createDriver(String desiredBrowserType, String url, String size) throws SetupException {
+        String browserType = desiredBrowserType == null ? GalenConfig.getConfig().getDefaultBrowser() : desiredBrowserType;
         
         SeleniumBrowser browser = (SeleniumBrowser) new SeleniumBrowserFactory(browserType).openBrowser();
         
@@ -316,8 +316,9 @@ public class GalenUtils {
         GalenProperties properties = null;
         if (TestSession.current() != null) {
             properties = TestSession.current().getProperties();
+        } else {
+            properties = new GalenProperties();
         }
-        else properties = new GalenProperties();
         
         properties.load(new File(fileName));
         return properties.getProperties();
@@ -347,8 +348,9 @@ public class GalenUtils {
     public static String getParentForFile(String filePath) {
         if (filePath != null) {
             return new File(filePath).getParent();
+        }  else {
+            return null;
         }
-        else return null;
     }
 
     public static InputStream findFileOrResourceAsStream(String filePath) throws FileNotFoundException {
@@ -356,16 +358,14 @@ public class GalenUtils {
 
         if (file.exists()) {
             return new FileInputStream(file);
-        }
-        else {
+        } else {
             if (!filePath.startsWith("/")) {
                 filePath = "/" + filePath;
             }
             InputStream stream = GalenUtils.class.getResourceAsStream(filePath);
             if (stream != null) {
                 return stream;
-            }
-            else {
+            } else {
                 String windowsFilePath = filePath.replace("\\", "/");
                 return GalenUtils.class.getResourceAsStream(windowsFilePath);
             }
