@@ -3,9 +3,9 @@ package net.mindengine.galen.api;
 import java.net.MalformedURLException;
 import java.util.List;
 
-import org.openqa.selenium.WebDriver;
-
 import net.mindengine.galen.utils.TestDevice;
+
+import org.openqa.selenium.WebDriver;
 
 /**
  * Java API for Galen layout testing. Will be injected to interact with Galen
@@ -27,7 +27,7 @@ public interface GalenExecutor {
      * @throws Exception
      *             in case of any errors
      */
-    void checkLayout(TestDevice testDevice, String url, List<String> specs) throws Exception;
+    void checkLayout(TestDevice testDevice, String url, List<String> specs);
 
     /**
      * Check the layout of a page for the given url, device and specs
@@ -43,7 +43,7 @@ public interface GalenExecutor {
      * @throws Exception
      *             in case of any errors
      */
-    void checkLayout(TestDevice testDevice, String url, List<String> specs, List<String> includedTags) throws Exception;
+    void checkLayout(TestDevice testDevice, String url, List<String> specs, List<String> includedTags);
 
     /**
      * Check the layout of a page for the given url, device and specs
@@ -61,7 +61,7 @@ public interface GalenExecutor {
      * @throws Exception
      *             in case of any errors
      */
-    void checkLayout(TestDevice testDevice, String url, List<String> specs, List<String> includedTags, List<String> groups) throws Exception;
+    void checkLayout(TestDevice testDevice, String url, List<String> specs, List<String> includedTags, List<String> groups);
 
     /**
      * Check the layout of a page for the given url, device and spec
@@ -75,7 +75,7 @@ public interface GalenExecutor {
      * @throws Exception
      *             in case of any errors
      */
-    void checkLayout(TestDevice testDevice, String url, String spec) throws Exception;
+    void checkLayout(TestDevice testDevice, String url, String spec);
 
     /**
      * Check the layout of a page for the given url, device and spec
@@ -91,7 +91,7 @@ public interface GalenExecutor {
      * @throws Exception
      *             in case of any errors
      */
-    void checkLayout(TestDevice testDevice, String url, String spec, List<String> includedTags) throws Exception;
+    void checkLayout(TestDevice testDevice, String url, String spec, List<String> includedTags);
 
     /**
      * Check the layout of a page for the given url, device and spec
@@ -109,7 +109,7 @@ public interface GalenExecutor {
      * @throws Exception
      *             in case of any errors
      */
-    void checkLayout(TestDevice testDevice, String url, String spec, List<String> includedTags, List<String> groups) throws Exception;
+    void checkLayout(TestDevice testDevice, String url, String spec, List<String> includedTags, List<String> groups);
 
     /**
      * Get the current used driver instance
@@ -117,7 +117,7 @@ public interface GalenExecutor {
      * @return current instance
      * @throws MalformedURLException
      */
-    WebDriver getDriverInstance() throws MalformedURLException;
+    WebDriver getDriverInstance();
 
     /**
      * Create a WebDriver instance
@@ -125,7 +125,7 @@ public interface GalenExecutor {
      * @return the created driver instance
      * @throws MalformedURLException
      */
-    abstract WebDriver createDriver() throws MalformedURLException;
+    abstract WebDriver createDriver();
 
     /**
      * Closes the current driver instance

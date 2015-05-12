@@ -16,6 +16,11 @@
 package net.mindengine.galen.api;
 
 public class UnregisteredTestSession extends RuntimeException {
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 5616871499278687730L;
+
     public UnregisteredTestSession(String message) {
         super(message);
     }

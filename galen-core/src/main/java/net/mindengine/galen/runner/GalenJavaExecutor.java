@@ -15,6 +15,7 @@
  ******************************************************************************/
 package net.mindengine.galen.runner;
 
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Date;
@@ -27,9 +28,11 @@ import net.mindengine.galen.api.GalenReportsContainer;
 import net.mindengine.galen.browser.SeleniumBrowserFactory;
 import net.mindengine.galen.config.GalenConfig;
 import net.mindengine.galen.config.GalenProperty;
+import net.mindengine.galen.exceptions.SetupException;
+import net.mindengine.galen.exceptions.TestExecutionException;
 import net.mindengine.galen.reports.TestReport;
 import net.mindengine.galen.reports.model.LayoutReport;
-import net.mindengine.galen.utils.ReportUtil;
+import net.mindengine.galen.utils.GalenUtils;
 import net.mindengine.galen.utils.TestDevice;
 
 import org.openqa.selenium.WebDriver;
@@ -40,42 +43,49 @@ import org.slf4j.LoggerFactory;
 
 public class GalenJavaExecutor implements GalenExecutor {
 
-    private static final Logger LOG = LoggerFactory.getLogger("Layout Tests");
+    private static final Logger LOG = LoggerFactory.getLogger(GalenJavaExecutor.class);
 
     private final ThreadLocal<WebDriver> activeWebDriver = new ThreadLocal<WebDriver>();
 
-    private void loadPage(final String uri) throws Exception {
+    private void loadPage(final String uri) {
         getDriverInstance().get(uri);
-        // TODO, maybe more error handling regarding webdriver?
     }
 
-    public WebDriver getDriverInstance() throws MalformedURLException {
-        if (activeWebDriver.get() == null) {
-            activeWebDriver.set(createDriver());
+    public WebDriver getDriverInstance() {
+        try {
+            if (activeWebDriver.get() == null) {
+                activeWebDriver.set(createDriver());
+            }
+            return activeWebDriver.get();
+        } catch (Exception e) {
+            throw new SetupException(e);
         }
-        return activeWebDriver.get();
     }
 
     /**
      * @see net.mindengine.galen.api.GalenExecutor#createDriver()
      */
     @Override
-    public WebDriver createDriver() throws MalformedURLException {
+    public WebDriver createDriver() {
         final boolean useGrid = GalenConfig.getConfig().readProperty(GalenProperty.GALEN_BROWSERFACTORY_SELENIUM_RUNINGRID).equalsIgnoreCase("true");
         final String browserType = GalenConfig.getConfig().getDefaultBrowser();
         final String grid = GalenConfig.getConfig().readProperty(GalenProperty.GALEN_BROWSERFACTORY_SELENIUM_GRID_URL);
         WebDriver driver;
         if (useGrid) {
-            LOG.debug("running locally");
-            driver = SeleniumBrowserFactory.getDriver(browserType);
-
-            final String gridUrl = grid + "/wd/hub";
-            LOG.info("running against a grid ", gridUrl);
             try {
-                driver = new RemoteWebDriver(new URL(gridUrl), SeleniumBrowserFactory.getBrowserCapabilities(browserType));
-                // renew session on error
-            } catch (final WebDriverException e) {
-                driver = new RemoteWebDriver(new URL(gridUrl), SeleniumBrowserFactory.getBrowserCapabilities(browserType));
+                LOG.debug("running locally");
+                driver = SeleniumBrowserFactory.getDriver(browserType);
+
+                final String gridUrl = grid + "/wd/hub";
+                LOG.info("running against a grid ", gridUrl);
+                try {
+                    driver = new RemoteWebDriver(new URL(gridUrl), SeleniumBrowserFactory.getBrowserCapabilities(browserType));
+                    // renew session on error
+                } catch (final WebDriverException e) {
+                    driver = new RemoteWebDriver(new URL(gridUrl), SeleniumBrowserFactory.getBrowserCapabilities(browserType));
+                }
+            } catch (MalformedURLException e) {
+                throw new SetupException(e);
             }
         } else {
             LOG.debug("running locally");
@@ -109,7 +119,7 @@ public class GalenJavaExecutor implements GalenExecutor {
      *      java.util.List, java.util.List)
      */
     @Override
-    public void checkLayout(TestDevice testDevice, String url, List<String> specs, List<String> includedTags) throws Exception {
+    public void checkLayout(TestDevice testDevice, String url, List<String> specs, List<String> includedTags) {
         for (String spec : specs) {
             checkLayoutInternal(getCallerMethod(), testDevice, url, spec, includedTags, null);
         }
@@ -120,7 +130,7 @@ public class GalenJavaExecutor implements GalenExecutor {
      *      java.lang.String, java.util.List, java.util.List)
      */
     @Override
-    public void checkLayout(TestDevice testDevice, String url, String spec, List<String> includedTags, List<String> groups) throws Exception {
+    public void checkLayout(TestDevice testDevice, String url, String spec, List<String> includedTags, List<String> groups) {
         checkLayoutInternal(getCallerMethod(), testDevice, url, spec, includedTags, groups);
     }
 
@@ -129,7 +139,7 @@ public class GalenJavaExecutor implements GalenExecutor {
      *      java.util.List)
      */
     @Override
-    public void checkLayout(TestDevice testDevice, String url, final List<String> specs) throws Exception {
+    public void checkLayout(TestDevice testDevice, String url, final List<String> specs) {
         for (String spec : specs) {
             checkLayoutInternal(getCallerMethod(), testDevice, url, spec, null, null);
         }
@@ -140,7 +150,7 @@ public class GalenJavaExecutor implements GalenExecutor {
      *      java.util.List, java.util.List, java.util.List)
      */
     @Override
-    public void checkLayout(final TestDevice testDevice, String url, List<String> specs, List<String> includedTags, List<String> groups) throws Exception {
+    public void checkLayout(final TestDevice testDevice, String url, List<String> specs, List<String> includedTags, List<String> groups) {
         for (String spec : specs) {
             checkLayoutInternal(getCallerMethod(), testDevice, url, spec, includedTags, groups);
         }
@@ -151,7 +161,7 @@ public class GalenJavaExecutor implements GalenExecutor {
      *      java.lang.String,java.lang.String)
      */
     @Override
-    public void checkLayout(TestDevice testDevice, String url, String spec) throws Exception {
+    public void checkLayout(TestDevice testDevice, String url, String spec) {
         checkLayoutInternal(getCallerMethod(), testDevice, url, spec, null, null);
     }
 
@@ -161,7 +171,7 @@ public class GalenJavaExecutor implements GalenExecutor {
      */
 
     @Override
-    public void checkLayout(TestDevice testDevice, String url, String spec, List<String> includedTags) throws Exception {
+    public void checkLayout(TestDevice testDevice, String url, String spec, List<String> includedTags) {
         checkLayoutInternal(getCallerMethod(), testDevice, url, spec, includedTags, null);
     }
 
@@ -182,16 +192,22 @@ public class GalenJavaExecutor implements GalenExecutor {
      *             in case of errors or failures
      */
     protected void checkLayoutInternal(final String methodName, final TestDevice testDevice, final String url, final String spec,
-            final List<String> includedTags, final List<String> groups) throws Exception {
-        final Date startTime = new Date();
-        LOG.info("Starting layout check of specs " + spec + " at " + startTime);
-        loadPage(url);
-        final TestReport report = GalenReportsContainer.get().registerTest(methodName, groups);
-        final LayoutReport layoutReport = Galen.checkLayout(getDriverInstance(), spec, includedTags, null, null, null);
-        final Date endDate = new Date();
-        LOG.info("Finshed layout check at " + endDate);
-        report.layout(layoutReport, spec + " | " + testDevice.getName());
-        ReportUtil.analyzeReport(getDriverInstance(), layoutReport, spec, testDevice);
+            final List<String> includedTags, final List<String> groups) {
+        try {
+            final Date startTime = new Date();
+            LOG.info("Starting layout check of specs " + spec + " at " + startTime);
+            loadPage(url);
+            final TestReport report = GalenReportsContainer.get().registerTest(methodName, groups);
+            final LayoutReport layoutReport = Galen.checkLayout(getDriverInstance(), spec, includedTags, null, null, null);
+            final Date endDate = new Date();
+            LOG.info("Finshed layout check at " + endDate);
+            report.layout(layoutReport, spec + " | " + testDevice.getName());
+            GalenUtils.analyzeReport(getDriverInstance(), layoutReport, spec, testDevice);
+        } catch (MalformedURLException e) {
+            throw new SetupException(e);
+        } catch (IOException e) {
+            throw new TestExecutionException("Could not find all spec files", e);
+        }
     }
 
     /**
@@ -200,11 +216,15 @@ public class GalenJavaExecutor implements GalenExecutor {
      * @return name of the method as String
      * @throws ClassNotFoundException
      */
-    private String getCallerMethod() throws ClassNotFoundException {
-        Throwable t = new Throwable();
-        StackTraceElement[] elements = t.getStackTrace();
-        String callerMethodName = elements[2].getMethodName();
-        return callerMethodName;
+    private String getCallerMethod() {
+        try {
+            Throwable t = new Throwable();
+            StackTraceElement[] elements = t.getStackTrace();
+            String callerMethodName = elements[2].getMethodName();
+            return callerMethodName;
+        } catch (Exception e) {
+            throw new SetupException("Could not detect calling test class", e);
+        }
     }
 
 }

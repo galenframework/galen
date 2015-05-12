@@ -29,7 +29,9 @@ import java.net.URL;
 import java.security.DigestInputStream;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.util.*;
+import java.util.List;
+import java.util.Map;
+import java.util.Properties;
 import java.util.regex.Pattern;
 
 import javax.imageio.ImageIO;
@@ -39,6 +41,11 @@ import net.mindengine.galen.browser.SeleniumBrowserFactory;
 import net.mindengine.galen.browser.SeleniumGridBrowserFactory;
 import net.mindengine.galen.config.GalenConfig;
 import net.mindengine.galen.config.GalenProperty;
+import net.mindengine.galen.exceptions.SetupException;
+import net.mindengine.galen.reports.model.LayoutObject;
+import net.mindengine.galen.reports.model.LayoutReport;
+import net.mindengine.galen.reports.model.LayoutSection;
+import net.mindengine.galen.reports.model.LayoutSpec;
 import net.mindengine.galen.tests.GalenProperties;
 import net.mindengine.galen.tests.TestSession;
 import net.mindengine.rainbow4j.Rainbow4J;
@@ -50,6 +57,7 @@ import org.openqa.selenium.OutputType;
 import org.openqa.selenium.Platform;
 import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.remote.RemoteWebDriver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -60,12 +68,16 @@ public class GalenUtils {
     private static final String URL_REGEX = "[a-zA-Z0-9]+://.*";
     public static final String JS_RETRIEVE_DEVICE_PIXEL_RATIO = "var pr = window.devicePixelRatio; if (pr != undefined && pr != null)return pr; else return 1.0;";
 
+    
+    private GalenUtils(){
+        // hide public constuctor
+    }
 
     public static boolean isUrl(String url) {
         if (url == null) {
             return false;
         }
-        return url.matches(URL_REGEX) || url.equals("-");
+        return url.matches(URL_REGEX) || "-".equals(url);
     }
     
     public static String formatScreenSize(Dimension screenSize) {
@@ -80,7 +92,7 @@ public class GalenUtils {
             return null;
         }
         if (!sizeText.matches("[0-9]+x[0-9]+")) {
-            throw new RuntimeException("Incorrect screen size: " + sizeText);
+            throw new SetupException("Incorrect screen size: " + sizeText);
         }
         else {
             String[] arr = sizeText.split("x");
@@ -238,8 +250,9 @@ public class GalenUtils {
      * Needed for Javascript based tests
      * @param browserType
      * @return
+     * @throws SetupException 
      */
-    public static WebDriver createDriver(String browserType, String url, String size) {
+    public static WebDriver createDriver(String browserType, String url, String size) throws SetupException {
         if (browserType == null) { 
             browserType = GalenConfig.getConfig().getDefaultBrowser();
         }
@@ -257,7 +270,7 @@ public class GalenUtils {
         return browser.getDriver();
     }
     
-    public static WebDriver createGridDriver(String gridUrl, String browserName, String browserVersion, String platform, Map<String, String> desiredCapabilities, String size) {
+    public static WebDriver createGridDriver(String gridUrl, String browserName, String browserVersion, String platform, Map<String, String> desiredCapabilities, String size) throws SetupException {
         SeleniumGridBrowserFactory factory = new SeleniumGridBrowserFactory(gridUrl);
         factory.setBrowser(browserName);
         factory.setBrowserVersion(browserVersion);
@@ -276,7 +289,7 @@ public class GalenUtils {
         return driver;
     }
     
-    public static void resizeDriver(WebDriver driver, String sizeText) {
+    public static void resizeDriver(WebDriver driver, String sizeText) throws SetupException {
         if (sizeText != null && !sizeText.trim().isEmpty()) {
             Dimension size = GalenUtils.readSize(sizeText);
             driver.manage().window().setSize(new org.openqa.selenium.Dimension(size.width, size.height));
@@ -411,4 +424,52 @@ public class GalenUtils {
         return "";
     }
 
+
+    /**
+     * Analyses a given Galen layout report and create a readable exception message if any errors occured
+     * 
+     * @param currentDriver
+     *            webdriver instance to use
+     * @param layoutReport
+     *            report to anaylse
+     * @param specPath
+     *            used spec
+     * @param testDevice
+     *            used test device
+     * @param tags
+     *            used tags
+     */
+    public static void analyzeReport(final WebDriver currentDriver, final LayoutReport layoutReport, final String specPath, final TestDevice testDevice) {
+        if (layoutReport.errors() > 0) {
+            final StringBuilder errorDetails = new StringBuilder();
+            for (final LayoutSection layoutSection : layoutReport.getSections()) {
+                final StringBuilder errorElementDetails = new StringBuilder();
+                errorElementDetails.append("\n").append("Layout Section: ").append(layoutSection.getName()).append("\n");
+                errorElementDetails.append("  ViewPort Details: ").append(testDevice).append("\n");
+                for (final LayoutObject layoutObject : layoutSection.getObjects()) {
+                    boolean hasErrors = false;
+                    errorElementDetails.append("  Element: ").append(layoutObject.getName());
+                    for (final LayoutSpec layoutSpec : layoutObject.getSpecs()) {
+                        if (layoutSpec.getErrors() != null && layoutSpec.getErrors().size() > 0) {
+                            errorElementDetails.append(layoutSpec.getErrors().toString());
+                            hasErrors = true;
+                        }
+                    }
+                    if (hasErrors) {
+                        errorDetails.append(errorElementDetails).append("\n");
+                        errorDetails.append("  Spec: ").append(specPath).append("\n");
+                    }
+                }
+            }
+            if (currentDriver instanceof RemoteWebDriver) {
+                final String browser = ((RemoteWebDriver) currentDriver).getCapabilities().getBrowserName() + " "
+                        + ((RemoteWebDriver) currentDriver).getCapabilities().getVersion();
+                final Platform platform = ((RemoteWebDriver) currentDriver).getCapabilities().getPlatform();
+                throw new RuntimeException("Browser: " + browser + " on " + platform + ", device " + testDevice + ", more details here: "
+                        + errorDetails.toString());
+            } else {
+                throw new RuntimeException(errorDetails.toString());
+            }
+        }
+    }
 }
