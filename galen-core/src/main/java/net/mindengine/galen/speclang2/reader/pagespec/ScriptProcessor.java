@@ -18,6 +18,7 @@ package net.mindengine.galen.speclang2.reader.pagespec;
 import net.mindengine.galen.parser.StructNode;
 import net.mindengine.galen.parser.SyntaxException;
 import net.mindengine.galen.specs.reader.StringCharReader;
+import net.mindengine.galen.utils.GalenUtils;
 
 import java.io.IOException;
 import java.util.Collections;
@@ -41,7 +42,13 @@ public class ScriptProcessor {
             }
         } else {
             String fullPath = pageSpecHandler.getFullPathToResource(scriptPath);
-            pageSpecHandler.runJavaScriptFromFile(fullPath);
+
+            String fileId = GalenUtils.calculateFileId(fullPath);
+
+            if (!pageSpecHandler.getProcessedScripts().contains(fileId)) {
+                pageSpecHandler.getProcessedScripts().add(fileId);
+                pageSpecHandler.runJavaScriptFromFile(fullPath);
+            }
         }
 
         return Collections.emptyList();

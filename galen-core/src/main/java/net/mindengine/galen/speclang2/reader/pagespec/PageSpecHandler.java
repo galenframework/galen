@@ -47,6 +47,8 @@ public class PageSpecHandler implements VarsParserJsFunctions {
     private final VarsParser varsParser;
     private final List<String> tags;
     private final List<Pair<Rule, PageRule>> pageRules;
+    private final List<String> processedImports = new LinkedList<String>();
+    private final List<String> processedScripts = new LinkedList<String>();
 
     public PageSpecHandler(PageSpec pageSpec, Browser browser, List<String> tags, String contextPath) {
         this.pageSpec = pageSpec;
@@ -339,5 +341,13 @@ public class PageSpecHandler implements VarsParserJsFunctions {
 
     public void runJavaScript(String completeScript) {
         jsExecutor.eval(completeScript);
+    }
+
+    public List<String> getProcessedImports() {
+        return processedImports;
+    }
+
+    public List<String> getProcessedScripts() {
+        return processedScripts;
     }
 }

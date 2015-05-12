@@ -17,6 +17,7 @@ package net.mindengine.galen.speclang2.reader.pagespec;
 
 import net.mindengine.galen.parser.IndentationStructureParser;
 import net.mindengine.galen.parser.StructNode;
+import net.mindengine.galen.parser.SyntaxException;
 import net.mindengine.galen.specs.reader.StringCharReader;
 import net.mindengine.galen.utils.GalenUtils;
 
@@ -38,29 +39,39 @@ public class ImportProcessor {
         List<StructNode> importedNodes = new LinkedList<StructNode>();
 
         if (reader.hasMoreNormalSymbols()) {
-            importedNodes.addAll(importPageSpec(reader.getTheRest().trim()));
+            importedNodes.addAll(importPageSpec(reader.getTheRest().trim(), statementNode));
         }
 
         if (statementNode.getChildNodes() != null) {
             for (StructNode childNode : statementNode.getChildNodes()) {
-                importedNodes.addAll(importPageSpec(childNode.getName()));
+                importedNodes.addAll(importPageSpec(childNode.getName(), childNode));
             }
         }
 
         return importedNodes;
     }
 
-    private List<StructNode> importPageSpec(String filePath) throws IOException {
+    private List<StructNode> importPageSpec(String filePath, StructNode origin) throws IOException {
         String fullPath = pageSpecHandler.getContextPath() + "/" + filePath;
 
-        InputStream stream = GalenUtils.findFileOrResourceAsStream(fullPath);
-        List<StructNode> structs = new IndentationStructureParser().parse(stream, fullPath);
+        String fileId = GalenUtils.calculateFileId(fullPath);
+        if (!pageSpecHandler.getProcessedImports().contains(fileId)) {
+            pageSpecHandler.getProcessedImports().add(fileId);
 
-        PageSpecHandler childPageSpecHandler = new PageSpecHandler(pageSpecHandler, GalenUtils.getParentForFile(fullPath));
+            InputStream stream = GalenUtils.findFileOrResourceAsStream(fullPath);
 
-        List<StructNode> allProcessedChildNodes = new LogicProcessor(childPageSpecHandler).process(structs);
-        new PostProcessor(childPageSpecHandler).process(allProcessedChildNodes);
+            if (stream == null) {
+                throw new SyntaxException(origin, "Cannot import: " + filePath);
+            }
 
+            List<StructNode> structs = new IndentationStructureParser().parse(stream, fullPath);
+
+            PageSpecHandler childPageSpecHandler = new PageSpecHandler(pageSpecHandler, GalenUtils.getParentForFile(fullPath));
+
+            List<StructNode> allProcessedChildNodes = new LogicProcessor(childPageSpecHandler).process(structs);
+            new PostProcessor(childPageSpecHandler).process(allProcessedChildNodes);
+
+        }
         return Collections.emptyList();
     }
 }

@@ -317,7 +317,7 @@ public class PageSpecReaderV2Test {
 
 
     @Test
-    public void should_importOtherPageSpecs_andMergeSectionsAndObjects() throws IOException {
+    public void should_importOtherPageSpecs_onlyOnce_andMergeSectionsAndObjects() throws IOException {
         PageSpec pageSpec = readPageSpec("speclang2/import-other-pagespecs.gspec");
 
         assertThat(pageSpec.getObjects(), is((Map<String, Locator>) new HashMap<String, Locator>() {{

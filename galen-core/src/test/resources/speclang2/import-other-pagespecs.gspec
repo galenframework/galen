@@ -7,6 +7,10 @@
     main-container       #main
 
 
+
+@import for-import/spec-for-import.gspec
+
+
 = Header section =
     header:
         height 100px
