@@ -18,6 +18,8 @@ package net.mindengine.galen.junit;
 import java.util.List;
 
 import net.mindengine.galen.api.GalenReportsContainer;
+import net.mindengine.galen.config.GalenConfig;
+import net.mindengine.galen.config.GalenProperty;
 import net.mindengine.galen.exceptions.TestExecutionException;
 import net.mindengine.galen.reports.GalenTestInfo;
 import net.mindengine.galen.reports.HtmlReportBuilder;
@@ -44,11 +46,10 @@ public class JUnitStepListener extends RunListener {
         LOG.info("Generating Galen Html reports");
         List<GalenTestInfo> tests = GalenReportsContainer.get().getAllTests();
         try {
-            // TODO move to variable
-            new HtmlReportBuilder().build(tests, "target/galen-html-reports");
+            new HtmlReportBuilder().build(tests, GalenConfig.getConfig().readProperty(GalenProperty.TEST_JAVA_REPORT_OUTPUTFOLDER));
             cleanData(tests);
         } catch (Exception e) {
-            throw new TestExecutionException("Error occurred during creating layout reports",e);
+            throw new TestExecutionException("Error occurred during creating layout reports", e);
         }
     }
 

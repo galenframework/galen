@@ -20,6 +20,8 @@ import java.util.List;
 
 import net.mindengine.galen.api.GalenExecutor;
 import net.mindengine.galen.api.GalenReportsContainer;
+import net.mindengine.galen.config.GalenConfig;
+import net.mindengine.galen.config.GalenProperty;
 import net.mindengine.galen.reports.GalenTestInfo;
 import net.mindengine.galen.reports.HtmlReportBuilder;
 import net.mindengine.galen.reports.model.FileTempStorage;
@@ -51,8 +53,7 @@ public class GalenListener implements IReporter, IInvokedMethodListener {
         LOG.info("Generating Galen Html reports");
         List<GalenTestInfo> tests = GalenReportsContainer.get().getAllTests();
         try {
-            // TODO move to variable
-            new HtmlReportBuilder().build(tests, "target/galen-html-reports");
+            new HtmlReportBuilder().build(tests, GalenConfig.getConfig().readProperty(GalenProperty.TEST_JAVA_REPORT_OUTPUTFOLDER));
             cleanData(tests);
         } catch (Exception e) {
             throw new RuntimeException(e);

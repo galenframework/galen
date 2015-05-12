@@ -92,10 +92,8 @@ public class GalenJavaExecutor implements GalenExecutor {
             driver = SeleniumBrowserFactory.getDriver(browserType);
         }
         try {
-            // TODO maybe added to config?
-            driver.manage().timeouts().pageLoadTimeout(20, TimeUnit.SECONDS);
-            // TODO maybe added to config?
-            driver.manage().timeouts().implicitlyWait(1, TimeUnit.SECONDS);
+            driver.manage().timeouts().pageLoadTimeout(GalenConfig.getConfig().getIntProperty(GalenProperty.TEST_JAVA_TIMEOUT_PAGELOAD), TimeUnit.SECONDS);
+            driver.manage().timeouts().implicitlyWait(GalenConfig.getConfig().getIntProperty(GalenProperty.TEST_JAVA_TIMEOUT_IMPLICITYWAIT), TimeUnit.SECONDS);
         } catch (final WebDriverException exception) {
             LOG.info("Setting timeout not working in some drive", exception);
         }
