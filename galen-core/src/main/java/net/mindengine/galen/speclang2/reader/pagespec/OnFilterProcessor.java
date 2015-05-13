@@ -20,6 +20,7 @@ import net.mindengine.galen.parser.SyntaxException;
 import net.mindengine.galen.specs.reader.StringCharReader;
 
 import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
 
 public class OnFilterProcessor {
@@ -35,20 +36,41 @@ public class OnFilterProcessor {
             throw new SyntaxException(statementNode, "Missing tags");
         }
 
-        String[] filterTags = rest.split(",");
-
         List<String> pageSpecTags = pageSpecHandler.getTags();
+        List<String> filterTags = parseTagsFrom(rest);
 
-
-        for (String filterTag : filterTags) {
-            String trimmedFilterTag = filterTag.trim();
-
-            if (trimmedFilterTag.equals("*")
-                   || (pageSpecTags != null && pageSpecTags.contains(trimmedFilterTag))) {
-                return statementNode.getChildNodes();
+        if (!containsExcludedTags(filterTags, pageSpecHandler.getExcludedTags())) {
+            for (String filterTag : filterTags) {
+                if (filterTag.equals("*")
+                        || (pageSpecTags != null && pageSpecTags.contains(filterTag))) {
+                    return statementNode.getChildNodes();
+                }
             }
         }
-
         return Collections.emptyList();
+    }
+
+    private List<String> parseTagsFrom(String text) {
+        String[] filterTagsArr = text.split(",");
+        List<String> list = new LinkedList<>();
+
+        for (String filterTag : filterTagsArr) {
+            String trimmedFilterTag = filterTag.trim();
+            list.add(trimmedFilterTag);
+        }
+
+        return list;
+    }
+
+
+    private boolean containsExcludedTags(List<String> filterTags, List<String> excludedTags) {
+        if (excludedTags != null) {
+            for (String excludedTag : excludedTags) {
+                if (filterTags.contains(excludedTag)) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 }

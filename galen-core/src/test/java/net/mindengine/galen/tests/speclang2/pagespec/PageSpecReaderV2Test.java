@@ -70,7 +70,7 @@ public class PageSpecReaderV2Test {
     @Test
     public void shouldRead_objectDefinitions_withMultiObjects() throws IOException {
         PageSpec pageSpec = readPageSpec("speclang2/object-definitions-multi-objects.gspec",
-                new SeleniumBrowser(new MockedDriver("/speclang2/mocks/menu-items.json")).getPage(), asList("mobile"));
+                new SeleniumBrowser(new MockedDriver("/speclang2/mocks/menu-items.json")).getPage(), asList("mobile"), EMPTY_TAGS);
 
         assertThat(pageSpec.getObjects(), is((Map<String, Locator>)new HashMap<String, Locator>(){{
             put("menu-item-1", new Locator("css", "#menu li", 1));
@@ -83,7 +83,7 @@ public class PageSpecReaderV2Test {
     @Test
     public void shouldRead_objectDefinitions_withMultiLevelObjects() throws IOException {
         PageSpec pageSpec = readPageSpec("speclang2/object-definitions-multi-level-objects.gspec",
-                new SeleniumBrowser(new MockedDriver("/speclang2/mocks/multi-level-objects.json")).getPage(), asList("mobile"));
+                new SeleniumBrowser(new MockedDriver("/speclang2/mocks/multi-level-objects.json")).getPage(), asList("mobile"), EMPTY_TAGS);
 
         assertThat(pageSpec.getObjects(), is((Map<String, Locator>)new HashMap<String, Locator>(){{
             put("header", new Locator("css", "#header"));
@@ -273,7 +273,7 @@ public class PageSpecReaderV2Test {
 
     @Test
     public void shouldRead_taggedSections_andProcessOnlyThose_thatMatchGivenTags_1() throws IOException {
-        PageSpec pageSpec = readPageSpec("speclang2/tagged-sections.gspec", NO_PAGE, asList("mobile"));
+        PageSpec pageSpec = readPageSpec("speclang2/tagged-sections.gspec", NO_PAGE, asList("mobile"), EMPTY_TAGS);
 
         assertThat(pageSpec.getSections().size(), is(1));
 
@@ -287,7 +287,7 @@ public class PageSpecReaderV2Test {
 
     @Test
     public void shouldRead_taggedSections_andProcessOnlyThose_thatMatchGivenTags_2() throws IOException {
-        PageSpec pageSpec = readPageSpec("speclang2/tagged-sections.gspec", NO_PAGE, asList("tablet"));
+        PageSpec pageSpec = readPageSpec("speclang2/tagged-sections.gspec", NO_PAGE, asList("tablet"), EMPTY_TAGS);
 
         assertThat(pageSpec.getSections().size(), is(1));
 
@@ -301,7 +301,7 @@ public class PageSpecReaderV2Test {
 
     @Test
     public void shouldRead_taggedSections_andProcessOnlyThose_thatMatchGivenTags_3() throws IOException {
-        PageSpec pageSpec = readPageSpec("speclang2/tagged-sections.gspec", NO_PAGE, asList("desktop"));
+        PageSpec pageSpec = readPageSpec("speclang2/tagged-sections.gspec", NO_PAGE, asList("desktop"), EMPTY_TAGS);
 
         assertThat(pageSpec.getSections().size(), is(1));
 
@@ -313,6 +313,19 @@ public class PageSpecReaderV2Test {
         assertThat(objects.get(1).getSpecs().get(0).getOriginalText(), is("inside header 5px top left"));
     }
 
+    @Test
+    public void shouldRead_taggedSections_andExcludeTags() throws IOException {
+        PageSpec pageSpec = readPageSpec("speclang2/tagged-sections.gspec", NO_PAGE, asList("mobile", "desktop"), asList("tablet"));
+
+        assertThat(pageSpec.getSections().size(), is(1));
+
+        List<ObjectSpecs> objects = pageSpec.getSections().get(0).getObjects();
+        assertThat(objects.size(), is(2));
+        assertThat(objects.get(0).getObjectName(), is("header"));
+        assertThat(objects.get(0).getSpecs().get(0).getOriginalText(), is("height 200px"));
+        assertThat(objects.get(1).getObjectName(), is("header-icon"));
+        assertThat(objects.get(1).getSpecs().get(0).getOriginalText(), is("inside header 5px top left"));
+    }
 
     @Test
     public void should_importOtherPageSpecs_onlyOnce_andMergeSectionsAndObjects() throws IOException {
@@ -402,7 +415,7 @@ public class PageSpecReaderV2Test {
     public void shouldRead_customRulesFromJavaScript_andProcessThem() throws IOException {
         PageSpec pageSpec = readPageSpec("speclang2/custom-js-rules.gspec",
                 new MockedPage(new HashMap<String, PageElement>()),
-                Collections.<String>emptyList());
+                EMPTY_TAGS, EMPTY_TAGS);
 
         assertThat(pageSpec.getSections().size(), is(1));
         assertThat(pageSpec.getSections().get(0).getName(), is("Main section"));
@@ -437,7 +450,7 @@ public class PageSpecReaderV2Test {
                 new MockedPage(new HashMap<String, PageElement>(){{
                     put("header", element(0, 0, 100, 10));
                 }}),
-                Collections.<String>emptyList());
+                EMPTY_TAGS, EMPTY_TAGS);
 
         assertThat(pageSpec.getSections().size(), is(1));
 
@@ -455,7 +468,7 @@ public class PageSpecReaderV2Test {
                     put("header", invisibleElement(0, 0, 100, 10));
                     put("header2", element(0, 0, 100, 10));
                 }}),
-                Collections.<String>emptyList());
+                EMPTY_TAGS, EMPTY_TAGS);
 
         assertThat(pageSpec.getSections().size(), is(1));
 
@@ -473,7 +486,7 @@ public class PageSpecReaderV2Test {
                     put("header", invisibleElement(0, 0, 100, 10));
                     put("header2", invisibleElement(0, 0, 100, 10));
                 }}),
-                Collections.<String>emptyList());
+                EMPTY_TAGS, EMPTY_TAGS);
 
         assertThat(pageSpec.getSections().size(), is(1));
 
@@ -488,7 +501,7 @@ public class PageSpecReaderV2Test {
     public void shouldAllow_toPassProperties() throws IOException {
         Properties properties = new Properties();
         properties.put("custom.user.name", "John");
-        PageSpec pageSpec = new PageSpecReaderV2().read("speclang2/properties.gspec", NO_PAGE, EMPTY_TAGS, properties);
+        PageSpec pageSpec = new PageSpecReaderV2().read("speclang2/properties.gspec", NO_PAGE, EMPTY_TAGS, EMPTY_TAGS, properties);
 
         assertThat(pageSpec.getSections().get(0).getName(), is("Main section for user John"));
         assertThat(pageSpec.getSections().get(0).getObjects().get(0).getSpecs().get(0).getOriginalText(),
@@ -498,11 +511,11 @@ public class PageSpecReaderV2Test {
 
 
     private PageSpec readPageSpec(String resource) throws IOException {
-        return readPageSpec(resource, NO_PAGE, EMPTY_TAGS);
+        return readPageSpec(resource, NO_PAGE, EMPTY_TAGS, EMPTY_TAGS);
     }
 
-    private PageSpec readPageSpec(String resource, Page page, List<String> tags) throws IOException {
-        return new PageSpecReaderV2().read(resource, page, tags, NO_PROPERTIES);
+    private PageSpec readPageSpec(String resource, Page page, List<String> tags, List<String> excludedTags) throws IOException {
+        return new PageSpecReaderV2().read(resource, page, tags, excludedTags, NO_PROPERTIES);
     }
 
     private MockedPageElement element(int left, int top, int width, int height) {

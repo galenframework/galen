@@ -50,11 +50,13 @@ public class PageSpecHandler implements VarsParserJsFunctions {
     private final List<String> processedImports = new LinkedList<>();
     private final List<String> processedScripts = new LinkedList<>();
     private final Properties properties;
+    private final List<String> excludedTags;
 
-    public PageSpecHandler(PageSpec pageSpec, Page page, List<String> tags, String contextPath, Properties properties) {
+    public PageSpecHandler(PageSpec pageSpec, Page page, List<String> tags, List<String> excludedTags, String contextPath, Properties properties) {
         this.pageSpec = pageSpec;
         this.page = page;
         this.tags = tags;
+        this.excludedTags = excludedTags;
         this.contextPath = contextPath;
         this.specReaderV2 = new SpecReaderV2();
         this.jsExecutor = createGalenJsExecutor(this);
@@ -76,6 +78,7 @@ public class PageSpecHandler implements VarsParserJsFunctions {
         this.jsExecutor = copy.jsExecutor;
         this.varsParser = copy.varsParser;
         this.tags = copy.tags;
+        this.excludedTags = copy.excludedTags;
         this.pageRules = copy.pageRules;
         this.properties = copy.properties;
     }
@@ -353,5 +356,9 @@ public class PageSpecHandler implements VarsParserJsFunctions {
 
     public Page getPage() {
         return page;
+    }
+
+    public List<String> getExcludedTags() {
+        return excludedTags;
     }
 }

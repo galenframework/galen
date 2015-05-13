@@ -15,7 +15,6 @@
 ******************************************************************************/
 package net.mindengine.galen.speclang2.reader.pagespec;
 
-import net.mindengine.galen.browser.Browser;
 import net.mindengine.galen.page.Page;
 import net.mindengine.galen.parser.IndentationStructureParser;
 import net.mindengine.galen.parser.StructNode;
@@ -29,18 +28,18 @@ import java.util.Properties;
 
 public class PageSpecReaderV2 {
 
-    public PageSpec read(String path, Page page, List<String> tags, Properties properties) throws IOException {
+    public PageSpec read(String path, Page page, List<String> tags, List<String> excludedTags, Properties properties) throws IOException {
         String contextPath = GalenUtils.getParentForFile(path);
-        return read(GalenUtils.findFileOrResourceAsStream(path), path, contextPath, page, tags, properties);
+        return read(GalenUtils.findFileOrResourceAsStream(path), path, contextPath, page, tags, excludedTags, properties);
     }
 
-    public PageSpec read(InputStream inputStream, String source, String contextPath, Page page, List<String> tags, Properties properties) throws IOException {
+    public PageSpec read(InputStream inputStream, String source, String contextPath, Page page, List<String> tags, List<String> excludedTags, Properties properties) throws IOException {
         IndentationStructureParser structParser = new IndentationStructureParser();
         List<StructNode> structs = structParser.parse(inputStream, source);
 
         PageSpec pageSpec = new PageSpec();
 
-        PageSpecHandler pageSpecHandler = new PageSpecHandler(pageSpec, page, tags, contextPath, properties);
+        PageSpecHandler pageSpecHandler = new PageSpecHandler(pageSpec, page, tags, excludedTags, contextPath, properties);
 
         List<StructNode> allProcessedChildNodes = new LogicProcessor(pageSpecHandler).process(structs);
         new PostProcessor(pageSpecHandler).process(allProcessedChildNodes);
