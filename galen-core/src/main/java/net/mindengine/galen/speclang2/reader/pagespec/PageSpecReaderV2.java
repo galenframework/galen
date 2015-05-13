@@ -24,21 +24,22 @@ import net.mindengine.galen.utils.GalenUtils;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
+import java.util.Properties;
 
 public class PageSpecReaderV2 {
 
-    public PageSpec read(String path, Browser browser, List<String> tags) throws IOException {
+    public PageSpec read(String path, Browser browser, List<String> tags, Properties properties) throws IOException {
         String contextPath = GalenUtils.getParentForFile(path);
-        return read(GalenUtils.findFileOrResourceAsStream(path), path, contextPath, browser, tags);
+        return read(GalenUtils.findFileOrResourceAsStream(path), path, contextPath, browser, tags, properties);
     }
 
-    public PageSpec read(InputStream inputStream, String source, String contextPath, Browser browser, List<String> tags) throws IOException {
+    public PageSpec read(InputStream inputStream, String source, String contextPath, Browser browser, List<String> tags, Properties properties) throws IOException {
         IndentationStructureParser structParser = new IndentationStructureParser();
         List<StructNode> structs = structParser.parse(inputStream, source);
 
         PageSpec pageSpec = new PageSpec();
 
-        PageSpecHandler pageSpecHandler = new PageSpecHandler(pageSpec, browser, tags, contextPath);
+        PageSpecHandler pageSpecHandler = new PageSpecHandler(pageSpec, browser, tags, contextPath, properties);
 
         List<StructNode> allProcessedChildNodes = new LogicProcessor(pageSpecHandler).process(structs);
         new PostProcessor(pageSpecHandler).process(allProcessedChildNodes);

@@ -34,10 +34,8 @@ import org.testng.annotations.Test;
 
 import java.awt.*;
 import java.io.IOException;
-import java.util.Collections;
-import java.util.HashMap;
+import java.util.*;
 import java.util.List;
-import java.util.Map;
 
 import static java.util.Arrays.asList;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -47,6 +45,7 @@ public class PageSpecReaderV2Test {
 
     private static final Browser NO_BROWSER = null;
     private static final List<String> EMPTY_TAGS = Collections.emptyList();
+    private static final Properties NO_PROPERTIES = null;
 
     @Test
     public void shouldRead_objectDefinitions() throws IOException {
@@ -486,6 +485,17 @@ public class PageSpecReaderV2Test {
         assertThat(section.getObjects().get(0).getSpecs().get(0).getOriginalText(), is("visible"));
     }
 
+    @Test
+    public void shouldAllow_toPassProperties() throws IOException {
+        Properties properties = new Properties();
+        properties.put("custom.user.name", "John");
+        PageSpec pageSpec = new PageSpecReaderV2().read("speclang2/properties.gspec", NO_BROWSER, EMPTY_TAGS, properties);
+
+        assertThat(pageSpec.getSections().get(0).getName(), is("Main section for user John"));
+        assertThat(pageSpec.getSections().get(0).getObjects().get(0).getSpecs().get(0).getOriginalText(),
+                is("text is \"Welcome, John!\""));
+    }
+
 
 
     private PageSpec readPageSpec(String resource) throws IOException {
@@ -493,7 +503,7 @@ public class PageSpecReaderV2Test {
     }
 
     private PageSpec readPageSpec(String resource, Browser browser, List<String> tags) throws IOException {
-        return new PageSpecReaderV2().read(resource, browser, tags);
+        return new PageSpecReaderV2().read(resource, browser, tags, NO_PROPERTIES);
     }
 
     private MockedPageElement element(int left, int top, int width, int height) {

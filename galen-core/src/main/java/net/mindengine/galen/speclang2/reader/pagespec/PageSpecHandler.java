@@ -47,18 +47,37 @@ public class PageSpecHandler implements VarsParserJsFunctions {
     private final VarsParser varsParser;
     private final List<String> tags;
     private final List<Pair<Rule, PageRule>> pageRules;
-    private final List<String> processedImports = new LinkedList<String>();
-    private final List<String> processedScripts = new LinkedList<String>();
+    private final List<String> processedImports = new LinkedList<>();
+    private final List<String> processedScripts = new LinkedList<>();
+    private final Properties properties;
 
-    public PageSpecHandler(PageSpec pageSpec, Browser browser, List<String> tags, String contextPath) {
+    public PageSpecHandler(PageSpec pageSpec, Browser browser, List<String> tags, String contextPath, Properties properties) {
         this.pageSpec = pageSpec;
         this.browser = browser;
         this.tags = tags;
         this.contextPath = contextPath;
         this.specReaderV2 = new SpecReaderV2();
         this.jsExecutor = createGalenJsExecutor(this);
-        this.varsParser = new VarsParser(new Context(), new Properties(), jsExecutor);
-        this.pageRules = new LinkedList<Pair<Rule, PageRule>>();
+        this.pageRules = new LinkedList<>();
+
+        if (properties != null) {
+            this.properties = properties;
+        } else {
+            this.properties = new Properties();
+        }
+        this.varsParser = new VarsParser(new Context(), this.properties, jsExecutor);
+    }
+
+    public PageSpecHandler(PageSpecHandler copy, String contextPath) {
+        this.pageSpec = copy.pageSpec;
+        this.browser = copy.browser;
+        this.contextPath = contextPath;
+        this.specReaderV2 = copy.specReaderV2;
+        this.jsExecutor = copy.jsExecutor;
+        this.varsParser = copy.varsParser;
+        this.tags = copy.tags;
+        this.pageRules = copy.pageRules;
+        this.properties = copy.properties;
     }
 
     private static GalenJsExecutor createGalenJsExecutor(final PageSpecHandler pageSpecHandler) {
@@ -140,17 +159,6 @@ public class PageSpecHandler implements VarsParserJsFunctions {
         }
 
         return Boolean.FALSE;
-    }
-
-    public PageSpecHandler(PageSpecHandler copy, String contextPath) {
-        this.pageSpec = copy.pageSpec;
-        this.browser = copy.browser;
-        this.contextPath = contextPath;
-        this.specReaderV2 = copy.specReaderV2;
-        this.jsExecutor = copy.jsExecutor;
-        this.varsParser = copy.varsParser;
-        this.tags = copy.tags;
-        this.pageRules = copy.pageRules;
     }
 
     public PageSpec buildPageSpec() {

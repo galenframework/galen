@@ -1,0 +1,6 @@
+
+
+
+= Main section for user ${custom.user.name} =
+    caption :
+        text is "Welcome, ${custom.user.name}!"
