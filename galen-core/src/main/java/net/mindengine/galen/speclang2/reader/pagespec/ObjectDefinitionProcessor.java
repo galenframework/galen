@@ -99,7 +99,7 @@ public class ObjectDefinitionProcessor {
     }
 
     private void addMultiObjectsToSpec(StructNode objectNode, String objectName, Locator locator) {
-        Page page = pageSpecHandler.getBrowser().getPage();
+        Page page = pageSpecHandler.getPage();
         int count = page.getObjectCount(locator);
 
         for (int index = 1; index <= count; index++) {

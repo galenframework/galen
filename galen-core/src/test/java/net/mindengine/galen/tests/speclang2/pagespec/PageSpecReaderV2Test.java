@@ -15,13 +15,13 @@
 ******************************************************************************/
 package net.mindengine.galen.tests.speclang2.pagespec;
 
-import net.mindengine.galen.browser.Browser;
 import net.mindengine.galen.browser.SeleniumBrowser;
 import net.mindengine.galen.components.MockedBrowser;
 import net.mindengine.galen.components.mocks.driver.MockedDriver;
 import net.mindengine.galen.components.validation.MockedInvisiblePageElement;
 import net.mindengine.galen.components.validation.MockedPage;
 import net.mindengine.galen.components.validation.MockedPageElement;
+import net.mindengine.galen.page.Page;
 import net.mindengine.galen.page.PageElement;
 import net.mindengine.galen.speclang2.reader.pagespec.PageSpecReaderV2;
 import net.mindengine.galen.specs.page.CorrectionsRect;
@@ -29,7 +29,6 @@ import net.mindengine.galen.specs.page.Locator;
 import net.mindengine.galen.specs.page.ObjectSpecs;
 import net.mindengine.galen.specs.page.PageSection;
 import net.mindengine.galen.specs.reader.page.PageSpec;
-import org.apache.commons.lang3.tuple.Pair;
 import org.testng.annotations.Test;
 
 import java.awt.*;
@@ -43,7 +42,7 @@ import static org.hamcrest.Matchers.*;
 
 public class PageSpecReaderV2Test {
 
-    private static final Browser NO_BROWSER = null;
+    private static final Page NO_PAGE = null;
     private static final List<String> EMPTY_TAGS = Collections.emptyList();
     private static final Properties NO_PROPERTIES = null;
 
@@ -71,7 +70,7 @@ public class PageSpecReaderV2Test {
     @Test
     public void shouldRead_objectDefinitions_withMultiObjects() throws IOException {
         PageSpec pageSpec = readPageSpec("speclang2/object-definitions-multi-objects.gspec",
-                new SeleniumBrowser(new MockedDriver("/speclang2/mocks/menu-items.json")), asList("mobile"));
+                new SeleniumBrowser(new MockedDriver("/speclang2/mocks/menu-items.json")).getPage(), asList("mobile"));
 
         assertThat(pageSpec.getObjects(), is((Map<String, Locator>)new HashMap<String, Locator>(){{
             put("menu-item-1", new Locator("css", "#menu li", 1));
@@ -84,7 +83,7 @@ public class PageSpecReaderV2Test {
     @Test
     public void shouldRead_objectDefinitions_withMultiLevelObjects() throws IOException {
         PageSpec pageSpec = readPageSpec("speclang2/object-definitions-multi-level-objects.gspec",
-                new SeleniumBrowser(new MockedDriver("/speclang2/mocks/multi-level-objects.json")), asList("mobile"));
+                new SeleniumBrowser(new MockedDriver("/speclang2/mocks/multi-level-objects.json")).getPage(), asList("mobile"));
 
         assertThat(pageSpec.getObjects(), is((Map<String, Locator>)new HashMap<String, Locator>(){{
             put("header", new Locator("css", "#header"));
@@ -274,7 +273,7 @@ public class PageSpecReaderV2Test {
 
     @Test
     public void shouldRead_taggedSections_andProcessOnlyThose_thatMatchGivenTags_1() throws IOException {
-        PageSpec pageSpec = readPageSpec("speclang2/tagged-sections.gspec", NO_BROWSER, asList("mobile"));
+        PageSpec pageSpec = readPageSpec("speclang2/tagged-sections.gspec", NO_PAGE, asList("mobile"));
 
         assertThat(pageSpec.getSections().size(), is(1));
 
@@ -288,7 +287,7 @@ public class PageSpecReaderV2Test {
 
     @Test
     public void shouldRead_taggedSections_andProcessOnlyThose_thatMatchGivenTags_2() throws IOException {
-        PageSpec pageSpec = readPageSpec("speclang2/tagged-sections.gspec", NO_BROWSER, asList("tablet"));
+        PageSpec pageSpec = readPageSpec("speclang2/tagged-sections.gspec", NO_PAGE, asList("tablet"));
 
         assertThat(pageSpec.getSections().size(), is(1));
 
@@ -302,7 +301,7 @@ public class PageSpecReaderV2Test {
 
     @Test
     public void shouldRead_taggedSections_andProcessOnlyThose_thatMatchGivenTags_3() throws IOException {
-        PageSpec pageSpec = readPageSpec("speclang2/tagged-sections.gspec", NO_BROWSER, asList("desktop"));
+        PageSpec pageSpec = readPageSpec("speclang2/tagged-sections.gspec", NO_PAGE, asList("desktop"));
 
         assertThat(pageSpec.getSections().size(), is(1));
 
@@ -402,7 +401,7 @@ public class PageSpecReaderV2Test {
     @Test
     public void shouldRead_customRulesFromJavaScript_andProcessThem() throws IOException {
         PageSpec pageSpec = readPageSpec("speclang2/custom-js-rules.gspec",
-                new MockedBrowser("", new Dimension(1, 1), new MockedPage(new HashMap<String, PageElement>())),
+                new MockedPage(new HashMap<String, PageElement>()),
                 Collections.<String>emptyList());
 
         assertThat(pageSpec.getSections().size(), is(1));
@@ -435,9 +434,9 @@ public class PageSpecReaderV2Test {
     @Test
     public void shouldRead_conditionsWithMultipleElseBlocks()  throws  IOException {
         PageSpec pageSpec = readPageSpec("speclang2/conditions.gspec",
-                new MockedBrowser("", new Dimension(1, 1), new MockedPage(new HashMap<String, PageElement>(){{
+                new MockedPage(new HashMap<String, PageElement>(){{
                     put("header", element(0, 0, 100, 10));
-                }})),
+                }}),
                 Collections.<String>emptyList());
 
         assertThat(pageSpec.getSections().size(), is(1));
@@ -452,10 +451,10 @@ public class PageSpecReaderV2Test {
     @Test
     public void shouldRead_conditionsWithMultipleElseBlocks_2()  throws  IOException {
         PageSpec pageSpec = readPageSpec("speclang2/conditions.gspec",
-                new MockedBrowser("", new Dimension(1, 1), new MockedPage(new HashMap<String, PageElement>(){{
+                new MockedPage(new HashMap<String, PageElement>(){{
                     put("header", invisibleElement(0, 0, 100, 10));
                     put("header2", element(0, 0, 100, 10));
-                }})),
+                }}),
                 Collections.<String>emptyList());
 
         assertThat(pageSpec.getSections().size(), is(1));
@@ -470,10 +469,10 @@ public class PageSpecReaderV2Test {
     @Test
     public void shouldRead_conditionsWithMultipleElseBlocks_3()  throws  IOException {
         PageSpec pageSpec = readPageSpec("speclang2/conditions.gspec",
-                new MockedBrowser("", new Dimension(1, 1), new MockedPage(new HashMap<String, PageElement>(){{
+                new MockedPage(new HashMap<String, PageElement>(){{
                     put("header", invisibleElement(0, 0, 100, 10));
                     put("header2", invisibleElement(0, 0, 100, 10));
-                }})),
+                }}),
                 Collections.<String>emptyList());
 
         assertThat(pageSpec.getSections().size(), is(1));
@@ -489,7 +488,7 @@ public class PageSpecReaderV2Test {
     public void shouldAllow_toPassProperties() throws IOException {
         Properties properties = new Properties();
         properties.put("custom.user.name", "John");
-        PageSpec pageSpec = new PageSpecReaderV2().read("speclang2/properties.gspec", NO_BROWSER, EMPTY_TAGS, properties);
+        PageSpec pageSpec = new PageSpecReaderV2().read("speclang2/properties.gspec", NO_PAGE, EMPTY_TAGS, properties);
 
         assertThat(pageSpec.getSections().get(0).getName(), is("Main section for user John"));
         assertThat(pageSpec.getSections().get(0).getObjects().get(0).getSpecs().get(0).getOriginalText(),
@@ -499,11 +498,11 @@ public class PageSpecReaderV2Test {
 
 
     private PageSpec readPageSpec(String resource) throws IOException {
-        return readPageSpec(resource, NO_BROWSER, EMPTY_TAGS);
+        return readPageSpec(resource, NO_PAGE, EMPTY_TAGS);
     }
 
-    private PageSpec readPageSpec(String resource, Browser browser, List<String> tags) throws IOException {
-        return new PageSpecReaderV2().read(resource, browser, tags, NO_PROPERTIES);
+    private PageSpec readPageSpec(String resource, Page page, List<String> tags) throws IOException {
+        return new PageSpecReaderV2().read(resource, page, tags, NO_PROPERTIES);
     }
 
     private MockedPageElement element(int left, int top, int width, int height) {

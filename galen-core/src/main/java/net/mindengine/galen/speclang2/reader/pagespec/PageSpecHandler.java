@@ -40,7 +40,7 @@ import org.mozilla.javascript.*;
 
 public class PageSpecHandler implements VarsParserJsFunctions {
     private final PageSpec pageSpec;
-    private final Browser browser;
+    private final Page page;
     private final String contextPath;
     private final SpecReaderV2 specReaderV2;
     private final GalenJsExecutor jsExecutor;
@@ -51,9 +51,9 @@ public class PageSpecHandler implements VarsParserJsFunctions {
     private final List<String> processedScripts = new LinkedList<>();
     private final Properties properties;
 
-    public PageSpecHandler(PageSpec pageSpec, Browser browser, List<String> tags, String contextPath, Properties properties) {
+    public PageSpecHandler(PageSpec pageSpec, Page page, List<String> tags, String contextPath, Properties properties) {
         this.pageSpec = pageSpec;
-        this.browser = browser;
+        this.page = page;
         this.tags = tags;
         this.contextPath = contextPath;
         this.specReaderV2 = new SpecReaderV2();
@@ -70,7 +70,7 @@ public class PageSpecHandler implements VarsParserJsFunctions {
 
     public PageSpecHandler(PageSpecHandler copy, String contextPath) {
         this.pageSpec = copy.pageSpec;
-        this.browser = copy.browser;
+        this.page = copy.page;
         this.contextPath = contextPath;
         this.specReaderV2 = copy.specReaderV2;
         this.jsExecutor = copy.jsExecutor;
@@ -151,7 +151,6 @@ public class PageSpecHandler implements VarsParserJsFunctions {
     public Object isVisible(String objectName) {
         for (Map.Entry<String, Locator> object : pageSpec.getObjects().entrySet()) {
             if (object.getKey().equals(objectName)) {
-                Page page = browser.getPage();
                 PageElement pageElement = page.getObject(object.getKey(), object.getValue());
 
                 return pageElement != null && pageElement.isPresent() && pageElement.isVisible();
@@ -163,10 +162,6 @@ public class PageSpecHandler implements VarsParserJsFunctions {
 
     public PageSpec buildPageSpec() {
         return pageSpec;
-    }
-
-    public Browser getBrowser() {
-        return browser;
     }
 
 
@@ -211,7 +206,6 @@ public class PageSpecHandler implements VarsParserJsFunctions {
     @Override
     public JsPageElement find(String name) {
         Pattern pattern = GalenUtils.convertObjectNameRegex(name);
-        Page page = browser.getPage();
 
         if (pageSpec != null) {
             for (Map.Entry<String, Locator> entry : pageSpec.getObjects().entrySet()) {
@@ -240,8 +234,6 @@ public class PageSpecHandler implements VarsParserJsFunctions {
 
     private List<JsPageElement> findJsPageElements(Pattern pattern) {
         List<JsPageElement> list = new LinkedList<JsPageElement>();
-
-        Page page = browser.getPage();
 
         if (pageSpec != null) {
             for (Map.Entry<String, Locator> entry : pageSpec.getObjects().entrySet()) {
@@ -357,5 +349,9 @@ public class PageSpecHandler implements VarsParserJsFunctions {
 
     public List<String> getProcessedScripts() {
         return processedScripts;
+    }
+
+    public Page getPage() {
+        return page;
     }
 }
