@@ -33,6 +33,7 @@ import net.mindengine.galen.validation.ValidationResult;
 
 import org.openqa.selenium.Dimension;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.firefox.FirefoxDriver;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
@@ -43,9 +44,7 @@ public class ComponentFrameIT {
 
     @BeforeMethod
     public void createDriver() {
-        if (driver == null) {
-            driver = DriverTestFactory.getDriver();
-        }
+        driver = new FirefoxDriver();
         driver.get(toFileProtocol(getClass().getResource("/frame-page/main.html").getPath()));
         driver.manage().window().setSize(new Dimension(1024,768));
     }
@@ -67,12 +66,12 @@ public class ComponentFrameIT {
         LayoutReport layoutReport = Galen.checkLayout(driver, findSpec("/frame-page/failed.spec"), asList("desktop"));
 
         assertThat(layoutReport.getValidationErrorResults(), contains(new ValidationResult()
-                .withObjects(asList(new ValidationObject(new Rect(8, 46, 302, 152), "frame")))
+                .withObjects(asList(new ValidationObject(new Rect(8, 32, 302, 152), "frame")))
                 .withError(new ValidationError(asList("Child component spec contains 1 errors")))
                 .withChildValidationResults(asList(
                         new ValidationResult()
-                            .withObjects(asList(new ValidationObject(new Rect(16, 103, 176, 20), "frame-link")))
-                            .withError(new ValidationError(asList("\"frame-link\" height is 20px instead of 40px")))
+                            .withObjects(asList(new ValidationObject(new Rect(16, 89, 219, 23), "frame-link")))
+                            .withError(new ValidationError(asList("\"frame-link\" height is 23px instead of 40px")))
                 ))
         ));
     }

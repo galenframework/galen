@@ -1,15 +1,13 @@
 
-===========================
-main-header     h1
-
-frame           #some-frame
-===========================
+@objects
+    main-header     h1
+    frame           #some-frame
 
 
-@ desktop
-main-header
-    above: frame
+= Main section =
+    @on desktop
+        main-header:
+            above frame
 
-
-frame
-    component frame: passed-component.spec
+        frame:
+            component frame passed-component.spec

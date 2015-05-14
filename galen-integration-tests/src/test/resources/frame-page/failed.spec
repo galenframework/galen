@@ -1,15 +1,15 @@
 
-===========================
-main-header     h1
+@objects
+    main-header     h1
 
-frame           #some-frame
-===========================
-
-
-@ desktop
-main-header
-    above: frame
+    frame           #some-frame
 
 
-frame
-    component frame: failed-component.spec
+= Main section =
+    @on desktop
+        main-header:
+            above frame
+
+
+        frame:
+            component frame failed-component.spec

@@ -1,10 +1,10 @@
 
-===========================
-frame-header    h2
-frame-link      a
-===========================
+@objects
+    frame-header    h2
+    frame-link      a
 
 
-@ desktop
-frame-header
-    above: frame-link ~ 20px
+= Main section =
+    @on desktop
+        frame-header:
+            above frame-link ~ 20px
