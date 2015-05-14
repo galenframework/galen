@@ -1,0 +1,9 @@
+
+
+
+
+
+= Main section =
+    @for [ 1 - 4] as index
+        menu-item-${index}:
+            right-of menu-item-${index*2 + 1}

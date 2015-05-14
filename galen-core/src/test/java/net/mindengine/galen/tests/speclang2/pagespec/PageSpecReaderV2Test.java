@@ -530,6 +530,22 @@ public class PageSpecReaderV2Test {
         }
     }
 
+    @Test
+    public void shouldAllow_mathExpressions_onIntegerValues_onForLoopIndexes() throws IOException {
+        PageSpec pageSpec = readPageSpec("speclang2/for-loop-math-expression.gspec");
+        PageSection section = pageSpec.getSections().get(0);
+
+        assertThat(section.getObjects().size(), is(4));
+        assertThat(section.getObjects().get(0).getSpecs().get(0).getOriginalText(),
+                is("right-of menu-item-3"));
+        assertThat(section.getObjects().get(1).getSpecs().get(0).getOriginalText(),
+                is("right-of menu-item-5"));
+        assertThat(section.getObjects().get(2).getSpecs().get(0).getOriginalText(),
+                is("right-of menu-item-7"));
+        assertThat(section.getObjects().get(3).getSpecs().get(0).getOriginalText(),
+                is("right-of menu-item-9"));
+    }
+
 
     private PageSpec readPageSpec(String resource) throws IOException {
         return readPageSpec(resource, NO_PAGE, EMPTY_TAGS, EMPTY_TAGS);
