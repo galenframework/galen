@@ -36,17 +36,17 @@ import static net.mindengine.galen.utils.GalenUtils.toCommaSeparated;
 
 public class GalenPageActionCheck extends GalenPageAction {
 
-    private List<String> specs;
+    private String specPath;
     private List<String> includedTags;
     private List<String> excludedTags;
 
     
     @Override
     public void execute(TestReport report, Browser browser, GalenPageTest pageTest, ValidationListener validationListener) throws IOException {
-        LayoutReport layoutReport = Galen.checkLayout(browser, getSpecs(), getIncludedTags(), getExcludedTags(), getCurrentProperties(), validationListener);
+        LayoutReport layoutReport = Galen.checkLayout(browser, specPath, getIncludedTags(), getExcludedTags(), getCurrentProperties(), validationListener);
 
         if (report != null) {
-            String reportTitle = "Check layout: " + toCommaSeparated(getSpecs()) + " included tags: " + toCommaSeparated(includedTags);
+            String reportTitle = "Check layout: " + specPath + " included tags: " + toCommaSeparated(includedTags);
             TestReportNode layoutReportNode = new LayoutReportNode(report.getFileStorage(), layoutReport, reportTitle);
             if (layoutReport.errors() > 0) {
                 layoutReportNode.setStatus(TestReportNode.Status.ERROR);
@@ -56,18 +56,11 @@ public class GalenPageActionCheck extends GalenPageAction {
     }
 
 
-    public GalenPageActionCheck withSpecs(List<String> specFilePaths) {
-        this.setSpecs(specFilePaths);
+    public GalenPageActionCheck withSpec(String specPath) {
+        setSpecPath(specPath);
         return this;
     }
 
-    public List<String> getSpecs() {
-        return specs;
-    }
-
-    public void setSpecs(List<String> specs) {
-        this.specs = specs;
-    }
 
     public GalenPageActionCheck withIncludedTags(List<String> includedTags) {
         this.setIncludedTags(includedTags);
@@ -98,11 +91,11 @@ public class GalenPageActionCheck extends GalenPageAction {
     
     @Override
     public int hashCode() {
-        return new HashCodeBuilder() //@formatter:off
-            .append(specs)
+        return new HashCodeBuilder()
+            .append(specPath)
             .append(includedTags)
             .append(excludedTags)
-            .toHashCode(); //@formatter:on
+            .toHashCode();
     }
     
     @Override
@@ -116,27 +109,28 @@ public class GalenPageActionCheck extends GalenPageAction {
         
         GalenPageActionCheck rhs = (GalenPageActionCheck)obj;
         
-        return new EqualsBuilder() //@formatter:off
-            .append(specs, rhs.specs)
+        return new EqualsBuilder()
+            .append(specPath, rhs.specPath)
             .append(includedTags, rhs.includedTags)
             .append(excludedTags, rhs.excludedTags)
-            .isEquals(); //@formatter:on
+            .isEquals();
     }
     
     @Override
     public String toString() {
-        return new ToStringBuilder(this) //@formatter:off
-            .append("specs", specs)
+        return new ToStringBuilder(this)
+            .append("specPath", specPath)
             .append("includedTags", includedTags)
             .append("excludedTags", excludedTags)
-            .toString(); //@formatter:on
+            .toString();
+    }
+
+    public void setSpecPath(String specPath) {
+        this.specPath = specPath;
     }
 
     public GalenPageAction withOriginalCommand(String originalCommand) {
         setOriginalCommand(originalCommand);
         return this;
     }
-
-
-
 }

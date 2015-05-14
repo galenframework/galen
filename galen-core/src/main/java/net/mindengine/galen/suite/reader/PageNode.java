@@ -18,9 +18,9 @@ package net.mindengine.galen.suite.reader;
 import java.util.LinkedList;
 import java.util.List;
 
-import net.mindengine.galen.parser.VarsContext;
 import net.mindengine.galen.parser.GalenPageTestReader;
 import net.mindengine.galen.parser.SyntaxException;
+import net.mindengine.galen.parser.VarsContext;
 import net.mindengine.galen.suite.GalenPageAction;
 import net.mindengine.galen.suite.GalenPageTest;
 

@@ -22,9 +22,9 @@ import net.mindengine.galen.page.PageElement;
 import net.mindengine.galen.page.Rect;
 import net.mindengine.galen.reports.LayoutReportListener;
 import net.mindengine.galen.reports.model.LayoutReport;
+import net.mindengine.galen.speclang2.reader.pagespec.PageSpecReaderV2;
 import net.mindengine.galen.specs.page.PageSection;
 import net.mindengine.galen.specs.reader.page.PageSpec;
-import net.mindengine.galen.specs.reader.page.PageSpecReader;
 import net.mindengine.galen.specs.reader.page.SectionFilter;
 import net.mindengine.galen.validation.*;
 
@@ -49,43 +49,37 @@ public class Galen {
     private static final List<String> EMPTY_TAGS = Collections.emptyList();
 
 
-    public static LayoutReport checkLayout(Browser browser, List<String> specPaths,
+    public static LayoutReport checkLayout(Browser browser, String specPath,
                                            List<String> includedTags, List<String> excludedTags,
                                            Properties properties, ValidationListener validationListener) throws IOException {
-        return checkLayout(browser, specPaths, includedTags, excludedTags, properties, validationListener, null);
+        return checkLayout(browser, specPath, includedTags, excludedTags, properties, validationListener, null);
     }
 
-    public static LayoutReport checkLayout(Browser browser, List<String> specPaths,
+    public static LayoutReport checkLayout(Browser browser, String specPath,
                                            List<String> includedTags, List<String> excludedTags,
                                            Properties properties, ValidationListener validationListener, File screenshotFile) throws IOException {
-        PageSpecReader reader = new PageSpecReader(properties, browser.getPage());
-
-        List<PageSpec> specs = new LinkedList<PageSpec>();
-
-        for (String specPath : specPaths) {
-            specs.add(reader.read(specPath));
-        }
-
-        return checkLayout(browser, specs, includedTags, excludedTags, validationListener, screenshotFile);
+        PageSpecReaderV2 reader = new PageSpecReaderV2();
+        PageSpec pageSpec = reader.read(specPath, browser.getPage(), includedTags, excludedTags, properties);
+        return checkLayout(browser, pageSpec, includedTags, excludedTags, validationListener, screenshotFile);
     }
 
-    public static LayoutReport checkLayout(Browser browser, List<PageSpec> specs,
+    public static LayoutReport checkLayout(Browser browser, PageSpec pageSpec,
                                            List<String> includedTags, List<String> excludedTags,
                                            ValidationListener validationListener) throws IOException {
-        return checkLayout(browser, specs, includedTags, excludedTags, validationListener, EMPTY_SCREENSHOT_FILE);
+        return checkLayout(browser, pageSpec, includedTags, excludedTags, validationListener, EMPTY_SCREENSHOT_FILE);
     }
 
-    public static LayoutReport checkLayout(Browser browser, List<PageSpec> specs,
+    public static LayoutReport checkLayout(Browser browser, PageSpec pageSpec,
                                    List<String> includedTags, List<String> excludedTags,
                                    ValidationListener validationListener, File screenshotFile) throws IOException {
 
         Page page = browser.getPage();
         page.setScreenshot(screenshotFile);
 
-        return checkLayoutForPage(page, browser, specs, includedTags, excludedTags, validationListener);
+        return checkLayoutForPage(page, browser, pageSpec, includedTags, excludedTags, validationListener);
     }
 
-    private static LayoutReport checkLayoutForPage(Page page, Browser browser, List<PageSpec> specs,
+    private static LayoutReport checkLayoutForPage(Page page, Browser browser, PageSpec pageSpec,
                                            List<String> includedTags, List<String> excludedTags,
                                            ValidationListener validationListener) throws IOException {
 
@@ -107,44 +101,21 @@ public class Galen {
         }
         listener.add(new LayoutReportListener(layoutReport));
 
+        SectionFilter sectionFilter = new SectionFilter(includedTags, excludedTags);
+        SectionValidation sectionValidation = new SectionValidation(pageSpec.getSections(), new PageValidation(browser, page, pageSpec, listener, sectionFilter), listener);
 
-        List<ValidationResult> allValidationErrorResults = new LinkedList<ValidationResult>();
+        List<ValidationResult> results = sectionValidation.check();
+        List<ValidationResult> allValidationErrorResults = new LinkedList<>();
 
-        for (PageSpec spec : specs) {
-
-            SectionFilter sectionFilter = new SectionFilter(includedTags, excludedTags);
-            List<PageSection> pageSections = mergeSectionsWithSameName(spec.findSections(sectionFilter));
-            SectionValidation sectionValidation = new SectionValidation(pageSections, new PageValidation(browser, page, spec, listener, sectionFilter), listener);
-
-            List<ValidationResult> results = sectionValidation.check();
-            for (ValidationResult result : results) {
-                if (result.getError() != null) {
-                    allValidationErrorResults.add(result);
-                }
+        for (ValidationResult result : results) {
+            if (result.getError() != null) {
+                allValidationErrorResults.add(result);
             }
         }
 
         layoutReport.setValidationErrorResults(allValidationErrorResults);
 
         return layoutReport;
-    }
-
-    private static List<PageSection> mergeSectionsWithSameName(List<PageSection> sections) {
-        List<PageSection> mergedSections = new LinkedList<PageSection>();
-
-
-        for (PageSection section : sections) {
-            PageSection sectionWithSameName = findSectionWithName(section.getName(), mergedSections);
-
-            if (sectionWithSameName != null) {
-                sectionWithSameName.mergeSection(section);
-            }
-            else {
-                mergedSections.add(section);
-            }
-        }
-
-        return mergedSections;
     }
 
     private static PageSection findSectionWithName(String name, List<PageSection> sections) {
@@ -161,7 +132,7 @@ public class Galen {
         return checkLayout(driver, spec, includedTags, EMPTY_TAGS, EMPTY_PROPERTIES, EMPTY_VALIDATION_LISTENER, EMPTY_SCREENSHOT_FILE);
     }
 
-    public static LayoutReport checkLayout(WebDriver driver, List<String> specPath,
+    public static LayoutReport checkLayout(WebDriver driver, String specPath,
                                            List<String> includedTags, List<String> excludedTags,
                                            Properties properties, ValidationListener validationListener) throws IOException {
         return checkLayout(new SeleniumBrowser(driver), specPath, includedTags, excludedTags, properties, validationListener);
@@ -169,14 +140,8 @@ public class Galen {
 
     public static LayoutReport checkLayout(WebDriver driver, String specPath,
                                            List<String> includedTags, List<String> excludedTags,
-                                           Properties properties, ValidationListener validationListener) throws IOException {
-        return checkLayout(new SeleniumBrowser(driver), asList(specPath), includedTags, excludedTags, properties, validationListener);
-    }
-
-    public static LayoutReport checkLayout(WebDriver driver, String specPath,
-                                           List<String> includedTags, List<String> excludedTags,
                                            Properties properties, ValidationListener validationListener, File screenshotFile) throws IOException {
-        return checkLayout(new SeleniumBrowser(driver), asList(specPath), includedTags, excludedTags, properties, validationListener, screenshotFile);
+        return checkLayout(new SeleniumBrowser(driver), specPath, includedTags, excludedTags, properties, validationListener, screenshotFile);
     }
 
     public static void dumpPage(WebDriver driver, String pageName, String specPath, String pageDumpPath) throws IOException {
@@ -191,8 +156,9 @@ public class Galen {
         dumpPage(browser, pageName, specPath, pageDumpPath, maxWidth, maxHeight, new Properties());
     }
     public static void dumpPage(Browser browser, String pageName, String specPath, String pageDumpPath, Integer maxWidth, Integer maxHeight, Properties properties) throws IOException {
-        PageSpecReader reader = new PageSpecReader(properties, browser.getPage());
-        PageSpec pageSpec = reader.read(specPath);
+        PageSpecReaderV2 reader = new PageSpecReaderV2();
+
+        PageSpec pageSpec = reader.read(specPath, browser.getPage(), EMPTY_TAGS, EMPTY_TAGS, properties);
         dumpPage(browser, pageName, pageSpec, new File(pageDumpPath), maxWidth, maxHeight);
     }
 

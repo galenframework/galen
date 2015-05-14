@@ -116,13 +116,10 @@ public class GalenPageActionReader {
                 throw new SyntaxException(UNKNOWN_LINE, "There are no page specs: " + originalText);
             }
             
-            List<String> specs = new LinkedList<String>();
-            for (int i=1; i < leftoverArgs.length; i++) {
-                specs.add(leftoverArgs[i]);
-            }
-            
+            String specPath = leftoverArgs[1];
+
             return new GalenPageActionCheck()
-                .withSpecs(specs)
+                .withSpec(specPath)
                 .withIncludedTags(readTags(cmd.getOptionValue("i")))
                 .withExcludedTags(readTags(cmd.getOptionValue("e")));
         }

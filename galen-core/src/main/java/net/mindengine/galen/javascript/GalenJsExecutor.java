@@ -23,7 +23,6 @@ import java.io.Reader;
 import net.mindengine.galen.api.Galen;
 import net.mindengine.galen.browser.WebDriverWrapper;
 import net.mindengine.galen.parser.VarsParserJsProcessable;
-import net.mindengine.galen.parser.VarsParserJsProcessor;
 import net.mindengine.galen.runner.events.TestEvent;
 import net.mindengine.galen.runner.events.TestFilterEvent;
 import net.mindengine.galen.runner.events.TestRetryEvent;
@@ -46,7 +45,7 @@ import org.slf4j.LoggerFactory;
 
 
 public class GalenJsExecutor implements VarsParserJsProcessable {
-    private final static Logger LOG = LoggerFactory.getLogger(VarsParserJsProcessor.class);
+    private final static Logger LOG = LoggerFactory.getLogger(GalenJsExecutor.class);
 
     private Context context;
     private ImporterTopLevel scope;

@@ -38,8 +38,8 @@ public class VarsParser {
         this.jsProcessor = jsProcessor;
     }
 
-    public VarsParser(VarsContext varsContext, Properties properties) {
-        this(varsContext, properties, null);
+    public VarsParser(Context context, Properties properties) {
+        this(context, properties, null);
     }
 
     public String parse(String templateText) {

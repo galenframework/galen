@@ -47,12 +47,12 @@ public class Place {
 
     @Override
     public int hashCode() {
-        return new HashCodeBuilder() //@formatter:off
+        return new HashCodeBuilder()
         .append(this.filePath)
         .append(this.lineNumber)
-        .toHashCode(); //@formatter:on
+        .toHashCode();
     }
-    
+
     @Override
     public boolean equals(Object obj) {
         if (obj == null)
@@ -61,17 +61,17 @@ public class Place {
             return true;
         if (!(obj instanceof Place))
             return false;
-        
+
         Place rhs = (Place)obj;
         return new EqualsBuilder().append(filePath, rhs.filePath).append(lineNumber, rhs.lineNumber).isEquals();
     }
-    
+
     @Override
     public String toString() {
-        return new ToStringBuilder(this) //@formatter:off
+        return new ToStringBuilder(this)
         .append("filePath", filePath)
         .append("lineNumber", lineNumber)
-        .toString(); //@formatter:on
+        .toString();
     }
     
 }

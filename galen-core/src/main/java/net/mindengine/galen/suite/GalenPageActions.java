@@ -15,8 +15,6 @@
 ******************************************************************************/
 package net.mindengine.galen.suite;
 
-import java.util.List;
-
 import net.mindengine.galen.suite.actions.GalenPageActionCheck;
 import net.mindengine.galen.suite.actions.GalenPageActionCookie;
 import net.mindengine.galen.suite.actions.GalenPageActionInjectJavascript;
@@ -30,8 +28,8 @@ public class GalenPageActions {
         return new GalenPageActionInjectJavascript(javascriptFilePath);
     }
 
-    public static GalenPageActionCheck check(List<String> specFilePaths) {
-        return new GalenPageActionCheck().withSpecs(specFilePaths);
+    public static GalenPageActionCheck check(String specFilePath) {
+        return new GalenPageActionCheck().withSpec(specFilePath);
     }
 
     public static GalenPageActionRunJavascript runJavascript(String javascriptPath) {

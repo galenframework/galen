@@ -19,8 +19,8 @@ import static java.lang.String.format;
 
 import java.util.*;
 
-import net.mindengine.galen.parser.VarsContext;
 import net.mindengine.galen.parser.SyntaxException;
+import net.mindengine.galen.parser.VarsContext;
 import net.mindengine.galen.tests.GalenBasicTest;
 
 public class ParameterizedNode extends Node<List<GalenBasicTest>>{

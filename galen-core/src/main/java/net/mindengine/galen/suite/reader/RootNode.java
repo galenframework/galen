@@ -19,8 +19,8 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
-import net.mindengine.galen.parser.VarsContext;
 import net.mindengine.galen.parser.SyntaxException;
+import net.mindengine.galen.parser.VarsContext;
 import net.mindengine.galen.tests.GalenBasicTest;
 
 public class RootNode extends Node<List<GalenBasicTest>> {

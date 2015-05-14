@@ -21,10 +21,10 @@ import java.util.List;
 import net.mindengine.galen.browser.Browser;
 import net.mindengine.galen.page.Page;
 import net.mindengine.galen.page.PageElement;
+import net.mindengine.galen.speclang2.reader.pagespec.PageSpecReaderV2;
 import net.mindengine.galen.specs.SpecComponent;
 import net.mindengine.galen.specs.page.Locator;
 import net.mindengine.galen.specs.reader.page.PageSpec;
-import net.mindengine.galen.specs.reader.page.PageSpecReader;
 import net.mindengine.galen.specs.reader.page.SectionFilter;
 import net.mindengine.galen.validation.*;
 import org.slf4j.Logger;
@@ -104,16 +104,16 @@ public class SpecValidationComponent extends SpecValidation<SpecComponent> {
 
     private List<ValidationResult> checkInsidePage(Browser browser, Page page, SpecComponent spec,
                                                    SectionFilter sectionFilter, ValidationListener validationListener) {
-        PageSpecReader pageSpecReader = new PageSpecReader(spec.getProperties(), page);
+        PageSpecReaderV2 pageSpecReader = new PageSpecReaderV2();
 
         PageSpec componentPageSpec;
         try {
-            componentPageSpec = pageSpecReader.read(spec.getSpecPath());
+            componentPageSpec = pageSpecReader.read(spec.getSpecPath(), page, sectionFilter.getIncludedTags(), sectionFilter.getExcludedTags(), spec.getProperties());
         } catch (IOException e) {
             throw new RuntimeException(e.getMessage(), e);
         }
 
-        SectionValidation sectionValidation = new SectionValidation(componentPageSpec.findSections(sectionFilter),
+        SectionValidation sectionValidation = new SectionValidation(componentPageSpec.getSections(),
                 new PageValidation(browser, page, componentPageSpec, validationListener, sectionFilter),
                 validationListener);
 

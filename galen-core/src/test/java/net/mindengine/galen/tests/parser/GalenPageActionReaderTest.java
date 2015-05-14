@@ -49,17 +49,13 @@ public class GalenPageActionReaderTest {
             {"run script.js \"\\\"john\\\"", new GalenPageActionRunJavascript("script.js").withJsonArguments("\"john\"")},
             {"run script.js", new GalenPageActionRunJavascript("script.js").withJsonArguments(null)},
             
-            {"check page1.spec", new GalenPageActionCheck().withSpecs(asList("page1.spec"))},
+            {"check page1.spec", new GalenPageActionCheck().withSpec("page1.spec")},
             {"check page1.spec --include mobile --exclude debug", new GalenPageActionCheck()
-                .withSpecs(asList("page1.spec"))
+                .withSpec("page1.spec")
                 .withIncludedTags(asList("mobile"))
                 .withExcludedTags(asList("debug"))},
             {"check page1.spec --include mobile,tablet --exclude nomobile,debug", new GalenPageActionCheck()
-                .withSpecs(asList("page1.spec"))
-                .withIncludedTags(asList("mobile", "tablet"))
-                .withExcludedTags(asList("nomobile", "debug"))},
-            {"check page1.spec page2.spec page3.spec --include mobile,tablet --exclude nomobile,debug", new GalenPageActionCheck()
-                .withSpecs(asList("page1.spec", "page2.spec", "page3.spec"))
+                .withSpec("page1.spec")
                 .withIncludedTags(asList("mobile", "tablet"))
                 .withExcludedTags(asList("nomobile", "debug"))},
             {"cookie \"somecookie1\" \"somecookie2\" \"somecookie3\"", new GalenPageActionCookie().withCookies("somecookie1", "somecookie2", "somecookie3")},
@@ -105,6 +101,4 @@ public class GalenPageActionReaderTest {
     private static GalenPageActionWait.Until gone(Locator locator) {
         return new GalenPageActionWait.Until(UntilType.GONE, locator);
     }
-    
-    //TODO negative tests for action parser
 }

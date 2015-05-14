@@ -73,7 +73,7 @@ public class GalenJsApi {
 
         List<String> includedTagsList = toList(includedTags);
 
-        LayoutReport layoutReport = Galen.checkLayout(new SeleniumBrowser(driver), asList(fileName),
+        LayoutReport layoutReport = Galen.checkLayout(new SeleniumBrowser(driver), fileName,
                 includedTagsList, toList(excludedTags),
                 properties,
                 session.getListener(),

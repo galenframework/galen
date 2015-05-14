@@ -199,7 +199,7 @@ public class GalenMain {
                     .withSize(arguments.getScreenSize())
                     .withBrowserFactory(new SeleniumBrowserFactory())
                     .withActions(
-                            asList((GalenPageAction) new GalenPageActionCheck().withSpecs(asList(pageSpecPath)).withIncludedTags(arguments.getIncludedTags())
+                            asList((GalenPageAction) new GalenPageActionCheck().withSpec(pageSpecPath).withIncludedTags(arguments.getIncludedTags())
                                     .withExcludedTags(arguments.getExcludedTags()).withOriginalCommand(arguments.getOriginal())))));
             galenTests.add(test);
         }

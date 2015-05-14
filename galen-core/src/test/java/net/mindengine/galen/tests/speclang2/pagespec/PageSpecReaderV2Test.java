@@ -16,7 +16,6 @@
 package net.mindengine.galen.tests.speclang2.pagespec;
 
 import net.mindengine.galen.browser.SeleniumBrowser;
-import net.mindengine.galen.components.MockedBrowser;
 import net.mindengine.galen.components.mocks.driver.MockedDriver;
 import net.mindengine.galen.components.validation.MockedInvisiblePageElement;
 import net.mindengine.galen.components.validation.MockedPage;
@@ -31,7 +30,6 @@ import net.mindengine.galen.specs.page.PageSection;
 import net.mindengine.galen.specs.reader.page.PageSpec;
 import org.testng.annotations.Test;
 
-import java.awt.*;
 import java.io.IOException;
 import java.util.*;
 import java.util.List;
@@ -170,6 +168,16 @@ public class PageSpecReaderV2Test {
         assertThat(section.getObjects().get(5).getSpecs().size(), is(1));
         assertThat(section.getObjects().get(5).getSpecs().get(0).getOriginalText(), is("height 30px"));
 
+    }
+
+    @Test
+    public void shouldProcess_hashInObjectPattern_asDigits() throws IOException {
+        PageSpec pageSpec = readPageSpec("speclang2/hash-in-object-name.gspec");
+
+        PageSection section = pageSpec.getSections().get(0);
+        assertThat(section.getObjects().size(), is(2));
+        assertThat(section.getObjects().get(0).getObjectName(), is("item-1"));
+        assertThat(section.getObjects().get(1).getObjectName(), is("item-342"));
     }
 
 

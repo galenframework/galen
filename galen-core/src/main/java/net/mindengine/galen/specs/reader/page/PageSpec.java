@@ -21,19 +21,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
 
-import net.mindengine.galen.page.Page;
 import net.mindengine.galen.specs.page.Locator;
 import net.mindengine.galen.specs.page.PageSection;
-import net.mindengine.galen.specs.reader.page.rules.Rule;
 
 
 public class PageSpec {
 
-    private static final List<String> EMPTY_TAGS = new LinkedList<String>();
-    private Map<String, Locator> objects = new HashMap<String, Locator>();
-    private Map<String, Locator> multiObjects = new HashMap<String, Locator>();
-    private List<PageSection> sections = new LinkedList<PageSection>();
-    private List<PageSpecRule> pageSpecRules = new LinkedList<PageSpecRule>();
+    private Map<String, Locator> objects = new HashMap<>();
+    private List<PageSection> sections = new LinkedList<>();
 
     public Map<String, Locator> getObjects() {
         return this.objects;
@@ -63,24 +58,6 @@ public class PageSpec {
         return objects.get(objectName);
     }
 
-    public List<PageSection> findSections(List<String> includedTags) {
-        return findSections(includedTags, EMPTY_TAGS);
-    }
-
-    public List<PageSection> findSections(List<String> includedTags, List<String> excludedTags) {
-        List<PageSection> filteredSections = new LinkedList<PageSection>();
-        
-        for (PageSection section : sections) {
-            
-            if (section.appliesToTags(includedTags)) {
-                if ( !(excludedTags != null && excludedTags.size() > 0 && section.hasAnyTag(excludedTags))) {
-                    filteredSections.add(section);
-                }
-            }
-        }
-        return filteredSections;
-    }
-
     /**
      * Find all objects that match simple regex
      * @param objectNameSimpleRegex - Regex which allows only '*' symbol in expresion
@@ -89,7 +66,7 @@ public class PageSpec {
     public List<String> findMatchingObjectNames(String objectNameSimpleRegex) {
         
         Pattern pattern = Pattern.compile(objectNameSimpleRegex.replace("*", "[a-zA-Z0-9_]+"));
-        List<String> foundObjects = new LinkedList<String>();
+        List<String> foundObjects = new LinkedList<>();
         
         for (String objectName : objects.keySet()) {
             if (pattern.matcher(objectName).matches()) {
@@ -100,60 +77,8 @@ public class PageSpec {
         return foundObjects;
     }
 
-    public Map<String, Locator> getMultiObjects() {
-        return multiObjects;
-    }
-
-    public void setMultiObjects(Map<String, Locator> multiObjects) {
-        this.multiObjects = multiObjects;
-    }
-
-    public void addMultiObject(String objectName, Locator locator) {
-        multiObjects.put(objectName, locator);
-    }
-
-    
-    
-    public void updateMultiObjects(Page page) {
-        for (Map.Entry<String, Locator> object : multiObjects.entrySet()) {
-            updateMultiObject(page, object.getKey(), object.getValue());
-        }
-    }
-
-    public void updateMultiObject(Page page,String objectName, Locator objectLocator) {
-        
-        int count = page.getObjectCount(objectLocator);
-        
-        for (int index = 1; index <= count; index++) {
-            String singleObjectName = objectName.replace("*", Integer.toString(index));
-            Locator newLocator = new Locator(objectLocator.getLocatorType(), objectLocator.getLocatorValue(), index);
-            objects.put(singleObjectName, newLocator);
-        }
-    }
-
 	public void merge(PageSpec spec) {
 		objects.putAll(spec.getObjects());
-		multiObjects.putAll(spec.getMultiObjects());
 		sections.addAll(spec.getSections());
-        pageSpecRules.addAll(spec.getRules());
 	}
-
-    public List<PageSection> findSections(SectionFilter sectionFilter) {
-        if (sectionFilter != null) {
-            return findSections(sectionFilter.getIncludedTags(), sectionFilter.getExcludedTags());
-        }
-        else {
-            return getSections();
-        }
-    }
-
-    public void addRuleProcessor(Rule rule, RuleProcessor ruleProcessor) {
-        this.pageSpecRules.add(new PageSpecRule(rule, ruleProcessor));
-    }
-
-
-    public List<PageSpecRule> getRules() {
-        return this.pageSpecRules;
-    }
-
 }

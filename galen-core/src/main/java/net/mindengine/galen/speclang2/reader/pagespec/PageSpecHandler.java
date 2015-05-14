@@ -15,7 +15,6 @@
 ******************************************************************************/
 package net.mindengine.galen.speclang2.reader.pagespec;
 
-import net.mindengine.galen.browser.Browser;
 import net.mindengine.galen.javascript.GalenJsExecutor;
 import net.mindengine.galen.page.AbsentPageElement;
 import net.mindengine.galen.page.Page;
@@ -36,6 +35,8 @@ import java.util.*;
 import java.util.regex.Pattern;
 
 import org.mozilla.javascript.*;
+
+import static java.util.Arrays.asList;
 
 
 public class PageSpecHandler implements VarsParserJsFunctions {
@@ -273,6 +274,7 @@ public class PageSpecHandler implements VarsParserJsFunctions {
         }
         jsExecutor.putObject(name, value);
     }
+
 
     private boolean isValidVariableName(String name) {
         if (name.isEmpty()) {

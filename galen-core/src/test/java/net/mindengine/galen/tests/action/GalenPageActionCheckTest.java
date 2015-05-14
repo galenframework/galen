@@ -46,7 +46,7 @@ public class GalenPageActionCheckTest {
         
         GalenPageActionCheck action = new GalenPageActionCheck()
             .withIncludedTags(asList("mobile"))
-            .withSpecs(asList(getClass().getResource("/GalenPageActionCheckTest/page.spec").getPath()));
+            .withSpec(getClass().getResource("/GalenPageActionCheckTest/page.spec").getPath());
         
         Browser browser = new SeleniumBrowser(driver);
         browser.load(TEST_URL);
@@ -63,12 +63,10 @@ public class GalenPageActionCheckTest {
                 "<SpecInside header-text-1>\n" +
                 "</o header-text-1>\n" +
                 "<o menu>\n" +
-                "<SpecWidth menu>\n" +
-                "<e><msg>\"menu\" width is 102% [410px] instead of 100% [400px]</msg></e>\n" +
-                "</o menu>\n" +
-                "<o menu>\n" +
                 "<SpecBelow menu>\n" +
                 "<SpecVertically menu>\n" +
+                "<SpecWidth menu>\n" +
+                "<e><msg>\"menu\" width is 102% [410px] instead of 100% [400px]</msg></e>\n" +
                 "</o menu>\n"
                 ));
     }
@@ -81,7 +79,7 @@ public class GalenPageActionCheckTest {
         GalenPageActionCheck action = new GalenPageActionCheck()
             .withIncludedTags(asList("mobile"))
             .withExcludedTags(asList("debug"))
-            .withSpecs(asList(getClass().getResource("/GalenPageActionCheckTest/page.spec").getPath()));
+            .withSpec(getClass().getResource("/GalenPageActionCheckTest/page.spec").getPath());
 
         Browser browser = new SeleniumBrowser(driver);
         browser.load(TEST_URL);

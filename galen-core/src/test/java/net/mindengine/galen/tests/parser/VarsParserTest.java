@@ -20,12 +20,7 @@ import static org.hamcrest.Matchers.is;
 
 import java.util.Properties;
 
-import net.mindengine.galen.parser.JsPageElement;
 import net.mindengine.galen.parser.VarsParser;
-import net.mindengine.galen.parser.VarsParserJsFunctions;
-import net.mindengine.galen.parser.VarsParserJsProcessor;
-import net.mindengine.galen.specs.reader.page.PageSpec;
-import net.mindengine.galen.specs.reader.page.PageSpecReader;
 import net.mindengine.galen.suite.reader.Context;
 
 import org.testng.annotations.DataProvider;
@@ -34,44 +29,15 @@ import org.testng.annotations.Test;
 public class VarsParserTest {
 
     private static final Properties EMPTY_PROPERTIES = new Properties();
-    public static final PageSpecReader EMPTY_PAGE_SPEC_READER = new PageSpecReader(EMPTY_PROPERTIES, null);
-    private VarsParserJsFunctions jsFunctions = new VarsParserJsFunctions() {
-        @Override
-        public int count(String regex) {
-            if (regex.equals("testval1")){
-                return 12;
-            }
-            else return 15;
-        }
-
-        @Override
-        public JsPageElement find(String name) {
-            return null;
-        }
-
-        @Override
-        public JsPageElement[] findAll(String regex) {
-            return new JsPageElement[0];
-        }
-    };
-
 
     @Test(dataProvider="provideGoodSamples") public void shouldProcessTemplate_successfully(Integer number, Context context, String templateText, String expectedText) {
-        VarsParser template = new VarsParser(context, EMPTY_PROPERTIES, new VarsParserJsProcessor(context, jsFunctions, EMPTY_PAGE_SPEC_READER));
+        VarsParser template = new VarsParser(context, EMPTY_PROPERTIES);
         String realText = template.parse(templateText);
 
         assertThat(realText, is(expectedText));
     }
 
-    @Test
-    public void shouldAllowTo_loadCustomJavascript() {
-        Context context = new Context();
-        VarsParser template = new VarsParser(context, EMPTY_PROPERTIES, new VarsParserJsProcessor(context, jsFunctions, EMPTY_PAGE_SPEC_READER));
-        String realText = template.parse("${load('/specs/customFunction.js')} got it from js: ${customFunction('qwe', 'ert')}");
 
-        assertThat(realText, is(" got it from js: qwe-ert"));
-    }
-    
     
     @DataProvider public Object[][] provideGoodSamples() {
         return new Object[][] {
@@ -85,9 +51,6 @@ public class VarsParserTest {
             {8, new Context(), "I have some money $30", "I have some money $30"},
             {9, new Context(), "I have some money $30$", "I have some money $30$"},
             {10, new Context(), "I have some money ${ 30", "I have some money "},
-            {11, new Context(), "There are ${count('testval1')} objects", "There are 12 objects"},
-            {12, new Context(), "There are ${count(\"sdvdv\")*2 - 1} objects", "There are 29 objects"},
-            {13, new Context().withParameter("qwe", 123), "Hi my age is ${qwe - 1}", "Hi my age is 122"},
         };
     }
 }

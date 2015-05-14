@@ -12,7 +12,7 @@ This is a name of suite
         
         # The following will be run using Rhino js library
         run  selenium/loginToMyProfile.js    '{"login":"user1", "password": "test123"}' 
-        check page1_1.spec page1_2.spec page1_3.spec --include sometag
+        check page1_1.spec --include sometag
     
     
     http://example.com/page2    1024x768

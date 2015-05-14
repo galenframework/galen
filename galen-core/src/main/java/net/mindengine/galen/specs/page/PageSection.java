@@ -21,18 +21,9 @@ import java.util.List;
 
 public class PageSection {
 
-    private List<ObjectSpecs> objects = new LinkedList<ObjectSpecs>();
+    private List<ObjectSpecs> objects = new LinkedList<>();
     private String name;
-    private List<PageSection> sections = new LinkedList<PageSection>();
-    private List<String> tags;
-    private List<ConditionalBlock> conditionalBlocks;
-
-
-
-    public List<ConditionalBlock> getConditionalBlocks() {
-        return this.conditionalBlocks;
-    }
-
+    private List<PageSection> sections = new LinkedList<>();
 
     public PageSection() {
     }
@@ -41,42 +32,6 @@ public class PageSection {
         setName(name);
     }
 
-    public void setConditionalBlocks(List<ConditionalBlock> conditionalBlocks) {
-        this.conditionalBlocks = conditionalBlocks;
-    }
-
-    public void addConditionalBlock(ConditionalBlock conditionalBlock) {
-        if (conditionalBlocks == null) {
-            conditionalBlocks = new LinkedList<ConditionalBlock>();
-        }
-        conditionalBlocks.add(conditionalBlock);
-    }
-
-    public List<String> getTags() {
-        return this.tags;
-    }
-
-    public void setTags(List<String> tags) {
-        this.tags = tags;
-    }
-
-    public boolean appliesToTags(List<String> includedTags) {
-        return tags.contains("*") || hasAnyTag(includedTags);
-    }
-
-    public boolean hasAnyTag(List<String> includedTags) {
-        if (includedTags != null && includedTags.size() > 0) {
-            if (tags != null) {
-                for (String tag : includedTags) {
-                    if (tags.contains(tag)) {
-                        return true;
-                    }
-                }
-            }
-            return false;
-        }
-        else return true;
-    }
 
     public List<ObjectSpecs> getObjects() {
         return this.objects;
@@ -85,7 +40,6 @@ public class PageSection {
     public void setObjects(List<ObjectSpecs> objects) {
         this.objects = objects;
     }
-
 
 
     public String getName() {
@@ -112,7 +66,7 @@ public class PageSection {
     public void mergeSection(PageSection section) {
         if (section.getObjects() != null) {
             if (this.objects == null) {
-                this.objects = new LinkedList<ObjectSpecs>();
+                this.objects = new LinkedList<>();
             }
 
             for (ObjectSpecs object : section.getObjects()) {
@@ -122,7 +76,7 @@ public class PageSection {
 
         if (section.getSections() != null) {
             if (this.sections == null) {
-                this.sections = new LinkedList<PageSection>();
+                this.sections = new LinkedList<>();
             }
 
             for (PageSection subSection : section.getSections()) {
@@ -133,7 +87,7 @@ public class PageSection {
 
     public void addObjects(ObjectSpecs objectSpecs) {
         if (objects == null) {
-            objects = new LinkedList<ObjectSpecs>();
+            objects = new LinkedList<>();
         }
 
         objects.add(objectSpecs);

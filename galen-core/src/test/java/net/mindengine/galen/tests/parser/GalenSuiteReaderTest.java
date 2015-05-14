@@ -62,10 +62,10 @@ public class GalenSuiteReaderTest {
                 assertThat(page.getScreenSize(), is(new Dimension(640, 480)));
                 
                 assertThat(page.getActions(), is(actions(GalenPageActions.injectJavascript("javascript.js"),
-                        GalenPageActions.check(asList("page1.spec")).withIncludedTags(asList("mobile", "tablet")).withExcludedTags(asList("nomobile")),
+                        GalenPageActions.check("page1.spec").withIncludedTags(asList("mobile", "tablet")).withExcludedTags(asList("nomobile")),
                         GalenPageActions.injectJavascript("javascript2.js"),
                         GalenPageActions.runJavascript("selenium/loginToMyProfile.js").withArguments("{\"login\":\"user1\", \"password\": \"test123\"}"),
-                        GalenPageActions.check(asList("page1_1.spec", "page1_2.spec", "page1_3.spec")).withIncludedTags(asList("sometag"))
+                        GalenPageActions.check("page1_1.spec").withIncludedTags(asList("sometag"))
                         )));
             }
             
@@ -76,8 +76,8 @@ public class GalenSuiteReaderTest {
                 assertThat(page.getUrl(), is("http://example.com/page2"));
                 assertThat(page.getScreenSize(), is(new Dimension(1024, 768)));
                 
-                assertThat(page.getActions(), is(actions(GalenPageActions.check(asList("page2.spec")),
-                        (GalenPageAction)GalenPageActions.check(asList("page3.spec")))));
+                assertThat(page.getActions(), is(actions(GalenPageActions.check("page2.spec"),
+                        GalenPageActions.check("page3.spec"))));
             }
         }
         
@@ -91,7 +91,7 @@ public class GalenSuiteReaderTest {
             assertThat(page.getUrl(), is("http://example.com/page3"));
             assertThat(page.getScreenSize(), is(new Dimension(320, 240)));
             
-            assertThat(page.getActions(), is(actions(GalenPageActions.check(asList("page3.spec")))));
+            assertThat(page.getActions(), is(actions(GalenPageActions.check("page3.spec"))));
         }
     }
     
@@ -109,7 +109,7 @@ public class GalenSuiteReaderTest {
         assertThat(pageActions.get(2), is((GalenPageAction)GalenPageActions.cookie("cookie1=somevalue; path=/")));
         assertThat(pageActions.get(3), is((GalenPageAction)GalenPageActions.runJavascript("script.js")));
         assertThat(pageActions.get(4), is((GalenPageAction)GalenPageActions.injectJavascript("script.js")));
-        assertThat(pageActions.get(5), is((GalenPageAction)GalenPageActions.check(asList("homepage.spec"))));
+        assertThat(pageActions.get(5), is((GalenPageAction)GalenPageActions.check("homepage.spec")));
         
     }
     
@@ -185,7 +185,7 @@ public class GalenSuiteReaderTest {
                 assertThat(page.getScreenSize(), is((Dimension)table[i][0]));
                 
                 assertThat(page.getActions(), is(actions(
-                        GalenPageActions.check(asList("page1.spec")).withIncludedTags((List<String>) table[i][1]).withExcludedTags((List<String>) table[i][3])
+                        GalenPageActions.check("page1.spec").withIncludedTags((List<String>) table[i][1]).withExcludedTags((List<String>) table[i][3])
                         )));
             }
         }
@@ -209,7 +209,7 @@ public class GalenSuiteReaderTest {
                 assertThat(page.getScreenSize(), is((Dimension)table[j][0]));
                 
                 assertThat(page.getActions(), is(actions(
-                        GalenPageActions.check(asList("page1.spec")).withIncludedTags((List<String>) table[j][1]).withExcludedTags((List<String>) table[j][3])
+                        GalenPageActions.check("page1.spec").withIncludedTags((List<String>) table[j][1]).withExcludedTags((List<String>) table[j][3])
                         )));
             }
         }
@@ -245,7 +245,7 @@ public class GalenSuiteReaderTest {
                 assertThat(page.getScreenSize(), is((Dimension)table[j][0]));
                 
                 assertThat(page.getActions(), is(actions(
-                        GalenPageActions.check(asList("page1.spec")).withIncludedTags((List<String>) table[j][1]).withExcludedTags((List<String>) table[j][3])
+                        GalenPageActions.check("page1.spec").withIncludedTags((List<String>) table[j][1]).withExcludedTags((List<String>) table[j][3])
                         )));
             }
         }
