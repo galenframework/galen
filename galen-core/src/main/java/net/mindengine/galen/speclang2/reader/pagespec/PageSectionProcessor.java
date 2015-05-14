@@ -21,6 +21,7 @@ import net.mindengine.galen.specs.page.ObjectSpecs;
 import net.mindengine.galen.specs.page.PageSection;
 import net.mindengine.galen.specs.page.SpecGroup;
 import net.mindengine.galen.specs.reader.page.rules.Rule;
+import net.mindengine.galen.suite.reader.Line;
 import net.mindengine.galen.utils.GalenUtils;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
@@ -212,7 +213,12 @@ public class PageSectionProcessor {
     }
 
     private void processSpec(ObjectSpecs objectSpecs, StructNode specNode) {
-        objectSpecs.getSpecs().add(pageSpecHandler.getSpecReaderV2().read(specNode.getName(), pageSpecHandler.getContextPath()));
+        try {
+            objectSpecs.getSpecs().add(pageSpecHandler.getSpecReaderV2().read(specNode.getName(), pageSpecHandler.getContextPath()));
+        } catch (SyntaxException ex) {
+            ex.setLine(new Line(specNode.getSource(), specNode.getFileLineNumber()));
+            throw ex;
+        }
     }
 
     private ObjectSpecs findObjectSpecsInSection(PageSection section, String objectName) {

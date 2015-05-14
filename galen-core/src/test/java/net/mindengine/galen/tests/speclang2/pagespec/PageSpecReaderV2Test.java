@@ -22,6 +22,7 @@ import net.mindengine.galen.components.validation.MockedPage;
 import net.mindengine.galen.components.validation.MockedPageElement;
 import net.mindengine.galen.page.Page;
 import net.mindengine.galen.page.PageElement;
+import net.mindengine.galen.parser.FileSyntaxException;
 import net.mindengine.galen.speclang2.reader.pagespec.PageSpecReaderV2;
 import net.mindengine.galen.specs.page.CorrectionsRect;
 import net.mindengine.galen.specs.page.Locator;
@@ -516,6 +517,18 @@ public class PageSpecReaderV2Test {
                 is("text is \"Welcome, John!\""));
     }
 
+
+    @Test
+    public void shouldThrow_fileSyntaxException_ifThereIsAnErrorInSpec() throws IOException {
+        try {
+            readPageSpec("speclang2/syntax-error.gspec");
+            throw new RuntimeException("FileSyntaxException was not thrown from page spec reader");
+        } catch (FileSyntaxException ex) {
+            assertThat(ex.getLine(), is(9));
+            assertThat(ex.getFilePath(), endsWith("speclang2/syntax-error.gspec"));
+            assertThat(ex.getCause().getMessage(), is("Expecting \"px\", \"to\" or \"%\", got \"\""));
+        }
+    }
 
 
     private PageSpec readPageSpec(String resource) throws IOException {

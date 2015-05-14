@@ -16,8 +16,10 @@
 package net.mindengine.galen.speclang2.reader.pagespec;
 
 import net.mindengine.galen.page.Page;
+import net.mindengine.galen.parser.FileSyntaxException;
 import net.mindengine.galen.parser.IndentationStructureParser;
 import net.mindengine.galen.parser.StructNode;
+import net.mindengine.galen.parser.SyntaxException;
 import net.mindengine.galen.specs.reader.page.PageSpec;
 import net.mindengine.galen.utils.GalenUtils;
 
@@ -34,18 +36,29 @@ public class PageSpecReaderV2 {
     }
 
     public PageSpec read(InputStream inputStream, String source, String contextPath, Page page, List<String> tags, List<String> excludedTags, Properties properties) throws IOException {
-        IndentationStructureParser structParser = new IndentationStructureParser();
-        List<StructNode> structs = structParser.parse(inputStream, source);
+        try {
+            IndentationStructureParser structParser = new IndentationStructureParser();
+            List<StructNode> structs = structParser.parse(inputStream, source);
 
-        PageSpec pageSpec = new PageSpec();
+            PageSpec pageSpec = new PageSpec();
 
-        PageSpecHandler pageSpecHandler = new PageSpecHandler(pageSpec, page, tags, excludedTags, contextPath, properties);
+            PageSpecHandler pageSpecHandler = new PageSpecHandler(pageSpec, page, tags, excludedTags, contextPath, properties);
 
-        List<StructNode> allProcessedChildNodes = new LogicProcessor(pageSpecHandler).process(structs);
-        new PostProcessor(pageSpecHandler).process(allProcessedChildNodes);
+            List<StructNode> allProcessedChildNodes = new LogicProcessor(pageSpecHandler).process(structs);
+            new PostProcessor(pageSpecHandler).process(allProcessedChildNodes);
 
 
-        return pageSpecHandler.buildPageSpec();
+            return pageSpecHandler.buildPageSpec();
+        } catch (SyntaxException ex) {
+            String exceptionSource = "<unknown location>";
+            Integer lineNumber = -1;
+            if (ex.getLine() != null) {
+                exceptionSource = ex.getLine().getText();
+                lineNumber = ex.getLine().getNumber();
+            }
+
+            throw new FileSyntaxException(ex, exceptionSource, lineNumber);
+        }
     }
 
 
