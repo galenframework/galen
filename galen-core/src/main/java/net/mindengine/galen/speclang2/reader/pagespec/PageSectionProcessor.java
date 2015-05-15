@@ -17,9 +17,11 @@ package net.mindengine.galen.speclang2.reader.pagespec;
 
 import net.mindengine.galen.parser.StructNode;
 import net.mindengine.galen.parser.SyntaxException;
+import net.mindengine.galen.specs.Spec;
 import net.mindengine.galen.specs.page.ObjectSpecs;
 import net.mindengine.galen.specs.page.PageSection;
 import net.mindengine.galen.specs.page.SpecGroup;
+import net.mindengine.galen.specs.reader.StringCharReader;
 import net.mindengine.galen.specs.reader.page.rules.Rule;
 import net.mindengine.galen.suite.reader.Line;
 import net.mindengine.galen.utils.GalenUtils;
@@ -214,7 +216,17 @@ public class PageSectionProcessor {
 
     private void processSpec(ObjectSpecs objectSpecs, StructNode specNode) {
         try {
-            objectSpecs.getSpecs().add(pageSpecHandler.getSpecReaderV2().read(specNode.getName(), pageSpecHandler.getContextPath()));
+            String specText = specNode.getName();
+            boolean onlyWarn = false;
+            if (specText.startsWith("%")) {
+                specText = specText.substring(1);
+                onlyWarn = true;
+            }
+
+            Spec spec = pageSpecHandler.getSpecReaderV2().read(specText, pageSpecHandler.getContextPath());
+            spec.setOnlyWarn(onlyWarn);
+
+            objectSpecs.getSpecs().add(spec);
         } catch (SyntaxException ex) {
             ex.setLine(new Line(specNode.getSource(), specNode.getFileLineNumber()));
             throw ex;

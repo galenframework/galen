@@ -546,6 +546,17 @@ public class PageSpecReaderV2Test {
                 is("right-of menu-item-9"));
     }
 
+    @Test
+    public void shouldRead_specsWithWarningLevel() throws IOException {
+        PageSpec pageSpec = readPageSpec("speclang2/warning-level-in-specs.gspec");
+
+        PageSection section = pageSpec.getSections().get(0);
+
+        assertThat(section.getObjects().get(0).getSpecs().get(0).isOnlyWarn(), is(false));
+        assertThat(section.getObjects().get(0).getSpecs().get(0).getOriginalText(), is("width 100px"));
+        assertThat(section.getObjects().get(0).getSpecs().get(1).isOnlyWarn(), is(true));
+        assertThat(section.getObjects().get(0).getSpecs().get(1).getOriginalText(), is("height 100px"));
+    }
 
     private PageSpec readPageSpec(String resource) throws IOException {
         return readPageSpec(resource, NO_PAGE, EMPTY_TAGS, EMPTY_TAGS);
