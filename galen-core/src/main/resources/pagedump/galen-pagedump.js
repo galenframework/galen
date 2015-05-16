@@ -196,7 +196,7 @@ Suggest.prototype.generateSuggestions = function (items) {
 
     for (var objectName in this.specs) {
         if (this.specs.hasOwnProperty(objectName)) {
-            html += "\n<b>" + objectName + "</b>\n";
+            html += "\n<b>" + objectName  + ":</b>\n";
             var specs = this.specs[objectName];
             for (var i = 0; i < specs.length; i++) {
                 html += "    " + specs[i].specText + "\n";
@@ -208,10 +208,10 @@ Suggest.prototype.generateSuggestions = function (items) {
 };
 Suggest.prototype._suggestions = {};
 Suggest.prototype._suggestions.width = function(a, b) {
-           return new Spec(a.name, "width: " + getPercentage(a.area[2], b.area[2]) + "% of " + b.name+"/width");
+           return new Spec(a.name, "width " + getPercentage(a.area[2], b.area[2]) + "% of " + b.name+"/width");
    };
 Suggest.prototype._suggestions.height = function(a, b) {
-          return new Spec(a.name, "height: " + getPercentage(a.area[3], b.area[3]) + "% of " + b.name+"/height");
+          return new Spec(a.name, "height " + getPercentage(a.area[3], b.area[3]) + "% of " + b.name+"/height");
    };
 
 function getPercentage(a, b) {
@@ -226,7 +226,7 @@ Suggest.prototype._suggestions.inside = function (itemA, itemB){
             return null;
         }
     }
-    return new Spec(itemA.name, "inside: " + itemB.name + " " + __galen_textForLocationsOfInsideSpec(itemA, itemB));
+    return new Spec(itemA.name, "inside " + itemB.name + " " + __galen_textForLocationsOfInsideSpec(itemA, itemB));
 };
 Suggest.prototype._suggestions.insidePartly = function (itemA, itemB){
     var points = areaToPoints(itemA.area); 
@@ -239,7 +239,7 @@ Suggest.prototype._suggestions.insidePartly = function (itemA, itemB){
     }
 
     if (amountOfInsidePoints > 0 && amountOfInsidePoints < 4) {
-        return new Spec(itemA.name, "inside partly: " + itemB.name + " " + __galen_textForLocationsOfInsideSpec(itemA, itemB));
+        return new Spec(itemA.name, "inside partly " + itemB.name + " " + __galen_textForLocationsOfInsideSpec(itemA, itemB));
     }
     return null;
 };
@@ -252,21 +252,21 @@ Suggest.prototype._suggestions.alignedHorizontally = function (itemA, itemB) {
         if (dTop > 0 || dBottom > 0) {
             errorRate = " " + Math.max(dTop, dBottom) + "px";
         }
-        return new Spec(itemA.name, "aligned horizontally all: " + itemB.name + errorRate);
+        return new Spec(itemA.name, "aligned horizontally all " + itemB.name + errorRate);
     }
     else if (dTop < 5) {
         var errorRate = "";
         if (dTop > 0) {
             errorRate = " " + dTop + "px";
         }
-        return new Spec(itemA.name, "aligned horizontally top: " + itemB.name + errorRate);
+        return new Spec(itemA.name, "aligned horizontally top " + itemB.name + errorRate);
     }
     else if (dBottom < 5) {
         var errorRate = "";
         if (dBottom > 0) {
             errorRate = " " + dBottom + "px";
         }
-        return new Spec(itemA.name, "aligned horizontally bottom: " + itemB.name + errorRate);
+        return new Spec(itemA.name, "aligned horizontally bottom " + itemB.name + errorRate);
     }
     return null;
 };
@@ -279,21 +279,21 @@ Suggest.prototype._suggestions.alignedVertically = function (itemA, itemB) {
         if (dLeft > 0 || dRight > 0) {
             errorRate = " " + Math.max(dLeft, dRight) + "px";
         }
-        return new Spec(itemA.name, "aligned vertically all: " + itemB.name + errorRate);
+        return new Spec(itemA.name, "aligned vertically all " + itemB.name + errorRate);
     }
     else if (dLeft < 5) {
         var errorRate = "";
         if (dLeft > 0) {
             errorRate = " " + dLeft + "px";
         }
-        return new Spec(itemA.name, "aligned vertically left: " + itemB.name + errorRate);
+        return new Spec(itemA.name, "aligned vertically left " + itemB.name + errorRate);
     }
     else if (dRight < 5) {
         var errorRate = "";
         if (dRight > 0) {
             errorRate = " " + dRight + "px";
         }
-        return new Spec(itemA.name, "aligned vertically right: " + itemB.name + errorRate);
+        return new Spec(itemA.name, "aligned vertically right " + itemB.name + errorRate);
     }
     return null;
 };
@@ -307,21 +307,21 @@ Suggest.prototype._suggestions.leftOf = function (a, b) {
 Suggest.prototype._suggestions.rightOf = function (a, b) {
     var diff = a.area[0] - b.area[0] - b.area[2];
     if (diff >= 0) {
-        return new Spec(a.name, "right of: " + b.name + " " + diff + "px");
+        return new Spec(a.name, "right of " + b.name + " " + diff + "px");
     }
     return null;
 };
 Suggest.prototype._suggestions.above = function (a, b) {
     var diff = b.area[1] - a.area[1] - a.area[3];
     if (diff >= 0) {
-        return new Spec(a.name, "above: " + b.name + " " + diff + "px");
+        return new Spec(a.name, "above " + b.name + " " + diff + "px");
     }
     return null;
 };
 Suggest.prototype._suggestions.below = function (a, b) {
     var diff = a.area[1] - b.area[1] - b.area[3];
     if (diff >= 0) {
-        return new Spec(a.name, "below: " + b.name + " " + diff + "px");
+        return new Spec(a.name, "below " + b.name + " " + diff + "px");
     }
     return null;
 };
@@ -352,20 +352,20 @@ Suggest.prototype._suggestions.centered = function (a, b) {
 
     if (similar(dt, db) && dt > 0 ) {
         if (similar(dl, dr) && dr > 0) {
-            return new Spec(a.name, "centered all inside: " + b.name + errorRate(Math.max(Math.abs(dt - db), Math.abs(dl - dr))));
+            return new Spec(a.name, "centered all inside " + b.name + errorRate(Math.max(Math.abs(dt - db), Math.abs(dl - dr))));
         }
         else {
-            return new Spec(a.name, "centered vertically inside: " + b.name + errorRate(dt - db));
+            return new Spec(a.name, "centered vertically inside " + b.name + errorRate(dt - db));
         }
     }
     else if (similar(dr, dl) && dr > 0) {
-        return new Spec(a.name, "centered horizontally inside: " + b.name + errorRate(dl - dr));
+        return new Spec(a.name, "centered horizontally inside " + b.name + errorRate(dl - dr));
     }
     else if (similar(dt, db) && dt < 0) {
-        return new Spec(a.name, "centered vertically on: " + b.name + errorRate(dt - db));
+        return new Spec(a.name, "centered vertically on " + b.name + errorRate(dt - db));
     }
     else if (similar(dr, dl) && dr < 0) {
-        return new Spec(a.name, "centered horizontally on: " + b.name + errorRate(dr - dl));
+        return new Spec(a.name, "centered horizontally on " + b.name + errorRate(dr - dl));
     }
     return null;
 };
