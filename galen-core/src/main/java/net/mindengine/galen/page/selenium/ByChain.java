@@ -48,7 +48,11 @@ public class ByChain {
                 }
 
             } else {
-                throw new IllegalArgumentException("Index is incorrect. Cannot find child elements without index");
+                if (elements.size() > 0) {
+                    return next.findElements(elements.get(0));
+                } else {
+                    return Collections.emptyList();
+                }
             }
         } else {
             return elements;
