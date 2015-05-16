@@ -70,7 +70,7 @@ public class GalenListener implements IReporter, IInvokedMethodListener {
                         storage.cleanup();
                     }
                 } catch (Exception e) {
-                    LOG.error("Unkown error during report cleaning", e);
+                    LOG.error("Unknown error during report cleaning", e);
                 }
             }
         }
@@ -90,10 +90,10 @@ public class GalenListener implements IReporter, IInvokedMethodListener {
             LOG.error("Access error during preparing injection", e);
             throw new TestNGException(e);
         } catch (Exception e) {
-            LOG.error("Unkown error during preparing injection", e);
+            LOG.error("Unknown error during preparing injection", e);
             throw new TestNGException(e);
         }
-        LOG.debug("Creation of Galen Executor was successfull");
+        LOG.debug("Creation of Galen Executor was successful");
     }
 
     public void scanFieldsForExecutor(final Object obj, final Field[] fields) {
@@ -102,7 +102,8 @@ public class GalenListener implements IReporter, IInvokedMethodListener {
                 field.setAccessible(true);
                 try {
                     if(field.isAnnotationPresent(Inject.class)){
-                    	Class<? extends GalenExecutor> clazz= ((Inject)field.getAnnotationsByType(Inject.class)[0]).implementation();
+                        Inject injectAnnotation = field.getAnnotation(Inject.class);
+                    	Class<? extends GalenExecutor> clazz= injectAnnotation.implementation();
                     	this.executor= (GalenExecutor)  clazz.getConstructors()[0].newInstance();
                     	field.set(obj,this.executor);
                     }
