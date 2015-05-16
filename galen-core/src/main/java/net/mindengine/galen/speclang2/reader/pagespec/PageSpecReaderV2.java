@@ -26,23 +26,33 @@ import net.mindengine.galen.utils.GalenUtils;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 
 public class PageSpecReaderV2 {
 
-    public PageSpec read(String path, Page page, List<String> tags, List<String> excludedTags, Properties properties) throws IOException {
+    public PageSpec read(String path, Page page,
+                         List<String> tags, List<String> excludedTags,
+                         Properties properties,
+                         Map<String, Object> jsVariables) throws IOException {
+
         String contextPath = GalenUtils.getParentForFile(path);
-        return read(GalenUtils.findFileOrResourceAsStream(path), path, contextPath, page, tags, excludedTags, properties);
+        return read(GalenUtils.findFileOrResourceAsStream(path), path, contextPath, page, tags, excludedTags, properties, jsVariables);
     }
 
-    public PageSpec read(InputStream inputStream, String source, String contextPath, Page page, List<String> tags, List<String> excludedTags, Properties properties) throws IOException {
+    public PageSpec read(InputStream inputStream, String source,
+                         String contextPath,
+                         Page page,
+                         List<String> tags, List<String> excludedTags,
+                         Properties properties,
+                         Map<String, Object> jsVariables) throws IOException {
         try {
             IndentationStructureParser structParser = new IndentationStructureParser();
             List<StructNode> structs = structParser.parse(inputStream, source);
 
             PageSpec pageSpec = new PageSpec();
 
-            PageSpecHandler pageSpecHandler = new PageSpecHandler(pageSpec, page, tags, excludedTags, contextPath, properties);
+            PageSpecHandler pageSpecHandler = new PageSpecHandler(pageSpec, page, tags, excludedTags, contextPath, properties, jsVariables);
 
             List<StructNode> allProcessedChildNodes = new LogicProcessor(pageSpecHandler).process(structs);
             new PostProcessor(pageSpecHandler).process(allProcessedChildNodes);

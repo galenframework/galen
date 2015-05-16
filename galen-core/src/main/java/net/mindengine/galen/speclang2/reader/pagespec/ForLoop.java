@@ -203,7 +203,7 @@ public class ForLoop {
 
         for (int i = begin; i < end; i++) {
 
-            Map<String, String> vars = new HashMap<String, String>();
+            Map<String, Object> vars = new HashMap<>();
             vars.put(indexName, sequence[i]);
 
             if (previousMapping != null) {

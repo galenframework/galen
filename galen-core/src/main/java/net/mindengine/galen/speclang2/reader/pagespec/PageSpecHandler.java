@@ -52,8 +52,13 @@ public class PageSpecHandler implements VarsParserJsFunctions {
     private final List<String> processedScripts = new LinkedList<>();
     private final Properties properties;
     private final List<String> excludedTags;
+    private final Map<String, Object> jsVariables;
 
-    public PageSpecHandler(PageSpec pageSpec, Page page, List<String> tags, List<String> excludedTags, String contextPath, Properties properties) {
+    public PageSpecHandler(PageSpec pageSpec, Page page,
+                           List<String> tags, List<String> excludedTags,
+                           String contextPath, Properties properties,
+                           Map<String, Object> jsVariables
+    ) {
         this.pageSpec = pageSpec;
         this.page = page;
         this.tags = tags;
@@ -62,6 +67,7 @@ public class PageSpecHandler implements VarsParserJsFunctions {
         this.specReaderV2 = new SpecReaderV2();
         this.jsExecutor = createGalenJsExecutor(this);
         this.pageRules = new LinkedList<>();
+        this.jsVariables = jsVariables;
 
         if (properties != null) {
             this.properties = properties;
@@ -69,7 +75,13 @@ public class PageSpecHandler implements VarsParserJsFunctions {
             this.properties = new Properties();
         }
         this.varsParser = new VarsParser(new Context(), this.properties, jsExecutor);
+
+        if (jsVariables != null) {
+            setGlobalVariables(jsVariables);
+        }
     }
+
+
 
     public PageSpecHandler(PageSpecHandler copy, String contextPath) {
         this.pageSpec = copy.pageSpec;
@@ -82,6 +94,7 @@ public class PageSpecHandler implements VarsParserJsFunctions {
         this.excludedTags = copy.excludedTags;
         this.pageRules = copy.pageRules;
         this.properties = copy.properties;
+        this.jsVariables = copy.jsVariables;
     }
 
     private static GalenJsExecutor createGalenJsExecutor(final PageSpecHandler pageSpecHandler) {
@@ -268,7 +281,7 @@ public class PageSpecHandler implements VarsParserJsFunctions {
         return list;
     }
 
-    public void setGlobalVariable(String name, String value, StructNode source) {
+    public void setGlobalVariable(String name, Object value, StructNode source) {
         if (!isValidVariableName(name)) {
             throw new SyntaxException(source, "Invalid name for variable");
         }
@@ -309,10 +322,14 @@ public class PageSpecHandler implements VarsParserJsFunctions {
         return processedNode;
     }
 
-    public void setGlobalVariables(Map<String, String> variables, StructNode originNode) {
-        for(Map.Entry<String, String> variable : variables.entrySet()) {
+    public void setGlobalVariables(Map<String, Object> variables, StructNode originNode) {
+        for(Map.Entry<String, Object> variable : variables.entrySet()) {
             setGlobalVariable(variable.getKey(), variable.getValue(), originNode);
         }
+    }
+
+    public void setGlobalVariables(Map<String, Object> variables) {
+        setGlobalVariables(variables, StructNode.UNKNOWN_SOURCE);
     }
 
     public List<String> getTags() {
@@ -362,5 +379,13 @@ public class PageSpecHandler implements VarsParserJsFunctions {
 
     public List<String> getExcludedTags() {
         return excludedTags;
+    }
+
+    public Properties getProperties() {
+        return properties;
+    }
+
+    public Map<String, Object> getJsVariables() {
+        return jsVariables;
     }
 }

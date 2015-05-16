@@ -23,6 +23,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class StructNode {
+    public static final StructNode UNKNOWN_SOURCE = new StructNode();
     private String name;
     private List<StructNode> childNodes;
     private int fileLineNumber = -1;

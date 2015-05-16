@@ -15,8 +15,10 @@
 ******************************************************************************/
 package net.mindengine.galen.suite.actions;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 
 import net.mindengine.galen.api.Galen;
 import net.mindengine.galen.browser.Browser;
@@ -36,14 +38,16 @@ import static net.mindengine.galen.utils.GalenUtils.toCommaSeparated;
 
 public class GalenPageActionCheck extends GalenPageAction {
 
+    private static final File NO_SCREENSHOT = null;
     private String specPath;
     private List<String> includedTags;
     private List<String> excludedTags;
+    private Map<String, Object> jsVariables;
 
-    
+
     @Override
     public void execute(TestReport report, Browser browser, GalenPageTest pageTest, ValidationListener validationListener) throws IOException {
-        LayoutReport layoutReport = Galen.checkLayout(browser, specPath, getIncludedTags(), getExcludedTags(), getCurrentProperties(), validationListener);
+        LayoutReport layoutReport = Galen.checkLayout(browser, specPath, getIncludedTags(), getExcludedTags(), getCurrentProperties(), jsVariables, NO_SCREENSHOT, validationListener);
 
         if (report != null) {
             String reportTitle = "Check layout: " + specPath + " included tags: " + toCommaSeparated(includedTags);
@@ -132,5 +136,9 @@ public class GalenPageActionCheck extends GalenPageAction {
     public GalenPageAction withOriginalCommand(String originalCommand) {
         setOriginalCommand(originalCommand);
         return this;
+    }
+
+    public void setJsVariables(Map<String, Object> jsVariables) {
+        this.jsVariables = jsVariables;
     }
 }

@@ -1,0 +1,6 @@
+
+
+
+= Main section =
+    header :
+        text is "Name: ${userName}, age: ${age}"

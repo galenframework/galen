@@ -15,6 +15,7 @@
 ******************************************************************************/
 package net.mindengine.galen.specs;
 
+import java.util.Map;
 import java.util.Properties;
 
 import net.mindengine.galen.specs.reader.Place;
@@ -25,6 +26,7 @@ public abstract class Spec {
     private Place place;
     private boolean onlyWarn = false;
     private String alias;
+    private Map<String, Object> jsVariables;
 
     public String getOriginalText() {
         return originalText;
@@ -88,5 +90,13 @@ public abstract class Spec {
     public Spec withAlias(String alias) {
         setAlias(alias);
         return this;
+    }
+
+    public Map<String, Object> getJsVariables() {
+        return jsVariables;
+    }
+
+    public void setJsVariables(Map<String, Object> jsVariables) {
+        this.jsVariables = jsVariables;
     }
 }

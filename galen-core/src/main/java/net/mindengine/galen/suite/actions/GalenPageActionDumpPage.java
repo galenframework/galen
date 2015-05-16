@@ -25,6 +25,8 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
+import java.util.Map;
+
 public class GalenPageActionDumpPage extends GalenPageAction {
 
     private String pageDumpPath;
@@ -32,6 +34,7 @@ public class GalenPageActionDumpPage extends GalenPageAction {
     private String pageName;
     private Integer maxHeight;
     private Integer maxWidth;
+    private Map<String, Object> jsVariables;
 
     public GalenPageActionDumpPage() {
     }
@@ -44,7 +47,7 @@ public class GalenPageActionDumpPage extends GalenPageAction {
 
     @Override
     public void execute(TestReport report, Browser browser, GalenPageTest pageTest, ValidationListener validationListener) throws Exception {
-        Galen.dumpPage(browser, pageName, specPath, pageDumpPath, maxWidth, maxHeight, getCurrentProperties());
+        Galen.dumpPage(browser, pageName, specPath, pageDumpPath, maxWidth, maxHeight, getCurrentProperties(), jsVariables);
     }
 
     public String getPageDumpPath() {
@@ -114,13 +117,13 @@ public class GalenPageActionDumpPage extends GalenPageAction {
 
     @Override
     public int hashCode() {
-        return new HashCodeBuilder() //@formatter:off
+        return new HashCodeBuilder()
                 .append(this.specPath)
                 .append(this.pageName)
                 .append(this.pageDumpPath)
                 .append(this.maxWidth)
                 .append(this.maxHeight)
-                .toHashCode(); //@formatter:on
+                .toHashCode();
     }
 
     @Override
@@ -151,5 +154,9 @@ public class GalenPageActionDumpPage extends GalenPageAction {
                 .append("maxWidth", maxWidth)
                 .append("maxHeight", maxHeight)
                 .toString(); //@formatter:on
+    }
+
+    public void setJsVariables(Map<String, Object> jsVariables) {
+        this.jsVariables = jsVariables;
     }
 }

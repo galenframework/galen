@@ -27,6 +27,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.regex.Pattern;
@@ -65,6 +66,7 @@ import org.slf4j.LoggerFactory;
 public class GalenMain {
 
     private final static Logger LOG = LoggerFactory.getLogger(GalenMain.class);
+    private static final Map<String, Object> NO_JSVARIABLES = null;
 
     private CompleteListener listener;
 
@@ -132,7 +134,7 @@ public class GalenMain {
 
             browser.load(arguments.getUrl());
 
-            Galen.dumpPage(browser, arguments.getUrl(), arguments.getPaths().get(0), arguments.getExport(), arguments.getMaxWidth(), arguments.getMaxHeight());
+            Galen.dumpPage(browser, arguments.getUrl(), arguments.getPaths().get(0), arguments.getExport(), arguments.getMaxWidth(), arguments.getMaxHeight(), NO_JSVARIABLES);
             System.out.println("Done!");
         } catch (Exception ex) {
             throw new RuntimeException(ex);

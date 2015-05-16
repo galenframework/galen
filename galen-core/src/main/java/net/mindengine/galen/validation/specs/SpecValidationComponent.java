@@ -108,7 +108,7 @@ public class SpecValidationComponent extends SpecValidation<SpecComponent> {
 
         PageSpec componentPageSpec;
         try {
-            componentPageSpec = pageSpecReader.read(spec.getSpecPath(), page, sectionFilter.getIncludedTags(), sectionFilter.getExcludedTags(), spec.getProperties());
+            componentPageSpec = pageSpecReader.read(spec.getSpecPath(), page, sectionFilter.getIncludedTags(), sectionFilter.getExcludedTags(), spec.getProperties(), spec.getJsVariables());
         } catch (IOException e) {
             throw new RuntimeException(e.getMessage(), e);
         }

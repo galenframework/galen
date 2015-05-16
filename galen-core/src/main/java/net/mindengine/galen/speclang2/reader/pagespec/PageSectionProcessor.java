@@ -235,6 +235,8 @@ public class PageSectionProcessor {
             Spec spec = pageSpecHandler.getSpecReaderV2().read(specText, pageSpecHandler.getContextPath());
             spec.setOnlyWarn(onlyWarn);
             spec.setAlias(alias);
+            spec.setProperties(pageSpecHandler.getProperties());
+            spec.setJsVariables(pageSpecHandler.getJsVariables());
 
             objectSpecs.getSpecs().add(spec);
         } catch (SyntaxException ex) {

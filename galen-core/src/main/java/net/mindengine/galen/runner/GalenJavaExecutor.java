@@ -187,7 +187,7 @@ public class GalenJavaExecutor implements GalenExecutor {
         LOG.info("Starting layout check of specs " + spec + " at " + startTime);
         loadPage(url);
         final TestReport report = GalenReportsContainer.get().registerTest(methodName, groups);
-        final LayoutReport layoutReport = Galen.checkLayout(getDriverInstance(), spec, includedTags, null, null, null);
+        final LayoutReport layoutReport = Galen.checkLayout(getDriverInstance(), spec, includedTags, null, null, null, null);
         final Date endDate = new Date();
         LOG.info("Finshed layout check at " + endDate);
         report.layout(layoutReport, spec + " | " + testDevice.getName());

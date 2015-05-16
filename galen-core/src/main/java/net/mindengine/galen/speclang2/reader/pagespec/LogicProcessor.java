@@ -166,7 +166,7 @@ public class LogicProcessor {
 
             return forLoop.apply(new LoopVisitor() {
                 @Override
-                public List<StructNode> visitLoop(Map<String, String> variables) throws IOException {
+                public List<StructNode> visitLoop(Map<String, Object> variables) throws IOException {
                     pageSpecHandler.setGlobalVariables(variables, statementNode);
                     return process(statementNode.getChildNodes());
                 }

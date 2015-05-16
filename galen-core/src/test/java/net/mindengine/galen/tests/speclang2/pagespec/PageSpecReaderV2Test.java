@@ -44,6 +44,7 @@ public class PageSpecReaderV2Test {
     private static final Page NO_PAGE = null;
     private static final List<String> EMPTY_TAGS = Collections.emptyList();
     private static final Properties NO_PROPERTIES = null;
+    private static final Map<String, Object> NO_VARS = null;
 
     @Test
     public void shouldRead_objectDefinitions() throws IOException {
@@ -510,7 +511,7 @@ public class PageSpecReaderV2Test {
     public void shouldAllow_toPassProperties() throws IOException {
         Properties properties = new Properties();
         properties.put("custom.user.name", "John");
-        PageSpec pageSpec = new PageSpecReaderV2().read("speclang2/properties.gspec", NO_PAGE, EMPTY_TAGS, EMPTY_TAGS, properties);
+        PageSpec pageSpec = new PageSpecReaderV2().read("speclang2/properties.gspec", NO_PAGE, EMPTY_TAGS, EMPTY_TAGS, properties, NO_VARS);
 
         assertThat(pageSpec.getSections().get(0).getName(), is("Main section for user John"));
         assertThat(pageSpec.getSections().get(0).getObjects().get(0).getSpecs().get(0).getOriginalText(),
@@ -575,13 +576,28 @@ public class PageSpecReaderV2Test {
         assertThat(object.getSpecs().get(2).getOriginalText(), is("inside screen 0px top"));
     }
 
+    @Test
+    public void shouldAllow_toPassCustomJsObjects() throws  IOException {
+        PageSpec pageSpec = new PageSpecReaderV2().read(
+                "speclang2/custom-js-variables.gspec",
+                NO_PAGE,
+                EMPTY_TAGS, EMPTY_TAGS,
+                NO_PROPERTIES,
+                new HashMap<String, Object>() {{
+                    put("age", 29);
+                    put("userName", "John");
+                }});
+
+        assertThat(pageSpec.getSections().get(0).getObjects().get(0).getSpecs().get(0).getOriginalText(),
+            is("text is \"Name: John, age: 29\""));
+    }
 
     private PageSpec readPageSpec(String resource) throws IOException {
         return readPageSpec(resource, NO_PAGE, EMPTY_TAGS, EMPTY_TAGS);
     }
 
     private PageSpec readPageSpec(String resource, Page page, List<String> tags, List<String> excludedTags) throws IOException {
-        return new PageSpecReaderV2().read(resource, page, tags, excludedTags, NO_PROPERTIES);
+        return new PageSpecReaderV2().read(resource, page, tags, excludedTags, NO_PROPERTIES, NO_VARS);
     }
 
     private MockedPageElement element(int left, int top, int width, int height) {

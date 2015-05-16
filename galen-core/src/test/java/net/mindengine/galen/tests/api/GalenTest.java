@@ -46,7 +46,7 @@ public class GalenTest {
         WebDriver driver = new MockedDriver();
         driver.get("/mocks/pages/galen4j-sample-page.json");
 
-        LayoutReport layoutReport = Galen.checkLayout(driver, "/specs/galen4j/sample-spec-with-error.spec", asList("mobile"), null, new Properties(), null);
+        LayoutReport layoutReport = Galen.checkLayout(driver, "/specs/galen4j/sample-spec-with-error.spec", asList("mobile"), null, new Properties(), null, null);
 
         assertThat(layoutReport.getValidationErrorResults(), contains(
                 new ValidationResult(
@@ -111,12 +111,6 @@ public class GalenTest {
                         new JsonParser().parse(readFileToString(new File(getClass().getResource(pathForExpectedContent).getFile())).replaceAll("\\s+", "")));
     }
 
-    // TODO move to test util class
-    private void assertFileContent(String pathForRealContent, String pathForExpectedContent) throws IOException {
-        Assert.assertEquals(String.format("Content of \"%s\" should be the same as in \"%s\"", pathForRealContent, pathForExpectedContent),
-                readFileToString(new File(pathForRealContent)).replaceAll("\\s+", ""),
-                readFileToString(new File(getClass().getResource(pathForExpectedContent).getFile())).replaceAll("\\s+", ""));
-    }
     private void assertFileDoesNotExist(String path) {
         assertThat("File " + path + " + should not exist", new File(path).exists(), is(false));
     }

@@ -22,5 +22,5 @@ import java.util.List;
 import java.util.Map;
 
 public interface LoopVisitor {
-    List<StructNode> visitLoop(Map<String, String> variables) throws IOException;
+    List<StructNode> visitLoop(Map<String, Object> variables) throws IOException;
 }

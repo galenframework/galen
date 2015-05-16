@@ -23,7 +23,6 @@ import net.mindengine.galen.page.Rect;
 import net.mindengine.galen.reports.LayoutReportListener;
 import net.mindengine.galen.reports.model.LayoutReport;
 import net.mindengine.galen.speclang2.reader.pagespec.PageSpecReaderV2;
-import net.mindengine.galen.specs.page.PageSection;
 import net.mindengine.galen.specs.reader.page.PageSpec;
 import net.mindengine.galen.specs.reader.page.SectionFilter;
 import net.mindengine.galen.validation.*;
@@ -38,8 +37,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.*;
 
-import static java.util.Arrays.asList;
-
 public class Galen {
 
     private final static Logger LOG = LoggerFactory.getLogger(Galen.class);
@@ -47,31 +44,35 @@ public class Galen {
     private static final Properties EMPTY_PROPERTIES = new Properties();
     private static final ValidationListener EMPTY_VALIDATION_LISTENER = null;
     private static final List<String> EMPTY_TAGS = Collections.emptyList();
+    private static final Map<String, Object> EMPTY_VARS = Collections.emptyMap();
 
 
     public static LayoutReport checkLayout(Browser browser, String specPath,
                                            List<String> includedTags, List<String> excludedTags,
-                                           Properties properties, ValidationListener validationListener) throws IOException {
-        return checkLayout(browser, specPath, includedTags, excludedTags, properties, validationListener, null);
+                                           Properties properties,
+                                           Map<String, Object> jsVariables,
+                                           File screenshotFile) throws IOException {
+        return checkLayout(browser, specPath, includedTags, excludedTags, properties, jsVariables, screenshotFile, null);
     }
 
     public static LayoutReport checkLayout(Browser browser, String specPath,
                                            List<String> includedTags, List<String> excludedTags,
-                                           Properties properties, ValidationListener validationListener, File screenshotFile) throws IOException {
+                                           Properties properties, Map<String, Object> jsVariables,
+                                           File screenshotFile, ValidationListener validationListener) throws IOException {
         PageSpecReaderV2 reader = new PageSpecReaderV2();
-        PageSpec pageSpec = reader.read(specPath, browser.getPage(), includedTags, excludedTags, properties);
-        return checkLayout(browser, pageSpec, includedTags, excludedTags, validationListener, screenshotFile);
+        PageSpec pageSpec = reader.read(specPath, browser.getPage(), includedTags, excludedTags, properties, jsVariables);
+        return checkLayout(browser, pageSpec, includedTags, excludedTags, screenshotFile, validationListener);
     }
 
     public static LayoutReport checkLayout(Browser browser, PageSpec pageSpec,
                                            List<String> includedTags, List<String> excludedTags,
                                            ValidationListener validationListener) throws IOException {
-        return checkLayout(browser, pageSpec, includedTags, excludedTags, validationListener, EMPTY_SCREENSHOT_FILE);
+        return checkLayout(browser, pageSpec, includedTags, excludedTags, EMPTY_SCREENSHOT_FILE, validationListener);
     }
 
     public static LayoutReport checkLayout(Browser browser, PageSpec pageSpec,
                                    List<String> includedTags, List<String> excludedTags,
-                                   ValidationListener validationListener, File screenshotFile) throws IOException {
+                                   File screenshotFile, ValidationListener validationListener) throws IOException {
 
         Page page = browser.getPage();
         page.setScreenshot(screenshotFile);
@@ -118,47 +119,46 @@ public class Galen {
         return layoutReport;
     }
 
-    private static PageSection findSectionWithName(String name, List<PageSection> sections) {
-        for (PageSection section : sections) {
-            if (section.getName().equals(name)) {
-                return section;
-            }
-        }
-
-        return null;
-    }
-
     public static LayoutReport checkLayout(WebDriver driver, String spec, List<String> includedTags) throws IOException {
-        return checkLayout(driver, spec, includedTags, EMPTY_TAGS, EMPTY_PROPERTIES, EMPTY_VALIDATION_LISTENER, EMPTY_SCREENSHOT_FILE);
+        return checkLayout(driver, spec, includedTags, EMPTY_TAGS, EMPTY_PROPERTIES, EMPTY_VARS, EMPTY_SCREENSHOT_FILE, EMPTY_VALIDATION_LISTENER);
     }
 
     public static LayoutReport checkLayout(WebDriver driver, String specPath,
                                            List<String> includedTags, List<String> excludedTags,
-                                           Properties properties, ValidationListener validationListener) throws IOException {
-        return checkLayout(new SeleniumBrowser(driver), specPath, includedTags, excludedTags, properties, validationListener);
+                                           Properties properties, Map<String, Object> jsVariables,
+                                           File screenshotFile) throws IOException {
+        return checkLayout(new SeleniumBrowser(driver), specPath, includedTags, excludedTags, properties, jsVariables, screenshotFile);
     }
 
     public static LayoutReport checkLayout(WebDriver driver, String specPath,
                                            List<String> includedTags, List<String> excludedTags,
-                                           Properties properties, ValidationListener validationListener, File screenshotFile) throws IOException {
-        return checkLayout(new SeleniumBrowser(driver), specPath, includedTags, excludedTags, properties, validationListener, screenshotFile);
+                                           Properties properties, Map<String, Object> jsVariables, File screenshotFile, ValidationListener validationListener) throws IOException {
+        return checkLayout(new SeleniumBrowser(driver), specPath, includedTags, excludedTags, properties, jsVariables, screenshotFile, validationListener);
     }
 
     public static void dumpPage(WebDriver driver, String pageName, String specPath, String pageDumpPath) throws IOException {
-        dumpPage(driver, pageName, specPath, pageDumpPath, null, null);
+        dumpPage(driver, pageName, specPath, pageDumpPath, null, null, null);
     }
 
     public static void dumpPage(WebDriver driver, String pageName, String specPath, String pageDumpPath, Integer maxWidth, Integer maxHeight) throws IOException {
-        dumpPage(new SeleniumBrowser(driver), pageName, specPath, pageDumpPath, maxWidth, maxHeight);
+        dumpPage(new SeleniumBrowser(driver), pageName, specPath, pageDumpPath, maxWidth, maxHeight, null);
+    }
+
+    public static void dumpPage(WebDriver driver, String pageName, String specPath, String pageDumpPath, Integer maxWidth, Integer maxHeight, Map<String, Object> jsVariables) throws IOException {
+        dumpPage(new SeleniumBrowser(driver), pageName, specPath, pageDumpPath, maxWidth, maxHeight, jsVariables);
     }
 
     public static void dumpPage(Browser browser, String pageName, String specPath, String pageDumpPath, Integer maxWidth, Integer maxHeight) throws IOException {
-        dumpPage(browser, pageName, specPath, pageDumpPath, maxWidth, maxHeight, new Properties());
+        dumpPage(browser, pageName, specPath, pageDumpPath, maxWidth, maxHeight, new Properties(), null);
     }
-    public static void dumpPage(Browser browser, String pageName, String specPath, String pageDumpPath, Integer maxWidth, Integer maxHeight, Properties properties) throws IOException {
+
+    public static void dumpPage(Browser browser, String pageName, String specPath, String pageDumpPath, Integer maxWidth, Integer maxHeight, Map<String, Object> jsVariables) throws IOException {
+        dumpPage(browser, pageName, specPath, pageDumpPath, maxWidth, maxHeight, new Properties(), jsVariables);
+    }
+    public static void dumpPage(Browser browser, String pageName, String specPath, String pageDumpPath, Integer maxWidth, Integer maxHeight, Properties properties, Map<String, Object> jsVariables) throws IOException {
         PageSpecReaderV2 reader = new PageSpecReaderV2();
 
-        PageSpec pageSpec = reader.read(specPath, browser.getPage(), EMPTY_TAGS, EMPTY_TAGS, properties);
+        PageSpec pageSpec = reader.read(specPath, browser.getPage(), EMPTY_TAGS, EMPTY_TAGS, properties, jsVariables);
         dumpPage(browser, pageName, pageSpec, new File(pageDumpPath), maxWidth, maxHeight);
     }
 

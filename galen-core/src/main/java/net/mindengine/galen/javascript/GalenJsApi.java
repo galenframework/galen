@@ -22,16 +22,14 @@ import net.mindengine.galen.reports.TestReport;
 import net.mindengine.galen.reports.model.LayoutReport;
 import net.mindengine.galen.reports.nodes.LayoutReportNode;
 import net.mindengine.galen.reports.nodes.TestReportNode;
-import net.mindengine.galen.runner.CompleteListener;
-import net.mindengine.galen.suite.actions.GalenPageActionCheck;
 import net.mindengine.galen.tests.TestSession;
 import net.mindengine.galen.utils.GalenUtils;
 import org.openqa.selenium.WebDriver;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 
 import static java.util.Arrays.asList;
@@ -49,7 +47,7 @@ public class GalenJsApi {
      * @param screenshotFilePath
      * @throws IOException
      */
-    public static void checkLayout(WebDriver driver, String fileName, String[]includedTags, String[]excludedTags, Properties properties, String screenshotFilePath) throws IOException {
+    public static void checkLayout(WebDriver driver, String fileName, String[]includedTags, String[]excludedTags, Properties properties, String screenshotFilePath, Map<String, Object> jsVariables) throws IOException {
 
         TestSession session = TestSession.current();
         if (session == null) {
@@ -76,8 +74,9 @@ public class GalenJsApi {
         LayoutReport layoutReport = Galen.checkLayout(new SeleniumBrowser(driver), fileName,
                 includedTagsList, toList(excludedTags),
                 properties,
-                session.getListener(),
-                screenshotFile);
+                jsVariables,
+                screenshotFile,
+                session.getListener());
 
         if (report != null) {
             String reportTitle = "Check layout: " + fileName + " included tags: " + GalenUtils.toCommaSeparated(includedTagsList);
