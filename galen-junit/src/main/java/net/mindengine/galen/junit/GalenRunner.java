@@ -65,7 +65,8 @@ public class GalenRunner extends BlockJUnit4ClassRunner {
                 field.setAccessible(true);
                 try {
                     if(field.isAnnotationPresent(Inject.class)){
-                    	Class<? extends GalenExecutor> clazz= ((Inject)field.getAnnotationsByType(Inject.class)[0]).implementation();
+                        Inject injectAnnotation = field.getAnnotation(Inject.class);
+                        Class<? extends GalenExecutor> clazz= injectAnnotation.implementation();
                     	this.executor= (GalenExecutor)  clazz.getConstructors()[0].newInstance();
                     	field.set(obj,this.executor);
                     }
