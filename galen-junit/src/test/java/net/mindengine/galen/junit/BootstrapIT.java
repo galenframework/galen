@@ -23,7 +23,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.openqa.selenium.Dimension;
 
-import com.google.inject.Inject;
+import net.mindengine.galen.api.Inject;
 
 @RunWith(GalenRunner.class)
 public class BootstrapIT {

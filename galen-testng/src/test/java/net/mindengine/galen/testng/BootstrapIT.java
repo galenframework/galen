@@ -23,7 +23,7 @@ import org.openqa.selenium.Dimension;
 import org.testng.annotations.Listeners;
 import org.testng.annotations.Test;
 
-import com.google.inject.Inject;
+import net.mindengine.galen.api.Inject;
 
 @Listeners(value = GalenListener.class)
 public class BootstrapIT {

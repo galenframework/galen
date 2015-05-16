@@ -16,10 +16,12 @@
 package net.mindengine.galen.testng;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
 import net.mindengine.galen.api.GalenExecutor;
 import net.mindengine.galen.api.GalenReportsContainer;
+import net.mindengine.galen.api.Inject;
 import net.mindengine.galen.reports.GalenTestInfo;
 import net.mindengine.galen.reports.HtmlReportBuilder;
 import net.mindengine.galen.reports.model.FileTempStorage;
@@ -34,17 +36,11 @@ import org.testng.ITestResult;
 import org.testng.TestNGException;
 import org.testng.xml.XmlSuite;
 
-import com.google.inject.Guice;
-import com.google.inject.Injector;
-import com.google.inject.Module;
-
 public class GalenListener implements IReporter, IInvokedMethodListener {
 
     private static final Logger LOG = LoggerFactory.getLogger(GalenListener.class);
 
     private GalenExecutor executor;
-
-    private Injector injector;
 
     @Override
     public void generateReport(List<XmlSuite> xmlSuites, List<ISuite> iSuites, String s) {
@@ -57,18 +53,6 @@ public class GalenListener implements IReporter, IInvokedMethodListener {
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
-    }
-
-    private Injector createInjector() throws TestNGException {
-        Module module = null;
-        try {
-            module = (Module) (GalenTestNGModule.class).newInstance();
-        } catch (InstantiationException e) {
-            throw new TestNGException(e);
-        } catch (IllegalAccessException e) {
-            throw new TestNGException(e);
-        }
-        return Guice.createInjector(module);
     }
 
     /**
@@ -93,10 +77,9 @@ public class GalenListener implements IReporter, IInvokedMethodListener {
 
     @Override
     public void beforeInvocation(IInvokedMethod method, ITestResult testResult) {
+        LOG.debug("Creating Galen Executor");
         try {
-            injector = createInjector();
             Object obj = method.getTestMethod().getInstance();
-            injector.injectMembers(obj);
             scanFieldsForExecutor(obj, obj.getClass().getDeclaredFields());
             if (this.executor == null) {
                 // search super class too
@@ -109,7 +92,7 @@ public class GalenListener implements IReporter, IInvokedMethodListener {
             LOG.error("Unkown error during preparing injection", e);
             throw new TestNGException(e);
         }
-
+        LOG.debug("Creation of Galen Executor was successfull");
     }
 
     public void scanFieldsForExecutor(final Object obj, final Field[] fields) {
@@ -117,12 +100,22 @@ public class GalenListener implements IReporter, IInvokedMethodListener {
             if (field.getType() == GalenExecutor.class) {
                 field.setAccessible(true);
                 try {
-                    this.executor = (GalenExecutor) field.get(obj);
+                    if(field.isAnnotationPresent(Inject.class)){
+                    	Class<? extends GalenExecutor> clazz= ((Inject)field.getAnnotationsByType(Inject.class)[0]).implementation();
+                    	this.executor= (GalenExecutor)  clazz.getConstructors()[0].newInstance();
+                    	field.set(obj,this.executor);
+                    }
                 } catch (IllegalArgumentException e) {
-                    LOG.error("Argument error during preparing injection", e);
+                    throw new TestNGException(e);
                 } catch (IllegalAccessException e) {
-                    LOG.error("Illegal access error during preparing injection", e);
-                }
+                    throw new TestNGException(e);
+                } catch (InstantiationException e) {
+                    throw new TestNGException(e);
+				} catch (InvocationTargetException e) {
+                    throw new TestNGException(e);
+				} catch (SecurityException e) {
+                    throw new TestNGException(e);
+				}
                 field.setAccessible(false);
             }
         }

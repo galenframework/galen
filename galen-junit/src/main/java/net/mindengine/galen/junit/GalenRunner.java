@@ -16,8 +16,10 @@
 package net.mindengine.galen.junit;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
 
 import net.mindengine.galen.api.GalenExecutor;
+import net.mindengine.galen.api.Inject;
 
 import org.junit.runner.Description;
 import org.junit.runner.notification.Failure;
@@ -27,10 +29,6 @@ import org.junit.runners.model.FrameworkMethod;
 import org.junit.runners.model.InitializationError;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import com.google.inject.Guice;
-import com.google.inject.Injector;
-import com.google.inject.Module;
 
 /**
  * A test runner for WebDriver-based layout tests. This test runner initializes a WebDriver instance before running the
@@ -44,51 +42,47 @@ public class GalenRunner extends BlockJUnit4ClassRunner {
 
     private GalenExecutor executor;
 
-    private Injector injector;
-
     public GalenRunner(Class<?> klass) throws InitializationError {
         super(klass);
-        injector = createInjector();
     }
 
     @Override
     public Object createTest() throws Exception {
+        LOG.debug("Creating Galen Executor");
         Object obj = super.createTest();
-        injector.injectMembers(obj);
         scanFieldsForExecutor(obj, obj.getClass().getDeclaredFields());
         if (this.executor == null) {
             // search super class too
             scanFieldsForExecutor(obj, obj.getClass().getSuperclass().getDeclaredFields());
         }
+        LOG.debug("Creation of Galen Executor was successfull");
         return obj;
     }
 
-    public void scanFieldsForExecutor(final Object obj, final Field[] fields) {
+    public void scanFieldsForExecutor(final Object obj, final Field[] fields) throws InitializationError {
         for (Field field : fields) {
             if (field.getType() == GalenExecutor.class) {
                 field.setAccessible(true);
                 try {
-                    this.executor = (GalenExecutor) field.get(obj);
+                    if(field.isAnnotationPresent(Inject.class)){
+                    	Class<? extends GalenExecutor> clazz= ((Inject)field.getAnnotationsByType(Inject.class)[0]).implementation();
+                    	this.executor= (GalenExecutor)  clazz.getConstructors()[0].newInstance();
+                    	field.set(obj,this.executor);
+                    }
                 } catch (IllegalArgumentException e) {
-                    LOG.error("Argument error during preparing injection", e);
+                    throw new InitializationError(e);
                 } catch (IllegalAccessException e) {
-                    LOG.error("Illegal access error during preparing injection", e);
-                }
+                    throw new InitializationError(e);
+                } catch (InstantiationException e) {
+                    throw new InitializationError(e);
+				} catch (InvocationTargetException e) {
+                    throw new InitializationError(e);
+				} catch (SecurityException e) {
+                    throw new InitializationError(e);
+				}
                 field.setAccessible(false);
             }
         }
-    }
-
-    private Injector createInjector() throws InitializationError {
-        Module module = null;
-        try {
-            module = (Module) (GalenJunitModule.class).newInstance();
-        } catch (InstantiationException e) {
-            throw new InitializationError(e);
-        } catch (IllegalAccessException e) {
-            throw new InitializationError(e);
-        }
-        return Guice.createInjector(module);
     }
 
     /**
