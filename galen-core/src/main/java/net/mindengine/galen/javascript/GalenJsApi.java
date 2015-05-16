@@ -28,6 +28,7 @@ import org.openqa.selenium.WebDriver;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
@@ -38,6 +39,16 @@ import static java.util.Arrays.asList;
  * This class is used for JavaScript functions defined in GalenApi.js
  */
 public class GalenJsApi {
+
+    public static class JsVariable {
+        private final String name;
+        private final Object value;
+        public JsVariable(String name, Object value) {
+            this.name = name;
+            this.value = value;
+        }
+    }
+
     /**
      * Needed for Javascript based tests
      * @param driver
@@ -47,7 +58,7 @@ public class GalenJsApi {
      * @param screenshotFilePath
      * @throws IOException
      */
-    public static void checkLayout(WebDriver driver, String fileName, String[]includedTags, String[]excludedTags, Properties properties, String screenshotFilePath, Map<String, Object> jsVariables) throws IOException {
+    public static void checkLayout(WebDriver driver, String fileName, String[]includedTags, String[]excludedTags, Properties properties, String screenshotFilePath, JsVariable[] vars) throws IOException {
 
         TestSession session = TestSession.current();
         if (session == null) {
@@ -71,6 +82,8 @@ public class GalenJsApi {
 
         List<String> includedTagsList = toList(includedTags);
 
+        Map<String, Object> jsVariables = convertJsVariables(vars);
+
         LayoutReport layoutReport = Galen.checkLayout(new SeleniumBrowser(driver), fileName,
                 includedTagsList, toList(excludedTags),
                 properties,
@@ -86,6 +99,17 @@ public class GalenJsApi {
             }
             report.addNode(layoutReportNode);
         }
+    }
+
+    private static Map<String, Object> convertJsVariables(JsVariable[] vars) {
+        Map<String, Object> converted = new HashMap<>();
+
+        if (vars != null) {
+            for (JsVariable variable : vars) {
+                converted.put(variable.name, variable.value);
+            }
+        }
+        return converted;
     }
 
     public static void resizeDriver(WebDriver driver, String sizeText) {

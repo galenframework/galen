@@ -1,0 +1,10 @@
+
+
+
+@objects
+    caption css #caption
+
+
+= Main section =
+    caption :
+        text is "Hi my name is ${customData.userName}"

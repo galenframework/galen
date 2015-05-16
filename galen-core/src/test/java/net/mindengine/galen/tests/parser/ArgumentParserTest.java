@@ -199,10 +199,10 @@ public class ArgumentParserTest {
                 new GalenArguments()
                     .withAction("config")},
 
-            {args("dump", "my-page.spec", "--url", "http://mindengine.net", "--export", "export-page-dir", "--max-width", "100", "--max-height", "150"),
+            {args("dump", "my-page.gspec", "--url", "http://mindengine.net", "--export", "export-page-dir", "--max-width", "100", "--max-height", "150"),
                 new GalenArguments()
                     .withAction("dump")
-                    .withPaths(asList("my-page.spec"))
+                    .withPaths(asList("my-page.gspec"))
                     .withUrl("http://mindengine.net")
                     .withExport("export-page-dir")
                     .withMaxWidth(100)

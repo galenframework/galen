@@ -31,8 +31,11 @@ import net.mindengine.galen.config.GalenConfig;
 import net.mindengine.galen.config.GalenProperty;
 import net.mindengine.galen.runner.CompleteListener;
 import net.mindengine.galen.runner.GalenArguments;
+import net.mindengine.galen.specs.Spec;
 import net.mindengine.galen.tests.GalenTest;
 
+import net.mindengine.galen.validation.PageValidation;
+import net.mindengine.galen.validation.ValidationResult;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.testng.annotations.AfterMethod;
@@ -328,6 +331,28 @@ public class GalenMainTest {
                 "Test 1 with filter one", 
                 "Test 1 with filter two",
                 "Test 2 with filter"));
+    }
+
+    @Test
+    public void shouldCheckLayout_inJsTests_andPassCustomJsVariables() throws Exception {
+        String testUrl = getClass().getResource("/suites/custom-js-variables-for-checklayout/simple.test.js").getFile();
+
+        GalenMain galen = new GalenMain();
+        final List<String> errorMessages = new LinkedList<>();
+
+        CompleteListener listener = new DummyCompleteListener() {
+            @Override
+            public void onSpecError(PageValidation pageValidation, String objectName, Spec spec, ValidationResult result) {
+                errorMessages.addAll(result.getError().getMessages());
+            }
+        };
+        galen.setListener(listener);
+        galen.execute(new GalenArguments()
+                .withAction("test")
+                .withPaths(asList(testUrl))
+        );
+
+        assertThat(errorMessages, hasItems("\"caption\" text is \"Hi my name is John\" but should be \"Hi my name is Jack\""));
     }
 }
 

@@ -1,0 +1,9 @@
+{
+  "items": [
+    {
+      "locator": "css: #caption",
+      "area": [0,0,100,10],
+      "text": "Hi my name is John"
+    }
+  ]
+}

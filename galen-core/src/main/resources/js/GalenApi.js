@@ -54,11 +54,24 @@
         return GalenUtils.createGridDriver(url, browser, browserVersion, platform, dc, size);
     }
 
+    function varsToArray(vars) {
+        var array = [],
+            name;
+
+        for (name in vars) {
+            if (vars.hasOwnProperty(name)) {
+                array.push(new GalenJsApi.JsVariable(name, vars[name]));
+            }
+        }
+
+        return array;
+    }
 
     function checkLayout(driver, pageSpecFile, includedTags, excludedTags) {
         var settings,
             screenshotFile = null,
-            properties = null;
+            properties = null,
+            jsVariables = [];
 
         if (arguments.length === 1) {
             settings = driver;
@@ -69,6 +82,10 @@
             excludedTags = settings.excludedTags;
             screenshotFile = settings.screenshot;
             properties = settings.properties;
+
+            if (settings.vars != undefined) {
+                jsVariables = varsToArray(settings.vars);
+            }
         }
 
         if (includedTags === undefined) {
@@ -92,7 +109,7 @@
             excludedTags = [excludedTags];
         }
 
-        GalenJsApi.checkLayout(driver, pageSpecFile, includedTags, excludedTags, properties, screenshotFile);
+        GalenJsApi.checkLayout(driver, pageSpecFile, includedTags, excludedTags, properties, screenshotFile, jsVariables);
     }
 
 
