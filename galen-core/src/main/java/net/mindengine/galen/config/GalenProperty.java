@@ -30,6 +30,11 @@ public enum GalenProperty {
 
     TEST_JS_SUFFIX("galen.test.js.file.suffix", ".test.js"),
     TEST_SUFFIX("galen.test.file.suffix", ".test"),
+    
+    TEST_JAVA_REPORT_OUTPUTFOLDER("galen.test.java.report.outputFolder", "target/galen-html-reports"),
+    TEST_JAVA_TIMEOUT_PAGELOAD("galen.test.java.timeout.pageLoad", "20"),
+    TEST_JAVA_TIMEOUT_IMPLICITYWAIT("galen.test.java.timeout.implicitWait", "1"),
+    
     GALEN_CONFIG_FILE("galen.config.file", "config"),
     GALEN_RANGE_APPROXIMATION("galen.range.approximation", "2"),
     GALEN_REPORTING_LISTENERS("galen.reporting.listeners", ""),

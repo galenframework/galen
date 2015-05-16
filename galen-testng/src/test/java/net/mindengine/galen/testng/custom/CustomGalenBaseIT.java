@@ -15,39 +15,18 @@
  ******************************************************************************/
 package net.mindengine.galen.testng.custom;
 
-import java.net.MalformedURLException;
-
 import net.mindengine.galen.api.GalenExecutor;
-import net.mindengine.galen.runner.GalenJavaExecutor;
+import net.mindengine.galen.api.Inject;
 import net.mindengine.galen.testng.GalenListener;
 import net.mindengine.galen.utils.TestDevice;
 
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.firefox.FirefoxDriver;
 import org.testng.annotations.Listeners;
 
 @Listeners(value = GalenListener.class)
 public class CustomGalenBaseIT {
 
-    // omit injection
-    private GalenExecutor runner = new GalenJavaExecutor() {
-
-        @Override
-        public WebDriver createDriver() throws MalformedURLException {
-            // customer driver
-            return new FirefoxDriver();
-        }
-
-        @Override
-        public synchronized void quitDriver() {
-            try {
-                getDriverInstance().close();
-            } catch (MalformedURLException ignored) {
-                // ignore errors
-            }
-        }
-
-    };
+	@Inject(implementation = MyGalenExecutor.class)
+    private GalenExecutor runner;
 
     public void checklayout(final String url, final String spec, final TestDevice testDevice) throws Exception {
         runner.checkLayout(testDevice, url, spec);
