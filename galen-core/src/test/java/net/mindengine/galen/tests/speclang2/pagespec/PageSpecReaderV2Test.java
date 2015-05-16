@@ -558,6 +558,24 @@ public class PageSpecReaderV2Test {
         assertThat(section.getObjects().get(0).getSpecs().get(1).getOriginalText(), is("height 100px"));
     }
 
+    @Test
+    public void shouldRead_specAliases_beforeActualSpecs() throws IOException {
+        PageSpec pageSpec = readPageSpec("speclang2/spec-notes.gspec");
+        PageSection section = pageSpec.getSections().get(0);
+
+        assertThat(section.getObjects().size(), is(1));
+        ObjectSpecs object = section.getObjects().get(0);
+
+        assertThat(object.getSpecs().size(), is(3));
+        assertThat(object.getSpecs().get(0).getAlias(), is(nullValue()));
+        assertThat(object.getSpecs().get(0).getOriginalText(), is("height 100px"));
+        assertThat(object.getSpecs().get(1).getAlias(), is("should be visible"));
+        assertThat(object.getSpecs().get(1).getOriginalText(), is("visible"));
+        assertThat(object.getSpecs().get(2).getAlias(), is("should be on top"));
+        assertThat(object.getSpecs().get(2).getOriginalText(), is("inside screen 0px top"));
+    }
+
+
     private PageSpec readPageSpec(String resource) throws IOException {
         return readPageSpec(resource, NO_PAGE, EMPTY_TAGS, EMPTY_TAGS);
     }

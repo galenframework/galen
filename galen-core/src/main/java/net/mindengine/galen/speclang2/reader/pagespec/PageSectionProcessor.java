@@ -15,6 +15,7 @@
 ******************************************************************************/
 package net.mindengine.galen.speclang2.reader.pagespec;
 
+import net.mindengine.galen.parser.Expectations;
 import net.mindengine.galen.parser.StructNode;
 import net.mindengine.galen.parser.SyntaxException;
 import net.mindengine.galen.specs.Spec;
@@ -223,8 +224,17 @@ public class PageSectionProcessor {
                 onlyWarn = true;
             }
 
+            String alias = null;
+            StringCharReader reader = new StringCharReader(specText);
+            if (reader.firstNonWhiteSpaceSymbol() == '"') {
+                alias = Expectations.doubleQuotedText().read(reader);
+                specText = reader.getTheRest();
+            }
+
+
             Spec spec = pageSpecHandler.getSpecReaderV2().read(specText, pageSpecHandler.getContextPath());
             spec.setOnlyWarn(onlyWarn);
+            spec.setAlias(alias);
 
             objectSpecs.getSpecs().add(spec);
         } catch (SyntaxException ex) {

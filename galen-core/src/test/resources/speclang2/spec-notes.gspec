@@ -1,0 +1,10 @@
+
+
+
+
+
+= Main section =
+    header:
+        height 100px
+        "should be visible" visible
+        % "should be on top" inside screen 0px top
