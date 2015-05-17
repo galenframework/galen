@@ -83,7 +83,7 @@
             screenshotFile = settings.screenshot;
             properties = settings.properties;
 
-            if (settings.vars != undefined) {
+            if (settings.vars !== undefined) {
                 jsVariables = varsToArray(settings.vars);
             }
         }
