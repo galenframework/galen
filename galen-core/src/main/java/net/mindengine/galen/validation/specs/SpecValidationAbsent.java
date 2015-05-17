@@ -25,10 +25,7 @@ public class SpecValidationAbsent extends SpecValidation<SpecAbsent>{
     @Override
     public ValidationResult check(PageValidation pageValidation, String objectName, SpecAbsent spec) throws ValidationErrorException {
         PageElement mainObject = pageValidation.findPageElement(objectName);
-        if (mainObject == null) {
-            throw new ValidationErrorException(String.format(OBJECT_WITH_NAME_S_IS_NOT_DEFINED_IN_PAGE_SPEC, objectName));
-        }
-        else if (mainObject.isPresent() && mainObject.isVisible()) {
+        if (mainObject != null && mainObject.isPresent() && mainObject.isVisible()) {
             throw new ValidationErrorException()
                 .withValidationObject(new ValidationObject(mainObject.getArea(), objectName))
                 .withMessage(format("\"%s\" is not absent on page", objectName));

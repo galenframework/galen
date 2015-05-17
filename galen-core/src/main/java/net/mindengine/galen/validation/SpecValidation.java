@@ -26,7 +26,6 @@ import net.mindengine.galen.specs.Range;
 import net.mindengine.galen.specs.RangeValue;
 import net.mindengine.galen.specs.Spec;
 import net.mindengine.galen.specs.reader.page.PageSpec;
-import net.mindengine.galen.validation.specs.SpecValidationGeneral;
 
 public abstract class SpecValidation<T extends Spec> {
     

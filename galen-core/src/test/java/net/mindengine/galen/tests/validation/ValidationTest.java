@@ -134,7 +134,9 @@ public class ValidationTest {
           
           
           // Absent 
-          
+
+          row(specAbsent(), page(new HashMap<String, PageElement>(){{
+          }})),
           row(specAbsent(), page(new HashMap<String, PageElement>(){{
               put("object", invisibleElement(10, 10, 100, 100));
           }})),
@@ -611,11 +613,6 @@ public class ValidationTest {
           row(validationResult(singleArea(new Rect(10, 10, 100, 100), "object"), messages("\"object\" is not absent on page")),
               specAbsent(), page(new HashMap<String, PageElement>(){{
                   put("object", element(10, 10, 100, 100));
-          }})),
-
-          row(validationResult(NO_AREA, messages("Cannot find locator for \"object\" in page spec")),
-              specAbsent(), page(new HashMap<String, PageElement>(){{
-                  put("blabla", absentElement(10, 10, 100, 100));
           }})),
 
           // Visible
