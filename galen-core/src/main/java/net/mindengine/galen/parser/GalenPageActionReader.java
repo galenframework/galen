@@ -18,8 +18,10 @@ package net.mindengine.galen.parser;
 import static net.mindengine.galen.suite.reader.Line.UNKNOWN_LINE;
 
 import java.awt.Dimension;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 import net.mindengine.galen.specs.page.Locator;
 import net.mindengine.galen.suite.GalenPageAction;
@@ -30,6 +32,7 @@ import net.mindengine.galen.utils.GalenUtils;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.PosixParser;
+import org.apache.commons.lang3.tuple.Pair;
 
 public class GalenPageActionReader {
 
@@ -102,30 +105,47 @@ public class GalenPageActionReader {
     }
 
     private static GalenPageAction checkActionFrom(String[] args, String originalText) {
-        Options options = new Options();
-        options.addOption("i", "include", true, "include tags");
-        options.addOption("e", "exclude", true, "exclude tags");
-        
-        org.apache.commons.cli.CommandLineParser parser = new PosixParser();
-        
-        try {
-            CommandLine cmd = parser.parse(options, args);
-            String[] leftoverArgs = cmd.getArgs();
-         
-            if (leftoverArgs == null || leftoverArgs.length < 2) {
-                throw new SyntaxException(UNKNOWN_LINE, "There are no page specs: " + originalText);
-            }
-            
-            String specPath = leftoverArgs[1];
+        CommandLineReader reader = new CommandLineReader(args);
 
-            return new GalenPageActionCheck()
-                .withSpec(specPath)
-                .withIncludedTags(readTags(cmd.getOptionValue("i")))
-                .withExcludedTags(readTags(cmd.getOptionValue("e")));
+        String specPath = null;
+        List<String> includedTags = new LinkedList<>();
+        List<String> excludedTags = new LinkedList<>();
+        Map<String, Object> jsVariables = new HashMap<>();
+
+
+        //Skipping the check action name
+        reader.skipArgument();
+
+        while (reader.hasNext()) {
+            if (!reader.isNextArgument()) {
+                specPath = reader.readNext();
+            } else {
+                Pair<String, String> argument = reader.readArgument();
+
+                if (argument.getKey().equals("include")) {
+                    includedTags.addAll(readTags(argument.getValue()));
+                } else if (argument.getKey().equals("exclude")) {
+                    excludedTags.addAll(readTags(argument.getValue()));
+                } else if (argument.getKey().startsWith("V")) {
+                    String varName = argument.getKey().substring(1);
+                    String varValue = argument.getValue();
+                    jsVariables.put(varName, varValue);
+                } else {
+                    throw new SyntaxException("Unknown argument: " + argument.getKey());
+                }
+            }
         }
-        catch (Exception e) {
-            throw new SyntaxException(UNKNOWN_LINE, "Couldn't parse: " + originalText, e);
+
+        if (specPath == null || specPath.isEmpty()) {
+            throw new SyntaxException("Missing spec path");
         }
+
+
+        return new GalenPageActionCheck()
+            .withSpec(specPath)
+            .withIncludedTags(includedTags)
+            .withExcludedTags(excludedTags)
+            .withJsVariables(jsVariables);
     }
 
 

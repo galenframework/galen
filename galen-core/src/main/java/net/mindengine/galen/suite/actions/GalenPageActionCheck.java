@@ -17,6 +17,7 @@ package net.mindengine.galen.suite.actions;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -140,5 +141,10 @@ public class GalenPageActionCheck extends GalenPageAction {
 
     public void setJsVariables(Map<String, Object> jsVariables) {
         this.jsVariables = jsVariables;
+    }
+
+    public GalenPageActionCheck withJsVariables(Map<String, Object> jsVariables) {
+        setJsVariables(jsVariables);
+        return this;
     }
 }

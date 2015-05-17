@@ -30,9 +30,15 @@ import net.mindengine.galen.suite.actions.GalenPageActionWait.UntilType;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+
 public class GalenPageActionReaderTest {
 
-    
+
+    private static final List<String> EMPTY_TAGS = Collections.emptyList();
+
     @Test(dataProvider="provideGoodSamples") public void shouldParse_action_successfully(String actionText, GalenPageAction expectedAction) {
         GalenPageAction realAction = GalenPageActionReader.readFrom(actionText);
         assertThat(realAction, is(expectedAction));
@@ -49,7 +55,10 @@ public class GalenPageActionReaderTest {
             {"run script.js \"\\\"john\\\"", new GalenPageActionRunJavascript("script.js").withJsonArguments("\"john\"")},
             {"run script.js", new GalenPageActionRunJavascript("script.js").withJsonArguments(null)},
             
-            {"check page1.spec", new GalenPageActionCheck().withSpec("page1.spec")},
+            {"check page1.spec", new GalenPageActionCheck()
+                    .withSpec("page1.spec")
+                    .withIncludedTags(EMPTY_TAGS)
+                    .withExcludedTags(EMPTY_TAGS)},
             {"check page1.spec --include mobile --exclude debug", new GalenPageActionCheck()
                 .withSpec("page1.spec")
                 .withIncludedTags(asList("mobile"))
@@ -58,6 +67,14 @@ public class GalenPageActionReaderTest {
                 .withSpec("page1.spec")
                 .withIncludedTags(asList("mobile", "tablet"))
                 .withExcludedTags(asList("nomobile", "debug"))},
+            {"check page1.spec --VuserName John", new GalenPageActionCheck()
+                    .withSpec("page1.spec")
+                    .withIncludedTags(EMPTY_TAGS)
+                    .withExcludedTags(EMPTY_TAGS)
+                    .withJsVariables(new HashMap<String, Object>(){{
+                        put("userName", "John");
+                    }})
+            },
             {"cookie \"somecookie1\" \"somecookie2\" \"somecookie3\"", new GalenPageActionCookie().withCookies("somecookie1", "somecookie2", "somecookie3")},
             {"cookie \"somecookie1\"", new GalenPageActionCookie().withCookies("somecookie1")},
             {"wait 10s", new GalenPageActionWait().withTimeout(10000)},
