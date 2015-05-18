@@ -58,7 +58,7 @@ public class GalenConfigTest {
         
         File configFile = new File("config");
         configFile.createNewFile();
-        FileUtils.copyFile(new File(getClass().getResource("/config").getFile()), configFile);
+        FileUtils.copyFile(new File(getClass().getResource("/config1").getFile()), configFile);
         
         GalenConfig config = GalenConfig.getConfig();
         config.reset();

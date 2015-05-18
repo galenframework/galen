@@ -25,6 +25,7 @@ import java.util.Properties;
 
 import net.mindengine.galen.specs.SpecImage;
 
+import net.mindengine.galen.utils.GalenUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -42,21 +43,18 @@ public class GalenConfig {
             loadConfig();
         }
         catch (Exception e) {
-            LOG.trace("Unknown error during Galen Config", e);
+            LOG.trace("Cannot load galen config", e);
         }
     }
     
     private void loadConfig() throws IOException {
         this.properties = new Properties();
 
-        File configFile = new File(readProperty(GalenProperty.GALEN_CONFIG_FILE));
-        
-        if (configFile.exists() && configFile.isFile()) {
-            InputStream in = new FileInputStream(configFile);
-            properties.load(in);
-            in.close();
+        InputStream stream = GalenUtils.findFileOrResourceAsStream(readProperty(GalenProperty.GALEN_CONFIG_FILE));
+        if (stream != null) {
+            properties.load(stream);
+            stream.close();
         }
-
     }
 
     private List<String> convertCommaSeparatedList(String text) {
