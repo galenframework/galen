@@ -20,6 +20,7 @@ import net.mindengine.galen.parser.SyntaxException;
 import net.mindengine.galen.specs.reader.StringCharReader;
 import net.mindengine.galen.suite.reader.Line;
 import net.mindengine.galen.utils.GalenUtils;
+import org.apache.commons.lang3.math.NumberUtils;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 
@@ -34,10 +35,10 @@ public class ForLoop {
     public static final String INDEX_DEFAULT_NAME = "index";
     private String previousMapping;
     private String nextMapping;
-    private String[] sequence;
+    private Object[] sequence;
     private String indexName;
 
-    public ForLoop(String[] sequence, String indexName, String previousMapping, String nextMapping) {
+    public ForLoop(Object[] sequence, String indexName, String previousMapping, String nextMapping) {
         this.sequence = sequence;
         this.indexName = indexName;
         this.previousMapping = previousMapping;
@@ -54,7 +55,7 @@ public class ForLoop {
             }
 
             String sequenceStatement = reader.readUntilSymbol(']');
-            String[] sequence;
+            Object[] sequence;
             if (isSimpleLoop) {
                 sequence = readSequenceForSimpleLoop(sequenceStatement);
             } else {
@@ -141,32 +142,40 @@ public class ForLoop {
         return matchingObjects.toArray(new String[]{});
     }
 
-    private static String[] readSequenceForSimpleLoop(String sequenceStatement) {
+    private static Object[] readSequenceForSimpleLoop(String sequenceStatement) {
         sequenceStatement = sequenceStatement.replace(" ", "");
         sequenceStatement = sequenceStatement.replace("\t", "");
         Pattern sequencePattern = Pattern.compile(".*\\-.*");
         try {
             String[] values = sequenceStatement.split(",");
 
-            ArrayList<String> sequence = new ArrayList<String>();
+            ArrayList<Object> sequence = new ArrayList<>();
 
-            for (String value : values) {
-                if (sequencePattern.matcher(value).matches()) {
-                    sequence.addAll(createSequence(value));
+            for (String stringValue : values) {
+                if (sequencePattern.matcher(stringValue).matches()) {
+                    sequence.addAll(createSequence(stringValue));
                 }
                 else {
-                    sequence.add(value);
+                    sequence.add(convertValueToIndex(stringValue));
                 }
             }
 
-            return sequence.toArray(new String[]{});
+            return sequence.toArray(new Object[]{});
         }
         catch (Exception ex) {
             throw new SyntaxException(UNKNOWN_LINE, "Incorrect sequence syntax: " + sequenceStatement, ex);
         }
     }
 
-    private static List<String> createSequence(String value) {
+    private static Object convertValueToIndex(String stringValue) {
+        if (NumberUtils.isNumber(stringValue)) {
+            return NumberUtils.toLong(stringValue);
+        } else {
+            return stringValue;
+        }
+    }
+
+    private static List<Object> createSequence(String value) {
         int dashIndex = value.indexOf('-');
 
         int rangeA = Integer.parseInt(value.substring(0, dashIndex));
@@ -175,11 +184,11 @@ public class ForLoop {
         return createSequence(rangeA, rangeB);
     }
 
-    private static List<String> createSequence(int min, int max) {
+    private static List<Object> createSequence(int min, int max) {
         if (max >= min) {
-            List<String> parameters = new LinkedList<String>();
+            List<Object> parameters = new LinkedList<>();
             for (int i = min; i <= max; i++) {
-                parameters.add(Integer.toString(i));
+                parameters.add(i);
             }
             return parameters;
         }

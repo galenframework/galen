@@ -22,6 +22,7 @@ import net.mindengine.galen.specs.Spec;
 import net.mindengine.galen.specs.page.ObjectSpecs;
 import net.mindengine.galen.specs.page.PageSection;
 import net.mindengine.galen.specs.page.SpecGroup;
+import net.mindengine.galen.specs.reader.Place;
 import net.mindengine.galen.specs.reader.StringCharReader;
 import net.mindengine.galen.specs.reader.page.rules.Rule;
 import net.mindengine.galen.suite.reader.Line;
@@ -235,6 +236,9 @@ public class PageSectionProcessor {
             Spec spec = pageSpecHandler.getSpecReaderV2().read(specText, pageSpecHandler.getContextPath());
             spec.setOnlyWarn(onlyWarn);
             spec.setAlias(alias);
+            if (specNode.getSource() != null) {
+                spec.setPlace(new Place(specNode.getSource(), specNode.getFileLineNumber()));
+            }
             spec.setProperties(pageSpecHandler.getProperties());
             spec.setJsVariables(pageSpecHandler.getJsVariables());
 
