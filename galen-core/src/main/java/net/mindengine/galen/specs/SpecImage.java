@@ -27,6 +27,7 @@ import static net.mindengine.galen.parser.Expectations.number;
 
 public class SpecImage extends Spec {
 
+
     public enum ErrorRateType {
         PIXELS("px"), PERCENT("%");
         private final String name;
@@ -94,6 +95,15 @@ public class SpecImage extends Spec {
     private Rect selectedArea;
     private boolean stretch = false;
     private boolean cropIfOutside = false;
+    private int analyzeOffset = 0;
+
+    public int getAnalyzeOffset() {
+        return analyzeOffset;
+    }
+
+    public void setAnalyzeOffset(int analyzeOffset) {
+        this.analyzeOffset = analyzeOffset;
+    }
 
     public Integer getTolerance() {
 

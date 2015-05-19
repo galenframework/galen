@@ -74,6 +74,7 @@ public class SpecValidationImage extends SpecValidation<SpecImage> {
         options.setSampleFilters(spec.getSampleFilters());
         options.setMapFilters(spec.getMapFilters());
         options.setTolerance(tolerance);
+        options.setAnalyzeOffset(spec.getAnalyzeOffset());
 
         Rect elementArea = pageElement.getArea();
 

@@ -992,6 +992,14 @@ public class SpecsReaderV2Test {
     }
 
     @Test
+    public void shouldReadSpec_image_withAnalyzeOffset() throws IOException {
+        SpecImage spec = (SpecImage)readSpec("image file imgs/image.png, analyze-offset 5");
+        assertThat(spec.getImagePaths(), contains("./imgs/image.png"));
+        assertThat(spec.getAnalyzeOffset(), is(5));
+    }
+
+
+    @Test
     public void shouldReadSpec_image_andBuildImagePath_withContextPath() throws IOException {
         SpecImage spec = (SpecImage) readSpec("image file image.png", "some-component/specs");
         assertThat(spec.getImagePaths(), contains("some-component/specs/image.png"));

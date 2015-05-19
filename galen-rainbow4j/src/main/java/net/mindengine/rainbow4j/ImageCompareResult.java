@@ -24,6 +24,8 @@ public class ImageCompareResult {
     private BufferedImage comparisonMap;
     private BufferedImage originalFilteredImage;
     private BufferedImage sampleFilteredImage;
+    private Integer offsetX;
+    private Integer offsetY;
 
     public void setPercentage(double percentage) {
         this.percentage = percentage;
@@ -63,5 +65,21 @@ public class ImageCompareResult {
 
     public BufferedImage getSampleFilteredImage() {
         return sampleFilteredImage;
+    }
+
+    public Integer getOffsetX() {
+        return offsetX;
+    }
+
+    public void setOffsetX(Integer offsetX) {
+        this.offsetX = offsetX;
+    }
+
+    public Integer getOffsetY() {
+        return offsetY;
+    }
+
+    public void setOffsetY(Integer offsetY) {
+        this.offsetY = offsetY;
     }
 }

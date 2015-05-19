@@ -309,6 +309,39 @@ public class Rainbow4JTest {
     }
 
 
+    @Test
+    public void shouldUseOffset_forDiffAnalysis() throws IOException {
+        BufferedImage image = Rainbow4J.loadImage(getClass().getResourceAsStream("/lenna.png"));
+        BufferedImage imageOffset = Rainbow4J.loadImage(getClass().getResourceAsStream("/lenna-offset.png"));
+
+        // First comparing without offset
+        {
+            ImageCompareResult result = Rainbow4J.compare(image, imageOffset, new ComparisonOptions());
+            assertThat(result.getTotalPixels(), is(allOf(greaterThan(64000L), lessThan(66000L))));
+            assertThat(result.getOffsetX(), is(0));
+            assertThat(result.getOffsetY(), is(0));
+        }
+
+        // Comparing without small offset
+        {
+            ComparisonOptions options2 = new ComparisonOptions();
+            options2.setAnalyzeOffset(1);
+            ImageCompareResult result2 = Rainbow4J.compare(image, imageOffset, options2);
+            assertThat(result2.getTotalPixels(), is(allOf(greaterThan(63000L), lessThan(66000L))));
+        }
+
+        // Comparing without bigger offset
+        {
+            ComparisonOptions options3 = new ComparisonOptions();
+            options3.setAnalyzeOffset(4);
+            ImageCompareResult result3 = Rainbow4J.compare(image, imageOffset, options3);
+            assertThat(result3.getTotalPixels(), is(0L));
+            assertThat(result3.getOffsetX(), is(-2));
+            assertThat(result3.getOffsetY(), is(-4));
+        }
+    }
+
+
     @DataProvider
     public Object[][] imageCompareProvider() {
         return new Object[][] {

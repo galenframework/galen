@@ -1467,7 +1467,7 @@ public class ValidationTest {
 
         PageSpec pageSpec = createMockedPageSpec(page);
         PageValidation validation = new PageValidation(null, page, pageSpec, null, null);
-        ValidationError error = validation.check("object", specImage(asList("/imgs/button-sample-incorrect.png"), 600, PIXEL_UNIT, 0, 10)).getError();
+        ValidationError error = validation.check("object", specImage(asList("/imgs/button-sample-incorrect.png"), 0, PIXEL_UNIT, 0, 10)).getError();
 
 
         assertThat("Comparison map should not be null", error.getImageComparison().getComparisonMap(), is(notNullValue()));

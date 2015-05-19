@@ -57,6 +57,9 @@ public class SpecImageProcessor implements SpecProcessor {
             else if ("tolerance".equals(parameter.getKey())) {
                 spec.setTolerance(parseIntegerParameter("tolerance", parameter.getValue()));
             }
+            else if ("analyze-offset".equals(parameter.getKey())) {
+                spec.setAnalyzeOffset(parseIntegerParameter("analyze-offset", parameter.getValue()));
+            }
             else if ("stretch".equals(parameter.getKey())) {
                 spec.setStretch(true);
             }

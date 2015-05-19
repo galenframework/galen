@@ -24,9 +24,10 @@ public class ComparisonOptions {
     private int tolerance;
     private boolean stretchToFit = false;
 
-    private List<ImageFilter> originalFilters = new LinkedList<ImageFilter>();
-    private List<ImageFilter> sampleFilters = new LinkedList<ImageFilter>();
-    private List<ImageFilter> mapFilters = new LinkedList<ImageFilter>();
+    private List<ImageFilter> originalFilters = new LinkedList<>();
+    private List<ImageFilter> sampleFilters = new LinkedList<>();
+    private List<ImageFilter> mapFilters = new LinkedList<>();
+    private int analyzeOffset = 0;
 
     public void setTolerance(int tolerance) {
         this.tolerance = tolerance;
@@ -95,5 +96,13 @@ public class ComparisonOptions {
 
     public void setSampleFilters(List<ImageFilter> sampleFilters) {
         this.sampleFilters = sampleFilters;
+    }
+
+    public void setAnalyzeOffset(int analyzeOffset) {
+        this.analyzeOffset = analyzeOffset;
+    }
+
+    public int getAnalyzeOffset() {
+        return analyzeOffset;
     }
 }

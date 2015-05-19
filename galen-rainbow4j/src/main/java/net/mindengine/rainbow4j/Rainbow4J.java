@@ -24,7 +24,6 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.*;
 import java.util.List;
 
 public class Rainbow4J {
@@ -65,7 +64,8 @@ public class Rainbow4J {
             throw new RuntimeException("Specified area is outside for secondary image");
         }
 
-        ImageHandler mapHandler = new ImageHandler(areaA.width, areaA.height);
+        int imageAWidth = imageA.getWidth();
+        int imageAHeight = imageA.getHeight();
 
         int Cax = areaA.x;
         int Cay = areaA.y;
@@ -86,61 +86,112 @@ public class Rainbow4J {
         ImageHandler handlerA = new ImageHandler(imageA);
         ImageHandler handlerB = new ImageHandler(imageB);
 
-        int x = 0, y = 0;
 
         applyAllFilters(areaA, areaB, options, handlerA, handlerB);
 
         int tolerance = options.getTolerance();
 
-        while(y < Ha) {
-            while (x < Wa) {
-                int xA = x + Cax;
-                int yA = y + Cay;
+        long minMismatchingPixels = Integer.MAX_VALUE;
 
-                Color cA = handlerA.pickColor(xA, yA);
+        ImageHandler resultingMapHandler = null;
 
-                int xB, yB;
 
-                if (options.isStretchToFit()) {
-                    xB = (int) Math.round((((double) x) * Kx) + Cbx);
-                    yB = (int) Math.round(((double) y) * Ky + Cby);
-                    xB = Math.min(xB, Cbx + Wb - 1);
-                    yB = Math.min(yB, Cby + Hb - 1);
-                }
-                else {
-                    xB = x + Cbx;
-                    yB = y + Cby;
-                }
+        int resultingOffsetX = 0;
+        int resultingOffsetY = 0;
 
-                Color cB = handlerB.pickColor(xB, yB);
 
-                long colorError = ImageHandler.colorDiff(cA, cB);
-                if (colorError > tolerance) {
+        // Here it moves within a spiral for better performance when analyzing a large offset
+        int offsetX = 0;
+        int offsetY = 0;
+        int spiral_dx = 0;
+        int spiral_dy = -1;
 
-                    Color color = Color.red;
+        int spiral_n = 0;
 
-                    int diff = (int) (colorError - tolerance);
-                    if (diff > 30 && diff < 80) {
-                        color = Color.yellow;
-                    }
-                    else if (diff <= 30){
-                        color = Color.green;
-                    }
-                    mapHandler.setRGB(x, y, color.getRed(), color.getGreen(), color.getBlue());
-                }
-                else {
-                    mapHandler.setRGB(x, y, 0, 0, 0);
-                }
+        if (options.getAnalyzeOffset() > 0) {
+            spiral_n = options.getAnalyzeOffset() * 2 + 1;
+        }
+        int max_spiral = spiral_n * spiral_n;
 
-                x += 1;
+        for (int spiral_i = 0; spiral_i <= max_spiral; spiral_i++) {
+
+            if ((offsetX == offsetY) || (offsetX < 0 && offsetX == -offsetY) || (offsetX > 0 && offsetX == 1 - offsetY)){
+                int temp = spiral_dx;
+                spiral_dx = -spiral_dy;
+                spiral_dy = temp;
             }
-            y += 1;
-            x = 0;
+
+            ImageHandler mapHandler = new ImageHandler(areaA.width, areaA.height);
+            long mismatchingPixels = 0;
+            int x = 0, y = 0;
+
+            while(y < Ha && minMismatchingPixels > 0) {
+                while (x < Wa && mismatchingPixels < minMismatchingPixels) {
+                    int xA = x + Cax + offsetX;
+                    int yA = y + Cay + offsetY;
+
+                    if (xA >= 0 && xA < imageAWidth && yA >= 0 && yA < imageAHeight) {
+
+                        Color cA = handlerA.pickColor(xA, yA);
+
+                        int xB, yB;
+
+                        if (options.isStretchToFit()) {
+                            xB = (int) Math.round((((double) x) * Kx) + Cbx);
+                            yB = (int) Math.round(((double) y) * Ky + Cby);
+                            xB = Math.min(xB, Cbx + Wb - 1);
+                            yB = Math.min(yB, Cby + Hb - 1);
+                        } else {
+                            xB = x + Cbx;
+                            yB = y + Cby;
+                        }
+
+                        Color cB = handlerB.pickColor(xB, yB);
+
+                        long colorError = ImageHandler.colorDiff(cA, cB);
+                        if (colorError > tolerance) {
+
+                            Color color = Color.red;
+
+                            int diff = (int) (colorError - tolerance);
+                            if (diff > 30 && diff < 80) {
+                                color = Color.yellow;
+                            } else if (diff <= 30) {
+                                color = Color.green;
+                            }
+                            mapHandler.setRGB(x, y, color.getRed(), color.getGreen(), color.getBlue());
+
+                            mismatchingPixels += 1;
+                        } else {
+                            mapHandler.setRGB(x, y, 0, 0, 0);
+                        }
+                    } else {
+                        mapHandler.setRGB(x, y, 0, 0, 0);
+                    }
+
+                    x += 1;
+                }
+                y += 1;
+                x = 0;
+            }
+
+            if (mismatchingPixels < minMismatchingPixels) {
+                minMismatchingPixels = mismatchingPixels;
+                resultingOffsetX = offsetX;
+                resultingOffsetY = offsetY;
+                resultingMapHandler = mapHandler;
+            }
+
+            offsetX += spiral_dx;
+            offsetY += spiral_dy;
         }
 
-        applyFilters(mapHandler, options.getMapFilters(), new Rectangle(0, 0, mapHandler.getWidth(), mapHandler.getHeight()));
 
-        ImageCompareResult result = analyzeComparisonMap(mapHandler);
+        applyFilters(resultingMapHandler, options.getMapFilters(), new Rectangle(0, 0, resultingMapHandler.getWidth(), resultingMapHandler.getHeight()));
+
+        ImageCompareResult result = analyzeComparisonMap(resultingMapHandler);
+        result.setOffsetX(resultingOffsetX);
+        result.setOffsetY(resultingOffsetY);
 
         result.setOriginalFilteredImage(handlerA.getImage().getSubimage(areaA.x, areaA.y, areaA.width, areaA.height));
         result.setSampleFilteredImage(handlerB.getImage().getSubimage(areaB.x, areaB.y, areaB.width, areaB.height));
@@ -151,7 +202,7 @@ public class Rainbow4J {
     private static ImageCompareResult analyzeComparisonMap(ImageHandler mapHandler) {
         ImageCompareResult result = new ImageCompareResult();
 
-        int totalMismatchingPixels = 0;
+        long totalMismatchingPixels = 0;
 
         byte[] bytes = mapHandler.getBytes();
 
@@ -163,7 +214,7 @@ public class Rainbow4J {
 
         double totalPixels = (mapHandler.getWidth() * mapHandler.getHeight());
         result.setPercentage(100.0 * totalMismatchingPixels / totalPixels);
-        result.setTotalPixels((long)totalMismatchingPixels);
+        result.setTotalPixels(totalMismatchingPixels);
         result.setComparisonMap(mapHandler.getImage());
         return result;
     }
