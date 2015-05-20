@@ -23,6 +23,7 @@ import net.mindengine.galen.parser.SyntaxException;
 import net.mindengine.galen.specs.reader.page.PageSpec;
 import net.mindengine.galen.utils.GalenUtils;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
@@ -37,7 +38,11 @@ public class PageSpecReaderV2 {
                          Map<String, Object> jsVariables) throws IOException {
 
         String contextPath = GalenUtils.getParentForFile(path);
-        return read(GalenUtils.findFileOrResourceAsStream(path), path, contextPath, page, tags, excludedTags, properties, jsVariables);
+        InputStream stream = GalenUtils.findFileOrResourceAsStream(path);
+        if (stream == null) {
+            throw new FileNotFoundException(path);
+        }
+        return read(stream, path, contextPath, page, tags, excludedTags, properties, jsVariables);
     }
 
     public PageSpec read(InputStream inputStream, String source,

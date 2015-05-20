@@ -59,6 +59,11 @@ public class LayoutReportNode extends TestReportNode {
 
     private void fetchStatisticForSections(List<LayoutSection> sections, TestStatistic testStatistic) {
         for (LayoutSection section : sections) {
+            if (section.getSections() != null) {
+                fetchStatisticForSections(section.getSections(), testStatistic);
+            }
+
+
             if (section.getObjects() != null) {
                 for (LayoutObject object: section.getObjects()) {
                     fetchStatisticForObject(object, testStatistic);

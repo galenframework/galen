@@ -49,10 +49,8 @@ public class SectionValidation {
     }
 
     private List<ValidationResult> checkPageSection(PageSection section) {
-        tellBeforeSection(section);
         List<ValidationResult> validationResult= new LinkedList<>();
         validationResult.addAll(checkSection(section));
-        tellAfterSection(section);
         return validationResult;
     }
 
