@@ -58,7 +58,10 @@ public class GalenUtils {
     private final static Logger LOG = LoggerFactory.getLogger(GalenUtils.class);
     
     private static final String URL_REGEX = "[a-zA-Z0-9]+://.*";
-    public static final String JS_RETRIEVE_DEVICE_PIXEL_RATIO = "var pr = window.devicePixelRatio; if (pr != undefined && pr != null)return pr; else return 1.0;";
+    public static final String JS_RETRIEVE_DEVICE_PIXEL_RATIO =
+            "window.devicePixelRatio = window.devicePixelRatio || " +
+            "window.screen.deviceXDPI / window.screen.logicalXDPI; " +
+            "var pr = window.devicePixelRatio; if (pr != undefined && pr != null) return pr; else return 1.0;";
 
 
     public static boolean isUrl(String url) {
@@ -156,7 +159,11 @@ public class GalenUtils {
         }
 
         if (GalenConfig.getConfig().shouldAutoresizeScreenshots()) {
-            resultingImage = GalenUtils.resizeScreenshotIfNeeded(driver, resultingImage);
+            try {
+                resultingImage = GalenUtils.resizeScreenshotIfNeeded(driver, resultingImage);
+            } catch (Exception ex) {
+                LOG.trace("Couldn't resize screenshot", ex);
+            }
         }
 
         ImageIO.write(resultingImage, "png", file);
