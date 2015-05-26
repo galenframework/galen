@@ -29,7 +29,7 @@
                       "filePath": "specs.spec",
                       "lineNumber": 12
                     },
-                    "name": "width: 10 to 20px",
+                    "name": "width 10 to 20px",
                     "highlight": ["objectA1"]
                   }
                 ],
@@ -43,7 +43,7 @@
                           "filePath": "specs.spec",
                           "lineNumber": 12
                         },
-                        "name": "inside: other-object 10px left",
+                        "name": "inside other-object 10px left",
                         "errors": ["objectA1 is not inside other-object"],
                         "highlight": [
                           "objectA1",
@@ -61,7 +61,7 @@
                           "filePath": "specs.spec",
                           "lineNumber": 12
                         },
-                        "name": "width: 10 to 20px",
+                        "name": "width 10 to 20px",
                         "highlight": ["objectA1"]
                       }
                     ]
@@ -77,7 +77,7 @@
                       "filePath": "specs.spec",
                       "lineNumber": 12
                     },
-                    "name": "width: 10 to 20px",
+                    "name": "width 10 to 20px",
                     "highlight": ["objectA2"]
                   },
                   {
@@ -86,7 +86,7 @@
                       "filePath": "specs.spec",
                       "lineNumber": 12
                     },
-                    "name": "width: 10px",
+                    "name": "width 10px",
                     "errors": ["objectA2 width is 20px instead of 10px"],
                     "highlight": ["objectA2"]
                   },
@@ -96,7 +96,7 @@
                       "filePath": "specs.spec",
                       "lineNumber": 12
                     },
-                    "name": "text is: Login",
+                    "name": "text is \"Login\"",
                     "errors": ["objectA2 text is \"Logout\" instead of \"Login\""],
                     "highlight": ["objectA2"]
                   }
@@ -116,7 +116,7 @@
                       "filePath": "specs.spec",
                       "lineNumber": 12
                     },
-                    "name": "height: 10 to 20px",
+                    "name": "height 10 to 20px",
                     "highlight": ["objectA1"]
                   },
                   {
@@ -125,7 +125,7 @@
                       "filePath": "specs.spec",
                       "lineNumber": 12
                     },
-                    "name": "component: some-component.spec",
+                    "name": "component some-component.spec",
                     "highlight": ["objectA1"],
                     "subLayout": {
                       "includedTags": [],
@@ -143,7 +143,7 @@
                                     "filePath": "specs.spec",
                                     "lineNumber": 12
                                   },
-                                  "name": "height: 10 to 20px",
+                                  "name": "height 10 to 20px",
                                   "highlight": ["sub-objectA1"]
                                 },
                                 {
@@ -152,7 +152,7 @@
                                     "filePath": "specs.spec",
                                     "lineNumber": 12
                                   },
-                                  "name": "width: 10px",
+                                  "name": "width 10px",
                                   "errors": ["sub-objectA1 width is 20px instead of 10px"],
                                   "highlight": ["sub-objectA1"]
                                 }
@@ -189,7 +189,7 @@
                       "filePath": "specs.spec",
                       "lineNumber": 12
                     },
-                    "name": "width: 10 to 20px",
+                    "name": "width 10 to 20px",
                     "highlight": ["objectB1"]
                   },
                   {
@@ -198,7 +198,7 @@
                       "filePath": "specs.spec",
                       "lineNumber": 12
                     },
-                    "name": "inside: other-object 10px left",
+                    "name": "inside other-object 10px left",
                     "errors": [
                       "objectB1 is not inside other-object",
                       "second error message with <xml> &tags"
@@ -221,7 +221,7 @@
                       "filePath": "specs.spec",
                       "lineNumber": 12
                     },
-                    "name": "height: 100px",
+                    "name": "height 100px",
                     "highlight": ["objectB2"]
                   },
                   {
@@ -230,7 +230,7 @@
                       "filePath": "specs.spec",
                       "lineNumber": 13
                     },
-                    "name": "width: 100px",
+                    "name": "width 100px",
                     "highlight": ["objectB2"]
                   }
                 ]

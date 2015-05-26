@@ -9,7 +9,7 @@ net.mindengine.galen.components.report.FakeException: Some exception here
 ========================================
 ----------------------------------------
 ========================================
-Failed suites:
+Failed tests:
     page1.test
 
 Status: FAIL

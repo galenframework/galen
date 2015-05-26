@@ -74,7 +74,7 @@ public class ReportingListenerTestUtils {
                 validationListener.onSpecGroup(pageValidation, "some spec group");
                     onSpecError(validationListener, pageValidation, "objectA1",
                             new SpecInside("other-object", asList(new Location(exact(10), asList(LEFT))))
-                                    .withOriginalText("inside: other-object 10px left")
+                                    .withOriginalText("inside other-object 10px left")
                                     .withPlace(new Place("specs.spec", 12)),
                             new ValidationResult(
                                     asList(
@@ -86,14 +86,14 @@ public class ReportingListenerTestUtils {
 
                 onSpecSuccess(validationListener, pageValidation, "objectA1",
                         new SpecWidth(between(10, 20))
-                                .withOriginalText("width: 10 to 20px")
+                                .withOriginalText("width 10 to 20px")
                                 .withPlace(new Place("specs.spec", 12))
                                 .withAlias("Some alias"),
                         new ValidationResult(asList(new ValidationObject(new Rect(10, 10, 100, 50), "objectA1"))));
 
                 onSpecSuccess(validationListener, pageValidation, "objectA1",
                         new SpecWidth(between(10, 20))
-                                .withOriginalText("width: 10 to 20px")
+                                .withOriginalText("width 10 to 20px")
                                 .withPlace(new Place("specs.spec", 12)),
                         new ValidationResult(asList(new ValidationObject(new Rect(10, 10, 100, 50), "objectA1"))));
             }
@@ -102,13 +102,13 @@ public class ReportingListenerTestUtils {
             validationListener.onObject(pageValidation, "objectA2"); {
                 onSpecSuccess(validationListener, pageValidation, "objectA2",
                         new SpecWidth(between(10, 20))
-                                .withOriginalText("width: 10 to 20px")
+                                .withOriginalText("width 10 to 20px")
                                 .withPlace(new Place("specs.spec", 12)),
                         new ValidationResult(asList(new ValidationObject(new Rect(200, 300, 50, 30), "objectA2"))));
 
                 onSpecError(validationListener, pageValidation,
                         "objectA2",
-                        new SpecWidth(exact(10)).withOriginalText("width: 10px")
+                        new SpecWidth(exact(10)).withOriginalText("width 10px")
                                 .withPlace(new Place("specs.spec", 12)),
                         new ValidationResult(asList(new ValidationObject(new Rect(200, 300, 50, 30), "objectA2")),
                                 new ValidationError(asList("objectA2 width is 20px instead of 10px"))));
@@ -116,7 +116,7 @@ public class ReportingListenerTestUtils {
 
                 onSpecError(validationListener, pageValidation,
                         "objectA2",
-                        new SpecText(SpecText.Type.IS, "Login").withOriginalText("text is: Login")
+                        new SpecText(SpecText.Type.IS, "Login").withOriginalText("text is \"Login\"")
                                 .withPlace(new Place("specs.spec", 12))
                                 .withOnlyWarn(true),
                         new ValidationResult(asList(new ValidationObject(new Rect(200, 300, 50, 30), "objectA2")),
@@ -132,14 +132,14 @@ public class ReportingListenerTestUtils {
             validationListener.onObject(pageValidation, "objectA1"); {
                 onSpecSuccess(validationListener, pageValidation, "objectA1",
                         new SpecHeight(between(10, 20))
-                                .withOriginalText("height: 10 to 20px")
+                                .withOriginalText("height 10 to 20px")
                                 .withPlace(new Place("specs.spec", 12)),
                         new ValidationResult(asList(new ValidationObject(new Rect(10, 10, 100, 50), "objectA1"))));
 
                 /* Calling before spec event as after it will be a sub-layout */
                 validationListener.onBeforeSpec(pageValidation, "objectA1",
                         new SpecHeight(between(10, 20))
-                        .withOriginalText("component: some-component.spec")
+                        .withOriginalText("component some-component.spec")
                         .withPlace(new Place("specs.spec", 12)));
                 //Doing sub-layout call
                 {
@@ -150,14 +150,14 @@ public class ReportingListenerTestUtils {
                     validationListener.onObject(pageValidation, "sub-objectA1"); {
                         onSpecSuccess(validationListener, pageValidation, "sub-objectA1",
                                 new SpecHeight(between(10, 20))
-                                        .withOriginalText("height: 10 to 20px")
+                                        .withOriginalText("height 10 to 20px")
                                         .withPlace(new Place("specs.spec", 12)),
                                 new ValidationResult(asList(new ValidationObject(new Rect(200, 300, 50, 30), "sub-objectA1"))));
 
 
                         onSpecError(validationListener, pageValidation,
                                 "sub-objectA1",
-                                new SpecWidth(exact(10)).withOriginalText("width: 10px")
+                                new SpecWidth(exact(10)).withOriginalText("width 10px")
                                         .withPlace(new Place("specs.spec", 12)),
                                 new ValidationResult(
                                         asList(new ValidationObject(new Rect(200, 300, 50, 30), "sub-objectA1")),
@@ -171,7 +171,7 @@ public class ReportingListenerTestUtils {
 
                 validationListener.onSpecSuccess(pageValidation, "objectA1",
                         new SpecHeight(between(10, 20))
-                                .withOriginalText("component: some-component.spec")
+                                .withOriginalText("component some-component.spec")
                                 .withPlace(new Place("specs.spec", 12)),
                         new ValidationResult(asList(new ValidationObject(new Rect(10, 10, 100, 50), "objectA1"))));
             }
@@ -192,13 +192,13 @@ public class ReportingListenerTestUtils {
 
                 onSpecSuccess(validationListener, pageValidation, "objectB1",
                         new SpecWidth(between(10, 20))
-                                .withOriginalText("width: 10 to 20px")
+                                .withOriginalText("width 10 to 20px")
                                 .withPlace(new Place("specs.spec", 12)),
                         new ValidationResult(asList(new ValidationObject(new Rect(10, 10, 100, 50), "objectB1"))));
                 
                 onSpecError(validationListener, pageValidation,
                         "objectB1",
-                        new SpecInside("other-object", asList(new Location(exact(10), asList(LEFT)))).withOriginalText("inside: other-object 10px left")
+                        new SpecInside("other-object", asList(new Location(exact(10), asList(LEFT)))).withOriginalText("inside other-object 10px left")
                                 .withPlace(new Place("specs.spec", 12)),
                         new ValidationResult(
                                 asList(new ValidationObject(new Rect(10, 10, 100, 50), "objectB1")),
@@ -214,7 +214,7 @@ public class ReportingListenerTestUtils {
             validationListener.onObject(pageValidation, "objectB2"); {
                 onSpecSuccess(validationListener, pageValidation, "objectB2",
                         new SpecHeight(exact(100))
-                                .withOriginalText("height: 100px")
+                                .withOriginalText("height 100px")
                                 .withPlace(new Place("specs.spec", 12)),
                         new ValidationResult(asList(new ValidationObject(new Rect(200, 300, 50, 30), "objectB2"))));
             }
@@ -223,7 +223,7 @@ public class ReportingListenerTestUtils {
             validationListener.onObject(pageValidation, "objectB2"); {
             onSpecSuccess(validationListener, pageValidation, "objectB2",
                     new SpecWidth(exact(100))
-                            .withOriginalText("width: 100px")
+                            .withOriginalText("width 100px")
                             .withPlace(new Place("specs.spec", 13)),
                     new ValidationResult(asList(new ValidationObject(new Rect(200, 300, 50, 30), "objectB2"))));
         }

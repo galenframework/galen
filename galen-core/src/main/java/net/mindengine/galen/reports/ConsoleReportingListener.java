@@ -21,13 +21,11 @@ import java.util.List;
 
 import net.mindengine.galen.config.GalenConfig;
 import net.mindengine.galen.runner.CompleteListener;
-import net.mindengine.galen.runner.GalenPageRunner;
 import net.mindengine.galen.specs.Spec;
 import net.mindengine.galen.specs.page.PageSection;
 import net.mindengine.galen.suite.GalenPageAction;
 import net.mindengine.galen.tests.GalenTest;
 import net.mindengine.galen.validation.PageValidation;
-import net.mindengine.galen.validation.ValidationError;
 import net.mindengine.galen.validation.ValidationResult;
 
 public class ConsoleReportingListener implements CompleteListener {
@@ -63,7 +61,8 @@ public class ConsoleReportingListener implements CompleteListener {
             increaseCurrentObjectLevel();
             
             out.print(getObjectIndentation());
-            out.println(objectName);
+            out.print(objectName);
+            out.println(":");
         }
     }
     
@@ -192,15 +191,15 @@ public class ConsoleReportingListener implements CompleteListener {
     @Override
     public void onBeforeSection(PageValidation pageValidation, PageSection pageSection) {
         if (logLevel >= SECTION_LEVEL) {
-            out.print("@ ");
+            out.print("= ");
             String name = pageSection.getName();
             if (name != null && !name.trim().isEmpty()) {
-                out.println(pageSection.getName());
+                out.print(pageSection.getName());
             }
             else {
-                out.println("Unnamed");
+                out.print("Unnamed");
             }
-            out.println("-------------------------");
+            out.println(" =");
         }
     }
 
@@ -252,7 +251,7 @@ public class ConsoleReportingListener implements CompleteListener {
         }
         
         if (failedTests.size() > 0) {
-            out.println("Failed suites:");
+            out.println("Failed tests:");
             for (String name: failedTests) {
                 out.println("    " + name);
             }
