@@ -24,7 +24,7 @@ import java.util.*;
 
 import static java.util.Arrays.asList;
 
-public class LogicProcessor {
+public class MacroProcessor {
     public static final String FOR_LOOP_KEYWORD = "@for";
     public static final String FOR_EACH_LOOP_KEYWORD = "@forEach";
     public static final String SET_KEYWORD = "@set";
@@ -40,7 +40,7 @@ public class LogicProcessor {
 
     private final PageSpecHandler pageSpecHandler;
 
-    private List<String> logicOperators = asList(
+    private List<String> macroOperators = asList(
             FOR_LOOP_KEYWORD,
             FOR_EACH_LOOP_KEYWORD,
             SET_KEYWORD,
@@ -51,7 +51,7 @@ public class LogicProcessor {
             RULE_KEYWORD
     );
 
-    public LogicProcessor(PageSpecHandler pageSpecHandler) {
+    public MacroProcessor(PageSpecHandler pageSpecHandler) {
         this.pageSpecHandler = pageSpecHandler;
     }
 
@@ -67,10 +67,10 @@ public class LogicProcessor {
             if (isConditionStatement(processedNode.getName())) {
                 resultingNodes.addAll(processConditionStatements(processedNode, it));
             }
-            else if (isLogicStatement(processedNode.getName())) {
-                resultingNodes.addAll(processLogicStatement(processedNode));
+            else if (isMacroStatement(processedNode.getName())) {
+                resultingNodes.addAll(processMacroStatement(processedNode));
             } else {
-                resultingNodes.add(processNonLogicStatement(processedNode));
+                resultingNodes.add(processNonMacroStatement(processedNode));
             }
         }
 
@@ -144,7 +144,7 @@ public class LogicProcessor {
         return IF_KEYWORD.equals(new StringCharReader(name).readWord());
     }
 
-    private StructNode processNonLogicStatement(StructNode processedNode) throws IOException {
+    private StructNode processNonMacroStatement(StructNode processedNode) throws IOException {
         if (processedNode.getChildNodes() != null) {
             StructNode fullyProcessed = new StructNode(processedNode.getName());
             fullyProcessed.setFileLineNumber(processedNode.getFileLineNumber());
@@ -157,7 +157,7 @@ public class LogicProcessor {
         }
     }
 
-    private List<StructNode> processLogicStatement(final StructNode statementNode) throws IOException {
+    private List<StructNode> processMacroStatement(final StructNode statementNode) throws IOException {
         StringCharReader reader = new StringCharReader(statementNode.getName());
         String firstWord = reader.readWord();
         if (FOR_LOOP_KEYWORD.equals(firstWord)
@@ -192,8 +192,8 @@ public class LogicProcessor {
         }
     }
 
-    private boolean isLogicStatement(String name) {
+    private boolean isMacroStatement(String name) {
         String firstWord = new StringCharReader(name).readWord();
-        return logicOperators.contains(firstWord);
+        return macroOperators.contains(firstWord);
     }
 }

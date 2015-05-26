@@ -59,7 +59,7 @@ public class PageSpecReaderV2 {
 
             PageSpecHandler pageSpecHandler = new PageSpecHandler(pageSpec, page, tags, excludedTags, contextPath, properties, jsVariables);
 
-            List<StructNode> allProcessedChildNodes = new LogicProcessor(pageSpecHandler).process(structs);
+            List<StructNode> allProcessedChildNodes = new MacroProcessor(pageSpecHandler).process(structs);
             new PostProcessor(pageSpecHandler).process(allProcessedChildNodes);
 
 

@@ -68,7 +68,7 @@ public class ImportProcessor {
 
             PageSpecHandler childPageSpecHandler = new PageSpecHandler(pageSpecHandler, GalenUtils.getParentForFile(fullPath));
 
-            List<StructNode> allProcessedChildNodes = new LogicProcessor(childPageSpecHandler).process(structs);
+            List<StructNode> allProcessedChildNodes = new MacroProcessor(childPageSpecHandler).process(structs);
             new PostProcessor(childPageSpecHandler).process(allProcessedChildNodes);
 
         }

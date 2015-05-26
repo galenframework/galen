@@ -16,7 +16,6 @@
 package net.mindengine.galen.speclang2.reader.pagespec;
 
 import net.mindengine.galen.parser.StructNode;
-import net.mindengine.galen.specs.reader.StringCharReader;
 
 import java.io.IOException;
 import java.util.List;
@@ -31,6 +30,6 @@ public class InPageRule implements PageRule {
 
     @Override
     public List<StructNode> apply(PageSpecHandler pageSpecHandler, String text, String objectName, Map<String, String> parameters) throws IOException {
-        return new LogicProcessor(pageSpecHandler).process(nodes);
+        return new MacroProcessor(pageSpecHandler).process(nodes);
     }
 }
