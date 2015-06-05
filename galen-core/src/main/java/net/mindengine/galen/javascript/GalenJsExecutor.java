@@ -21,7 +21,6 @@ import java.io.InputStream;
 import java.io.Reader;
 
 import net.mindengine.galen.api.Galen;
-import net.mindengine.galen.browser.WebDriverWrapper;
 import net.mindengine.galen.parser.VarsParserJsProcessable;
 import net.mindengine.galen.runner.events.TestEvent;
 import net.mindengine.galen.runner.events.TestFilterEvent;
@@ -63,7 +62,6 @@ public class GalenJsExecutor implements VarsParserJsProcessable {
     private void importAllMajorClasses() {
         importClasses(new Class[]{
                 Thread.class,
-                WebDriverWrapper.class,
                 By.class,
                 WebElement.class,
                 WebDriver.class,

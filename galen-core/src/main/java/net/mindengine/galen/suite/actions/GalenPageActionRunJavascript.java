@@ -21,7 +21,6 @@ import java.io.Reader;
 
 import net.mindengine.galen.browser.Browser;
 import net.mindengine.galen.browser.SeleniumBrowser;
-import net.mindengine.galen.browser.WebDriverWrapper;
 import net.mindengine.galen.javascript.GalenJsExecutor;
 import net.mindengine.galen.reports.TestReport;
 import net.mindengine.galen.suite.GalenPageAction;
@@ -32,6 +31,7 @@ import net.mindengine.galen.validation.ValidationListener;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.openqa.selenium.WebDriver;
 
 public class GalenPageActionRunJavascript extends GalenPageAction{
 
@@ -52,16 +52,16 @@ public class GalenPageActionRunJavascript extends GalenPageAction{
         GalenJsExecutor js = new GalenJsExecutor();
         js.eval(GalenJsExecutor.loadJsFromLibrary("GalenPages.js"));
         js.putObject("browser", browser);
-        provideWrappedWebDriver(js, browser);
+        provideWebDriverInstance(js, browser);
         
         js.eval("var arg = " + jsonArguments);
         js.eval(scriptFileReader, javascriptPath);
     }
     
-    private void provideWrappedWebDriver(GalenJsExecutor jsExecutor, Browser browser) {
+    private void provideWebDriverInstance(GalenJsExecutor jsExecutor, Browser browser) {
         if (browser instanceof SeleniumBrowser) {
             SeleniumBrowser seleniumBrowser = (SeleniumBrowser) browser;
-            WebDriverWrapper driver = new WebDriverWrapper(seleniumBrowser.getDriver());
+            WebDriver driver = seleniumBrowser.getDriver();
             jsExecutor.putObject("driver", driver);
         }
         
