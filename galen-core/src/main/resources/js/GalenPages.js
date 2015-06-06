@@ -528,5 +528,13 @@
         return listToArray(list);
     };
 
+    function insideFrame(driver, locator, callback) {
+        var frameElement = driver.findElement(GalenPages.convertLocator(GalenPages.parseLocator(locator)));
+        driver.switchTo().frame(frameElement);
+        callback();
+        driver.switchTo().parentFrame();
+    }
+
     exports.GalenPages = GalenPages;
+    exports.insideFrame = insideFrame;
 }(this));
