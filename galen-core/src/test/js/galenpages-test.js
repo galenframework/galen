@@ -1,6 +1,8 @@
 var assert = require("assert"),
     should=require("should"),
     GalenPages = require("./../../main/resources/js/GalenPages").GalenPages,
+    $page = require("./../../main/resources/js/GalenPages").$page,
+    $list = require("./../../main/resources/js/GalenPages").$list,
     assertThat = require("./assertThat.js").assertThat,
     assertError = require("./assertThat.js").assertError;
 
@@ -22,11 +24,28 @@ function toJson(obj) {
     return JSON.stringify(obj);
 };
 
-// Thread object is mocked in order test how galen wait for pages
+// Thread object is mocked in order test how galen waits for pages
 Thread = {
     sleep: function (time) {
     }
+};
+
+
+/*
+ * Mocking java list
+ */
+function JavaList(items) {
+    this.items = items;
 }
+JavaList.prototype.size = function () {
+    return this.items.length;
+};
+JavaList.prototype.get = function (index) {
+    if (index >= this.size()) {
+        throw new Error("Index out of bounds: " + index);
+    }
+    return this.items[index];
+};
 
 /*
  * Mocking a WebDriver
@@ -45,6 +64,16 @@ function RecordingDriver() {
     this.findElement = function (by) {
         this.record("#findElement " + toJson(by));
         return new RecordingWebElement(by);
+    };
+    this.findElements = function (by) {
+        this.record("#findElements" + toJson(by));
+        /*
+        always return two mocked elements so that we can test stuff related to $list
+         */
+        return new JavaList([
+            new RecordingWebElement(by),
+            new RecordingWebElement(by)
+        ]);
     };
     this.navigate = function () {
         return new RecordingDriverNavigation(this);
@@ -574,6 +603,54 @@ describe("GalenPages", function (){
                 assertThat("Driver actions", driver.actions).is(["#getTitle"]);
                 assertThat("Title", title).is("Fake title");
             });
+        });
+    });
+
+    describe("$page", function() {
+        it("should create a new function with page elements", function () {
+            var LoginPage = $page({
+                login: "#login",
+                password: "#password",
+
+                loginAs: function (email, password) {
+                    return "Logging as " + email;
+                }
+            });
+
+            var loginPage = new LoginPage(dummyDriver);
+            assertThat("loginAs function should return", loginPage.loginAs("someuser@example.com", "p"))
+                .is("Logging as someuser@example.com");
+            should.exist(loginPage.login.locator);
+            should.exist(loginPage.password.locator);
+        });
+    });
+
+    describe("$list", function () {
+        it("should generate a list of components", function () {
+            var NoteElement = $page({
+                title: ".title",
+                content: ".description",
+
+                getNoteContent: function () {
+                    return "some fake content";
+                }
+            });
+
+            var NotesPage = $page({
+                title: "#title",
+                notes: $list(NoteElement, "div.notes .note")
+            });
+
+            var driver = new RecordingDriver();
+            var notesPage = new NotesPage(driver);
+
+            assertThat("There should be 2 notes", notesPage.notes.size())
+                .is(2);
+
+
+            assertThat("Should be able to retrieve a note", notesPage.notes.get(1).getNoteContent())
+                .is("some fake content");
+
         });
     });
 });
