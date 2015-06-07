@@ -548,19 +548,17 @@
     };
     GalenPages.PageElementList.prototype.get = function (index) {
         var elements = this.getWebElements(),
-            constructor = this.elementConstructor,
             pageElement,
             subPage;
 
-        if (index >=0 && index < elements.size()) {
+        if (index >= 0 && index < elements.size()) {
             pageElement = elements.get(index);
 
-            subPage =  new constructor(pageElement);
+            subPage =  new this.elementConstructor(pageElement);
             subPage.name = this.name + " #" + index;
             return subPage;
-        } else {
-            throw new Error("Index out of bounds: " + index);
         }
+        throw new Error("Index out of bounds: " + index);
     };
 
 
