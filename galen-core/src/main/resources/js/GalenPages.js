@@ -87,8 +87,8 @@
         create: function (driver) {
             return new GalenPages.Driver(driver);
         },
-        extendPage: function (page, driver, mainFields, secondaryFields) {
-            var obj = new GalenPages.Page(driver, mainFields, secondaryFields),
+        extendPage: function (page, driver, name, mainFields, secondaryFields) {
+            var obj = new GalenPages.Page(driver, name, mainFields, secondaryFields),
                 key;
 
             for (key in obj) {
@@ -107,8 +107,8 @@
         },
         Driver: function (driver) {
             this.driver = driver;
-            this.page = function (mainFields, secondaryFields) {
-                return new GalenPages.Page(this.driver, mainFields, secondaryFields);
+            this.page = function (name, mainFields, secondaryFields) {
+                return new GalenPages.Page(this.driver, name, mainFields, secondaryFields);
             };
             this.component = this.page;
 
@@ -277,15 +277,22 @@
         }
     };
 
-    GalenPages.Page = function (driver, mainFields, secondaryFields) {
+    GalenPages.Page = function (driver, name, mainFields, secondaryFields) {
         this.driver = driver;
-        var thisPage = this;
-        this.initPageElements(mainFields, function (fieldNames) {
+        this.name = name;
+        var thisPage = this,
+            suffix = "";
+
+        if (name !== undefined && name !== null && name.length > 0) {
+            suffix = " on " + this.name;
+        }
+
+        this.initPageElements(mainFields, suffix, function (fieldNames) {
             thisPage.primaryFields = fieldNames;
         });
-        this.initPageElements(secondaryFields);
+        this.initPageElements(secondaryFields, suffix);
     };
-    GalenPages.Page.prototype.initPageElements = function (elementsMap, elementsCollectedCallback) {
+    GalenPages.Page.prototype.initPageElements = function (elementsMap, nameSuffix, elementsCollectedCallback) {
         var fieldNames = [],
             property,
             value;
@@ -294,10 +301,10 @@
             if (elementsMap.hasOwnProperty(property)) {
                 value = elementsMap[property];
                 if (typeof value === "string") {
-                    this[property] = new GalenPages.PageElement(property, GalenPages.parseLocator(value), this);
+                    this[property] = new GalenPages.PageElement(property + nameSuffix, GalenPages.parseLocator(value), this);
                     fieldNames.push(property);
                 } else if (value !== null && value.hasOwnProperty("__type__") && value.__type__ === GalenPages.Types.List) {
-                    this[property] = new GalenPages.PageElementList(property, GalenPages.parseLocator(value.locator), value.elementConstructor, this);
+                    this[property] = new GalenPages.PageElementList(property + nameSuffix, GalenPages.parseLocator(value.locator), value.elementConstructor, this);
                 } else {
                     this[property] = value;
                 }
@@ -385,9 +392,6 @@
 
     GalenPages.PageElement = function (name, locator, parent) {
         this.name = name;
-        if (parent === undefined) {
-            parent = null;
-        }
         this.cachedWebElement = null;
         this.locator = locator;
         this.parent = parent;
@@ -420,7 +424,7 @@
         this.getWebElement().click();
     };
     GalenPages.PageElement.prototype.typeText = function (text) {
-        this._report("Type text \"" + text + "\" to " + this.name);
+        this._report("Type \"" + text + "\" to " + this.name);
         this.getWebElement().sendKeys(text);
     };
     GalenPages.PageElement.prototype.getText = function () {
@@ -549,18 +553,22 @@
     GalenPages.PageElementList.prototype.get = function (index) {
         var elements = this.getWebElements(),
             pageElement,
-            subPage;
+            subPage,
+            listElementName;
 
         if (index >= 0 && index < elements.size()) {
             pageElement = elements.get(index);
 
-            subPage =  new this.elementConstructor(pageElement);
-            subPage.name = this.name + " #" + index;
+            listElementName = "#" + index + " of " + this.name;
+
+            subPage = new this.elementConstructor(pageElement, {
+                name: listElementName
+            });
+            subPage.name = listElementName;
             return subPage;
         }
         throw new Error("Index out of bounds: " + index);
     };
-
 
     function insideFrame(driver, locator, callback) {
         var frameElement = driver.findElement(GalenPages.convertLocator(GalenPages.parseLocator(locator)));
@@ -570,9 +578,13 @@
     }
 
 
-    function $page(mainFields, secondaryFields) {
-        return function (driver) {
-            GalenPages.extendPage(this, driver, mainFields, secondaryFields);
+    function $page(name, mainFields, secondaryFields) {
+        return function (driver, parent) {
+            var fullName = name;
+            if (parent !== undefined && parent !== null && parent.hasOwnProperty("name")) {
+                fullName = name + " on " + parent.name;
+            }
+            GalenPages.extendPage(this, driver, fullName, mainFields, secondaryFields);
         };
     }
 

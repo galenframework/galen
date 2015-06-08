@@ -1,11 +1,11 @@
 importClass(net.mindengine.galen.tests.integration.GalenPagesIT);
 
-var CommentComponent = $page({
+var CommentComponent = $page("Comment", {
     userLink: "a.user",
     message: ".message"
 });
 
-var CommentsPage = $page({
+var CommentsPage = $page("Comments page", {
     comments: $list(CommentComponent, ".comments > li")
 });
 

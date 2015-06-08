@@ -290,7 +290,7 @@ describe("GalenPages", function (){
         });
 
         it("should create a page with fields and evalSafeToString id css xpath locators", function (){
-            var page = $.page({
+            var page = $.page("some page", {
                 label: ".some label",
                 link: "id:  some-link",
                 button: "xpath: //some-button"
@@ -306,7 +306,7 @@ describe("GalenPages", function (){
         });
 
         it("Should identify css and xpath locators based on their first character", function () {
-            var page = $.page({
+            var page = $.page("some page", {
                 css01: ".some label",
                 css02: "#id",
                 xpath01: "//some-button",
@@ -321,7 +321,7 @@ describe("GalenPages", function (){
         });
 
         it("should create a page and use functions as-is with fields", function () {
-            var page = $.page({
+            var page = $.page("some page", {
                 label: ".some label",
                 doIt: function (a) {
                     var b = a +5;
@@ -334,7 +334,7 @@ describe("GalenPages", function (){
         });
 
         it("should create a page and split fields into main and secondary", function () {
-            var page = $.page({
+            var page = new $.page("some page", {
                 mainField1: ".some-field-1",
                 mainField2: ".some-field-1"
             }, {
@@ -349,7 +349,7 @@ describe("GalenPages", function (){
         });
 
         it("should create page elements with all needed functions", function (){
-            var page = $.page({
+            var page = $.page("some page", {
                 someField: ".some-field"
             });
 
@@ -367,7 +367,7 @@ describe("GalenPages", function (){
     describe("#extendPage", function () {
         it("should extend page object with page elements", function () {
             var MyPage = function (driver) {
-                GalenPages.extendPage(this, driver, {
+                GalenPages.extendPage(this, driver, "My page", {
                     someField: ".some-field",
                     someFunc: function () {
                         return "some value";
@@ -381,6 +381,8 @@ describe("GalenPages", function (){
             assertThat("myPage.someField", myPage.someField).hasFields([
                 "click", "typeText", "clear", "isDisplayed", "getWebElement"
             ]);
+
+            assertThat("Should set a name for a page", myPage.name).is("My page");
         });
     });
 
@@ -390,7 +392,7 @@ describe("GalenPages", function (){
 
         it("should trigger getWebElement only once when doing actions on it", function (){
             driver.clearActions();
-            var page = $.page({someField: ".some-field"});
+            var page = $.page("some page", {someField: ".some-field"});
             page.someField.click();
             page.someField.typeText("Some text");
             page.someField.clear();
@@ -415,7 +417,7 @@ describe("GalenPages", function (){
 
         it("should report all events", function (){
             driver.clearActions();
-            var page = $.page({someField: ".some-field"});
+            var page = $.page("some page", {someField: ".some-field"});
 
             GalenPages.settings.allowReporting = true;
             TestSession.data = [];
@@ -432,17 +434,17 @@ describe("GalenPages", function (){
             page.someField.selectByText("blahblah");
 
             assertThat("TestSession report should be", TestSession.data).is([
-                {name: "Click someField", details: "css: .some-field"},
-                {name: "Type text \"Some text\" to someField", details: "css: .some-field"},
-                {name: "Clear someField", details: "css: .some-field"},
-                {name: "Select by value \"blahblah\" in someField", details: "css: .some-field"},
-                {name: "Select by text \"blahblah\" in someField", details: "css: .some-field"},
+                {name: "Click someField on some page", details: "css: .some-field"},
+                {name: "Type \"Some text\" to someField on some page", details: "css: .some-field"},
+                {name: "Clear someField on some page", details: "css: .some-field"},
+                {name: "Select by value \"blahblah\" in someField on some page", details: "css: .some-field"},
+                {name: "Select by text \"blahblah\" in someField on some page", details: "css: .some-field"},
             ]);
         });
 
         it("should not report if reporting is disabled", function (){
             driver.clearActions();
-            var page = $.page({someField: ".some-field"});
+            var page = $.page("some page", {someField: ".some-field"});
 
             GalenPages.settings.allowReporting = false;
             TestSession.data = [];
@@ -464,7 +466,7 @@ describe("GalenPages", function (){
         it("should handle NoSuchElementException from java", function () {
             driver.clearActions();
             driver.findElement = function (){throw new Error("No Such element");}
-            var page = $.page({someField: ".some-field"});
+            var page = $.page("some page", {someField: ".some-field"});
 
             assertError(function (){
                 page.someField.typeText("Some text");
@@ -488,7 +490,7 @@ describe("GalenPages", function (){
 
         it("should wait for primaryFields only", function () {
             driver.clearActions();
-            var page = $.page({
+            var page = $.page("some page", {
                 label: ".some-field",
                 button: ".some-button"
             }, {
@@ -510,7 +512,7 @@ describe("GalenPages", function (){
 
         it("should throw error if a field is not displayed", function (){
             driver.clearActions();
-            var page = $.page({
+            var page = $.page("some page", {
                 label: ".some-field",
                 button: ".some-button"
             });
@@ -534,7 +536,7 @@ describe("GalenPages", function (){
         var $ = GalenPages.create(driver);
 
         it("should create component", function () {
-            var c = $.component({
+            var c = $.component("some component", {
                 label: ".some-label",
                 someFunction: function (){}
             });
@@ -608,7 +610,7 @@ describe("GalenPages", function (){
 
     describe("$page", function() {
         it("should create a new function with page elements", function () {
-            var LoginPage = $page({
+            var LoginPage = $page("Login page", {
                 login: "#login",
                 password: "#password",
 
@@ -627,7 +629,7 @@ describe("GalenPages", function (){
 
     describe("$list", function () {
         it("should generate a list of components", function () {
-            var NoteElement = $page({
+            var NoteElement = $page("Note", {
                 title: ".title",
                 content: ".description",
 
@@ -636,7 +638,7 @@ describe("GalenPages", function (){
                 }
             });
 
-            var NotesPage = $page({
+            var NotesPage = $page("Notes page", {
                 title: "#title",
                 notes: $list(NoteElement, "div.notes .note")
             });
@@ -647,10 +649,16 @@ describe("GalenPages", function (){
             assertThat("There should be 2 notes", notesPage.notes.size())
                 .is(2);
 
+            var secondNote = notesPage.notes.get(1);
 
-            assertThat("Should be able to retrieve a note", notesPage.notes.get(1).getNoteContent())
+            assertThat("Should give full name in sub components", secondNote.name)
+                .is("#1 of notes on Notes page");
+
+            assertThat("Should give full name in sub components", secondNote.title.name)
+                .is("title on Note on #1 of notes on Notes page");
+
+            assertThat("Should be able to retrieve a note", secondNote.getNoteContent())
                 .is("some fake content");
-
         });
     });
 });
