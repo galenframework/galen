@@ -251,46 +251,35 @@ describe("GalenPages", function (){
         });
     });
 
-    describe("#create", function (){
-        it("should return wrapped instance of webdriver", function() {
-            var gjs = GalenPages.create(dummyDriver);
 
-            should.exist(gjs);
-            should.exist(gjs.driver);
-            gjs.driver.should.equal(dummyDriver);
+    describe("#Page", function () {
+        var driver = new RecordingDriver();
 
-            should.exist(gjs.page);
-            should.exist(gjs.component);
-        });
-    });
-
-    describe("#page", function () {
-        var $ = GalenPages.create(dummyDriver);
         it("should create a simple page", function () {
-            var page = $.page();
+            var page = new GalenPages.Page(driver, "some page", {});
             should.exist(page);
             should.exist(page.driver);
             should.exist(page.findChild);
             should.exist(page.findChildren);
 
-            page.driver.should.equal(dummyDriver);
+            page.driver.should.equal(driver);
         });
 
         it("should create a simple page and replace properties", function () {
-            var page = $.page().set({
+            var page = new GalenPages.Page(driver, "some page").set({
                 someProperty: "some value"
             });
             should.exist(page);
             should.exist(page.driver);
             should.exist(page.findChild);
             should.exist(page.findChildren);
-            page.driver.should.equal(dummyDriver);
+            page.driver.should.equal(driver);
             should.exist(page.someProperty);
             assertThat("somePropery of page should be equal", page.someProperty).is("some value");
         });
 
         it("should create a page with fields and evalSafeToString id css xpath locators", function (){
-            var page = $.page("some page", {
+            var page = new GalenPages.Page(driver, "some page", {
                 label: ".some label",
                 link: "id:  some-link",
                 button: "xpath: //some-button"
@@ -306,7 +295,7 @@ describe("GalenPages", function (){
         });
 
         it("Should identify css and xpath locators based on their first character", function () {
-            var page = $.page("some page", {
+            var page = new GalenPages.Page(driver, "some page", {
                 css01: ".some label",
                 css02: "#id",
                 xpath01: "//some-button",
@@ -321,7 +310,7 @@ describe("GalenPages", function (){
         });
 
         it("should create a page and use functions as-is with fields", function () {
-            var page = $.page("some page", {
+            var page = new GalenPages.Page(driver, "some page", {
                 label: ".some label",
                 doIt: function (a) {
                     var b = a +5;
@@ -334,7 +323,7 @@ describe("GalenPages", function (){
         });
 
         it("should create a page and split fields into main and secondary", function () {
-            var page = new $.page("some page", {
+            var page = new GalenPages.Page(driver, "some page", {
                 mainField1: ".some-field-1",
                 mainField2: ".some-field-1"
             }, {
@@ -349,7 +338,7 @@ describe("GalenPages", function (){
         });
 
         it("should create page elements with all needed functions", function (){
-            var page = $.page("some page", {
+            var page = new GalenPages.Page(driver, "some page", {
                 someField: ".some-field"
             });
 
@@ -388,11 +377,10 @@ describe("GalenPages", function (){
 
     describe("page elements interaction", function () {
         var driver = new RecordingDriver();
-        var $ = GalenPages.create(driver);
 
         it("should trigger getWebElement only once when doing actions on it", function (){
             driver.clearActions();
-            var page = $.page("some page", {someField: ".some-field"});
+            var page = new GalenPages.Page(driver, "some page", {someField: ".some-field"});
             page.someField.click();
             page.someField.typeText("Some text");
             page.someField.clear();
@@ -417,7 +405,7 @@ describe("GalenPages", function (){
 
         it("should report all events", function (){
             driver.clearActions();
-            var page = $.page("some page", {someField: ".some-field"});
+            var page = new GalenPages.Page(driver, "some page", {someField: ".some-field"});
 
             GalenPages.settings.allowReporting = true;
             TestSession.data = [];
@@ -444,7 +432,7 @@ describe("GalenPages", function (){
 
         it("should not report if reporting is disabled", function (){
             driver.clearActions();
-            var page = $.page("some page", {someField: ".some-field"});
+            var page = new GalenPages.Page(driver, "some page", {someField: ".some-field"});
 
             GalenPages.settings.allowReporting = false;
             TestSession.data = [];
@@ -466,7 +454,9 @@ describe("GalenPages", function (){
         it("should handle NoSuchElementException from java", function () {
             driver.clearActions();
             driver.findElement = function (){throw new Error("No Such element");}
-            var page = $.page("some page", {someField: ".some-field"});
+            var page = new GalenPages.Page(driver, "some page", {
+                someField: ".some-field"
+            });
 
             assertError(function (){
                 page.someField.typeText("Some text");
@@ -486,11 +476,10 @@ describe("GalenPages", function (){
 
     describe("page waiting", function () {
         var driver = new RecordingDriver();
-        var $ = GalenPages.create(driver);
 
         it("should wait for primaryFields only", function () {
             driver.clearActions();
-            var page = $.page("some page", {
+            var page = new GalenPages.Page(driver, "some page", {
                 label: ".some-field",
                 button: ".some-button"
             }, {
@@ -512,7 +501,7 @@ describe("GalenPages", function (){
 
         it("should throw error if a field is not displayed", function (){
             driver.clearActions();
-            var page = $.page("some page", {
+            var page = new GalenPages.Page(driver, "some page", {
                 label: ".some-field",
                 button: ".some-button"
             });
@@ -531,82 +520,6 @@ describe("GalenPages", function (){
         });
     });
 
-    describe("#component", function (){
-        var driver = new RecordingDriver();
-        var $ = GalenPages.create(driver);
-
-        it("should create component", function () {
-            var c = $.component("some component", {
-                label: ".some-label",
-                someFunction: function (){}
-            });
-
-            should.exist(c.driver);
-            should.exist(c.label);
-            should.exist(c.label.locator);
-            should.exist(c.someFunction);
-            should.exist(c.waitForIt);
-
-            assertThat("Typeof someFunction", typeof c.someFunction).is("function");
-        });
-
-    });
-
-    describe("basic functions", function (){
-        var driver = new RecordingDriver();
-        var $ = GalenPages.create(driver);
-
-        describe("#get", function (){
-            it("should load new page", function (){
-                driver.clearActions();
-                $.get("http://example.com");
-                assertThat("Driver actions should be", driver.actions).is(["#get http://example.com"]);
-            });
-        });
-
-        describe("#refresh", function () {
-            it("should invoke driver.navigate().reload()", function (){
-                driver.clearActions();
-                $.refresh();
-                assertThat("Driver actions should be", driver.actions).is(["#navigate().reload"]);
-            });
-        });
-
-        describe("#back", function () {
-            it("should invoke driver.navigate().back()", function () {
-                driver.clearActions();
-                $.back();
-                assertThat("Driver actions", driver.actions).is(["#navigate().back"]);
-            });
-        });
-
-        describe("#currentUrl", function () {
-            it("should return current url in browser", function (){
-                driver.clearActions();
-                var url = $.currentUrl();
-                assertThat("Driver actions", driver.actions).is(["#getCurrentUrl"]);
-                assertThat("The returned url", url).is("http://fakeurl.fake");
-            });
-        });
-
-        describe("#pageSource", function () {
-            it("should return page source from driver", function (){
-                driver.clearActions();
-                var pageSource = $.pageSource();
-                assertThat("Driver actions", driver.actions).is(["#getPageSource"]);
-                assertThat("Page source", pageSource).is("<fake>page source</fake>");
-            });
-        });
-
-        describe("#title", function () {
-            it("should return title from driver", function () {
-                driver.clearActions();
-                var title = $.title();
-                assertThat("Driver actions", driver.actions).is(["#getTitle"]);
-                assertThat("Title", title).is("Fake title");
-            });
-        });
-    });
 
     describe("$page", function() {
         it("should create a new function with page elements", function () {
@@ -661,4 +574,5 @@ describe("GalenPages", function (){
                 .is("some fake content");
         });
     });
+
 });

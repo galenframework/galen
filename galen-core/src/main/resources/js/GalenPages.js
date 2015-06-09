@@ -84,9 +84,6 @@
                 value: locatorText
             };
         },
-        create: function (driver) {
-            return new GalenPages.Driver(driver);
-        },
         extendPage: function (page, driver, name, mainFields, secondaryFields) {
             var obj = new GalenPages.Page(driver, name, mainFields, secondaryFields),
                 key;
@@ -104,33 +101,6 @@
                 }
             }
 
-        },
-        Driver: function (driver) {
-            this.driver = driver;
-            this.page = function (name, mainFields, secondaryFields) {
-                return new GalenPages.Page(this.driver, name, mainFields, secondaryFields);
-            };
-            this.component = this.page;
-
-            //basic functions
-            this.get = function (url) {
-                this.driver.get(url);
-            };
-            this.refresh = function () {
-                this.driver.navigate().reload();
-            };
-            this.back = function () {
-                this.driver.navigate().back();
-            };
-            this.currentUrl = function () {
-                return this.driver.getCurrentUrl();
-            };
-            this.pageSource = function () {
-                return this.driver.getPageSource();
-            };
-            this.title = function () {
-                return this.driver.getTitle();
-            };
         },
 
         convertLocator: function (galenLocator) {
