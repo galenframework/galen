@@ -155,6 +155,7 @@ public class GalenPageActionReader {
         options.addOption("e", "export", true, "Export dir");
         options.addOption("w", "max-width", true, "Maximal width of elements in croppped screenshots");
         options.addOption("h", "max-height", true, "Maximal height of elements in cropped screenshots");
+        options.addOption("i", "only-images", false, "Flag for exporting only images without html and json files");
 
         org.apache.commons.cli.CommandLineParser parser = new PosixParser();
 
@@ -180,13 +181,15 @@ public class GalenPageActionReader {
                 maxHeight = Integer.parseInt(maxHeightText);
             }
 
+            boolean onlyImages = cmd.hasOption("i");
 
             return new GalenPageActionDumpPage()
                     .withSpecPath(leftoverArgs[1])
                     .withPageName(cmd.getOptionValue("n"))
                     .withPageDumpPath(cmd.getOptionValue("e"))
                     .withMaxWidth(maxWidth)
-                    .withMaxHeight(maxHeight);
+                    .withMaxHeight(maxHeight)
+                    .withOnlyImages(onlyImages);
         }
         catch (Exception e) {
             throw new SyntaxException(UNKNOWN_LINE, "Couldn't parse: " + originalText, e);

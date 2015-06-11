@@ -98,7 +98,10 @@ public class GalenPageActionReaderTest {
                 .withSpecPath("page1.spec").withPageName("Home page dump").withPageDumpPath("/export/dir/path")
             },
             {"dump page1.spec --name \"Home page dump\" --export /export/dir/path --max-width 120 --max-height 240", new GalenPageActionDumpPage()
-                .withSpecPath("page1.spec").withPageName("Home page dump").withPageDumpPath("/export/dir/path").withMaxWidth(120).withMaxHeight(240)
+                .withSpecPath("page1.spec").withPageName("Home page dump").withPageDumpPath("/export/dir/path").withMaxWidth(120).withMaxHeight(240).withOnlyImages(false)
+            },
+            {"dump page1.spec --name \"Home page dump\" --export /export/dir/path --only-images --max-width 120 --max-height 240", new GalenPageActionDumpPage()
+                .withSpecPath("page1.spec").withPageName("Home page dump").withPageDumpPath("/export/dir/path").withMaxWidth(120).withMaxHeight(240).withOnlyImages(true)
             }
         };
     }

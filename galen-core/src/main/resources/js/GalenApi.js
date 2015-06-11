@@ -177,7 +177,7 @@
         }
     };
 
-    function dumpPage(driver, pageName, specPath, exportPath, maxWidth, maxHeight) {
+    function dumpPage(driver, pageName, specPath, exportPath, maxWidth, maxHeight, onlyImages) {
         if (maxWidth === undefined) {
             maxWidth = null;
         }
@@ -185,7 +185,12 @@
         if (maxHeight === undefined) {
             maxHeight = null;
         }
-        Galen.dumpPage(driver, pageName, specPath, exportPath, maxWidth, maxHeight);
+
+        if (onlyImages === undefined) {
+            onlyImages = false;
+        }
+
+        Galen.dumpPage(driver, pageName, specPath, exportPath, maxWidth, maxHeight, onlyImages);
     }
 
     exports.createDriver = createDriver;

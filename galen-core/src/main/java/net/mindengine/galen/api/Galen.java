@@ -137,32 +137,32 @@ public class Galen {
     }
 
     public static void dumpPage(WebDriver driver, String pageName, String specPath, String pageDumpPath) throws IOException {
-        dumpPage(driver, pageName, specPath, pageDumpPath, null, null, null);
+        dumpPage(driver, pageName, specPath, pageDumpPath, null, null, false);
     }
 
-    public static void dumpPage(WebDriver driver, String pageName, String specPath, String pageDumpPath, Integer maxWidth, Integer maxHeight) throws IOException {
-        dumpPage(new SeleniumBrowser(driver), pageName, specPath, pageDumpPath, maxWidth, maxHeight, null);
+    public static void dumpPage(WebDriver driver, String pageName, String specPath, String pageDumpPath, Integer maxWidth, Integer maxHeight, Boolean onlyImages) throws IOException {
+        dumpPage(new SeleniumBrowser(driver), pageName, specPath, pageDumpPath, maxWidth, maxHeight, onlyImages);
     }
 
-    public static void dumpPage(WebDriver driver, String pageName, String specPath, String pageDumpPath, Integer maxWidth, Integer maxHeight, Map<String, Object> jsVariables) throws IOException {
-        dumpPage(new SeleniumBrowser(driver), pageName, specPath, pageDumpPath, maxWidth, maxHeight, jsVariables);
+    public static void dumpPage(WebDriver driver, String pageName, String specPath, String pageDumpPath, Integer maxWidth, Integer maxHeight, Boolean onlyImages, Map<String, Object> jsVariables) throws IOException {
+        dumpPage(new SeleniumBrowser(driver), pageName, specPath, pageDumpPath, maxWidth, maxHeight, onlyImages, jsVariables);
     }
 
-    public static void dumpPage(Browser browser, String pageName, String specPath, String pageDumpPath, Integer maxWidth, Integer maxHeight) throws IOException {
-        dumpPage(browser, pageName, specPath, pageDumpPath, maxWidth, maxHeight, new Properties(), null);
+    public static void dumpPage(Browser browser, String pageName, String specPath, String pageDumpPath, Integer maxWidth, Integer maxHeight, Boolean onlyImages) throws IOException {
+        dumpPage(browser, pageName, specPath, pageDumpPath, maxWidth, maxHeight, onlyImages, new Properties(), null);
     }
 
-    public static void dumpPage(Browser browser, String pageName, String specPath, String pageDumpPath, Integer maxWidth, Integer maxHeight, Map<String, Object> jsVariables) throws IOException {
-        dumpPage(browser, pageName, specPath, pageDumpPath, maxWidth, maxHeight, new Properties(), jsVariables);
+    public static void dumpPage(Browser browser, String pageName, String specPath, String pageDumpPath, Integer maxWidth, Integer maxHeight, Boolean onlyImages, Map<String, Object> jsVariables) throws IOException {
+        dumpPage(browser, pageName, specPath, pageDumpPath, maxWidth, maxHeight, onlyImages, new Properties(), jsVariables);
     }
-    public static void dumpPage(Browser browser, String pageName, String specPath, String pageDumpPath, Integer maxWidth, Integer maxHeight, Properties properties, Map<String, Object> jsVariables) throws IOException {
+    public static void dumpPage(Browser browser, String pageName, String specPath, String pageDumpPath, Integer maxWidth, Integer maxHeight, Boolean onlyImages, Properties properties, Map<String, Object> jsVariables) throws IOException {
         PageSpecReaderV2 reader = new PageSpecReaderV2();
 
         PageSpec pageSpec = reader.read(specPath, browser.getPage(), EMPTY_TAGS, EMPTY_TAGS, properties, jsVariables);
-        dumpPage(browser, pageName, pageSpec, new File(pageDumpPath), maxWidth, maxHeight);
+        dumpPage(browser, pageName, pageSpec, new File(pageDumpPath), maxWidth, maxHeight, onlyImages);
     }
 
-    public static void dumpPage(Browser browser, String pageName, PageSpec pageSpec, File reportFolder, Integer maxWidth, Integer maxHeight) throws IOException {
+    public static void dumpPage(Browser browser, String pageName, PageSpec pageSpec, File reportFolder, Integer maxWidth, Integer maxHeight, boolean onlyImages) throws IOException {
         if (!reportFolder.exists()) {
             if (!reportFolder.mkdirs()) {
                 throw new RuntimeException("Cannot create dir: " + reportFolder.getAbsolutePath());
@@ -188,15 +188,16 @@ public class Galen {
             }
         }
 
-        pageDump.setPageName(pageName);
-        pageDump.exportAsJson(new File(reportFolder.getAbsoluteFile() + File.separator + "page.json"));
-        pageDump.exportAsHtml(pageName, new File(reportFolder.getAbsoluteFile() + File.separator + "page.html"));
+        if (!onlyImages) {
+            pageDump.setPageName(pageName);
+            pageDump.exportAsJson(new File(reportFolder.getAbsoluteFile() + File.separator + "page.json"));
+            pageDump.exportAsHtml(pageName, new File(reportFolder.getAbsoluteFile() + File.separator + "page.html"));
+            copyResource("/html-report/jquery-1.11.2.min.js", new File(reportFolder.getAbsolutePath() + File.separator + "jquery-1.11.2.min.js"));
+            copyResource("/pagedump/galen-pagedump.js", new File(reportFolder.getAbsolutePath() + File.separator + "galen-pagedump.js"));
+            copyResource("/pagedump/galen-pagedump.css", new File(reportFolder.getAbsolutePath() + File.separator + "galen-pagedump.css"));
+        }
+
         pageDump.exportAllScreenshots(browser, reportFolder);
-
-
-        copyResource("/html-report/jquery-1.11.2.min.js", new File(reportFolder.getAbsolutePath() + File.separator + "jquery-1.11.2.min.js"));
-        copyResource("/pagedump/galen-pagedump.js", new File(reportFolder.getAbsolutePath() + File.separator + "galen-pagedump.js"));
-        copyResource("/pagedump/galen-pagedump.css", new File(reportFolder.getAbsolutePath() + File.separator + "galen-pagedump.css"));
     }
 
     private static void copyResource(String resourceName, File destFile) throws IOException {

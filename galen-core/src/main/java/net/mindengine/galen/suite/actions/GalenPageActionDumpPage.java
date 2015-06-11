@@ -34,6 +34,8 @@ public class GalenPageActionDumpPage extends GalenPageAction {
     private String pageName;
     private Integer maxHeight;
     private Integer maxWidth;
+    private boolean onlyImages = false;
+
     private Map<String, Object> jsVariables;
 
     public GalenPageActionDumpPage() {
@@ -47,7 +49,7 @@ public class GalenPageActionDumpPage extends GalenPageAction {
 
     @Override
     public void execute(TestReport report, Browser browser, GalenPageTest pageTest, ValidationListener validationListener) throws Exception {
-        Galen.dumpPage(browser, pageName, specPath, pageDumpPath, maxWidth, maxHeight, getCurrentProperties(), jsVariables);
+        Galen.dumpPage(browser, pageName, specPath, pageDumpPath, maxWidth, maxHeight, isOnlyImages(), getCurrentProperties(), jsVariables);
     }
 
     public String getPageDumpPath() {
@@ -115,6 +117,23 @@ public class GalenPageActionDumpPage extends GalenPageAction {
         return this;
     }
 
+    public void setJsVariables(Map<String, Object> jsVariables) {
+        this.jsVariables = jsVariables;
+    }
+
+    public boolean isOnlyImages() {
+        return onlyImages;
+    }
+
+    public void setOnlyImages(boolean onlyImages) {
+        this.onlyImages = onlyImages;
+    }
+
+    public GalenPageActionDumpPage withOnlyImages(boolean onlyImages) {
+        setOnlyImages(onlyImages);
+        return this;
+    }
+
     @Override
     public int hashCode() {
         return new HashCodeBuilder()
@@ -123,6 +142,7 @@ public class GalenPageActionDumpPage extends GalenPageAction {
                 .append(this.pageDumpPath)
                 .append(this.maxWidth)
                 .append(this.maxHeight)
+                .append(this.onlyImages)
                 .toHashCode();
     }
 
@@ -136,27 +156,25 @@ public class GalenPageActionDumpPage extends GalenPageAction {
             return false;
 
         GalenPageActionDumpPage rhs = (GalenPageActionDumpPage)obj;
-        return new EqualsBuilder() //@formatter:off
+        return new EqualsBuilder()
                 .append(specPath, rhs.specPath)
                 .append(pageName, rhs.pageName)
                 .append(pageDumpPath, rhs.pageDumpPath)
                 .append(maxWidth, rhs.maxWidth)
                 .append(maxHeight, rhs.maxHeight)
-                .isEquals(); //@formatter:on
+                .append(onlyImages, rhs.onlyImages)
+                .isEquals();
     }
 
     @Override
     public String toString() {
-        return new ToStringBuilder(this) //@formatter:off
+        return new ToStringBuilder(this)
                 .append("specPath", specPath)
                 .append("pageName", pageName)
                 .append("pageDumpPath", pageDumpPath)
                 .append("maxWidth", maxWidth)
                 .append("maxHeight", maxHeight)
-                .toString(); //@formatter:on
-    }
-
-    public void setJsVariables(Map<String, Object> jsVariables) {
-        this.jsVariables = jsVariables;
+                .append("onlyImages", onlyImages)
+                .toString();
     }
 }

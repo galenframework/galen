@@ -93,7 +93,7 @@ public class GalenTest {
 
         WebDriver driver = new MockedDriver();
         driver.get("/mocks/pages/galen4j-pagedump.json");
-        Galen.dumpPage(driver, "test page", "/specs/galen4j/pagedump.spec", pageDumpPath, 80, 80);
+        Galen.dumpPage(driver, "test page", "/specs/galen4j/pagedump.spec", pageDumpPath, 80, 80, false);
 
         assertFileExists(pageDumpPath + "/objects/button-save.png");
         assertFileDoesNotExist(pageDumpPath + "/objects/name-textfield.png");
@@ -101,8 +101,36 @@ public class GalenTest {
         assertFileExists(pageDumpPath + "/objects/menu-item-2.png");
         assertFileExists(pageDumpPath + "/objects/menu-item-3.png");
         assertFileDoesNotExist(pageDumpPath + "/objects/big-container.png");
+
+
+        assertFileExists(pageDumpPath + "/page.json");
+        assertFileExists(pageDumpPath + "/page.html");
+        assertFileExists(pageDumpPath + "/jquery-1.11.2.min.js");
+        assertFileExists(pageDumpPath + "/galen-pagedump.js");
+        assertFileExists(pageDumpPath + "/galen-pagedump.css");
     }
 
+    @Test
+    public void dumpPage_shouldOnlyStoreScreenshots_withoutHtmlReport() throws IOException {
+        String pageDumpPath = Files.createTempDir().getAbsolutePath() + "/pagedump";
+
+        WebDriver driver = new MockedDriver();
+        driver.get("/mocks/pages/galen4j-pagedump.json");
+        Galen.dumpPage(driver, "test page", "/specs/galen4j/pagedump.spec", pageDumpPath, 80, 80, true);
+
+        assertFileExists(pageDumpPath + "/objects/button-save.png");
+        assertFileDoesNotExist(pageDumpPath + "/objects/name-textfield.png");
+        assertFileExists(pageDumpPath + "/objects/menu-item-1.png");
+        assertFileExists(pageDumpPath + "/objects/menu-item-2.png");
+        assertFileExists(pageDumpPath + "/objects/menu-item-3.png");
+        assertFileDoesNotExist(pageDumpPath + "/objects/big-container.png");
+
+        assertFileDoesNotExist(pageDumpPath + "/page.json");
+        assertFileDoesNotExist(pageDumpPath + "/page.html");
+        assertFileDoesNotExist(pageDumpPath + "/jquery-1.11.2.min.js");
+        assertFileDoesNotExist(pageDumpPath + "/galen-pagedump.js");
+        assertFileDoesNotExist(pageDumpPath + "/galen-pagedump.css");
+    }
 
 
     private void assertJSONContent(String pathForRealContent, String pathForExpectedContent) throws IOException {
