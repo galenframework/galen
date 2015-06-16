@@ -63,6 +63,7 @@ public class GalenUtils {
             "window.screen.deviceXDPI / window.screen.logicalXDPI; " +
             "var pr = window.devicePixelRatio; if (pr != undefined && pr != null) return pr; else return 1.0;";
 
+    public static final int ZERO_WIDTH_SPACE_CHAR = 65279;
 
     public static boolean isUrl(String url) {
         if (url == null) {
@@ -423,4 +424,18 @@ public class GalenUtils {
         return "";
     }
 
+    public static String removeNonPrintableControlSymbols(String line) {
+        StringBuilder builder = new StringBuilder();
+
+        char ch;
+        for (int i = 0; i < line.length(); i++) {
+            ch = line.charAt(i);
+
+            if (ch >= 32 && ch < ZERO_WIDTH_SPACE_CHAR || ch == 9) {
+                builder.append(ch);
+            }
+
+        }
+        return builder.toString();
+    }
 }

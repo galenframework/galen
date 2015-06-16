@@ -30,6 +30,8 @@ import net.mindengine.galen.parser.SyntaxException;
 import net.mindengine.galen.parser.VarsContext;
 import net.mindengine.galen.tests.GalenBasicTest;
 
+import static net.mindengine.galen.utils.GalenUtils.removeNonPrintableControlSymbols;
+
 public class GalenSuiteLineProcessor {
 
     private RootNode rootNode = new RootNode();
@@ -192,6 +194,8 @@ public class GalenSuiteLineProcessor {
         for (int i=0; i<line.length(); i++) {
             if (line.charAt(i) == ' ') {
                 spacesCount++;
+            } else if (line.charAt(i) == '\t') {
+                spacesCount += 4;
             }
             else {
                 return spacesCount;
@@ -229,9 +233,11 @@ public class GalenSuiteLineProcessor {
         int lineNumber = 0;
         while(line != null){
             lineNumber++;
+
+            line = removeNonPrintableControlSymbols(line);
             processLine(line, lineNumber);
             line = bufferedReader.readLine();
         }
     }
-    
+
 }
