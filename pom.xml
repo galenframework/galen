@@ -342,7 +342,7 @@
 
     <!-- VERSION NUMBERS -->
     <commons-io.version>2.4</commons-io.version>
-    <selenium.version>2.45.0</selenium.version>
+    <selenium.version>2.46.0</selenium.version>
     <phantomjsdriver.version>1.2.1</phantomjsdriver.version>
     <slf4j.version>1.7.10</slf4j.version>
     <!-- testing libs -->
