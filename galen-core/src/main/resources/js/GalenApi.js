@@ -15,7 +15,7 @@
  * ******************************************************************************/
 
 
-/*global GalenJsApi, GalenUtils, TestSession, System, Galen*/
+/*global GalenJsApi, GalenUtils, TestSession, System, Galen, GalenCore, logged*/
 /*jslint nomen: true*/
 
 (function (exports) {
@@ -112,16 +112,6 @@
         GalenJsApi.checkLayout(driver, pageSpecFile, includedTags, excludedTags, properties, screenshotFile, jsVariables);
     }
 
-
-    function logged(title, callback) {
-        var report = TestSession.current().getReport(),
-            result;
-        report.sectionStart(title);
-        result = callback(report);
-        report.sectionEnd();
-        return result;
-    }
-
     function takeScreenshot(driver) {
         return GalenUtils.takeScreenshot(driver);
     }
@@ -195,7 +185,6 @@
 
     exports.createDriver = createDriver;
     exports.createGridDriver = createGridDriver;
-    exports.logged = logged;
     exports.checkLayout = checkLayout;
     exports.session = session;
     exports.takeScreenshot = takeScreenshot;

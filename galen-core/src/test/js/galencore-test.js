@@ -1,6 +1,21 @@
 var _ = require("./../../main/resources/js/GalenCore.js"),
     assertThat = require("./assertThat.js").assertThat,
-    assertError = require("./assertThat.js").assertError;
+    assertError = require("./assertThat.js").assertError,
+    AssertEvents = require("./events.js").AssertEvents;
+
+// Mocking the TestSession
+TestSession = {
+    current: function() {
+        return {
+            getReport: function() {
+                return {
+                    sectionStart: AssertEvents.registerFunction("TestSession.current().getReport().sectionStart", 1),
+                    sectionEnd: AssertEvents.registerFunction("TestSession.current().getReport().sectionEnd", 0)
+                };
+            }
+        }
+    }
+};
 
 //mocking GalenJsTest
 GalenTest = function(jsObject) {
@@ -559,4 +574,52 @@ describe("GalenCore", function () {
             ]);
         });
     })
+
+    describe("#logged", function () {
+        it("should create a structured reporting", function () {
+            AssertEvents.assert(function () {
+                _.logged("Section A", function () {
+                    _.logged("Section B", function () {
+
+                    })
+                });
+            }).shouldBe([ {
+                name: "TestSession.current().getReport().sectionStart",
+                args: ["Section A"]
+            }, {
+                name: "TestSession.current().getReport().sectionStart",
+                args: ["Section B"]
+            }, {
+                name: "TestSession.current().getReport().sectionEnd",
+                args: []
+            }, {
+                name: "TestSession.current().getReport().sectionEnd",
+                args: []
+            }]);
+        });
+    });
+
+    describe("#loggedFunction", function () {
+        it("should create a function that is based on logged function", function () {
+            AssertEvents.assert(function () {
+                var lf = _.loggedFunction("Login as ${_1.email} with password ${_1.password} on ${_2} env", function (user, env) {
+                    AssertEvents.say("Function was called with", [user, env]);
+                })
+
+                lf({
+                    email: "test@example.com",
+                    password: "123qwe"
+                }, "sandbox")
+            }).shouldBe([ {
+                name: "TestSession.current().getReport().sectionStart",
+                args: ["Login as test@example.com with password 123qwe on sandbox env"]
+            }, {
+                name: "Function was called with",
+                args: [{email: "test@example.com", password: "123qwe"}, "sandbox"]
+            }, {
+                name: "TestSession.current().getReport().sectionEnd",
+                args: []
+            }]);
+        });
+    });
 });

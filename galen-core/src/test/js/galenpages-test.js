@@ -4,7 +4,8 @@ var assert = require("assert"),
     $page = require("./../../main/resources/js/GalenPages").$page,
     $list = require("./../../main/resources/js/GalenPages").$list,
     assertThat = require("./assertThat.js").assertThat,
-    assertError = require("./assertThat.js").assertError;
+    assertError = require("./assertThat.js").assertError,
+    AssertEvents = require("./events.js").AssertEvents;
 
 var dummyDriver = {};
 
@@ -30,6 +31,27 @@ Thread = {
     }
 };
 
+// Mocking the TestSession
+TestSession = {
+    current: function() {
+        return {
+            getReport: function() {
+                return {
+                    sectionStart: AssertEvents.registerFunction("TestSession.current().getReport().sectionStart", 1),
+                    sectionEnd: AssertEvents.registerFunction("TestSession.current().getReport().sectionEnd", 0),
+                    info: function (name) {
+                        AssertEvents.say("report.info()", [name]);
+                        return {
+                            withDetails: function (details) {
+                                AssertEvents.say("report.info().withDetails()", [details]);
+                            }
+                        };
+                    }
+                };
+            }
+        }
+    }
+};
 
 /*
  * Mocking java list
@@ -146,26 +168,6 @@ function RecordingWebElement(locator) {
         return new RecordingWebElement(locator);
     }
 }
-
-TestSession =  {
-    data: [],
-    current: function () {
-        return this;
-    },
-    getReport: function () {
-        return {
-            info: function (name) {
-                var entry = {name: name};
-                TestSession.data.push(entry);
-                return {
-                    withDetails: function (details) {
-                        entry.details = details;
-                    }
-                };
-            }
-        }
-    }
-};
 
 
 describe("GalenPages", function (){
@@ -408,25 +410,29 @@ describe("GalenPages", function (){
             var page = new GalenPages.Page(driver, "some page", {someField: ".some-field"});
 
             GalenPages.settings.allowReporting = true;
-            TestSession.data = [];
 
-            page.someField.click();
-            page.someField.typeText("Some text");
-            page.someField.clear();
-            page.someField.isDisplayed();
-            page.someField.getWebElement();
-            page.someField.isEnabled();
-            page.someField.attribute("someattr");
-            page.someField.cssValue("display");
-            page.someField.selectByValue("blahblah");
-            page.someField.selectByText("blahblah");
-
-            assertThat("TestSession report should be", TestSession.data).is([
-                {name: "Click someField on some page", details: "css: .some-field"},
-                {name: "Type \"Some text\" to someField on some page", details: "css: .some-field"},
-                {name: "Clear someField on some page", details: "css: .some-field"},
-                {name: "Select by value \"blahblah\" in someField on some page", details: "css: .some-field"},
-                {name: "Select by text \"blahblah\" in someField on some page", details: "css: .some-field"},
+            AssertEvents.assert(function () {
+                page.someField.click();
+                page.someField.typeText("Some text");
+                page.someField.clear();
+                page.someField.isDisplayed();
+                page.someField.getWebElement();
+                page.someField.isEnabled();
+                page.someField.attribute("someattr");
+                page.someField.cssValue("display");
+                page.someField.selectByValue("blahblah");
+                page.someField.selectByText("blahblah");
+            }).shouldBe([
+                {name: "report.info()", args: ["Click someField on some page"]},
+                {name: "report.info().withDetails()", args: ["css: .some-field"]},
+                {name: "report.info()", args: ["Type \"Some text\" to someField on some page"]},
+                {name: "report.info().withDetails()", args: ["css: .some-field"]},
+                {name: "report.info()", args: ["Clear someField on some page"]},
+                {name: "report.info().withDetails()", args: ["css: .some-field"]},
+                {name: "report.info()", args: ["Select by value \"blahblah\" in someField on some page"]},
+                {name: "report.info().withDetails()", args: ["css: .some-field"]},
+                {name: "report.info()", args: ["Select by text \"blahblah\" in someField on some page"]},
+                {name: "report.info().withDetails()", args: ["css: .some-field"]},
             ]);
         });
 
@@ -437,18 +443,18 @@ describe("GalenPages", function (){
             GalenPages.settings.allowReporting = false;
             TestSession.data = [];
 
-            page.someField.click();
-            page.someField.typeText("Some text");
-            page.someField.clear();
-            page.someField.isDisplayed();
-            page.someField.getWebElement();
-            page.someField.isEnabled();
-            page.someField.attribute("someattr");
-            page.someField.cssValue("display");
-            page.someField.selectByValue("blahblah");
-            page.someField.selectByText("blahblah");
-
-            assertThat("TestSession report should be", TestSession.data).is([]);
+            AssertEvents.assert(function () {
+                page.someField.click();
+                page.someField.typeText("Some text");
+                page.someField.clear();
+                page.someField.isDisplayed();
+                page.someField.getWebElement();
+                page.someField.isEnabled();
+                page.someField.attribute("someattr");
+                page.someField.cssValue("display");
+                page.someField.selectByValue("blahblah");
+                page.someField.selectByText("blahblah");
+            }).shouldBe([]);
         });
 
         it("should handle NoSuchElementException from java", function () {

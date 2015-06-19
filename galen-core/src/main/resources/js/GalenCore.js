@@ -17,7 +17,7 @@
 
 
 /*jslint nomen: true*/
-/*global _galenCore, GalenTest, TestSuiteEvent, TestEvent, TestFilterEvent, TestRetryEvent*/
+/*global _galenCore, GalenTest, TestSuiteEvent, TestEvent, TestFilterEvent, TestRetryEvent, TestSession*/
 
 (function (exports) {
     "use strict";
@@ -65,6 +65,8 @@
     }
 
     var GalenCore = {
+        _invokeFunc: invokeFunc,
+
         settings: {
             parameterization: {
                 stackBackwards: false
@@ -195,42 +197,37 @@
             }
             return "";
         },
-        processTestName: function (name) {
-            var parameters = this.parametersStack.last(),
-                text = "",
+        processExpression: function (name, expressionCallback) {
+            var text = "",
                 processing = true,
                 id = 0,
                 varName = "",
                 // 0 - appending to text, 1 - appending to varName
                 state = 0,
                 sym;
-            if (parameters !== null) {
-                while (processing) {
-                    sym = name.charAt(id);
-                    if (sym === "$" && id < name.length - 1 && name.charAt(id + 1) === "{") {
-                        varName = "";
-                        id += 1;
-                        state = 1;
-                    } else if (state === 1 && name.charAt(id) === "}") {
-                        state = 0;
-                        if (varName.length > 0) {
-                            text = text + GalenCore.processVariable(varName);
-                        }
-                    } else {
-                        if (state === 0) {
-                            text = text + sym;
-                        } else {
-                            varName = varName + sym;
-                        }
-                    }
-
+            while (processing) {
+                sym = name.charAt(id);
+                if (sym === "$" && id < name.length - 1 && name.charAt(id + 1) === "{") {
+                    varName = "";
                     id += 1;
-                    processing = (id < name.length);
+                    state = 1;
+                } else if (state === 1 && name.charAt(id) === "}") {
+                    state = 0;
+                    if (varName.length > 0) {
+                        text = text + expressionCallback(varName);
+                    }
+                } else {
+                    if (state === 0) {
+                        text = text + sym;
+                    } else {
+                        varName = varName + sym;
+                    }
                 }
 
-                return text;
+                id += 1;
+                processing = (id < name.length);
             }
-            return name;
+            return text;
         }
     };
 
@@ -241,7 +238,7 @@
             callbacks = [callback];
         }
         aTest = {
-            testName: GalenCore.processTestName(name),
+            testName: GalenCore.processExpression(name, GalenCore.processVariable),
             callbacks: callbacks,
             arguments: GalenCore.parametersStack.fetchAll(),
             data: GalenCore.futureData.fetchAll(),
@@ -418,6 +415,36 @@
         }));
     }
 
+    function logged(title, callback) {
+        var report = TestSession.current().getReport(),
+            result;
+        report.sectionStart(title);
+        result = callback(report);
+        report.sectionEnd();
+        return result;
+    }
+
+    /*jslint unparam: true*/
+    function loggedFunction(title, callback) {
+        return function (_1, _2, _3, _4, _5, _6, _7, _8, _9, _10, _11, _12, _13, _14, _15, _16) {
+            var args = arguments,
+                that = this,
+                convertedTitle = GalenCore.processExpression(title, function (expressionText) {
+                    try {
+                        /*jslint evil:true */
+                        return eval(expressionText);
+                    } catch (ex) {
+                        return "";
+                    }
+                });
+
+            logged(convertedTitle, function () {
+                GalenCore._invokeFunc(that, args, callback);
+            });
+        };
+    }
+    /*jslint unparam: false*/
+
     exports.test = test;
     exports.forAll = forAll;
     exports.forOnly = forOnly;
@@ -431,4 +458,6 @@
     exports.testFilter = testFilter;
     exports.testRetry = testRetry;
     exports.grouped = grouped;
+    exports.logged = logged;
+    exports.loggedFunction = loggedFunction;
 }(this));
