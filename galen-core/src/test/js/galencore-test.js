@@ -601,12 +601,14 @@ describe("GalenCore", function () {
 
     describe("#loggedFunction", function () {
         it("should create a function that is based on logged function", function () {
+            var result = null;
             AssertEvents.assert(function () {
                 var lf = _.loggedFunction("Login as ${_1.email} with password ${_1.password} on ${_2} env", function (user, env) {
                     AssertEvents.say("Function was called with", [user, env]);
-                })
+                    return "returned value";
+                });
 
-                lf({
+                result = lf({
                     email: "test@example.com",
                     password: "123qwe"
                 }, "sandbox")
@@ -620,6 +622,9 @@ describe("GalenCore", function () {
                 name: "TestSession.current().getReport().sectionEnd",
                 args: []
             }]);
+
+            assertThat("Returned result from loggedFunction should be", result)
+                .is("returned value");
         });
     });
 });

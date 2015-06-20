@@ -438,8 +438,9 @@
                     }
                 });
 
-            logged(convertedTitle, function () {
-                GalenCore._invokeFunc(that, args, callback);
+
+            return logged(convertedTitle, function () {
+                return GalenCore._invokeFunc(that, args, callback);
             });
         };
     }
