@@ -13,7 +13,7 @@
 * See the License for the specific language governing permissions and
 * limitations under the License.
 ******************************************************************************/
-package net.mindengine.galen.api;
+package net.mindengine.galen.support;
 
 import net.mindengine.galen.reports.GalenTestInfo;
 import net.mindengine.galen.reports.TestReport;

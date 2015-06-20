@@ -2,11 +2,10 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <groupId>net.mindengine</groupId>
-  <artifactId>galen-junit</artifactId>
+  <artifactId>galen-java-support</artifactId>
   <version>1.6.5-SNAPSHOT</version>
-  <name>Galen Framework Junit Integration</name>
+  <name>Galen Framework Support for Java Test Frameworks</name>
   <packaging>jar</packaging>
-  <description>Running integration tests for galen</description>
   <url>http://galenframework.com</url>
 
   <parent>
@@ -15,8 +14,19 @@
     <version>1.6.5-SNAPSHOT</version>
   </parent>
 
-
   <dependencies>
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>${junit.version}</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.testng</groupId>
+      <artifactId>testng</artifactId>
+      <version>${testng.version}</version>
+      <scope>compile</scope>
+    </dependency>
     <dependency>
       <groupId>net.mindengine</groupId>
       <artifactId>galen-rainbow4j</artifactId>
@@ -30,12 +40,6 @@
     <dependency>
       <groupId>org.slf4j</groupId>
       <artifactId>slf4j-api</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>junit</groupId>
-      <artifactId>junit</artifactId>
-      <version>${junit.version}</version>
-      <scope>provided</scope>
     </dependency>
   </dependencies>
   <build>
@@ -161,6 +165,7 @@
       <distribution>manual</distribution>
     </license>
   </licenses>
+
   <developers>
     <developer>
       <id>ishubin</id>

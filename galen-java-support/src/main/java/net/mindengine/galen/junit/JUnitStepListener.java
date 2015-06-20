@@ -17,7 +17,7 @@ package net.mindengine.galen.junit;
 
 import java.util.List;
 
-import net.mindengine.galen.api.GalenReportsContainer;
+import net.mindengine.galen.support.GalenReportsContainer;
 import net.mindengine.galen.config.GalenConfig;
 import net.mindengine.galen.config.GalenProperty;
 import net.mindengine.galen.reports.GalenTestInfo;
