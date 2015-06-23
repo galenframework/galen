@@ -520,7 +520,7 @@ describe("GalenPages", function (){
 
             assertError(function (){
                 page.waitForIt();
-            }).is("timeout waiting for page elements:\n  - label to be displayed");
+            }).is("timeout waiting for some page elements:\n  - label to be displayed");
 
             page.label.counter.should.equal(11);
         });

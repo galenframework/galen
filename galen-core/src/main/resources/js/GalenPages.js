@@ -342,6 +342,7 @@
         if (this.primaryFields.length > 0) {
             var conditions = {},
                 i,
+                pageName = this.name,
                 applyConditionFunc = function () {
                     return this.field.exists() && this.field.isDisplayed();
                 };
@@ -353,7 +354,11 @@
                 };
             }
 
-            GalenPages.wait({time: this.waitTimeout, period: this.waitPeriod, message: "timeout waiting for page elements:"}).untilAll(conditions);
+            if (pageName === null || pageName === undefined) {
+                pageName = "page";
+            }
+
+            GalenPages.wait({time: this.waitTimeout, period: this.waitPeriod, message: "timeout waiting for " + pageName + " elements:"}).untilAll(conditions);
         } else {
             throw new Error("You can't wait for page as it does not have any fields defined");
         }
