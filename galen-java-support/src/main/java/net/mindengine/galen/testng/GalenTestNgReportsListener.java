@@ -30,9 +30,9 @@ import org.testng.IReporter;
 import org.testng.ISuite;
 import org.testng.xml.XmlSuite;
 
-public class GalenTestNgReportesListener implements IReporter {
+public class GalenTestNgReportsListener implements IReporter {
 
-    private static final Logger LOG = LoggerFactory.getLogger(GalenTestNgReportesListener.class);
+    private static final Logger LOG = LoggerFactory.getLogger(GalenTestNgReportsListener.class);
 
     @Override
     public void generateReport(List<XmlSuite> xmlSuites, List<ISuite> iSuites, String s) {
