@@ -71,11 +71,16 @@ public class GalenBasicTestRunner {
                 pageRunner.run(browser, pageTest);
             }
             catch (Exception ex) {
-                LOG.trace("Unkown error during test run", ex);
+                LOG.trace("Unknown error during test run", ex);
                 report.error(ex);
             }
-            
-            browser.quit();
+
+
+            try {
+                browser.quit();
+            } catch (Exception ex) {
+                LOG.error("Couldn't quit the browser properly", ex);
+            }
             report.sectionEnd();
         }
         
