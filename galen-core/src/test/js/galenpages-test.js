@@ -3,6 +3,7 @@ var assert = require("assert"),
     GalenPages = require("./../../main/resources/js/GalenPages").GalenPages,
     $page = require("./../../main/resources/js/GalenPages").$page,
     $list = require("./../../main/resources/js/GalenPages").$list,
+    $component = require("./../../main/resources/js/GalenPages").$component,
     assertThat = require("./assertThat.js").assertThat,
     assertError = require("./assertThat.js").assertError,
     AssertEvents = require("./events.js").AssertEvents;
@@ -74,45 +75,46 @@ JavaList.prototype.get = function (index) {
  */
 function RecordingDriver() {
     this.actions = [];
-    this.get = function (url) {
-        this.record("#get " + url);
-    };
-    this.record = function (action) {
-        this.actions[this.actions.length] = action;
-    };
-    this.clearActions = function () {
-        this.actions = [];
-    };
-    this.findElement = function (by) {
-        this.record("#findElement " + toJson(by));
-        return new RecordingWebElement(by);
-    };
-    this.findElements = function (by) {
-        this.record("#findElements" + toJson(by));
-        /*
-        always return two mocked elements so that we can test stuff related to $list
-         */
-        return new JavaList([
-            new RecordingWebElement(by),
-            new RecordingWebElement(by)
-        ]);
-    };
-    this.navigate = function () {
-        return new RecordingDriverNavigation(this);
-    },
-    this.getCurrentUrl = function () {
-        this.record("#getCurrentUrl");
-        return "http://fakeurl.fake";
-    },
-    this.getPageSource = function () {
-        this.record("#getPageSource");
-        return "<fake>page source</fake>";
-    },
-    this.getTitle = function () {
-        this.record("#getTitle");
-        return "Fake title";
-    }
 }
+RecordingDriver.prototype.get = function (url) {
+    this.record("#get " + url);
+};
+RecordingDriver.prototype.record = function (action) {
+    this.actions[this.actions.length] = action;
+};
+RecordingDriver.prototype.clearActions = function () {
+    this.actions = [];
+};
+RecordingDriver.prototype.findElement = function (by) {
+    this.record("#findElement " + toJson(by));
+    return new RecordingWebElement(by, this);
+};
+RecordingDriver.prototype.findElements = function (by) {
+    this.record("#findElements" + toJson(by));
+    /*
+    always return two mocked elements so that we can test stuff related to $list
+     */
+    return new JavaList([
+        new RecordingWebElement(by, this),
+        new RecordingWebElement(by, this)
+    ]);
+};
+RecordingDriver.prototype.navigate = function () {
+    return new RecordingDriverNavigation(this);
+},
+RecordingDriver.prototype.getCurrentUrl = function () {
+    this.record("#getCurrentUrl");
+    return "http://fakeurl.fake";
+},
+RecordingDriver.prototype.getPageSource = function () {
+    this.record("#getPageSource");
+    return "<fake>page source</fake>";
+},
+RecordingDriver.prototype.getTitle = function () {
+    this.record("#getTitle");
+    return "Fake title";
+};
+
 
 /*
  * Mocking a WebDriver.Navigatation
@@ -130,44 +132,51 @@ function RecordingDriverNavigation(driver) {
 /*
  * Mocking a WebElement
  */
-function RecordingWebElement(locator) {
+function RecordingWebElement(locator, driver) {
     this.actions = [];
+    this.driver = driver;
     this.locator = locator;
-    this.click = function () {
-        this.record("#click");
-    };
-    this.sendKeys = function (keys) {
-        this.record("#sendKeys " + keys);
-    };
-    this.clear = function () {
-        this.record("#clear");
-    };
-    this.isDisplayed = function () {
-        this.record("#isDisplayed");
-        return true;
-    };
-    this.isEnabled = function () {
-        this.record("#isEnabled");
-        return true;
-    };
-    this.getAttribute = function (attrName) {
-        this.record("#getAttribute " + attrName);
-        return "";
-    };
-    this.getCssValue = function (cssProperty) {
-        this.record("#getCssValue " + cssProperty);
-        return "";
-    };
-    this.record = function (action) {
-        this.actions[this.actions.length] = action;
-    };
-    this.clearActions = function () {
-        this.actions = [];
-    };
-    this.findElement = function (locator) {
-        return new RecordingWebElement(locator);
-    }
 }
+RecordingWebElement.prototype.click = function () {
+    this.record("#click");
+};
+RecordingWebElement.prototype.sendKeys = function (keys) {
+    this.record("#sendKeys " + keys);
+};
+RecordingWebElement.prototype.clear = function () {
+    this.record("#clear");
+};
+RecordingWebElement.prototype.isDisplayed = function () {
+    this.record("#isDisplayed");
+    return true;
+};
+RecordingWebElement.prototype.isEnabled = function () {
+    this.record("#isEnabled");
+    return true;
+};
+RecordingWebElement.prototype.getAttribute = function (attrName) {
+    this.record("#getAttribute " + attrName);
+    return "";
+};
+RecordingWebElement.prototype.getCssValue = function (cssProperty) {
+    this.record("#getCssValue " + cssProperty);
+    return "";
+};
+RecordingWebElement.prototype.getText = function () {
+    this.record("#getText");
+    return "";
+};
+RecordingWebElement.prototype.record = function (action) {
+    this.actions[this.actions.length] = action;
+    this.driver.record(action);
+};
+RecordingWebElement.prototype.clearActions = function () {
+    this.actions = [];
+};
+RecordingWebElement.prototype.findElement = function (locator) {
+    this.record("#findElement " + toJson(locator));
+    return new RecordingWebElement(locator, this.driver);
+};
 
 
 describe("GalenPages", function (){
@@ -392,7 +401,10 @@ describe("GalenPages", function (){
             page.someField.attribute("someattr");
             page.someField.cssValue("display");
 
-            assertThat("Performed actions on driver should be", driver.actions).is(["#findElement {\"t\":\"css\",\"v\":\".some-field\"}"]);
+            assertThat("Performed actions on driver should be", driver.actions).is([
+                "#findElement {\"t\":\"css\",\"v\":\".some-field\"}",
+                "#click","#sendKeys Some text","#clear","#isDisplayed","#isEnabled","#getAttribute someattr","#getCssValue display"
+            ]);
 
             assertThat("Performed actions on web element should be", page.someField.getWebElement().actions).is([
                 "#click",
@@ -578,6 +590,37 @@ describe("GalenPages", function (){
 
             assertThat("Should be able to retrieve a note", secondNote.getNoteContent())
                 .is("some fake content");
+        });
+    });
+
+    describe("$component", function () {
+        it("should generate a single component", function () {
+            var Popup = $page("Popup", {
+                title: ".title",
+                closeButton: ".close"
+            });
+
+            var MyPage = $page("My page", {
+                popup: $component(Popup, ".popup")
+            });
+
+            var driver = new RecordingDriver();
+            var myPage = new MyPage(driver);
+
+
+            myPage.popup.isDisplayed();
+            myPage.popup.click();
+            myPage.popup.title.click();
+            myPage.popup.title.getText();
+
+            assertThat("Actions on driver should be", driver.actions).is([
+                "#findElement {\"t\":\"css\",\"v\":\".popup\"}",
+                "#isDisplayed", "#click",
+                "#findElement {\"t\":\"css\",\"v\":\".popup\"}",
+                "#findElement {\"t\":\"css\",\"v\":\".title\"}",
+                "#click","#getText"
+            ]);
+
         });
     });
 

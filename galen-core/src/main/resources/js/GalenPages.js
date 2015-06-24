@@ -31,7 +31,8 @@
             allowReporting: true
         },
         Types: {
-            List: "__GALEN_PAGES_TYPE_LIST__"
+            List: "__GALEN_PAGES_TYPE_LIST__",
+            Component: "__GALEN_PAGES_TYPE_COMPONENT__"
         },
         report: function (name, details) {
             if (GalenPages.settings.allowReporting) {
@@ -273,8 +274,14 @@
                 if (typeof value === "string") {
                     this[property] = new GalenPages.PageElement(property + nameSuffix, GalenPages.parseLocator(value), this);
                     fieldNames.push(property);
-                } else if (value !== null && value.hasOwnProperty("__type__") && value.__type__ === GalenPages.Types.List) {
-                    this[property] = new GalenPages.PageElementList(property + nameSuffix, GalenPages.parseLocator(value.locator), value.elementConstructor, this);
+                } else if (value !== null && value.hasOwnProperty("__type__")) {
+                    if (value.__type__ === GalenPages.Types.List) {
+                        this[property] = new GalenPages.PageElementList(property + nameSuffix, GalenPages.parseLocator(value.locator), value.elementConstructor, this);
+                    } else if (value.__type__ === GalenPages.Types.Component) {
+                        this[property] = GalenPages.initPageElementComponent(property + nameSuffix, GalenPages.parseLocator(value.locator), value.elementConstructor, this, this.driver);
+                    } else {
+                        throw new Error("Unrecognized type: " + value.__type__);
+                    }
                 } else {
                     this[property] = value;
                 }
@@ -545,6 +552,45 @@
         throw new Error("Index out of bounds: " + index);
     };
 
+    GalenPages.initPageElementComponent = function (name, locator, elementConstructor, parent, driver) {
+
+        var subDriver = {
+                locator: locator,
+                webElement: null,
+                driver: driver,
+                getWebElement: function () {
+                    if (this.webElement === null) {
+                        this.webElement = this.driver.findElement(GalenPages.convertLocator(locator));
+                    }
+                    return this.webElement;
+                },
+                findElement: function (by) {
+                    return this.getWebElement().findElement(by);
+                },
+                findElements: function (by) {
+                    return this.getWebElement().findElements(by);
+                }
+            },
+            component = new elementConstructor(subDriver, {
+                name: name
+            }),
+            pageElement = new GalenPages.PageElement(name, locator, parent),
+            property;
+
+        for (property in pageElement) {
+            if (pageElement.hasOwnProperty(property)) {
+                component[property] = pageElement[property];
+            }
+        }
+
+        for (property in GalenPages.PageElement.prototype) {
+            if (GalenPages.PageElement.prototype.hasOwnProperty(property)) {
+                component[property] = GalenPages.PageElement.prototype[property];
+            }
+        }
+        return component;
+    };
+
     function insideFrame(driver, locator, callback) {
         var frameElement = driver.findElement(GalenPages.convertLocator(GalenPages.parseLocator(locator)));
         driver.switchTo().frame(frameElement);
@@ -571,8 +617,17 @@
         };
     }
 
+    function $component(elementConstructor, locator) {
+        return {
+            __type__: GalenPages.Types.Component,
+            elementConstructor: elementConstructor,
+            locator: locator
+        };
+    }
+
     exports.GalenPages = GalenPages;
     exports.insideFrame = insideFrame;
     exports.$page = $page;
     exports.$list = $list;
+    exports.$component = $component;
 }(this));
