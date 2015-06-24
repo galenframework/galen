@@ -16,6 +16,7 @@
 
 /*global GalenUtils, TestSession, By, Thread, Actions*/
 /*jslint nomen: true*/
+/*jslint newcap: true*/
 
 (function (exports) {
     "use strict";
