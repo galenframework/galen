@@ -67,13 +67,29 @@ public class ExpectColorRanges implements Expectation<List<ColorRange>> {
 
     private Color parseColor(String colorText) {
         if (colorText.startsWith("#")) {
-            return Color.decode(colorText);
+            if (colorText.length() == 4) {
+                return Color.decode(convertShortHandNotation(colorText));
+            } else {
+                return Color.decode(colorText);
+            }
         }
         
         if (colorWords.containsKey(colorText)){
             return colorWords.get(colorText);
         }
         else throw new SyntaxException("Unknown color: " + colorText);
+    }
+
+    private String convertShortHandNotation(String colorText) {
+        char r = colorText.charAt(1);
+        char g = colorText.charAt(2);
+        char b = colorText.charAt(3);
+
+        return new StringBuilder("#")
+                .append(r).append(r)
+                .append(g).append(g)
+                .append(b).append(b)
+                .toString();
     }
 
 }

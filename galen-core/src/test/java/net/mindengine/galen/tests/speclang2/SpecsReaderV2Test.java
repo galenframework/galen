@@ -854,6 +854,17 @@ public class SpecsReaderV2Test {
         assertThat(colors.get(0).getColor(), is(new Color(255, 0, 0)));
     }
 
+
+    @Test
+    public void shouldReadSpec_color_withShorthand_hexColorNotation() throws Exception {
+        SpecColorScheme spec = (SpecColorScheme)readSpec("color-scheme 40% #f3e");
+        List<ColorRange> colors = spec.getColorRanges();
+        assertThat(colors.size(), is(1));
+
+        assertThat(colors.get(0).getRange(), is(Range.exact(40)));
+        assertThat(colors.get(0).getColor(), is(new Color(255, 51, 238)));
+    }
+
     @Test
     public void shouldReadSpec_image_withMaxPercentageError() throws IOException {
         SpecImage spec = (SpecImage)readSpec("image file imgs/image.png, error 2.4%");
