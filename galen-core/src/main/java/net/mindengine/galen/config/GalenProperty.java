@@ -49,8 +49,9 @@ public enum GalenProperty {
     GALEN_BROWSERFACTORY_SELENIUM_GRID_URL("galen.browserFactory.selenium.grid.url", null),
     GALEN_BROWSERFACTORY_SELENIUM_GRID_BROWSER("galen.browserFactory.selenium.grid.browser", null),
     GALEN_BROWSERFACTORY_SELENIUM_GRID_BROWSERVERSION("galen.browserFactory.selenium.grid.browserVersion", null),
-    GALEN_BROWSERFACTORY_SELENIUM_GRID_PLATFORM("galen.browserFactory.selenium.grid.platform", null);
+    GALEN_BROWSERFACTORY_SELENIUM_GRID_PLATFORM("galen.browserFactory.selenium.grid.platform", null),
 
+    GALEN_BROWSER_VIEWPORT_ADJUSTSIZE("galen.browser.viewport.adjustSize", "false");
 
     protected final String propertyName;
     protected final String defaultValue;

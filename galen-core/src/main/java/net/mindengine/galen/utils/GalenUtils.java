@@ -438,4 +438,26 @@ public class GalenUtils {
         }
         return builder.toString();
     }
+
+    public static Dimension getViewportArea(WebDriver driver) {
+        List<Long> size = (List<Long>)((JavascriptExecutor)driver).executeScript("return [window.innerWidth" +
+                        "|| document.documentElement.clientWidth" +
+                        "|| document.body.clientWidth," +
+                        "window.innerHeight" +
+                        "|| document.documentElement.clientHeight" +
+                        "|| document.body.clientHeight];"
+        );
+        return new Dimension(size.get(0).intValue(), size.get(1).intValue());
+    }
+
+    public static void autoAdjustBrowserWindowSizeToFitViewport(WebDriver driver, int width, int height) {
+        driver.manage().window().setSize(new org.openqa.selenium.Dimension(width, height));
+        Dimension viewport = getViewportArea(driver);
+
+        if (viewport.getWidth() < width) {
+            int delta = (int) (width - viewport.getWidth());
+
+            driver.manage().window().setSize(new org.openqa.selenium.Dimension(width +  delta, height));
+        }
+    }
 }

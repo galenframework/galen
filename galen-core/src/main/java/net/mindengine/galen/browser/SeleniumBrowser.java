@@ -48,7 +48,11 @@ public class SeleniumBrowser implements Browser {
 
     @Override
     public void changeWindowSize(Dimension windowSize) {
-        driver.manage().window().setSize(new org.openqa.selenium.Dimension(windowSize.width, windowSize.height));
+        if (GalenConfig.getConfig().getBooleanProperty(GalenProperty.GALEN_BROWSER_VIEWPORT_ADJUSTSIZE)) {
+            GalenUtils.autoAdjustBrowserWindowSizeToFitViewport(driver, windowSize.width, windowSize.height);
+        } else {
+            driver.manage().window().setSize(new org.openqa.selenium.Dimension(windowSize.width, windowSize.height));
+        }
     }
 
     @Override
