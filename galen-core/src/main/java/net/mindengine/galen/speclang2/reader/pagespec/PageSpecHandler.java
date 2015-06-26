@@ -20,7 +20,7 @@ import net.mindengine.galen.page.AbsentPageElement;
 import net.mindengine.galen.page.Page;
 import net.mindengine.galen.page.PageElement;
 import net.mindengine.galen.parser.*;
-import net.mindengine.galen.speclang2.reader.specs.SpecReaderV2;
+import net.mindengine.galen.speclang2.reader.specs.SpecReader;
 import net.mindengine.galen.specs.page.Locator;
 import net.mindengine.galen.specs.page.PageSection;
 import net.mindengine.galen.specs.reader.page.PageSpec;
@@ -36,14 +36,12 @@ import java.util.regex.Pattern;
 
 import org.mozilla.javascript.*;
 
-import static java.util.Arrays.asList;
-
 
 public class PageSpecHandler implements VarsParserJsFunctions {
     private final PageSpec pageSpec;
     private final Page page;
     private final String contextPath;
-    private final SpecReaderV2 specReaderV2;
+    private final SpecReader specReader;
     private final GalenJsExecutor jsExecutor;
     private final VarsParser varsParser;
     private final List<String> tags;
@@ -64,7 +62,7 @@ public class PageSpecHandler implements VarsParserJsFunctions {
         this.tags = tags;
         this.excludedTags = excludedTags;
         this.contextPath = contextPath;
-        this.specReaderV2 = new SpecReaderV2();
+        this.specReader = new SpecReader();
         this.jsExecutor = createGalenJsExecutor(this);
         this.pageRules = new LinkedList<>();
         this.jsVariables = jsVariables;
@@ -87,7 +85,7 @@ public class PageSpecHandler implements VarsParserJsFunctions {
         this.pageSpec = copy.pageSpec;
         this.page = copy.page;
         this.contextPath = contextPath;
-        this.specReaderV2 = copy.specReaderV2;
+        this.specReader = copy.specReader;
         this.jsExecutor = copy.jsExecutor;
         this.varsParser = copy.varsParser;
         this.tags = copy.tags;
@@ -200,8 +198,8 @@ public class PageSpecHandler implements VarsParserJsFunctions {
         return null;
     }
 
-    public SpecReaderV2 getSpecReaderV2() {
-        return specReaderV2;
+    public SpecReader getSpecReader() {
+        return specReader;
     }
 
     public void addObjectToSpec(String objectName, Locator locator) {

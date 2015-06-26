@@ -138,7 +138,7 @@ public class PageSectionProcessor {
         objectSpecs.addSpecGroup(specGroup);
 
         for (StructNode specNode : specNodes) {
-            specGroup.addSpec(pageSpecHandler.getSpecReaderV2().read(specNode.getName(), pageSpecHandler.getContextPath()));
+            specGroup.addSpec(pageSpecHandler.getSpecReader().read(specNode.getName(), pageSpecHandler.getContextPath()));
         }
     }
 
@@ -233,7 +233,7 @@ public class PageSectionProcessor {
             }
 
 
-            Spec spec = pageSpecHandler.getSpecReaderV2().read(specText, pageSpecHandler.getContextPath());
+            Spec spec = pageSpecHandler.getSpecReader().read(specText, pageSpecHandler.getContextPath());
             spec.setOnlyWarn(onlyWarn);
             spec.setAlias(alias);
             if (specNode.getSource() != null) {

@@ -39,7 +39,7 @@ import static java.util.Arrays.asList;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 
-public class PageSpecReaderV2Test {
+public class PageSpecReaderTest {
 
     private static final Page NO_PAGE = null;
     private static final List<String> EMPTY_TAGS = Collections.emptyList();

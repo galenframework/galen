@@ -35,7 +35,7 @@ import junit.framework.Assert;
 import net.mindengine.galen.config.GalenConfig;
 import net.mindengine.galen.page.Rect;
 import net.mindengine.galen.parser.SyntaxException;
-import net.mindengine.galen.speclang2.reader.specs.SpecReaderV2;
+import net.mindengine.galen.speclang2.reader.specs.SpecReader;
 import net.mindengine.galen.specs.*;
 
 import net.mindengine.galen.specs.colors.ColorRange;
@@ -1052,11 +1052,11 @@ public class SpecsReaderV2Test {
     }
 
     private Spec readSpec(String specText) {
-        return new SpecReaderV2().read(specText);
+        return new SpecReader().read(specText);
     }
 
     private Spec readSpec(String specText, String contextPath) {
-        return new SpecReaderV2().read(specText, contextPath);
+        return new SpecReader().read(specText, contextPath);
     }
 
     private List<Side> sides(Side...sides) {

@@ -21,13 +21,12 @@ import net.mindengine.galen.specs.reader.StringCharReader;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Properties;
 
 
-public class SpecReaderV2 {
+public class SpecReader {
     public static Map<String, SpecProcessor> specProcessors = initSpecProcessors();
 
-    public SpecReaderV2() {
+    public SpecReader() {
         initSpecProcessors();
     }
 
