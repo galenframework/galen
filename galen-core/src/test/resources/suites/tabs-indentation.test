@@ -1,0 +1,7 @@
+
+@@ set
+	title Some test
+
+Home page ${title}
+	http://localhost:8080 1024x768
+		check some.spec

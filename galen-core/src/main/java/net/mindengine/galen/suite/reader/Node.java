@@ -35,7 +35,7 @@ public abstract class Node<T> {
     
     private int calculateSpacesIndentation() {
         int spaces = 0;
-        
+
         if (line != null && line.getText() != null) {
             for (int i=0; i<line.getText().length(); i++) {
                 if (line.getText().charAt(i) == ' ') {
@@ -93,7 +93,7 @@ public abstract class Node<T> {
     }
     
     public String getArguments() {
-        return line.getText();
+        return line.getText().trim();
     }
 
 
@@ -110,5 +110,5 @@ public abstract class Node<T> {
         this.spacesIndentation = spacesIndentation;
     }
 
-    
+
 }

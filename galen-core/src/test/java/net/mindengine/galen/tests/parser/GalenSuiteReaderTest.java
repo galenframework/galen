@@ -330,10 +330,19 @@ public class GalenSuiteReaderTest {
         assertThat(galenTests.get(4).getName(), is("Test on chrome browser"));
         assertThat(galenTests.get(4).getGroups(), contains("mobile", "tablet"));
     }
-    
-    
-    
-    
+
+    @Test
+    public void shouldRead_suiteWithTabsIndentations() throws IOException {
+        GalenSuiteReader reader = new GalenSuiteReader();
+        List<GalenBasicTest> galenTests = reader.read(new File(getClass().getResource("/suites/tabs-indentation.test").getFile()));
+
+        assertThat(galenTests.size(), is(1));
+        assertThat(galenTests.get(0).getName(), is("Home page Some test"));
+
+        assertThat(galenTests.get(0).getPageTests().get(0).getTitle(), is("http://localhost:8080 1024x768"));
+        assertThat(galenTests.get(0).getPageTests().get(0).getActions().get(0).getOriginalCommand(), is("check some.spec"));
+    }
+
     private List<GalenPageAction> actions(GalenPageAction...actions) {
         List<GalenPageAction> list = new LinkedList<GalenPageAction>();
         for (GalenPageAction action : actions) {
@@ -370,7 +379,7 @@ public class GalenSuiteReaderTest {
         return new Object[][]{
             {"/suites/suite-with-error-unknown-table-in-parameterized.test", 16, "Table with name \"some_unknown_table\" does not exist"},
             {"/suites/suite-with-error-page-error.test", 3, "Incorrect amount of arguments: selenium http://"},
-            {"/suites/suite-with-error-action-inject-error.test", 3, "Cannot parse:         inject"},
+            {"/suites/suite-with-error-action-inject-error.test", 3, "Cannot parse: inject"},
             {"/suites/suite-with-error-table-wrong-amount-of-columns-1.test", 5, "Amount of cells in a row is not the same in header"},
             {"/suites/suite-with-error-table-wrong-amount-of-columns-2.test", 4, "Incorrect format. Should end with '|'"},
             {"/suites/suite-with-error-table-wrong-amount-of-columns-3.test", 4, "Incorrect format. Should start with '|'"},
