@@ -98,7 +98,7 @@ public class PageSpecHandler implements VarsParserJsFunctions {
     private static GalenJsExecutor createGalenJsExecutor(final PageSpecHandler pageSpecHandler) {
         GalenJsExecutor js = new GalenJsExecutor();
         js.putObject("_pageSpecHandler", pageSpecHandler);
-        js.evalScriptFromLibrary("GalenSpecProcessingV2.js");
+        js.evalScriptFromLibrary("GalenSpecProcessing.js");
 
 
         js.getScope().defineProperty("isVisible", new BaseFunction() {
@@ -108,6 +108,16 @@ public class PageSpecHandler implements VarsParserJsFunctions {
                     throw new IllegalArgumentException("Should take string argument");
                 }
                 return pageSpecHandler.isVisible((String) args[0]);
+            }
+        }, ScriptableObject.DONTENUM);
+
+        js.getScope().defineProperty("isPresent", new BaseFunction() {
+            @Override
+            public Object call(org.mozilla.javascript.Context cx, Scriptable scope, Scriptable thisObj, Object[] args) {
+                if (args.length == 0 || !(args[0] instanceof String)) {
+                    throw new IllegalArgumentException("Should take string argument");
+                }
+                return pageSpecHandler.isPresent((String) args[0]);
             }
         }, ScriptableObject.DONTENUM);
 
@@ -172,6 +182,16 @@ public class PageSpecHandler implements VarsParserJsFunctions {
             }
         }
 
+        return Boolean.FALSE;
+    }
+
+    public Object isPresent(String objectName) {
+        for (Map.Entry<String, Locator> object : pageSpec.getObjects().entrySet()) {
+            if (object.getKey().equals(objectName)) {
+                PageElement pageElement = page.getObject(object.getKey(), object.getValue());
+                return pageElement != null && pageElement.isPresent();
+            }
+        }
         return Boolean.FALSE;
     }
 

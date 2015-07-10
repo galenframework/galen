@@ -21,7 +21,7 @@ import java.util.List;
 import net.mindengine.galen.browser.Browser;
 import net.mindengine.galen.page.Page;
 import net.mindengine.galen.page.PageElement;
-import net.mindengine.galen.speclang2.reader.pagespec.PageSpecReaderV2;
+import net.mindengine.galen.speclang2.reader.pagespec.PageSpecReader;
 import net.mindengine.galen.specs.SpecComponent;
 import net.mindengine.galen.specs.page.Locator;
 import net.mindengine.galen.specs.reader.page.PageSpec;
@@ -104,7 +104,7 @@ public class SpecValidationComponent extends SpecValidation<SpecComponent> {
 
     private List<ValidationResult> checkInsidePage(Browser browser, Page page, SpecComponent spec,
                                                    SectionFilter sectionFilter, ValidationListener validationListener) {
-        PageSpecReaderV2 pageSpecReader = new PageSpecReaderV2();
+        PageSpecReader pageSpecReader = new PageSpecReader();
 
         PageSpec componentPageSpec;
         try {

@@ -22,7 +22,7 @@ import net.mindengine.galen.page.PageElement;
 import net.mindengine.galen.page.Rect;
 import net.mindengine.galen.reports.LayoutReportListener;
 import net.mindengine.galen.reports.model.LayoutReport;
-import net.mindengine.galen.speclang2.reader.pagespec.PageSpecReaderV2;
+import net.mindengine.galen.speclang2.reader.pagespec.PageSpecReader;
 import net.mindengine.galen.specs.reader.page.PageSpec;
 import net.mindengine.galen.specs.reader.page.SectionFilter;
 import net.mindengine.galen.validation.*;
@@ -59,7 +59,7 @@ public class Galen {
                                            List<String> includedTags, List<String> excludedTags,
                                            Properties properties, Map<String, Object> jsVariables,
                                            File screenshotFile, ValidationListener validationListener) throws IOException {
-        PageSpecReaderV2 reader = new PageSpecReaderV2();
+        PageSpecReader reader = new PageSpecReader();
         PageSpec pageSpec = reader.read(specPath, browser.getPage(), includedTags, excludedTags, properties, jsVariables);
         return checkLayout(browser, pageSpec, includedTags, excludedTags, screenshotFile, validationListener);
     }
@@ -156,7 +156,7 @@ public class Galen {
         dumpPage(browser, pageName, specPath, pageDumpPath, maxWidth, maxHeight, onlyImages, new Properties(), jsVariables);
     }
     public static void dumpPage(Browser browser, String pageName, String specPath, String pageDumpPath, Integer maxWidth, Integer maxHeight, Boolean onlyImages, Properties properties, Map<String, Object> jsVariables) throws IOException {
-        PageSpecReaderV2 reader = new PageSpecReaderV2();
+        PageSpecReader reader = new PageSpecReader();
 
         PageSpec pageSpec = reader.read(specPath, browser.getPage(), EMPTY_TAGS, EMPTY_TAGS, properties, jsVariables);
         dumpPage(browser, pageName, pageSpec, new File(pageDumpPath), maxWidth, maxHeight, onlyImages);

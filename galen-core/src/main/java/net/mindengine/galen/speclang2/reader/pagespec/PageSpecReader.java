@@ -30,7 +30,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
-public class PageSpecReaderV2 {
+public class PageSpecReader {
 
     public PageSpec read(String path, Page page,
                          List<String> tags, List<String> excludedTags,

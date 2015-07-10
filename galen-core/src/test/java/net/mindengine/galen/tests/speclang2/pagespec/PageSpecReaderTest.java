@@ -23,7 +23,7 @@ import net.mindengine.galen.components.validation.MockedPageElement;
 import net.mindengine.galen.page.Page;
 import net.mindengine.galen.page.PageElement;
 import net.mindengine.galen.parser.FileSyntaxException;
-import net.mindengine.galen.speclang2.reader.pagespec.PageSpecReaderV2;
+import net.mindengine.galen.speclang2.reader.pagespec.PageSpecReader;
 import net.mindengine.galen.specs.page.CorrectionsRect;
 import net.mindengine.galen.specs.page.Locator;
 import net.mindengine.galen.specs.page.ObjectSpecs;
@@ -511,7 +511,7 @@ public class PageSpecReaderTest {
     public void shouldAllow_toPassProperties() throws IOException {
         Properties properties = new Properties();
         properties.put("custom.user.name", "John");
-        PageSpec pageSpec = new PageSpecReaderV2().read("speclang2/properties.gspec", NO_PAGE, EMPTY_TAGS, EMPTY_TAGS, properties, NO_VARS);
+        PageSpec pageSpec = new PageSpecReader().read("speclang2/properties.gspec", NO_PAGE, EMPTY_TAGS, EMPTY_TAGS, properties, NO_VARS);
 
         assertThat(pageSpec.getSections().get(0).getName(), is("Main section for user John"));
         assertThat(pageSpec.getSections().get(0).getObjects().get(0).getSpecs().get(0).getOriginalText(),
@@ -578,7 +578,7 @@ public class PageSpecReaderTest {
 
     @Test
     public void shouldAllow_toPassCustomJsObjects() throws  IOException {
-        PageSpec pageSpec = new PageSpecReaderV2().read(
+        PageSpec pageSpec = new PageSpecReader().read(
                 "speclang2/custom-js-variables.gspec",
                 NO_PAGE,
                 EMPTY_TAGS, EMPTY_TAGS,
@@ -597,7 +597,7 @@ public class PageSpecReaderTest {
     }
 
     private PageSpec readPageSpec(String resource, Page page, List<String> tags, List<String> excludedTags) throws IOException {
-        return new PageSpecReaderV2().read(resource, page, tags, excludedTags, NO_PROPERTIES, NO_VARS);
+        return new PageSpecReader().read(resource, page, tags, excludedTags, NO_PROPERTIES, NO_VARS);
     }
 
     private MockedPageElement element(int left, int top, int width, int height) {
