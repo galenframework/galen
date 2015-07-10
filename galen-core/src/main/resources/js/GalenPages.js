@@ -611,6 +611,14 @@
     }
 
     function $list(elementConstructor, locator) {
+        if (typeof elementConstructor !== "function") {
+            throw new Error("First argument is not a function");
+        }
+
+        if (typeof locator !== "string") {
+            throw new Error("Second argument is not a string");
+        }
+
         return {
             __type__: GalenPages.Types.List,
             elementConstructor: elementConstructor,
