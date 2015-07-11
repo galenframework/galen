@@ -125,6 +125,18 @@ public class Galen {
 
     public static LayoutReport checkLayout(WebDriver driver, String specPath,
                                            List<String> includedTags, List<String> excludedTags,
+                                           Properties properties) throws IOException {
+        return checkLayout(new SeleniumBrowser(driver), specPath, includedTags, excludedTags, properties, EMPTY_VARS, EMPTY_SCREENSHOT_FILE);
+    }
+
+    public static LayoutReport checkLayout(WebDriver driver, String specPath,
+                                           List<String> includedTags, List<String> excludedTags,
+                                           Properties properties, Map<String, Object> jsVariables) throws IOException {
+        return checkLayout(new SeleniumBrowser(driver), specPath, includedTags, excludedTags, properties, jsVariables, EMPTY_SCREENSHOT_FILE);
+    }
+
+    public static LayoutReport checkLayout(WebDriver driver, String specPath,
+                                           List<String> includedTags, List<String> excludedTags,
                                            Properties properties, Map<String, Object> jsVariables,
                                            File screenshotFile) throws IOException {
         return checkLayout(new SeleniumBrowser(driver), specPath, includedTags, excludedTags, properties, jsVariables, screenshotFile);

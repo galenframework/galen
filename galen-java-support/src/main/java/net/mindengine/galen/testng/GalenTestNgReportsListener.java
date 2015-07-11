@@ -46,11 +46,6 @@ public class GalenTestNgReportsListener implements IReporter {
         }
     }
 
-    /**
-     * Removes temporary test data
-     * 
-     * @param testInfos
-     */
     private void cleanData(List<GalenTestInfo> testInfos) {
         for (GalenTestInfo testInfo : testInfos) {
             if (testInfo.getReport() != null) {
