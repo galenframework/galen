@@ -81,18 +81,11 @@ public class ExpectRange implements Expectation<Range>{
 
     private Range createRange(RangeValue firstValue, RangeType rangeType) {
         if (rangeType == RangeType.APPROXIMATE) {
-            Double delta = 0.0;
-            int approximationConfig = GalenConfig.getConfig().getRangeApproximation();
+            Double delta = (double) GalenConfig.getConfig().getRangeApproximation();
 
             Double firstValueAsDouble = firstValue.asDouble();
             int precision = firstValue.getPrecision();
 
-            if (Math.abs(firstValueAsDouble) > 100) {
-                delta = ((double)approximationConfig) * Math.abs(firstValueAsDouble) / 100.0;
-            }
-            else {
-                delta = (double) approximationConfig;
-            }
             return Range.between(new RangeValue(firstValueAsDouble - delta, precision),
                     new RangeValue(firstValueAsDouble + delta, precision));
         }

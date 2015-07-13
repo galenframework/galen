@@ -105,7 +105,7 @@ public class ExpectationsTest {
            {"\t9\t\tpx", Range.exact(9)},
            {"-49px", Range.exact(-49)},
            {"~100px", Range.between(98, 102)},
-           {"~1000px", Range.between(980, 1020)},
+           {"~1000px", Range.between(998, 1002)},
            {"~1px", Range.between(-1, 3)},
            {"~0px", Range.between(-2, 2)},
            {" ~0px", Range.between(-2, 2)},
