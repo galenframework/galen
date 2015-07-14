@@ -57,7 +57,7 @@
             width 70 to 90 px
             aligned horizontally all cancel-button
 
-        cancel-button
+        cancel-button:
             width 80 to 100 px
             near login-button 3 to 8px right
 

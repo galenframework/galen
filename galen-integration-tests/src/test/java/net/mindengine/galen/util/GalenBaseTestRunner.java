@@ -17,16 +17,16 @@ package net.mindengine.galen.util;
 
 import static java.util.Arrays.asList;
 
+import java.awt.*;
 import java.io.File;
 import java.util.Arrays;
 import java.util.List;
 
+import com.google.common.io.Files;
 import net.mindengine.galen.GalenMain;
-import net.mindengine.galen.config.GalenConfig;
 import net.mindengine.galen.config.GalenProperty;
 import net.mindengine.galen.runner.GalenArguments;
 
-import org.openqa.selenium.Dimension;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.testng.annotations.DataProvider;
@@ -35,35 +35,38 @@ public abstract class GalenBaseTestRunner {
 
     private static final Logger LOG = LoggerFactory.getLogger("GalenBaseLayoutTests");
 
-    public static final TestDevice SMALL_PHONE = new TestDevice("small-phone", new Dimension(280, 400), asList("small-phone", "phone", "mobile"));
 
-    public static final TestDevice NORMAL_PHONE = new TestDevice("normal-phone", new Dimension(320, 450), asList("normal-phone", "phone", "mobile"));
+    public static final TestDevice MOBILE = new TestDevice("mobile", new Dimension(450, 800), asList("mobile"));
 
-    public static final TestDevice TABLET = new TestDevice("tablet", new Dimension(768, 1024), asList("tablet", "mobile"));
+    public static final TestDevice TABLET = new TestDevice("tablet", new Dimension(600, 800), asList("tablet"));
 
-    public static final TestDevice DESKTOP = new TestDevice("desktop", new Dimension(1024, 800), asList("desktop", "desktop"));
+    public static final TestDevice DESKTOP = new TestDevice("desktop", new Dimension(1100, 800), asList("desktop"));
 
-    public static final TestDevice FULLHD = new TestDevice("fullhd", new Dimension(1920, 1080), asList("fullhd", "desktop"));
-
-    public void verifyPage(final String uri, final TestDevice pDevice, final String specPath) throws Exception {
-        String projectPath = new File("").getAbsolutePath();
-        String completeUrl = uri.startsWith("http://") ? uri : "file://" + new File("").getAbsolutePath() + "/src/test/resources/" + uri;
+    public void verifyPage(String uri, TestDevice device, String specPath, File reportFolder) throws Exception {
+        String completeUrl = "file://" + getAbsolutePathToResource(uri);
         String defaultBrowser = System.getProperty(GalenProperty.GALEN_DEFAULT_BROWSER.name(), "firefox");
-        GalenConfig.getConfig().setProperty(GalenProperty.GALEN_DEFAULT_BROWSER, defaultBrowser);
+
         LOG.info("Opening url " + completeUrl + " in browser " + defaultBrowser);
-        new GalenMain().execute(new GalenArguments().withUrl(completeUrl).withPaths(Arrays.asList(specPath)).withAction("check")
-                .withIncludedTags(pDevice.getTags().toString()).withHtmlReport(projectPath + "/target/galen-html")
-                .withScreenSize(new java.awt.Dimension(pDevice.getScreenSize().getWidth(), pDevice.getScreenSize().getHeight())));
+
+        new GalenMain().execute(new GalenArguments()
+                .withAction("check")
+                .withUrl(completeUrl)
+                .withPaths(Arrays.asList(getAbsolutePathToResource(specPath)))
+                .withIncludedTags(device.getTags().toArray(new String[]{}))
+                .withHtmlReport(reportFolder.getAbsolutePath())
+                .withScreenSize(device.getScreenSize()));
+    }
+
+    protected String getAbsolutePathToResource(String uri) {
+        return new File(getClass().getResource(uri).getFile()).getAbsolutePath();
     }
 
     @DataProvider
     public Object[][] devices() {
-        return new Object[][] {// @formatter:off
-              { SMALL_PHONE },
-              { NORMAL_PHONE },
+        return new Object[][] {
+              { MOBILE },
               { TABLET },
-              { DESKTOP },
-              { FULLHD }, // @formatter:on
+              { DESKTOP }
         };
     }
 

@@ -26,7 +26,7 @@
 
         login-button:
             height ~ 45px
-            text is Login
+            text is "Login"
             above text-block-3 10 to 50px
 
 

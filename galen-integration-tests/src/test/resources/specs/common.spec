@@ -28,12 +28,12 @@
             width 900px
 
         header-text:
-            text is Sample Website for Galen Framework
+            text is "Sample Website for Galen Framework"
 
 
     @on mobile, tablet
         header-text:
-            text is Sample Website
+            text is "Sample Website"
 
 
 
@@ -60,12 +60,12 @@
 
         @forEach [menu-item-*] as menuItem, prev as previousMenuItem
             ${menuItem}:
-                near ${menuItem} 0 to 5px left
+                right-of ${previousMenuItem} 0 to 5px
                 aligned horizontally all ${previousMenuItem}
 
 
     @on mobile
-        menu-item-*
+        menu-item-* :
             width 48 to 50% of screen/width
 
         @for [ 1, 2 ] as index
