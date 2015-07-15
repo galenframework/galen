@@ -22,8 +22,10 @@ import static org.hamcrest.Matchers.*;
 import java.awt.Dimension;
 import java.io.File;
 import java.io.IOException;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 import net.mindengine.galen.browser.BrowserFactory;
 import net.mindengine.galen.browser.SeleniumGridBrowserFactory;
@@ -40,6 +42,7 @@ import org.testng.annotations.Test;
 public class GalenSuiteReaderTest {
 
     private static final List<String> EMPTY_TAGS = new LinkedList<String>();
+    private static final Map<String, Object> EMPTY_VARIABLES = Collections.emptyMap();
 
 
     @Test
@@ -62,12 +65,16 @@ public class GalenSuiteReaderTest {
                 assertThat(page.getScreenSize(), is(new Dimension(640, 480)));
                 
                 assertThat(page.getActions(), is(actions(GalenPageActions.injectJavascript("javascript.js"),
-                        GalenPageActions.check("page1.spec").withIncludedTags(asList("mobile", "tablet")).withExcludedTags(asList("nomobile")),
+                        GalenPageActions.check("page1.spec")
+                                .withIncludedTags(asList("mobile", "tablet"))
+                                .withExcludedTags(asList("nomobile"))
+                                .withJsVariables(EMPTY_VARIABLES),
                         GalenPageActions.injectJavascript("javascript2.js"),
                         GalenPageActions.runJavascript("selenium/loginToMyProfile.js").withArguments("{\"login\":\"user1\", \"password\": \"test123\"}"),
                         GalenPageActions.check("page1_1.spec")
                                 .withIncludedTags(asList("sometag"))
                                 .withExcludedTags(EMPTY_TAGS)
+                                .withJsVariables(EMPTY_VARIABLES)
                         )));
             }
             
@@ -80,10 +87,12 @@ public class GalenSuiteReaderTest {
 
                 assertThat(page.getActions(), is(actions(GalenPageActions.check("page2.spec")
                             .withIncludedTags(EMPTY_TAGS)
-                            .withExcludedTags(EMPTY_TAGS),
+                            .withExcludedTags(EMPTY_TAGS)
+                            .withJsVariables(EMPTY_VARIABLES),
                         GalenPageActions.check("page3.spec")
                             .withIncludedTags(EMPTY_TAGS)
-                            .withExcludedTags(EMPTY_TAGS))
+                            .withExcludedTags(EMPTY_TAGS)
+                            .withJsVariables(EMPTY_VARIABLES))
                 ));
             }
         }
@@ -101,6 +110,7 @@ public class GalenSuiteReaderTest {
             assertThat(page.getActions(), is(actions(GalenPageActions.check("page3.spec")
                     .withIncludedTags(EMPTY_TAGS)
                     .withExcludedTags(EMPTY_TAGS)
+                    .withJsVariables(EMPTY_VARIABLES)
             )));
         }
     }
@@ -121,7 +131,8 @@ public class GalenSuiteReaderTest {
         assertThat(pageActions.get(4), is((GalenPageAction)GalenPageActions.injectJavascript("script.js")));
         assertThat(pageActions.get(5), is((GalenPageAction)GalenPageActions.check("homepage.spec")
                 .withIncludedTags(EMPTY_TAGS)
-                .withExcludedTags(EMPTY_TAGS)));
+                .withExcludedTags(EMPTY_TAGS)
+                .withJsVariables(EMPTY_VARIABLES)));
         
     }
     
@@ -197,7 +208,10 @@ public class GalenSuiteReaderTest {
                 assertThat(page.getScreenSize(), is((Dimension)table[i][0]));
                 
                 assertThat(page.getActions(), is(actions(
-                        GalenPageActions.check("page1.spec").withIncludedTags((List<String>) table[i][1]).withExcludedTags((List<String>) table[i][3])
+                        GalenPageActions.check("page1.spec")
+                                .withIncludedTags((List<String>) table[i][1])
+                                .withExcludedTags((List<String>) table[i][3])
+                                .withJsVariables(EMPTY_VARIABLES)
                         )));
             }
         }
@@ -221,7 +235,10 @@ public class GalenSuiteReaderTest {
                 assertThat(page.getScreenSize(), is((Dimension)table[j][0]));
                 
                 assertThat(page.getActions(), is(actions(
-                        GalenPageActions.check("page1.spec").withIncludedTags((List<String>) table[j][1]).withExcludedTags((List<String>) table[j][3])
+                        GalenPageActions.check("page1.spec")
+                                .withIncludedTags((List<String>) table[j][1])
+                                .withExcludedTags((List<String>) table[j][3])
+                                .withJsVariables(EMPTY_VARIABLES)
                         )));
             }
         }
@@ -257,7 +274,10 @@ public class GalenSuiteReaderTest {
                 assertThat(page.getScreenSize(), is((Dimension)table[j][0]));
                 
                 assertThat(page.getActions(), is(actions(
-                        GalenPageActions.check("page1.spec").withIncludedTags((List<String>) table[j][1]).withExcludedTags((List<String>) table[j][3])
+                        GalenPageActions.check("page1.spec")
+                                .withIncludedTags((List<String>) table[j][1])
+                                .withExcludedTags((List<String>) table[j][3])
+                                .withJsVariables(EMPTY_VARIABLES)
                         )));
             }
         }

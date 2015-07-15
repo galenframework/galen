@@ -100,6 +100,7 @@ public class GalenPageActionCheck extends GalenPageAction {
             .append(specPath)
             .append(includedTags)
             .append(excludedTags)
+            .append(jsVariables)
             .toHashCode();
     }
     
@@ -118,6 +119,7 @@ public class GalenPageActionCheck extends GalenPageAction {
             .append(specPath, rhs.specPath)
             .append(includedTags, rhs.includedTags)
             .append(excludedTags, rhs.excludedTags)
+            .append(jsVariables, rhs.jsVariables)
             .isEquals();
     }
     
@@ -127,6 +129,7 @@ public class GalenPageActionCheck extends GalenPageAction {
             .append("specPath", specPath)
             .append("includedTags", includedTags)
             .append("excludedTags", excludedTags)
+            .append("jsVariables", jsVariables)
             .toString();
     }
 

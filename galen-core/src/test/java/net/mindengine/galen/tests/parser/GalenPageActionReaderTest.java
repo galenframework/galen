@@ -33,11 +33,13 @@ import org.testng.annotations.Test;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class GalenPageActionReaderTest {
 
 
     private static final List<String> EMPTY_TAGS = Collections.emptyList();
+    private static final Map<String, Object> EMPTY_VARIABLES = Collections.emptyMap();
 
     @Test(dataProvider="provideGoodSamples") public void shouldParse_action_successfully(String actionText, GalenPageAction expectedAction) {
         GalenPageAction realAction = GalenPageActionReader.readFrom(actionText);
@@ -58,15 +60,18 @@ public class GalenPageActionReaderTest {
             {"check page1.spec", new GalenPageActionCheck()
                     .withSpec("page1.spec")
                     .withIncludedTags(EMPTY_TAGS)
-                    .withExcludedTags(EMPTY_TAGS)},
+                    .withExcludedTags(EMPTY_TAGS)
+                    .withJsVariables(EMPTY_VARIABLES)},
             {"check page1.spec --include mobile --exclude debug", new GalenPageActionCheck()
                 .withSpec("page1.spec")
                 .withIncludedTags(asList("mobile"))
-                .withExcludedTags(asList("debug"))},
+                .withExcludedTags(asList("debug"))
+                .withJsVariables(EMPTY_VARIABLES)},
             {"check page1.spec --include mobile,tablet --exclude nomobile,debug", new GalenPageActionCheck()
                 .withSpec("page1.spec")
                 .withIncludedTags(asList("mobile", "tablet"))
-                .withExcludedTags(asList("nomobile", "debug"))},
+                .withExcludedTags(asList("nomobile", "debug"))
+                .withJsVariables(EMPTY_VARIABLES)},
             {"check page1.spec --VuserName John", new GalenPageActionCheck()
                     .withSpec("page1.spec")
                     .withIncludedTags(EMPTY_TAGS)
