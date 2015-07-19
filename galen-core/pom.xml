@@ -187,9 +187,6 @@
           <target>1.7</target>
         </configuration>
       </plugin>
-      <!-- <plugin> <artifactId>maven-assembly-plugin</artifactId> <configuration> <archive> <manifest> <mainClass>net.mindengine.galen.GalenMain</mainClass> <addDefaultImplementationEntries>true</addDefaultImplementationEntries> 
-        <addDefaultSpecificationEntries>true</addDefaultSpecificationEntries> </manifest> </archive> <finalName>galen</finalName> <descriptorRefs> <descriptorRef>jar-with-dependencies</descriptorRef> </descriptorRefs> 
-        </configuration> </plugin> -->
       <plugin>
         <groupId>org.jacoco</groupId>
         <artifactId>jacoco-maven-plugin</artifactId>

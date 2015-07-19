@@ -48,7 +48,7 @@
               <finalName>galen</finalName>
               <archive>
                 <manifest>
-                  <mainClass>net.mindengine.galen.GalenMain</mainClass>
+                  <mainClass>com.galenframework.GalenMain</mainClass>
                   <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
                   <addDefaultSpecificationEntries>true</addDefaultSpecificationEntries>
                 </manifest>

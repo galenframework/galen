@@ -1,4 +1,4 @@
-importClass(net.mindengine.galen.tests.integration.GalenPagesIT);
+importClass(com.galenframework.tests.integration.GalenPagesIT);
 
 var CommentComponent = $page("Comment", {
     userLink: "a.user",

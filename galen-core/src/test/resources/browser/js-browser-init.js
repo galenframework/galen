@@ -1,5 +1,5 @@
-importClass(net.mindengine.galen.components.MockedBrowser);
-importClass(net.mindengine.galen.components.validation.MockedPage);
+importClass(com.galenframework.components.MockedBrowser);
+importClass(com.galenframework.components.validation.MockedPage);
 importClass(java.awt.Dimension);
 
 

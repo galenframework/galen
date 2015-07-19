@@ -1,4 +1,4 @@
-importClass(net.mindengine.galen.components.JsTestRegistry);
+importClass(com.galenframework.components.JsTestRegistry);
 
 // At this point the following script should be ignored
 // as it was already loaded previously

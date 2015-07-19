@@ -1,4 +1,4 @@
-importClass(net.mindengine.galen.components.mocks.driver.MockedDriver);
+importClass(com.galenframework.components.mocks.driver.MockedDriver);
 
 test("Simple test", function () {
     var driver = new MockedDriver("/suites/custom-js-variables-for-checklayout/page-mock.json");

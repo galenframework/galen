@@ -1,4 +1,4 @@
-importClass(net.mindengine.galen.components.JsTestRegistry);
+importClass(com.galenframework.components.JsTestRegistry);
 
 
 test("Test number 2", function () {

@@ -1,4 +1,4 @@
-importClass(net.mindengine.galen.components.DummyDriver);
+importClass(com.galenframework.components.DummyDriver);
 
 var pageUrl = args[0];
 var pageSize = args[1];

@@ -1,4 +1,4 @@
-importClass(net.mindengine.galen.components.JsTestRegistry);
+importClass(com.galenframework.components.JsTestRegistry);
 JsTestRegistry.get().registerEvent("included.js was loaded");
 
 

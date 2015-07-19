@@ -1,9 +1,9 @@
 /** This script is used in PageSpecReader **/
 /*jslint nomen: true*/
-/*global importClass, net, PageRule, StructNode, _pageSpecHandler*/
+/*global importClass, com, PageRule, StructNode, _pageSpecHandler*/
 
-importClass(net.mindengine.galen.speclang2.reader.pagespec.PageRule);
-importClass(net.mindengine.galen.parser.StructNode);
+importClass(com.galenframework.speclang2.reader.pagespec.PageRule);
+importClass(com.galenframework.parser.StructNode);
 
 function _readDataFromProperties(properties) {
     "use strict";
