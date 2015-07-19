@@ -15,45 +15,71 @@ It has a special language to describe the layout of web page for different brows
 Here is a small example of basic syntax.
 
 ```
-# Objects definition
-=====================================
-header                  id  header
-menu                    css #menu
-content                 id  content
-side-panel              id  side-panel
-footer                  id  footer
-=====================================
+@objects
+    header                  id  header
+    menu                    css #menu
+    content                 id  content
+    side-panel              id  side-panel
+    footer                  id  footer
+
+= Main section =
+    @on *
+        header:
+            inside screen 0px top, 0px left, 0px right
+
+        menu:
+            inside screen 0px left right
+            below header 0px
+
+        content:
+            below menu 0px
+            inside screen 0px left
+
+    @on desktop
+        side-panel:
+            below menu 0px
+            inside screen 0px right
+            width 300px
+            near content 0px right
+
+    @on mobile
+        content, side-panel:
+            width 100% of screen/width
+
+        side-panel:
+            below content 0px
+```
 
 
-@ *
--------------------------------
-header
-    inside: screen 0px top, 0px left, 0px right
+And here is a more advanced spec:
+```
+# example of using custom rules (functions)
 
-menu
-    inside: screen 0px left right
-    below: header 0px
+@set userMargin 5 to 10 px
 
-content
-    below: menu 0px
-    inside:screen 0px left
+@objects
+    user-*      div.users-list .user
 
-@ desktop
---------------------------------
-side-panel
-    below: menu 0px
-    inside: screen 0px right
-    width: 300px
-    near: content 0px right
+@rule %{pattern} are below each other by %{distance} and aligned
+    @forEach [pattern] as object, prev as prevObject
+        ${object}:
+            below ${prevObject} ${distance}
+            aligned vertically all ${prevObject}
 
-@ mobile
---------------------------------
-content, side-panel
-    width: 100% of screen/width
+= Checking all users =
+    | user-* are below each other by ${userMargin} and aligned
+```
 
 
-side-panel
-    below: content 0px
+Conditional statements:
+```
+@objects
+    banner-container    #banner-container
+
+= Banner section =
+    @if ${isVisible("banner-container")}
+        banner-container:
+            image file imgs/banner.png, error 5%
 ```
 
 
@@ -63,7 +89,7 @@ Contributing
 ------------
 If you want to contribute to this project just look for current open issues. Please let know in the comments of the issue that you are going to pick it up because somebody could already work on it. In the end just send the pull request. By the way the feature that you are going to work on should not just solve your particular problem. It should be extendable and configurable. The github issues is the best place to debate on the feature and discuss how it should be implemented.
 
-All the work on the next version is performed in corresponding release branch (e.g. release-2.0). The master branch reflects the current live version. 
+All the work on the next version is performed in corresponding release branch (e.g. release-2.0). The master branch reflects the current live version. Most of the pull requests are accepted on release branch and not on master. If you think it is a crucial bugfix for current version, please consider asking in developers chat first.
 
 If you would like to make a change to the Galen Framework website (http://galenframework.com) you can do it here https://github.com/galenframework/galenframework.com
 
