@@ -4,6 +4,8 @@ import net.mindengine.galen.api.Galen;
 import net.mindengine.galen.reports.TestReport;
 import net.mindengine.galen.reports.model.LayoutReport;
 import net.mindengine.galen.support.GalenReportsContainer;
+import net.mindengine.galen.utils.GalenUtils;
+import org.openqa.selenium.Dimension;
 import org.openqa.selenium.WebDriver;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
@@ -36,6 +38,43 @@ public abstract class GalenTestNgTestBase {
             throw new RuntimeException("The report is not instantiated yet");
         }
         return report;
+    }
+
+
+    /**
+     * Loads the given url in the current driver for current test thread
+     * @param url The website url that should be loaded in the current driver
+     */
+    public void load(String url) {
+        getDriver().get(url);
+    }
+
+    /**
+     * Loads the given url in the current driver for current test thread and changes the browser window size
+     * @param url The website url that should be loaded in the current driver
+     * @param width The width of browser window
+     * @param height The height of browser window
+     */
+    public void load(String url, int width, int height) {
+        load(url);
+        resize(width, height);
+    }
+
+    /**
+     * Injects the given javaScript expression in current driver for current test thread
+     * @param javaScript A JavaScript code that should be executed in the current browser
+     */
+    public void inject(String javaScript) {
+        GalenUtils.injectJavascript(getDriver(), javaScript);
+    }
+
+    /**
+     * Changes the size of current browser for current test thread
+     * @param width The width of browser window
+     * @param height The height of browser window
+     */
+    public void resize(int width, int height) {
+        getDriver().manage().window().setSize(new Dimension(width, height));
     }
 
     /**
