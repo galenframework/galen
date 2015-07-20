@@ -1,0 +1,51 @@
+Galen Framework is an open-source tool for testing layout and responsive design of web applications.
+For more information visit http://galenframework.com
+
+usage: galen <action> [<args>]
+
+The available galen actions are:
+    test
+    check
+    dump
+    config
+
+test:
+    Loads and executes galen tests in specified path
+
+    usage: galen test <testpath> [--htmlreport] [--testngreport]
+            [--jsonreport] [--parallel-suites <parallel-suites-number>]
+            [--filter <test-filter>] [--recursive] [--groups <groups>]
+            [--excluded-groups <excluded-groups>]
+            [-D<property-name>=<property-value>]
+
+check:
+    Opens browser and performs layout check with specified spec
+
+    usage: galen check <specpath> [--htmlreport] [--testngreport]
+            [--jsonreport] [--url <url>] [--size <size>] [--javascript <jscode>]
+            [--include <tags>] [--exclude <excluded-tags>]
+            [-D<property-name>=<property-value>]
+
+dump:
+    Opens browser and create a page dump for a specified spec
+
+    usage: galen dump <specpath> [--url <url>] [--size <size>]
+            [--export <export-path>]
+            [--max-width <max-width>]
+            [--max-height <max-height>]
+
+
+License:
+    Copyright 2015 Ivan Shubin http://galenframework.com
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.

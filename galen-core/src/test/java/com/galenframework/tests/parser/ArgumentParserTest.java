@@ -155,24 +155,6 @@ public class ArgumentParserTest {
                     .withHtmlReport("some.html")
                     .withTestngReport("testng.xml")},
 
-            {args("check", "some.spec", "-u", "http://mindengine.net", 
-                            "-j", "some.js", 
-                            "-i", "mobile,all", 
-                            "-e", "nomobile,testTag", 
-                            "-s", "400x700", 
-                            "-h", "some.html",
-                            "-g", "testng.xml"), 
-               new GalenArguments()
-                    .withAction("check")
-                    .withUrl("http://mindengine.net")
-                    .withJavascript("some.js")
-                    .withIncludedTags("mobile", "all")
-                    .withExcludedTags("nomobile", "testTag")
-                    .withScreenSize(new Dimension(400, 700))
-                    .withPaths(asList("some.spec"))
-                    .withHtmlReport("some.html")
-                    .withTestngReport("testng.xml")},
-
             {args("check", "some.spec",
                             "--url", "http://mindengine.net", 
                             "--include", "mobile,all", 
@@ -199,6 +181,18 @@ public class ArgumentParserTest {
             {args("config"), 
                 new GalenArguments()
                     .withAction("config")},
+
+            {args("help"),
+                new GalenArguments()
+                    .withAction("help")},
+
+            {args("-h"),
+                new GalenArguments()
+                    .withAction("help")},
+
+            {args("--help"),
+                new GalenArguments()
+                    .withAction("help")},
 
             {args("dump", "my-page.gspec", "--url", "http://mindengine.net", "--export", "export-page-dir", "--max-width", "100", "--max-height", "150"),
                 new GalenArguments()

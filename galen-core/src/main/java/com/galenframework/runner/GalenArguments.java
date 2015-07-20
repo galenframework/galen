@@ -152,7 +152,7 @@ public class GalenArguments {
         options.addOption("i", "include", true, "Tags for sections that should be included in test run");
         options.addOption("e", "exclude", true, "Tags for sections that should be excluded from test run");
         options.addOption("s", "size", true, "Browser screen size");
-        options.addOption("h", "htmlreport", true, "Path for html output report");
+        options.addOption("H", "htmlreport", true, "Path for html output report");
         options.addOption("J", "jsonreport", true, "Path for json report");
         options.addOption("g", "testngreport", true, "Path for testng xml report");
         options.addOption("r", "recursive", false, "Flag for recursive tests scan");
@@ -161,9 +161,10 @@ public class GalenArguments {
         options.addOption("f", "filter", true, "Test filter");
         options.addOption("E", "export", true, "Export path for page dump");
         options.addOption("W", "max-width", true, "Maximum width for page dump");
-        options.addOption("H", "max-height", true, "Maximum height for page dump");
+        options.addOption("T", "max-height", true, "Maximum height for page dump");
         options.addOption("G", "groups", true, "Test groups");
         options.addOption("Q", "excluded-groups", true, "Excluded test groups");
+        options.addOption("h", "help", false, "Print help");
 
         
         CommandLineParser parser = new PosixParser();
@@ -195,6 +196,10 @@ public class GalenArguments {
                 galen.setPaths(paths);
             }
         }
+
+        if (cmd.hasOption("h") && leftovers.length == 0) {
+            galen.setAction("help");
+        }
         
         galen.setUrl(cmd.getOptionValue("u"));
         
@@ -204,13 +209,13 @@ public class GalenArguments {
         galen.setJavascript(cmd.getOptionValue("javascript"));
         galen.setTestngReport(cmd.getOptionValue("g"));
         galen.setRecursive(cmd.hasOption("r"));
-        galen.setHtmlReport(cmd.getOptionValue("h"));
+        galen.setHtmlReport(cmd.getOptionValue("H"));
         galen.setParallelSuites(Integer.parseInt(cmd.getOptionValue("p", "0")));
         galen.setPrintVersion(cmd.hasOption("v"));
         galen.setFilter(cmd.getOptionValue("f"));
         galen.setExport(cmd.getOptionValue("E"));
         galen.setMaxWidth(parseOptionalInt(cmd.getOptionValue("W")));
-        galen.setMaxHeight(parseOptionalInt(cmd.getOptionValue("H")));
+        galen.setMaxHeight(parseOptionalInt(cmd.getOptionValue("T")));
         galen.setJsonReport(cmd.getOptionValue("J"));
         galen.setGroups(convertTags(cmd.getOptionValue("G")));
         galen.setExcludedGroups(convertTags(cmd.getOptionValue("Q")));
@@ -263,6 +268,9 @@ public class GalenArguments {
                 return;
             }
             else if ("dump".equals(galen.getAction())) {
+                return;
+            }
+            else if ("help".equals(galen.getAction())) {
                 return;
             }
             else throw new IllegalArgumentException("Unknown action: " + galen.getAction());

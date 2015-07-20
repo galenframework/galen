@@ -19,8 +19,10 @@ import static java.util.Arrays.asList;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.io.PrintStream;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -360,6 +362,17 @@ public class GalenMainTest {
         );
 
         assertThat(errorMessages, hasItems("\"caption\" text is \"Hi my name is John\" but should be \"Hi my name is Jack\""));
+    }
+
+    @Test
+    public void shouldPrintHelp() throws Exception {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        PrintStream ps = new PrintStream(baos);
+        new GalenMain(ps, System.err).execute(new GalenArguments().withAction("help"));
+
+        String realText = baos.toString("UTF-8");
+        assertThat(realText, allOf(containsString("Galen Framework is an open-source tool for testing layout"),
+                containsString("Apache License")));
     }
 }
 

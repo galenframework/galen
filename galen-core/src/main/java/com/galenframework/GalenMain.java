@@ -17,11 +17,7 @@ package com.galenframework;
 
 import static java.util.Arrays.asList;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.StringWriter;
+import java.io.*;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Collections;
@@ -46,31 +42,18 @@ import com.galenframework.suite.reader.GalenSuiteReader;
 import com.galenframework.tests.GalenTest;
 import com.galenframework.validation.FailureListener;
 import com.galenframework.api.Galen;
-import com.galenframework.browser.Browser;
 import com.galenframework.browser.SeleniumBrowserFactory;
 import com.galenframework.config.GalenConfig;
 import com.galenframework.javascript.GalenJsExecutor;
-import com.galenframework.parser.SyntaxException;
-import com.galenframework.reports.ConsoleReportingListener;
-import com.galenframework.reports.GalenTestInfo;
-import com.galenframework.reports.HtmlReportBuilder;
 import com.galenframework.reports.TestNgReportBuilder;
 import com.galenframework.reports.json.JsonReportBuilder;
 import com.galenframework.reports.model.FileTempStorage;
 import com.galenframework.runner.CombinedListener;
 import com.galenframework.runner.CompleteListener;
 import com.galenframework.runner.EventHandler;
-import com.galenframework.runner.GalenArguments;
-import com.galenframework.runner.JsTestCollector;
-import com.galenframework.runner.SuiteListener;
-import com.galenframework.runner.events.TestFilterEvent;
 import com.galenframework.suite.GalenPageAction;
 import com.galenframework.suite.GalenPageTest;
-import com.galenframework.suite.actions.GalenPageActionCheck;
-import com.galenframework.suite.reader.GalenSuiteReader;
 import com.galenframework.tests.GalenBasicTest;
-import com.galenframework.tests.GalenTest;
-import com.galenframework.validation.FailureListener;
 
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
@@ -80,8 +63,20 @@ public class GalenMain {
 
     private final static Logger LOG = LoggerFactory.getLogger(GalenMain.class);
     private static final Map<String, Object> NO_JSVARIABLES = null;
+    private final PrintStream outStream;
+    private final PrintStream errStream;
 
     private CompleteListener listener;
+
+    public GalenMain() {
+        this.outStream = System.out;
+        this.errStream = System.err;
+    }
+
+    public GalenMain(PrintStream outStream, PrintStream errStream) {
+        this.outStream = outStream;
+        this.errStream = errStream;
+    }
 
     public void execute(GalenArguments arguments) throws Exception {
         if (arguments.getAction() != null) {
@@ -101,28 +96,35 @@ public class GalenMain {
                 performConfig();
             } else if ("dump".equals(arguments.getAction())) {
                 performPageDump(arguments);
+            } else if ("help".equals(arguments.getAction())) {
+                printHelp();
             }
             combinedListener.done();
 
             if (GalenConfig.getConfig().getUseFailExitCode()) {
                 if (failureListener.hasFailures()) {
-                    System.err.println("There were failures in galen tests");
+                    errStream.println("There were failures in galen tests");
                     System.exit(1);
                 }
             }
         } else {
             if (arguments.getPrintVersion()) {
-                System.out.println("Galen Framework");
+                outStream.println("Galen Framework");
                 String version = getClass().getPackage().getImplementationVersion();
                 if (version == null) {
                     version = "unknown";
                 } else {
                     version = version.replace("-SNAPSHOT", "");
                 }
-                System.out.println("Version: " + version);
-                System.out.println("JavaScript executor: " + GalenJsExecutor.getVersion());
+                outStream.println("Version: " + version);
+                outStream.println("JavaScript executor: " + GalenJsExecutor.getVersion());
             }
         }
+    }
+
+    private void printHelp() throws IOException {
+        InputStream helpStream = getClass().getResourceAsStream("/galen-help-text");
+        IOUtils.copy(helpStream, outStream);
     }
 
     private void performPageDump(GalenArguments arguments) throws SyntaxException {
@@ -148,7 +150,7 @@ public class GalenMain {
             browser.load(arguments.getUrl());
 
             Galen.dumpPage(browser, arguments.getUrl(), arguments.getPaths().get(0), arguments.getExport(), arguments.getMaxWidth(), arguments.getMaxHeight(), false, NO_JSVARIABLES);
-            System.out.println("Done!");
+            outStream.println("Done!");
         } catch (Exception ex) {
             throw new RuntimeException(ex);
         } finally {
@@ -168,16 +170,16 @@ public class GalenMain {
             IOUtils.write(writer.toString(), fos, "UTF-8");
             fos.flush();
             fos.close();
-            System.out.println("Created config file");
+            outStream.println("Created config file");
         } else {
-            System.err.println("Config file already exists");
+            errStream.println("Config file already exists");
         }
     }
 
     private CombinedListener createListeners(GalenArguments arguments) throws IOException, SecurityException, IllegalArgumentException, ClassNotFoundException,
             NoSuchMethodException, InstantiationException, IllegalAccessException, InvocationTargetException {
         CombinedListener combinedListener = new CombinedListener();
-        combinedListener.add(new ConsoleReportingListener(System.out, System.out));
+        combinedListener.add(new ConsoleReportingListener(outStream, outStream));
 
         // Adding all user defined listeners
         List<CompleteListener> configuredListeners = getConfiguredListeners();
