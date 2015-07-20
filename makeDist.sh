@@ -7,7 +7,7 @@ if [ -d dist ]; then
 fi
 
 
-modules=(galen-core galen-rainbow4j)
+modules=(galen-core galen-rainbow4j galen-java-support)
 
 version=$( cat pom.xml | grep "<version>" | head -n 1 | awk -F"[<>]" '/version/{print $3}' | sed "s/-SNAPSHOT//g" )
 
@@ -26,6 +26,7 @@ mvn clean package -DskipTests=true
 
 cp galen-distribution/target/galen-bin.jar dist/$bin/galen.jar
 cp -r fordist/* dist/$bin/.
+cp .README dist/$bin/README
 
 cp LICENSE-2.0.txt dist/$src/.
 cp .README dist/$src/README
