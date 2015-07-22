@@ -26,6 +26,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 import java.util.Properties;
 
+import com.galenframework.actions.GalenAction;
 import com.galenframework.specs.reader.StringCharReader;
 import com.galenframework.GalenMain;
 import com.galenframework.components.DummyCompleteListener;
@@ -33,12 +34,10 @@ import com.galenframework.config.GalenConfig;
 import com.galenframework.parser.Expectations;
 import com.galenframework.runner.CompleteListener;
 import com.galenframework.specs.Range;
-import com.galenframework.specs.reader.StringCharReader;
 
 import org.apache.commons.io.FileUtils;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
-import org.testng.annotations.AfterClass;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.Test;
 
@@ -130,7 +129,7 @@ public class GalenConfigTest {
         config.reset();
         
         
-        List<CompleteListener> listeners = new GalenMain().getConfiguredListeners();
+        List<CompleteListener> listeners = GalenAction.getConfiguredListeners();
         assertThat(listeners, is(notNullValue()));
         assertThat(listeners.size(), is(1));
         assertThat(listeners.get(0), is(instanceOf(DummyCompleteListener.class)));

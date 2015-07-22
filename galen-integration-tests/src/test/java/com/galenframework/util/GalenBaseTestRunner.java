@@ -24,11 +24,6 @@ import java.util.List;
 
 import com.galenframework.GalenMain;
 import com.galenframework.config.GalenProperty;
-import com.galenframework.runner.GalenArguments;
-import com.google.common.io.Files;
-import com.galenframework.GalenMain;
-import com.galenframework.config.GalenProperty;
-import com.galenframework.runner.GalenArguments;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -51,13 +46,31 @@ public abstract class GalenBaseTestRunner {
 
         LOG.info("Opening url " + completeUrl + " in browser " + defaultBrowser);
 
-        new GalenMain().execute(new GalenArguments()
-                .withAction("check")
-                .withUrl(completeUrl)
-                .withPaths(Arrays.asList(getAbsolutePathToResource(specPath)))
-                .withIncludedTags(device.getTags().toArray(new String[]{}))
-                .withHtmlReport(reportFolder.getAbsolutePath())
-                .withScreenSize(device.getScreenSize()));
+        new GalenMain().execute(new String[]{
+                "check",
+                getAbsolutePathToResource(specPath),
+                "--url", completeUrl,
+                "--include", commaSeparated(device.getTags()),
+                "--htmlreport", reportFolder.getAbsolutePath(),
+                "--size", convertScreenSize(device.getScreenSize())
+        });
+    }
+
+    private String convertScreenSize(Dimension screenSize) {
+        return (int)screenSize.getWidth() + "x" + (int)screenSize.getHeight();
+    }
+
+    protected String commaSeparated(List<String> tags) {
+        StringBuilder builder = new StringBuilder();
+        boolean comma = false;
+        for (String tag : tags) {
+            if (comma) {
+                builder.append(",");
+            }
+            comma = true;
+            builder.append(tag);
+        }
+        return builder.toString();
     }
 
     protected String getAbsolutePathToResource(String uri) {
