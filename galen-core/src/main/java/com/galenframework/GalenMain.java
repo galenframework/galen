@@ -74,6 +74,10 @@ public class GalenMain {
         }
     }
 
+    public static void main (String[] args) {
+        new GalenMain().execute(args);
+    }
+
 
     public CompleteListener getListener() {
         return listener;
