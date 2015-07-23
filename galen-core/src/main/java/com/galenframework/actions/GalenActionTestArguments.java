@@ -50,7 +50,8 @@ public class GalenActionTestArguments {
         options.addOption("j", "jsonreport", true, "Path for json report");
         options.addOption("g", "testngreport", true, "Path for testng xml report");
         options.addOption("r", "recursive", false, "Flag for recursive tests scan");
-        options.addOption("p", "parallel-suites", true, "Amount of suites to be run in parallel");
+        options.addOption("p", "parallel-tests", true, "Amount of tests to be run in parallel");
+        options.addOption("P", "parallel-suites", true, "Amount of tests to be run in parallel");
         options.addOption("f", "filter", true, "Test filter");
         options.addOption("G", "groups", true, "Test groups");
         options.addOption("Q", "excluded-groups", true, "Excluded test groups");
@@ -72,7 +73,18 @@ public class GalenActionTestArguments {
         arguments.setTestngReport(cmd.getOptionValue("g"));
         arguments.setRecursive(cmd.hasOption("r"));
         arguments.setHtmlReport(cmd.getOptionValue("h"));
-        arguments.setParallelThreads(Integer.parseInt(cmd.getOptionValue("p", "0")));
+
+
+        /*
+        having this double check in order to have backwards compatibility with previous version
+         in which the parallel tests used to be defined via --parallel-suites argument
+         */
+        if (cmd.hasOption("p")) {
+            arguments.setParallelThreads(Integer.parseInt(cmd.getOptionValue("p", "0")));
+        } else {
+            arguments.setParallelThreads(Integer.parseInt(cmd.getOptionValue("P", "0")));
+        }
+
         arguments.setFilter(cmd.getOptionValue("f"));
         arguments.setJsonReport(cmd.getOptionValue("j"));
         arguments.setGroups(convertTags(cmd.getOptionValue("G")));

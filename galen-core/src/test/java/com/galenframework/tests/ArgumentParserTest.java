@@ -139,6 +139,14 @@ public class ArgumentParserTest {
                     .setIncludedTags(EMPTY_TAGS)
                     .setExcludedTags(EMPTY_TAGS)},
 
+            {args("test", "mysuite", "mysuite2", "--parallel-tests", "3"),
+                    new GalenActionTestArguments()
+                            .setPaths(asList("mysuite", "mysuite2"))
+                            .setRecursive(false)
+                            .setParallelThreads(3)
+                            .setIncludedTags(EMPTY_TAGS)
+                            .setExcludedTags(EMPTY_TAGS)},
+
 
         };
     }
