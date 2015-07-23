@@ -52,5 +52,7 @@ com.galenframework.components.report.FakeException: Some exception here
 Failed tests:
     page1.test
 
-Status: FAIL
+Suite status: FAIL
+Total tests: 1
+Total failed tests: 1
 Total failures: 5

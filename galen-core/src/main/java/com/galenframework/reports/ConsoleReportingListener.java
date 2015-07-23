@@ -258,13 +258,16 @@ public class ConsoleReportingListener implements CompleteListener {
             out.println();
         }
         
-        out.print("Status: ");
+        out.print("Suite status: ");
         if (failedTests.size() > 0) {
             out.println("FAIL");
-            out.println("Total failures: " + allStatistic.getErrors());
         }
         else {
             out.println("PASS");
         }
+
+        out.println("Total tests: " + tests.size());
+        out.println("Total failed tests: " + failedTests.size());
+        out.println("Total failures: " + allStatistic.getErrors());
     }
 }
