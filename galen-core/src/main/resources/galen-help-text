@@ -8,6 +8,8 @@ The available galen actions are:
     check
     dump
     config
+    help
+    version
 
 test:
     Loads and executes galen tests in specified path
@@ -21,18 +23,17 @@ test:
 check:
     Opens browser and performs layout check with specified spec
 
-    usage: galen check <specpath> [--htmlreport] [--testngreport]
-            [--jsonreport] [--url <url>] [--size <size>] [--javascript <jscode>]
+    usage: galen check <specpath>  --url <url> --size <size>
+            [--htmlreport <htmlreportpath>] [--testngreport <testngpath>]
+            [--jsonreport <jsonpath>] [--javascript <jspath>]
             [--include <tags>] [--exclude <excluded-tags>]
             [-D<property-name>=<property-value>]
 
 dump:
     Opens browser and create a page dump for a specified spec
 
-    usage: galen dump <specpath> [--url <url>] [--size <size>]
-            [--export <export-path>]
-            [--max-width <max-width>]
-            [--max-height <max-height>]
+    usage: galen dump <specpath> --url <url> --size <size> --export <export-path>
+            [--max-width <max-width>] [--max-height <max-height>]
 
 
 License:
