@@ -14,8 +14,8 @@
       
       <!-- Now, select which projects to include in this module-set. -->
       <includes>
-        <include>net.mindengine:galen-core</include>
-        <include>net.mindengine:galen-rainbow4j</include>
+        <include>com.galenframework:galen-core</include>
+        <include>com.galenframework:galen-rainbow4j</include>
       </includes>
       <binaries>
         <unpack>true</unpack>
