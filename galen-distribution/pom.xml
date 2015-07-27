@@ -10,11 +10,11 @@
     <version>1.6.5-SNAPSHOT</version>
   </parent>
   
-  <artifactId>distribution</artifactId>
+  <artifactId>galen-distribution</artifactId>
 
   <packaging>pom</packaging>
 
-  <name>Distribution</name>
+  <name>Distribution moduel for Galen Framework</name>
   
   <!-- NOTE: These dependency declarations are only required to sort this project to the 
        end of the line in the multimodule build. 
