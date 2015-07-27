@@ -116,12 +116,10 @@ function onLayoutCheckClick() {
             showShadow();
             showPopup("Loading ...");
 
-            setTimeout(function () {
-                loadImage(screenshot, function () {
-                    _GalenReport.showNotification(checkText, errorText);
-                    _GalenReport.showScreenshotWithObjects(screenshot, this.width, this.height, objects);
-                });
-            }, 100);
+            loadImage(screenshot, function () {
+                _GalenReport.showNotification(checkText, errorText);
+                _GalenReport.showScreenshotWithObjects(screenshot, this.width, this.height, objects);
+            });
 
         } else {
             _GalenReport.showErrorNotification("Couldn't find layout data");
@@ -153,19 +151,17 @@ function onImageComparisonClick() {
     showShadow();
     showPopup("Loading ...");
 
-    setTimeout(function () {
-        loadImage(actualImagePath, function (actualImage, actualImageWidth, actualImageHeight) {
-            loadImage(expectedImagePath, function (expectedImage, expectedImageWidth, expectedImageHeight) {
-                loadImage(mapImagePath, function (mapImage, mapImageWidth, mapImageHeight) {
-                    showPopup(_GalenReport.tpl.imageComparison({
-                        actual: actualImagePath,
-                        expected: expectedImagePath,
-                        map: mapImagePath
-                    }));
-                });
+    loadImage(actualImagePath, function (actualImage, actualImageWidth, actualImageHeight) {
+        loadImage(expectedImagePath, function (expectedImage, expectedImageWidth, expectedImageHeight) {
+            loadImage(mapImagePath, function (mapImage, mapImageWidth, mapImageHeight) {
+                showPopup(_GalenReport.tpl.imageComparison({
+                    actual: actualImagePath,
+                    expected: expectedImagePath,
+                    map: mapImagePath
+                }));
             });
         });
-    }, 10000);
+    });
 
     return false;
 }
