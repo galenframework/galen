@@ -113,10 +113,15 @@ function onLayoutCheckClick() {
                 screenshot = _GalenReport.layouts[0].screenshot;
             }
 
-            loadImage(screenshot, function () {
-                _GalenReport.showNotification(checkText, errorText);
-                _GalenReport.showScreenshotWithObjects(screenshot, this.width, this.height, objects);
-            });
+            showShadow();
+            showPopup("Loading ...");
+
+            setTimeout(function () {
+                loadImage(screenshot, function () {
+                    _GalenReport.showNotification(checkText, errorText);
+                    _GalenReport.showScreenshotWithObjects(screenshot, this.width, this.height, objects);
+                });
+            }, 100);
 
         } else {
             _GalenReport.showErrorNotification("Couldn't find layout data");
@@ -145,17 +150,23 @@ function onImageComparisonClick() {
     var expectedImagePath = $this.attr("data-expected-image");
     var mapImagePath = $this.attr("data-map-image");
 
-    loadImage(actualImagePath, function (actualImage, actualImageWidth, actualImageHeight) {
-        loadImage(expectedImagePath, function (expectedImage, expectedImageWidth, expectedImageHeight) {
-            loadImage(mapImagePath, function (mapImage, mapImageWidth, mapImageHeight) {
-                showPopup(_GalenReport.tpl.imageComparison({
-                    actual: actualImagePath,
-                    expected: expectedImagePath,
-                    map: mapImagePath
-                }));
+    showShadow();
+    showPopup("Loading ...");
+
+    setTimeout(function () {
+        loadImage(actualImagePath, function (actualImage, actualImageWidth, actualImageHeight) {
+            loadImage(expectedImagePath, function (expectedImage, expectedImageWidth, expectedImageHeight) {
+                loadImage(mapImagePath, function (mapImage, mapImageWidth, mapImageHeight) {
+                    showPopup(_GalenReport.tpl.imageComparison({
+                        actual: actualImagePath,
+                        expected: expectedImagePath,
+                        map: mapImagePath
+                    }));
+                });
             });
         });
-    });
+    }, 10000);
+
     return false;
 }
 
