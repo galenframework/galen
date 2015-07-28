@@ -17,6 +17,7 @@ package com.galenframework.tests.speclang2.pagespec;
 
 import com.galenframework.components.validation.MockedInvisiblePageElement;
 import com.galenframework.components.validation.MockedPageElement;
+import com.galenframework.parser.SyntaxException;
 import com.galenframework.speclang2.reader.pagespec.PageSpecReader;
 import com.galenframework.specs.page.CorrectionsRect;
 import com.galenframework.specs.page.PageSection;
@@ -512,6 +513,16 @@ public class PageSpecReaderTest {
         assertThat(section.getObjects().get(0).getSpecs().get(0).getOriginalText(), is("visible"));
     }
 
+    @Test(expectedExceptions = FileSyntaxException.class,
+            expectedExceptionsMessageRegExp = "JavaScript error inside statement\n    in speclang2/condition-with-js-error.gspec:5"
+    )
+    public void shouldFail_whenThereIsAnError_insideIfStatement() throws IOException {
+        readPageSpec("speclang2/condition-with-js-error.gspec",
+                new MockedPage(new HashMap<String, PageElement>()),
+                EMPTY_TAGS, EMPTY_TAGS);
+
+    }
+
     @Test
     public void shouldAllow_toPassProperties() throws IOException {
         Properties properties = new Properties();
@@ -596,6 +607,8 @@ public class PageSpecReaderTest {
         assertThat(pageSpec.getSections().get(0).getObjects().get(0).getSpecs().get(0).getOriginalText(),
             is("text is \"Name: John, age: 29\""));
     }
+
+
 
     private PageSpec readPageSpec(String resource) throws IOException {
         return readPageSpec(resource, NO_PAGE, EMPTY_TAGS, EMPTY_TAGS);

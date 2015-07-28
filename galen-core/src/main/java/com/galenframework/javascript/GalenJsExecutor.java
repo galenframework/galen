@@ -124,6 +124,23 @@ public class GalenJsExecutor implements VarsParserJsProcessable {
         }
     }
 
+    /**
+     * Used for processing js expressions in page spec reader. In case of failure throws an exception
+     * @param script - JavaScript code
+     * @return result of JavaScript code execution
+     */
+    @Override
+    public String evalStrictToString(String script) {
+        Object returnedObject = context.evaluateString(scope, script, "<cmd>", 1, null);
+        if (returnedObject != null) {
+            if (returnedObject instanceof Double) {
+                return Integer.toString(((Double) returnedObject).intValue());
+            } else if (returnedObject instanceof Float) {
+                return Integer.toString(((Float) returnedObject).intValue());
+            } else return returnedObject.toString();
+        } else return "null";
+    }
+
     public static String loadJsFromLibrary(String path) {
         try {
             InputStream is = GalenJsExecutor.class.getResourceAsStream("/js/" + path);

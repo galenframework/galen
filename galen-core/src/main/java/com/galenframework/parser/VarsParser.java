@@ -42,7 +42,15 @@ public class VarsParser {
         this(context, properties, null);
     }
 
+    public String parseStrict(String templateText) {
+        return parse(templateText, true);
+    }
+
     public String parse(String templateText) {
+        return parse(templateText, false);
+    }
+
+    private String parse(String templateText, boolean strict) {
         StringCharReader reader = new StringCharReader(templateText);
         
         StringBuffer buffer = new StringBuffer();
@@ -68,7 +76,7 @@ public class VarsParser {
             else if (state ==  PARSING_PARAM) {
                 if (symbol == '}') {
                     String expression = currentExpression.toString().trim();
-                    Object value = getExpressionValue(expression, context);
+                    Object value = getExpressionValue(expression, context, strict);
                     if (value == null) {
                         value = "";
                     }
@@ -85,7 +93,7 @@ public class VarsParser {
     }
 
     
-    private Object getExpressionValue(String expression, Context context) {
+    private Object getExpressionValue(String expression, Context context, boolean strict) {
         Object value = context.getValue(expression);
         if (value == null) {
             //Looking for value in properties
@@ -99,7 +107,7 @@ public class VarsParser {
             }
         }
         if (value == null){
-            value = readJsExpression(expression, context);
+            value = readJsExpression(expression, context, strict);
         }
 
         if (value == null) {
@@ -108,9 +116,13 @@ public class VarsParser {
         else return value;
     }
 
-    private String readJsExpression(String expression, Context context) {
+    private String readJsExpression(String expression, Context context, boolean strict) {
         if (jsProcessor != null) {
-            return jsProcessor.evalSafeToString(expression);
+            if (strict) {
+                return jsProcessor.evalStrictToString(expression);
+            } else {
+                return jsProcessor.evalSafeToString(expression);
+            }
         }
         else return null;
     }

@@ -63,15 +63,20 @@ public class MacroProcessor {
 
         while (it.hasNext()) {
             StructNode node = it.next();
-            StructNode processedNode = pageSpecHandler.processExpressionsIn(node);
 
-            if (isConditionStatement(processedNode.getName())) {
-                resultingNodes.addAll(processConditionStatements(processedNode, it));
-            }
-            else if (isMacroStatement(processedNode.getName())) {
-                resultingNodes.addAll(processMacroStatement(processedNode));
+            if (isConditionStatement(node.getName())) {
+                try {
+                    resultingNodes.addAll(processConditionStatements(node, it));
+                } catch (Exception ex) {
+                    throw new SyntaxException(node, "JavaScript error inside statement", ex);
+                }
             } else {
-                resultingNodes.add(processNonMacroStatement(processedNode));
+                StructNode processedNode = pageSpecHandler.processExpressionsIn(node);
+                if (isMacroStatement(processedNode.getName())) {
+                    resultingNodes.addAll(processMacroStatement(processedNode));
+                } else {
+                    resultingNodes.add(processNonMacroStatement(processedNode));
+                }
             }
         }
 
@@ -84,25 +89,26 @@ public class MacroProcessor {
         boolean finishedConditions = false;
 
         while(it.hasNext() && !finishedConditions) {
-            StructNode processedNode = pageSpecHandler.processExpressionsIn(it.next());
-            String firstWord = new StringCharReader(processedNode.getName()).readWord();
+            StructNode nextNode = it.next();
+
+            String firstWord = new StringCharReader(nextNode.getName()).readWord();
             if (firstWord.equals(ELSEIF_KEYWORD)) {
                 if (elseNode != null) {
-                    throw new SyntaxException(processedNode, "Cannot use elseif statement after else block");
+                    throw new SyntaxException(nextNode, "Cannot use elseif statement after else block");
                 }
-                elseIfNodes.add(processedNode);
+                elseIfNodes.add(pageSpecHandler.processStrictExpressionsIn(nextNode));
             } else if (firstWord.equals(ELSE_KEYWORD)) {
                 if (elseNode != null) {
-                    throw new SyntaxException(processedNode, "Cannot use else statement after else block");
+                    throw new SyntaxException(nextNode, "Cannot use else statement after else block");
                 }
-                elseNode = processedNode;
+                elseNode = pageSpecHandler.processStrictExpressionsIn(nextNode);
             } else {
                 finishedConditions = true;
                 it.previous();
             }
         }
 
-        return applyConditions(ifNode, elseIfNodes, elseNode);
+        return applyConditions(pageSpecHandler.processStrictExpressionsIn(ifNode), elseIfNodes, elseNode);
     }
 
     private List<StructNode> applyConditions(StructNode ifNode, List<StructNode> elseIfNodes, StructNode elseNode) {

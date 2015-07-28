@@ -330,9 +330,22 @@ public class PageSpecHandler implements VarsParserJsFunctions {
         return varsParser;
     }
 
+    public StructNode processStrictExpressionsIn(StructNode originNode) {
+        return processExpressionsIn(originNode, true);
+    }
 
     public StructNode processExpressionsIn(StructNode originNode) {
-        String result = getVarsParser().parse(originNode.getName());
+        return processExpressionsIn(originNode, false);
+    }
+
+    private StructNode processExpressionsIn(StructNode originNode, boolean strict) {
+        String result;
+
+        if (strict) {
+            result = getVarsParser().parseStrict(originNode.getName());
+        } else {
+            result = getVarsParser().parse(originNode.getName());
+        }
 
         StructNode processedNode = new StructNode(result);
         processedNode.setFileLineNumber(originNode.getFileLineNumber());
@@ -407,4 +420,5 @@ public class PageSpecHandler implements VarsParserJsFunctions {
     public Map<String, Object> getJsVariables() {
         return jsVariables;
     }
+
 }
