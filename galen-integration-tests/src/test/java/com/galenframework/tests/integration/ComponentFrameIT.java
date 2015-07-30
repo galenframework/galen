@@ -70,8 +70,8 @@ public class ComponentFrameIT {
                 .withError(new ValidationError(asList("Child component spec contains 1 errors")))
                 .withChildValidationResults(asList(
                         new ValidationResult()
-                            .withObjects(asList(new ValidationObject(new Rect(16, 89, 219, 23), "frame-link")))
-                            .withError(new ValidationError(asList("\"frame-link\" height is 23px instead of 40px")))
+                                .withObjects(asList(new ValidationObject(new Rect(16, 89, 176, 20), "frame-link")))
+                                .withError(new ValidationError(asList("\"frame-link\" height is 20px instead of 40px")))
                 ))
         ));
     }
