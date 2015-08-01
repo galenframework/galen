@@ -1,0 +1,18 @@
+
+
+
+= Empty section 1 =
+    @set var1 1
+    = Empty section 2 =
+        @if false
+            object:
+                width 100px
+
+
+= Non empty section =
+    = Another empty section =
+
+    button:
+        height 100px
+
+

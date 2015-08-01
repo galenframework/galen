@@ -92,4 +92,24 @@ public class PageSection {
 
         objects.add(objectSpecs);
     }
+
+    public boolean isEmpty() {
+        return objects == null || objects.isEmpty();
+    }
+
+    public PageSection cleanSection() {
+        PageSection cleanedSection = new PageSection(name);
+        cleanedSection.setObjects(objects);
+
+        if (sections != null) {
+            for (PageSection subSection : sections) {
+                PageSection cleanedSubSection = subSection.cleanSection();
+                if (!cleanedSubSection.isEmpty()) {
+                    cleanedSection.getSections().add(cleanedSubSection);
+                }
+            }
+        }
+
+        return cleanedSection;
+    }
 }

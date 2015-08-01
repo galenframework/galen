@@ -563,6 +563,22 @@ public class PageSpecReaderTest {
                 is("right-of menu-item-9"));
     }
 
+
+    @Test
+    public void shouldParse_forLoops_withIfStatements() throws IOException {
+        PageSpec pageSpec = readPageSpec("speclang2/for-with-if.gspec");
+        PageSection section = pageSpec.getSections().get(0);
+
+        assertThat(section.getObjects().size(), is(1));
+        assertThat(section.getObjects().get(0).getSpecs().size(), is(2));
+        assertThat(section.getObjects().get(0).getObjectName(),
+                is("button"));
+        assertThat(section.getObjects().get(0).getSpecs().get(0).getOriginalText(),
+                is("inside container1 10px top left"));
+        assertThat(section.getObjects().get(0).getSpecs().get(1).getOriginalText(),
+                is("inside container2 10px top left"));
+    }
+
     @Test
     public void shouldRead_specsWithWarningLevel() throws IOException {
         PageSpec pageSpec = readPageSpec("speclang2/warning-level-in-specs.gspec");
@@ -606,6 +622,18 @@ public class PageSpecReaderTest {
 
         assertThat(pageSpec.getSections().get(0).getObjects().get(0).getSpecs().get(0).getOriginalText(),
             is("text is \"Name: John, age: 29\""));
+    }
+
+    @Test
+    public void shouldClean_emptySetions() throws  IOException {
+        PageSpec pageSpec = readPageSpec("speclang2/empty-sections.gspec");
+
+        assertThat(pageSpec.getSections().size(), is(1));
+
+        PageSection section = pageSpec.getSections().get(0);
+
+        assertThat(section.getSections().size(), is(0));
+        assertThat(section.getObjects().size(), is(1));
     }
 
 

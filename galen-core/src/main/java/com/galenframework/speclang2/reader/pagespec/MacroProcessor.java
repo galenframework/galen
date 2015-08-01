@@ -83,7 +83,7 @@ public class MacroProcessor {
         return resultingNodes;
     }
 
-    private List<StructNode> processConditionStatements(StructNode ifNode, ListIterator<StructNode> it) {
+    private List<StructNode> processConditionStatements(StructNode ifNode, ListIterator<StructNode> it) throws IOException {
         List<StructNode> elseIfNodes = new LinkedList<StructNode>();
         StructNode elseNode = null;
         boolean finishedConditions = false;
@@ -108,7 +108,8 @@ public class MacroProcessor {
             }
         }
 
-        return applyConditions(pageSpecHandler.processStrictExpressionsIn(ifNode), elseIfNodes, elseNode);
+        List<StructNode> nodesFromConditions = applyConditions(pageSpecHandler.processStrictExpressionsIn(ifNode), elseIfNodes, elseNode);
+        return process(nodesFromConditions);
     }
 
     private List<StructNode> applyConditions(StructNode ifNode, List<StructNode> elseIfNodes, StructNode elseNode) {

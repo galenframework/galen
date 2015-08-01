@@ -1,0 +1,14 @@
+
+
+@objects
+    button      #button
+    container1   #container-1
+    container2   #container-2
+
+= Main section =
+
+    @for [container1,container2] as container
+        @if ${true}
+            button:
+                inside ${container} 10px top left
+

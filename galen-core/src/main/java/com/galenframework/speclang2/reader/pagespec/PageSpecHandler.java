@@ -197,7 +197,24 @@ public class PageSpecHandler implements VarsParserJsFunctions {
     }
 
     public PageSpec buildPageSpec() {
-        return pageSpec;
+        PageSpec cleanedSpec = new PageSpec();
+        cleanedSpec.setObjects(pageSpec.getObjects());
+        cleanedSpec.setSections(cleanEmptySections(pageSpec.getSections()));
+        return cleanedSpec;
+    }
+
+    private List<PageSection> cleanEmptySections(List<PageSection> sections) {
+        List<PageSection> cleanedSections = new LinkedList<>();
+
+        for (PageSection pageSection : sections) {
+            PageSection cleanedSection = pageSection.cleanSection();
+
+            if (!pageSection.isEmpty()) {
+                cleanedSections.add(cleanedSection);
+            }
+        }
+
+        return cleanedSections;
     }
 
 
