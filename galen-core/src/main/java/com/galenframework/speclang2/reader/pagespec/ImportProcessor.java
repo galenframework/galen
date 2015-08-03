@@ -53,7 +53,12 @@ public class ImportProcessor {
     }
 
     private List<StructNode> importPageSpec(String filePath, StructNode origin) throws IOException {
-        String fullPath = pageSpecHandler.getContextPath() + "/" + filePath;
+
+        String fullPath = filePath;
+
+        if (pageSpecHandler.getContextPath() != null) {
+            fullPath = pageSpecHandler.getContextPath() + "/" + filePath;
+        }
 
         String fileId = GalenUtils.calculateFileId(fullPath);
         if (!pageSpecHandler.getProcessedImports().contains(fileId)) {
@@ -62,7 +67,7 @@ public class ImportProcessor {
             InputStream stream = GalenUtils.findFileOrResourceAsStream(fullPath);
 
             if (stream == null) {
-                throw new SyntaxException(origin, "Cannot import: " + filePath);
+                throw new SyntaxException(origin, "Cannot find file: " + fullPath);
             }
 
             List<StructNode> structs = new IndentationStructureParser().parse(stream, fullPath);
