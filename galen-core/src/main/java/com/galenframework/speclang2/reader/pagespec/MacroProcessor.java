@@ -17,7 +17,6 @@ package com.galenframework.speclang2.reader.pagespec;
 
 import com.galenframework.parser.SyntaxException;
 import com.galenframework.parser.StructNode;
-import com.galenframework.parser.SyntaxException;
 import com.galenframework.specs.reader.StringCharReader;
 
 import java.io.IOException;

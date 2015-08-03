@@ -94,7 +94,22 @@ public class PageSection {
     }
 
     public boolean isEmpty() {
-        return objects == null || objects.isEmpty();
+        return countAllObjectsRecursively() == 0;
+    }
+
+    private int countAllObjectsRecursively() {
+        int amount = 0;
+        if (objects != null) {
+            amount = objects.size();
+        }
+
+        if (sections != null) {
+            for (PageSection subSection : sections) {
+                amount += subSection.countAllObjectsRecursively();
+            }
+        }
+
+        return amount;
     }
 
     public PageSection cleanSection() {

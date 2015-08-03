@@ -1,0 +1,10 @@
+@objects
+    menu-item-1    #id1
+
+
+@rule %{objectName} is squared
+    ${objectName}:
+        width 100 % of ${objectName}/height
+
+= Main section =
+    | menu-item-1 is squared

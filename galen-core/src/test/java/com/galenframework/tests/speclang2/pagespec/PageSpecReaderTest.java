@@ -426,6 +426,23 @@ public class PageSpecReaderTest {
                 is("width 100 % of menu-item-1/height"));
     }
 
+    @Test
+    public void shouldRead_customSpecRulesInSections_withoutOtherObjects_andProcessThem() throws IOException {
+        PageSpec pageSpec = readPageSpec("speclang2/custom-rules-only-per-section.gspec");
+
+        assertThat(pageSpec.getSections().size(), is(1));
+        assertThat(pageSpec.getSections().get(0).getName(), is("Main section"));
+        assertThat(pageSpec.getSections().get(0).getSections().size(), is(1));
+
+        PageSection subSection = pageSpec.getSections().get(0).getSections().get(0);
+        assertThat(subSection.getName(), is("menu-item-1 is squared"));
+        assertThat(subSection.getObjects().size(), is(1));
+
+        assertThat(subSection.getObjects().get(0).getObjectName(), is("menu-item-1"));
+        assertThat(subSection.getObjects().get(0).getSpecs().size(), is(1));
+        assertThat(subSection.getObjects().get(0).getSpecs().get(0).getOriginalText(), is("width 100 % of menu-item-1/height"));
+    }
+
 
     @Test
     public void shouldRead_customRulesFromJavaScript_andProcessThem() throws IOException {
