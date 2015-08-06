@@ -15,10 +15,7 @@
 ******************************************************************************/
 package com.galenframework.components.mocks.driver;
 
-import org.openqa.selenium.By;
-import org.openqa.selenium.Dimension;
-import org.openqa.selenium.Point;
-import org.openqa.selenium.WebElement;
+import org.openqa.selenium.*;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -147,4 +144,8 @@ public class MockedDriverElement implements WebElement {
         this.item.getMockedEvents().add(event);
     }
 
+    @Override
+    public <X> X getScreenshotAs(OutputType<X> outputType) throws WebDriverException {
+        return null;
+    }
 }
