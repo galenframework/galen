@@ -287,6 +287,15 @@ public class PageSpecReaderTest {
         }
     }
 
+    /**
+     * Comes from https://github.com/galenframework/galen/issues/303
+     */
+    @Test
+    public void shouldRead_emptyLoops_withoutException() throws IOException {
+        PageSpec pageSpec = readPageSpec("speclang2/empty-for-loops.gspec", NO_PAGE, EMPTY_TAGS, EMPTY_TAGS);
+        assertThat(pageSpec.getSections().size(), is(0));
+    }
+
     @Test
     public void shouldRead_taggedSections_andProcessOnlyThose_thatMatchGivenTags_1() throws IOException {
         PageSpec pageSpec = readPageSpec("speclang2/tagged-sections.gspec", NO_PAGE, asList("mobile"), EMPTY_TAGS);

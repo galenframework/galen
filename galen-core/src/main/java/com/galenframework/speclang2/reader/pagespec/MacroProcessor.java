@@ -56,30 +56,33 @@ public class MacroProcessor {
     }
 
     public List<StructNode> process(List<StructNode> nodes) throws IOException {
-        List<StructNode> resultingNodes = new LinkedList<StructNode>();
+        if (nodes != null) {
+            List<StructNode> resultingNodes = new LinkedList<StructNode>();
+            ListIterator<StructNode> it = nodes.listIterator();
 
-        ListIterator<StructNode> it = nodes.listIterator();
+            while (it.hasNext()) {
+                StructNode node = it.next();
 
-        while (it.hasNext()) {
-            StructNode node = it.next();
-
-            if (isConditionStatement(node.getName())) {
-                try {
-                    resultingNodes.addAll(processConditionStatements(node, it));
-                } catch (Exception ex) {
-                    throw new SyntaxException(node, "JavaScript error inside statement", ex);
-                }
-            } else {
-                StructNode processedNode = pageSpecHandler.processExpressionsIn(node);
-                if (isMacroStatement(processedNode.getName())) {
-                    resultingNodes.addAll(processMacroStatement(processedNode));
+                if (isConditionStatement(node.getName())) {
+                    try {
+                        resultingNodes.addAll(processConditionStatements(node, it));
+                    } catch (Exception ex) {
+                        throw new SyntaxException(node, "JavaScript error inside statement", ex);
+                    }
                 } else {
-                    resultingNodes.add(processNonMacroStatement(processedNode));
+                    StructNode processedNode = pageSpecHandler.processExpressionsIn(node);
+                    if (isMacroStatement(processedNode.getName())) {
+                        resultingNodes.addAll(processMacroStatement(processedNode));
+                    } else {
+                        resultingNodes.add(processNonMacroStatement(processedNode));
+                    }
                 }
             }
-        }
 
-        return resultingNodes;
+            return resultingNodes;
+        } else {
+            return Collections.emptyList();
+        }
     }
 
     private List<StructNode> processConditionStatements(StructNode ifNode, ListIterator<StructNode> it) throws IOException {
