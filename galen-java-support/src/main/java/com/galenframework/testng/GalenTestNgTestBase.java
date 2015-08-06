@@ -20,15 +20,11 @@ import com.galenframework.reports.TestReport;
 import com.galenframework.reports.model.LayoutReport;
 import com.galenframework.support.GalenReportsContainer;
 import com.galenframework.utils.GalenUtils;
-import com.galenframework.api.Galen;
-import com.galenframework.reports.TestReport;
-import com.galenframework.reports.model.LayoutReport;
-import com.galenframework.support.GalenReportsContainer;
-import com.galenframework.utils.GalenUtils;
 import org.openqa.selenium.Dimension;
 import org.openqa.selenium.WebDriver;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Listeners;
 
 import java.io.IOException;
 import java.lang.reflect.Method;
@@ -38,11 +34,12 @@ import java.util.Map;
 import java.util.Properties;
 
 /**
- * This class is used as a base test class for TestNG tests.
+ * This class is used as a base test class for TestNG tests.  <br>
  * It takes care of storing WebDriver and Report instances in {@link ThreadLocal} so that the tests could be run in parallel
- * without any race condition. It also quits the WebDriver at the end of the test.
+ * without any race condition. It also quits the WebDriver at the end of the test.  <br>
  * It has {@link #checkLayout} method which als takes care of storing the layout report in reports container.
  */
+@Listeners(GalenTestNgReportsListener.class)
 public abstract class GalenTestNgTestBase {
 
     protected ThreadLocal<WebDriver> driver = new ThreadLocal<>();
