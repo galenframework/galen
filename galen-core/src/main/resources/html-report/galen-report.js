@@ -34,10 +34,7 @@ function hasChildElements(items) {
 function onExpandNodeClick() {
     var expandLink = this;
 
-    var container = $(this).next(".expand-container");
-    if (container.length === 0) {
-        container = $(this).next().next(".expand-container");
-    }
+    var container = $(this).siblings(".expand-container");
     container.slideToggle({
         duration: "fast",
         complete: function () {
@@ -68,27 +65,31 @@ ColorPatternPicker.prototype.pickColor = function () {
     return this.colors[this.index];
 };
 
-function collectObjectsToHighlight(objects, objectNames) {
+function collectObjectsToHighlight(objects, filterFunction) {
     var collected = {},
         colorPicker = new ColorPatternPicker();
 
-    for (var i = 0; i < objectNames.length; i++) {
-        var objectName = objectNames[i];
+    for (objectName in objects) {
+        if (objects.hasOwnProperty(objectName)) {
 
-        if (objectName in objects) {
-            var area = objects[objectName].area;
+            if (filterFunction(objectName, objects[objectName])) {
+                var area = objects[objectName].area;
 
-            collected[objectName] = {
-                area: {
-                    left: area[0] - 3,
-                    top: area[1] - 3,
-                    width: area[2],
-                    height: area[3]
-                },
-                color: colorPicker.pickColor()
-            };
+                collected[objectName] = {
+                    area: {
+                        left: area[0] - 3,
+                        top: area[1] - 3,
+                        width: area[2],
+                        height: area[3]
+                    },
+                    color: colorPicker.pickColor(),
+                    drawBorder: true,
+                    fillBackground: false
+                };
+            }
         }
     }
+
     return collected;
 }
 
@@ -105,7 +106,10 @@ function onLayoutCheckClick() {
         var layout = _GalenReport.layouts[layoutId];
 
         if (layout !== null) {
-            var objects = collectObjectsToHighlight(layout.objects, objectNames);
+            var objects = collectObjectsToHighlight(layout.objects, function (objectName, object) {
+                return objectNames.indexOf(objectName) > -1;
+            });
+
 
             var screenshot = layout.screenshot;
 
@@ -162,6 +166,121 @@ function onImageComparisonClick() {
             });
         });
     });
+
+    return false;
+}
+
+function visitEachSpec(sections, callback) {
+    for (var i = 0; i < sections.length; i++) {
+        if (sections[i].sections != undefined && sections[i].sections != null) {
+            visitEachSpec(sections[i].sections, callback);
+        }
+
+        for (var j = 0; j < sections[i].objects.length; j++) {
+            for (var k = 0; k < sections[i].objects[j].specs.length; k++) {
+                callback(sections[i].objects[j].specs[k]);
+            }
+        }
+    }
+}
+
+function rgb2hex(r,g,b){
+    return "#" +
+        ("0" + r.toString(16)).slice(-2) +
+        ("0" + g.toString(16)).slice(-2) +
+        ("0" + b.toString(16)).slice(-2);
+}
+
+
+function pickHeatColor(value) {
+    var max = 6;
+    var _t = Math.min(value/max, 1.0);
+
+    if (_t < 0.5) {
+        var t = _t*2;
+        var red = Math.min(Math.floor(255.0 * t), 255);
+        return rgb2hex(red, 255, 0);
+    } else {
+        var t = (_t - 0.5) * 2;
+        var green = Math.min(Math.floor(255.0 * (1.0 - t)), 255);
+        return rgb2hex(255, green, 0);
+    }
+
+}
+
+function collectObjectsForHeatmap(layout) {
+    var objectsHeatMap = {
+    };
+
+    visitEachSpec(layout.sections, function (spec) {
+        for (var i = 0; i < spec.highlight.length; i++) {
+            var name = spec.highlight[i];
+            if (name != "screen" && name != "self" && name != "viewport" && name != "parent") {
+                if (objectsHeatMap[name] !== undefined) {
+                    objectsHeatMap[name] += 1;
+                } else {
+                    objectsHeatMap[name] = 1;
+                }
+            }
+        }
+    });
+
+    var collected = {};
+
+    for (objectName in objectsHeatMap) {
+        if (objectsHeatMap.hasOwnProperty(objectName)) {
+            var count = objectsHeatMap[objectName];
+
+            if (layout.objects.hasOwnProperty(objectName)) {
+                
+                var area = layout.objects[objectName].area;
+
+                collected[objectName] = {
+                    area: {
+                        left: area[0],
+                        top: area[1],
+                        width: area[2],
+                        height: area[3]
+                    },
+                    color: pickHeatColor(count),
+                    drawBorder: false,
+                    fillBackground: true
+                };
+            }
+        }
+    }
+    return collected;
+}
+
+function onLayoutHeatmapClick() {
+    $this = $(this);
+    var layoutId = $this.closest(".node-horizontal-menu").attr("data-layout-id");
+
+    if (layoutId !== "" && layoutId >= 0) {
+        var layout = _GalenReport.layouts[layoutId];
+
+        if (layout !== null) {
+            var objects = collectObjectsForHeatmap(layout);
+
+            var screenshot = layout.screenshot;
+
+            if (screenshot === null || screenshot === undefined) {
+                screenshot = _GalenReport.layouts[0].screenshot;
+            }
+
+            showShadow();
+            showPopup("Loading ...");
+
+            loadImage(screenshot, function () {
+                _GalenReport.showScreenshotWithObjects(screenshot, this.width, this.height, objects);
+            });
+
+        } else {
+            _GalenReport.showErrorNotification("Couldn't find layout data");
+        }
+    } else {
+        _GalenReport.showErrorNotification("Couldn't find layout data");
+    }
 
     return false;
 }
@@ -223,7 +342,8 @@ function createGalenReport() {
         registerLayout: function (layout) {
             var id = this.layouts.push({
                 objects: layout.objects,
-                screenshot: layout.screenshot
+                screenshot: layout.screenshot,
+                sections: layout.sections
             }) - 1;
             return id;
         },
@@ -247,6 +367,7 @@ function createGalenReport() {
             $("a.expand-link.contains-children-true").click(onExpandNodeClick);
             $("a.layout-check").click(onLayoutCheckClick);
             $("a.image-comparison-link").click(onImageComparisonClick);
+            $("a.layout-heatmap-link").click(onLayoutHeatmapClick);
 
             expandErrorNodes();
         },
@@ -298,6 +419,9 @@ Handlebars.registerHelper("renderNode", function (node) {
         } else if (node.type === "text") {
             return safeHtml(_GalenReport.tpl.reportNodeText(node));
         } else if (node.type === "layout") {
+            if (node.layoutId === undefined || node.layoutId === null) {
+                node.layoutId = _GalenReport.registerLayout(node);
+            }
             return safeHtml(_GalenReport.tpl.layout(node));
         }
     }
@@ -324,8 +448,10 @@ Handlebars.registerHelper("renderLayoutCheck", function (check) {
 
 Handlebars.registerHelper("renderSublayout", function (sublayout) {
     if (sublayout !== null && sublayout !== undefined) {
-        var layoutId = _GalenReport.registerLayout(sublayout);
-        sublayout.layoutId = layoutId;
+        if (sublayout.layoutId === undefined || sublayout.layoutId === null) {
+            sublayout.layoutId = _GalenReport.registerLayout(sublayout);
+        }
+        
         return safeHtml(_GalenReport.tpl.sublayout(sublayout));
     }
 });

@@ -64,6 +64,7 @@ var reportData = ##REPORT-DATA##;
                 <span class="report-time">{{formatReportTime time}}</span>
                 <a class="expand-link node-expand-button node-status-label node-status-info contains-children-true collapsed" href="#">LAYOUT</a>
                 <div class="node-name">{{name}}</div>
+                <div class="node-horizontal-menu" data-layout-id="{{layoutId}}"><a class="layout-heatmap-link" href="#">Heat Map</a></div>
                 <div class="node-details expand-container">
                     {{renderSublayout this}}
                 </div>
@@ -99,7 +100,7 @@ var reportData = ##REPORT-DATA##;
                 </div>
             </li>
         </script>
-        
+
         <script id="report-layout-object-tpl" type="text/x-handlebars-template">
             <li>
                 <a class="layout-object icon-sprite-before expand-link contains-children-true" href="#">{{name}}</a>
@@ -122,7 +123,7 @@ var reportData = ##REPORT-DATA##;
         </script>
         <script id="report-layout-check-tpl" type="text/x-handlebars-template">
             <li>
-            <a class="layout-check icon-sprite-before layout-check-status-{{status}}" href="#" 
+            <a class="layout-check icon-sprite-before layout-check-status-{{status}}" href="#"
                 data-highlight-objects="{{commaSeparated highlight}}"
                 title="{{place.filePath}}#{{place.lineNumber}}"
                 >{{name}}</a>
@@ -130,7 +131,7 @@ var reportData = ##REPORT-DATA##;
                 {{#if errors}}
                     <div class="layout-check-error-message">
                         {{#if imageComparison}}
-                        <a class="image-comparison-link" 
+                        <a class="image-comparison-link"
                             data-actual-image="{{imageComparison.actualImage}}"
                             data-expected-image="{{imageComparison.expectedImage}}"
                             data-map-image="{{imageComparison.comparisonMapImage}}"
@@ -141,13 +142,13 @@ var reportData = ##REPORT-DATA##;
                             {{#each errors}}
                                 <li>{{this}}</li>
                             {{/each}}
-                            </ul>
-                        </div>
+                        </ul>
                     </div>
+                </div>
                 {{/if}}
 
                 {{#if subLayout}}
-                    {{renderSublayout subLayout}}
+                {{renderSublayout subLayout}}
                 {{/if}}
             </li>
         </script>
@@ -155,7 +156,7 @@ var reportData = ##REPORT-DATA##;
             <div class="screenshot-canvas">
                 <img src="{{screenshot}}"/>
                 {{#each objects}}
-                <div class="canvas-rect" style="left: {{area.left}}px; top: {{area.top}}px; width: {{area.width}}px; height: {{area.height}}px; border-color: {{color}};">
+                <div class="canvas-rect" style="left: {{area.left}}px; top: {{area.top}}px; width: {{area.width}}px; height: {{area.height}}px; {{#if drawBorder}}border-color: {{color}};{{else}}border:none;{{/if}}{{#if fillBackground}}background: {{color}};{{else}}background:none;{{/if}}">
                     <div class="canvas-rect-wrapper">
                         <div class="canvas-rect-hint" style="background: {{color}};">{{@key}}</div>
                     </div>
@@ -184,7 +185,7 @@ var reportData = ##REPORT-DATA##;
                 <li><a class="menu-op-expand-errors" href="#">Expand Errors</a></li>
             </ul>
         </div>
-        <h2>##REPORT-TEST-NAME##</h2>
+        <h2>Login page on mobile device</h2>
         <div id="main"></div>
         <div id="screen-shadow"></div>
         <div id="popup" class="popup">

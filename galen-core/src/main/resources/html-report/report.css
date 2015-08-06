@@ -476,3 +476,15 @@ a.layout-check-status-warn {
     background: #444;
 }
 
+
+/* Horizontal menu for report nodes*/
+.node-horizontal-menu {
+    margin-left: 100px;
+}
+.node-horizontal-menu a {
+    color: red;
+    text-decoration: underline;
+}
+.node-horizontal-menu a:hover {
+    text-decoration: none;
+}
