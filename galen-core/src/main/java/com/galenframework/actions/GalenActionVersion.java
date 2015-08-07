@@ -17,6 +17,8 @@ package com.galenframework.actions;
 
 import com.galenframework.javascript.GalenJsExecutor;
 import com.galenframework.runner.CombinedListener;
+import com.galenframework.utils.VersionUtil;
+import org.openqa.selenium.By;
 
 import java.io.PrintStream;
 
@@ -37,6 +39,7 @@ public class GalenActionVersion extends GalenAction {
         }
         outStream.println("Version: " + version);
         outStream.println("JavaScript executor: " + GalenJsExecutor.getVersion());
+        outStream.println("Selenium version: " + VersionUtil.getVersion(By.class, "Selenium-Version"));
 
     }
 }
