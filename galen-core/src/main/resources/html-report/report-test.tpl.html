@@ -158,7 +158,7 @@ var reportData = ##REPORT-DATA##;
                 {{#each objects}}
                 <div class="canvas-rect" style="left: {{area.left}}px; top: {{area.top}}px; width: {{area.width}}px; height: {{area.height}}px; {{#if drawBorder}}border-color: {{color}};{{else}}border:none;{{/if}}{{#if fillBackground}}background: {{color}};{{else}}background:none;{{/if}}">
                     <div class="canvas-rect-wrapper">
-                        <div class="canvas-rect-hint" style="background: {{color}};">{{@key}}</div>
+                        <div class="canvas-rect-hint" style="background: {{color}};">{{name}}</div>
                     </div>
                 </div>
                 {{/each}}

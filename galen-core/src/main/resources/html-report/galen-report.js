@@ -66,7 +66,7 @@ ColorPatternPicker.prototype.pickColor = function () {
 };
 
 function collectObjectsToHighlight(objects, filterFunction) {
-    var collected = {},
+    var collected = [],
         colorPicker = new ColorPatternPicker();
 
     for (objectName in objects) {
@@ -75,7 +75,8 @@ function collectObjectsToHighlight(objects, filterFunction) {
             if (filterFunction(objectName, objects[objectName])) {
                 var area = objects[objectName].area;
 
-                collected[objectName] = {
+                collected.push({
+                    name: objectName,
                     area: {
                         left: area[0] - 3,
                         top: area[1] - 3,
@@ -85,7 +86,7 @@ function collectObjectsToHighlight(objects, filterFunction) {
                     color: colorPicker.pickColor(),
                     drawBorder: true,
                     fillBackground: false
-                };
+                });
             }
         }
     }
@@ -171,14 +172,16 @@ function onImageComparisonClick() {
 }
 
 function visitEachSpec(sections, callback) {
-    for (var i = 0; i < sections.length; i++) {
-        if (sections[i].sections != undefined && sections[i].sections != null) {
-            visitEachSpec(sections[i].sections, callback);
-        }
+    if (sections !== null && sections !== undefined) {
+        for (var i = 0; i < sections.length; i++) {
+            if (sections[i].sections != undefined && sections[i].sections != null) {
+                visitEachSpec(sections[i].sections, callback);
+            }
 
-        for (var j = 0; j < sections[i].objects.length; j++) {
-            for (var k = 0; k < sections[i].objects[j].specs.length; k++) {
-                callback(sections[i].objects[j].specs[k]);
+            for (var j = 0; j < sections[i].objects.length; j++) {
+                for (var k = 0; k < sections[i].objects[j].specs.length; k++) {
+                    callback(sections[i].objects[j].specs[k]);
+                }
             }
         }
     }
@@ -212,6 +215,8 @@ function collectObjectsForHeatmap(layout) {
     var objectsHeatMap = {
     };
 
+    var collected = [];
+
     visitEachSpec(layout.sections, function (spec) {
         for (var i = 0; i < spec.highlight.length; i++) {
             var name = spec.highlight[i];
@@ -222,10 +227,14 @@ function collectObjectsForHeatmap(layout) {
                     objectsHeatMap[name] = 1;
                 }
             }
+            if (spec.hasOwnProperty("subLayout")) {
+                var collectedFromSubLayout = collectObjectsForHeatmap(spec.subLayout);
+                for (var k = 0; k < collectedFromSubLayout.length; k++) {
+                    collected.push(collectedFromSubLayout[k]);
+                }
+            }
         }
     });
-
-    var collected = {};
 
     for (objectName in objectsHeatMap) {
         if (objectsHeatMap.hasOwnProperty(objectName)) {
@@ -235,7 +244,8 @@ function collectObjectsForHeatmap(layout) {
                 
                 var area = layout.objects[objectName].area;
 
-                collected[objectName] = {
+                collected.push({
+                    name: objectName,
                     area: {
                         left: area[0],
                         top: area[1],
@@ -245,7 +255,7 @@ function collectObjectsForHeatmap(layout) {
                     color: pickHeatColor(count),
                     drawBorder: false,
                     fillBackground: true
-                };
+                });
             }
         }
     }
@@ -260,7 +270,9 @@ function onLayoutHeatmapClick() {
         var layout = _GalenReport.layouts[layoutId];
 
         if (layout !== null) {
-            var objects = collectObjectsForHeatmap(layout);
+            var objects = collectObjectsForHeatmap(layout).sort(function (a, b) {
+                return a.area.width*a.area.height + b.area.width*b.area.height;
+            });
 
             var screenshot = layout.screenshot;
 
