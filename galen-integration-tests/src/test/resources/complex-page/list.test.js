@@ -16,6 +16,6 @@ var secondUserName = commentsPage.comments.get(1).userLink.getText();
 var secondMessage = commentsPage.comments.get(1).message.getText();
 
 
-GalenPagesIT._callbacks.add("Amount of comments is " + commentsPage.comments.size());
-GalenPagesIT._callbacks.add("2nd user name is: " + secondUserName);
-GalenPagesIT._callbacks.add("2nd message is: " + secondMessage);
+GalenPagesIT._callbacks.put("list-test", "Amount of comments is " + commentsPage.comments.size()
+    + "\n2nd user name is: " + secondUserName
+    + "\n2nd message is: " + secondMessage);

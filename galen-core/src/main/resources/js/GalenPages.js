@@ -516,6 +516,13 @@
         var list = this.driver.findElements(GalenPages.convertLocator(locator));
         return list;
     };
+    GalenPages.PageElement.prototype.insideFrame = function (callback) {
+        var webElement = this.getWebElement(),
+            driver = this.getDriver();
+        driver.switchTo().frame(webElement);
+        callback(this, driver);
+        driver.switchTo().parentFrame();
+    };
 
     GalenPages.PageElementList = function (name, locator, elementConstructor, parent) {
         this.name = name;
