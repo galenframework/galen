@@ -1,0 +1,14 @@
+
+
+@objects
+    menu-item-1 #menu
+    menu-item-2 #menu
+    menu-item-3 #menu
+
+
+= Main section =
+    @for [1-3] as index
+
+    @forEach [menu-item-*] as menuItem
+
+    @forEach [menu-item-*] as menuItem, next as nextItem
