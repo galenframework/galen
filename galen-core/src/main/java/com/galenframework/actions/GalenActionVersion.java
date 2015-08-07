@@ -15,12 +15,19 @@
 ******************************************************************************/
 package com.galenframework.actions;
 
+import com.galenframework.GalenMain;
 import com.galenframework.javascript.GalenJsExecutor;
 import com.galenframework.runner.CombinedListener;
+import org.apache.commons.io.IOUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import java.io.IOException;
 import java.io.PrintStream;
 
 public class GalenActionVersion extends GalenAction {
+
+    private final static Logger LOG = LoggerFactory.getLogger(GalenActionVersion.class);
 
     public GalenActionVersion(String[] arguments, PrintStream outStream, PrintStream errStream, CombinedListener listener) {
         super(arguments, outStream, errStream, listener);
@@ -37,6 +44,13 @@ public class GalenActionVersion extends GalenAction {
         }
         outStream.println("Version: " + version);
         outStream.println("JavaScript executor: " + GalenJsExecutor.getVersion());
+        String seleniumVersion = "";
+        try {
+            seleniumVersion = IOUtils.toString(GalenMain.class.getResourceAsStream("/META-INF/maven/org.seleniumhq.selenium/selenium-java/pom.properties"));
+        } catch (IOException e) {
+            LOG.debug("Cannot read selenium version from classpath", e);
+        }
+        outStream.println("Selenium version: " + seleniumVersion);
 
     }
 }
