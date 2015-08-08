@@ -523,6 +523,17 @@
         callback(this, driver);
         driver.switchTo().parentFrame();
     };
+    GalenPages.PageElement.prototype.dragAndDopTo = function (dropField) {
+        this._report("Drag  \"" + this.name + "\" and drop on \"" + dropField.name + "\"");
+        var builder = new Actions(this.getDriver()),
+            dropWebElement = dropField.getWebElement(),
+            dragAndDrop = builder.clickAndHold(this.getWebElement())
+                .moveToElement(dropWebElement)
+                .release(dropWebElement)
+                .build();
+
+        dragAndDrop.perform();
+    };
 
     GalenPages.PageElementList = function (name, locator, elementConstructor, parent) {
         this.name = name;
