@@ -144,11 +144,11 @@ public class SeleniumPage implements Page {
         else if ("viewport".equals(objectName)) {
             return new ViewportElement(driver);
         }
-        else if ("parent".equals(objectName)) {
+        else if ("parent".equals(objectName) || "self".equals(objectName)) {
             if (parentObject != null) {
                 return parentObject;
             }
-            else throw new RuntimeException("There is no parent object defined on page");
+            else throw new RuntimeException("There is no " + objectName + " object defined on page");
         }
         else return null;
     }
