@@ -156,13 +156,21 @@ function onImageComparisonClick() {
     showShadow();
     showPopup("Loading ...");
 
+    var windowWidth = $(window).width();
+
     loadImage(actualImagePath, function (actualImage, actualImageWidth, actualImageHeight) {
         loadImage(expectedImagePath, function (expectedImage, expectedImageWidth, expectedImageHeight) {
             loadImage(mapImagePath, function (mapImage, mapImageWidth, mapImageHeight) {
+                var layout = "vertical";
+                if (windowWidth - actualImageWidth - expectedImageWidth > 100) {
+                    layout = "horizontal";
+                }
+
                 showPopup(_GalenReport.tpl.imageComparison({
                     actual: actualImagePath,
                     expected: expectedImagePath,
-                    map: mapImagePath
+                    map: mapImagePath,
+                    layout: layout
                 }));
             });
         });

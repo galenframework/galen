@@ -165,15 +165,21 @@ var reportData = ##REPORT-DATA##;
             </div>
         </script>
         <script id="image-comparison-tpl" type="text/x-handlebars-template">
-            <div class="image-comparison">
-                <h5>Actual</h5>
-                <img src="{{actual}}"/>
+            <div class="image-comparison image-comparison-layout-{{layout}}">
+                <div class="actual-image">
+                    <h5>Actual</h5>
+                    <img src="{{actual}}"/>
+                </div>
 
-                <h5>Expected</h5>
-                <img src="{{expected}}"/>
+                <div class="expected-image">
+                    <h5>Expected</h5>
+                    <img src="{{expected}}"/>
+                </div>
 
-                <h5>Comparison map</h5>
-                <img src="{{map}}"/>
+                <div class="comparison-map">
+                    <h5>Comparison map</h5>
+                    <img src="{{map}}"/>
+                </div>
             </div>
         </script>
 

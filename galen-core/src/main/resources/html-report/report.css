@@ -265,6 +265,15 @@ a.layout-check-status-warn {
 .image-comparison img {
     margin-bottom: 20px;
 }
+.image-comparison-layout-horizontal .actual-image, .image-comparison-layout-horizontal .expected-image {
+    display:inline-block;
+}
+.image-comparison-layout-horizontal .actual-image {
+    display:: block;
+}
+.image-comparison-layout-vertical .actual-image, .image-comparison-layout-vertical .expected-image {
+    display:block;
+}
 
 /* Notifications */
 
