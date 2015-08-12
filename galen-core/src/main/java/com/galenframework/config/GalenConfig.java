@@ -15,8 +15,6 @@
 ******************************************************************************/
 package com.galenframework.config;
 
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.LinkedList;
@@ -25,9 +23,7 @@ import java.util.Properties;
 
 import com.galenframework.specs.SpecImage;
 import com.galenframework.utils.GalenUtils;
-import com.galenframework.specs.SpecImage;
 
-import com.galenframework.utils.GalenUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -47,6 +43,11 @@ public class GalenConfig {
         catch (Exception e) {
             LOG.trace("Cannot load galen config", e);
         }
+    }
+
+
+    public Properties getProperties() {
+        return properties;
     }
     
     private void loadConfig() throws IOException {
