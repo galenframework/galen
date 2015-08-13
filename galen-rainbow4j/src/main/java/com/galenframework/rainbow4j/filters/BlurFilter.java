@@ -47,8 +47,8 @@ public class BlurFilter implements ImageFilter {
         if (radius > 1) {
             byte[] copyBytes = ArrayUtils.clone(bytes);
 
-            for (int yc = area.y; yc < area.height; yc++) {
-                for (int xc = area.x; xc < area.width; xc++) {
+            for (int yc = area.y; yc < area.y + area.height; yc++) {
+                for (int xc = area.x; xc < area.x + area.width; xc++) {
 
                     int startY = Math.max(yc - radius, 0);
                     int startX = Math.max(xc - radius, 0);

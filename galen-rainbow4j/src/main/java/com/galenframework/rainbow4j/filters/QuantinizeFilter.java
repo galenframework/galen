@@ -45,8 +45,8 @@ public class QuantinizeFilter implements ImageFilter {
 
         int d = 256 / colorsAmount;
 
-        for (int y = area.y; y < area.height; y++) {
-            for (int x = area.x; x < area.width; x++) {
+        for (int y = area.y; y < area.y + area.height; y++) {
+            for (int x = area.x; x < area.x + area.width; x++) {
                 int k = y * width * 3 + x * 3;
                 double red = (bytes[k] & 0xff) / d;
                 double green = (bytes[k + 1] & 0xff) / d;
