@@ -613,7 +613,7 @@
     function insideFrame(driver, locator, callback) {
         var frameElement = driver.findElement(GalenPages.convertLocator(GalenPages.parseLocator(locator)));
         driver.switchTo().frame(frameElement);
-        callback();
+        callback(driver);
         driver.switchTo().parentFrame();
     }
 
