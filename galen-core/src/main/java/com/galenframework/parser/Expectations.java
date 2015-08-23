@@ -130,4 +130,11 @@ public class Expectations {
     public static ExpectationErrorRate errorRate() {
         return new ExpectationErrorRate();
     }
+
+    public static void expectNextWord(String expectedWord, StringCharReader reader) {
+        String word = word().read(reader);
+        if (!expectedWord.equals(word)) {
+            throw new SyntaxException("Expected: " + expectedWord + ", got: " + word);
+        }
+    }
 }

@@ -60,6 +60,7 @@ public class ValidationFactory {
         validations.put(SpecColorScheme.class, new SpecValidationColorScheme());
         validations.put(SpecImage.class, new SpecValidationImage());
         validations.put(SpecCss.class, new SpecValidationCss());
+        validations.put(SpecCount.class, new SpecValidationCount());
     }
 
     @SuppressWarnings({ "unchecked", "rawtypes" })

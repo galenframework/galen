@@ -150,12 +150,11 @@ public class ExpectationsTest {
             row("0p", "Expecting \"px\", \"to\" or \"%\", got \"p\""),
             row("0 p", "Expecting \"px\", \"to\" or \"%\", got \"p\""),
             row("0PX", "Expecting \"px\", \"to\" or \"%\", got \"PX\""),
-            row("10 to 20", "Missing ending: \"px\" or \"%\""),
-            row("10 to 20p", "Missing ending: \"px\" or \"%\""),
+            row("10 to 20", "Expecting \"px\", got \"\""),
+            row("10 to 20p", "Expecting \"px\", got \"p\""),
             row("10 to 20%", "Missing value path for relative range"),
             row("10 to 20% of ", "Missing value path for relative range"),
             row("10% to 20% of ", "Missing value path for relative range"),
-            //TODO add negative tests for ~ Range
         };
     }
     

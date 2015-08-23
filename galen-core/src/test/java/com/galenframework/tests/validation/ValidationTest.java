@@ -15,9 +15,8 @@
 ******************************************************************************/
 package com.galenframework.tests.validation;
 
+import static com.galenframework.specs.Range.*;
 import static java.util.Arrays.asList;
-import static com.galenframework.specs.Range.between;
-import static com.galenframework.specs.Range.exact;
 import static com.galenframework.specs.Side.BOTTOM;
 import static com.galenframework.specs.Side.LEFT;
 import static com.galenframework.specs.Side.RIGHT;
@@ -554,7 +553,55 @@ public class ValidationTest {
             }})),
             row(new SpecCss("font-size", SpecText.Type.MATCHES, "[0-9]+px"), page(new HashMap<String, PageElement>(){{
                 put("object", elementWithCss("font-size", "18px"));
-            }}))
+            }})),
+
+
+            row(new SpecCount(SpecCount.FetchType.ANY, "menu-item-*", exact(3)), page(new HashMap<String, PageElement>(){{
+                put("object", element(0,0, 10,10));
+                put("menu-item-1", element(0,0, 10,10));
+                put("menu-item-2", element(0,0, 10,10));
+                put("menu-item-3", element(0,0, 10,10));
+            }})),
+            row(new SpecCount(SpecCount.FetchType.ANY, "menu-item-*", lessThan(3)), page(new HashMap<String, PageElement>(){{
+                put("object", element(0,0, 10,10));
+                put("menu-item-1", element(0,0, 10,10));
+                put("menu-item-2", element(0,0, 10,10));
+            }})),
+            row(new SpecCount(SpecCount.FetchType.ANY, "menu-item-*", greaterThan(3)), page(new HashMap<String, PageElement>(){{
+                put("object", element(0,0, 10,10));
+                put("menu-item-1", element(0,0, 10,10));
+                put("menu-item-2", element(0,0, 10,10));
+                put("menu-item-3", element(0,0, 10,10));
+                put("menu-item-4", element(0,0, 10,10));
+            }})),
+            row(new SpecCount(SpecCount.FetchType.ANY, "menu-item-*", between(3, 5)), page(new HashMap<String, PageElement>(){{
+                put("object", element(0,0, 10,10));
+                put("menu-item-1", element(0,0, 10,10));
+                put("menu-item-2", element(0,0, 10,10));
+                put("menu-item-3", element(0,0, 10,10));
+                put("menu-item-4", element(0,0, 10,10));
+            }})),
+            row(new SpecCount(SpecCount.FetchType.ANY, "menu-item-*, box-*", exact(4)), page(new HashMap<String, PageElement>(){{
+                put("object", element(0,0, 10,10));
+                put("menu-item-1", element(0,0, 10,10));
+                put("menu-item-2", element(0,0, 10,10));
+                put("menu-item-3", element(0,0, 10,10));
+                put("box-123", element(0,0, 10,10));
+            }})),
+            row(new SpecCount(SpecCount.FetchType.VISIBLE, "menu-item-*", exact(1)), page(new HashMap<String, PageElement>() {{
+                put("object", element(0, 0, 10, 10));
+                put("menu-item-1", invisibleElement(0, 0, 10, 10));
+                put("menu-item-2", element(0, 0, 10, 10));
+                put("menu-item-3", invisibleElement(0, 0, 10, 10));
+                put("menu-item-4", invisibleElement(0, 0, 10, 10));
+            }})),
+            row(new SpecCount(SpecCount.FetchType.ABSENT, "menu-item-*", exact(3)), page(new HashMap<String, PageElement>(){{
+                put("object", element(0,0, 10,10));
+                put("menu-item-1", absentElement(0,0, 10,10));
+                put("menu-item-2", element(0,0, 10,10));
+                put("menu-item-3", absentElement(0,0, 10,10));
+                put("menu-item-4", absentElement(0,0, 10,10));
+            }})),
         };
     }
 
@@ -1452,6 +1499,33 @@ public class ValidationTest {
                         put("object", element(100, 90, 100, 40));
                     }}, imageComparisonTestScreenshot)),
 
+
+            /* Spec Count */
+                /*
+            row(new ValidationResult(areas(new ValidationObject(new Rect(100, 90, 100, 40), "object")),
+                            new ValidationError(messages("There are 3 objects matching \"menu-item-*\" instead of 2"))),
+                    new SpecCount(SpecCount.FetchType.ANY, "menu-item-*", exact(2)), page(new HashMap<String, PageElement>() {{
+                        put("object", element(100, 90, 100, 40));
+                        put("menu-item-1", element(100, 90, 100, 40));
+                        put("menu-item-2", element(100, 90, 100, 40));
+                        put("menu-item-3", element(100, 90, 100, 40));
+                    }})),*/
+            row(new ValidationResult(areas(new ValidationObject(new Rect(100, 90, 100, 40), "object")),
+                            new ValidationError(messages("There are 2 visible objects matching \"menu-item-*\" instead of 3"))),
+                    new SpecCount(SpecCount.FetchType.VISIBLE, "menu-item-*", exact(3)), page(new HashMap<String, PageElement>() {{
+                        put("object", element(100, 90, 100, 40));
+                        put("menu-item-1", element(100, 90, 100, 40));
+                        put("menu-item-2", element(100, 90, 100, 40));
+                        put("menu-item-3", absentElement(100, 90, 100, 40));
+                    }})),/*
+            row(new ValidationResult(areas(new ValidationObject(new Rect(100, 90, 100, 40), "object")),
+                            new ValidationError(messages("There are 1 absent objects matching \"menu-item-*\" instead of 3"))),
+                    new SpecCount(SpecCount.FetchType.ABSENT, "menu-item-*", exact(3)), page(new HashMap<String, PageElement>() {{
+                        put("object", element(100, 90, 100, 40));
+                        put("menu-item-1", element(100, 90, 100, 40));
+                        put("menu-item-2", element(100, 90, 100, 40));
+                        put("menu-item-3", absentElement(100, 90, 100, 40));
+                    }})),*/
         };
     }
 

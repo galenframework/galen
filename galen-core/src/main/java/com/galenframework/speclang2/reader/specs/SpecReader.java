@@ -93,6 +93,7 @@ public class SpecReader {
             put("color-scheme", new SpecColorSchemeProcessor());
             put("image", new SpecImageProcessor());
             put("component", new SpecComponentProcessor());
+            put("count", new SpecCountProcessor());
         }};
     }
 

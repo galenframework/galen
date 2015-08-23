@@ -1052,6 +1052,64 @@ public class SpecsReaderV2Test {
         assertThat(spec.getOriginalText(), is("component frame some.spec"));
     }
 
+    @Test
+    public void shouldReadSpec_count_any_pattern_is_6() throws IOException {
+        SpecCount spec = (SpecCount)readSpec("count any menu-item-* is 6");
+        assertThat(spec.getPattern(), is("menu-item-*"));
+        assertThat(spec.getAmount(), is(Range.exact(6)));
+        assertThat(spec.getFetchType(), is(SpecCount.FetchType.ANY));
+        assertThat(spec.getOriginalText(), is("count any menu-item-* is 6"));
+    }
+
+    @Test
+    public void shouldReadSpec_count_visible_pattern_is_6() throws IOException {
+        SpecCount spec = (SpecCount)readSpec("count visible menu-item-* is 6");
+        assertThat(spec.getPattern(), is("menu-item-*"));
+        assertThat(spec.getAmount(), is(Range.exact(6)));
+        assertThat(spec.getFetchType(), is(SpecCount.FetchType.VISIBLE));
+        assertThat(spec.getOriginalText(), is("count visible menu-item-* is 6"));
+    }
+
+    @Test
+    public void shouldReadSpec_absent_visible_pattern_is_6() throws IOException {
+        SpecCount spec = (SpecCount)readSpec("count absent menu-item-* is 6");
+        assertThat(spec.getPattern(), is("menu-item-*"));
+        assertThat(spec.getAmount(), is(Range.exact(6)));
+        assertThat(spec.getFetchType(), is(SpecCount.FetchType.ABSENT));
+        assertThat(spec.getOriginalText(), is("count absent menu-item-* is 6"));
+    }
+    @Test
+    public void shouldReadSpec_count_pattern_in_double_qoutes_is_6() throws IOException {
+        SpecCount spec = (SpecCount)readSpec("count any \"menu-item-*, box-*\" is 6");
+        assertThat(spec.getPattern(), is("menu-item-*, box-*"));
+        assertThat(spec.getAmount(), is(Range.exact(6)));
+        assertThat(spec.getOriginalText(), is("count any \"menu-item-*, box-*\" is 6"));
+    }
+
+    @Test
+    public void shouldReadSpec_count_pattern_is_6_to_8() throws IOException {
+        SpecCount spec = (SpecCount)readSpec("count any menu-item-* is 6 to 8");
+        assertThat(spec.getPattern(), is("menu-item-*"));
+        assertThat(spec.getAmount(), is(Range.between(6, 8)));
+        assertThat(spec.getOriginalText(), is("count any menu-item-* is 6 to 8"));
+    }
+
+    @Test
+    public void shouldReadSpec_count_pattern_is__lessThan_8() throws IOException {
+        SpecCount spec = (SpecCount)readSpec("count any menu-item-* is < 8");
+        assertThat(spec.getPattern(), is("menu-item-*"));
+        assertThat(spec.getAmount(), is(Range.lessThan(8)));
+        assertThat(spec.getOriginalText(), is("count any menu-item-* is < 8"));
+    }
+
+    @Test
+    public void shouldReadSpec_count_pattern_is__biggerThan_8() throws IOException {
+        SpecCount spec = (SpecCount)readSpec("count any menu-item-* is > 8");
+        assertThat(spec.getPattern(), is("menu-item-*"));
+        assertThat(spec.getAmount(), is(Range.greaterThan(8)));
+        assertThat(spec.getOriginalText(), is("count any menu-item-* is > 8"));
+    }
+
     private Spec readSpec(String specText) {
         return new SpecReader().read(specText);
     }

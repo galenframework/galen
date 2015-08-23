@@ -25,6 +25,7 @@ import com.galenframework.specs.page.Locator;
 import com.galenframework.specs.page.PageSection;
 import com.galenframework.specs.page.Locator;
 import com.galenframework.specs.page.PageSection;
+import com.galenframework.utils.GalenUtils;
 
 
 public class PageSpec {
@@ -66,12 +67,16 @@ public class PageSpec {
      * @return
      */
     public List<String> findMatchingObjectNames(String objectNameSimpleRegex) {
-        
-        Pattern pattern = Pattern.compile(objectNameSimpleRegex.replace("*", "[a-zA-Z0-9_]+"));
+        String[] textPatterns = objectNameSimpleRegex.split(",");
+        List<Pattern> patterns = new LinkedList<>();
+
+        for (String textPattern : textPatterns) {
+            patterns.add(GalenUtils.convertObjectNameRegex(textPattern.trim()));
+        }
         List<String> foundObjects = new LinkedList<>();
         
         for (String objectName : objects.keySet()) {
-            if (pattern.matcher(objectName).matches()) {
+            if (oneOfPatternsMatches(patterns, objectName)) {
                 foundObjects.add(objectName);
             }
         }
@@ -79,7 +84,16 @@ public class PageSpec {
         return foundObjects;
     }
 
-	public void merge(PageSpec spec) {
+    private boolean oneOfPatternsMatches(List<Pattern> patterns, String objectName) {
+        for (Pattern pattern : patterns) {
+            if (pattern.matcher(objectName).matches()) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public void merge(PageSpec spec) {
 		objects.putAll(spec.getObjects());
 		sections.addAll(spec.getSections());
 	}

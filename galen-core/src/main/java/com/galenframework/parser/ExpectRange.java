@@ -17,22 +17,24 @@ package com.galenframework.parser;
 
 import static com.galenframework.parser.Expectations.isDelimeter;
 import static com.galenframework.parser.Expectations.isNumeric;
-import static com.galenframework.suite.reader.Line.UNKNOWN_LINE;
+import static com.galenframework.parser.Expectations.range;
 
 import com.galenframework.config.GalenConfig;
 import com.galenframework.specs.RangeValue;
 import com.galenframework.specs.reader.StringCharReader;
 import com.galenframework.suite.reader.Line;
-import com.galenframework.config.GalenConfig;
 import com.galenframework.specs.Range;
-import com.galenframework.specs.RangeValue;
-import com.galenframework.specs.reader.StringCharReader;
 
 public class ExpectRange implements Expectation<Range>{
 
     private String endingWord = "px";
-   
-	private enum RangeType {
+    private boolean shouldUseEndingWord = true;
+
+    public void setNoEndingWord() {
+        shouldUseEndingWord = false;
+    }
+
+    private enum RangeType {
 		NOTHING, APPROXIMATE, LESS_THAN, GREATER_THAN
 	}
 
@@ -55,33 +57,41 @@ public class ExpectRange implements Expectation<Range>{
         RangeValue firstValue = new ExpectRangeValue().read(reader);
         
         String text = expectNonNumeric(reader);
-        if (text.equals(endingWord)) {
+
+        if (shouldUseEndingWord && text.equals(endingWord)) {
             return createRange(firstValue, rangeType);
         }
+
         if (text.equals("%")) {
             return createRange(firstValue, rangeType).withPercentOf(readPercentageOf(reader));
         }
-        else if (rangeType == RangeType.NOTHING){
+        else if (rangeType != RangeType.NOTHING) {
+            return createRange(firstValue, rangeType);
+        }
+        else {
             Range range;
 
             if (text.equals("to")) {
                 RangeValue secondValue =  new ExpectRangeValue().read(reader);
                 range = Range.between(firstValue, secondValue);
             }
-            else {
+            else if (shouldUseEndingWord) {
                 throw new SyntaxException(Line.UNKNOWN_LINE, "Expecting \"px\", \"to\" or \"%\", got \"" + text + "\"");
+            } else {
+                range = Range.exact(firstValue);
             }
             
             String end = expectNonNumeric(reader);
-            if (end.equals(endingWord)) {
+            if (shouldUseEndingWord && end.equals(endingWord)) {
+                return range;
+            } else if (end.equals("%")) {
+                return range.withPercentOf(readPercentageOf(reader));
+            } else if (shouldUseEndingWord) {
+                throw new SyntaxException(Line.UNKNOWN_LINE, "Expecting \"" + endingWord + "\", got \"" + end + "\"");
+            } else {
                 return range;
             }
-            else if (end.equals("%")) {
-                return range.withPercentOf(readPercentageOf(reader));
-            }
-            else throw new SyntaxException(Line.UNKNOWN_LINE, "Missing ending: \"px\" or \"%\"");
         }
-        else throw new SyntaxException(Line.UNKNOWN_LINE, msgFor(text));
     }
 
     private Range createRange(RangeValue firstValue, RangeType rangeType) {
