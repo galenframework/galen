@@ -19,8 +19,10 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonValue;
 import com.galenframework.reports.TestStatistic;
 import com.galenframework.reports.model.FileTempStorage;
+import org.apache.commons.io.FileUtils;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
@@ -63,6 +65,17 @@ public class TestReportNode {
 
         String attachmentName = getFileStorage().registerFile(name, file);
         attachments.add(attachmentName);
+        return this;
+    }
+
+    public TestReportNode withTextAttachment(String name, String text) {
+        try {
+            File textFile = File.createTempFile(name, ".txt");
+            FileUtils.write(textFile, text);
+            withAttachment(name, textFile);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         return this;
     }
 
