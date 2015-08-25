@@ -17,8 +17,6 @@ package com.galenframework.browser;
 
 import com.galenframework.config.GalenConfig;
 import com.galenframework.config.GalenProperty;
-import com.galenframework.config.GalenConfig;
-import com.galenframework.config.GalenProperty;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.EqualsBuilder;
@@ -27,6 +25,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.openqa.selenium.Platform;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.edge.EdgeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.ie.InternetExplorerDriver;
 import org.openqa.selenium.phantomjs.PhantomJSDriver;
@@ -46,6 +45,7 @@ public class SeleniumBrowserFactory implements BrowserFactory {
     public static final String IE = "ie";
     public static final String PHANTOMJS = "phantomjs";
     public static final String SAFARI = "safari";
+    public static final String EDGE = "edge";
     private String browserType = GalenConfig.getConfig().getDefaultBrowser();
 
     public SeleniumBrowserFactory(String browserType) {
@@ -86,19 +86,11 @@ public class SeleniumBrowserFactory implements BrowserFactory {
     }
 
     private Browser createLocalBrowser() {
-        final WebDriver driver = SeleniumBrowserFactory.getDriver(browserType);
-        if (driver != null) {
-            return new SeleniumBrowser(driver);
-        } else {
-            throw new RuntimeException(String.format("Unknown browser type: \"%s\"", browserType));
-        }
+        return new SeleniumBrowser(SeleniumBrowserFactory.getDriver(browserType));
     }
     
     public static WebDriver getDriver(String browserType){
         
-        // TODO use switch case
-        // default is firefox
-        final WebDriver driver= null; 
         if ( StringUtils.isEmpty(browserType) || FIREFOX.equals(browserType)) {
             return new FirefoxDriver(SeleniumBrowserFactory.getBrowserCapabilities(browserType));
         }
@@ -114,7 +106,12 @@ public class SeleniumBrowserFactory implements BrowserFactory {
         else if (SAFARI.equals(browserType)) {
             return new SafariDriver();
         }
-        return driver;
+        else if (EDGE.equals(browserType)) {
+            return new EdgeDriver();
+        }
+        else {
+            throw new RuntimeException(String.format("Unknown browser type: \"%s\"", browserType));
+        }
     }
 
     public static DesiredCapabilities getBrowserCapabilities(String driverParameter) {
