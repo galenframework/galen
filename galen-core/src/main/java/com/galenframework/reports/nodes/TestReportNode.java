@@ -23,9 +23,7 @@ import org.apache.commons.io.FileUtils;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Date;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 public class TestReportNode {
 
@@ -40,6 +38,7 @@ public class TestReportNode {
 
     private List<String> attachments;
     private Date time = new Date();
+    private Map<String, ReportExtra> extras;
 
     public TestReportNode(FileTempStorage fileStorage) {
         this.fileStorage = fileStorage;
@@ -82,6 +81,43 @@ public class TestReportNode {
     private FileTempStorage getFileStorage() {
         return fileStorage;
     }
+
+    private synchronized Map<String, ReportExtra> ensureExtras() {
+        if (extras == null) {
+            extras = new HashMap<>();
+        }
+        return extras;
+    }
+
+    public TestReportNode withExtrasText(String name, String text) {
+        ensureExtras().put(name, new ReportExtraText(text));
+        return this;
+    }
+
+
+    public TestReportNode withExtrasLink(String name, String link) {
+        ensureExtras().put(name, new ReportExtraLink(link));
+        return this;
+    }
+
+    public TestReportNode withExtrasImage(String name, File image) {
+        ensureExtras().put(name, new ReportExtraImage(getFileStorage().registerFile(image.getName(), image)));
+        return this;
+    }
+
+    public TestReportNode withExtrasFile(String name, File file) {
+        ensureExtras().put(name, new ReportExtraFile(getFileStorage().registerFile(file.getName(), file)));
+        return this;
+    }
+
+    public Map<String, ReportExtra> getExtras() {
+        return extras;
+    }
+
+    public void setExtras(Map<String, ReportExtra> extras) {
+        this.extras = extras;
+    }
+
 
     public static enum Status {
         INFO("info"),

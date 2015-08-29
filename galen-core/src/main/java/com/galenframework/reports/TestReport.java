@@ -20,8 +20,6 @@ import com.galenframework.reports.nodes.LayoutReportNode;
 import com.galenframework.reports.nodes.TestReportNode;
 import com.galenframework.reports.model.FileTempStorage;
 import com.galenframework.reports.model.LayoutReport;
-import com.galenframework.reports.nodes.LayoutReportNode;
-import com.galenframework.reports.nodes.TestReportNode;
 
 import java.util.List;
 
