@@ -305,6 +305,12 @@ function onLayoutHeatmapClick() {
     return false;
 }
 
+
+function onNodeExtrasClick() {
+    var html = $(this).next(".node-extras-content").html();
+    showPopup(html);
+}
+
 function onNotificationCloseClick() {
     $(this).closest(".notification").fadeOut("fast");
     return false;
@@ -378,7 +384,8 @@ function createGalenReport() {
            layoutCheck: createTemplate("report-layout-check-tpl"),
            sublayout: createTemplate("report-layout-sublayout-tpl"),
            screenshotPopup: createTemplate("screenshot-popup-tpl"),
-           imageComparison: createTemplate("image-comparison-tpl")
+           imageComparison: createTemplate("image-comparison-tpl"),
+           nodeExtras: createTemplate("node-extras-tpl")
         },
 
         render: function (id, reportData) {
@@ -388,6 +395,7 @@ function createGalenReport() {
             $("a.layout-check").click(onLayoutCheckClick);
             $("a.image-comparison-link").click(onImageComparisonClick);
             $("a.layout-heatmap-link").click(onLayoutHeatmapClick);
+            $("a.node-extras").click(onNodeExtrasClick);
 
             expandErrorNodes();
         },
@@ -447,6 +455,21 @@ Handlebars.registerHelper("renderNode", function (node) {
     }
     return "";
 });
+
+Handlebars.registerHelper("renderNodeExtras", function (extras) {
+    if (extras !== null && extras !== undefined) {
+        return safeHtml(_GalenReport.tpl.nodeExtras(extras));
+    }
+    return "";
+});
+
+Handlebars.registerHelper('ifCond', function(v1, v2, options) {
+    if(v1 === v2) {
+        return options.fn(this);
+    }
+    return options.inverse(this);
+});
+
 
 Handlebars.registerHelper("renderLayoutSection", function (section) {
     if (section !== null && section !== undefined) {

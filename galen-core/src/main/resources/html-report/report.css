@@ -497,3 +497,36 @@ a.layout-check-status-warn {
 .node-horizontal-menu a:hover {
     text-decoration: none;
 }
+
+/* Extras */
+.node-extras {
+    display: inline-block;
+}
+a.node-extras {
+    display: inline-block;
+    background: #F76C57;
+    color: white;
+    font-size: 10pt;
+    padding: 3px;
+    border-radius: 4px;
+}
+a.node-extras:hover {
+    background: #F52B0C;
+}
+
+.node-extras-content {
+    display: none;
+}
+table.node-extras-table {
+    border-collapse: collapse;
+}
+table.node-extras-table td {
+    border:1px solid #aaa;
+    padding: 5px;
+    color: #555;
+    vertical-align: top;
+}
+table.node-extras-table td img {
+    max-width:100%;
+    max-height: 300px;
+}
