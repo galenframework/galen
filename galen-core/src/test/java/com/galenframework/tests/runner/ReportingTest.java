@@ -27,6 +27,7 @@ import java.io.IOException;
 import java.io.PrintStream;
 import java.lang.reflect.Field;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -166,15 +167,15 @@ public class ReportingTest {
         GalenTestInfo testInfo = new GalenTestInfo("Home page test", null);
 
         testInfo.setReport(new TestReport());
-        testInfo.setStartedAt(new Date(1399741000000L));
-        testInfo.setEndedAt(new Date(1399746930000L));
+        testInfo.setStartedAt(asDate(2014, 4, 10, 18, 56, 40));
+        testInfo.setEndedAt(asDate(2014, 4, 10, 20, 35, 30));
         testInfo.setException(new FakeException("Some exception here"));
         testInfos.add(testInfo);
         
         testInfo = new GalenTestInfo("Login page test", null);
         testInfo.setReport(new TestReport());
-        testInfo.setStartedAt(new Date(1399741000000L));
-        testInfo.setEndedAt(new Date(1399746930000L));
+        testInfo.setStartedAt(asDate(2014, 4, 10, 18, 56, 40));
+        testInfo.setEndedAt(asDate(2014, 4, 10, 20, 35, 30));
         testInfos.add(testInfo);
         
         
@@ -185,6 +186,11 @@ public class ReportingTest {
         String realXml = readFileToString(new File(reportPath));
         
         Assert.assertEquals(trimEveryLine(expectedXml), trimEveryLine(realXml));
+    }
+
+    private Date asDate(int year, int month, int dayOfMonth, int hourOfDay, int minute, int second) {
+        return new GregorianCalendar(year, month, dayOfMonth, hourOfDay, minute, second)
+                .getTime();
     }
     
     @Test public void shouldReport_inHtmlFormat_withException_andAttachments() throws IOException, TemplateException {
