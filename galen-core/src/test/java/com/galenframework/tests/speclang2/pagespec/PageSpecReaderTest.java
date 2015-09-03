@@ -663,6 +663,17 @@ public class PageSpecReaderTest {
     }
 
 
+    @Test
+    public void countFunction_shouldCountAllMatchingObjects() throws IOException {
+        PageSpec pageSpec = readPageSpec("speclang2/count.gspec");
+
+        assertThat(pageSpec.getSections().size(), is(2));
+        assertThat(pageSpec.getSections().get(0).getObjects().size(), is(6));
+
+        assertThat(pageSpec.getSections().get(1).getObjects().size(), is(3));
+    }
+
+
 
     private PageSpec readPageSpec(String resource) throws IOException {
         return readPageSpec(resource, NO_PAGE, EMPTY_TAGS, EMPTY_TAGS);

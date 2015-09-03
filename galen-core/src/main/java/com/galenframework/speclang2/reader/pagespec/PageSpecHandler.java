@@ -253,7 +253,17 @@ public class PageSpecHandler implements VarsParserJsFunctions {
 
     @Override
     public int count(String regex) {
-        throw new RuntimeException("not yet implemented");
+        Pattern pattern = GalenUtils.convertObjectNameRegex(regex);
+
+        int counter = 0;
+
+        for (Map.Entry<String, Locator> entry : pageSpec.getObjects().entrySet()) {
+            if (pattern.matcher(entry.getKey()).matches()) {
+                counter += 1;
+            }
+        }
+
+        return counter;
     }
 
     @Override
