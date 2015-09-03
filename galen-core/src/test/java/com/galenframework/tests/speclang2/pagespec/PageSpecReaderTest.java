@@ -673,6 +673,19 @@ public class PageSpecReaderTest {
         assertThat(pageSpec.getSections().get(1).getObjects().size(), is(3));
     }
 
+    @Test
+    public void forEachLoop_shouldOrderCorrectly_objectsWithNumbers() throws IOException {
+        PageSpec pageSpec = readPageSpec("speclang2/foreach-sortorder.gspec");
+
+        List<ObjectSpecs> objects = pageSpec.getSections().get(0).getObjects();
+
+        assertThat(objects.size(), is(4));
+        assertThat(objects.get(0).getObjectName(), is("menu-item-1"));
+        assertThat(objects.get(1).getObjectName(), is("menu-item-2"));
+        assertThat(objects.get(2).getObjectName(), is("menu-item-12"));
+        assertThat(objects.get(3).getObjectName(), is("menu-item-101"));
+    }
+
 
 
     private PageSpec readPageSpec(String resource) throws IOException {
