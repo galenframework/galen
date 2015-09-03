@@ -16,6 +16,7 @@
 package com.galenframework.speclang2.reader.pagespec;
 
 import com.galenframework.parser.*;
+import com.galenframework.speclang2.AlphanumericComparator;
 import com.galenframework.specs.page.PageSection;
 import com.galenframework.javascript.GalenJsExecutor;
 import com.galenframework.page.AbsentPageElement;
@@ -253,7 +254,17 @@ public class PageSpecHandler implements VarsParserJsFunctions {
 
     @Override
     public int count(String regex) {
-        throw new RuntimeException("not yet implemented");
+        Pattern pattern = GalenUtils.convertObjectNameRegex(regex);
+
+        int counter = 0;
+
+        for (Map.Entry<String, Locator> entry : pageSpec.getObjects().entrySet()) {
+            if (pattern.matcher(entry.getKey()).matches()) {
+                counter += 1;
+            }
+        }
+
+        return counter;
     }
 
     @Override
@@ -311,7 +322,7 @@ public class PageSpecHandler implements VarsParserJsFunctions {
         Collections.sort(list, new Comparator<JsPageElement>() {
             @Override
             public int compare(JsPageElement jsPageElement, JsPageElement t1) {
-                return jsPageElement.name.compareTo(t1.name);
+                return new AlphanumericComparator().compare(jsPageElement.name, t1.name);
             }
         });
         return list;

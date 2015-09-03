@@ -1,0 +1,18 @@
+
+
+@objects
+
+    menu-item-101           #qwe
+
+    menu-item-1             #qwe
+
+    menu-item-2             #qwe
+
+    menu-item-12            #qwe
+
+
+
+= Main =
+    @forEach [menu-item-*] as objectName
+        ${objectName}:
+            visible

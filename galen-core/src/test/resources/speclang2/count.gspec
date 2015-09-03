@@ -1,0 +1,20 @@
+
+
+@objects
+    item-1      #i1
+        name    #i1name
+
+    item-2      #i2
+        name    #i2name
+
+    item-3      #i3
+        name    #i3name
+
+= Star =
+    @for [ 1 - ${count("item-*")}] as i
+        item-${i}:
+            visible
+= Hash =
+    @for [ 1 - ${count("item-#")}] as i
+        item-${i}:
+            visible

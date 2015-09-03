@@ -16,10 +16,9 @@
 package com.galenframework.speclang2.reader.pagespec;
 
 import com.galenframework.parser.SyntaxException;
+import com.galenframework.speclang2.AlphanumericComparator;
 import com.galenframework.specs.reader.StringCharReader;
 import com.galenframework.parser.StructNode;
-import com.galenframework.parser.SyntaxException;
-import com.galenframework.specs.reader.StringCharReader;
 import com.galenframework.suite.reader.Line;
 import com.galenframework.utils.GalenUtils;
 import org.apache.commons.lang3.math.NumberUtils;
@@ -141,6 +140,8 @@ public class ForLoop {
             }
         }
 
+
+        Collections.sort(matchingObjects, new AlphanumericComparator());
         return matchingObjects.toArray(new String[]{});
     }
 
