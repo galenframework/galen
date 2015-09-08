@@ -21,7 +21,6 @@ import com.galenframework.parser.StructNode;
 import com.galenframework.parser.SyntaxException;
 import com.galenframework.specs.page.CorrectionsRect;
 import com.galenframework.page.Page;
-import com.galenframework.specs.page.CorrectionsRect;
 import com.galenframework.specs.page.Locator;
 import com.galenframework.specs.reader.StringCharReader;
 import com.galenframework.suite.reader.Line;
@@ -108,7 +107,7 @@ public class ObjectDefinitionProcessor {
 
         for (int index = 1; index <= count; index++) {
             addObjectToSpec(objectNode, objectName.replace("*", Integer.toString(index)),
-                    new Locator(locator.getLocatorType(), locator.getLocatorValue(), index));
+                    new Locator(locator.getLocatorType(), locator.getLocatorValue(), index).withParent(locator.getParent()));
         }
     }
 
