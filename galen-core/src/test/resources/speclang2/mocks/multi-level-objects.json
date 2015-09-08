@@ -5,6 +5,12 @@
     "subItems": [ {
       "locator": "css: img",
       "area": [0, 0, 10, 10]
+    }, {
+        "locator": "css: li",
+        "area": [0, 0, 10, 10]
+    }, {
+        "locator": "css: li",
+        "area": [0, 0, 10, 10]
     } ]
   }, {
     "locator": "css: .box",

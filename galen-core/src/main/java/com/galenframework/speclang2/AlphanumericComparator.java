@@ -31,10 +31,10 @@ public class AlphanumericComparator implements Comparator<String> {
         int result;
 
         while(leftReader.hasMore() && rightReader.hasMore()) {
-            Object leftChunk = parseChunk(leftReader);
-            Object rightChunk = parseChunk(rightReader);
+            String leftChunk = parseChunk(leftReader);
+            String rightChunk = parseChunk(rightReader);
 
-            if (leftChunk instanceof Number && rightChunk instanceof Number) {
+            if (firstLetterIsDigit(leftChunk) && firstLetterIsDigit(rightChunk)) {
                 result = toInt(leftChunk) - toInt(rightChunk);
                 if (result != 0) {
                     return result;
@@ -50,11 +50,15 @@ public class AlphanumericComparator implements Comparator<String> {
         return left.length() - right.length();
     }
 
-    private Integer toInt(Object chunk) {
-        return ((Number)chunk).intValue();
+    private boolean firstLetterIsDigit(String chunk) {
+        return chunk.length() > 0 && isDigit(chunk.charAt(0));
     }
 
-    private Object parseChunk(StringCharReader reader) {
+    private Integer toInt(String chunk) {
+        return Integer.parseInt(chunk);
+    }
+
+    private String parseChunk(StringCharReader reader) {
         if (isDigit(reader.currentSymbol())) {
             return parseNumber(reader);
         } else {
@@ -71,13 +75,13 @@ public class AlphanumericComparator implements Comparator<String> {
         return builder.toString();
     }
 
-    private Integer parseNumber(StringCharReader reader) {
+    private String parseNumber(StringCharReader reader) {
         StringBuilder builder = new StringBuilder();
 
         while(reader.hasMore() && isDigit(reader.currentSymbol())) {
             builder.append(reader.next());
         }
-        return Integer.parseInt(builder.toString());
+        return builder.toString();
     }
 
     private boolean isDigit(char symbol) {

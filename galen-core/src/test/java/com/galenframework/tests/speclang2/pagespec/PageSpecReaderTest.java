@@ -96,6 +96,9 @@ public class PageSpecReaderTest {
             put("header.icon", new Locator("css", "img")
                     .withParent(new Locator("css", "#header")));
 
+            put("header.item-1", new Locator("css", "li", 1).withParent(new Locator("css", "#header")));
+            put("header.item-2", new Locator("css", "li", 2).withParent(new Locator("css", "#header")));
+
             put("box-1", new Locator("css", ".box", 1));
             put("box-1.caption", new Locator("css", ".caption")
                     .withParent(new Locator("css", ".box", 1)));

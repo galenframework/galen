@@ -3,6 +3,7 @@
 @objects
     header  #header
         icon img
+        item-*  li
 
     box-*   .box
         caption  .caption
