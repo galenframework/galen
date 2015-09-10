@@ -1,12 +1,12 @@
 /*******************************************************************************
 * Copyright 2015 Ivan Shubin http://galenframework.com
-* 
+*
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
 * You may obtain a copy of the License at
-* 
+*
 *   http://www.apache.org/licenses/LICENSE-2.0
-* 
+*
 * Unless required by applicable law or agreed to in writing, software
 * distributed under the License is distributed on an "AS IS" BASIS,
 * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -96,16 +96,19 @@ public class PageDump {
 
         BufferedImage image = Rainbow4J.loadImage(screenshotOriginalFile.getAbsolutePath());
 
-
         File objectsFolder = new File(reportFolder.getAbsolutePath() + File.separator + "objects");
         objectsFolder.mkdirs();
 
         for (Element element : items.values()) {
             if (element.hasImage) {
                 int[] area = element.getArea();
+                int availableHeight = image.getHeight() - area[1];
+                int availableWidth = image.getWidth() - area[0];
+                int subimageHeight = Math.min(area[2], availableHeight);
+                int subimageWidth = Math.min(area[3], availableWidth);
 
                 try {
-                    BufferedImage subImage = image.getSubimage(area[0], area[1], area[2], area[3]);
+                    BufferedImage subImage = image.getSubimage(area[0], area[1], subimageHeight, subimageWidth);
                     Rainbow4J.saveImage(subImage, new File(objectsFolder.getAbsolutePath() + File.separator + element.getObjectName() + ".png"));
                 }
                 catch (Exception ex) {
