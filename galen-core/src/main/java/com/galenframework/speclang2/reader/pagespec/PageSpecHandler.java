@@ -103,30 +103,40 @@ public class PageSpecHandler implements VarsParserJsFunctions {
         js.getScope().defineProperty("isVisible", new BaseFunction() {
             @Override
             public Object call(org.mozilla.javascript.Context cx, Scriptable scope, Scriptable thisObj, Object[] args) {
-                if (args.length == 0 || !(args[0] instanceof String)) {
-                    throw new IllegalArgumentException("Should take string argument");
+                if (args.length == 0) {
+                    throw new IllegalArgumentException("Should take string argument, got nothing");
                 }
-                return pageSpecHandler.isVisible((String) args[0]);
+
+                if (args[0] == null) {
+                    throw new IllegalArgumentException("Object name should be null");
+                }
+                return pageSpecHandler.isVisible(args[0].toString());
             }
         }, ScriptableObject.DONTENUM);
 
         js.getScope().defineProperty("isPresent", new BaseFunction() {
             @Override
             public Object call(org.mozilla.javascript.Context cx, Scriptable scope, Scriptable thisObj, Object[] args) {
-                if (args.length == 0 || !(args[0] instanceof String)) {
-                    throw new IllegalArgumentException("Should take string argument");
+                if (args.length == 0) {
+                    throw new IllegalArgumentException("Should take string argument, got nothing");
                 }
-                return pageSpecHandler.isPresent((String) args[0]);
+                if (args[0] == null) {
+                    throw new IllegalArgumentException("Object name should be null");
+                }
+                return pageSpecHandler.isPresent(args[0].toString());
             }
         }, ScriptableObject.DONTENUM);
 
         js.getScope().defineProperty("count", new BaseFunction() {
             @Override
             public Object call(org.mozilla.javascript.Context cx, Scriptable scope, Scriptable thisObj, Object[] args) {
-                if (args.length == 0 || !(args[0] instanceof String)) {
-                    throw new IllegalArgumentException("Should take string argument");
+                if (args.length == 0) {
+                    throw new IllegalArgumentException("Should take string argument, got nothing");
                 }
-                return pageSpecHandler.count((String) args[0]);
+                if (args[0] == null) {
+                    throw new IllegalArgumentException("Object name should be null");
+                }
+                return pageSpecHandler.count(args[0].toString());
             }
         }, ScriptableObject.DONTENUM);
 
@@ -141,9 +151,9 @@ public class PageSpecHandler implements VarsParserJsFunctions {
                     throw new IllegalArgumentException("Pattern should not be null");
                 } else if (args[0] instanceof NativeJavaObject) {
                     NativeJavaObject njo = (NativeJavaObject) args[0];
-                    pattern = (String) njo.unwrap();
+                    pattern = njo.unwrap().toString();
                 } else {
-                    pattern = (String) args[0];
+                    pattern = args[0].toString();
                 }
                 return pageSpecHandler.find(pattern);
             }
@@ -152,7 +162,7 @@ public class PageSpecHandler implements VarsParserJsFunctions {
         js.getScope().defineProperty("findAll", new BaseFunction() {
             @Override
             public Object call(org.mozilla.javascript.Context cx, Scriptable scope, Scriptable thisObj, Object[] args) {
-                String pattern = null;
+                String pattern;
 
                 if (args.length == 0) {
                     throw new IllegalArgumentException("Should take one string argument, got none");
@@ -160,9 +170,9 @@ public class PageSpecHandler implements VarsParserJsFunctions {
                     throw new IllegalArgumentException("Pattern should not be null");
                 } else if (args[0] instanceof NativeJavaObject) {
                     NativeJavaObject njo = (NativeJavaObject) args[0];
-                    pattern = (String) njo.unwrap();
+                    pattern = njo.unwrap().toString();
                 } else {
-                    pattern = (String) args[0];
+                    pattern = args[0].toString();
                 }
 
                 return pageSpecHandler.findAll(pattern);
