@@ -24,8 +24,8 @@ import com.galenframework.page.Page;
 import com.galenframework.page.PageElement;
 import com.galenframework.speclang2.reader.specs.SpecReader;
 import com.galenframework.specs.page.Locator;
-import com.galenframework.specs.page.PageSection;
 import com.galenframework.specs.reader.page.PageSpec;
+import com.galenframework.specs.reader.page.SectionFilter;
 import com.galenframework.specs.reader.page.rules.Rule;
 import com.galenframework.specs.reader.page.rules.RuleParser;
 import com.galenframework.suite.reader.Context;
@@ -46,23 +46,21 @@ public class PageSpecHandler implements VarsParserJsFunctions {
     private final SpecReader specReader;
     private final GalenJsExecutor jsExecutor;
     private final VarsParser varsParser;
-    private final List<String> tags;
     private final List<Pair<Rule, PageRule>> pageRules;
     private final List<String> processedImports = new LinkedList<>();
     private final List<String> processedScripts = new LinkedList<>();
     private final Properties properties;
-    private final List<String> excludedTags;
     private final Map<String, Object> jsVariables;
+    private final SectionFilter sectionFilter;
 
     public PageSpecHandler(PageSpec pageSpec, Page page,
-                           List<String> tags, List<String> excludedTags,
+                           SectionFilter sectionFilter,
                            String contextPath, Properties properties,
                            Map<String, Object> jsVariables
     ) {
         this.pageSpec = pageSpec;
         this.page = page;
-        this.tags = tags;
-        this.excludedTags = excludedTags;
+        this.sectionFilter = sectionFilter;
         this.contextPath = contextPath;
         this.specReader = new SpecReader();
         this.jsExecutor = createGalenJsExecutor(this);
@@ -90,8 +88,7 @@ public class PageSpecHandler implements VarsParserJsFunctions {
         this.specReader = copy.specReader;
         this.jsExecutor = copy.jsExecutor;
         this.varsParser = copy.varsParser;
-        this.tags = copy.tags;
-        this.excludedTags = copy.excludedTags;
+        this.sectionFilter = copy.sectionFilter;
         this.pageRules = copy.pageRules;
         this.properties = copy.properties;
         this.jsVariables = copy.jsVariables;
@@ -392,10 +389,6 @@ public class PageSpecHandler implements VarsParserJsFunctions {
         setGlobalVariables(variables, StructNode.UNKNOWN_SOURCE);
     }
 
-    public List<String> getTags() {
-        return tags;
-    }
-
     public String getContextPath() {
         return contextPath;
     }
@@ -437,16 +430,16 @@ public class PageSpecHandler implements VarsParserJsFunctions {
         return page;
     }
 
-    public List<String> getExcludedTags() {
-        return excludedTags;
-    }
-
     public Properties getProperties() {
         return properties;
     }
 
     public Map<String, Object> getJsVariables() {
         return jsVariables;
+    }
+
+    public SectionFilter getSectionFilter() {
+        return sectionFilter;
     }
 
 }

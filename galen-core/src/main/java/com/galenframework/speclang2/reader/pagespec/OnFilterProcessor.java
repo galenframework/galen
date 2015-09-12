@@ -17,7 +17,6 @@ package com.galenframework.speclang2.reader.pagespec;
 
 import com.galenframework.parser.SyntaxException;
 import com.galenframework.parser.StructNode;
-import com.galenframework.parser.SyntaxException;
 import com.galenframework.specs.reader.StringCharReader;
 
 import java.util.Collections;
@@ -37,10 +36,10 @@ public class OnFilterProcessor {
             throw new SyntaxException(statementNode, "Missing tags");
         }
 
-        List<String> pageSpecTags = pageSpecHandler.getTags();
+        List<String> pageSpecTags = pageSpecHandler.getSectionFilter().getIncludedTags();
         List<String> filterTags = parseTagsFrom(rest);
 
-        if (!containsExcludedTags(filterTags, pageSpecHandler.getExcludedTags())) {
+        if (!containsExcludedTags(filterTags, pageSpecHandler.getSectionFilter().getExcludedTags())) {
             for (String filterTag : filterTags) {
                 if (filterTag.equals("*")
                         || (pageSpecTags != null && pageSpecTags.contains(filterTag))) {

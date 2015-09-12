@@ -16,7 +16,9 @@
 package com.galenframework.validation.specs;
 
 import java.io.IOException;
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 import com.galenframework.browser.Browser;
 import com.galenframework.speclang2.reader.pagespec.PageSpecReader;
@@ -34,6 +36,7 @@ import static java.util.Arrays.asList;
 
 public class SpecValidationComponent extends SpecValidation<SpecComponent> {
     private final static Logger LOG = LoggerFactory.getLogger(SpecValidationComponent.class);
+    private static final Map<String, Locator> NO_OBJECTS = Collections.emptyMap();
 
     @Override
     public ValidationResult check(PageValidation pageValidation, String objectName, SpecComponent spec) throws ValidationErrorException {
@@ -108,7 +111,7 @@ public class SpecValidationComponent extends SpecValidation<SpecComponent> {
 
         PageSpec componentPageSpec;
         try {
-            componentPageSpec = pageSpecReader.read(spec.getSpecPath(), page, sectionFilter.getIncludedTags(), sectionFilter.getExcludedTags(), spec.getProperties(), spec.getJsVariables());
+            componentPageSpec = pageSpecReader.read(spec.getSpecPath(), page, sectionFilter, spec.getProperties(), spec.getJsVariables(), NO_OBJECTS);
         } catch (IOException e) {
             throw new RuntimeException(e.getMessage(), e);
         }

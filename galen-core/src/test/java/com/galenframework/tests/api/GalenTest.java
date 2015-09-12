@@ -16,6 +16,7 @@
 package com.galenframework.tests.api;
 
 import com.galenframework.page.Rect;
+import com.galenframework.specs.reader.page.SectionFilter;
 import com.google.common.io.Files;
 import com.google.gson.JsonParser;
 
@@ -46,7 +47,7 @@ public class GalenTest {
         WebDriver driver = new MockedDriver();
         driver.get("/mocks/pages/galen4j-sample-page.json");
 
-        LayoutReport layoutReport = Galen.checkLayout(driver, "/specs/galen4j/sample-spec-with-error.spec", asList("mobile"), null, new Properties(), null, null);
+        LayoutReport layoutReport = Galen.checkLayout(driver, "/specs/galen4j/sample-spec-with-error.spec", new SectionFilter(asList("mobile"), null), new Properties(), null, null);
 
         assertThat(layoutReport.getValidationErrorResults(), contains(
                 new ValidationResult(

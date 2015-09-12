@@ -18,6 +18,8 @@ package com.galenframework.javascript;
 import com.galenframework.api.UnregisteredTestSession;
 import com.galenframework.reports.nodes.LayoutReportNode;
 import com.galenframework.reports.nodes.TestReportNode;
+import com.galenframework.specs.page.Locator;
+import com.galenframework.specs.reader.page.SectionFilter;
 import com.galenframework.tests.TestSession;
 import com.galenframework.utils.GalenUtils;
 import com.galenframework.api.Galen;
@@ -49,6 +51,16 @@ public class GalenJsApi {
         }
     }
 
+    public static class JsPageObject {
+        private final String name;
+        private final String locator;
+
+        public JsPageObject(String name, String locator) {
+            this.name = name;
+            this.locator = locator;
+        }
+    }
+
     /**
      * Needed for Javascript based tests
      * @param driver
@@ -58,7 +70,8 @@ public class GalenJsApi {
      * @param screenshotFilePath
      * @throws IOException
      */
-    public static void checkLayout(WebDriver driver, String fileName, String[]includedTags, String[]excludedTags, Properties properties, String screenshotFilePath, JsVariable[] vars) throws IOException {
+    public static void checkLayout(WebDriver driver, String fileName, String[]includedTags, String[]excludedTags,
+                                   Properties properties, String screenshotFilePath, JsVariable[] vars, JsPageObject[] jsPageObjects) throws IOException {
 
         TestSession session = TestSession.current();
         if (session == null) {
@@ -85,11 +98,11 @@ public class GalenJsApi {
         Map<String, Object> jsVariables = convertJsVariables(vars);
 
         LayoutReport layoutReport = Galen.checkLayout(new SeleniumBrowser(driver), fileName,
-                includedTagsList, toList(excludedTags),
+                new SectionFilter(includedTagsList, toList(excludedTags)),
                 properties,
                 jsVariables,
                 screenshotFile,
-                session.getListener());
+                session.getListener(), convertObjects(jsPageObjects));
 
         if (report != null) {
             String reportTitle = "Check layout: " + fileName + " included tags: " + GalenUtils.toCommaSeparated(includedTagsList);
@@ -98,6 +111,35 @@ public class GalenJsApi {
                 layoutReportNode.setStatus(TestReportNode.Status.ERROR);
             }
             report.addNode(layoutReportNode);
+        }
+    }
+
+    private static Map<String, Locator> convertObjects(JsPageObject[] jsPageObjects) {
+        Map<String, Locator> objects = new HashMap<>();
+
+        if (jsPageObjects != null) {
+            for (JsPageObject jsPageObject : jsPageObjects) {
+                objects.put(jsPageObject.name, fromGalenPagesLocator(jsPageObject.locator));
+            }
+        }
+
+        return objects;
+    }
+
+    private static Locator fromGalenPagesLocator(String locatorText) {
+        if (locatorText == null) {
+            throw new IllegalArgumentException("Locator cannot be null");
+        }
+
+        locatorText = locatorText.trim();
+
+        int index = locatorText.indexOf(":");
+        if (index > 0) {
+            String type = locatorText.substring(0, index);
+            String value = locatorText.substring(index + 1);
+            return new Locator(type, value.trim());
+        } else {
+            return new Locator("css", locatorText);
         }
     }
 

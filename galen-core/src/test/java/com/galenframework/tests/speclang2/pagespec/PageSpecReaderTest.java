@@ -35,6 +35,7 @@ import com.galenframework.specs.page.Locator;
 import com.galenframework.specs.page.ObjectSpecs;
 import com.galenframework.specs.page.PageSection;
 import com.galenframework.specs.reader.page.PageSpec;
+import com.galenframework.specs.reader.page.SectionFilter;
 import org.testng.annotations.Test;
 
 import java.io.IOException;
@@ -51,6 +52,7 @@ public class PageSpecReaderTest {
     private static final List<String> EMPTY_TAGS = Collections.emptyList();
     private static final Properties NO_PROPERTIES = null;
     private static final Map<String, Object> NO_VARS = null;
+    private static final Map<String, Locator> EMPTY_OBJECTS = null;
 
     @Test
     public void shouldRead_objectDefinitions() throws IOException {
@@ -556,7 +558,7 @@ public class PageSpecReaderTest {
     public void shouldAllow_toPassProperties() throws IOException {
         Properties properties = new Properties();
         properties.put("custom.user.name", "John");
-        PageSpec pageSpec = new PageSpecReader().read("speclang2/properties.gspec", NO_PAGE, EMPTY_TAGS, EMPTY_TAGS, properties, NO_VARS);
+        PageSpec pageSpec = new PageSpecReader().read("speclang2/properties.gspec", NO_PAGE, new SectionFilter(EMPTY_TAGS, EMPTY_TAGS), properties, NO_VARS, EMPTY_OBJECTS);
 
         assertThat(pageSpec.getSections().get(0).getName(), is("Main section for user John"));
         assertThat(pageSpec.getSections().get(0).getObjects().get(0).getSpecs().get(0).getOriginalText(),
@@ -642,12 +644,12 @@ public class PageSpecReaderTest {
         PageSpec pageSpec = new PageSpecReader().read(
                 "speclang2/custom-js-variables.gspec",
                 NO_PAGE,
-                EMPTY_TAGS, EMPTY_TAGS,
+                new SectionFilter(EMPTY_TAGS, EMPTY_TAGS),
                 NO_PROPERTIES,
                 new HashMap<String, Object>() {{
                     put("age", 29);
                     put("userName", "John");
-                }});
+                }}, EMPTY_OBJECTS);
 
         assertThat(pageSpec.getSections().get(0).getObjects().get(0).getSpecs().get(0).getOriginalText(),
             is("text is \"Name: John, age: 29\""));
@@ -689,6 +691,21 @@ public class PageSpecReaderTest {
         assertThat(objects.get(3).getObjectName(), is("menu-item-101"));
     }
 
+    @Test
+    public void shouldAllow_toProvideObjects_toPageSpec() throws IOException {
+        Map<String, Locator> objects = new HashMap<>();
+        objects.put("header", new Locator("css", "#header"));
+        objects.put("menu", new Locator("id", "menu"));
+
+        PageSpec pageSpec = new PageSpecReader().read("speclang2/provide-objects.gspec", NO_PAGE, new SectionFilter(EMPTY_TAGS, EMPTY_TAGS), NO_PROPERTIES, NO_VARS, objects);
+
+        assertThat(pageSpec.getObjects(), allOf(
+                hasEntry("header", new Locator("css", "#header")),
+                hasEntry("menu", new Locator("id", "menu")),
+                hasEntry("button", new Locator("css", "#button"))
+        ));
+
+    }
 
 
     private PageSpec readPageSpec(String resource) throws IOException {
@@ -696,7 +713,7 @@ public class PageSpecReaderTest {
     }
 
     private PageSpec readPageSpec(String resource, Page page, List<String> tags, List<String> excludedTags) throws IOException {
-        return new PageSpecReader().read(resource, page, tags, excludedTags, NO_PROPERTIES, NO_VARS);
+        return new PageSpecReader().read(resource, page, new SectionFilter(tags, excludedTags), NO_PROPERTIES, NO_VARS, EMPTY_OBJECTS);
     }
 
     private MockedPageElement element(int left, int top, int width, int height) {

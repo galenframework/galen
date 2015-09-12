@@ -23,6 +23,7 @@ import java.io.Reader;
 import com.galenframework.api.Galen;
 import com.galenframework.runner.events.TestFilterEvent;
 import com.galenframework.runner.events.TestSuiteEvent;
+import com.galenframework.specs.page.Locator;
 import com.galenframework.tests.GalenTest;
 import com.galenframework.tests.TestSession;
 import com.galenframework.utils.GalenUtils;

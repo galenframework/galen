@@ -18,15 +18,13 @@ package com.galenframework.api;
 import com.galenframework.browser.Browser;
 import com.galenframework.page.Rect;
 import com.galenframework.speclang2.reader.pagespec.PageSpecReader;
+import com.galenframework.specs.page.Locator;
 import com.galenframework.validation.*;
-import com.galenframework.browser.Browser;
 import com.galenframework.browser.SeleniumBrowser;
 import com.galenframework.page.Page;
 import com.galenframework.page.PageElement;
-import com.galenframework.page.Rect;
 import com.galenframework.reports.LayoutReportListener;
 import com.galenframework.reports.model.LayoutReport;
-import com.galenframework.speclang2.reader.pagespec.PageSpecReader;
 import com.galenframework.specs.reader.page.PageSpec;
 import com.galenframework.specs.reader.page.SectionFilter;
 
@@ -51,48 +49,57 @@ public class Galen {
 
 
     public static LayoutReport checkLayout(Browser browser, String specPath,
-                                           List<String> includedTags, List<String> excludedTags,
+                                           SectionFilter sectionFilter,
                                            Properties properties,
                                            Map<String, Object> jsVariables,
                                            File screenshotFile) throws IOException {
-        return checkLayout(browser, specPath, includedTags, excludedTags, properties, jsVariables, screenshotFile, null);
+        return checkLayout(browser, specPath, sectionFilter, properties, jsVariables, screenshotFile, null);
+    }
+    public static LayoutReport checkLayout(Browser browser, String specPath,
+                                           SectionFilter sectionFilter,
+                                           Properties properties, Map<String, Object> jsVariables,
+                                           File screenshotFile, ValidationListener validationListener
+                                           ) throws IOException {
+        return checkLayout(browser, specPath, sectionFilter, properties, jsVariables, screenshotFile, validationListener, null);
     }
 
     public static LayoutReport checkLayout(Browser browser, String specPath,
-                                           List<String> includedTags, List<String> excludedTags,
+                                           SectionFilter sectionFilter,
                                            Properties properties, Map<String, Object> jsVariables,
-                                           File screenshotFile, ValidationListener validationListener) throws IOException {
+                                           File screenshotFile, ValidationListener validationListener,
+                                           Map<String, Locator> objects) throws IOException {
         PageSpecReader reader = new PageSpecReader();
-        PageSpec pageSpec = reader.read(specPath, browser.getPage(), includedTags, excludedTags, properties, jsVariables);
-        return checkLayout(browser, pageSpec, includedTags, excludedTags, screenshotFile, validationListener);
+        PageSpec pageSpec = reader.read(specPath, browser.getPage(), sectionFilter, properties, jsVariables, objects);
+        return checkLayout(browser, pageSpec, sectionFilter, screenshotFile, validationListener);
     }
 
     public static LayoutReport checkLayout(Browser browser, PageSpec pageSpec,
-                                           List<String> includedTags, List<String> excludedTags,
+                                           SectionFilter sectionFilter,
                                            ValidationListener validationListener) throws IOException {
-        return checkLayout(browser, pageSpec, includedTags, excludedTags, EMPTY_SCREENSHOT_FILE, validationListener);
+        return checkLayout(browser, pageSpec, sectionFilter, EMPTY_SCREENSHOT_FILE, validationListener);
     }
 
     public static LayoutReport checkLayout(Browser browser, PageSpec pageSpec,
-                                   List<String> includedTags, List<String> excludedTags,
-                                   File screenshotFile, ValidationListener validationListener) throws IOException {
+                                           SectionFilter sectionFilter,
+                                           File screenshotFile,
+                                           ValidationListener validationListener) throws IOException {
 
         Page page = browser.getPage();
         page.setScreenshot(screenshotFile);
 
-        return checkLayoutForPage(page, browser, pageSpec, includedTags, excludedTags, validationListener);
+        return checkLayoutForPage(page, browser, pageSpec, sectionFilter, validationListener);
     }
 
     private static LayoutReport checkLayoutForPage(Page page, Browser browser, PageSpec pageSpec,
-                                           List<String> includedTags, List<String> excludedTags,
-                                           ValidationListener validationListener) throws IOException {
+                                                   SectionFilter sectionFilter,
+                                                   ValidationListener validationListener) throws IOException {
 
         CombinedValidationListener listener = new CombinedValidationListener();
         listener.add(validationListener);
 
         LayoutReport layoutReport = new LayoutReport();
-        layoutReport.setIncludedTags(includedTags);
-        layoutReport.setExcludedTags(excludedTags);
+        layoutReport.setIncludedTags(sectionFilter.getIncludedTags());
+        layoutReport.setExcludedTags(sectionFilter.getExcludedTags());
         try {
             File screenshot = page.createScreenshot();
             if (screenshot != null) {
@@ -105,7 +112,6 @@ public class Galen {
         }
         listener.add(new LayoutReportListener(layoutReport));
 
-        SectionFilter sectionFilter = new SectionFilter(includedTags, excludedTags);
         SectionValidation sectionValidation = new SectionValidation(pageSpec.getSections(), new PageValidation(browser, page, pageSpec, listener, sectionFilter), listener);
 
         List<ValidationResult> results = sectionValidation.check();
@@ -123,32 +129,33 @@ public class Galen {
     }
 
     public static LayoutReport checkLayout(WebDriver driver, String spec, List<String> includedTags) throws IOException {
-        return checkLayout(driver, spec, includedTags, EMPTY_TAGS, EMPTY_PROPERTIES, EMPTY_VARS, EMPTY_SCREENSHOT_FILE, EMPTY_VALIDATION_LISTENER);
+        return checkLayout(driver, spec, new SectionFilter(includedTags, EMPTY_TAGS),
+                EMPTY_PROPERTIES, EMPTY_VARS, EMPTY_SCREENSHOT_FILE, EMPTY_VALIDATION_LISTENER);
     }
 
     public static LayoutReport checkLayout(WebDriver driver, String specPath,
-                                           List<String> includedTags, List<String> excludedTags,
+                                           SectionFilter sectionFilter,
                                            Properties properties) throws IOException {
-        return checkLayout(new SeleniumBrowser(driver), specPath, includedTags, excludedTags, properties, EMPTY_VARS, EMPTY_SCREENSHOT_FILE);
+        return checkLayout(new SeleniumBrowser(driver), specPath, sectionFilter, properties, EMPTY_VARS, EMPTY_SCREENSHOT_FILE);
     }
 
     public static LayoutReport checkLayout(WebDriver driver, String specPath,
-                                           List<String> includedTags, List<String> excludedTags,
+                                           SectionFilter sectionFilter,
                                            Properties properties, Map<String, Object> jsVariables) throws IOException {
-        return checkLayout(new SeleniumBrowser(driver), specPath, includedTags, excludedTags, properties, jsVariables, EMPTY_SCREENSHOT_FILE);
+        return checkLayout(new SeleniumBrowser(driver), specPath, sectionFilter, properties, jsVariables, EMPTY_SCREENSHOT_FILE);
     }
 
     public static LayoutReport checkLayout(WebDriver driver, String specPath,
-                                           List<String> includedTags, List<String> excludedTags,
+                                           SectionFilter sectionFilter,
                                            Properties properties, Map<String, Object> jsVariables,
                                            File screenshotFile) throws IOException {
-        return checkLayout(new SeleniumBrowser(driver), specPath, includedTags, excludedTags, properties, jsVariables, screenshotFile);
+        return checkLayout(new SeleniumBrowser(driver), specPath, sectionFilter, properties, jsVariables, screenshotFile);
     }
 
     public static LayoutReport checkLayout(WebDriver driver, String specPath,
-                                           List<String> includedTags, List<String> excludedTags,
+                                           SectionFilter sectionFilter,
                                            Properties properties, Map<String, Object> jsVariables, File screenshotFile, ValidationListener validationListener) throws IOException {
-        return checkLayout(new SeleniumBrowser(driver), specPath, includedTags, excludedTags, properties, jsVariables, screenshotFile, validationListener);
+        return checkLayout(new SeleniumBrowser(driver), specPath, sectionFilter, properties, jsVariables, screenshotFile, validationListener);
     }
 
     public static void dumpPage(WebDriver driver, String pageName, String specPath, String pageDumpPath) throws IOException {
@@ -173,7 +180,7 @@ public class Galen {
     public static void dumpPage(Browser browser, String pageName, String specPath, String pageDumpPath, Integer maxWidth, Integer maxHeight, Boolean onlyImages, Properties properties, Map<String, Object> jsVariables) throws IOException {
         PageSpecReader reader = new PageSpecReader();
 
-        PageSpec pageSpec = reader.read(specPath, browser.getPage(), EMPTY_TAGS, EMPTY_TAGS, properties, jsVariables);
+        PageSpec pageSpec = reader.read(specPath, browser.getPage(), new SectionFilter(EMPTY_TAGS, EMPTY_TAGS), properties, jsVariables, null);
         dumpPage(browser, pageName, pageSpec, new File(pageDumpPath), maxWidth, maxHeight, onlyImages);
     }
 

@@ -67,11 +67,31 @@
         return array;
     }
 
+
+    function objectsToJsPageObjects(objects) {
+        var name, jsPageObjects, locatorText;
+
+        if (objects !== null) {
+            jsPageObjects = [];
+
+            for (name in objects) {
+                if (objects.hasOwnProperty(name)) {
+                    locatorText = objects[name];
+                    jsPageObjects.push(new GalenJsApi.JsPageObject(name, locatorText));
+                }
+            }
+
+            return jsPageObjects;
+        }
+        return null;
+    }
+
     function checkLayout(driver, pageSpecFile, includedTags, excludedTags) {
         var settings,
             screenshotFile = null,
             properties = null,
-            jsVariables = [];
+            jsVariables = [],
+            jsPageObjects = null;
 
         if (arguments.length === 1) {
             settings = driver;
@@ -85,6 +105,10 @@
 
             if (settings.vars !== undefined) {
                 jsVariables = varsToArray(settings.vars);
+            }
+
+            if (settings.objects !== undefined) {
+                jsPageObjects = objectsToJsPageObjects(settings.objects);
             }
         }
 
@@ -109,7 +133,7 @@
             excludedTags = [excludedTags];
         }
 
-        GalenJsApi.checkLayout(driver, pageSpecFile, includedTags, excludedTags, properties, screenshotFile, jsVariables);
+        GalenJsApi.checkLayout(driver, pageSpecFile, includedTags, excludedTags, properties, screenshotFile, jsVariables, jsPageObjects);
     }
 
     function takeScreenshot(driver) {

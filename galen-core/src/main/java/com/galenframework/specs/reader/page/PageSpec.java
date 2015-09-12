@@ -23,22 +23,30 @@ import java.util.regex.Pattern;
 
 import com.galenframework.specs.page.Locator;
 import com.galenframework.specs.page.PageSection;
-import com.galenframework.specs.page.Locator;
-import com.galenframework.specs.page.PageSection;
 import com.galenframework.utils.GalenUtils;
 
 
 public class PageSpec {
 
-    private Map<String, Locator> objects = new HashMap<>();
-    private List<PageSection> sections = new LinkedList<>();
+    private final Map<String, Locator> objects = new HashMap<>();
+    private final List<PageSection> sections = new LinkedList<>();
+
+    public PageSpec() {
+    }
+
+    public PageSpec(Map<String, Locator> objects) {
+        setObjects(objects);
+    }
 
     public Map<String, Locator> getObjects() {
         return this.objects;
     }
 
     public void setObjects(Map<String, Locator> objects) {
-        this.objects = objects;
+        this.objects.clear();
+        if (objects != null) {
+            this.objects.putAll(objects);
+        }
     }
 
     public List<PageSection> getSections() {
@@ -46,7 +54,10 @@ public class PageSpec {
     }
 
     public void setSections(List<PageSection> sections) {
-        this.sections = sections;
+        this.sections.clear();
+        if (sections != null) {
+            this.sections.addAll(sections);
+        }
     }
 
     public void addSection(PageSection section) {

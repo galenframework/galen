@@ -18,6 +18,7 @@ package com.galenframework;
 import com.galenframework.api.Galen;
 import com.galenframework.reports.TestReport;
 import com.galenframework.reports.model.LayoutReport;
+import com.galenframework.specs.reader.page.SectionFilter;
 import com.galenframework.utils.GalenUtils;
 import org.openqa.selenium.Dimension;
 import org.openqa.selenium.WebDriver;
@@ -101,22 +102,21 @@ public abstract class GalenJavaTestBase {
      * @throws IOException
      */
     public void checkLayout(String specPath, List<String> includedTags) throws IOException {
-        checkLayout(specPath, includedTags, Collections.<String>emptyList(), new Properties(), null);
+        checkLayout(specPath, new SectionFilter(includedTags, Collections.<String>emptyList()), new Properties(), null);
     }
 
     /**
      * Checks layout of the page that is currently open in current thread. Takes driver from ThreadLocal
      *
      * @param specPath     a path to galen spec file
-     * @param includedTags a list of tags that should be included in spec
-     * @param excludedTags a list of tags that should be excluded from spec
+     * @param sectionFilter a filter that is used for "@on" filtering in specs
      * @param properties   a set of properties that will be accessible in special galen spec expressions.
      * @param vars         JavaScript variables that will be available in special galen spec expressions
      * @throws IOException
      */
-    public void checkLayout(String specPath, List<String> includedTags, List<String> excludedTags, Properties properties, Map<String, Object> vars) throws IOException {
+    public void checkLayout(String specPath, SectionFilter sectionFilter,  Properties properties, Map<String, Object> vars) throws IOException {
         String title = "Check layout " + specPath;
-        LayoutReport layoutReport = Galen.checkLayout(getDriver(), specPath, includedTags, excludedTags, properties, vars);
+        LayoutReport layoutReport = Galen.checkLayout(getDriver(), specPath, sectionFilter, properties, vars);
         getReport().layout(layoutReport, title);
 
         if (layoutReport.errors() > 0) {

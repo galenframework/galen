@@ -20,7 +20,9 @@ import com.galenframework.parser.FileSyntaxException;
 import com.galenframework.parser.IndentationStructureParser;
 import com.galenframework.parser.StructNode;
 import com.galenframework.parser.SyntaxException;
+import com.galenframework.specs.page.Locator;
 import com.galenframework.specs.reader.page.PageSpec;
+import com.galenframework.specs.reader.page.SectionFilter;
 import com.galenframework.utils.GalenUtils;
 
 import java.io.FileNotFoundException;
@@ -33,31 +35,31 @@ import java.util.Properties;
 public class PageSpecReader {
 
     public PageSpec read(String path, Page page,
-                         List<String> tags, List<String> excludedTags,
+                         SectionFilter sectionFilter,
                          Properties properties,
-                         Map<String, Object> jsVariables) throws IOException {
+                         Map<String, Object> jsVariables, Map<String, Locator> objects) throws IOException {
 
         String contextPath = GalenUtils.getParentForFile(path);
         InputStream stream = GalenUtils.findFileOrResourceAsStream(path);
         if (stream == null) {
             throw new FileNotFoundException(path);
         }
-        return read(stream, path, contextPath, page, tags, excludedTags, properties, jsVariables);
+        return read(stream, path, contextPath, page, sectionFilter, properties, jsVariables, objects);
     }
 
     public PageSpec read(InputStream inputStream, String source,
                          String contextPath,
                          Page page,
-                         List<String> tags, List<String> excludedTags,
+                         SectionFilter sectionFilter,
                          Properties properties,
-                         Map<String, Object> jsVariables) throws IOException {
+                         Map<String, Object> jsVariables, Map<String, Locator> objects) throws IOException {
         try {
             IndentationStructureParser structParser = new IndentationStructureParser();
             List<StructNode> structs = structParser.parse(inputStream, source);
 
-            PageSpec pageSpec = new PageSpec();
+            PageSpec pageSpec = new PageSpec(objects);
 
-            PageSpecHandler pageSpecHandler = new PageSpecHandler(pageSpec, page, tags, excludedTags, contextPath, properties, jsVariables);
+            PageSpecHandler pageSpecHandler = new PageSpecHandler(pageSpec, page, sectionFilter, contextPath, properties, jsVariables);
 
             List<StructNode> allProcessedChildNodes = new MacroProcessor(pageSpecHandler).process(structs);
             new PostProcessor(pageSpecHandler).process(allProcessedChildNodes);

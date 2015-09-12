@@ -21,6 +21,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.galenframework.specs.reader.page.SectionFilter;
 import com.galenframework.validation.ValidationListener;
 import com.galenframework.api.Galen;
 import com.galenframework.browser.Browser;
@@ -49,7 +50,8 @@ public class GalenPageActionCheck extends GalenPageAction {
 
     @Override
     public void execute(TestReport report, Browser browser, GalenPageTest pageTest, ValidationListener validationListener) throws IOException {
-        LayoutReport layoutReport = Galen.checkLayout(browser, specPath, getIncludedTags(), getExcludedTags(), getCurrentProperties(), jsVariables, NO_SCREENSHOT, validationListener);
+        SectionFilter sectionFilter = new SectionFilter(getIncludedTags(), getExcludedTags());
+        LayoutReport layoutReport = Galen.checkLayout(browser, specPath, sectionFilter, getCurrentProperties(), jsVariables, NO_SCREENSHOT, validationListener);
 
         if (report != null) {
             String reportTitle = "Check layout: " + specPath + " included tags: " + toCommaSeparated(includedTags);
