@@ -127,7 +127,7 @@ public class SpecValidationImage extends SpecValidation<SpecImage> {
             InputStream stream = GalenUtils.findFileOrResourceAsStream(imagePath);
             sampleImage = Rainbow4J.loadImage(stream);
         } catch (Exception ex) {
-            LOG.error("Unkown errors during image check.", ex);
+            LOG.error("Unknown errors during image check.", ex);
             throw new ValidationErrorException("Couldn't load image: " + spec.getImagePaths().get(0));
         }
 

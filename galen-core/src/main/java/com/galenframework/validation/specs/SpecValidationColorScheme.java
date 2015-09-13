@@ -24,6 +24,7 @@ import java.util.List;
 import com.galenframework.config.GalenConfig;
 import com.galenframework.config.GalenProperty;
 import com.galenframework.page.Rect;
+import com.galenframework.specs.RangeValue;
 import com.galenframework.specs.SpecColorScheme;
 import com.galenframework.specs.colors.ColorRange;
 import com.galenframework.validation.*;
@@ -68,10 +69,12 @@ public class SpecValidationColorScheme extends SpecValidation<SpecColorScheme> {
         
         for (ColorRange colorRange : spec.getColorRanges()) {
             Color color = colorRange.getColor();
-            int percentage = (int)spectrum.getPercentage(color.getRed(), color.getGreen(), color.getBlue(), colorTestRange);
+            double realPercentage = spectrum.getPercentage(color.getRed(), color.getGreen(), color.getBlue(), colorTestRange);
             
-            if (!colorRange.getRange().holds(percentage)) {
-                messages.add(String.format("color %s on \"%s\" is %d%% %s", toHexColor(color), objectName, (int)percentage, colorRange.getRange().getErrorMessageSuffix("%")));
+            if (!colorRange.getRange().holds(realPercentage)) {
+                String realPercentageText = new RangeValue(realPercentage, colorRange.getRange().findPrecision()).toString();
+
+                messages.add(String.format("color %s on \"%s\" is %s%% %s", toHexColor(color), objectName, realPercentageText, colorRange.getRange().getErrorMessageSuffix("%")));
             }
         }
 

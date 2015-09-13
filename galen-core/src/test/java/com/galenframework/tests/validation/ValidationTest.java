@@ -1465,6 +1465,11 @@ public class ValidationTest {
                           put("object", element(10, 10, 500, 300));
                   }}, testImage)),
 
+          row(validationResult(areas(new ValidationObject(new Rect(10, 10, 500, 300), "object")),
+                    messages("color #3a70d0 on \"object\" is 12.87% instead of 12.84%")),
+                specColorScheme(new ColorRange(Color.decode("#3A70D0"), exact(new RangeValue(1284, 2)))), page(new HashMap<String, PageElement>(){{
+                    put("object", element(10, 10, 500, 300));
+                }}, testImage)),
 
 
 

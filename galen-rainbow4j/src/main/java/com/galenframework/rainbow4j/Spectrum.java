@@ -39,7 +39,7 @@ public class Spectrum {
      * @param range 0 to 255 value of range within which it should take histogram value
      * @return
      */
-    public float getPercentage(int red, int green, int blue, int range) {
+    public double getPercentage(int red, int green, int blue, int range) {
 
         long counter = 0;
         
@@ -62,7 +62,7 @@ public class Spectrum {
             }
         }
 
-        return 100.f * counter/pixelsAmount;
+        return 100.d * counter/pixelsAmount;
     }
     
     public void printColors() {
