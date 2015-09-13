@@ -1501,7 +1501,7 @@ public class ValidationTest {
 
 
             /* Spec Count */
-                /*
+
             row(new ValidationResult(areas(new ValidationObject(new Rect(100, 90, 100, 40), "object")),
                             new ValidationError(messages("There are 3 objects matching \"menu-item-*\" instead of 2"))),
                     new SpecCount(SpecCount.FetchType.ANY, "menu-item-*", exact(2)), page(new HashMap<String, PageElement>() {{
@@ -1509,7 +1509,7 @@ public class ValidationTest {
                         put("menu-item-1", element(100, 90, 100, 40));
                         put("menu-item-2", element(100, 90, 100, 40));
                         put("menu-item-3", element(100, 90, 100, 40));
-                    }})),*/
+                    }})),
             row(new ValidationResult(areas(new ValidationObject(new Rect(100, 90, 100, 40), "object")),
                             new ValidationError(messages("There are 2 visible objects matching \"menu-item-*\" instead of 3"))),
                     new SpecCount(SpecCount.FetchType.VISIBLE, "menu-item-*", exact(3)), page(new HashMap<String, PageElement>() {{
@@ -1517,7 +1517,7 @@ public class ValidationTest {
                         put("menu-item-1", element(100, 90, 100, 40));
                         put("menu-item-2", element(100, 90, 100, 40));
                         put("menu-item-3", absentElement(100, 90, 100, 40));
-                    }})),/*
+                    }})),
             row(new ValidationResult(areas(new ValidationObject(new Rect(100, 90, 100, 40), "object")),
                             new ValidationError(messages("There are 1 absent objects matching \"menu-item-*\" instead of 3"))),
                     new SpecCount(SpecCount.FetchType.ABSENT, "menu-item-*", exact(3)), page(new HashMap<String, PageElement>() {{
@@ -1525,7 +1525,7 @@ public class ValidationTest {
                         put("menu-item-1", element(100, 90, 100, 40));
                         put("menu-item-2", element(100, 90, 100, 40));
                         put("menu-item-3", absentElement(100, 90, 100, 40));
-                    }})),*/
+                    }}))
         };
     }
 
