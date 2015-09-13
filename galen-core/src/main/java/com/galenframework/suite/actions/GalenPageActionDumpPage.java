@@ -15,14 +15,13 @@
 ******************************************************************************/
 package com.galenframework.suite.actions;
 
+import com.galenframework.api.GalenPageDump;
 import com.galenframework.browser.Browser;
 import com.galenframework.validation.ValidationListener;
 import com.galenframework.api.Galen;
-import com.galenframework.browser.Browser;
 import com.galenframework.reports.TestReport;
 import com.galenframework.suite.GalenPageAction;
 import com.galenframework.suite.GalenPageTest;
-import com.galenframework.validation.ValidationListener;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -51,7 +50,13 @@ public class GalenPageActionDumpPage extends GalenPageAction {
 
     @Override
     public void execute(TestReport report, Browser browser, GalenPageTest pageTest, ValidationListener validationListener) throws Exception {
-        Galen.dumpPage(browser, pageName, specPath, pageDumpPath, maxWidth, maxHeight, isOnlyImages(), getCurrentProperties(), jsVariables);
+        new GalenPageDump(pageName)
+                .setMaxWidth(maxWidth)
+                .setMaxHeight(maxHeight)
+                .setOnlyImages(isOnlyImages())
+                .setProperties(getCurrentProperties())
+                .setJsVariables(jsVariables)
+        .dumpPage(browser, specPath, pageDumpPath);
     }
 
     public String getPageDumpPath() {

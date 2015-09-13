@@ -15,6 +15,7 @@
 ******************************************************************************/
 package com.galenframework.tests.api;
 
+import com.galenframework.api.GalenPageDump;
 import com.galenframework.page.Rect;
 import com.galenframework.specs.reader.page.SectionFilter;
 import com.google.common.io.Files;
@@ -68,7 +69,7 @@ public class GalenTest {
 
         WebDriver driver = new MockedDriver();
         driver.get("/mocks/pages/galen4j-pagedump.json");
-        Galen.dumpPage(driver, "test page", "/specs/galen4j/pagedump.spec", pageDumpPath);
+        new GalenPageDump("test page").dumpPage(driver, "/specs/galen4j/pagedump.spec", pageDumpPath);
 
         assertFileExists(pageDumpPath + "/page.json");
         assertJSONContent(pageDumpPath + "/page.json", "/pagedump/expected.json");
@@ -94,7 +95,10 @@ public class GalenTest {
 
         WebDriver driver = new MockedDriver();
         driver.get("/mocks/pages/galen4j-pagedump.json");
-        Galen.dumpPage(driver, "test page", "/specs/galen4j/pagedump.spec", pageDumpPath, 80, 80, false);
+        new GalenPageDump("test page")
+                .setMaxWidth(80)
+                .setMaxHeight(80)
+                .dumpPage(driver, "/specs/galen4j/pagedump.spec", pageDumpPath);
 
         assertFileExists(pageDumpPath + "/objects/button-save.png");
         assertFileDoesNotExist(pageDumpPath + "/objects/name-textfield.png");
@@ -117,7 +121,11 @@ public class GalenTest {
 
         WebDriver driver = new MockedDriver();
         driver.get("/mocks/pages/galen4j-pagedump.json");
-        Galen.dumpPage(driver, "test page", "/specs/galen4j/pagedump.spec", pageDumpPath, 80, 80, true);
+        new GalenPageDump("test page")
+                .setMaxWidth(80)
+                .setMaxHeight(80)
+                .setOnlyImages(true)
+                .dumpPage(driver, "/specs/galen4j/pagedump.spec", pageDumpPath);
 
         assertFileExists(pageDumpPath + "/objects/button-save.png");
         assertFileDoesNotExist(pageDumpPath + "/objects/name-textfield.png");
@@ -133,6 +141,35 @@ public class GalenTest {
         assertFileDoesNotExist(pageDumpPath + "/galen-pagedump.css");
     }
 
+    @Test
+    public void dumpPage_shouldExcludeObjects_thatMatch_givenRegex() throws IOException {
+        String pageDumpPath = Files.createTempDir().getAbsolutePath() + "/pagedump";
+
+        WebDriver driver = new MockedDriver();
+        driver.get("/mocks/pages/galen4j-pagedump.json");
+        new GalenPageDump("test page")
+                .setExcludedObjects(asList(
+                    "big-container",
+                    "menu-item-#"))
+                .dumpPage(driver,  "/specs/galen4j/pagedump.spec", pageDumpPath);
+
+        assertFileExists(pageDumpPath + "/page.json");
+        assertJSONContent(pageDumpPath + "/page.json", "/pagedump/expected-without-excluded-objects.json");
+        assertFileExists(pageDumpPath + "/page.html");
+
+        assertFileExists(pageDumpPath + "/page.png");
+        assertFileExists(pageDumpPath + "/objects/button-save.png");
+        assertFileExists(pageDumpPath + "/objects/name-textfield.png");
+        assertFileDoesNotExist(pageDumpPath + "/objects/menu-item-1.png");
+        assertFileDoesNotExist(pageDumpPath + "/objects/menu-item-2.png");
+        assertFileDoesNotExist(pageDumpPath + "/objects/menu-item-3.png");
+        assertFileDoesNotExist(pageDumpPath + "/objects/big-container.png");
+
+        assertFileExists(pageDumpPath + "/jquery-1.11.2.min.js");
+        assertFileExists(pageDumpPath + "/galen-pagedump.js");
+        assertFileExists(pageDumpPath + "/galen-pagedump.css");
+
+    }
 
     private void assertJSONContent(String pathForRealContent, String pathForExpectedContent) throws IOException {
         Assert.assertEquals(String.format("Content of \"%s\" should be the same as in \"%s\"", pathForRealContent, pathForExpectedContent),

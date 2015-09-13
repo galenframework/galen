@@ -15,7 +15,7 @@
  * ******************************************************************************/
 
 
-/*global GalenJsApi, GalenUtils, TestSession, System, Galen, GalenCore, logged*/
+/*global GalenJsApi, GalenPageDump, GalenUtils, TestSession, System, Galen, GalenCore, logged*/
 /*jslint nomen: true*/
 
 (function (exports) {
@@ -191,7 +191,29 @@
         }
     };
 
-    function dumpPage(driver, pageName, specPath, exportPath, maxWidth, maxHeight, onlyImages) {
+    function dumpPage(settings) {
+        var driver = settings.driver,
+            name = settings.name,
+            spec = settings.spec,
+            exportPath = settings.exportPath,
+            maxWidth = settings.maxWidth,
+            maxHeight = settings.maxHeight,
+            onlyImages = settings.onlyImages,
+            excludedObjects = settings.excludedObjects;
+
+        if (driver === undefined || driver === null) {
+            throw new Error("Driver is not defined");
+        }
+        if (name === undefined || name === null) {
+            name = "undefined";
+        }
+        if (spec === undefined || spec === null) {
+            throw new Error("spec is not defined");
+        }
+        if (exportPath === undefined || exportPath === null) {
+            throw new Error("exportPath is not defined");
+        }
+
         if (maxWidth === undefined) {
             maxWidth = null;
         }
@@ -204,7 +226,17 @@
             onlyImages = false;
         }
 
-        Galen.dumpPage(driver, pageName, specPath, exportPath, maxWidth, maxHeight, onlyImages);
+        if (excludedObjects !== undefined && excludedObjects !== null) {
+            excludedObjects = GalenJsApi.toList(excludedObjects);
+        }
+
+
+        new GalenPageDump(name)
+            .setMaxWidth(maxWidth)
+            .setMaxHeight(maxHeight)
+            .setOnlyImages(onlyImages)
+            .setExcludedObjects(excludedObjects)
+            .dumpPage(driver, spec, exportPath);
     }
 
     exports.createDriver = createDriver;

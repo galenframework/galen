@@ -1,0 +1,16 @@
+{
+  "pageName": "test page",
+  "title": "My page",
+  "items": {
+    "name-textfield": {
+      "area": [120, 10, 200, 50],
+      "text": "",
+      "hasImage":true
+    },
+    "button-save": {
+      "area": [10, 10, 100, 50],
+      "text": "Save",
+      "hasImage":true
+    }
+  }
+}

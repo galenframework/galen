@@ -159,7 +159,7 @@ public class GalenJsApi {
     }
 
 
-    private static List<String> toList(String[] array) {
+    public static List<String> toList(String[] array) {
         if (array != null) {
             return asList(array);
         }

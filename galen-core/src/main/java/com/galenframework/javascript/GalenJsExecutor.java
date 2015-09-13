@@ -21,9 +21,9 @@ import java.io.InputStream;
 import java.io.Reader;
 
 import com.galenframework.api.Galen;
+import com.galenframework.api.GalenPageDump;
 import com.galenframework.runner.events.TestFilterEvent;
 import com.galenframework.runner.events.TestSuiteEvent;
-import com.galenframework.specs.page.Locator;
 import com.galenframework.tests.GalenTest;
 import com.galenframework.tests.TestSession;
 import com.galenframework.utils.GalenUtils;
@@ -76,7 +76,8 @@ public class GalenJsExecutor implements VarsParserJsProcessable {
                 TestSuiteEvent.class,
                 TestFilterEvent.class,
                 TestRetryEvent.class,
-                Galen.class
+                Galen.class,
+                GalenPageDump.class
         });
     }
     

@@ -15,7 +15,7 @@
 ******************************************************************************/
 package com.galenframework.actions;
 
-import com.galenframework.api.Galen;
+import com.galenframework.api.GalenPageDump;
 import com.galenframework.browser.Browser;
 import com.galenframework.browser.SeleniumBrowserFactory;
 import com.galenframework.parser.SyntaxException;
@@ -59,7 +59,11 @@ public class GalenActionDump extends GalenAction {
 
             browser.load(dumpArguments.getUrl());
 
-            Galen.dumpPage(browser, dumpArguments.getUrl(), dumpArguments.getPaths().get(0), dumpArguments.getExport(), dumpArguments.getMaxWidth(), dumpArguments.getMaxHeight(), false, NO_JSVARIABLES);
+            new GalenPageDump(dumpArguments.getUrl())
+                    .setMaxWidth(dumpArguments.getMaxWidth())
+                    .setMaxHeight(dumpArguments.getMaxHeight())
+                    .dumpPage(browser, dumpArguments.getPaths().get(0), dumpArguments.getExport());
+
             outStream.println("Done!");
         } catch (Exception ex) {
             throw new RuntimeException(ex);
