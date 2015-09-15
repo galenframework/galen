@@ -16,10 +16,12 @@
 package com.galenframework.tests.reports;
 
 import com.galenframework.reports.TestReport;
+import com.galenframework.reports.model.FileTempStorage;
 import com.galenframework.reports.nodes.*;
 import org.testng.annotations.Test;
 
 import java.io.File;
+import java.lang.reflect.Field;
 import java.util.Map;
 
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -29,7 +31,9 @@ public class TestReportTest {
 
 
     @Test
-    public void shouldAllow_toStore_extrasData() {
+    public void shouldAllow_toStore_extrasData() throws NoSuchFieldException, IllegalAccessException {
+        resetFileStorageUniqueId();
+
         TestReport report = new TestReport();
 
         report.info("Some info")
@@ -53,5 +57,11 @@ public class TestReportTest {
         assertThat(extraImage.getValue(), is("file-2-page-screenshot.png"));
 
 
+    }
+
+    private void resetFileStorageUniqueId() throws NoSuchFieldException, IllegalAccessException {
+        Field uniqueIdField = FileTempStorage.class.getDeclaredField("_uniqueId");
+        uniqueIdField.setAccessible(true);
+        uniqueIdField.set(null, 0L);
     }
 }
