@@ -36,9 +36,6 @@ public class JsFunctionLoad extends BaseFunction {
 
     private final static Logger LOG = LoggerFactory.getLogger(JsFunctionLoad.class);
 
-    /**
-     *
-     */
     private static final long serialVersionUID = 1L;
 
     private Stack<String> contextPathStack = new Stack<String>();
@@ -55,20 +52,20 @@ public class JsFunctionLoad extends BaseFunction {
         }
 
         for (Object arg : args) {
-            if (arg instanceof String) {
-                load((String) arg, cx, scope);
-            } else if (arg instanceof NativeArray) {
+            if (arg instanceof NativeArray) {
                 NativeArray array = (NativeArray)arg;
                 for (int i = 0; i < array.getLength(); i++) {
                     Object path = array.get(i);
-                    if (path instanceof String) {
-                        load((String) path, cx, scope);
+                    if (path != null) {
+                        load(path.toString(), cx, scope);
                     } else {
-                        throw new RuntimeException("'load' function takes only array of string but one item was: " + path.getClass());
+                        throw new NullPointerException("Cannot have null argument in load function");
                     }
                 }
+            } else if (arg == null) {
+                throw new NullPointerException("Cannot have null argument in load function");
             } else {
-                throw new RuntimeException("'load' function takes only string arguments or array of string but got: " + arg.getClass());
+                load(arg.toString(), cx, scope);
             }
         }
         return null;
