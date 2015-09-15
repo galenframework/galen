@@ -523,7 +523,7 @@
         callback(this, driver);
         driver.switchTo().parentFrame();
     };
-    GalenPages.PageElement.prototype.dragAndDopTo = function (dropField) {
+    GalenPages.PageElement.prototype.dragAndDropTo = function (dropField) {
         this._report("Drag  \"" + this.name + "\" and drop on \"" + dropField.name + "\"");
         var builder = new Actions(this.getDriver()),
             dropWebElement = dropField.getWebElement(),
