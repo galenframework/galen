@@ -81,10 +81,10 @@
 
                 return new this.Locator(type, value);
             }
-            return {
-                type: this.identifyLocatorType(locatorText),
-                value: locatorText
-            };
+            return new this.Locator(this.identifyLocatorType(locatorText), locatorText);
+        },
+        toStringLocator: function (locator) {
+            return locator.type + ": " + locator.value;
         },
         extendPage: function (page, driver, name, mainFields, secondaryFields) {
             var obj = new GalenPages.Page(driver, name, mainFields, secondaryFields),
@@ -260,9 +260,11 @@
         }
 
         this.initPageElements(mainFields, suffix, function (fieldNames) {
-            thisPage.primaryFields = fieldNames;
+            thisPage._primaryFields = fieldNames;
         });
-        this.initPageElements(secondaryFields, suffix);
+        this.initPageElements(secondaryFields, suffix, function (fieldNames) {
+            thisPage._secondaryFields = fieldNames;
+        });
     };
     GalenPages.Page.prototype.initPageElements = function (elementsMap, nameSuffix, elementsCollectedCallback) {
         var fieldNames = [],
@@ -292,6 +294,19 @@
         if (elementsCollectedCallback !== null && typeof elementsCollectedCallback  === "function") {
             elementsCollectedCallback(fieldNames);
         }
+    };
+    GalenPages.Page.prototype.getAllLocators = function () {
+        var fieldNames = this._primaryFields.concat(this._secondaryFields),
+            i,
+            field,
+            allFieldLocators = {};
+
+        for (i = 0; i < fieldNames.length; i += 1) {
+            field = this[fieldNames[i]];
+            allFieldLocators[fieldNames[i]] = GalenPages.toStringLocator(field.locator);
+        }
+
+        return allFieldLocators;
     };
     GalenPages.Page.prototype.waitTimeout = "10s";
     GalenPages.Page.prototype.waitPeriod = "1s";
@@ -347,7 +362,7 @@
         return this;
     };
     GalenPages.Page.prototype.waitForIt = function () {
-        if (this.primaryFields.length > 0) {
+        if (this._primaryFields.length > 0) {
             var conditions = {},
                 i,
                 pageName = this.name,
@@ -355,9 +370,9 @@
                     return this.field.exists() && this.field.isDisplayed();
                 };
 
-            for (i = 0; i < this.primaryFields.length; i += 1) {
-                conditions[this.primaryFields[i] + " to be displayed"] = {
-                    field: this[this.primaryFields[i]],
+            for (i = 0; i < this._primaryFields.length; i += 1) {
+                conditions[this._primaryFields[i] + " to be displayed"] = {
+                    field: this[this._primaryFields[i]],
                     apply: applyConditionFunc
                 };
             }

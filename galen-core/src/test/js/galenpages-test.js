@@ -342,7 +342,15 @@ describe("GalenPages", function (){
                 secondaryField2: ".secondary-field-2"
             });
 
-            assertThat("Primary fields should be", page.primaryFields).is(["mainField1", "mainField2"]);
+            assertThat("Primary fields should be", page._primaryFields).is(["mainField1", "mainField2"]);
+            assertThat("Secondary fields should be", page._secondaryFields).is(["secondaryField1", "secondaryField2"]);
+
+            assertThat("All field locators should be", page.getAllLocators()).is({
+                mainField1: "css: .some-field-1",
+                mainField2: "css: .some-field-1",
+                secondaryField1: "css: .secondary-field-1",
+                secondaryField2: "css: .secondary-field-2"
+            });
 
             should.exist(page.secondaryField1);
             should.exist(page.secondaryField2);
