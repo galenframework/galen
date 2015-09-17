@@ -509,8 +509,8 @@ Handlebars.registerHelper("hasChildElements", function (items1, items2) {
 Handlebars.registerHelper("formatReportTime", function (time) {
     if (time !== null && time !== undefined) {
     var date = new Date(time);
-        var hh = date.getUTCHours();
-        var mm = date.getUTCMinutes();
+        var hh = date.getHours();
+        var mm = date.getMinutes();
         var ss = date.getSeconds();
         if (hh < 10) {hh = "0"+hh;}
         if (mm < 10) {mm = "0"+mm;}
@@ -583,8 +583,8 @@ Handlebars.registerHelper("formatDateTime", function (time) {
         var month = toStringWithLeadingZero(d.getMonth() + 1);
         var year = d.getFullYear();
 
-        var hh = toStringWithLeadingZero(d.getUTCHours());
-        var mm = toStringWithLeadingZero(d.getUTCMinutes());
+        var hh = toStringWithLeadingZero(d.getHours());
+        var mm = toStringWithLeadingZero(d.getMinutes());
         var ss = toStringWithLeadingZero(d.getSeconds());
         return date + "-" + month + "-" + year + " " + hh + ":" + mm + ":" + ss;
     }
