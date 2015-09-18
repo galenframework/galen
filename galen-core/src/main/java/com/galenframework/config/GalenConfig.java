@@ -173,4 +173,8 @@ public class GalenConfig {
     public String getTestSuffix() {
         return readProperty(GalenProperty.TEST_SUFFIX);
     }
+
+    public String getStringProperty(GalenProperty property) {
+        return readProperty(property);
+    }
 }

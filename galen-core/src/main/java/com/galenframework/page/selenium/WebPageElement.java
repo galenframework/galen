@@ -15,25 +15,26 @@
 ******************************************************************************/
 package com.galenframework.page.selenium;
 
+import com.galenframework.config.GalenConfig;
+import com.galenframework.config.GalenProperty;
 import com.galenframework.page.Rect;
 import com.galenframework.specs.page.CorrectionsRect;
 import com.galenframework.page.PageElement;
-import com.galenframework.page.Rect;
-import com.galenframework.specs.page.CorrectionsRect;
 import com.galenframework.specs.page.Locator;
 
-import org.openqa.selenium.Dimension;
-import org.openqa.selenium.Point;
-import org.openqa.selenium.WebElement;
+import org.openqa.selenium.*;
+
 
 public class WebPageElement extends PageElement {
 
+    private WebDriver driver;
     private WebElement webElement;
     private Locator locator;
     private String objectName;
     
 
-    public WebPageElement(String objectName, WebElement webElement, Locator objectLocator) {
+    public WebPageElement(WebDriver driver, String objectName, WebElement webElement, Locator objectLocator) {
+        this.driver = driver;
         this.setObjectName(objectName);
         this.setWebElement(webElement);
         this.setLocator(objectLocator);
@@ -43,16 +44,18 @@ public class WebPageElement extends PageElement {
     
     @Override
     public Rect calculateArea() {
-        if (cachedArea == null) {   
-            Point location = getWebElement().getLocation();
-            Dimension size = getWebElement().getSize();
-            cachedArea = new Rect(location.getX(), location.getY(), size.getWidth(), size.getHeight());
-            
+        if (cachedArea == null) {
+            cachedArea = getAreaFinder().findArea(this);
             if (getLocator() != null && getLocator().getCorrections() != null) {
                 cachedArea = correctedRect(cachedArea, getLocator().getCorrections());
             }
         }
         return cachedArea;
+    }
+
+    private AreaFinder getAreaFinder() {
+        String areaFinderName = GalenConfig.getConfig().getStringProperty(GalenProperty.GALEN_BROWSER_PAGELEMENT_AREAFINDER);
+        return AreaFinder.valueOf(areaFinderName.toUpperCase());
     }
 
     private Rect correctedRect(Rect rect, CorrectionsRect corrections) {
@@ -140,4 +143,7 @@ public class WebPageElement extends PageElement {
         return getWebElement().getCssValue(cssPropertyName);
     }
 
+    public WebDriver getDriver() {
+        return driver;
+    }
 }

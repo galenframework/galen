@@ -51,7 +51,10 @@ public enum GalenProperty {
     GALEN_BROWSERFACTORY_SELENIUM_GRID_BROWSERVERSION("galen.browserFactory.selenium.grid.browserVersion", null),
     GALEN_BROWSERFACTORY_SELENIUM_GRID_PLATFORM("galen.browserFactory.selenium.grid.platform", null),
 
-    GALEN_BROWSER_VIEWPORT_ADJUSTSIZE("galen.browser.viewport.adjustSize", "false");
+    GALEN_BROWSER_VIEWPORT_ADJUSTSIZE("galen.browser.viewport.adjustSize", "false"),
+
+    GALEN_BROWSER_PAGELEMENT_AREAFINDER("galen.browser.pageElement.areaFinder", "native"),
+    GALEN_BROWSER_PAGELEMENT_AREAFINDER_CUSTOM_SCRIPT("galen.browser.pageElement.areaFinder.custom.script", null);
 
     protected final String propertyName;
     protected final String defaultValue;

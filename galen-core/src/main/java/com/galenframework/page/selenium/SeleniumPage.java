@@ -66,7 +66,7 @@ public class SeleniumPage implements Page {
             
             objectContext = byChain.findElement(driver);
 
-            this.parentObject = new WebPageElement("parent", objectContext, objectContextLocator)
+            this.parentObject = new WebPageElement(driver, "parent", objectContext, objectContextLocator)
                     .withOffset(offsetLeft, offsetTop);
         }
     }
@@ -127,7 +127,7 @@ public class SeleniumPage implements Page {
 
         try {
             WebElement webElement = driverFindElement(byChain);
-            pageElement = new WebPageElement(objectName, webElement, objectLocator).withOffset(offsetLeft, offsetTop);
+            pageElement = new WebPageElement(driver, objectName, webElement, objectLocator).withOffset(offsetLeft, offsetTop);
         } catch (NoSuchElementException e) {
             pageElement = new AbsentPageElement();
         }
