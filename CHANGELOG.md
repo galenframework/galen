@@ -18,9 +18,10 @@ All changes to Galen Framework project will be documented in this file
 - Support for float percentages in color-scheme validation
 - "count" spec for validating the amount of specific objects on page
 - Providing object locators to spec parser from Java and JavaScript
+- Switch for page elements area finding method. This makes it possible to tests on iOS devices 7.0 and greater
 
 ### Fixed
-- String concatanation in Galen Specs parser
+- String concatenation in Galen Specs parser
 - RasterFormatException in page dump in case the screenshot is smaller than the element area 
 - Improved layout for image comparison popup in HTML report
 
