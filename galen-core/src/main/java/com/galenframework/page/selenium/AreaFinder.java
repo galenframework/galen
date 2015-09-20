@@ -41,12 +41,19 @@ public enum AreaFinder {
     JSBASED(new FindArea() {
         @Override
         public Rect findArea(WebPageElement webPageElement) {
-            String script = "var element = arguments[0], " +
-                    "scrollTop = window.pageYOffset || document.documentElement.scrollTop, " +
-                    "scrollLeft = window.pageXOffset || document.documentElement.scrollLeft, " +
-                    "rect = element.getBoundingClientRect(); return [rect.left + scrollLeft, rect.top + scrollTop, rect.width, rect.height];";
-            List<Number> rect = (List<Number>)((JavascriptExecutor)webPageElement.getDriver()).executeScript(script, webPageElement.getWebElement());
+            List<Number> rect = (List<Number>)((JavascriptExecutor)webPageElement.getDriver()).executeScript(JSBASED_SCRIPT, webPageElement.getWebElement());
             return new Rect(rect.get(0).intValue(), rect.get(1).intValue(), rect.get(2).intValue(), rect.get(3).intValue());
+        }
+    }),
+
+    JSBASED_NATIVE(new FindArea() {
+        @Override
+        public Rect findArea(WebPageElement webPageElement) {
+            try {
+                return JSBASED.findArea(webPageElement);
+            } catch (Exception ex) {
+                return NATIVE.findArea(webPageElement);
+            }
         }
     }),
 
@@ -75,4 +82,9 @@ public enum AreaFinder {
     public Rect findArea(WebPageElement webPageElement) {
         return areaFinder.findArea(webPageElement);
     }
+
+    private static final String JSBASED_SCRIPT = "var element = arguments[0], " +
+                    "scrollTop = window.pageYOffset || document.documentElement.scrollTop, " +
+                    "scrollLeft = window.pageXOffset || document.documentElement.scrollLeft, " +
+                    "rect = element.getBoundingClientRect(); return [rect.left + scrollLeft, rect.top + scrollTop, rect.width, rect.height];";
 }
