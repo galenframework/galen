@@ -179,9 +179,13 @@ public class GalenPageDump {
         for (PageDump.Element element : pageDump.getItems().values()) {
             if (element.getHasImage()) {
                 int[] area = element.getArea();
+                int availableHeight = image.getHeight() - area[1];
+                int availableWidth = image.getWidth() - area[0];
+                int subimageWidth = Math.min(area[2], availableWidth);
+                int subimageHeight = Math.min(area[3], availableHeight);
 
                 try {
-                    BufferedImage subImage = image.getSubimage(area[0], area[1], area[2], area[3]);
+                    BufferedImage subImage = image.getSubimage(area[0], area[1], subimageWidth, subimageHeight);
                     Rainbow4J.saveImage(subImage, new File(objectsFolder.getAbsolutePath() + File.separator + element.getObjectName() + ".png"));
                 }
                 catch (Exception ex) {
