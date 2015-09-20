@@ -157,7 +157,11 @@ var reportData = ##REPORT-DATA##;
         </script>
         <script id="screenshot-popup-tpl" type="text/x-handlebars-template">
             <div class="screenshot-canvas">
+                {{#if screenshot}}
                 <img src="{{screenshot}}"/>
+                {{else}}
+                <div class="empty-screenshot" style="width: {{width}}; height: {{height}};"></div>
+                {{/if}}
                 {{#each objects}}
                 <div class="canvas-rect" style="left: {{area.left}}px; top: {{area.top}}px; width: {{area.width}}px; height: {{area.height}}px; {{#if drawBorder}}border-color: {{color}};{{else}}border:none;{{/if}}{{#if fillBackground}}background: {{color}};{{else}}background:none;{{/if}}">
                     <div class="canvas-rect-wrapper">

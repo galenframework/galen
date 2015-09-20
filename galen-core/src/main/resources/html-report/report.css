@@ -531,3 +531,8 @@ table.node-extras-table td img {
     max-width:100%;
     max-height: 300px;
 }
+
+.empty-screenshot {
+    display: inline-block;
+    background: #000;
+}

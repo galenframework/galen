@@ -69,7 +69,7 @@ function collectObjectsToHighlight(objects, filterFunction) {
     var collected = [],
         colorPicker = new ColorPatternPicker();
 
-    for (objectName in objects) {
+    for (var objectName in objects) {
         if (objects.hasOwnProperty(objectName)) {
 
             if (filterFunction(objectName, objects[objectName])) {
@@ -92,6 +92,31 @@ function collectObjectsToHighlight(objects, filterFunction) {
     }
 
     return collected;
+}
+
+function findScreenSize(objects) {
+    var maxWidth = 0;
+    var maxHeight = 0;
+    for (var objectName in objects) {
+        if (objectName === "screen") {
+            return {
+                width: objects[objectName].area[2],
+                height: objects[objectName].area[3]
+            };
+        } else {
+            if (maxWidth < objects[objectName].area[2]) {
+                maxWidth = objects[objectName].area[2];
+            }
+            if (maxHeight < objects[objectName].area[3]) {
+                maxHeight = objects[objectName].area[3];
+            }
+        }
+    }
+
+    return {
+        width: maxWidth,
+        height: maxHeight
+    };
 }
 
 function onLayoutCheckClick() {
@@ -124,6 +149,10 @@ function onLayoutCheckClick() {
             loadImage(screenshot, function () {
                 _GalenReport.showNotification(checkText, errorText);
                 _GalenReport.showScreenshotWithObjects(screenshot, this.width, this.height, objects);
+            }, function () {
+                var screenSize = findScreenSize(layout.objects);
+                _GalenReport.showNotification(checkText, errorText);
+                _GalenReport.showScreenshotWithObjects(null, screenSize.width, screenSize.height, objects);
             });
 
         } else {
@@ -136,13 +165,13 @@ function onLayoutCheckClick() {
     return false;
 }
 
-function loadImage(imagePath, callback) {
+function loadImage(imagePath, callback, errorCallback) {
     var img = new Image();
     img.onload = function () {
         callback(this, this.width, this.height);
     };
     img.onerror = function() {
-        _GalenReport.showNotification("Cannot load image", "Path: " + imagePath);
+        errorCallback(this);
     };
     img.src = imagePath;
 }
@@ -293,6 +322,10 @@ function onLayoutHeatmapClick() {
 
             loadImage(screenshot, function () {
                 _GalenReport.showScreenshotWithObjects(screenshot, this.width, this.height, objects);
+            }, function () {
+                var screenSize = findScreenSize(layout.objects);
+                _GalenReport.showNotification("Couldn't load screenshot: " + screenshot, "");
+                _GalenReport.showScreenshotWithObjects(null, screenSize.width, screenSize.height, objects);
             });
 
         } else {
@@ -413,7 +446,9 @@ function createGalenReport() {
         showScreenshotWithObjects: function (screenshotPath, width, height, objects) {
             showPopup(_GalenReport.tpl.screenshotPopup({
                 screenshot: screenshotPath,
-                objects: objects
+                objects: objects,
+                width: width,
+                height: height
             })); 
         }
     };
