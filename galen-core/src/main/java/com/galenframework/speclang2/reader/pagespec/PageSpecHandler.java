@@ -412,7 +412,11 @@ public class PageSpecHandler implements VarsParserJsFunctions {
     }
 
     public String getFullPathToResource(String scriptPath) {
-        return contextPath + "/" + scriptPath;
+        if (contextPath != null) {
+            return contextPath + "/" + scriptPath;
+        } else {
+            return scriptPath;
+        }
     }
 
     public void addRule(String ruleText, PageRule pageRule) {
