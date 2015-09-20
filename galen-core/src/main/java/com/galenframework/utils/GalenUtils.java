@@ -178,7 +178,13 @@ public class GalenUtils {
      * @return
      */
     public static BufferedImage resizeScreenshotIfNeeded(WebDriver driver, BufferedImage screenshotImage) {
-        Double devicePixelRatio = ((Number)((JavascriptExecutor)driver).executeScript(JS_RETRIEVE_DEVICE_PIXEL_RATIO)).doubleValue();
+        Double devicePixelRatio = 1.0;
+
+        try {
+            devicePixelRatio = ((Number) ((JavascriptExecutor) driver).executeScript(JS_RETRIEVE_DEVICE_PIXEL_RATIO)).doubleValue();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
 
         if (devicePixelRatio > 1.0 && screenshotImage.getWidth() > 0) {
             Long screenSize = (Long) ((JavascriptExecutor) driver).executeScript("return Math.max(" +
