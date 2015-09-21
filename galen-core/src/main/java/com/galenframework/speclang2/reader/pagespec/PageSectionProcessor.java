@@ -126,7 +126,7 @@ public class PageSectionProcessor {
                 return new ImmutablePair<PageRule, Map<String, String>>(rulePair.getValue(), parameters);
             }
         }
-        throw new SyntaxException(ruleNode, "Could find rule matching: " + ruleText);
+        throw new SyntaxException(ruleNode, "Couldn't find rule matching: " + ruleText);
     }
 
     private void processObjectLevelRule(ObjectSpecs objectSpecs, StructNode sourceNode) throws IOException {
