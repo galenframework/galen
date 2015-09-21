@@ -1,7 +1,7 @@
 # Change log
 All changes to Galen Framework project will be documented in this file
 
-## [Unreleased][unreleased]
+## [2.1.0][2015-09-21]
 ### Changed
 - Java API:
     - Changed signature of Galen.checkLayout method
