@@ -337,7 +337,7 @@ public class PageSpecHandler implements VarsParserJsFunctions {
 
     public void setGlobalVariable(String name, Object value, StructNode source) {
         if (!isValidVariableName(name)) {
-            throw new SyntaxException(source, "Invalid name for variable");
+            throw new SyntaxException(source, "Invalid name for variable: " + name);
         }
         jsExecutor.putObject(name, value);
     }
