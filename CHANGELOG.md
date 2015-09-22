@@ -1,6 +1,11 @@
 # Change log
 All changes to Galen Framework project will be documented in this file
 
+## [Unreleased][Unreleased]
+### Fixed
+- Blur for edges of page element image
+
+
 ## [2.1.0][2015-09-21]
 ### Changed
 - Java API:

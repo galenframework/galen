@@ -50,10 +50,10 @@ public class BlurFilter implements ImageFilter {
             for (int yc = area.y; yc < area.y + area.height; yc++) {
                 for (int xc = area.x; xc < area.x + area.width; xc++) {
 
-                    int startY = Math.max(yc - radius, 0);
-                    int startX = Math.max(xc - radius, 0);
-                    int endY = Math.min(yc + radius, height);
-                    int endX = Math.min(xc + radius, width);
+                    int startY = Math.max(yc - radius, area.y);
+                    int startX = Math.max(xc - radius, area.x);
+                    int endY = Math.min(yc + radius, area.height + area.y);
+                    int endX = Math.min(xc + radius, area.width + area.x);
 
                     int ar = 0, ag = 0, ab = 0;
                     double sumWeight = 0;
