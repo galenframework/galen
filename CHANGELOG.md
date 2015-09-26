@@ -4,6 +4,10 @@ All changes to Galen Framework project will be documented in this file
 ## [Unreleased][Unreleased]
 ### Fixed
 - Blur for edges of page element image
+- Removed default ./ prefix to all spec paths
+
+### Changed 
+- Exiting with error code by default in case there were failed tests
 
 
 ## [2.1.0][2015-09-21]
