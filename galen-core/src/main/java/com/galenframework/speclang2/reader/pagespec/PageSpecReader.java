@@ -40,9 +40,6 @@ public class PageSpecReader {
                          Map<String, Object> jsVariables, Map<String, Locator> objects) throws IOException {
 
         String contextPath = GalenUtils.getParentForFile(path);
-        if (contextPath == null) {
-            contextPath = "./";
-        }
 
         InputStream stream = GalenUtils.findFileOrResourceAsStream(path);
         if (stream == null) {
