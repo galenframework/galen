@@ -40,7 +40,7 @@ public enum GalenProperty {
     GALEN_REPORTING_LISTENERS("galen.reporting.listeners", ""),
     GALEN_DEFAULT_BROWSER("galen.default.browser", "firefox"),
     GALEN_LOG_LEVEL("galen.log.level", "10"),
-    GALEN_USE_FAIL_EXIT_CODE("galen.use.fail.exit.code", "false"),
+    GALEN_USE_FAIL_EXIT_CODE("galen.use.fail.exit.code", "true"),
 
     SPEC_COLORSCHEME_PRECISON("spec.colorscheme.precision", "256"),
     SPEC_COLORSCHEME_TESTRANGE("spec.colorscheme.testrange", "6"),
