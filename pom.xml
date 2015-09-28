@@ -49,6 +49,7 @@
     <!-- maven plugins -->
     <maven-assembly-plugin.version>2.5.3</maven-assembly-plugin.version>
     <maven-compiler-plugin.version>2.3.2</maven-compiler-plugin.version>
+    <maven-release-plugin.version>2.5.2</maven-release-plugin.version>
     <maven-gpg-plugin.version>1.6</maven-gpg-plugin.version>
     <maven-frontend-plugin.version>0.0.20</maven-frontend-plugin.version>
     <maven-eclipse-plugin.version>2.7</maven-eclipse-plugin.version>
@@ -62,6 +63,7 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-release-plugin</artifactId>
+          <version>${maven-release-plugin.version}</version>
           <configuration>
             <goals>deploy</goals>
             <autoVersionSubmodules>true</autoVersionSubmodules>
@@ -99,13 +101,8 @@
         </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
-          <artifactId>maven-release-plugin</artifactId>
-          <version>2.5.2</version>
-        </plugin>
-        <plugin>
-          <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-gpg-plugin</artifactId>
-            <version>1.6</version>
+            <version>${maven-gpg-plugin.version}</version>
             <executions>
               <execution>
                 <id>sign-artifacts</id>
