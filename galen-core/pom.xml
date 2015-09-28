@@ -228,7 +228,7 @@
         <version>${maven-surefire-plugin.version}</version>
         <configuration>
           <!-- Sets the VM argument line used when unit tests are run. -->
-          <argLine>${surefireArgLine}</argLine>
+          <argLine>-Dgalen.use.fail.exit.code=false ${surefireArgLine}</argLine>
           <!-- Skips unit tests if the value of skip.unit.tests property is true -->
           <skipTests>${skipTests}</skipTests>
         </configuration>
