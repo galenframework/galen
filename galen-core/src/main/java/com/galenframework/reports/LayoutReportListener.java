@@ -24,9 +24,7 @@ import com.galenframework.reports.model.*;
 import com.galenframework.reports.nodes.TestReportNode;
 import com.galenframework.specs.page.PageSection;
 import com.galenframework.validation.*;
-import com.galenframework.reports.nodes.TestReportNode;
 import com.galenframework.specs.Spec;
-import com.galenframework.specs.page.PageSection;
 import com.galenframework.suite.GalenPageAction;
 
 public class LayoutReportListener implements ValidationListener {

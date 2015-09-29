@@ -74,23 +74,25 @@ public class SectionValidation {
 
             validationResults.addAll(checkObject(object.getObjectName(), object.getSpecs()));
 
-            checkSpecGroups(object.getObjectName(), object.getSpecGroups());
+            validationResults.addAll(checkSpecGroups(object.getObjectName(), object.getSpecGroups()));
 
             tellOnAfterObject(object.getObjectName());
         }
         return validationResults;
     }
 
-    private void checkSpecGroups(String objectName, List<SpecGroup> specGroups) {
+    private List<ValidationResult> checkSpecGroups(String objectName, List<SpecGroup> specGroups) {
+        List<ValidationResult> validationResults = new LinkedList<>();
         if (specGroups != null) {
             for (SpecGroup specGroup : specGroups) {
                 tellOnSpecGroup(specGroup);
 
-                checkObject(objectName, specGroup.getSpecs());
+                validationResults.addAll(checkObject(objectName, specGroup.getSpecs()));
 
                 tellOnAfterSpecGroup(specGroup);
             }
         }
+        return validationResults;
     }
 
     private List<ValidationResult> checkSection(PageSection section) {

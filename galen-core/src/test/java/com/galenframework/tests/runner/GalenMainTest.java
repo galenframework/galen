@@ -40,12 +40,18 @@ import com.galenframework.validation.ValidationResult;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.testng.annotations.AfterMethod;
+import org.testng.annotations.BeforeClass;
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import com.google.common.io.Files;
 
 @Test(singleThreaded = true)
 public class GalenMainTest {
+    @BeforeMethod
+    public void initGalenProperties() {
+        GalenConfig.getConfig().setProperty(GalenProperty.GALEN_USE_FAIL_EXIT_CODE, "false");
+    }
 
 
     @AfterMethod
@@ -335,7 +341,6 @@ public class GalenMainTest {
     @Test
     public void shouldCheckLayout_inJsTests_andPassCustomJsVariables() throws Exception {
         String testUrl = getClass().getResource("/suites/custom-js-variables-for-checklayout/simple.test.js").getFile();
-
         GalenMain galen = new GalenMain();
         final List<String> errorMessages = new LinkedList<>();
 

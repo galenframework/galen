@@ -171,6 +171,28 @@ public class GalenTest {
 
     }
 
+    /**
+     * comes from https://github.com/galenframework/galen/issues/324
+     */
+    @Test
+    public void checkLayout_shouldGiveErrors_ifCustomRules_areFailed() throws IOException {
+        WebDriver driver = new MockedDriver();
+        driver.get("/mocks/pages/galen4j-sample-page.json");
+
+        LayoutReport layoutReport = Galen.checkLayout(driver, "/specs/galen4j/custom-rules-failure.spec", new SectionFilter(null, null), new Properties(), null, null);
+
+        assertThat(layoutReport.errors(), is(2));
+        assertThat(layoutReport.getValidationErrorResults(), contains(
+                new ValidationResult(
+                        asList(
+                                new ValidationObject(new Rect(10, 10, 100, 50), "save-button")),
+                        new ValidationError().withMessage("\"save-button\" width is 100px instead of 140px")),
+                new ValidationResult(
+                        asList(
+                                new ValidationObject(new Rect(10, 10, 100, 50), "save-button")),
+                        new ValidationError().withMessage("\"save-button\" width is 200% [100px] instead of 100% [50px]"))));
+    }
+
     private void assertJSONContent(String pathForRealContent, String pathForExpectedContent) throws IOException {
         Assert.assertEquals(String.format("Content of \"%s\" should be the same as in \"%s\"", pathForRealContent, pathForExpectedContent),
                 new JsonParser().parse(readFileToString(new File(pathForRealContent)).replaceAll("\\s+", "")),
