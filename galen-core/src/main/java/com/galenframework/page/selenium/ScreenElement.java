@@ -36,9 +36,11 @@ public class ScreenElement extends PageElement {
     @Override
     public Rect calculateArea() {
         List<Long> size = (List<Long>)((JavascriptExecutor)driver).executeScript("return [Math.max(" +
+                    "document.documentElement.scrollWidth," +
                     "document.body.offsetWidth, document.documentElement.offsetWidth," +
                     "document.body.clientWidth, document.documentElement.clientWidth)," +
                     "Math.max(" + 
+                    "document.documentElement.scrollHeight," +
                     "document.body.offsetHeight, document.documentElement.offsetHeight," +
                     "document.body.clientHeight, document.documentElement.clientHeight)];"
                 );
