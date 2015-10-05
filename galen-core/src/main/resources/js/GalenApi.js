@@ -186,7 +186,11 @@
             if (typeof object === "string") {
                 System.out.println(object);
             } else {
-                System.out.println(JSON.stringify(object));
+                if (object.toJSON !== undefined) {
+                    System.out.println(JSON.stringify(object));
+                } else {
+                    System.out.println(object);
+                }
             }
         }
     };
