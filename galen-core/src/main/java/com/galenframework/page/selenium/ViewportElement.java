@@ -20,9 +20,7 @@ import java.awt.*;
 import com.galenframework.page.Rect;
 import com.galenframework.utils.GalenUtils;
 import com.galenframework.page.PageElement;
-import com.galenframework.page.Rect;
 
-import com.galenframework.utils.GalenUtils;
 import org.openqa.selenium.WebDriver;
 
 public class ViewportElement extends PageElement {

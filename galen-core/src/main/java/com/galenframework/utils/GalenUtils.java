@@ -445,12 +445,12 @@ public class GalenUtils {
     }
 
     public static Dimension getViewportArea(WebDriver driver) {
-        List<Long> size = (List<Long>)((JavascriptExecutor)driver).executeScript("return [window.innerWidth" +
-                        "|| document.documentElement.clientWidth" +
-                        "|| document.body.clientWidth," +
-                        "window.innerHeight" +
-                        "|| document.documentElement.clientHeight" +
-                        "|| document.body.clientHeight];"
+        List<Long> size = (List<Long>)((JavascriptExecutor)driver).executeScript("return [document.documentElement.clientWidth" +
+                        "|| document.body.clientWidth" +
+                        "|| window.innerWidth," +
+                        "document.documentElement.clientHeight" +
+                        "|| document.body.clientHeight" +
+                        "|| window.innerHeight];"
         );
         return new Dimension(size.get(0).intValue(), size.get(1).intValue());
     }
