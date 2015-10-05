@@ -1,12 +1,17 @@
 # Change log
 All changes to Galen Framework project will be documented in this file
 
-## [2.1.1][2015-09-29]
+## [unreleased][unknown]
+### Fixed
+- Viewport calculation. Now it ignores scrollbars
+- console.log now is able to print Java objects
+
+## [2.1.2][2015-09-29]
 ### Fixed
 - LayoutReport.errors() was not taking into account errors within object-based custom rules
 - Exception within tests are now printed to console
 
-## [2.1.0][2015-09-29]
+## [2.1.1][2015-09-29]
 ### Fixed
 - Blur for edges of page element image
 - Removed default ./ prefix to all spec paths
