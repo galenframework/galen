@@ -292,7 +292,15 @@ public class GalenUtils {
     public static void resizeDriver(WebDriver driver, String sizeText) {
         if (sizeText != null && !sizeText.trim().isEmpty()) {
             Dimension size = GalenUtils.readSize(sizeText);
-            driver.manage().window().setSize(new org.openqa.selenium.Dimension(size.width, size.height));
+            resizeDriver(driver, size.width, size.height);
+        }
+    }
+
+    public static void resizeDriver(WebDriver driver, int width, int height) {
+        if (GalenConfig.getConfig().getBooleanProperty(GalenProperty.GALEN_BROWSER_VIEWPORT_ADJUSTSIZE)) {
+            GalenUtils.autoAdjustBrowserWindowSizeToFitViewport(driver, width, height);
+        } else {
+            driver.manage().window().setSize(new org.openqa.selenium.Dimension(width, height));
         }
     }
 
@@ -461,7 +469,6 @@ public class GalenUtils {
 
         if (viewport.getWidth() < width) {
             int delta = (int) (width - viewport.getWidth());
-
             driver.manage().window().setSize(new org.openqa.selenium.Dimension(width +  delta, height));
         }
     }
