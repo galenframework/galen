@@ -36,7 +36,7 @@ this.rule = function (ruleExpression, callback) {
     _pageSpecHandler.addRule(ruleExpression, new PageRule({
         callback: callback,
 
-        apply: function (pageSpecHandler, ruleText, currentObjectName, properties) {
+        apply: function (pageSpecHandler, ruleText, currentObjectName, properties, ruleBody) {
 
             var resultingNodes = [],
                 data = _readDataFromProperties(properties),
@@ -65,6 +65,14 @@ this.rule = function (ruleExpression, callback) {
                         }
 
                         resultingNodes.push(objectNode);
+                    },
+                    doRuleBody: function () {
+                        var i;
+                        if (ruleBody !== null) {
+                            for (i = 0; i < ruleBody.size(); i += 1) {
+                                resultingNodes.push(ruleBody.get(i));
+                            }
+                        }
                     }
                 };
 

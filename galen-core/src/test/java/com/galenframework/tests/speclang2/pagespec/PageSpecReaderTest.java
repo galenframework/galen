@@ -708,6 +708,38 @@ public class PageSpecReaderTest {
     }
 
 
+    @Test
+    public void customRules_shouldAllow_toUse_ruleBodies_inSpecs() throws IOException {
+        PageSpec pageSpec = readPageSpec("speclang2/custom-rules-using-rule-body.gspec",
+                new MockedPage(new HashMap<String, PageElement>(){{
+                    put("banner-1", element(0, 0, 100, 10));
+                    put("banner-2", invisibleElement(0, 0, 100, 10));
+                }}),
+                EMPTY_TAGS, EMPTY_TAGS);
+
+        assertThat(pageSpec.getSections().get(0).getObjects().size(), is(1));
+        assertThat(pageSpec.getSections().get(0).getObjects().get(0).getSpecGroups().size(), is(1));
+        assertThat(pageSpec.getSections().get(0).getObjects().get(0).getSpecGroups().get(0).getSpecs().get(0).getOriginalText(), is("height 90px"));
+
+
+        assertThat(pageSpec.getSections().get(0).getSections().size(), is(2));
+        List<ObjectSpecs> objects = pageSpec.getSections().get(0).getSections().get(0).getObjects();
+
+        assertThat(objects.size(), is(1));
+        assertThat(objects.get(0).getObjectName(), is("banner-1"));
+        assertThat(objects.get(0).getSpecs().size(), is(1));
+        assertThat(objects.get(0).getSpecs().get(0).getOriginalText(), is("width 145px"));
+
+
+        objects = pageSpec.getSections().get(0).getSections().get(1).getObjects();
+
+        assertThat(objects.size(), is(1));
+        assertThat(objects.get(0).getObjectName(), is("banner-3"));
+        assertThat(objects.get(0).getSpecs().size(), is(1));
+        assertThat(objects.get(0).getSpecs().get(0).getOriginalText(), is("visible"));
+    }
+
+
     private PageSpec readPageSpec(String resource) throws IOException {
         return readPageSpec(resource, NO_PAGE, EMPTY_TAGS, EMPTY_TAGS);
     }
