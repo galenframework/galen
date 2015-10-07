@@ -91,7 +91,13 @@ function collectObjectsToHighlight(objects, filterFunction) {
         }
     }
 
-    return collected;
+    return sortByArea(collected);
+}
+
+function sortByArea(objects) {
+    return objects.sort(function (a, b) {
+        return b.area.width*b.area.height - a.area.width*a.area.height;
+    });
 }
 
 function findScreenSize(objects) {
@@ -296,7 +302,8 @@ function collectObjectsForHeatmap(layout) {
             }
         }
     }
-    return collected;
+
+    return sortByArea(collected);
 }
 
 function onLayoutHeatmapClick() {
@@ -307,10 +314,7 @@ function onLayoutHeatmapClick() {
         var layout = _GalenReport.layouts[layoutId];
 
         if (layout !== null) {
-            var objects = collectObjectsForHeatmap(layout).sort(function (a, b) {
-                return a.area.width*a.area.height + b.area.width*b.area.height;
-            });
-
+            var objects = collectObjectsForHeatmap(layout);
             var screenshot = layout.screenshot;
 
             if (screenshot === null || screenshot === undefined) {
