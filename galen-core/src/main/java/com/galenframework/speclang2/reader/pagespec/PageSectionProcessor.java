@@ -22,14 +22,9 @@ import com.galenframework.specs.reader.StringCharReader;
 import com.galenframework.specs.reader.page.rules.Rule;
 import com.galenframework.parser.Expectations;
 import com.galenframework.parser.StructNode;
-import com.galenframework.parser.SyntaxException;
 import com.galenframework.specs.Spec;
 import com.galenframework.specs.page.ObjectSpecs;
-import com.galenframework.specs.page.PageSection;
-import com.galenframework.specs.page.SpecGroup;
 import com.galenframework.specs.reader.Place;
-import com.galenframework.specs.reader.StringCharReader;
-import com.galenframework.specs.reader.page.rules.Rule;
 import com.galenframework.suite.reader.Line;
 import com.galenframework.utils.GalenUtils;
 import org.apache.commons.lang3.tuple.ImmutablePair;
@@ -100,7 +95,7 @@ public class PageSectionProcessor {
 
         List<StructNode> resultingNodes;
         try {
-            resultingNodes = rule.getKey().apply(pageSpecHandler, ruleText, NO_OBJECT_NAME, rule.getValue());
+            resultingNodes = rule.getKey().apply(pageSpecHandler, ruleText, NO_OBJECT_NAME, rule.getValue(), ruleNode.getChildNodes());
         } catch (Exception ex) {
             throw new SyntaxException(ruleNode, "Error processing custom rule", ex);
         }
@@ -135,7 +130,7 @@ public class PageSectionProcessor {
 
         pageSpecHandler.setGlobalVariable("objectName", objectSpecs.getObjectName(), sourceNode);
 
-        List<StructNode> specNodes = rule.getKey().apply(pageSpecHandler, ruleText, objectSpecs.getObjectName(), rule.getValue());
+        List<StructNode> specNodes = rule.getKey().apply(pageSpecHandler, ruleText, objectSpecs.getObjectName(), rule.getValue(), sourceNode.getChildNodes());
 
 
         SpecGroup specGroup = new SpecGroup();

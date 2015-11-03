@@ -1,0 +1,36 @@
+@objects
+    banner-1     #banner-1
+    banner-2     #banner-2
+
+
+@rule if %{objectName} is visible
+    @if ${isVisible(objectName)}
+        @ruleBody
+
+
+@script
+    rule("if %{itemName} is not visible", function (objectName, parameters) {
+        if (!isVisible(parameters.itemName)) {
+            this.doRuleBody();
+        }
+    });
+
+
+= Main =
+    | if banner-1 is visible
+        banner-1:
+            width 145px
+
+    banner-1:
+        | if banner-1 is visible
+            height 90px
+
+
+    | if banner-2 is visible
+        banner-2:
+            width 321px
+
+    # checking that js rule is able to use rule bodies
+    | if banner-2 is not visible
+        banner-3:
+            visible

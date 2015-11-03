@@ -16,12 +16,11 @@
 package com.galenframework.speclang2.reader.pagespec;
 
 import com.galenframework.parser.StructNode;
-import com.galenframework.parser.StructNode;
 
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
 public interface PageRule {
-    List<StructNode> apply(PageSpecHandler pageSpecHandler, String text, String objectName, Map<String, String> parameters) throws IOException;
+    List<StructNode> apply(PageSpecHandler pageSpecHandler, String text, String objectName, Map<String, String> parameters, List<StructNode> ruleBody) throws IOException;
 }
