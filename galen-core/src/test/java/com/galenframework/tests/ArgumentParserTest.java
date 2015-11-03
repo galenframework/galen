@@ -200,7 +200,8 @@ public class ArgumentParserTest {
                         "--exclude", "nomobile,testTag",
                         "--size", "400x700",
                         "--htmlreport", "some.html",
-                        "--testngreport", "testng.xml"),
+                        "--testngreport", "testng.xml",
+                        "--junitreport", "junit.xml"),
                         new GalenActionCheckArguments()
                                 .setUrl("http://mindengine.net")
                                 .setJavascript("some.js")
@@ -210,6 +211,7 @@ public class ArgumentParserTest {
                                 .setPaths(asList("some.spec"))
                                 .setHtmlReport("some.html")
                                 .setTestngReport("testng.xml")
+                                .setJunitReport("junit.xml")
                 },
 
                 {args("check", "some.spec",

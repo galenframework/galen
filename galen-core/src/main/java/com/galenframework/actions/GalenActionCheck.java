@@ -63,6 +63,7 @@ public class GalenActionCheck extends GalenAction {
         GalenActionTestArguments testArguments = new GalenActionTestArguments();
         testArguments.setHtmlReport(checkArguments.getHtmlReport());
         testArguments.setJsonReport(checkArguments.getJsonReport());
+        testArguments.setJunitReport(checkArguments.getJunitReport());
         testArguments.setTestngReport(checkArguments.getTestngReport());
 
         GalenActionTest.runTests(new EventHandler(), galenTests, testArguments, listener);
