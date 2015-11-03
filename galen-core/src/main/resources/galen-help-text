@@ -14,7 +14,7 @@ The available galen actions are:
 test:
     Loads and executes galen tests in specified path
 
-    usage: galen test <testpath> [--htmlreport] [--testngreport]
+    usage: galen test <testpath> [--htmlreport] [--testngreport]  [--junitreport]
             [--jsonreport] [--parallel-suites <parallel-suites-number>]
             [--filter <test-filter>] [--recursive] [--groups <groups>]
             [--excluded-groups <excluded-groups>]
@@ -24,7 +24,7 @@ check:
     Opens browser and performs layout check with specified spec
 
     usage: galen check <specpath>  --url <url> --size <size>
-            [--htmlreport <htmlreportpath>] [--testngreport <testngpath>]
+            [--htmlreport <htmlreportpath>] [--testngreport <testngpath>] [--junitreport <junitpath>]
             [--jsonreport <jsonpath>] [--javascript <jspath>]
             [--include <tags>] [--exclude <excluded-tags>]
             [-D<property-name>=<property-value>]
