@@ -5,11 +5,11 @@
         <testcase class="${test.testInfo.name?html}" name="${test.testInfo.name?html}"
                   time="${(test.duration/1000)?c}" timestamp="${test.testInfo.startedAt?string('yyyy-MM-dd\'T\'HH:mm:ss\'Z\'')}">
             <#if test.failed>
-                <failure message="Layout errors" type="${test.testInfo.exception.class.name}">
-                    <#if test.testInfo.exception?has_content>
-                        ${test.exceptionMessage?html}
-                    </#if>
-                </failure>
+                <#if test.testInfo.exception?has_content>
+                    <failure message="Layout errors" type="${test.testInfo.exception.class.name}">
+                            ${test.exceptionMessage?html}
+                    </failure>
+                </#if>
             </#if>
         </testcase>
         </#list>
