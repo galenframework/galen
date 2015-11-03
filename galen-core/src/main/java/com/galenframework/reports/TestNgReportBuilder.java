@@ -41,11 +41,11 @@ public class TestNgReportBuilder {
             GalenTestAggregatedInfo aggregatedInfo = new GalenTestAggregatedInfo(testIdGenerator.generateTestId(test.getName()), test);
             aggregatedTests.add(aggregatedInfo);
         }
-        
-        exportTesngReport(aggregatedTests, reportPath);
+
+        exportTestngReport(aggregatedTests, reportPath);
     }
 
-    private void exportTesngReport(List<GalenTestAggregatedInfo> tests, String reportPath) throws IOException, TemplateException {
+    private void exportTestngReport(List<GalenTestAggregatedInfo> tests, String reportPath) throws IOException, TemplateException {
         File file = new File(reportPath);
         makeSurePathExists(file);
         file.createNewFile();
