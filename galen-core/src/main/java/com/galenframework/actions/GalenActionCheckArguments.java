@@ -36,6 +36,7 @@ public class GalenActionCheckArguments {
     private Dimension screenSize;
     private String htmlReport;
     private String testngReport;
+    private String junitReport;
     private String jsonReport;
     private String javascript;
 
@@ -49,6 +50,7 @@ public class GalenActionCheckArguments {
         options.addOption("h", "htmlreport", true, "Path for html output report");
         options.addOption("j", "jsonreport", true, "Path for json report");
         options.addOption("g", "testngreport", true, "Path for testng xml report");
+        options.addOption("x", "junitreport", true, "Path for junit xml report");
         options.addOption("u", "url", true, "Initial test url");
         options.addOption("s", "size", true, "Browser window size");
         options.addOption("J", "javascript", true, "JavaScript code that should be executed before checking layout");
@@ -66,6 +68,7 @@ public class GalenActionCheckArguments {
 
         GalenActionCheckArguments arguments = new GalenActionCheckArguments();
         arguments.setTestngReport(cmd.getOptionValue("g"));
+        arguments.setJunitReport(cmd.getOptionValue("x"));
         arguments.setHtmlReport(cmd.getOptionValue("h"));
         arguments.setJsonReport(cmd.getOptionValue("j"));
         arguments.setUrl(cmd.getOptionValue("u"));
@@ -129,6 +132,15 @@ public class GalenActionCheckArguments {
 
     public GalenActionCheckArguments setTestngReport(String testngReport) {
         this.testngReport = testngReport;
+        return this;
+    }
+
+    public String getJunitReport() {
+        return junitReport;
+    }
+
+    public GalenActionCheckArguments setJunitReport(String junitReport) {
+        this.junitReport = junitReport;
         return this;
     }
 
@@ -196,6 +208,7 @@ public class GalenActionCheckArguments {
                 .append(screenSize)
                 .append(htmlReport)
                 .append(testngReport)
+                .append(junitReport)
                 .append(jsonReport)
                 .append(javascript)
                 .toHashCode();
@@ -221,6 +234,7 @@ public class GalenActionCheckArguments {
                 .append(rhs.screenSize, screenSize)
                 .append(rhs.htmlReport, htmlReport)
                 .append(rhs.testngReport, testngReport)
+                .append(rhs.junitReport, junitReport)
                 .append(rhs.jsonReport, jsonReport)
                 .append(rhs.javascript, javascript)
                 .isEquals();
@@ -236,6 +250,7 @@ public class GalenActionCheckArguments {
                 .append("screenSize", screenSize)
                 .append("htmlReport", htmlReport)
                 .append("testngReport", testngReport)
+                .append("junitReport", junitReport)
                 .append("jsonReport", jsonReport)
                 .append("javascript", javascript)
                 .toString();

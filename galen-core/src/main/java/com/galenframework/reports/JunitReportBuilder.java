@@ -15,6 +15,10 @@
 ******************************************************************************/
 package com.galenframework.reports;
 
+import freemarker.template.Configuration;
+import freemarker.template.Template;
+import freemarker.template.TemplateException;
+
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -24,11 +28,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import freemarker.template.Configuration;
-import freemarker.template.Template;
-import freemarker.template.TemplateException;
-
-public class TestNgReportBuilder {
+public class JunitReportBuilder {
     
     private Configuration freemarkerConfiguration = new Configuration();
 
@@ -42,10 +42,10 @@ public class TestNgReportBuilder {
             aggregatedTests.add(aggregatedInfo);
         }
 
-        exportTestngReport(aggregatedTests, reportPath);
+        exportJunitReport(aggregatedTests, reportPath);
     }
 
-    private void exportTestngReport(List<GalenTestAggregatedInfo> tests, String reportPath) throws IOException, TemplateException {
+    private void exportJunitReport(List<GalenTestAggregatedInfo> tests, String reportPath) throws IOException, TemplateException {
         File file = new File(reportPath);
         makeSurePathExists(file);
         file.createNewFile();
@@ -54,7 +54,7 @@ public class TestNgReportBuilder {
         Map<String, Object> model = new HashMap<String, Object>();
         model.put("tests", tests);
         
-        Template template = new Template("report-main", new InputStreamReader(getClass().getResourceAsStream("/testng-report/testng-report.ftl.xml")), freemarkerConfiguration);
+        Template template = new Template("report-main", new InputStreamReader(getClass().getResourceAsStream("/junit-report/junit-report.ftl.xml")), freemarkerConfiguration);
         template.process(model, fileWriter);
         fileWriter.flush();
         fileWriter.close();

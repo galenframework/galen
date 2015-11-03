@@ -33,6 +33,7 @@ public class MacroProcessor {
     public static final String IMPORT_KEYWORD = "@import";
     public static final String SCRIPT_KEYWORD = "@script";
     public static final String RULE_KEYWORD = "@rule";
+    public static final String RULE_BODY = "@ruleBody";
     public static final String IF_KEYWORD = "@if";
     public static final String ELSEIF_KEYWORD = "@elseif";
     public static final String ELSE_KEYWORD = "@else";
@@ -48,8 +49,10 @@ public class MacroProcessor {
             ON_KEYWORD,
             IMPORT_KEYWORD,
             SCRIPT_KEYWORD,
-            RULE_KEYWORD
+            RULE_KEYWORD,
+            RULE_BODY
     );
+    private List<StructNode> currentRuleBody;
 
     public MacroProcessor(PageSpecHandler pageSpecHandler) {
         this.pageSpecHandler = pageSpecHandler;
@@ -197,6 +200,10 @@ public class MacroProcessor {
             throw new SyntaxException(statementNode, "elseif statement without if block");
         } else if (ELSE_KEYWORD.equals(firstWord)) {
             throw new SyntaxException(statementNode, "else statement without if block");
+        } else if (RULE_BODY.equals(firstWord)) {
+            if (currentRuleBody != null) {
+                return currentRuleBody;
+            } else return Collections.emptyList();
         } else {
             throw new SyntaxException(statementNode, "Invalid statement: " + firstWord);
         }
@@ -205,5 +212,14 @@ public class MacroProcessor {
     private boolean isMacroStatement(String name) {
         String firstWord = new StringCharReader(name).readWord();
         return macroOperators.contains(firstWord);
+    }
+
+    public MacroProcessor setCurrentRuleBody(List<StructNode> currentRuleBody) {
+        this.currentRuleBody = currentRuleBody;
+        return this;
+    }
+
+    public List<StructNode> getCurrentRuleBody() {
+        return currentRuleBody;
     }
 }
