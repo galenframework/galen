@@ -19,6 +19,7 @@ import com.galenframework.TestRunnable;
 import com.galenframework.config.GalenConfig;
 import com.galenframework.reports.GalenTestInfo;
 import com.galenframework.reports.HtmlReportBuilder;
+import com.galenframework.reports.JunitReportBuilder;
 import com.galenframework.reports.TestNgReportBuilder;
 import com.galenframework.reports.json.JsonReportBuilder;
 import com.galenframework.reports.model.FileTempStorage;
@@ -238,6 +239,9 @@ public class GalenActionTest extends GalenAction {
         if (testArguments.getTestngReport() != null) {
             createTestngReport(testArguments.getTestngReport(), testInfos);
         }
+        if (testArguments.getJunitReport() != null) {
+            createJunitReport(testArguments.getJunitReport(), testInfos);
+        }
         if (testArguments.getHtmlReport() != null) {
             createHtmlReport(testArguments.getHtmlReport(), testInfos);
         }
@@ -259,6 +263,14 @@ public class GalenActionTest extends GalenAction {
             new HtmlReportBuilder().build(testInfos, htmlReportPath);
         } catch (Exception ex) {
             LOG.error("Unknown error during creating HTML report.", ex);
+        }
+    }
+
+    private static void createJunitReport(String junitReport, List<GalenTestInfo> testInfos) {
+        try {
+            new JunitReportBuilder().build(testInfos, junitReport);
+        } catch (Exception ex) {
+            LOG.error("Unknown error during creating Junit report.", ex);
         }
     }
 

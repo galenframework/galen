@@ -33,6 +33,7 @@ public class GalenActionTestArguments {
     private List<String> excludedTags = new LinkedList<String>();
     private String htmlReport;
     private String testngReport;
+    private String junitReport;
     private int parallelThreads = 0;
     private String filter;
     private String jsonReport;
@@ -49,6 +50,7 @@ public class GalenActionTestArguments {
         options.addOption("h", "htmlreport", true, "Path for html output report");
         options.addOption("j", "jsonreport", true, "Path for json report");
         options.addOption("g", "testngreport", true, "Path for testng xml report");
+        options.addOption("x", "junitreport", true, "Path for junit xml report");
         options.addOption("r", "recursive", false, "Flag for recursive tests scan");
         options.addOption("p", "parallel-tests", true, "Amount of tests to be run in parallel");
         options.addOption("P", "parallel-suites", true, "Amount of tests to be run in parallel");
@@ -71,6 +73,7 @@ public class GalenActionTestArguments {
         arguments.setIncludedTags(convertTags(cmd.getOptionValue("i", "")));
         arguments.setExcludedTags(convertTags(cmd.getOptionValue("e", "")));
         arguments.setTestngReport(cmd.getOptionValue("g"));
+        arguments.setJunitReport(cmd.getOptionValue("x"));
         arguments.setRecursive(cmd.hasOption("r"));
         arguments.setHtmlReport(cmd.getOptionValue("h"));
 
@@ -169,8 +172,17 @@ public class GalenActionTestArguments {
         return this;
     }
 
+    public String getJunitReport() {
+        return junitReport;
+    }
+
     public String getTestngReport() {
         return testngReport;
+    }
+
+    public GalenActionTestArguments setJunitReport(String junitReport) {
+        this.junitReport = junitReport;
+        return this;
     }
 
     public GalenActionTestArguments setTestngReport(String testngReport) {
@@ -214,6 +226,7 @@ public class GalenActionTestArguments {
                 .append(excludedTags)
                 .append(htmlReport)
                 .append(testngReport)
+                .append(junitReport)
                 .append(parallelThreads)
                 .append(filter)
                 .append(jsonReport)
@@ -241,6 +254,7 @@ public class GalenActionTestArguments {
                 .append(excludedTags, rhs.excludedTags)
                 .append(htmlReport, rhs.htmlReport)
                 .append(testngReport, rhs.testngReport)
+                .append(junitReport, rhs.junitReport)
                 .append(parallelThreads, rhs.parallelThreads)
                 .append(filter, rhs.filter)
                 .append(jsonReport, rhs.jsonReport)
@@ -258,6 +272,7 @@ public class GalenActionTestArguments {
                 .append("excludedTags", excludedTags)
                 .append("htmlReport", htmlReport)
                 .append("testngReport", testngReport)
+                .append("junitReport", junitReport)
                 .append("parallelThreads", parallelThreads)
                 .append("filter", filter)
                 .append("jsonReport", jsonReport)
