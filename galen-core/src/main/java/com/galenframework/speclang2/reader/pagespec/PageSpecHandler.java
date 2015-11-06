@@ -298,33 +298,41 @@ public class PageSpecHandler implements VarsParserJsFunctions {
     }
 
     @Override
-    public JsPageElement[] findAll(String regex) {
-        Pattern pattern = GalenUtils.convertObjectNameRegex(regex);
-        List<JsPageElement> jsElements = findJsPageElements(pattern);
-        return orderByNames(jsElements).toArray(new JsPageElement[0]);
-    }
+    public JsPageElement[] findAll(String objectsStatements) {
+        List<String> objectNames = findAllObjectsMatchingStatements(objectsStatements);
+        List<JsPageElement> jsElements = new ArrayList<>(objectNames.size());
 
-    private List<JsPageElement> findJsPageElements(Pattern pattern) {
-        List<JsPageElement> list = new LinkedList<JsPageElement>();
-
-        if (pageSpec != null) {
-            for (Map.Entry<String, Locator> entry : pageSpec.getObjects().entrySet()) {
-                String objectName = entry.getKey();
-                if (pattern.matcher(objectName).matches()) {
-                    Locator locator = entry.getValue();
-                    if (locator != null && page != null) {
-                        PageElement pageElement = page.getObject(objectName, locator);
-                        if (pageElement != null) {
-                            list.add(new JsPageElement(objectName, pageElement));
-                        } else {
-                            list.add(new JsPageElement(objectName, new AbsentPageElement()));
-                        }
-                    }
+        for (String objectName : objectNames) {
+            Locator locator = pageSpec.getObjects().get(objectName);
+            if (locator != null) {
+                PageElement pageElement = page.getObject(objectName, locator);
+                if (pageElement != null) {
+                    jsElements.add(new JsPageElement(objectName, pageElement));
+                } else {
+                    jsElements.add(new JsPageElement(objectName, new AbsentPageElement()));
                 }
             }
         }
-        return list;
+        return jsElements.toArray(new JsPageElement[jsElements.size()]);
     }
+
+    public List<String> findAllObjectsMatchingStatements(String objectStatements) {
+        String[] objectPatterns = objectStatements.split(",");
+        List<String> matchingObjects = new LinkedList<>();
+
+        List<String> allObjectNames = getSortedObjectNames();
+
+        for (String objectPattern : objectPatterns) {
+            Pattern regex = GalenUtils.convertObjectNameRegex(objectPattern.trim());
+            for (String objectName : allObjectNames) {
+                if (regex.matcher(objectName).matches()) {
+                    matchingObjects.add(objectName);
+                }
+            }
+        }
+        return matchingObjects;
+    }
+
 
     private List<JsPageElement> orderByNames(List<JsPageElement> list) {
         Collections.sort(list, new Comparator<JsPageElement>() {
@@ -476,20 +484,4 @@ public class PageSpecHandler implements VarsParserJsFunctions {
         }
     }
 
-    public List<String> findAllObjectsMatchingStatements(String sequenceStatement) {
-        String[] objectPatterns = sequenceStatement.split(",");
-        List<String> matchingObjects = new LinkedList<>();
-
-        List<String> allObjectNames = getSortedObjectNames();
-
-        for (String objectPattern : objectPatterns) {
-            Pattern regex = GalenUtils.convertObjectNameRegex(objectPattern.trim());
-            for (String objectName : allObjectNames) {
-                if (regex.matcher(objectName).matches()) {
-                    matchingObjects.add(objectName);
-                }
-            }
-        }
-         return matchingObjects;
-    }
 }
