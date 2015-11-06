@@ -32,7 +32,7 @@ public abstract class GalenTestNgTestBase extends GalenJavaTestBase {
     /**
      * Initializes the TestReport instance with the name of current test method and stores it in {@link ThreadLocal}
      */
-    @BeforeMethod
+    @BeforeMethod(alwaysRun = true)
     public void initReport(Method method) {
         report.set(GalenReportsContainer.get().registerTest(method));
     }
@@ -40,7 +40,7 @@ public abstract class GalenTestNgTestBase extends GalenJavaTestBase {
     /**
      * {@inheritDoc}
      */
-    @BeforeMethod
+    @BeforeMethod(alwaysRun = true)
     public void initDriver(Object[] args) {
         super.initDriver(args);
     }
@@ -48,7 +48,7 @@ public abstract class GalenTestNgTestBase extends GalenJavaTestBase {
     /**
      * {@inheritDoc}
      */
-    @AfterMethod
+    @AfterMethod(alwaysRun = true)
     public void quitDriver() {
         super.quitDriver();
     }
