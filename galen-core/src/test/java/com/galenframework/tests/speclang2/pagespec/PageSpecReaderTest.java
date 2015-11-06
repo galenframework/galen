@@ -17,23 +17,17 @@ package com.galenframework.tests.speclang2.pagespec;
 
 import com.galenframework.components.validation.MockedInvisiblePageElement;
 import com.galenframework.components.validation.MockedPageElement;
-import com.galenframework.parser.SyntaxException;
 import com.galenframework.speclang2.reader.pagespec.PageSpecReader;
 import com.galenframework.specs.page.CorrectionsRect;
 import com.galenframework.specs.page.PageSection;
 import com.galenframework.browser.SeleniumBrowser;
 import com.galenframework.components.mocks.driver.MockedDriver;
-import com.galenframework.components.validation.MockedInvisiblePageElement;
 import com.galenframework.components.validation.MockedPage;
-import com.galenframework.components.validation.MockedPageElement;
 import com.galenframework.page.Page;
 import com.galenframework.page.PageElement;
 import com.galenframework.parser.FileSyntaxException;
-import com.galenframework.speclang2.reader.pagespec.PageSpecReader;
-import com.galenframework.specs.page.CorrectionsRect;
 import com.galenframework.specs.page.Locator;
 import com.galenframework.specs.page.ObjectSpecs;
-import com.galenframework.specs.page.PageSection;
 import com.galenframework.specs.reader.page.PageSpec;
 import com.galenframework.specs.reader.page.SectionFilter;
 import org.testng.annotations.Test;
@@ -737,6 +731,20 @@ public class PageSpecReaderTest {
         assertThat(objects.get(0).getObjectName(), is("banner-3"));
         assertThat(objects.get(0).getSpecs().size(), is(1));
         assertThat(objects.get(0).getSpecs().get(0).getOriginalText(), is("visible"));
+    }
+
+    @Test
+    public void shouldRead_objectClasses_inObjectsSection() throws IOException {
+        PageSpec pageSpec = readPageSpec("speclang2/object-classes-definition.gspec");
+
+        assertThat(pageSpec.getObjectGroups(), is((Map<String, List<String>>)new HashMap<String, List<String>>(){{
+            put("image-validation", asList("header.icon", "header.caption", "menu.item-1"));
+            put("header-stuff", asList("header.icon", "header.caption"));
+            put("baseGroup", asList("obj-base-and-sub", "obj-base-and-other-sub"));
+            put("subGroup", asList("obj-base-and-sub"));
+            put("otherSubGroup", asList("obj-base-and-other-sub"));
+        }}));
+
     }
 
 

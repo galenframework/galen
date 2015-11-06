@@ -24,13 +24,14 @@ import com.galenframework.page.Page;
 import com.galenframework.specs.page.Locator;
 import com.galenframework.specs.reader.StringCharReader;
 import com.galenframework.suite.reader.Line;
+import com.galenframework.utils.GalenUtils;
 
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 import static java.lang.String.format;
 
 public class ObjectDefinitionProcessor {
+    public static final String GROUPED = "@grouped";
     private final PageSpecHandler pageSpecHandler;
     private static final String CORRECTIONS_SYMBOL = "@";
 
@@ -38,25 +39,52 @@ public class ObjectDefinitionProcessor {
         this.pageSpecHandler = pageSpecHandler;
     }
 
+    private Stack<List<String>> groupStack = new Stack<>();
+
     public List<StructNode> process(StringCharReader reader, StructNode structNode) {
         if (!reader.getTheRest().isEmpty()) {
             throw new SyntaxException(new Line(structNode.getSource(), structNode.getFileLineNumber()), "Objects definition does not take any arguments");
         }
 
         if (structNode.getChildNodes() != null) {
+            groupStack = new Stack<>();
+
             for (StructNode childNode : structNode.getChildNodes()) {
-                parseObject(childNode);
+                parseItem(childNode);
             }
         }
         return Collections.emptyList();
     }
 
 
-    private void parseObject(StructNode objectNode) {
-        parseObject(objectNode, null, null);
+    private void parseItem(StructNode objectNode) {
+        parseItem(objectNode, null, null);
     }
 
-    private void parseObject(StructNode objectNode, String parentName, Locator parentLocator) {
+    private void parseItem(StructNode objectNode, String parentName, Locator parentLocator) {
+        if (objectNode.getName().startsWith(GROUPED)) {
+            processGrouped(objectNode, parentName, parentLocator);
+        } else {
+            processObject(objectNode, parentName, parentLocator);
+        }
+
+    }
+
+    private void processGrouped(StructNode objectNode, String parentName, Locator parentLocator) {
+        String parameters = objectNode.getName().substring(GROUPED.length()).trim();
+        List<String> groupNames = GalenUtils.fromCommaSeparated(parameters);
+        groupStack.push(groupNames);
+
+        if (objectNode.getChildNodes() != null) {
+            for (StructNode childObjectNode : objectNode.getChildNodes()) {
+                parseItem(childObjectNode, parentName, parentLocator);
+            }
+        }
+
+        groupStack.pop();
+    }
+
+    private void processObject(StructNode objectNode, String parentName, Locator parentLocator) {
         StringCharReader reader = new StringCharReader(objectNode.getName());
 
         String objectName = reader.readWord();
@@ -65,17 +93,31 @@ public class ObjectDefinitionProcessor {
             objectName = parentName + "." + objectName;
         }
 
-        String word = expectCorrectionsOrId(objectNode, reader, objectName);
-        String locatorText;
-
+        String locatorText = null;
+        List<String> groups = null;
         CorrectionsRect corrections = null;
-        if (word.equals(CORRECTIONS_SYMBOL)) {
-            corrections = Expectations.corrections().read(reader);
-            locatorText = reader.getTheRest();
+
+        while(reader.hasMore()) {
+            String word = expectCorrectionsOrId(objectNode, reader, objectName);
+
+            if (word.equals(CORRECTIONS_SYMBOL)) {
+                corrections = Expectations.corrections().read(reader);
+            } else if (word.equals(GROUPED)) {
+                groups = parseGroupsInBrackets(reader);
+            }
+            else {
+                locatorText = word + reader.getTheRest();
+                reader.moveToTheEnd();
+            }
         }
-        else {
-            locatorText = word + reader.getTheRest();
+
+
+        if (locatorText == null) {
+            throw new SyntaxException("Missing locator");
         }
+
+
+
 
         Locator locator = readLocatorFromString(objectNode, objectName, locatorText.trim());
         locator.setCorrections(corrections);
@@ -85,29 +127,49 @@ public class ObjectDefinitionProcessor {
         }
 
         if (objectName.contains("*")) {
-            addMultiObjectsToSpec(objectNode, objectName, locator);
+            addMultiObjectsToSpec(objectNode, objectName, locator, groups);
         } else {
-            addObjectToSpec(objectNode, objectName, locator);
+            addObjectToSpec(objectNode, objectName, locator, groups);
         }
     }
 
-    private void addObjectToSpec(StructNode objectNode, String objectName, Locator locator) {
+    private List<String> parseGroupsInBrackets(StringCharReader reader) {
+        if (reader.firstNonWhiteSpaceSymbol() == '(') {
+            reader.readUntilSymbol('(');
+            return GalenUtils.fromCommaSeparated(reader.readUntilSymbol(')'));
+        } else {
+            throw new SyntaxException("Missing '(' for group definitions");
+        }
+    }
+
+    private void addObjectToSpec(StructNode objectNode, String objectName, Locator locator, List<String> groupsForThisObject) {
         pageSpecHandler.addObjectToSpec(objectName, locator);
+
+        List<String> allCurrentGroups = getAllCurrentGroups();
+        if (allCurrentGroups != null && !allCurrentGroups.isEmpty()) {
+            pageSpecHandler.applyGroupsToObject(objectName, allCurrentGroups);
+        }
+
+        if (groupsForThisObject != null && !groupsForThisObject.isEmpty()) {
+            pageSpecHandler.applyGroupsToObject(objectName, groupsForThisObject);
+        }
 
         if (objectNode.getChildNodes() != null && objectNode.getChildNodes().size() > 0) {
             for (StructNode subObjectNode : objectNode.getChildNodes()) {
-                parseObject(pageSpecHandler.processExpressionsIn(subObjectNode), objectName, locator);
+                parseItem(pageSpecHandler.processExpressionsIn(subObjectNode), objectName, locator);
             }
         }
     }
 
-    private void addMultiObjectsToSpec(StructNode objectNode, String objectName, Locator locator) {
+
+    private void addMultiObjectsToSpec(StructNode objectNode, String objectName, Locator locator, List<String> groupsForThisObject) {
         Page page = pageSpecHandler.getPage();
         int count = page.getObjectCount(locator);
 
         for (int index = 1; index <= count; index++) {
             addObjectToSpec(objectNode, objectName.replace("*", Integer.toString(index)),
-                    new Locator(locator.getLocatorType(), locator.getLocatorValue(), index).withParent(locator.getParent()));
+                    new Locator(locator.getLocatorType(), locator.getLocatorValue(), index).withParent(locator.getParent()),
+                    groupsForThisObject);
         }
     }
 
@@ -156,5 +218,19 @@ public class ObjectDefinitionProcessor {
                     format("Missing locator for object \"%s\"", objectName));
         }
         return word;
+    }
+
+    private List<String> getAllCurrentGroups() {
+        List<String> allCurrentGroups = new LinkedList<>();
+
+        Iterator<List<String>> it = groupStack.iterator();
+        while(it.hasNext()) {
+            for (String groupName : it.next()) {
+                if (!allCurrentGroups.contains(groupName)) {
+                    allCurrentGroups.add(groupName);
+                }
+            }
+        }
+        return allCurrentGroups;
     }
 }

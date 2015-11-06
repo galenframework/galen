@@ -30,6 +30,7 @@ public class PageSpec {
 
     private final Map<String, Locator> objects = new HashMap<>();
     private final List<PageSection> sections = new LinkedList<>();
+    private final Map<String, List<String>> objectGroups = new HashMap<>();
 
     public PageSpec() {
     }
@@ -46,6 +47,12 @@ public class PageSpec {
         this.objects.clear();
         if (objects != null) {
             this.objects.putAll(objects);
+        }
+    }
+    public void setObjectGroups(Map<String, List<String>> objectGroups) {
+        this.objectGroups.clear();
+        if (objectGroups != null) {
+            this.objectGroups.putAll(objectGroups);
         }
     }
 
@@ -108,4 +115,9 @@ public class PageSpec {
 		objects.putAll(spec.getObjects());
 		sections.addAll(spec.getSections());
 	}
+
+    public Map<String, List<String>> getObjectGroups() {
+        return objectGroups;
+    }
+
 }

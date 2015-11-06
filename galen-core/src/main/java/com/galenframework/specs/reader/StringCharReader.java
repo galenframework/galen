@@ -42,6 +42,10 @@ public class StringCharReader {
         return cursor < length;
     }
 
+    public void moveToTheEnd() {
+        cursor = length;
+    }
+
     public char next() {
         if(cursor == length) {
             throw new IndexOutOfBoundsException();

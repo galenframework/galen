@@ -208,6 +208,7 @@ public class PageSpecHandler implements VarsParserJsFunctions {
         PageSpec cleanedSpec = new PageSpec();
         cleanedSpec.setObjects(pageSpec.getObjects());
         cleanedSpec.setSections(cleanEmptySections(pageSpec.getSections()));
+        cleanedSpec.setObjectGroups(pageSpec.getObjectGroups());
         return cleanedSpec;
     }
 
@@ -456,4 +457,19 @@ public class PageSpecHandler implements VarsParserJsFunctions {
         return sectionFilter;
     }
 
+    public void applyGroupsToObject(final String objectName, List<String> groups) {
+        for (String groupName : groups) {
+
+            List<String> groupObjectsList = pageSpec.getObjectGroups().get(groupName);
+            if (groupObjectsList != null) {
+                if (!groupObjectsList.contains(objectName)) {
+                    groupObjectsList.add(objectName);
+                }
+            } else {
+                groupObjectsList = new LinkedList<>();
+                groupObjectsList.add(objectName);
+                pageSpec.getObjectGroups().put(groupName, groupObjectsList);
+            }
+        }
+    }
 }

@@ -472,4 +472,18 @@ public class GalenUtils {
             driver.manage().window().setSize(new org.openqa.selenium.Dimension(width +  delta, height));
         }
     }
+
+    public static List<String> fromCommaSeparated(String parameters) {
+        List<String> items = new LinkedList<>();
+        String[] paramArray = parameters.split(",");
+
+        for (String param : paramArray) {
+            String trimmed = param.trim();
+            if (!trimmed.isEmpty()) {
+                items.add(trimmed);
+            }
+        }
+
+        return items;
+    }
 }
