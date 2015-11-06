@@ -457,19 +457,39 @@ public class PageSpecHandler implements VarsParserJsFunctions {
         return sectionFilter;
     }
 
-    public void applyGroupsToObject(final String objectName, List<String> groups) {
-        for (String groupName : groups) {
+    public void applyGroupsToObject(String objectName, List<String> groups) {
+        if (!objectName.isEmpty()) {
+            for (String groupName : groups) {
+                groupName = groupName.trim();
 
-            List<String> groupObjectsList = pageSpec.getObjectGroups().get(groupName);
-            if (groupObjectsList != null) {
-                if (!groupObjectsList.contains(objectName)) {
+                List<String> groupObjectsList = pageSpec.getObjectGroups().get(groupName);
+                if (groupObjectsList != null) {
+                    if (!groupObjectsList.contains(objectName)) {
+                        groupObjectsList.add(objectName);
+                    }
+                } else {
+                    groupObjectsList = new LinkedList<>();
                     groupObjectsList.add(objectName);
+                    pageSpec.getObjectGroups().put(groupName, groupObjectsList);
                 }
-            } else {
-                groupObjectsList = new LinkedList<>();
-                groupObjectsList.add(objectName);
-                pageSpec.getObjectGroups().put(groupName, groupObjectsList);
             }
         }
+    }
+
+    public List<String> findAllObjectsMatchingStatements(String sequenceStatement) {
+        String[] objectPatterns = sequenceStatement.split(",");
+        List<String> matchingObjects = new LinkedList<>();
+
+        List<String> allObjectNames = getSortedObjectNames();
+
+        for (String objectPattern : objectPatterns) {
+            Pattern regex = GalenUtils.convertObjectNameRegex(objectPattern.trim());
+            for (String objectName : allObjectNames) {
+                if (regex.matcher(objectName).matches()) {
+                    matchingObjects.add(objectName);
+                }
+            }
+        }
+         return matchingObjects;
     }
 }

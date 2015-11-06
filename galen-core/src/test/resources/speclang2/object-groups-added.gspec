@@ -1,0 +1,12 @@
+@objects
+    obj1        #obj1
+    obj2        #obj2
+    obj3        #obj3
+
+    anotherObject  #anotherObject
+
+
+@objects
+    @group [obj1, obj3] as groupA, groupB
+
+    @group [obj*] as groupC

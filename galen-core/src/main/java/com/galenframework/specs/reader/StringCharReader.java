@@ -123,4 +123,7 @@ public class StringCharReader {
         cursor = position;
     }
 
+    public void skipWord() {
+        readWord();
+    }
 }

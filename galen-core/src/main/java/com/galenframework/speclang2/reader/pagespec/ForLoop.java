@@ -126,21 +126,7 @@ public class ForLoop {
     }
 
     private static String[] readSequenceFromPageObjects(String sequenceStatement, PageSpecHandler pageSpecHandler) {
-        String[] objectPatterns = sequenceStatement.split(",");
-
-        ArrayList<String> matchingObjects = new ArrayList<String>();
-        List<String> allObjectNames = pageSpecHandler.getSortedObjectNames();
-
-        for (String objectPattern : objectPatterns) {
-            Pattern regex = GalenUtils.convertObjectNameRegex(objectPattern);
-            for (String objectName : allObjectNames) {
-                if (regex.matcher(objectName).matches()) {
-                    matchingObjects.add(objectName);
-                }
-            }
-        }
-
-
+        List<String> matchingObjects = pageSpecHandler.findAllObjectsMatchingStatements(sequenceStatement);
         Collections.sort(matchingObjects, new AlphanumericComparator());
         return matchingObjects.toArray(new String[]{});
     }

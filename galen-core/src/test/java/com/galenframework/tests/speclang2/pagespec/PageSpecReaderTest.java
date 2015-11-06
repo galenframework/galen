@@ -735,16 +735,23 @@ public class PageSpecReaderTest {
 
     @Test
     public void shouldRead_objectClasses_inObjectsSection() throws IOException {
-        PageSpec pageSpec = readPageSpec("speclang2/object-classes-definition.gspec");
+        PageSpec pageSpec = readPageSpec("speclang2/object-groups-definition.gspec");
 
-        assertThat(pageSpec.getObjectGroups(), is((Map<String, List<String>>)new HashMap<String, List<String>>(){{
-            put("image-validation", asList("header.icon", "header.caption", "menu.item-1"));
-            put("header-stuff", asList("header.icon", "header.caption"));
-            put("baseGroup", asList("obj-base-and-sub", "obj-base-and-other-sub"));
-            put("subGroup", asList("obj-base-and-sub"));
-            put("otherSubGroup", asList("obj-base-and-other-sub"));
-        }}));
+        assertThat(pageSpec.getObjectGroups(), hasEntry("image-validation", asList("header.icon", "header.caption", "menu.item-1")));
+        assertThat(pageSpec.getObjectGroups(), hasEntry("header-stuff", asList("header.icon", "header.caption")));
+        assertThat(pageSpec.getObjectGroups(), hasEntry("baseGroup", asList("obj-base-and-sub", "obj-base-and-other-sub")));
+        assertThat(pageSpec.getObjectGroups(), hasEntry("subGroup", asList("obj-base-and-sub")));
+        assertThat(pageSpec.getObjectGroups(), hasEntry("otherSubGroup", asList("obj-base-and-other-sub")));
+    }
 
+
+    @Test
+    public void shouldApply_objectGroups_toAlreadyProcessedObjects() throws IOException {
+        PageSpec pageSpec = readPageSpec("speclang2/object-groups-added.gspec");
+
+        assertThat(pageSpec.getObjectGroups(), hasEntry("groupA", asList("obj1", "obj3")));
+        assertThat(pageSpec.getObjectGroups(), hasEntry("groupB", asList("obj1", "obj3")));
+        assertThat(pageSpec.getObjectGroups(), hasEntry("groupC", asList("obj1", "obj2", "obj3")));
     }
 
 

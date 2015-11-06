@@ -32,6 +32,7 @@ import static java.lang.String.format;
 
 public class ObjectDefinitionProcessor {
     public static final String GROUPED = "@grouped";
+    private static final String GROUP = "@group";
     private final PageSpecHandler pageSpecHandler;
     private static final String CORRECTIONS_SYMBOL = "@";
 
@@ -62,12 +63,55 @@ public class ObjectDefinitionProcessor {
     }
 
     private void parseItem(StructNode objectNode, String parentName, Locator parentLocator) {
-        if (objectNode.getName().startsWith(GROUPED)) {
+        String firstWord = new StringCharReader(objectNode.getName()).readWord();
+
+        if (firstWord.equals(GROUPED)) {
             processGrouped(objectNode, parentName, parentLocator);
+        } else if (firstWord.equals(GROUP)) {
+            processAddedGroup(objectNode);
         } else {
             processObject(objectNode, parentName, parentLocator);
         }
 
+    }
+
+    private void processAddedGroup(StructNode objectNode) {
+        StringCharReader reader = new StringCharReader(objectNode.getName());
+
+        // skipping @group word
+        reader.skipWord();
+
+        if (reader.firstNonWhiteSpaceSymbol() == '[' ) {
+            reader.readUntilSymbol('[');
+            String sequenceStatement = reader.readUntilSymbol(']');
+            List<String> foundObjects = pageSpecHandler.findAllObjectsMatchingStatements(sequenceStatement);
+
+
+            String asWord = reader.readWord();
+            if (asWord.equals("as")) {
+
+                String groupsText = reader.getTheRest().trim();
+                if (!groupsText.isEmpty()) {
+                    List<String> groups = GalenUtils.fromCommaSeparated(groupsText);
+
+                    for (String objectName : foundObjects) {
+                        pageSpecHandler.applyGroupsToObject(objectName, groups);
+                    }
+                } else {
+                    throw new SyntaxException("Missing groups");
+                }
+            } else {
+                throw new SyntaxException("Missing: \"as\"");
+            }
+        } else {
+            throw new SyntaxException("Unexpected symbol: " + reader.firstNonWhiteSpaceSymbol());
+        }
+
+
+
+        if (objectNode.hasChildNodes()) {
+            throw new SyntaxException("This line does not take any child blocks");
+        }
     }
 
     private void processGrouped(StructNode objectNode, String parentName, Locator parentLocator) {
@@ -111,13 +155,9 @@ public class ObjectDefinitionProcessor {
             }
         }
 
-
         if (locatorText == null) {
             throw new SyntaxException("Missing locator");
         }
-
-
-
 
         Locator locator = readLocatorFromString(objectNode, objectName, locatorText.trim());
         locator.setCorrections(corrections);
@@ -143,6 +183,9 @@ public class ObjectDefinitionProcessor {
     }
 
     private void addObjectToSpec(StructNode objectNode, String objectName, Locator locator, List<String> groupsForThisObject) {
+        if (!objectName.matches("[0-9a-zA-Z_\\.\\-]*")) {
+            throw new SyntaxException("Invalid object name: " + objectName);
+        }
         pageSpecHandler.addObjectToSpec(objectName, locator);
 
         List<String> allCurrentGroups = getAllCurrentGroups();
