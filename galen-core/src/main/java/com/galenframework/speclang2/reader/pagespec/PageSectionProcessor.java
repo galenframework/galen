@@ -202,7 +202,9 @@ public class PageSectionProcessor {
                 throw new SyntaxException(source, "Incorrect object expression");
             }
 
-            if (GalenUtils.isObjectExpression(singleExpression)) {
+            if (GalenUtils.isObjectGroup(singleExpression)) {
+                resultingObjectNames.addAll(pageSpecHandler.findOjectsInGroup(GalenUtils.extractGroupName(singleExpression)));
+            } else if (GalenUtils.isObjectsSearchExpression(singleExpression)) {
                 Pattern objectPattern = GalenUtils.convertObjectNameRegex(singleExpression);
                 for (String objectName : pageSpecHandler.getSortedObjectNames()) {
                     if (objectPattern.matcher(objectName).matches()) {

@@ -410,7 +410,12 @@ public class GalenUtils {
         return Pattern.compile(jRegex);
     }
 
-    public static boolean isObjectExpression(String singleExpression) {
+    public static boolean isObjectsSearchExpression(String singleExpression) {
+        //check if it is group
+        if (singleExpression.startsWith("&")) {
+            return true;
+        }
+
         for (int i = 0; i < singleExpression.length(); i++) {
             char symbol = singleExpression.charAt(i);
             if (symbol == '*' || symbol == '#') {
@@ -485,5 +490,13 @@ public class GalenUtils {
         }
 
         return items;
+    }
+
+    public static boolean isObjectGroup(String singleExpression) {
+        return singleExpression.startsWith("&");
+    }
+
+    public static String extractGroupName(String singleExpression) {
+        return singleExpression.substring(1);
     }
 }

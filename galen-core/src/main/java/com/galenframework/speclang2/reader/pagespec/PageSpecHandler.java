@@ -484,4 +484,11 @@ public class PageSpecHandler implements VarsParserJsFunctions {
         }
     }
 
+    public List<String> findOjectsInGroup(String groupName) {
+        if (pageSpec.getObjectGroups().containsKey(groupName)) {
+            return pageSpec.getObjectGroups().get(groupName);
+        } else {
+            return Collections.emptyList();
+        }
+    }
 }
