@@ -1,0 +1,24 @@
+@objects
+    menu-item-1     #mi1
+    menu-item-2     #mi2
+    login-button    #login-btn
+    cancel-button   #cancel-btn
+
+    @group [*-button] as buttons
+
+@script
+    this.forGroup = function (groupName) {
+        var result = "";
+        var objects = findAll("&" + groupName);
+        for (var i = 0; i < objects.length; i++) {
+            if (i > 0) {
+                result += ",";
+            }
+            result += objects[i].name;
+        }
+        return result;
+    }
+
+= Main Section =
+    ${forGroup("buttons")}:
+        height 30px

@@ -197,22 +197,19 @@ public class PageSectionProcessor {
 
         for (String part : parts) {
             String singleExpression = part.trim();
-
-            if (singleExpression.isEmpty()) {
-                throw new SyntaxException(source, "Incorrect object expression");
-            }
-
-            if (GalenUtils.isObjectGroup(singleExpression)) {
-                resultingObjectNames.addAll(pageSpecHandler.findOjectsInGroup(GalenUtils.extractGroupName(singleExpression)));
-            } else if (GalenUtils.isObjectsSearchExpression(singleExpression)) {
-                Pattern objectPattern = GalenUtils.convertObjectNameRegex(singleExpression);
-                for (String objectName : pageSpecHandler.getSortedObjectNames()) {
-                    if (objectPattern.matcher(objectName).matches()) {
-                        resultingObjectNames.add(objectName);
+            if (!singleExpression.isEmpty()) {
+                if (GalenUtils.isObjectGroup(singleExpression)) {
+                    resultingObjectNames.addAll(pageSpecHandler.findOjectsInGroup(GalenUtils.extractGroupName(singleExpression)));
+                } else if (GalenUtils.isObjectsSearchExpression(singleExpression)) {
+                    Pattern objectPattern = GalenUtils.convertObjectNameRegex(singleExpression);
+                    for (String objectName : pageSpecHandler.getSortedObjectNames()) {
+                        if (objectPattern.matcher(objectName).matches()) {
+                            resultingObjectNames.add(objectName);
+                        }
                     }
+                } else {
+                    resultingObjectNames.add(singleExpression);
                 }
-            } else {
-                resultingObjectNames.add(singleExpression);
             }
         }
         return resultingObjectNames;

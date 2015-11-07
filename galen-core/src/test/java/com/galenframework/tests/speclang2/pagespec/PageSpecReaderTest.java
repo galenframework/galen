@@ -769,6 +769,37 @@ public class PageSpecReaderTest {
         assertThat(objects.get(1).getSpecs().get(0).getOriginalText(), is("height 30px"));
     }
 
+    @Test
+    public void shouldFind_allObjects_forSpecifiedGroups_forEachLoop() throws IOException {
+        PageSpec pageSpec = readPageSpec("speclang2/object-groups-foreach.gspec");
+
+        List<ObjectSpecs> objects = pageSpec.getSections().get(0).getObjects();
+        assertThat(objects.size(), is(2));
+
+        assertThat(objects.get(0).getObjectName(), is("cancel-button"));
+        assertThat(objects.get(0).getSpecs().get(0).getOriginalText(), is("height 30px"));
+
+        assertThat(objects.get(1).getObjectName(), is("login-button"));
+        assertThat(objects.get(1).getSpecs().get(0).getOriginalText(), is("height 30px"));
+    }
+
+
+    @Test
+    public void shouldFind_allObjects_forSpecifiedGroups_inJavaScriptFindAllFunction() throws IOException {
+        PageSpec pageSpec = readPageSpec("speclang2/object-groups-findAll.gspec",
+                new MockedPage(new HashMap<String, PageElement>()),
+                EMPTY_TAGS, EMPTY_TAGS);
+
+        List<ObjectSpecs> objects = pageSpec.getSections().get(0).getObjects();
+        assertThat(objects.size(), is(2));
+
+        assertThat(objects.get(0).getObjectName(), is("cancel-button"));
+        assertThat(objects.get(0).getSpecs().get(0).getOriginalText(), is("height 30px"));
+
+        assertThat(objects.get(1).getObjectName(), is("login-button"));
+        assertThat(objects.get(1).getSpecs().get(0).getOriginalText(), is("height 30px"));
+    }
+
     private PageSpec readPageSpec(String resource) throws IOException {
         return readPageSpec(resource, NO_PAGE, EMPTY_TAGS, EMPTY_TAGS);
     }

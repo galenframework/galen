@@ -323,10 +323,14 @@ public class PageSpecHandler implements VarsParserJsFunctions {
         List<String> allObjectNames = getSortedObjectNames();
 
         for (String objectPattern : objectPatterns) {
-            Pattern regex = GalenUtils.convertObjectNameRegex(objectPattern.trim());
-            for (String objectName : allObjectNames) {
-                if (regex.matcher(objectName).matches()) {
-                    matchingObjects.add(objectName);
+            if (GalenUtils.isObjectGroup(objectPattern)) {
+                matchingObjects.addAll(findOjectsInGroup(GalenUtils.extractGroupName(objectPattern)));
+            } else {
+                Pattern regex = GalenUtils.convertObjectNameRegex(objectPattern.trim());
+                for (String objectName : allObjectNames) {
+                    if (regex.matcher(objectName).matches()) {
+                        matchingObjects.add(objectName);
+                    }
                 }
             }
         }
