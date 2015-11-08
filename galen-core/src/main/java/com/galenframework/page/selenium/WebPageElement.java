@@ -71,13 +71,9 @@ public class WebPageElement extends PageElement {
     }
 
     
-    private Boolean cachedVisibility = null;
     @Override
     public boolean isVisible() {
-        if (cachedVisibility == null) {
-            cachedVisibility = getWebElement().isDisplayed();
-        }
-        return cachedVisibility;
+        return getWebElement().isDisplayed();
     }
 
     @Override
