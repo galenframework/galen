@@ -15,34 +15,71 @@
 ******************************************************************************/
 package com.galenframework.speclang2.reader.specs;
 
-import com.galenframework.parser.SyntaxException;
+import com.galenframework.parser.Expectations;
 import com.galenframework.specs.SpecComponent;
 import com.galenframework.specs.reader.StringCharReader;
 import com.galenframework.specs.Spec;
+import org.apache.commons.lang3.math.NumberUtils;
+import org.apache.commons.lang3.tuple.Pair;
 
 import java.io.File;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class SpecComponentProcessor implements SpecProcessor {
     @Override
     public Spec process(StringCharReader reader, String contextPath) {
         SpecComponent spec = new SpecComponent();
 
-        String childFilePath = reader.getTheRest().trim();
-
+        int initialPosition = reader.currentCursorPosition();
         if (reader.readWord().equals("frame")) {
-            childFilePath = reader.getTheRest().trim();
             spec.setFrame(true);
-        }
-        if (childFilePath.isEmpty()) {
-            throw new SyntaxException("File path to component spec is not specified");
-        }
-
-        String fullFilePath = childFilePath;
-        if (contextPath != null) {
-            fullFilePath = contextPath + File.separator + childFilePath;
+        } else {
+            reader.moveCursorTo(initialPosition);
         }
 
-        spec.setSpecPath(fullFilePath);
+        String filePath = reader.readSafeUntilSymbol(',').trim();
+
+        List<Pair<String, String>> unprocessedArguments = Expectations.commaSeparatedRepeatedKeyValues().read(reader);
+        spec.setArguments(processArguments(unprocessedArguments));
+
+        if (contextPath != null && !contextPath.equals(".")) {
+            filePath = contextPath + File.separator + filePath;
+        }
+
+        spec.setSpecPath(filePath);
         return spec;
+    }
+
+    private Map<String, Object> processArguments(List<Pair<String, String>> unprocessedArguments) {
+        Map<String, Object> arguments = new HashMap<>();
+
+        for (Pair<String, String> textArgument : unprocessedArguments) {
+            arguments.put(textArgument.getKey(), processArgumentValue(textArgument.getValue()));
+        }
+        return arguments;
+    }
+
+    private Object processArgumentValue(String value) {
+        try {
+            if (value == null) {
+                return "";
+            }
+
+            if (NumberUtils.isDigits(value)) {
+                return Long.parseLong(value);
+            } else if (NumberUtils.isNumber(value)) {
+                return Double.parseDouble(value);
+            } else if (value.equals("true")){
+                return true;
+            } else if (value.equals("false")){
+                return false;
+            } else {
+                return value;
+            }
+        } catch (Exception ex) {
+            return value;
+        }
     }
 }

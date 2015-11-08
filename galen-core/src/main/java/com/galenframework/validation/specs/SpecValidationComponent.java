@@ -17,6 +17,7 @@ package com.galenframework.validation.specs;
 
 import java.io.IOException;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -111,9 +112,13 @@ public class SpecValidationComponent extends SpecValidation<SpecComponent> {
 
         PageSpec componentPageSpec;
         try {
-            componentPageSpec = pageSpecReader.read(spec.getSpecPath(), page, sectionFilter, spec.getProperties(), spec.getJsVariables(), NO_OBJECTS);
+            componentPageSpec = pageSpecReader.read(spec.getSpecPath(),
+                    page, sectionFilter, spec.getProperties(),
+                    wrapJsVariables(spec.getJsVariables(), spec.getArguments()),
+                    NO_OBJECTS
+            );
         } catch (IOException e) {
-            throw new RuntimeException(e.getMessage(), e);
+            throw new RuntimeException("Could not read spec " + spec.getSpecPath(), e);
         }
 
         SectionValidation sectionValidation = new SectionValidation(componentPageSpec.getSections(),
@@ -121,6 +126,19 @@ public class SpecValidationComponent extends SpecValidation<SpecComponent> {
                 validationListener);
 
         return sectionValidation.check();
+    }
+
+    private Map<String, Object> wrapJsVariables(Map<String, Object> jsVariables, Map<String, Object> arguments) {
+        Map<String, Object> newJsVariables = new HashMap<>();
+        if (jsVariables != null) {
+            newJsVariables.putAll(jsVariables);
+        }
+
+        if (arguments != null) {
+            newJsVariables.putAll(arguments);
+        }
+
+        return newJsVariables;
     }
 
     private List<ValidationResult> checkInsideNormalWebElement(PageValidation pageValidation, String objectName, SpecComponent spec) {

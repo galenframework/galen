@@ -18,8 +18,6 @@ package com.galenframework.speclang2.reader.specs;
 import com.galenframework.parser.SyntaxException;
 import com.galenframework.specs.*;
 import com.galenframework.specs.reader.StringCharReader;
-import com.galenframework.parser.SyntaxException;
-import com.galenframework.specs.reader.StringCharReader;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -123,6 +121,6 @@ public class SpecReader {
     }
 
     public Spec read(String specText) {
-        return read(specText, ".");
+        return read(specText, null);
     }
 }

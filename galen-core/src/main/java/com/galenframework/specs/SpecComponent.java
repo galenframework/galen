@@ -16,10 +16,13 @@
 package com.galenframework.specs;
 
 
+import java.util.Map;
+
 public class SpecComponent extends Spec {
 
     private String specPath;
     private boolean frame;
+    private Map<String, Object> arguments;
 
     public String getSpecPath() {
         return specPath;
@@ -35,5 +38,13 @@ public class SpecComponent extends Spec {
 
     public void setFrame(boolean frame) {
         this.frame = frame;
+    }
+
+    public Map<String, Object> getArguments() {
+        return arguments;
+    }
+
+    public void setArguments(Map<String, Object> arguments) {
+        this.arguments = arguments;
     }
 }

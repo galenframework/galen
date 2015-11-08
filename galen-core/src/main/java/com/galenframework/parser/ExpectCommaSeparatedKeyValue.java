@@ -16,7 +16,6 @@
 package com.galenframework.parser;
 
 import com.galenframework.specs.reader.StringCharReader;
-import com.galenframework.specs.reader.StringCharReader;
 import org.apache.commons.lang3.tuple.MutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 
@@ -27,21 +26,32 @@ import java.util.List;
 public class ExpectCommaSeparatedKeyValue implements Expectation<List<Pair<String, String>>> {
 
     @Override
-    public List<Pair<String, String>> read(StringCharReader charReader) {
+    public List<Pair<String, String>> read(StringCharReader reader) {
         List<Pair<String, String>> data = new LinkedList<Pair<String, String>>();
 
         Pair<String, String> currentParam = null;
 
-        while(charReader.hasMore()) {
+        while(reader.hasMore()) {
             if (currentParam == null) {
-                String word = new ExpectWord().read(charReader);
+                String word = new ExpectWord().read(reader);
                 if (!word.isEmpty()) {
                     currentParam = new MutablePair<String, String>(word, "");
                     data.add(currentParam);
                 }
             }
             else {
-                final String value = charReader.readSafeUntilSymbol(',').trim();
+                String value;
+
+                if (reader.firstNonWhiteSpaceSymbol() == '\"') {
+                    value = Expectations.doubleQuotedText().read(reader);
+
+                    String leftover = reader.readSafeUntilSymbol(',').trim();
+                    if (!leftover.isEmpty()) {
+                        throw new SyntaxException("Cannot parse text after double-quoted text: " + leftover);
+                    }
+                } else {
+                    value = reader.readSafeUntilSymbol(',').trim();
+                }
                 currentParam.setValue(value);
                 currentParam = null;
             }
