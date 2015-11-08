@@ -54,13 +54,11 @@ public class PageDump {
         @JsonIgnore
         private String objectName;
         private int[] area;
-        private String text;
         private boolean hasImage = false;
 
-        public Element(String objectName, int[] area, String text) {
+        public Element(String objectName, int[] area) {
             setObjectName(objectName);
             setArea(area);
-            setText(text);
         }
 
         public void setObjectName(String objectName) {
@@ -77,14 +75,6 @@ public class PageDump {
 
         public int[] getArea() {
             return area;
-        }
-
-        public void setText(String text) {
-            this.text = text;
-        }
-
-        public String getText() {
-            return text;
         }
 
         public void setHasImage(boolean hasImage) {

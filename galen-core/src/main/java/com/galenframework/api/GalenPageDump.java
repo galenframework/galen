@@ -95,7 +95,7 @@ public class GalenPageDump {
                 PageElement pageElement = pageValidation.findPageElement(objectName);
 
                 if (pageElement.isVisible() && pageElement.getArea() != null) {
-                    PageDump.Element element = new PageDump.Element(objectName, pageElement.getArea().toIntArray(), pageElement.getText());
+                    PageDump.Element element = new PageDump.Element(objectName, pageElement.getArea().toIntArray());
 
                     if (pageElement.isPresent() && pageElement.isVisible() && isWithinArea(pageElement, maxWidth, maxHeight)) {
                         element.setHasImage(true);

@@ -4,32 +4,26 @@
     "items": {
         "big-container": {
             "area": [0, 0, 500, 300],
-            "text": "",
             "hasImage":true
         },
         "name-textfield": {
             "area": [120, 10, 200, 50],
-            "text": "",
             "hasImage":true
         },
         "button-save": {
             "area": [10, 10, 100, 50],
-            "text": "Save",
             "hasImage":true
         },
         "menu-item-1": {
             "area": [30, 10, 20, 10],
-            "text": "",
             "hasImage":true
         },
         "menu-item-2": {
             "area": [50, 10, 20, 10],
-            "text": "",
             "hasImage":true
         },
         "menu-item-3": {
             "area": [70, 10, 20, 10],
-            "text": "",
             "hasImage":true
         }
     }

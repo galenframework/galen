@@ -387,7 +387,6 @@ function showSpecSuggestions(selectedIds) {
 function showObjectDetails(item) {
     $("#object-details .xf-object-name").text(item.name);
     $("#object-details .xf-object-area").text(item.area);
-    $("#object-details .xf-object-text").text(item.text);
 
     if (item.hasImage) {
         $("#object-details .image").html("<img src='objects/" + item.name + ".png'/>").show();
