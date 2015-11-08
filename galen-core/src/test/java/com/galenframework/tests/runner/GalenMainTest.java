@@ -293,13 +293,13 @@ public class GalenMainTest {
     @Test 
     public void shouldGenerate_configFile() throws Exception {
         new GalenMain().execute(new String[]{"config"});
-        assertThat("config file should exist", new File("config").exists(), is(true));
-        new File("config").delete();
+        assertThat("config file should exist", new File("galen.config").exists(), is(true));
+        new File("galen.config").delete();
     }
     
     @Test 
     public void shouldNot_overrideExistingConfigFile() throws IOException {
-        File file = new File("config");
+        File file = new File("galen.config");
         file.createNewFile();
         FileUtils.writeStringToFile(file, "someTestDate = qwertyuiop");
         

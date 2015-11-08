@@ -53,7 +53,14 @@ public class GalenConfig {
     private void loadConfig() throws IOException {
         this.properties = new Properties();
 
+
         InputStream stream = GalenUtils.findFileOrResourceAsStream(readProperty(GalenProperty.GALEN_CONFIG_FILE));
+
+        if (stream == null) {
+            //fallback to old way of config name
+            stream = GalenUtils.findFileOrResourceAsStream("config");
+        }
+
         if (stream != null) {
             properties.load(stream);
             stream.close();

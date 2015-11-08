@@ -35,7 +35,7 @@ public enum GalenProperty {
     TEST_JAVA_TIMEOUT_PAGELOAD("galen.test.java.timeout.pageLoad", "20"),
     TEST_JAVA_TIMEOUT_IMPLICITYWAIT("galen.test.java.timeout.implicitWait", "1"),
     
-    GALEN_CONFIG_FILE("galen.config.file", "config"),
+    GALEN_CONFIG_FILE("galen.config.file", "galen.config"),
     GALEN_RANGE_APPROXIMATION("galen.range.approximation", "2"),
     GALEN_REPORTING_LISTENERS("galen.reporting.listeners", ""),
     GALEN_DEFAULT_BROWSER("galen.default.browser", "firefox"),

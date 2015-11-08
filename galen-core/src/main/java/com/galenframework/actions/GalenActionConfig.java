@@ -27,10 +27,12 @@ public class GalenActionConfig extends GalenAction {
 
     @Override
     public void execute() throws IOException {
-        File file = new File("config");
+        File file = new File("galen.config");
 
         if (!file.exists()) {
-            file.createNewFile();
+            if (!file.createNewFile()) {
+                throw new RuntimeException("Could not create file: " + file.getAbsolutePath());
+            }
             FileOutputStream fos = new FileOutputStream(file);
 
             StringWriter writer = new StringWriter();
