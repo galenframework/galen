@@ -32,7 +32,6 @@ import static java.lang.String.format;
 
 public class ObjectDefinitionProcessor {
     public static final String GROUPED = "@grouped";
-    private static final String GROUP = "@group";
     private final PageSpecHandler pageSpecHandler;
     private static final String CORRECTIONS_SYMBOL = "@";
 
@@ -57,75 +56,12 @@ public class ObjectDefinitionProcessor {
         return Collections.emptyList();
     }
 
-
     private void parseItem(StructNode objectNode) {
         parseItem(objectNode, null, null);
     }
 
     private void parseItem(StructNode objectNode, String parentName, Locator parentLocator) {
-        String firstWord = new StringCharReader(objectNode.getName()).readWord();
-
-        if (firstWord.equals(GROUPED)) {
-            processGrouped(objectNode, parentName, parentLocator);
-        } else if (firstWord.equals(GROUP)) {
-            processAddedGroup(objectNode);
-        } else {
-            processObject(objectNode, parentName, parentLocator);
-        }
-
-    }
-
-    private void processAddedGroup(StructNode objectNode) {
-        StringCharReader reader = new StringCharReader(objectNode.getName());
-
-        // skipping @group word
-        reader.skipWord();
-
-        if (reader.firstNonWhiteSpaceSymbol() == '[' ) {
-            reader.readUntilSymbol('[');
-            String sequenceStatement = reader.readUntilSymbol(']');
-            List<String> foundObjects = pageSpecHandler.findAllObjectsMatchingStatements(sequenceStatement);
-
-
-            String asWord = reader.readWord();
-            if (asWord.equals("as")) {
-
-                String groupsText = reader.getTheRest().trim();
-                if (!groupsText.isEmpty()) {
-                    List<String> groups = GalenUtils.fromCommaSeparated(groupsText);
-
-                    for (String objectName : foundObjects) {
-                        pageSpecHandler.applyGroupsToObject(objectName, groups);
-                    }
-                } else {
-                    throw new SyntaxException("Missing groups");
-                }
-            } else {
-                throw new SyntaxException("Missing: \"as\"");
-            }
-        } else {
-            throw new SyntaxException("Unexpected symbol: " + reader.firstNonWhiteSpaceSymbol());
-        }
-
-
-
-        if (objectNode.hasChildNodes()) {
-            throw new SyntaxException("This line does not take any child blocks");
-        }
-    }
-
-    private void processGrouped(StructNode objectNode, String parentName, Locator parentLocator) {
-        String parameters = objectNode.getName().substring(GROUPED.length()).trim();
-        List<String> groupNames = GalenUtils.fromCommaSeparated(parameters);
-        groupStack.push(groupNames);
-
-        if (objectNode.getChildNodes() != null) {
-            for (StructNode childObjectNode : objectNode.getChildNodes()) {
-                parseItem(childObjectNode, parentName, parentLocator);
-            }
-        }
-
-        groupStack.pop();
+        processObject(objectNode, parentName, parentLocator);
     }
 
     private void processObject(StructNode objectNode, String parentName, Locator parentLocator) {
@@ -147,7 +83,7 @@ public class ObjectDefinitionProcessor {
             if (word.equals(CORRECTIONS_SYMBOL)) {
                 corrections = Expectations.corrections().read(reader);
             } else if (word.equals(GROUPED)) {
-                groups = parseGroupsInBrackets(reader);
+                groups = parseInlineGroupsInBrackets(reader);
             }
             else {
                 locatorText = word + reader.getTheRest();
@@ -173,7 +109,7 @@ public class ObjectDefinitionProcessor {
         }
     }
 
-    private List<String> parseGroupsInBrackets(StringCharReader reader) {
+    private List<String> parseInlineGroupsInBrackets(StringCharReader reader) {
         if (reader.firstNonWhiteSpaceSymbol() == '(') {
             reader.readUntilSymbol('(');
             return GalenUtils.fromCommaSeparated(reader.readUntilSymbol(')'));

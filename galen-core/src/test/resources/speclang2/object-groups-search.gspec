@@ -4,8 +4,8 @@
     login-button    #login-btn
     cancel-button   #cancel-btn
 
-    @group [*-button] as buttons
-
+@groups
+    buttons         *-button
 
 = Main Section =
     &buttons:

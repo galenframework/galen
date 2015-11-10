@@ -6,7 +6,6 @@
     anotherObject  #anotherObject
 
 
-@objects
-    @group [obj1, obj3] as groupA, groupB
-
-    @group [obj*] as groupC
+@groups
+    (groupA, groupB)        obj1, obj3
+    groupC                  obj*

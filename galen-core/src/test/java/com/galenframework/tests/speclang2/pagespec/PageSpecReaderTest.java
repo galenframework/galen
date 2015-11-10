@@ -737,11 +737,8 @@ public class PageSpecReaderTest {
     public void shouldRead_objectClasses_inObjectsSection() throws IOException {
         PageSpec pageSpec = readPageSpec("speclang2/object-groups-definition.gspec");
 
-        assertThat(pageSpec.getObjectGroups(), hasEntry("image-validation", asList("header.icon", "header.caption", "menu.item-1")));
-        assertThat(pageSpec.getObjectGroups(), hasEntry("header-stuff", asList("header.icon", "header.caption")));
-        assertThat(pageSpec.getObjectGroups(), hasEntry("baseGroup", asList("obj-base-and-sub", "obj-base-and-other-sub")));
-        assertThat(pageSpec.getObjectGroups(), hasEntry("subGroup", asList("obj-base-and-sub")));
-        assertThat(pageSpec.getObjectGroups(), hasEntry("otherSubGroup", asList("obj-base-and-other-sub")));
+        assertThat(pageSpec.getObjectGroups(), hasEntry("image-validation", asList("menu.item-1", "button")));
+        assertThat(pageSpec.getObjectGroups(), hasEntry("menu-stuff", asList("menu.item-1")));
     }
 
 

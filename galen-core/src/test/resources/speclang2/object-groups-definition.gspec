@@ -1,18 +1,7 @@
 @objects
-    header      #header
-        # Giving a group for multiple objects
-        @grouped  image-validation, header-stuff
-            icon        img.icon
-            caption     h1
-
-    @grouped baseGroup
-        @grouped subGroup
-            obj-base-and-sub            #div1
-
-        @grouped otherSubGroup
-            obj-base-and-other-sub      #div2
-
-
     menu        #menu
         # Inline group declaration
-        item-1  @grouped(image-validation)    ul li
+        item-1  @grouped(image-validation, menu-stuff)    ul li
+        item-2      ul li
+
+    button  @grouped(image-validation)    #btn

@@ -29,6 +29,7 @@ public class MacroProcessor {
     public static final String FOR_EACH_LOOP_KEYWORD = "@forEach";
     public static final String SET_KEYWORD = "@set";
     public static final String OBJECTS_KEYWORD = "@objects";
+    public static final String GROUPS_KEYWORD = "@groups";
     public static final String ON_KEYWORD = "@on";
     public static final String IMPORT_KEYWORD = "@import";
     public static final String SCRIPT_KEYWORD = "@script";
@@ -46,6 +47,7 @@ public class MacroProcessor {
             FOR_EACH_LOOP_KEYWORD,
             SET_KEYWORD,
             OBJECTS_KEYWORD,
+            GROUPS_KEYWORD,
             ON_KEYWORD,
             IMPORT_KEYWORD,
             SCRIPT_KEYWORD,
@@ -188,6 +190,8 @@ public class MacroProcessor {
             return new SetVariableProcessor(pageSpecHandler).process(reader, statementNode);
         } else if (OBJECTS_KEYWORD.equals(firstWord)) {
             return new ObjectDefinitionProcessor(pageSpecHandler).process(reader, statementNode);
+        } else if (GROUPS_KEYWORD.equals(firstWord)) {
+            return new GroupsDefinitionProcessor(pageSpecHandler).process(reader, statementNode);
         } else if (ON_KEYWORD.equals(firstWord)) {
             return process(new OnFilterProcessor(pageSpecHandler).process(reader, statementNode));
         } else if (IMPORT_KEYWORD.equals(firstWord)) {
