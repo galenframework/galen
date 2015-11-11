@@ -218,8 +218,9 @@ public class Rainbow4JTest {
 
         ImageCompareResult diff = Rainbow4J.compare(imageA, imageB, options);
 
-        assertThat(diff.getTotalPixels(), is(lessThan(5700L)));
-        assertThat(diff.getPercentage(), is(lessThan(2.26)));
+        assertThat(diff.getTotalPixels(), is(6670L));
+        assertThat(diff.getPercentage(), is(lessThan(2.86)));
+        assertThat(diff.getPercentage(), is(greaterThan(2.56)));
     }
 
     @Test
@@ -232,11 +233,11 @@ public class Rainbow4JTest {
         options.setTolerance(10);
         ImageCompareResult diff = Rainbow4J.compare(imageA, imageB, options);
 
-        assertThat(diff.getTotalPixels(), is(greaterThan(13800L)));
-        assertThat(diff.getTotalPixels(), is(lessThan(14000L)));
+        assertThat(diff.getTotalPixels(), is(greaterThan(14800L)));
+        assertThat(diff.getTotalPixels(), is(lessThan(15500L)));
 
-        assertThat(diff.getPercentage(), is(greaterThan(5.4)));
-        assertThat(diff.getPercentage(), is(lessThan(5.6)));
+        assertThat(diff.getPercentage(), is(greaterThan(5.9)));
+        assertThat(diff.getPercentage(), is(lessThan(6.1)));
     }
 
     @Test
@@ -346,10 +347,10 @@ public class Rainbow4JTest {
     public Object[][] imageCompareProvider() {
         return new Object[][] {
                 //pixelsmooth,  approx percentage, total pixels
-                {0, 0.64, 1618L},
-                {1, 0.64, 1618},
-                {2, 0.76, 1900},
-                {3, 0.69, 1727}
+                {0, 0.72, 1797},
+                {1, 0.72, 1797},
+                {2, 0.85, 2117},
+                {3, 0.85, 2118}
         };
     }
 
