@@ -71,37 +71,6 @@ public class ImageHandler {
         return rgbBytes;
     }
 
-    public Color getSmoothedColor(int x, int y, int x2, int y2) {
-        if (x < 0) x = 0;
-        if (y < 0) y = 0;
-
-        if (x >= width || y >= height) {
-            throw new RuntimeException("pixel is out of range");
-        }
-
-        if (x2 >= width) x2 = width - 1;
-        if (y2 >= height) y2 = height - 1;
-
-        int i, j;
-
-        long r = 0, g = 0, b = 0, t = 0;
-
-        for (i = x; i <= x2; i++) {
-            for (j = y; j <= y2; j++) {
-                t += 1;
-                Color c = pickColor(i, j);
-                r += c.getRed();
-                g += c.getGreen();
-                b += c.getBlue();
-            }
-        }
-
-        if (t > 0) {
-            return new Color((int)(r/t), (int)(g/t), (int)(b/t));
-        }
-        else return new Color(0, 0, 0);
-    }
-
     public Color pickColor(int x, int y) {
         if (x < width && y < height && x >= 0 && y >= 0) {
             int k = y * width * BLOCK_SIZE + x * BLOCK_SIZE;
@@ -116,10 +85,10 @@ public class ImageHandler {
         }
     }
 
-    public static long colorDiff(Color cA, Color cB) {
-        return Math.abs(cA.getRed() - cB.getRed())
-               + Math.abs(cA.getGreen() - cB.getGreen())
-               + Math.abs(cB.getBlue() - cB.getBlue());
+    public static long colorDiff(Color left, Color right) {
+        return Math.abs(    left.getRed()   - right.getRed())
+               + Math.abs(  left.getGreen() - right.getGreen())
+               + Math.abs(  left.getBlue()  - right.getBlue());
     }
 
 
