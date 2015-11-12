@@ -20,6 +20,7 @@ import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.LinkedList;
 import java.util.List;
 
 import com.galenframework.rainbow4j.*;
@@ -29,6 +30,7 @@ import org.testng.Assert;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
+import static java.util.Arrays.asList;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 
@@ -340,6 +342,42 @@ public class Rainbow4JTest {
             assertThat(result3.getOffsetX(), is(-2));
             assertThat(result3.getOffsetY(), is(-4));
         }
+    }
+
+    @Test
+    public void shouldApply_maskFilter_andShouldGive_smallDifference() throws IOException {
+        BufferedImage imageActual = Rainbow4J.loadImage(getClass().getResourceAsStream("/mask/actual.png"));
+        BufferedImage imageExpected = Rainbow4J.loadImage(getClass().getResourceAsStream("/mask/expected-with-rect.png"));
+        BufferedImage imageMask = Rainbow4J.loadImage(getClass().getResourceAsStream("/mask/mask.png"));
+
+        ComparisonOptions options = new ComparisonOptions();
+        List<ImageFilter> filters = new LinkedList<>();
+        filters.add(new MaskFilter(new ImageHandler(imageMask)));
+        options.setOriginalFilters(filters);
+
+        ImageCompareResult result = Rainbow4J.compare(imageActual, imageExpected, options);
+
+        assertThat(result.getTotalPixels(), is(57L));
+        assertThat(result.getPercentage(), is(lessThan(0.25)));
+    }
+
+
+    @Test
+    public void shouldApply_maskFilter_andShouldGive_biggerDifference() throws IOException {
+        BufferedImage imageActual = Rainbow4J.loadImage(getClass().getResourceAsStream("/mask/actual.png"));
+        BufferedImage imageExpected = Rainbow4J.loadImage(getClass().getResourceAsStream("/mask/expected-with-rect-and-cross.png"));
+        BufferedImage imageMask = Rainbow4J.loadImage(getClass().getResourceAsStream("/mask/mask.png"));
+
+        ComparisonOptions options = new ComparisonOptions();
+        List<ImageFilter> filters = new LinkedList<>();
+        filters.add(new MaskFilter(new ImageHandler(imageMask)));
+        options.setOriginalFilters(filters);
+
+        ImageCompareResult result = Rainbow4J.compare(imageActual, imageExpected, options);
+
+        assertThat(result.getTotalPixels(), is(7907L));
+        assertThat(result.getPercentage(), is(lessThan(30.0)));
+        assertThat(result.getPercentage(), is(greaterThan(28.0)));
     }
 
 

@@ -24,7 +24,7 @@ public class ImageHandler {
     private int width;
     private int height;
 
-    private final static int BLOCK_SIZE = 3;
+    public final static int BLOCK_SIZE = 4;
 
     public ImageHandler(BufferedImage image) {
         this.bytes = readRgbModelFrom(image);
@@ -47,10 +47,8 @@ public class ImageHandler {
 
 
     private static byte[] readRgbModelFrom(BufferedImage image) {
-
         int w = image.getWidth();
         int h = image.getHeight();
-
 
         int[] pixels = new int[w * h];
         image.getRGB(0, 0, w, h, pixels, 0, w);
@@ -62,9 +60,10 @@ public class ImageHandler {
                 int index = r * w + c;
                 int indexRgb = r * w * BLOCK_SIZE + c * BLOCK_SIZE;
 
-                rgbBytes[indexRgb] = (byte)((pixels[index] >> 16) &0xff);
-                rgbBytes[indexRgb + 1] = (byte)((pixels[index] >> 8) &0xff);
-                rgbBytes[indexRgb + 2] = (byte)(pixels[index] &0xff);
+                rgbBytes[indexRgb] = (byte)((pixels[index] >> 16) & 0xff);
+                rgbBytes[indexRgb + 1] = (byte)((pixels[index] >> 8) & 0xff);
+                rgbBytes[indexRgb + 2] = (byte)(pixels[index] & 0xff);
+                rgbBytes[indexRgb + 3] = (byte)((pixels[index] >> 24) & 0xff);
             }
         }
 
@@ -77,7 +76,8 @@ public class ImageHandler {
 
             return new Color(bytes[k] & 0xff,
                     bytes[k + 1] & 0xff,
-                    bytes[k + 2] & 0xff
+                    bytes[k + 2] & 0xff,
+                    bytes[k + 3] & 0xff
             );
         }
         else {
@@ -86,14 +86,18 @@ public class ImageHandler {
     }
 
     public static long colorDiff(Color left, Color right) {
-        return Math.abs(    left.getRed()   - right.getRed())
-               + Math.abs(  left.getGreen() - right.getGreen())
-               + Math.abs(  left.getBlue()  - right.getBlue());
+        if (left.getAlpha() > 128 && right.getAlpha() > 128) {
+            return Math.abs(left.getRed() - right.getRed())
+                    + Math.abs(left.getGreen() - right.getGreen())
+                    + Math.abs(left.getBlue() - right.getBlue());
+        } else {
+            return 0L;
+        }
     }
 
 
     public BufferedImage getImage() {
-        BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
+        BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
 
         for(int r=0; r< height; r++) {
             for (int c = 0; c < width; c++) {
@@ -101,7 +105,9 @@ public class ImageHandler {
                 int red = bytes[index] & 0xFF;
                 int green = bytes[index + 1] & 0xFF;
                 int blue = bytes[index + 2] & 0xFF;
-                int rgb = (red << 16) | (green << 8) | blue;
+                int alpha = bytes[index + 3] & 0xFF;
+
+                int rgb = (alpha << 24) | (red << 16) | (green << 8) | blue;
                 image.setRGB(c, r, rgb);
             }
         }
@@ -113,11 +119,12 @@ public class ImageHandler {
         filter.apply(this.bytes, width, height, area);
     }
 
-    public void setRGB(int x, int y, int r, int g, int b) {
+    public void setRGBA(int x, int y, int r, int g, int b, int a) {
         int k = y * width * BLOCK_SIZE + x * BLOCK_SIZE;
         bytes[k] = (byte) (r & 0xff);
         bytes[k + 1] = (byte) (g & 0xff);
         bytes[k + 2] = (byte) (b & 0xff);
+        bytes[k + 3] = (byte) (a & 0xff);
     }
 
     public int getWidth() {

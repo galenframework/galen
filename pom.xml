@@ -30,7 +30,6 @@
     <!-- VERSION NUMBERS -->
     <commons-io.version>2.4</commons-io.version>
     <commons-cli.version>1.2</commons-cli.version>
-    <selenium.version>2.47.1</selenium.version>
     <phantomjsdriver.version>1.2.1</phantomjsdriver.version>
     <rhino.version>1.7R5</rhino.version>
     <slf4j.version>1.7.10</slf4j.version>
@@ -171,31 +170,6 @@
         <groupId>com.google.code.gson</groupId>
         <artifactId>gson</artifactId>
         <version>${gson.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.seleniumhq.selenium</groupId>
-        <artifactId>selenium-firefox-driver</artifactId>
-        <version>${selenium.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.seleniumhq.selenium</groupId>
-        <artifactId>selenium-chrome-driver</artifactId>
-        <version>${selenium.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.seleniumhq.selenium</groupId>
-        <artifactId>selenium-edge-driver</artifactId>
-        <version>${selenium.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.seleniumhq.selenium</groupId>
-        <artifactId>selenium-java</artifactId>
-        <version>${selenium.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.seleniumhq.selenium</groupId>
-        <artifactId>selenium-support</artifactId>
-        <version>${selenium.version}</version>
       </dependency>
       <dependency>
         <groupId>commons-cli</groupId>

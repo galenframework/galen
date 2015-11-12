@@ -33,6 +33,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.galenframework.rainbow4j.filters.MaskFilter;
 import com.galenframework.specs.*;
 import com.galenframework.specs.colors.ColorRange;
 import junit.framework.Assert;
@@ -993,6 +994,18 @@ public class SpecsReaderV2Test {
         DenoiseFilter filter2 = (DenoiseFilter) spec.getMapFilters().get(0);
         assertThat(filter2.getRadius(), is(4));
 
+    }
+
+    @Test
+    public void shouldReadSpec_image_withMask() throws IOException {
+        SpecImage spec = (SpecImage)readSpec("image file image.png, filter mask color-scheme-image-1.png");
+
+        assertThat(spec.getImagePaths(), contains("image.png"));
+        assertThat(spec.getOriginalFilters().size(), is(1));
+        assertThat(spec.getOriginalFilters().get(0), is(instanceOf(MaskFilter.class)));
+
+        assertThat(spec.getSampleFilters().size(), is(1));
+        assertThat(spec.getSampleFilters().get(0), is(instanceOf(MaskFilter.class)));
     }
 
     @Test

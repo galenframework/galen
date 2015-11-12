@@ -15,6 +15,8 @@
 ******************************************************************************/
 package com.galenframework.rainbow4j.filters;
 
+import com.galenframework.rainbow4j.ImageHandler;
+
 import java.awt.*;
 
 public class SaturationFilter implements ImageFilter {
@@ -46,7 +48,7 @@ public class SaturationFilter implements ImageFilter {
         double t = level / 100.0;
         for (int y = area.y; y < area.y + area.height; y++) {
             for (int x = area.x; x < area.x + area.width; x++) {
-                int k = y * width * 3 + x * 3;
+                int k = y * width * ImageHandler.BLOCK_SIZE + x * ImageHandler.BLOCK_SIZE;
                 double red = bytes[k] & 0xff;
                 double green = bytes[k + 1] & 0xff;
                 double blue = bytes[k + 2] & 0xff;

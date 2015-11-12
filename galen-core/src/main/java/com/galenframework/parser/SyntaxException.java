@@ -37,6 +37,10 @@ public class SyntaxException extends RuntimeException {
         this.line = line;
     }
 
+    public SyntaxException(String paramString, Throwable paramThrowable) {
+        super(paramString, paramThrowable);
+    }
+
     public SyntaxException(Line line, String paramString) {
         super(paramString);
         this.line = line;

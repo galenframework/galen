@@ -368,9 +368,8 @@ public class ValidationTest {
           row(specTextMatches(".* some.* multiline"), page(new HashMap<String, PageElement>(){{
               put("object", element(10, 10, 10, 10).withText("A text with some \n more multiline"));
           }})),
-          
-          
-          // Above 
+
+          // Above
           
           row(specAbove("button", Range.exact(20)), page(new HashMap<String, PageElement>(){{
               put("object", element(10, 10, 10, 10));

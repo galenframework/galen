@@ -15,6 +15,7 @@
 ******************************************************************************/
 package com.galenframework.rainbow4j.filters;
 
+import com.galenframework.rainbow4j.ImageHandler;
 import org.apache.commons.lang3.ArrayUtils;
 
 import java.awt.*;
@@ -23,7 +24,6 @@ import java.awt.*;
  * Created by ishubin on 2014/09/14.
  */
 public class BlurFilter implements ImageFilter {
-    private static final int BLOCK_SIZE = 3;
     private int radius;
 
     public BlurFilter(int radius) {
@@ -62,7 +62,7 @@ public class BlurFilter implements ImageFilter {
 
                     for (int y = startY; y < endY; y++) {
                         for (int x = startX; x < endX; x++) {
-                            int k = y * width * BLOCK_SIZE + x * BLOCK_SIZE;
+                            int k = y * width * ImageHandler.BLOCK_SIZE + x * ImageHandler.BLOCK_SIZE;
                             int r = copyBytes[k] & 0xff;
                             int g = copyBytes[k + 1] & 0xff;
                             int b = copyBytes[k + 2] & 0xff;
@@ -78,7 +78,7 @@ public class BlurFilter implements ImageFilter {
                     }
 
 
-                    int k = yc * width * BLOCK_SIZE + xc * BLOCK_SIZE;
+                    int k = yc * width * ImageHandler.BLOCK_SIZE + xc * ImageHandler.BLOCK_SIZE;
                     bytes[k] = (byte) (ar / sumWeight);
                     bytes[k + 1] = (byte) (ag / sumWeight);
                     bytes[k + 2] = (byte) (ab / sumWeight);

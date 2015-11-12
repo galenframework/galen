@@ -15,6 +15,8 @@
 ******************************************************************************/
 package com.galenframework.rainbow4j.filters;
 
+import com.galenframework.rainbow4j.ImageHandler;
+
 import java.awt.*;
 
 public class ContrastFilter implements  ImageFilter{
@@ -41,7 +43,7 @@ public class ContrastFilter implements  ImageFilter{
 
         for (int y = area.y; y < area.y + area.height; y++) {
             for (int x = area.x; x < area.x + area.width; x++) {
-                int k = y * width * 3 + x * 3;
+                int k = y * width * ImageHandler.BLOCK_SIZE + x * ImageHandler.BLOCK_SIZE;
 
                 bytes[k] = contrast(bytes[k], factor);
                 bytes[k + 1] = contrast(bytes[k + 1], factor);

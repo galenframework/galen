@@ -15,10 +15,11 @@
 ******************************************************************************/
 package com.galenframework.rainbow4j.filters;
 
+import com.galenframework.rainbow4j.ImageHandler;
+
 import java.awt.*;
 
 public class DenoiseFilter implements ImageFilter {
-    private static final int BLOCK_SIZE = 3;
     private int radius;
 
     public DenoiseFilter(int radius) {
@@ -43,7 +44,7 @@ public class DenoiseFilter implements ImageFilter {
 
                     for (int y = startY; y < endY; y++) {
                         for (int x = startX; x < endX; x++) {
-                            int k = y * width * BLOCK_SIZE + x * BLOCK_SIZE;
+                            int k = y * width * ImageHandler.BLOCK_SIZE + x * ImageHandler.BLOCK_SIZE;
                             int r = bytes[k] & 0xff;
                             int g = bytes[k + 1] & 0xff;
                             int b = bytes[k + 2] & 0xff;
@@ -57,7 +58,7 @@ public class DenoiseFilter implements ImageFilter {
                         }
                     }
 
-                    int k = yc * width * BLOCK_SIZE + xc * BLOCK_SIZE;
+                    int k = yc * width * ImageHandler.BLOCK_SIZE + xc * ImageHandler.BLOCK_SIZE;
                     if (whitePixels > 0) {
                         if (blackPixels / whitePixels > 3) {
                             bytes[k] = 0;

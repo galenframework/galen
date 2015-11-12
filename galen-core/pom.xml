@@ -13,6 +13,10 @@
     <version>2.1.4-SNAPSHOT</version>
   </parent>
 
+  <properties>
+    <selenium.version>2.48.2</selenium.version>
+  </properties>
+
   <dependencies>
     <dependency>
       <groupId>com.galenframework</groupId>
@@ -53,6 +57,7 @@
     <dependency>
       <groupId>org.seleniumhq.selenium</groupId>
       <artifactId>selenium-firefox-driver</artifactId>
+      <version>${selenium.version}</version>
       <exclusions>
         <exclusion>
           <groupId>com.google.code.gson</groupId>
@@ -63,30 +68,46 @@
     <dependency>
       <groupId>org.seleniumhq.selenium</groupId>
       <artifactId>selenium-chrome-driver</artifactId>
+      <version>${selenium.version}</version>
+        <exclusions>
+            <exclusion>
+                <groupId>com.google.code.gson</groupId>
+                <artifactId>gson</artifactId>
+            </exclusion>
+        </exclusions>
     </dependency>
     <dependency>
       <groupId>org.seleniumhq.selenium</groupId>
       <artifactId>selenium-edge-driver</artifactId>
+      <version>${selenium.version}</version>
+        <exclusions>
+            <exclusion>
+                <groupId>com.google.code.gson</groupId>
+                <artifactId>gson</artifactId>
+            </exclusion>
+        </exclusions>
     </dependency>
     <dependency>
       <groupId>org.seleniumhq.selenium</groupId>
       <artifactId>selenium-java</artifactId>
-      <exclusions>
-        <exclusion>
-          <groupId>com.google.code.gson</groupId>
-          <artifactId>gson</artifactId>
-        </exclusion>
-      </exclusions>
+      <version>${selenium.version}</version>
+        <exclusions>
+            <exclusion>
+                <groupId>com.google.code.gson</groupId>
+                <artifactId>gson</artifactId>
+            </exclusion>
+        </exclusions>
     </dependency>
     <dependency>
       <groupId>org.seleniumhq.selenium</groupId>
       <artifactId>selenium-support</artifactId>
-      <exclusions>
-        <exclusion>
-          <groupId>com.google.code.gson</groupId>
-          <artifactId>gson</artifactId>
-        </exclusion>
-      </exclusions>
+      <version>${selenium.version}</version>
+        <exclusions>
+            <exclusion>
+                <groupId>com.google.code.gson</groupId>
+                <artifactId>gson</artifactId>
+            </exclusion>
+        </exclusions>
     </dependency>
     <dependency>
       <groupId>commons-cli</groupId>

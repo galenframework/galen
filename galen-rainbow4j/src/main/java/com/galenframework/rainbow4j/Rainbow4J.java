@@ -159,14 +159,14 @@ public class Rainbow4J {
                             } else if (diff <= 30) {
                                 color = Color.green;
                             }
-                            mapHandler.setRGB(x, y, color.getRed(), color.getGreen(), color.getBlue());
+                            mapHandler.setRGBA(x, y, color.getRed(), color.getGreen(), color.getBlue(), 255);
 
                             mismatchingPixels += 1;
                         } else {
-                            mapHandler.setRGB(x, y, 0, 0, 0);
+                            mapHandler.setRGBA(x, y, 0, 0, 0, 255);
                         }
                     } else {
-                        mapHandler.setRGB(x, y, 0, 0, 0);
+                        mapHandler.setRGBA(x, y, 0, 0, 0, 255);
                     }
 
                     x += 1;
@@ -206,7 +206,7 @@ public class Rainbow4J {
 
         byte[] bytes = mapHandler.getBytes();
 
-        for (int k = 0; k < bytes.length - 3; k += 3) {
+        for (int k = 0; k < bytes.length - ImageHandler.BLOCK_SIZE; k += ImageHandler.BLOCK_SIZE) {
             if (((int)bytes[k] &0xff) > 0 || ((int)bytes[k + 1] &0xff) > 0 || ((int)bytes[k + 2] &0xff) > 0) {
                 totalMismatchingPixels++;
             }

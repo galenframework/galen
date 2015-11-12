@@ -499,4 +499,13 @@ public class GalenUtils {
     public static String extractGroupName(String singleExpression) {
         return singleExpression.substring(1);
     }
+
+    public static InputStream findMandatoryFileOrResourceAsStream(String imagePath) throws FileNotFoundException {
+        InputStream stream = findFileOrResourceAsStream(imagePath);
+        if (stream == null) {
+            throw new FileNotFoundException(imagePath);
+        }
+
+        return stream;
+    }
 }
