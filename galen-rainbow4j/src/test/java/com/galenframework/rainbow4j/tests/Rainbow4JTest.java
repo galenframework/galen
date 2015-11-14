@@ -395,10 +395,9 @@ public class Rainbow4JTest {
         }
 
         List<Integer> expectedPixels = asList(
-                840, 545, 537, 536, 543, 524, 526, 428, 432
+                840, 534, 531, 536, 543, 524, 526, 428, 432
         );
 
-        // Assert that denoise 1 removes only some of them
         for (int size = 1; size < 10; size++) {
             ComparisonOptions options = new ComparisonOptions();
             options.setTolerance(25);

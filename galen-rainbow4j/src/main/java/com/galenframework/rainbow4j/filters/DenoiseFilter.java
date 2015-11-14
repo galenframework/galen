@@ -30,12 +30,15 @@ public class DenoiseFilter implements ImageFilter {
     public void apply(byte[] bytes, int width, int height, Rectangle area) {
         radius = Math.min(radius, Math.min(width / 2, height / 2));
 
+        int maximumPossiblePixels = (radius * 2 + 1) * (radius * 2 + 1);
+
         if (radius > 0) {
             for (int yc = 0; yc < height; yc++) {
                 for (int xc = 0; xc < width; xc++) {
 
                     int blackPixels = 0;
                     int whitePixels = 0;
+                    int total = 0;
 
                     int startY = Math.max(yc - radius, 0);
                     int startX = Math.max(xc - radius, 0);
@@ -55,12 +58,18 @@ public class DenoiseFilter implements ImageFilter {
                             else {
                                 whitePixels ++;
                             }
+
+                            total++;
                         }
                     }
 
+                    double amountRatio = ((double) total) / ((double) maximumPossiblePixels);
+
                     int k = yc * width * ImageHandler.BLOCK_SIZE + xc * ImageHandler.BLOCK_SIZE;
                     if (whitePixels > 0) {
-                        if (blackPixels / whitePixels > 3) {
+                        if ((amountRatio > 0.6 && blackPixels / whitePixels > 3) // matching normal pixels
+                            || (amountRatio <= 0.6 && blackPixels / whitePixels >= 2) // matching pixels that are on border
+                                ) {
                             bytes[k] = 0;
                             bytes[k + 1] = 0;
                             bytes[k + 2] = 0;
