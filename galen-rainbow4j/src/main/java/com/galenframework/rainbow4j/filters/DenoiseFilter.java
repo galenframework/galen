@@ -30,7 +30,7 @@ public class DenoiseFilter implements ImageFilter {
     public void apply(byte[] bytes, int width, int height, Rectangle area) {
         radius = Math.min(radius, Math.min(width / 2, height / 2));
 
-        if (radius > 1) {
+        if (radius > 0) {
             for (int yc = 0; yc < height; yc++) {
                 for (int xc = 0; xc < width; xc++) {
 
@@ -39,11 +39,11 @@ public class DenoiseFilter implements ImageFilter {
 
                     int startY = Math.max(yc - radius, 0);
                     int startX = Math.max(xc - radius, 0);
-                    int endY = Math.min(yc + radius, height);
-                    int endX = Math.min(xc + radius, width);
+                    int endY = Math.min(yc + radius, height - 1);
+                    int endX = Math.min(xc + radius, width - 1);
 
-                    for (int y = startY; y < endY; y++) {
-                        for (int x = startX; x < endX; x++) {
+                    for (int y = startY; y <= endY; y++) {
+                        for (int x = startX; x <= endX; x++) {
                             int k = y * width * ImageHandler.BLOCK_SIZE + x * ImageHandler.BLOCK_SIZE;
                             int r = bytes[k] & 0xff;
                             int g = bytes[k + 1] & 0xff;

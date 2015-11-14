@@ -380,6 +380,37 @@ public class Rainbow4JTest {
         assertThat(result.getPercentage(), is(greaterThan(28.0)));
     }
 
+    @Test
+    public void shouldApply_denoiseFilter_andRemoveAllNoisePixels() throws IOException {
+        BufferedImage imageActual = Rainbow4J.loadImage(getClass().getResourceAsStream("/noise/menu-item-1.png"));
+        BufferedImage imageExpected = Rainbow4J.loadImage(getClass().getResourceAsStream("/noise/menu-item-1-expected-spots-2.png"));
+
+
+        // Assert first that there are a lot of mismatching pixels
+        {
+            ComparisonOptions options = new ComparisonOptions();
+            options.setTolerance(25);
+            ImageCompareResult result = Rainbow4J.compare(imageActual, imageExpected, options);
+            assertThat(result.getTotalPixels(), is(1075L));
+        }
+
+        List<Integer> expectedPixels = asList(
+                840, 545, 537, 536, 543, 524, 526, 428, 432
+        );
+
+        // Assert that denoise 1 removes only some of them
+        for (int size = 1; size < 10; size++) {
+            ComparisonOptions options = new ComparisonOptions();
+            options.setTolerance(25);
+            options.setMapFilters(asList((ImageFilter)new DenoiseFilter(size)));
+            ImageCompareResult result = Rainbow4J.compare(imageActual, imageExpected, options);
+
+            assertThat("map-denoise " + size + " should result in mismatching pixels",
+                    result.getTotalPixels(),
+                    is(expectedPixels.get(size - 1).longValue()));
+        }
+    }
+
 
     @DataProvider
     public Object[][] imageCompareProvider() {
