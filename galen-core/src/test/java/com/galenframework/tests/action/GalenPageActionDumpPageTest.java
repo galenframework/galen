@@ -27,6 +27,7 @@ import org.testng.annotations.Test;
 
 import java.io.File;
 
+import static java.util.Arrays.asList;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 
@@ -37,8 +38,12 @@ public class GalenPageActionDumpPageTest {
 
         String pageDumpPath = Files.createTempDir().getAbsolutePath() + "/pagedump";
 
-        WebDriver driver = new MockedDriver();
+        MockedDriver driver = new MockedDriver();
         driver.get("/mocks/pages/galen4j-pagedump.json");
+        driver.setExpectedJavaScriptReturnValues(asList(
+                (Object) asList(0L, 0L, 300L, 1000L),
+                (Object) asList(0L, 0L, 300L, 500L)
+        ));
 
         GalenPageAction pageAction = new GalenPageActionDumpPage("Test page", "/specs/galen4j/pagedump.spec", pageDumpPath);
 

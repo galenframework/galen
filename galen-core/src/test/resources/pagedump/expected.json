@@ -25,6 +25,14 @@
         "menu-item-3": {
             "area": [70, 10, 20, 10],
             "hasImage":true
+        },
+        "screen": {
+            "area": [0, 0, 300, 1000],
+            "hasImage": true
+        },
+        "viewport": {
+            "area": [0, 0, 300, 500],
+            "hasImage": true
         }
     }
 }

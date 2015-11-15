@@ -29,6 +29,7 @@ import java.io.InputStream;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class MockedDriver implements WebDriver, TakesScreenshot, JavascriptExecutor {
     private MockedDriverPage page;
@@ -36,6 +37,8 @@ public class MockedDriver implements WebDriver, TakesScreenshot, JavascriptExecu
 
     private Dimension screenSize = new Dimension(1024, 768);
     private List<String> allExecutedJavascript = new LinkedList<String>();
+
+    private List<Object> expectedJavaScriptReturnValues;
 
     public MockedDriver() {
     }
@@ -224,23 +227,41 @@ public class MockedDriver implements WebDriver, TakesScreenshot, JavascriptExecu
         else throw new RuntimeException("Cannot make screenshot");
     }
 
+    private final AtomicInteger jsExecutionSteps = new AtomicInteger(0);
+
     @Override
     public Object executeScript(String s, Object... objects) {
         allExecutedJavascript.add(s);
 
-        if (s.equals(GalenUtils.JS_RETRIEVE_DEVICE_PIXEL_RATIO)) {
-            return 1L;
+        if (expectedJavaScriptReturnValues != null) {
+            int step = jsExecutionSteps.getAndIncrement();
+            return expectedJavaScriptReturnValues.get(step);
+        } else {
+            if (s.equals(GalenUtils.JS_RETRIEVE_DEVICE_PIXEL_RATIO)) {
+                return 1L;
+            } else return null;
         }
-        else return null;
     }
 
     @Override
     public Object executeAsyncScript(String s, Object... objects) {
         allExecutedJavascript.add(s);
-        return null;
+        if (expectedJavaScriptReturnValues != null) {
+            return expectedJavaScriptReturnValues.get(jsExecutionSteps.getAndIncrement());
+        } else {
+            return null;
+        }
     }
 
     public List<String> getAllExecutedJavascript() {
         return allExecutedJavascript;
+    }
+
+    public List<Object> getExpectedJavaScriptReturnValues() {
+        return expectedJavaScriptReturnValues;
+    }
+
+    public void setExpectedJavaScriptReturnValues(List<Object> expectedJavaScriptReturnValues) {
+        this.expectedJavaScriptReturnValues = expectedJavaScriptReturnValues;
     }
 }

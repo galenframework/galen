@@ -67,8 +67,14 @@ public class GalenTest {
     public void dumpPage_shouldGenereate_htmlJsonReport_andStorePicturesOfElements() throws IOException {
         String pageDumpPath = Files.createTempDir().getAbsolutePath() + "/pagedump";
 
-        WebDriver driver = new MockedDriver();
+        MockedDriver driver = new MockedDriver();
         driver.get("/mocks/pages/galen4j-pagedump.json");
+        driver.setExpectedJavaScriptReturnValues(asList(
+                 asList(300L, 500L),
+                 asList(300L, 1000L),
+                 1L
+        ));
+
         new GalenPageDump("test page").dumpPage(driver, "/specs/galen4j/pagedump.spec", pageDumpPath);
 
         assertFileExists(pageDumpPath + "/page.json");
@@ -93,8 +99,13 @@ public class GalenTest {
     public void dumpPage_shouldOnlyStoreScreenshots_thatAreLessThan_theMaxAllowed() throws IOException {
         String pageDumpPath = Files.createTempDir().getAbsolutePath() + "/pagedump";
 
-        WebDriver driver = new MockedDriver();
+        MockedDriver driver = new MockedDriver();
         driver.get("/mocks/pages/galen4j-pagedump.json");
+        driver.setExpectedJavaScriptReturnValues(asList(
+                (Object) asList(0L, 0L, 300L, 1000L),
+                (Object) asList(0L, 0L, 300L, 500L)
+        ));
+
         new GalenPageDump("test page")
                 .setMaxWidth(80)
                 .setMaxHeight(80)
@@ -119,8 +130,13 @@ public class GalenTest {
     public void dumpPage_shouldOnlyStoreScreenshots_withoutHtmlReport() throws IOException {
         String pageDumpPath = Files.createTempDir().getAbsolutePath() + "/pagedump";
 
-        WebDriver driver = new MockedDriver();
+        MockedDriver driver = new MockedDriver();
         driver.get("/mocks/pages/galen4j-pagedump.json");
+        driver.setExpectedJavaScriptReturnValues(asList(
+                (Object) asList(0L, 0L, 300L, 1000L),
+                (Object) asList(0L, 0L, 300L, 500L)
+        ));
+
         new GalenPageDump("test page")
                 .setMaxWidth(80)
                 .setMaxHeight(80)
@@ -145,8 +161,14 @@ public class GalenTest {
     public void dumpPage_shouldExcludeObjects_thatMatch_givenRegex() throws IOException {
         String pageDumpPath = Files.createTempDir().getAbsolutePath() + "/pagedump";
 
-        WebDriver driver = new MockedDriver();
+        MockedDriver driver = new MockedDriver();
         driver.get("/mocks/pages/galen4j-pagedump.json");
+        driver.setExpectedJavaScriptReturnValues(asList(
+                (Object) asList(300L, 500L),
+                (Object) asList(300L, 1000L),
+                (Object) 1L
+        ));
+
         new GalenPageDump("test page")
                 .setExcludedObjects(asList(
                     "big-container",

@@ -81,7 +81,6 @@ public class GalenPageDump {
             }
         }
 
-
         Set<String> objectNames = pageSpec.getObjects().keySet();
         PageValidation pageValidation = new PageValidation(browser, browser.getPage(), pageSpec, null, null);
 
@@ -90,7 +89,12 @@ public class GalenPageDump {
 
         List<Pattern> patterns = convertPatterns(excludedObjects);
 
-        for (String objectName : objectNames) {
+        Set<String> finalObjectNames = new HashSet<>();
+        finalObjectNames.addAll(objectNames);
+        finalObjectNames.add("screen");
+        finalObjectNames.add("viewport");
+
+        for (String objectName : finalObjectNames) {
             if (!matchesExcludedPatterns(objectName, patterns)) {
                 PageElement pageElement = pageValidation.findPageElement(objectName);
 
