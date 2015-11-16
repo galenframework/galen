@@ -44,7 +44,7 @@ public class BlurFilter implements ImageFilter {
             throw new RuntimeException("Specified area is outside of image");
         }
 
-        if (radius > 1) {
+        if (radius > 0) {
             byte[] copyBytes = ArrayUtils.clone(bytes);
 
             for (int yc = area.y; yc < area.y + area.height; yc++) {
@@ -52,16 +52,16 @@ public class BlurFilter implements ImageFilter {
 
                     int startY = Math.max(yc - radius, area.y);
                     int startX = Math.max(xc - radius, area.x);
-                    int endY = Math.min(yc + radius, area.height + area.y);
-                    int endX = Math.min(xc + radius, area.width + area.x);
+                    int endY = Math.min(yc + radius, area.height + area.y - 1);
+                    int endX = Math.min(xc + radius, area.width + area.x - 1);
 
                     int ar = 0, ag = 0, ab = 0;
                     double sumWeight = 0;
                     double distance;
                     double dWeight;
 
-                    for (int y = startY; y < endY; y++) {
-                        for (int x = startX; x < endX; x++) {
+                    for (int y = startY; y <= endY; y++) {
+                        for (int x = startX; x <= endX; x++) {
                             int k = y * width * ImageHandler.BLOCK_SIZE + x * ImageHandler.BLOCK_SIZE;
                             int r = copyBytes[k] & 0xff;
                             int g = copyBytes[k + 1] & 0xff;

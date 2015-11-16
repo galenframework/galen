@@ -395,7 +395,7 @@ public class Rainbow4JTest {
         }
 
         List<Integer> expectedPixels = asList(
-                840, 534, 531, 536, 543, 524, 526, 428, 432
+                603, 499, 496, 483, 458, 427, 388, 385, 383
         );
 
         for (int size = 1; size < 10; size++) {
@@ -410,15 +410,48 @@ public class Rainbow4JTest {
         }
     }
 
+    @Test
+    public void shouldApply_blurFilter_andImproveNoisyDiff() throws IOException {
+        BufferedImage imageActual = Rainbow4J.loadImage(getClass().getResourceAsStream("/noise/menu-item-1.png"));
+        BufferedImage imageExpected = Rainbow4J.loadImage(getClass().getResourceAsStream("/noise/menu-item-1-expected-spots-2.png"));
+
+        List<Integer> expectedPixels = asList(
+                653, 765, 860, 982, 1068, 1168, 1263, 1334, 1415
+        );
+
+        // Assert first that there are a lot of mismatching pixels
+        {
+            ComparisonOptions options = new ComparisonOptions();
+            options.setTolerance(25);
+            ImageCompareResult result = Rainbow4J.compare(imageActual, imageExpected, options);
+            assertThat(result.getTotalPixels(), is(1075L));
+        }
+
+        for (int size = 1; size < 10; size++) {
+            ComparisonOptions options = new ComparisonOptions();
+            options.setTolerance(25);
+            List<ImageFilter> filters = new LinkedList<>();
+            filters.add(new BlurFilter(size));
+            options.setOriginalFilters(filters);
+            options.setSampleFilters(filters);
+
+            ImageCompareResult result = Rainbow4J.compare(imageActual, imageExpected, options);
+
+            assertThat("blur filter with size " + size + " should result in mismatching pixels",
+                    result.getTotalPixels(),
+                    is(expectedPixels.get(size - 1).longValue()));
+        }
+    }
+
 
     @DataProvider
     public Object[][] imageCompareProvider() {
         return new Object[][] {
                 //pixelsmooth,  approx percentage, total pixels
                 {0, 0.72, 1797},
-                {1, 0.72, 1797},
-                {2, 0.85, 2117},
-                {3, 0.85, 2118}
+                {1, 0.85, 2138},
+                {2, 0.87, 2176},
+                {3, 0.92, 2305}
         };
     }
 
