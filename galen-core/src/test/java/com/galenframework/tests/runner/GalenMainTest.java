@@ -31,6 +31,7 @@ import com.galenframework.components.DummyCompleteListener;
 import com.galenframework.components.JsTestRegistry;
 import com.galenframework.config.GalenProperty;
 import com.galenframework.runner.CompleteListener;
+import com.galenframework.suite.reader.GalenSuiteReader;
 import com.galenframework.tests.GalenTest;
 import com.galenframework.config.GalenConfig;
 import com.galenframework.specs.Spec;

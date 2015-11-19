@@ -37,12 +37,7 @@ public abstract class Node<T> {
         int spaces = 0;
 
         if (line != null && line.getText() != null) {
-            for (int i=0; i<line.getText().length(); i++) {
-                if (line.getText().charAt(i) == ' ') {
-                    spaces++;
-                }
-                else return spaces;
-            }
+            return GalenSuiteLineProcessor.calculateIndentationSpaces(line.getText());
         }
         return spaces;
     }

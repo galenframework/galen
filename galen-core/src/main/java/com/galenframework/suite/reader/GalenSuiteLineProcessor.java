@@ -28,11 +28,8 @@ import java.util.Properties;
 
 import com.galenframework.parser.SyntaxException;
 import com.galenframework.utils.GalenUtils;
-import com.galenframework.parser.SyntaxException;
 import com.galenframework.parser.VarsContext;
 import com.galenframework.tests.GalenBasicTest;
-
-import static com.galenframework.utils.GalenUtils.removeNonPrintableControlSymbols;
 
 public class GalenSuiteLineProcessor {
 
@@ -57,7 +54,7 @@ public class GalenSuiteLineProcessor {
                 }
             }
             else {
-                int spaces = indentationSpaces(line);
+                int spaces = calculateIndentationSpaces(line);
                 
                 Node<?> processingNode = currentNode.findProcessingNodeByIndentation(spaces);
                 Node<?> newNode = processingNode.processNewNode(new Line(line, number));
@@ -191,7 +188,7 @@ public class GalenSuiteLineProcessor {
         return rootNode.build(new VarsContext(properties));
     }
 
-    private int indentationSpaces(String line) {
+    public static int calculateIndentationSpaces(String line) {
         int spacesCount = 0;
         for (int i=0; i<line.length(); i++) {
             if (line.charAt(i) == ' ') {

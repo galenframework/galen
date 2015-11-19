@@ -364,6 +364,19 @@ public class GalenSuiteReaderTest {
         assertThat(galenTests.get(0).getPageTests().get(0).getActions().get(0).getOriginalCommand(), is("check some.spec"));
     }
 
+    @Test
+    public void shouldRead_suiteWithTabsIndentations_2() throws IOException {
+        GalenSuiteReader reader = new GalenSuiteReader();
+        List<GalenBasicTest> galenTests = reader.read(new File(getClass().getResource("/suites/tabs-indentation-2.test").getFile()));
+
+        assertThat(galenTests.size(), is(1));
+        assertThat(galenTests.get(0).getName(), is("Home page"));
+
+        assertThat(galenTests.get(0).getPageTests().get(0).getTitle(), is("http://www.google.com 1920x1080"));
+        assertThat(galenTests.get(0).getPageTests().get(0).getActions().get(0).getOriginalCommand(), is("run buttonclick.js"));
+        assertThat(galenTests.get(0).getPageTests().get(0).getActions().get(1).getOriginalCommand(), is("check home.gspec"));
+    }
+
     private List<GalenPageAction> actions(GalenPageAction...actions) {
         List<GalenPageAction> list = new LinkedList<GalenPageAction>();
         for (GalenPageAction action : actions) {
