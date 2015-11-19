@@ -203,7 +203,8 @@
             maxWidth = settings.maxWidth,
             maxHeight = settings.maxHeight,
             onlyImages = settings.onlyImages,
-            excludedObjects = settings.excludedObjects;
+            excludedObjects = settings.excludedObjects,
+            dump;
 
         if (driver === undefined || driver === null) {
             throw new Error("Driver is not defined");
@@ -230,17 +231,20 @@
             onlyImages = false;
         }
 
-        if (excludedObjects !== undefined && excludedObjects !== null) {
+        if (excludedObjects === undefined) {
+            excludedObjects = null;
+        }
+
+        if (excludedObjects !== null) {
             excludedObjects = GalenJsApi.toList(excludedObjects);
         }
 
-
-        new GalenPageDump(name)
-            .setMaxWidth(maxWidth)
-            .setMaxHeight(maxHeight)
-            .setOnlyImages(onlyImages)
-            .setExcludedObjects(excludedObjects)
-            .dumpPage(driver, spec, exportPath);
+        dump = new GalenPageDump(name);
+        dump.setMaxWidth(maxWidth);
+        dump.setMaxHeight(maxHeight);
+        dump.setOnlyImages(onlyImages);
+        dump.setExcludedObjects(excludedObjects);
+        dump.dumpPage(driver, spec, exportPath);
     }
 
     exports.createDriver = createDriver;
