@@ -140,7 +140,7 @@ public class SpecValidationImage extends SpecValidation<SpecImage> {
                     elementArea.getTop(), elementArea.getWidth(), elementArea.getHeight(), pageImage.getWidth(), pageImage.getHeight()));
         }
 
-        if (spec.isCropIfOutside()) {
+        if (spec.isCropIfOutside() || isOnlyOnePixelOutsideScreenshot(elementArea, pageImage)) {
             elementArea = cropElementAreaIfOutside(elementArea, pageImage.getWidth(), pageImage.getHeight());
         }
 
@@ -167,6 +167,13 @@ public class SpecValidationImage extends SpecValidation<SpecImage> {
         }
 
         return new ImageCheck(imagePath, difference, result, errorMessage);
+    }
+
+    private boolean isOnlyOnePixelOutsideScreenshot(Rect elementArea, BufferedImage pageImage) {
+        int dx = elementArea.getLeft() + elementArea.getWidth() - pageImage.getWidth();
+        int dy = elementArea.getTop() + elementArea.getHeight() - pageImage.getHeight();
+
+        return Math.max(dx, dy) == 1;
     }
 
     private Rect cropElementAreaIfOutside(Rect elementArea, int width, int height) {
