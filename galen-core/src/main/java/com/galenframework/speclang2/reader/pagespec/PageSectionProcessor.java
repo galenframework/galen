@@ -169,7 +169,7 @@ public class PageSectionProcessor {
         String name = objectNode.getName();
         String objectExpression = name.substring(0, name.length() - 1).trim();
 
-        List<String> objectNames = findAllMatchingObjectNamesForExpression(objectExpression, objectNode);
+        List<String> objectNames = pageSpecHandler.findAllObjectsMatchingStrictStatements(objectExpression);
 
         for (String objectName : objectNames) {
             if (objectNode.getChildNodes() != null && objectNode.getChildNodes().size() > 0) {
@@ -188,31 +188,6 @@ public class PageSectionProcessor {
                 }
             }
         }
-    }
-
-    private List<String> findAllMatchingObjectNamesForExpression(String objectExpression, StructNode source) {
-        String[] parts = objectExpression.split(",");
-
-        List<String> resultingObjectNames = new LinkedList<String>();
-
-        for (String part : parts) {
-            String singleExpression = part.trim();
-            if (!singleExpression.isEmpty()) {
-                if (GalenUtils.isObjectGroup(singleExpression)) {
-                    resultingObjectNames.addAll(pageSpecHandler.findOjectsInGroup(GalenUtils.extractGroupName(singleExpression)));
-                } else if (GalenUtils.isObjectsSearchExpression(singleExpression)) {
-                    Pattern objectPattern = GalenUtils.convertObjectNameRegex(singleExpression);
-                    for (String objectName : pageSpecHandler.getSortedObjectNames()) {
-                        if (objectPattern.matcher(objectName).matches()) {
-                            resultingObjectNames.add(objectName);
-                        }
-                    }
-                } else {
-                    resultingObjectNames.add(singleExpression);
-                }
-            }
-        }
-        return resultingObjectNames;
     }
 
     private void processSpec(ObjectSpecs objectSpecs, StructNode specNode) {

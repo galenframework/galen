@@ -296,6 +296,22 @@ public class PageSpecReaderTest {
     }
 
     @Test
+    public void shouldLoopOver_existingAndNonExisting_objects() throws IOException {
+        PageSpec pageSpec = readPageSpec("speclang2/foreach-loop-with-nonexisting-objects.gspec");
+
+        List<ObjectSpecs> objects = pageSpec.getSections().get(0).getObjects();
+
+        assertThat(objects.size(), is(6));
+
+        assertThat(objects.get(0).getObjectName(), is("menu-item-1"));
+        assertThat(objects.get(1).getObjectName(), is("menu-item-2"));
+        assertThat(objects.get(2).getObjectName(), is("menu-item-3"));
+        assertThat(objects.get(3).getObjectName(), is("header"));
+        assertThat(objects.get(4).getObjectName(), is("toolbar"));
+        assertThat(objects.get(5).getObjectName(), is("popup"));
+    }
+
+    @Test
     public void shouldRead_taggedSections_andProcessOnlyThose_thatMatchGivenTags_1() throws IOException {
         PageSpec pageSpec = readPageSpec("speclang2/tagged-sections.gspec", NO_PAGE, asList("mobile"), EMPTY_TAGS);
 

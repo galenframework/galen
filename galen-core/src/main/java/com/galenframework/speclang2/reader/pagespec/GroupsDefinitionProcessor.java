@@ -66,7 +66,7 @@ public class GroupsDefinitionProcessor {
             throw new SyntaxException(groupNode, "Missing object statements");
         }
 
-        List<String> objects = pageSpecHandler.findAllObjectsMatchingStatements(objectStatements);
+        List<String> objects = pageSpecHandler.findAllObjectsMatchingStrictStatements(objectStatements);
 
         if (!groups.isEmpty()) {
             for (String object : objects) {

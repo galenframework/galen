@@ -1,0 +1,14 @@
+
+
+@objects
+    header          #h
+    menu-item-1     #m1
+    menu-item-2     #m2
+    menu-item-3     #m3
+
+
+
+= Main section =
+    @forEach [menu-item-*,header,toolbar,popup] as item
+        ${item}:
+            height 100px

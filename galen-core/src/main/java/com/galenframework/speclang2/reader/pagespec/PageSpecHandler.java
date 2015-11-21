@@ -255,7 +255,7 @@ public class PageSpecHandler implements VarsParserJsFunctions {
 
     public List<String> getSortedObjectNames() {
         List<String> list = new ArrayList<String>(pageSpec.getObjects().keySet());
-        Collections.sort(list);
+        Collections.sort(list, new AlphanumericComparator());
         return list;
     }
 
@@ -299,7 +299,7 @@ public class PageSpecHandler implements VarsParserJsFunctions {
 
     @Override
     public JsPageElement[] findAll(String objectsStatements) {
-        List<String> objectNames = findAllObjectsMatchingStatements(objectsStatements);
+        List<String> objectNames = findAllObjectsMatchingStrictStatements(objectsStatements);
         List<JsPageElement> jsElements = new ArrayList<>(objectNames.size());
 
         for (String objectName : objectNames) {
@@ -316,36 +316,30 @@ public class PageSpecHandler implements VarsParserJsFunctions {
         return jsElements.toArray(new JsPageElement[jsElements.size()]);
     }
 
-    public List<String> findAllObjectsMatchingStatements(String objectStatements) {
-        String[] objectPatterns = objectStatements.split(",");
-        List<String> matchingObjects = new LinkedList<>();
+    public List<String> findAllObjectsMatchingStrictStatements(String objectExpression) {
+        String[] parts = objectExpression.split(",");
 
-        List<String> allObjectNames = getSortedObjectNames();
+        List<String> allSortedObjectNames = getSortedObjectNames();
+        List<String> resultingObjectNames = new LinkedList<String>();
 
-        for (String objectPattern : objectPatterns) {
-            if (GalenUtils.isObjectGroup(objectPattern)) {
-                matchingObjects.addAll(findOjectsInGroup(GalenUtils.extractGroupName(objectPattern)));
-            } else {
-                Pattern regex = GalenUtils.convertObjectNameRegex(objectPattern.trim());
-                for (String objectName : allObjectNames) {
-                    if (regex.matcher(objectName).matches()) {
-                        matchingObjects.add(objectName);
+        for (String part : parts) {
+            String singleExpression = part.trim();
+            if (!singleExpression.isEmpty()) {
+                if (GalenUtils.isObjectGroup(singleExpression)) {
+                    resultingObjectNames.addAll(findOjectsInGroup(GalenUtils.extractGroupName(singleExpression)));
+                } else if (GalenUtils.isObjectsSearchExpression(singleExpression)) {
+                    Pattern objectPattern = GalenUtils.convertObjectNameRegex(singleExpression);
+                    for (String objectName : allSortedObjectNames) {
+                        if (objectPattern.matcher(objectName).matches()) {
+                            resultingObjectNames.add(objectName);
+                        }
                     }
+                } else {
+                    resultingObjectNames.add(singleExpression);
                 }
             }
         }
-        return matchingObjects;
-    }
-
-
-    private List<JsPageElement> orderByNames(List<JsPageElement> list) {
-        Collections.sort(list, new Comparator<JsPageElement>() {
-            @Override
-            public int compare(JsPageElement jsPageElement, JsPageElement t1) {
-                return new AlphanumericComparator().compare(jsPageElement.name, t1.name);
-            }
-        });
-        return list;
+        return resultingObjectNames;
     }
 
     public void setGlobalVariable(String name, Object value, StructNode source) {
