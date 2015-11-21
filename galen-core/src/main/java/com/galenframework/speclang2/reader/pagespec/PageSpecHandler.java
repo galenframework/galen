@@ -304,13 +304,15 @@ public class PageSpecHandler implements VarsParserJsFunctions {
 
         for (String objectName : objectNames) {
             Locator locator = pageSpec.getObjects().get(objectName);
+            PageElement pageElement = null;
             if (locator != null) {
-                PageElement pageElement = page.getObject(objectName, locator);
-                if (pageElement != null) {
-                    jsElements.add(new JsPageElement(objectName, pageElement));
-                } else {
-                    jsElements.add(new JsPageElement(objectName, new AbsentPageElement()));
-                }
+                pageElement = page.getObject(objectName, locator);
+            }
+
+            if (pageElement != null) {
+                jsElements.add(new JsPageElement(objectName, pageElement));
+            } else {
+                jsElements.add(new JsPageElement(objectName, new AbsentPageElement()));
             }
         }
         return jsElements.toArray(new JsPageElement[jsElements.size()]);

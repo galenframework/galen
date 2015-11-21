@@ -17,9 +17,11 @@ package com.galenframework.page;
 
 public class AbsentPageElement extends PageElement {
 
+    private static final Rect ABSENT_RECT = new Rect(0, 0, 0, 0);
+
     @Override
     public Rect calculateArea() {
-        return null;
+        return ABSENT_RECT;
     }
 
     @Override

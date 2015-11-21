@@ -813,6 +813,27 @@ public class PageSpecReaderTest {
         assertThat(objects.get(1).getSpecs().get(0).getOriginalText(), is("height 30px"));
     }
 
+    /**
+     * When nonexisting object is passed to findAll function - it should return an instance of JsPageElement that
+     * will give 0 for any location related values like width, height, right etc. Also it should return false for
+     * isVisible function.
+     * @throws IOException
+     */
+    @Test
+    public void findAll_andFind_functions_shouldHave_strictObjectProcessing_likeForEachLoop() throws IOException {
+        PageSpec pageSpec = readPageSpec("speclang2/findAll-nonexisting-objects.gspec");
+
+        List<ObjectSpecs> objects = pageSpec.getSections().get(0).getObjects();
+        assertThat(objects.size(), is(1));
+
+        assertThat(objects.get(0).getSpecs().get(0).getOriginalText(), is(
+                "text is \"header[0, 0, 0, 0, false], menu[0, 0, 0, 0, false]\""
+        ));
+        assertThat(objects.get(0).getSpecs().get(1).getOriginalText(), is(
+                "text is \"header[0, 0, 0, 0, false]\""
+        ));
+    }
+
     private PageSpec readPageSpec(String resource) throws IOException {
         return readPageSpec(resource, NO_PAGE, EMPTY_TAGS, EMPTY_TAGS);
     }

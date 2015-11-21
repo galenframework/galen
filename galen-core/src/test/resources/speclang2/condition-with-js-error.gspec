@@ -2,6 +2,6 @@
 
 
 = Main section =
-    @if ${find("some-missing-object").height() == 5}
+    @if ${ someUndefinedFunction() }
         some-missing-object:
             width 100px

@@ -1,0 +1,39 @@
+
+
+@script
+    this.debugObject = function(element) {
+        return element.name + "["
+                + element.left()
+                + ", " + element.top()
+                + ", " + element.width()
+                + ", " + element.height()
+                + ", " + element.isVisible()
+                + "]";
+    };
+
+    this.debugObjects = function (pattern) {
+        var elements = findAll(pattern);
+
+        var str = "";
+        for (var i = 0; i < elements.length; i++) {
+            if (i > 0) {
+                str += ", ";
+            }
+            str += debugObject(elements[i]);
+        }
+        return str;
+    };
+
+    this.debugSingleObject = function(objectName) {
+        return debugObject(find(objectName));
+    }
+
+
+
+= Main section =
+
+    global:
+        text is "${debugObjects('header, menu')}"
+        text is "${debugSingleObject('header')}"
+
+
