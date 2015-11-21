@@ -125,7 +125,6 @@ public class SeleniumBrowserFactory implements BrowserFactory {
             capabilities.setCapability(InternetExplorerDriver.IE_ENSURE_CLEAN_SESSION, true);
         }
         if (driverParameter.equalsIgnoreCase(CHROME)) {
-            // chrome runs much faster
             capabilities = DesiredCapabilities.chrome();
         }
         return capabilities;
@@ -133,16 +132,16 @@ public class SeleniumBrowserFactory implements BrowserFactory {
 
     @Override
     public int hashCode() {
-        return new HashCodeBuilder() //@formatter:off
+        return new HashCodeBuilder()
             .append(browserType)
-            .toHashCode(); //@formatter:on
+            .toHashCode();
     }
     
     @Override
     public String toString() {
-        return new ToStringBuilder(this) //@formatter:off
+        return new ToStringBuilder(this)
             .append("browserType", this.browserType)
-            .toString(); //@formatter:on
+            .toString();
     }
     
     @Override
