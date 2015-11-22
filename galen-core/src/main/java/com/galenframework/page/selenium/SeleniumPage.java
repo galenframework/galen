@@ -231,4 +231,7 @@ public class SeleniumPage implements Page {
         this.parentObject = parentObject;
     }
 
+    public WebDriver getDriver() {
+        return driver;
+    }
 }

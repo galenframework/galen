@@ -15,6 +15,11 @@
 ******************************************************************************/
 package com.galenframework.speclang2.reader.pagespec;
 
+import com.galenframework.browser.Browser;
+import com.galenframework.browser.SeleniumBrowser;
+import com.galenframework.page.selenium.ScreenElement;
+import com.galenframework.page.selenium.SeleniumPage;
+import com.galenframework.page.selenium.ViewportElement;
 import com.galenframework.parser.*;
 import com.galenframework.speclang2.AlphanumericComparator;
 import com.galenframework.specs.page.PageSection;
@@ -30,6 +35,7 @@ import com.galenframework.specs.reader.page.rules.Rule;
 import com.galenframework.specs.reader.page.rules.RuleParser;
 import com.galenframework.suite.reader.Context;
 import com.galenframework.utils.GalenUtils;
+import com.thoughtworks.selenium.Selenium;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 
@@ -99,6 +105,11 @@ public class PageSpecHandler implements VarsParserJsFunctions {
         js.putObject("_pageSpecHandler", pageSpecHandler);
         js.evalScriptFromLibrary("GalenSpecProcessing.js");
 
+        if (pageSpecHandler.page instanceof SeleniumPage) {
+            SeleniumPage seleniumPage = (SeleniumPage) pageSpecHandler.page;
+            js.putObject("screen", new JsPageElement("screen", new ScreenElement(seleniumPage.getDriver())));
+            js.putObject("viewport", new JsPageElement("viewport", new ViewportElement(seleniumPage.getDriver())));
+        }
 
         js.getScope().defineProperty("isVisible", new BaseFunction() {
             @Override
@@ -178,7 +189,6 @@ public class PageSpecHandler implements VarsParserJsFunctions {
                 return pageSpecHandler.findAll(pattern);
             }
         }, ScriptableObject.DONTENUM);
-
         return js;
     }
 

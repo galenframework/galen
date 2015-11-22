@@ -1,0 +1,8 @@
+
+@objects
+    menu-icon       #menu-icon
+
+
+= Menu =
+    menu-icon:
+        width ${screen.width() - viewport.width() + 20} px
