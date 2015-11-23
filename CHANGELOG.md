@@ -1,10 +1,13 @@
 # Change log
 All changes to Galen Framework project will be documented in this file
 
-## [unreleased][unknown]
+## [2.2.0][Unreleased]
+
+
+## [2.1.3][2015-11-11]
 ### Fixed
 - Viewport calculation. Now it ignores scrollbars
-- console.log now is able to print Java objects
+- console.log is able to print Java objects
 
 ## [2.1.2][2015-09-29]
 ### Fixed

@@ -16,10 +16,8 @@
 package com.galenframework.validation;
 
 import com.galenframework.page.PageElement;
-import com.galenframework.parser.SyntaxException;
 import com.galenframework.specs.SpecCount;
 
-import javax.xml.bind.ValidationException;
 import java.util.*;
 
 import static java.lang.String.format;
@@ -28,7 +26,7 @@ public class SpecValidationCount extends SpecValidation<SpecCount> {
 
     @Override
     public ValidationResult check(PageValidation pageValidation, String objectName, SpecCount spec) throws ValidationErrorException {
-        List<String> matchingNames = pageValidation.getPageSpec().findMatchingObjectNames(spec.getPattern());
+        List<String> matchingNames = pageValidation.getPageSpec().findOnlyExistingMatchingObjectNames(spec.getPattern());
         Map<String, PageElement> reportElements;
         Map<String, PageElement> filteredElements;
 

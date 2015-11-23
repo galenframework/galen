@@ -15,12 +15,10 @@
 ******************************************************************************/
 package com.galenframework.specs.reader.page;
 
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.regex.Pattern;
 
+import com.galenframework.speclang2.AlphanumericComparator;
 import com.galenframework.specs.page.Locator;
 import com.galenframework.specs.page.PageSection;
 import com.galenframework.utils.GalenUtils;
@@ -80,35 +78,74 @@ public class PageSpec {
     }
 
     /**
-     * Find all objects that match simple regex
-     * @param objectNameSimpleRegex - Regex which allows only '*' symbol in expresion
+     * Find all objects that match galen object statements
+     * @param objectExpression - Galen object statements
      * @return
      */
-    public List<String> findMatchingObjectNames(String objectNameSimpleRegex) {
-        String[] textPatterns = objectNameSimpleRegex.split(",");
-        List<Pattern> patterns = new LinkedList<>();
+    public List<String> findOnlyExistingMatchingObjectNames(String objectExpression) {
+        String[] parts = objectExpression.split(",");
 
-        for (String textPattern : textPatterns) {
-            patterns.add(GalenUtils.convertObjectNameRegex(textPattern.trim()));
-        }
-        List<String> foundObjects = new LinkedList<>();
-        
-        for (String objectName : objects.keySet()) {
-            if (oneOfPatternsMatches(patterns, objectName)) {
-                foundObjects.add(objectName);
+        List<String> allSortedObjectNames = getSortedObjectNames();
+        List<String> resultingObjectNames = new LinkedList<String>();
+
+        for (String part : parts) {
+            String singleExpression = part.trim();
+            if (!singleExpression.isEmpty()) {
+                if (GalenUtils.isObjectGroup(singleExpression)) {
+                    resultingObjectNames.addAll(findObjectsInGroup(GalenUtils.extractGroupName(singleExpression)));
+                } else if (GalenUtils.isObjectsSearchExpression(singleExpression)) {
+                    Pattern objectPattern = GalenUtils.convertObjectNameRegex(singleExpression);
+                    for (String objectName : allSortedObjectNames) {
+                        if (objectPattern.matcher(objectName).matches()) {
+                            resultingObjectNames.add(objectName);
+                        }
+                    }
+                } else if (objects.containsKey(singleExpression)) {
+                    resultingObjectNames.add(singleExpression);
+                }
             }
         }
-        
-        return foundObjects;
+        return resultingObjectNames;
     }
 
-    private boolean oneOfPatternsMatches(List<Pattern> patterns, String objectName) {
-        for (Pattern pattern : patterns) {
-            if (pattern.matcher(objectName).matches()) {
-                return true;
+    public List<String> findAllObjectsMatchingStrictStatements(String objectExpression) {
+        String[] parts = objectExpression.split(",");
+
+        List<String> allSortedObjectNames = getSortedObjectNames();
+        List<String> resultingObjectNames = new LinkedList<String>();
+
+        for (String part : parts) {
+            String singleExpression = part.trim();
+            if (!singleExpression.isEmpty()) {
+                if (GalenUtils.isObjectGroup(singleExpression)) {
+                    resultingObjectNames.addAll(findObjectsInGroup(GalenUtils.extractGroupName(singleExpression)));
+                } else if (GalenUtils.isObjectsSearchExpression(singleExpression)) {
+                    Pattern objectPattern = GalenUtils.convertObjectNameRegex(singleExpression);
+                    for (String objectName : allSortedObjectNames) {
+                        if (objectPattern.matcher(objectName).matches()) {
+                            resultingObjectNames.add(objectName);
+                        }
+                    }
+                } else {
+                    resultingObjectNames.add(singleExpression);
+                }
             }
         }
-        return false;
+        return resultingObjectNames;
+    }
+
+    public List<String> getSortedObjectNames() {
+        List<String> list = new ArrayList<String>(getObjects().keySet());
+        Collections.sort(list, new AlphanumericComparator());
+        return list;
+    }
+
+    public List<String> findObjectsInGroup(String groupName) {
+        if (getObjectGroups().containsKey(groupName)) {
+            return getObjectGroups().get(groupName);
+        } else {
+            return Collections.emptyList();
+        }
     }
 
     public void merge(PageSpec spec) {

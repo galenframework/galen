@@ -15,13 +15,10 @@
 ******************************************************************************/
 package com.galenframework.speclang2.reader.pagespec;
 
-import com.galenframework.browser.Browser;
-import com.galenframework.browser.SeleniumBrowser;
 import com.galenframework.page.selenium.ScreenElement;
 import com.galenframework.page.selenium.SeleniumPage;
 import com.galenframework.page.selenium.ViewportElement;
 import com.galenframework.parser.*;
-import com.galenframework.speclang2.AlphanumericComparator;
 import com.galenframework.specs.page.PageSection;
 import com.galenframework.javascript.GalenJsExecutor;
 import com.galenframework.page.AbsentPageElement;
@@ -35,7 +32,6 @@ import com.galenframework.specs.reader.page.rules.Rule;
 import com.galenframework.specs.reader.page.rules.RuleParser;
 import com.galenframework.suite.reader.Context;
 import com.galenframework.utils.GalenUtils;
-import com.thoughtworks.selenium.Selenium;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 
@@ -263,11 +259,6 @@ public class PageSpecHandler implements VarsParserJsFunctions {
         pageSpec.addObject(objectName, locator);
     }
 
-    public List<String> getSortedObjectNames() {
-        List<String> list = new ArrayList<String>(pageSpec.getObjects().keySet());
-        Collections.sort(list, new AlphanumericComparator());
-        return list;
-    }
 
 
     @Override
@@ -309,7 +300,7 @@ public class PageSpecHandler implements VarsParserJsFunctions {
 
     @Override
     public JsPageElement[] findAll(String objectsStatements) {
-        List<String> objectNames = findAllObjectsMatchingStrictStatements(objectsStatements);
+        List<String> objectNames = pageSpec.findAllObjectsMatchingStrictStatements(objectsStatements);
         List<JsPageElement> jsElements = new ArrayList<>(objectNames.size());
 
         for (String objectName : objectNames) {
@@ -328,31 +319,6 @@ public class PageSpecHandler implements VarsParserJsFunctions {
         return jsElements.toArray(new JsPageElement[jsElements.size()]);
     }
 
-    public List<String> findAllObjectsMatchingStrictStatements(String objectExpression) {
-        String[] parts = objectExpression.split(",");
-
-        List<String> allSortedObjectNames = getSortedObjectNames();
-        List<String> resultingObjectNames = new LinkedList<String>();
-
-        for (String part : parts) {
-            String singleExpression = part.trim();
-            if (!singleExpression.isEmpty()) {
-                if (GalenUtils.isObjectGroup(singleExpression)) {
-                    resultingObjectNames.addAll(findOjectsInGroup(GalenUtils.extractGroupName(singleExpression)));
-                } else if (GalenUtils.isObjectsSearchExpression(singleExpression)) {
-                    Pattern objectPattern = GalenUtils.convertObjectNameRegex(singleExpression);
-                    for (String objectName : allSortedObjectNames) {
-                        if (objectPattern.matcher(objectName).matches()) {
-                            resultingObjectNames.add(objectName);
-                        }
-                    }
-                } else {
-                    resultingObjectNames.add(singleExpression);
-                }
-            }
-        }
-        return resultingObjectNames;
-    }
 
     public void setGlobalVariable(String name, Object value, StructNode source) {
         if (!isValidVariableName(name)) {
@@ -494,11 +460,7 @@ public class PageSpecHandler implements VarsParserJsFunctions {
         }
     }
 
-    public List<String> findOjectsInGroup(String groupName) {
-        if (pageSpec.getObjectGroups().containsKey(groupName)) {
-            return pageSpec.getObjectGroups().get(groupName);
-        } else {
-            return Collections.emptyList();
-        }
+    public List<String> findAllObjectsMatchingStrictStatements(String objectStatements) {
+        return pageSpec.findAllObjectsMatchingStrictStatements(objectStatements);
     }
 }

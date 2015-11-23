@@ -69,7 +69,7 @@ public abstract class SpecValidation<T extends Spec> {
         for (String objectName : childObjects) {
             if (objectName.contains("*")) {
                 
-                List<String> foundObjects = pageSpec.findMatchingObjectNames(objectName);
+                List<String> foundObjects = pageSpec.findOnlyExistingMatchingObjectNames(objectName);
                 if (foundObjects.size() == 0) {
                     throw new ValidationErrorException("There are no objects matching: " + objectName);
                 }
