@@ -34,6 +34,8 @@ import java.util.regex.Pattern;
 import javax.imageio.ImageIO;
 
 import com.galenframework.browser.SeleniumGridBrowserFactory;
+import com.galenframework.page.selenium.ByChain;
+import com.galenframework.specs.page.Locator;
 import com.galenframework.tests.GalenProperties;
 import com.galenframework.tests.TestSession;
 import com.galenframework.browser.SeleniumBrowser;
@@ -44,11 +46,7 @@ import com.galenframework.rainbow4j.Rainbow4J;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringEscapeUtils;
-import org.openqa.selenium.JavascriptExecutor;
-import org.openqa.selenium.OutputType;
-import org.openqa.selenium.Platform;
-import org.openqa.selenium.TakesScreenshot;
-import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -507,5 +505,13 @@ public class GalenUtils {
         }
 
         return stream;
+    }
+
+    public static WebElement findWebElement(WebDriver driver, Locator locator) {
+        return ByChain.fromLocator(locator).findElement(driver);
+    }
+
+    public static List<WebElement> findWebElements(WebDriver driver, Locator locator) {
+        return ByChain.fromLocator(locator).findElements(driver);
     }
 }

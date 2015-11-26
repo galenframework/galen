@@ -247,6 +247,44 @@
         dump.dumpPage(driver, spec, exportPath);
     }
 
+    function parsePageSpec(settings) {
+        var driver = settings.driver,
+            pageSpecFile = settings.spec,
+            includedTags = settings.tags,
+            excludedTags = settings.excludedTags,
+            properties = settings.properties,
+            jsVariables = null,
+            jsPageObjects = null;
+
+        if (settings.vars !== undefined) {
+            jsVariables = varsToArray(settings.vars);
+        }
+
+        if (settings.objects !== undefined) {
+            jsPageObjects = objectsToJsPageObjects(settings.objects);
+        }
+
+
+        if (includedTags === undefined) {
+            includedTags = null;
+        }
+        if (excludedTags === undefined) {
+            excludedTags = null;
+        }
+        if (properties === undefined) {
+            properties = null;
+        }
+
+        if (!Array.isArray(includedTags) && includedTags !== null) {
+            includedTags = [includedTags];
+        }
+        if (!Array.isArray(excludedTags) && excludedTags !== null) {
+            excludedTags = [excludedTags];
+        }
+
+        return GalenJsApi.parsePageSpec(driver, pageSpecFile, includedTags, excludedTags, properties, jsVariables, jsPageObjects);
+    }
+
     exports.createDriver = createDriver;
     exports.createGridDriver = createGridDriver;
     exports.checkLayout = checkLayout;
@@ -256,6 +294,7 @@
     exports.cookie = cookie;
     exports.inject = inject;
     exports.readFile = readFile;
+    exports.parsePageSpec = parsePageSpec;
     exports.console = galenConsole;
     exports.dumpPage = dumpPage;
     exports.resize = resize;

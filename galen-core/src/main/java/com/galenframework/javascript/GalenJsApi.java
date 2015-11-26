@@ -16,9 +16,13 @@
 package com.galenframework.javascript;
 
 import com.galenframework.api.UnregisteredTestSession;
+import com.galenframework.page.Page;
+import com.galenframework.page.selenium.SeleniumPage;
 import com.galenframework.reports.nodes.LayoutReportNode;
 import com.galenframework.reports.nodes.TestReportNode;
+import com.galenframework.speclang2.reader.pagespec.PageSpecReader;
 import com.galenframework.specs.page.Locator;
+import com.galenframework.specs.reader.page.PageSpec;
 import com.galenframework.specs.reader.page.SectionFilter;
 import com.galenframework.tests.TestSession;
 import com.galenframework.utils.GalenUtils;
@@ -156,6 +160,17 @@ public class GalenJsApi {
 
     public static void resizeDriver(WebDriver driver, String sizeText) {
         GalenUtils.resizeDriver(driver, sizeText);
+    }
+
+    public static PageSpec parsePageSpec(WebDriver driver, String specPath, String[]includedTags, String[]excludedTags,
+                Properties properties, JsVariable[] vars, JsPageObject[] jsPageObjects) throws IOException {
+        PageSpecReader reader = new PageSpecReader();
+        Page page = new SeleniumBrowser(driver).getPage();
+
+        SectionFilter sectionFilter = new SectionFilter(toList(includedTags), toList(excludedTags));
+        Map<String, Object> jsVariables = convertJsVariables(vars);
+
+        return reader.read(specPath, page, sectionFilter, properties, jsVariables, convertObjects(jsPageObjects));
     }
 
 
