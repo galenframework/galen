@@ -1,0 +1,9 @@
+
+@objects
+    menu_item-1  #m1
+    menu_item-2  #m2
+    menu_item-3  #m3
+
+= Main section =
+    ${first("menu_item-*").name}:
+        width 100px

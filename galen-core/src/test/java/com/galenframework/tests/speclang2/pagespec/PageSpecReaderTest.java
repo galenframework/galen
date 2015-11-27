@@ -31,7 +31,6 @@ import com.galenframework.specs.page.Locator;
 import com.galenframework.specs.page.ObjectSpecs;
 import com.galenframework.specs.reader.page.PageSpec;
 import com.galenframework.specs.reader.page.SectionFilter;
-import org.mockito.Mock;
 import org.testng.annotations.Test;
 
 import java.io.IOException;
@@ -44,7 +43,7 @@ import static org.hamcrest.Matchers.*;
 
 public class PageSpecReaderTest {
 
-    private static final Page NO_PAGE = null;
+    private static final Page EMPTY_PAGE = new MockedPage();
     private static final List<String> EMPTY_TAGS = Collections.emptyList();
     private static final Properties NO_PROPERTIES = null;
     private static final Map<String, Object> NO_VARS = null;
@@ -293,7 +292,7 @@ public class PageSpecReaderTest {
      */
     @Test
     public void shouldRead_emptyLoops_withoutException() throws IOException {
-        PageSpec pageSpec = readPageSpec("speclang2/empty-for-loops.gspec", NO_PAGE, EMPTY_TAGS, EMPTY_TAGS);
+        PageSpec pageSpec = readPageSpec("speclang2/empty-for-loops.gspec", EMPTY_PAGE, EMPTY_TAGS, EMPTY_TAGS);
         assertThat(pageSpec.getSections().size(), is(0));
     }
 
@@ -315,7 +314,7 @@ public class PageSpecReaderTest {
 
     @Test
     public void shouldRead_taggedSections_andProcessOnlyThose_thatMatchGivenTags_1() throws IOException {
-        PageSpec pageSpec = readPageSpec("speclang2/tagged-sections.gspec", NO_PAGE, asList("mobile"), EMPTY_TAGS);
+        PageSpec pageSpec = readPageSpec("speclang2/tagged-sections.gspec", EMPTY_PAGE, asList("mobile"), EMPTY_TAGS);
 
         assertThat(pageSpec.getSections().size(), is(1));
 
@@ -329,7 +328,7 @@ public class PageSpecReaderTest {
 
     @Test
     public void shouldRead_taggedSections_andProcessOnlyThose_thatMatchGivenTags_2() throws IOException {
-        PageSpec pageSpec = readPageSpec("speclang2/tagged-sections.gspec", NO_PAGE, asList("tablet"), EMPTY_TAGS);
+        PageSpec pageSpec = readPageSpec("speclang2/tagged-sections.gspec", EMPTY_PAGE, asList("tablet"), EMPTY_TAGS);
 
         assertThat(pageSpec.getSections().size(), is(1));
 
@@ -343,7 +342,7 @@ public class PageSpecReaderTest {
 
     @Test
     public void shouldRead_taggedSections_andProcessOnlyThose_thatMatchGivenTags_3() throws IOException {
-        PageSpec pageSpec = readPageSpec("speclang2/tagged-sections.gspec", NO_PAGE, asList("desktop"), EMPTY_TAGS);
+        PageSpec pageSpec = readPageSpec("speclang2/tagged-sections.gspec", EMPTY_PAGE, asList("desktop"), EMPTY_TAGS);
 
         assertThat(pageSpec.getSections().size(), is(1));
 
@@ -357,7 +356,7 @@ public class PageSpecReaderTest {
 
     @Test
     public void shouldRead_taggedSections_andExcludeTags() throws IOException {
-        PageSpec pageSpec = readPageSpec("speclang2/tagged-sections.gspec", NO_PAGE, asList("mobile", "desktop"), asList("tablet"));
+        PageSpec pageSpec = readPageSpec("speclang2/tagged-sections.gspec", EMPTY_PAGE, asList("mobile", "desktop"), asList("tablet"));
 
         assertThat(pageSpec.getSections().size(), is(1));
 
@@ -570,7 +569,7 @@ public class PageSpecReaderTest {
     public void shouldAllow_toPassProperties() throws IOException {
         Properties properties = new Properties();
         properties.put("custom.user.name", "John");
-        PageSpec pageSpec = new PageSpecReader().read("speclang2/properties.gspec", NO_PAGE, new SectionFilter(EMPTY_TAGS, EMPTY_TAGS), properties, NO_VARS, EMPTY_OBJECTS);
+        PageSpec pageSpec = new PageSpecReader().read("speclang2/properties.gspec", EMPTY_PAGE, new SectionFilter(EMPTY_TAGS, EMPTY_TAGS), properties, NO_VARS, EMPTY_OBJECTS);
 
         assertThat(pageSpec.getSections().get(0).getName(), is("Main section for user John"));
         assertThat(pageSpec.getSections().get(0).getObjects().get(0).getSpecs().get(0).getOriginalText(),
@@ -655,7 +654,7 @@ public class PageSpecReaderTest {
     public void shouldAllow_toPassCustomJsObjects() throws  IOException {
         PageSpec pageSpec = new PageSpecReader().read(
                 "speclang2/custom-js-variables.gspec",
-                NO_PAGE,
+                EMPTY_PAGE,
                 new SectionFilter(EMPTY_TAGS, EMPTY_TAGS),
                 NO_PROPERTIES,
                 new HashMap<String, Object>() {{
@@ -709,7 +708,7 @@ public class PageSpecReaderTest {
         objects.put("header", new Locator("css", "#header"));
         objects.put("menu", new Locator("id", "menu"));
 
-        PageSpec pageSpec = new PageSpecReader().read("speclang2/provide-objects.gspec", NO_PAGE, new SectionFilter(EMPTY_TAGS, EMPTY_TAGS), NO_PROPERTIES, NO_VARS, objects);
+        PageSpec pageSpec = new PageSpecReader().read("speclang2/provide-objects.gspec", EMPTY_PAGE, new SectionFilter(EMPTY_TAGS, EMPTY_TAGS), NO_PROPERTIES, NO_VARS, objects);
 
         assertThat(pageSpec.getObjects(), allOf(
                 hasEntry("header", new Locator("css", "#header")),
@@ -769,25 +768,43 @@ public class PageSpecReaderTest {
         assertThat(pageSpec.getObjectGroups(), hasEntry("groupC", asList("obj1", "obj2", "obj3")));
     }
 
+    @Test
+    public void countFunction_shouldWorkWithGroups() throws IOException {
+        PageSpec pageSpec = readPageSpec("speclang2/count-grouped-objects.gspec");
+        assertThat(firstAppearingSpecIn(pageSpec), is("text is \"count is 4\""));
+    }
+
+    @Test
+    public void findFunction_shouldWorkWithGroups() throws IOException {
+        PageSpec pageSpec = readPageSpec("speclang2/find-grouped-object.gspec");
+        assertThat(firstAppearingObjectIn(pageSpec).getObjectName(), is("menu_item-1"));
+    }
+
+    @Test
+    public void firstFunction_shouldWorkWithGroups() throws IOException {
+        PageSpec pageSpec = readPageSpec("speclang2/first-grouped-object.gspec");
+        assertThat(firstAppearingObjectIn(pageSpec).getObjectName(), is("menu_item-1"));
+    }
+
+    @Test
+    public void lastFunction_shouldWorkWithGroups() throws IOException {
+        PageSpec pageSpec = readPageSpec("speclang2/last-grouped-object.gspec");
+        assertThat(firstAppearingObjectIn(pageSpec).getObjectName(), is("menu_icon"));
+    }
 
     @Test
     public void shouldFind_allObjects_forSpecifiedGroups_inRegularObjectStatement() throws IOException {
         PageSpec pageSpec = readPageSpec("speclang2/object-groups-search.gspec");
-
-        List<ObjectSpecs> objects = pageSpec.getSections().get(0).getObjects();
-        assertThat(objects.size(), is(2));
-
-        assertThat(objects.get(0).getObjectName(), is("cancel-button"));
-        assertThat(objects.get(0).getSpecs().get(0).getOriginalText(), is("height 30px"));
-
-        assertThat(objects.get(1).getObjectName(), is("login-button"));
-        assertThat(objects.get(1).getSpecs().get(0).getOriginalText(), is("height 30px"));
+        assertSearchAndForEachGroupsElements(pageSpec);
     }
 
     @Test
     public void shouldFind_allObjects_forSpecifiedGroups_forEachLoop() throws IOException {
         PageSpec pageSpec = readPageSpec("speclang2/object-groups-foreach.gspec");
+        assertSearchAndForEachGroupsElements(pageSpec);
+    }
 
+    private void assertSearchAndForEachGroupsElements(PageSpec pageSpec) {
         List<ObjectSpecs> objects = pageSpec.getSections().get(0).getObjects();
         assertThat(objects.size(), is(2));
 
@@ -797,7 +814,6 @@ public class PageSpecReaderTest {
         assertThat(objects.get(1).getObjectName(), is("login-button"));
         assertThat(objects.get(1).getSpecs().get(0).getOriginalText(), is("height 30px"));
     }
-
 
     @Test
     public void shouldFind_allObjects_forSpecifiedGroups_inJavaScriptFindAllFunction() throws IOException {
@@ -855,9 +871,26 @@ public class PageSpecReaderTest {
         ));
     }
 
+    @Test
+    public void shouldAllowToInvoke_first_function() throws IOException {
+        PageSpec pageSpec = readPageSpec("speclang2/first-function.gspec");
+
+        List<ObjectSpecs> objects = pageSpec.getSections().get(0).getObjects();
+        assertThat(objects.size(), is(1));
+        assertThat(objects.get(0).getObjectName(), is("menu_item-1"));
+    }
+
+    @Test
+    public void shouldAllowToInvoke_last_function() throws IOException {
+        PageSpec pageSpec = readPageSpec("speclang2/last-function.gspec");
+
+        List<ObjectSpecs> objects = pageSpec.getSections().get(0).getObjects();
+        assertThat(objects.size(), is(1));
+        assertThat(objects.get(0).getObjectName(), is("menu_item-3"));
+    }
 
     private PageSpec readPageSpec(String resource) throws IOException {
-        return readPageSpec(resource, NO_PAGE, EMPTY_TAGS, EMPTY_TAGS);
+        return readPageSpec(resource, EMPTY_PAGE, EMPTY_TAGS, EMPTY_TAGS);
     }
 
     private PageSpec readPageSpec(String resource, Page page) throws IOException {
@@ -874,6 +907,14 @@ public class PageSpecReaderTest {
 
     protected PageElement invisibleElement(int left, int top, int width, int height) {
         return new MockedInvisiblePageElement(left, top, width, height);
+    }
+
+    private String firstAppearingSpecIn(PageSpec pageSpec) {
+        return pageSpec.getSections().get(0).getObjects().get(0).getSpecs().get(0).getOriginalText();
+    }
+
+    private ObjectSpecs firstAppearingObjectIn(PageSpec pageSpec) {
+        return pageSpec.getSections().get(0).getObjects().get(0);
     }
 
 }

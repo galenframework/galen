@@ -57,7 +57,11 @@ public class MockedPage implements Page {
 
     @Override
     public PageElement getObject(String objectName, Locator locator) {
-        return getElements().get(objectName);
+        if (elements != null) {
+            return elements.get(objectName);
+        } else {
+            return null;
+        }
     }
 
     public HashMap<String, PageElement> getElements() {

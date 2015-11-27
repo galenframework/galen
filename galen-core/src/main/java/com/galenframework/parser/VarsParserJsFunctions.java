@@ -39,4 +39,20 @@ public interface VarsParserJsFunctions {
      * @return
      */
     JsPageElement[] findAll(String regex);
+
+
+    /**
+     * Finds all page elements but returns only first
+     * @param regex - simple galen regex
+     * @return
+     */
+    JsPageElement first(String regex);
+
+
+    /**
+     * Finds all page elements but returns only the last one
+     * @param regex - simple galen regex
+     * @return
+     */
+    JsPageElement last(String regex);
 }

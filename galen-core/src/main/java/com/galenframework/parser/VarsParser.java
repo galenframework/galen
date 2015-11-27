@@ -17,6 +17,8 @@ package com.galenframework.parser;
 
 import com.galenframework.specs.reader.StringCharReader;
 import com.galenframework.suite.reader.Context;
+import org.mozilla.javascript.NativeArray;
+import org.mozilla.javascript.NativeJavaObject;
 
 import java.util.Properties;
 
@@ -76,7 +78,7 @@ public class VarsParser {
             else if (state ==  PARSING_PARAM) {
                 if (symbol == '}') {
                     String expression = currentExpression.toString().trim();
-                    Object value = getExpressionValue(expression, context, strict);
+                    String value = getExpressionValueString(expression, context, strict);
                     if (value == null) {
                         value = "";
                     }
@@ -93,7 +95,7 @@ public class VarsParser {
     }
 
     
-    private Object getExpressionValue(String expression, Context context, boolean strict) {
+    private String getExpressionValueString(String expression, Context context, boolean strict) {
         Object value = context.getValue(expression);
         if (value == null) {
             //Looking for value in properties
@@ -110,10 +112,16 @@ public class VarsParser {
             value = readJsExpression(expression, context, strict);
         }
 
+        if (value instanceof NativeJavaObject) {
+            NativeJavaObject javaObject = (NativeJavaObject) value;
+            value = javaObject.unwrap();
+        }
+
         if (value == null) {
             return "";
+        }  else {
+            return value.toString();
         }
-        else return value;
     }
 
     private String readJsExpression(String expression, Context context, boolean strict) {

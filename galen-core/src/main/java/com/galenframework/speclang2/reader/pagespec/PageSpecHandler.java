@@ -150,42 +150,47 @@ public class PageSpecHandler implements VarsParserJsFunctions {
         js.getScope().defineProperty("find", new BaseFunction() {
             @Override
             public Object call(org.mozilla.javascript.Context cx, Scriptable scope, Scriptable thisObj, Object[] args) {
-                String pattern = null;
-
-                if (args.length == 0) {
-                    throw new IllegalArgumentException("Should take one string argument, got none");
-                } else if (args[0] == null) {
-                    throw new IllegalArgumentException("Pattern should not be null");
-                } else if (args[0] instanceof NativeJavaObject) {
-                    NativeJavaObject njo = (NativeJavaObject) args[0];
-                    pattern = njo.unwrap().toString();
-                } else {
-                    pattern = args[0].toString();
-                }
-                return pageSpecHandler.find(pattern);
+                return pageSpecHandler.find(getSingleStringArgument(args));
             }
         }, ScriptableObject.DONTENUM);
 
         js.getScope().defineProperty("findAll", new BaseFunction() {
             @Override
             public Object call(org.mozilla.javascript.Context cx, Scriptable scope, Scriptable thisObj, Object[] args) {
-                String pattern;
+                return pageSpecHandler.findAll(getSingleStringArgument(args));
+            }
+        }, ScriptableObject.DONTENUM);
 
-                if (args.length == 0) {
-                    throw new IllegalArgumentException("Should take one string argument, got none");
-                } else if (args[0] == null) {
-                    throw new IllegalArgumentException("Pattern should not be null");
-                } else if (args[0] instanceof NativeJavaObject) {
-                    NativeJavaObject njo = (NativeJavaObject) args[0];
-                    pattern = njo.unwrap().toString();
-                } else {
-                    pattern = args[0].toString();
-                }
+        js.getScope().defineProperty("first", new BaseFunction() {
+            @Override
+            public Object call(org.mozilla.javascript.Context cx, Scriptable scope, Scriptable thisObj, Object[] args) {
+                return pageSpecHandler.first(getSingleStringArgument(args));
+            }
+        }, ScriptableObject.DONTENUM);
 
-                return pageSpecHandler.findAll(pattern);
+        js.getScope().defineProperty("last", new BaseFunction() {
+            @Override
+            public Object call(org.mozilla.javascript.Context cx, Scriptable scope, Scriptable thisObj, Object[] args) {
+                return pageSpecHandler.last(getSingleStringArgument(args));
             }
         }, ScriptableObject.DONTENUM);
         return js;
+    }
+
+    private static String getSingleStringArgument(Object[] args) {
+        String singleArgument = null;
+        if (args.length == 0) {
+            throw new IllegalArgumentException("Should take one string argument, got none");
+        } else if (args[0] == null) {
+            throw new IllegalArgumentException("Pattern should not be null");
+        } else if (args[0] instanceof NativeJavaObject) {
+            NativeJavaObject njo = (NativeJavaObject) args[0];
+            singleArgument = njo.unwrap().toString();
+        } else {
+            singleArgument = args[0].toString();
+        }
+
+        return singleArgument;
     }
 
     public Object isVisible(String objectName) {
@@ -263,34 +268,21 @@ public class PageSpecHandler implements VarsParserJsFunctions {
 
     @Override
     public int count(String regex) {
-        Pattern pattern = GalenUtils.convertObjectNameRegex(regex);
-
-        int counter = 0;
-
-        for (Map.Entry<String, Locator> entry : pageSpec.getObjects().entrySet()) {
-            if (pattern.matcher(entry.getKey()).matches()) {
-                counter += 1;
-            }
-        }
-
-        return counter;
+        List<String> objectNames = pageSpec.findOnlyExistingMatchingObjectNames(regex);
+        return objectNames.size();
     }
 
     @Override
     public JsPageElement find(String name) {
-        Pattern pattern = GalenUtils.convertObjectNameRegex(name);
+        List<String> objectNames = pageSpec.findOnlyExistingMatchingObjectNames(name);
+        if (!objectNames.isEmpty()) {
+            String objectName = objectNames.get(0);
 
-        if (pageSpec != null) {
-            for (Map.Entry<String, Locator> entry : pageSpec.getObjects().entrySet()) {
-                String objectName = entry.getKey();
-                if (pattern.matcher(objectName).matches()) {
-                    Locator locator = entry.getValue();
-                    if (locator != null && page != null) {
-                        PageElement pageElement = page.getObject(objectName, locator);
-                        if (pageElement != null) {
-                            return new JsPageElement(objectName, pageElement);
-                        }
-                    }
+            Locator locator = pageSpec.getObjects().get(objectName);
+            if (locator != null && page != null) {
+                PageElement pageElement = page.getObject(objectName, locator);
+                if (pageElement != null) {
+                    return new JsPageElement(objectName, pageElement);
                 }
             }
         }
@@ -319,12 +311,59 @@ public class PageSpecHandler implements VarsParserJsFunctions {
         return jsElements.toArray(new JsPageElement[jsElements.size()]);
     }
 
+    @Override
+    public JsPageElement first(String objectsStatements) {
+        return extractSingleElement(objectsStatements, new FilterFunction<String>() {
+            @Override
+            public String filter(List<String> list) {
+                return list.get(0);
+            }
+        });
+    }
+
+    @Override
+    public JsPageElement last(String objectsStatements) {
+        return extractSingleElement(objectsStatements, new FilterFunction<String>() {
+            @Override
+            public String filter(List<String> list) {
+                return list.get(list.size() - 1);
+            }
+        });
+    }
+
+    private JsPageElement extractSingleElement(String objectsStatements, FilterFunction<String> filterFunction) {
+        List<String> objectNames = pageSpec.findAllObjectsMatchingStrictStatements(objectsStatements);
+
+        PageElement pageElement = null;
+        String objectName = objectsStatements;
+
+        if (!objectNames.isEmpty()) {
+            objectName = filterFunction.filter(objectNames);
+
+            Locator locator = pageSpec.getObjects().get(objectName);
+            if (locator != null) {
+                pageElement = page.getObject(objectName, locator);
+            }
+        }
+
+        if (pageElement != null) {
+            return new JsPageElement(objectName, pageElement);
+        } else {
+            return new JsPageElement(objectName, new AbsentPageElement());
+        }
+    }
+
 
     public void setGlobalVariable(String name, Object value, StructNode source) {
         if (!isValidVariableName(name)) {
             throw new SyntaxException(source, "Invalid name for variable: " + name);
         }
-        jsExecutor.putObject(name, value);
+
+        if (value != null && value instanceof NativeJavaObject) {
+            jsExecutor.putObject(name, ((NativeJavaObject) value).unwrap());
+        } else {
+            jsExecutor.putObject(name, value);
+        }
     }
 
 

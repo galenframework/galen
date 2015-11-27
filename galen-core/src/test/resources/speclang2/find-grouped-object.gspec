@@ -1,0 +1,15 @@
+@objects
+
+    header          #header
+    menu_item-1     #m1
+    menu_item-2     #m2
+    menu_item-3     #m3
+
+    menu_icon       #icon
+
+@groups
+    menu_elements       menu_item-*, menu_icon
+
+= Main section =
+    ${find("&menu_elements").name}:
+        width 100px

@@ -32,10 +32,7 @@ import com.galenframework.runner.events.TestEvent;
 import com.galenframework.runner.events.TestRetryEvent;
 
 import org.apache.commons.io.IOUtils;
-import org.mozilla.javascript.Context;
-import org.mozilla.javascript.ContextFactory;
-import org.mozilla.javascript.ImporterTopLevel;
-import org.mozilla.javascript.ScriptableObject;
+import org.mozilla.javascript.*;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -112,18 +109,26 @@ public class GalenJsExecutor implements VarsParserJsProcessable {
     public String evalSafeToString(String script) {
         try {
             Object returnedObject = context.evaluateString(scope, script, "<cmd>", 1, null);
-            if (returnedObject != null) {
-                if (returnedObject instanceof Double) {
-                    return Integer.toString(((Double) returnedObject).intValue());
-                } else if (returnedObject instanceof Float) {
-                    return Integer.toString(((Float) returnedObject).intValue());
-                } else return returnedObject.toString();
-            } else return null;
+            return unwrapProcessedObjectToString(returnedObject);
         }
         catch (Exception ex) {
             LOG.error("Unknown error during processing javascript expressions.", ex);
             return null;
         }
+    }
+
+    private String unwrapProcessedObjectToString(Object returnedObject) {
+        if (returnedObject != null) {
+            if (returnedObject instanceof NativeJavaObject) {
+                returnedObject = ((NativeJavaObject) returnedObject).unwrap();
+            }
+
+            if (returnedObject instanceof Double) {
+                return Integer.toString(((Double) returnedObject).intValue());
+            } else if (returnedObject instanceof Float) {
+                return Integer.toString(((Float) returnedObject).intValue());
+            } else return returnedObject.toString();
+        } else return null;
     }
 
     /**
@@ -134,12 +139,10 @@ public class GalenJsExecutor implements VarsParserJsProcessable {
     @Override
     public String evalStrictToString(String script) {
         Object returnedObject = context.evaluateString(scope, script, "<cmd>", 1, null);
-        if (returnedObject != null) {
-            if (returnedObject instanceof Double) {
-                return Integer.toString(((Double) returnedObject).intValue());
-            } else if (returnedObject instanceof Float) {
-                return Integer.toString(((Float) returnedObject).intValue());
-            } else return returnedObject.toString();
+        String unwrappedObject = unwrapProcessedObjectToString(returnedObject);
+
+        if (unwrappedObject != null) {
+            return unwrappedObject;
         } else return "null";
     }
 
