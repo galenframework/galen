@@ -51,13 +51,13 @@ All changes to Galen Framework project will be documented in this file
 
 
 
-## [2.0.10] - 2015-09-08
+## [2.0.10][2015-09-08]
 ## Fixed
 - Multi objects matching inside parent object
 
 
 
-## [2.0.9] - 2015-09-03
+## [2.0.9][2015-09-03]
 ### Fixed
 - Count function in page spec reader 
 
@@ -66,7 +66,7 @@ All changes to Galen Framework project will be documented in this file
 
 
 
-## [2.0.8] - 2015-08-25
+## [2.0.8][2015-08-25]
 ### Added
 - Edge browser support
 - Text file attachment support in reports
@@ -76,19 +76,19 @@ All changes to Galen Framework project will be documented in this file
 
 
 
-## [2.0.7] - 2015-08-13
+## [2.0.7][2015-08-13]
 ### Fixed
 - Fixed cleaning of empty sections. It was incidentally removing non-empty sections in page spec
 
 
 
-## [2.0.5] - 2015-08-03
+## [2.0.5][2015-08-03]
 ### Fixed
 - Fixed cleaning of empty sections. It was incidentally removing non-empty sections in page spec
 
 
 
-## [2.0.3] - 2015-07-27
+## [2.0.3][2015-07-27]
 ### Changed
 - Galen Specs Lang v2.
 
