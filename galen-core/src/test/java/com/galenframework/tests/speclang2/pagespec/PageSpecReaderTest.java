@@ -889,6 +889,21 @@ public class PageSpecReaderTest {
         assertThat(objects.get(0).getObjectName(), is("menu_item-3"));
     }
 
+    @Test
+    public void ruleShouldAllows_toUseColon_atTheEnd() throws IOException {
+        PageSpec pageSpec = readPageSpec("speclang2/rule-colon-at-end.gspec");
+
+        assertThat(pageSpec.getSections().size(), is(1));
+        assertThat(pageSpec.getSections().get(0).getObjects().size(), is(0));
+        assertThat(pageSpec.getSections().get(0).getSections().size(), is(1));
+        assertThat(pageSpec.getSections().get(0).getSections().get(0).getObjects().size(), is(1));
+
+        ObjectSpecs object = pageSpec.getSections().get(0).getSections().get(0).getObjects().get(0);
+        assertThat(object.getObjectName(), is("menu_item-1"));
+        assertThat(object.getSpecs().size(), is(1));
+        assertThat(object.getSpecs().get(0).getOriginalText(), is("width 100px"));
+    }
+
     private PageSpec readPageSpec(String resource) throws IOException {
         return readPageSpec(resource, EMPTY_PAGE, EMPTY_TAGS, EMPTY_TAGS);
     }

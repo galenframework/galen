@@ -75,10 +75,10 @@ public class PageSectionProcessor {
             String childLine = sectionChildNode.getName();
             if (isSectionDefinition(childLine)) {
                 new PageSectionProcessor(pageSpecHandler, section).process(sectionChildNode);
-            } else if (isObject(childLine)) {
-                processObject(section, sectionChildNode);
             } else if (isRule(childLine)) {
                 processSectionRule(section, sectionChildNode);
+            } else if (isObject(childLine)) {
+                processObject(section, sectionChildNode);
             } else {
                 throw new SyntaxException(sectionChildNode, "Unknown statement: " + childLine);
             }
