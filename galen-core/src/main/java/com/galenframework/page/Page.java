@@ -19,7 +19,6 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 
 import com.galenframework.specs.page.Locator;
-import com.galenframework.specs.page.Locator;
 
 public interface Page {
 

@@ -18,6 +18,7 @@ package com.galenframework.tests.integration;
 
 import com.galenframework.api.Galen;
 import com.galenframework.reports.model.LayoutReport;
+import com.galenframework.validation.ValidationResult;
 import org.openqa.selenium.Dimension;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
@@ -26,6 +27,7 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import java.io.IOException;
+import java.util.Collections;
 
 import static java.util.Arrays.asList;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -37,7 +39,6 @@ public class ComponentBasicIT {
     @BeforeMethod
     public void createDriver() {
         driver = new FirefoxDriver();
-        driver.get(toFileProtocol(getClass().getResource("/complex-page/index.html").getPath()));
         driver.manage().window().setSize(new Dimension(1024, 768));
     }
 
@@ -48,6 +49,7 @@ public class ComponentBasicIT {
 
     @Test
     public void componentSpec_shouldAllowToProvide_arguments_fromParentSpec() throws IOException {
+        driver.get(toFileProtocol(getClass().getResource("/complex-page/index.html").getPath()));
         LayoutReport layoutReport = Galen.checkLayout(driver, findSpec("/complex-page/using-component-arguments.gspec"), asList("desktop"));
 
         assertThat("Amount of failures should be", layoutReport.errors(), is(1));
@@ -55,6 +57,30 @@ public class ComponentBasicIT {
         assertThat(layoutReport.getValidationErrorResults().get(0).getChildValidationResults().get(0).getError().getMessages().get(0),
                 is("\"message\" text is \"OMG!\" but should be \"Cool!\""));
     }
+
+
+    /**
+     * Comes from bug https://github.com/galenframework/galen/issues/353
+     * @throws IOException
+     */
+    @Test
+    public void componentSpec_shouldAllowToExecute_2ndLevel_componentSpec() throws IOException {
+        driver.get(toFileProtocol(getClass().getResource("/2nd-level-component/index.html").getPath()));
+        LayoutReport layoutReport = Galen.checkLayout(driver, findSpec("/2nd-level-component/quote-containers.gspec"), Collections.<String>emptyList());
+
+        assertThat("Amount of failures should be", layoutReport.errors(), is(1));
+
+        ValidationResult firstValidationError = layoutReport.getValidationErrorResults().get(0);
+        assertThat(firstValidationError.getError().getMessages().get(0), is("Child component spec contains 1 errors"));
+
+        ValidationResult secondValidationError = firstValidationError.getChildValidationResults().get(0);
+        assertThat(secondValidationError.getError().getMessages().get(0), is("Child component spec contains 1 errors"));
+
+        ValidationResult thirdValidationError = secondValidationError.getChildValidationResults().get(0);
+        assertThat(thirdValidationError.getError().getMessages().get(0), is("\"name\" text is \"Buggy component\" but should start with \"Title\""));
+    }
+
+
 
     private String findSpec(String path) {
         return getClass().getResource(path).getPath();

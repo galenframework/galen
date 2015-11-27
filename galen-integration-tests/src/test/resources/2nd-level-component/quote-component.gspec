@@ -1,0 +1,10 @@
+@objects
+    attribution          .attribution
+
+= Quote Item =
+
+= Attribution =
+    attribution:
+        component attribution-component.gspec
+
+

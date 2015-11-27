@@ -1,0 +1,8 @@
+@objects
+    quote-container-*               .quote-container
+        quote-item-*                .quote
+
+= Quote Archetype - Multiple Instances Possible =
+
+    quote-container-#.quote-item-#:
+        component quote-component.gspec

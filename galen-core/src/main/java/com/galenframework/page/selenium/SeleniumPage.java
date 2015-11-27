@@ -31,14 +31,14 @@ import com.galenframework.rainbow4j.Rainbow4J;
 
 import org.openqa.selenium.*;
 
+import static com.galenframework.page.selenium.ByChain.fromLocator;
+
 public class SeleniumPage implements Page {
 
     private WebDriver driver;
     
-    private Map<String, List<PageElement>> cachedElementsList = new HashMap<String, List<PageElement>>();
     private Map<String, PageElement> cachedPageElements = new HashMap<String, PageElement>();
     
-    private WebElement objectContext;
     private PageElement parentObject;
 
     private BufferedImage cachedScreenshotImage;
@@ -46,28 +46,37 @@ public class SeleniumPage implements Page {
     private int offsetLeft = 0;
     private int offsetTop = 0;
 
+    private final SearchContext driverSearchContext;
 
     public SeleniumPage(WebDriver driver) {
-        this.driver = driver;
+        this(driver, driver);
     }
-    
-    public SeleniumPage(WebDriver driver, Locator objectContextLocator) {
+
+    private SeleniumPage(WebDriver driver, SearchContext driverSearchContext) {
         this.driver = driver;
-        setObjectContext(objectContextLocator);
+        this.driverSearchContext = driverSearchContext;
+    }
+
+    private SeleniumPage(WebDriver driver, SearchContext searchContext, Locator objectContextLocator) {
+        this.driver = driver;
+
+        WebElement contextElement = findObjectContext(searchContext, objectContextLocator);
+        this.driverSearchContext = contextElement;
+        this.parentObject = new WebPageElement(driver, "parent", contextElement, objectContextLocator)
+                .withOffset(offsetLeft, offsetTop);
     }
 
     
-    private void setObjectContext(Locator objectContextLocator) {
+    private WebElement findObjectContext(SearchContext searchContext, Locator objectContextLocator) {
         if (objectContextLocator != null) {
-            ByChain byChain = ByChain.fromLocator(objectContextLocator);
+            ByChain byChain = fromLocator(objectContextLocator);
             if (byChain == null) {
-                throw new RuntimeException("Cannot convert locator: " + objectContextLocator.getLocatorType() + " " + objectContextLocator.getLocatorValue());
+                throw new RuntimeException("Cannot convert locator " + objectContextLocator.prettyString());
             }
             
-            objectContext = byChain.findElement(driver);
-
-            this.parentObject = new WebPageElement(driver, "parent", objectContext, objectContextLocator)
-                    .withOffset(offsetLeft, offsetTop);
+            return byChain.findElement(searchContext);
+        }  else {
+            throw new IllegalArgumentException("objectContextLocator cannot be null");
         }
     }
 
@@ -96,34 +105,16 @@ public class SeleniumPage implements Page {
     }
 
     private List<WebElement> driverFindElements(ByChain byChain) {
-        if (objectContext == null) {
-            try {
-                return byChain.findElements(driver);
-            } catch (NullPointerException e) {
-                throw new WebDriverException(e);
-            } catch (StaleElementReferenceException e) {
-                throw new WebDriverException(e);
-            }
-        }
-        else {
-            return byChain.findElements(objectContext);
-        }
+        return byChain.findElements(driverSearchContext);
     }
 
     private WebElement driverFindElement(ByChain byChain) {
-        if (objectContext == null) {
-            return byChain.findElement(driver);
-        }
-        else {
-            return byChain.findElement(objectContext);
-        }
+        return byChain.findElement(driverSearchContext);
     }
-    
-
 
     private PageElement locatorToElement(String objectName, Locator objectLocator) {
         PageElement pageElement;
-        ByChain byChain = ByChain.fromLocator(objectLocator);
+        ByChain byChain = fromLocator(objectLocator);
 
         try {
             WebElement webElement = driverFindElement(byChain);
@@ -156,13 +147,12 @@ public class SeleniumPage implements Page {
 
     @Override
     public int getObjectCount(Locator locator) {
-        ByChain byChain = ByChain.fromLocator(locator);
-        return driverFindElements(byChain).size();
+        return driverFindElements(fromLocator(locator)).size();
     }
 
     @Override
     public Page createObjectContextPage(Locator objectContextLocator) {
-        return new SeleniumPage(this.driver, objectContextLocator);
+        return new SeleniumPage(this.driver, this.driverSearchContext, objectContextLocator);
     }
 
     @Override

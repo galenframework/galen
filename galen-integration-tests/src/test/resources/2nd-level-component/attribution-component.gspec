@@ -1,0 +1,10 @@
+@objects
+    name         .title
+
+= Required Children =
+    parent:
+        contains name
+
+= Attribution Information =
+    name:
+        text starts "Title"
