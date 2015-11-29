@@ -1,0 +1,58 @@
+@import common.gspec
+
+@objects
+    welcome_block       .jumbotron
+    greeting            #welcome-page h1
+    text_block-*        #welcome-page p
+    login_button        #welcome-page .button-login
+
+@groups
+    longWordTest greeting
+
+
+= Content =
+    @on *
+        welcome_block:
+            inside content ~ 20px top left right
+
+        text_block-1, login_button, text_block-3:
+            inside welcome_block ~30px left
+
+        greeting:
+            above text_block-1 10 to 50 px
+            inside welcome_block ~ 30px left
+
+        text_block-1:
+            height > 20px
+            above login_button 10 to 50 px
+
+        login_button:
+            height ~ 45px
+            text is "Login"
+            above text_block-3 10 to 50px
+
+
+    @on desktop
+        greeting:
+            height ~ 69px
+            inside welcome_block ~ 68 px top
+
+        login_button:
+            width ~ 78px
+
+
+    @on tablet
+        greeting:
+            height ~ 39px
+            inside welcome_block ~ 50 px top
+
+        login_button:
+            width ~ 78px
+
+    @on mobile
+        greeting:
+            height ~ 78px
+            inside welcome_block ~ 50 px top
+
+        login_button:
+            inside welcome_block ~ 30px left right

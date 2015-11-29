@@ -41,7 +41,7 @@ public class GalenMain {
         this.errStream = errStream;
     }
 
-    public void execute(String[] arguments) {
+    public void execute(String...arguments) {
         FailureListener failureListener = new FailureListener();
         CombinedListener combinedListener = new CombinedListener();
         combinedListener.add(failureListener);

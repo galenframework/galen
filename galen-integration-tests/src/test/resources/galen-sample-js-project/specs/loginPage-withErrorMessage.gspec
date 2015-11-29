@@ -1,0 +1,20 @@
+
+
+@objects
+    password_textfield   input[name='login.password']
+    login_button         .button-login
+    error_message        #login-error-message
+
+
+= Error message =
+    @on *
+        error_message:
+            below password_textfield 5 to 15px
+            height ~ 52px
+            aligned vertically all password_textfield
+            above login_button 10 to 30px
+
+
+    @on mobile
+        error_message:
+            aligned vertically all login_button

@@ -1,0 +1,78 @@
+@import common.gspec
+
+@objects
+    login_box           #login-page
+    login_caption       #login-page h2
+
+    username_textfield  input[name='login.username']
+    password_textfield  input[name='login.password']
+
+    login_button        .button-login
+    cancel_button       .button-cancel
+
+
+= Login box =
+    @on *
+        login_box:
+            centered horizontally inside content 1px
+            below menu 20 to 45px
+
+        login_caption:
+            height 20 to 35px
+            text is "Login"
+
+        username_textfield, password_textfield:
+            height 25 to 35 px
+
+        username_textfield:
+            below login_caption 5 to 15px
+            aligned vertically all password_textfield
+
+        password_textfield:
+            below username_textfield 5 to 15px
+            aligned vertically left login_button
+
+        login_button, cancel_button:
+            height 40 to 50 px
+
+        login_button:
+            text is "Login"
+
+        cancel_button:
+            text is "Cancel"
+
+
+    @on desktop, tablet
+        login_box:
+            width 400px
+
+        login_caption:
+            inside login_box ~ 40px top, ~ 20px left
+
+        username_textfield, password_textfield:
+            inside login_box ~ 20px left right
+
+        login_button:
+            below password_textfield 5 to 15px
+            width 70 to 90 px
+            aligned horizontally all cancel_button
+
+        cancel_button:
+            width 80 to 100 px
+            near login_button 3 to 8px right
+
+
+    @on mobile
+        login_box:
+            inside screen ~ 20px left right
+
+        username_textfield, password_textfield:
+            inside login_box 0px left right
+
+        login_caption:
+            inside login_box 0px top, 0px left
+
+        login_button:
+            inside login_box 0px left right
+            above cancel_button  4 to 10px
+            aligned vertically all cancel_button

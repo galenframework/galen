@@ -1,13 +1,13 @@
-@import common.spec
+@import common.gspec
 
 @objects
-    caption             css     #my-notes-page  h2
+    caption             #my-notes-page  h2
 
-    note-*              css     .list-group a
-        title           css     h4
-        description     css     p
+    note-*              .list-group a
+        title           h4
+        description     p
 
-    button-addnote      css     button
+    button_addnote      button
 
 
 = Content =
@@ -38,16 +38,16 @@
                 aligned vertically all note-${i}.title
 
 
-        button-addnote:
+        button_addnote:
             height ~ 45px
             below note-2 20 to 45 px
 
     @on desktop, tablet
-        button-addnote:
+        button_addnote:
             width 90 to 120px
             inside content ~ 20 px left
             aligned vertically left note-1
 
     @on mobile
-        button-addnote:
+        button_addnote:
             inside content ~ 20px left right

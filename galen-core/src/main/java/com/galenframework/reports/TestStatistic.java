@@ -15,13 +15,27 @@
 ******************************************************************************/
 package com.galenframework.reports;
 
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.lang3.builder.ToStringBuilder;
+
 public class TestStatistic {
 
     private int passed = 0;
     private int errors = 0;
     private int warnings = 0;
     private int total = 0;
-    
+
+    public TestStatistic() {
+    }
+
+    public TestStatistic(int passed, int errors, int warnings, int total) {
+        this.passed = passed;
+        this.errors = errors;
+        this.warnings = warnings;
+        this.total = total;
+    }
+
     public int getPassed() {
         return passed;
     }
@@ -51,5 +65,46 @@ public class TestStatistic {
         this.passed += statistic.getPassed();
         this.errors += statistic.getErrors();
         this.warnings += statistic.getWarnings();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (obj == this) {
+            return true;
+        }
+        if (!(obj instanceof TestStatistic)) {
+            return false;
+        }
+
+        TestStatistic rhs = (TestStatistic) obj;
+        return new EqualsBuilder()
+                .append(this.passed, rhs.passed)
+                .append(this.errors, rhs.errors)
+                .append(this.warnings, rhs.warnings)
+                .append(this.total, rhs.total)
+                .isEquals();
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder()
+                .append(passed)
+                .append(errors)
+                .append(warnings)
+                .append(total)
+                .toHashCode();
+    }
+
+    @Override
+    public String toString() {
+        return new ToStringBuilder(this)
+                .append("passed", passed)
+                .append("errors", errors)
+                .append("warnings", warnings)
+                .append("total", total)
+                .toString();
     }
 }

@@ -1,12 +1,15 @@
 
 @objects
-    header                   css   #header .middle-wrapper
-    header-logo              id    header-logo
-    header-text              css   #header h1
-    menu                     css   #menu ul
-    menu-item-*              css   #menu li a
-    content                  css   #content
-    footer                   id    footer
+    header                   #header .middle-wrapper
+        logo                    #header-logo
+        text                    h1
+    menu                     #menu ul
+        item-*                  li a
+    content                  #content
+    footer                   #footer
+
+@groups
+    longWordTest             header.text, menu.item-*
 
 
 = Header =
@@ -16,23 +19,23 @@
             centered horizontally inside screen 1px
             height ~ 70px
 
-        header-logo:
+        header.logo:
             inside header 5 to 15px top, 0 to 10px left
-            near header-text 5 to 30px left
+            near header.text 5 to 30px left
 
-        header-text:
+        header.text:
             inside header 10 to 25px top
 
     @on desktop
         header:
             width 900px
 
-        header-text:
+        header.text:
             text is "Sample Website for Galen Framework"
 
 
     @on mobile, tablet
-        header-text:
+        header.text:
             text is "Sample Website"
 
 
@@ -50,31 +53,31 @@
 
 
     @on desktop, tablet
-        menu-item-1:
+        menu.item-1:
             inside menu ~ 0px top left bottom
 
-        menu-item-*:
+        menu.item-*:
             width 90 to 130px
             height ~ 64px
             inside menu ~ 0px top
 
-        @forEach [menu-item-*] as menuItem, prev as previousMenuItem
+        @forEach [menu.item-*] as menuItem, prev as previousMenuItem
             ${menuItem}:
                 right-of ${previousMenuItem} 0 to 5px
                 aligned horizontally all ${previousMenuItem}
 
 
     @on mobile
-        menu-item-* :
+        menu.item-* :
             width 48 to 50% of screen/width
 
         @for [ 1, 2 ] as index
-            menu-item-${index}:
-                above menu-item-${index + 2} 0 to 5px
+            menu.item-${index}:
+                above menu.item-${index + 2} 0 to 5px
 
         @for [ 1, 3 ] as index
-            menu-item-${index}:
-                near menu-item-${index + 1}  0 to 5 px left
+            menu.item-${index}:
+                near menu.item-${index + 1}  0 to 5 px left
 
 
 = Content =

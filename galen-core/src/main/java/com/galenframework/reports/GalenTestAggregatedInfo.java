@@ -15,13 +15,9 @@
 ******************************************************************************/
 package com.galenframework.reports;
 
-import java.util.Iterator;
 import java.util.List;
-import java.util.Set;
-import java.util.TreeSet;
 
 
-import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 
 import com.fasterxml.jackson.annotation.JsonUnwrapped;
@@ -35,6 +31,8 @@ public class GalenTestAggregatedInfo {
     private String testId;
 
 
+    public GalenTestAggregatedInfo() {
+    }
 
     public GalenTestAggregatedInfo(String testId, GalenTestInfo test) {
         this.setTestInfo(test);
