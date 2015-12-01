@@ -16,6 +16,7 @@ galen-core/coverage-report/
 galen-integration-tests/node/
 galen-integration-tests/node_modules/
 galen-integration-tests/coverage-report/
+galen-java-support/coverage-report/
 .release-notes
 *.swp
 config2
@@ -26,4 +27,3 @@ config2
 /node_modules/
 bin
 .externalToolBuilders/*
-

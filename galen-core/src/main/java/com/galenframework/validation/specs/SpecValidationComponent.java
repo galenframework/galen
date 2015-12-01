@@ -64,7 +64,7 @@ public class SpecValidationComponent extends SpecValidation<SpecComponent> {
                     .withChildValidationResults(errorResults);
         }
 
-        return new ValidationResult(objects);
+        return new ValidationResult(spec, objects);
     }
 
     private void tellListenerAfterSubLayout(PageValidation pageValidation, String objectName) {

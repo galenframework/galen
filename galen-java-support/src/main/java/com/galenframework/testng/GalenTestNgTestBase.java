@@ -15,7 +15,7 @@
 ******************************************************************************/
 package com.galenframework.testng;
 
-import com.galenframework.GalenJavaTestBase;
+import com.galenframework.support.GalenJavaTestBase;
 import com.galenframework.support.GalenReportsContainer;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;

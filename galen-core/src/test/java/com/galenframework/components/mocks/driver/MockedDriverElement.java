@@ -21,7 +21,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.NoSuchElementException;
 
-public class MockedDriverElement implements WebElement {
+public class MockedDriverElement implements WebElement, TakesScreenshot {
     private final MockedPageItem item;
 
     public MockedDriverElement(MockedPageItem item) {

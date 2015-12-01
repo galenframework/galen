@@ -15,6 +15,7 @@
 = Header =
     @on *
         header:
+            component header-component.gspec
             inside screen 0px top
             centered horizontally inside screen 1px
             height ~ 70px

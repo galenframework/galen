@@ -87,7 +87,7 @@ public class SpecValidationColorScheme extends SpecValidation<SpecColorScheme> {
                     .withMessages(messages);
         }
 
-        return new ValidationResult(objects);
+        return new ValidationResult(spec, objects);
     }
 
     private String toHexColor(Color color) {

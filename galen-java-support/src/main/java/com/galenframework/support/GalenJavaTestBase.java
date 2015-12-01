@@ -13,11 +13,14 @@
 * See the License for the specific language governing permissions and
 * limitations under the License.
 ******************************************************************************/
-package com.galenframework;
+package com.galenframework.support;
 
 import com.galenframework.api.Galen;
 import com.galenframework.reports.TestReport;
+import com.galenframework.reports.model.LayoutObject;
 import com.galenframework.reports.model.LayoutReport;
+import com.galenframework.reports.model.LayoutSection;
+import com.galenframework.reports.model.LayoutSpec;
 import com.galenframework.specs.reader.page.SectionFilter;
 import com.galenframework.utils.GalenUtils;
 import org.openqa.selenium.Dimension;
@@ -120,7 +123,7 @@ public abstract class GalenJavaTestBase {
         getReport().layout(layoutReport, title);
 
         if (layoutReport.errors() > 0) {
-            throw new RuntimeException("Incorrect layout: " + title);
+            throw new LayoutValidationException(specPath, layoutReport, sectionFilter);
         }
     }
 

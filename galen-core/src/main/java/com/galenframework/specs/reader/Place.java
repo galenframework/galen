@@ -73,5 +73,8 @@ public class Place {
         .append("lineNumber", lineNumber)
         .toString();
     }
-    
+
+    public String toPrettyString() {
+        return filePath + ":" + lineNumber;
+    }
 }

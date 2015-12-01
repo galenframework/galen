@@ -15,7 +15,7 @@
 ******************************************************************************/
 package com.galenframework.junit;
 
-import com.galenframework.GalenJavaTestBase;
+import com.galenframework.support.GalenJavaTestBase;
 import com.galenframework.support.GalenReportsContainer;
 import org.junit.After;
 import org.junit.Before;
@@ -51,12 +51,13 @@ public abstract class GalenJUnitTestBase extends GalenJavaTestBase {
         return createDriver();
     }
 
+
     /**
      * {@inheritDoc}
      */
     @Before
-    public void initDriver(Object[] args) {
-        super.initDriver(args);
+    public void initDriver() {
+        super.initDriver(null);
     }
 
     /**

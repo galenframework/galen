@@ -115,7 +115,7 @@ public class SpecValidationImage extends SpecValidation<SpecImage> {
                             minCheck.result.getComparisonMap()));
         }
 
-        return new ValidationResult(objects);
+        return new ValidationResult(spec, objects);
     }
 
 
