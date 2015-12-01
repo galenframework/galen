@@ -51,12 +51,13 @@ public abstract class GalenJUnitTestBase extends GalenJavaTestBase {
         return createDriver();
     }
 
+
     /**
      * {@inheritDoc}
      */
     @Before
-    public void initDriver(Object[] args) {
-        super.initDriver(args);
+    public void initDriver() {
+        super.initDriver(null);
     }
 
     /**
