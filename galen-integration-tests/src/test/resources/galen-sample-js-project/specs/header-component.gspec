@@ -1,8 +1,0 @@
-@objects
-    logo    img
-
-
-= Header component =
-    logo:
-        inside parent 100px top
-        width 100px
