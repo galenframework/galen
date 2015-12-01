@@ -57,7 +57,7 @@ public class SpecValidationInside extends SpecValidationGeneral<SpecInside> {
             }
         }
 
-        return new ValidationResult(objects);
+        return new ValidationResult(spec, objects);
     }
 
     @Override

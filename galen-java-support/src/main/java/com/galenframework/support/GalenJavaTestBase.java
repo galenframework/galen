@@ -13,7 +13,7 @@
 * See the License for the specific language governing permissions and
 * limitations under the License.
 ******************************************************************************/
-package com.galenframework;
+package com.galenframework.support;
 
 import com.galenframework.api.Galen;
 import com.galenframework.reports.TestReport;
@@ -123,29 +123,7 @@ public abstract class GalenJavaTestBase {
         getReport().layout(layoutReport, title);
 
         if (layoutReport.errors() > 0) {
-            final StringBuffer errorDetails = new StringBuffer();
-            for (LayoutSection layoutSection : layoutReport.getSections()) {
-                final StringBuffer layoutDetails = new StringBuffer();
-                layoutDetails.append("\n").append("Layout Section: ").append(layoutSection.getName())
-                        .append("\n");
-                for (LayoutObject layoutObject : layoutSection.getObjects()) {
-                    boolean hasErrors = false;
-                    final StringBuffer errorElementDetails = new StringBuffer();
-                    errorElementDetails.append("  Element: ").append(layoutObject.getName());
-                    for (LayoutSpec layoutSpec : layoutObject.getSpecs()) {
-                        if (layoutSpec.getErrors() != null && layoutSpec.getErrors().size() > 0) {
-                            errorElementDetails.append(layoutSpec.getErrors().toString());
-                            hasErrors = true;
-                        }
-                    }
-                    if (hasErrors) {
-                        errorDetails.append("Tag Details: ").append(sectionFilter.getIncludedTags()).append("\n");
-                        errorDetails.append(layoutDetails);
-                        errorDetails.append(errorElementDetails).append("\n");
-                    }
-                }
-            }
-            throw new RuntimeException(errorDetails.toString());
+            throw new LayoutValidationException(specPath, layoutReport, sectionFilter);
         }
     }
 

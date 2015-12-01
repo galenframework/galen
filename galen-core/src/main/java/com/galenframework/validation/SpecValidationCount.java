@@ -50,7 +50,7 @@ public class SpecValidationCount extends SpecValidation<SpecCount> {
 
 
         if (spec.getAmount().holds(filteredElements.size())) {
-            return new ValidationResult(convertToValidationObjects(reportElements));
+            return new ValidationResult(spec, convertToValidationObjects(reportElements));
         } else {
             throw new ValidationErrorException()
                     .withValidationObjects(convertToValidationObjects(reportElements))

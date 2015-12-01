@@ -15,6 +15,7 @@
 ******************************************************************************/
 package com.galenframework.validation;
 
+import com.galenframework.specs.Spec;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -27,18 +28,22 @@ import java.util.List;
  */
 public class ValidationResult {
 
+    private Spec spec;
     private List<ValidationObject> validationObjects = new LinkedList<ValidationObject>();
     private ValidationError error;
     private List<ValidationResult> childValidationResults;
 
-    public ValidationResult(List<ValidationObject> validationObjects) {
+    public ValidationResult(Spec spec, List<ValidationObject> validationObjects) {
+        this.spec = spec;
         this.validationObjects = validationObjects;
     }
 
-    public ValidationResult() {
+    public ValidationResult(Spec spec) {
+        this.spec = spec;
     }
 
-    public ValidationResult(List<ValidationObject> validationObjects, ValidationError validationError) {
+    public ValidationResult(Spec spec, List<ValidationObject> validationObjects, ValidationError validationError) {
+        this.spec = spec;
         this.validationObjects = validationObjects;
         this.error = validationError;
     }
@@ -70,11 +75,11 @@ public class ValidationResult {
 
     @Override
     public int hashCode() {
-        return new HashCodeBuilder() //@formatter:off
+        return new HashCodeBuilder()
                 .append(validationObjects)
                 .append(error)
                 .append(childValidationResults)
-                .toHashCode(); //@formatter:on
+                .toHashCode();
     }
 
 
@@ -88,11 +93,11 @@ public class ValidationResult {
             return false;
 
         ValidationResult rhs = (ValidationResult)obj;
-        return new EqualsBuilder() //@formatter:off
+        return new EqualsBuilder()
                 .append(this.error, rhs.error)
                 .append(this.validationObjects, rhs.validationObjects)
                 .append(this.childValidationResults, rhs.childValidationResults)
-                .isEquals(); //@formatter:on
+                .isEquals();
 
     }
 
@@ -135,5 +140,9 @@ public class ValidationResult {
     public ValidationResult withChildValidationResults(List<ValidationResult> childValidationResults) {
         setChildValidationResults(childValidationResults);
         return this;
+    }
+
+    public Spec getSpec() {
+        return spec;
     }
 }

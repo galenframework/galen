@@ -17,6 +17,7 @@ package com.galenframework.tests.api;
 
 import com.galenframework.api.GalenPageDump;
 import com.galenframework.page.Rect;
+import com.galenframework.specs.Spec;
 import com.galenframework.specs.reader.page.SectionFilter;
 import com.google.common.io.Files;
 import com.google.gson.JsonParser;
@@ -43,6 +44,8 @@ import static org.hamcrest.Matchers.*;
 
 public class GalenTest {
 
+    private static final Spec NO_SPEC = null;
+
     @Test
     public void checkLayout_shouldTestLayout_andReturnLayoutReport() throws IOException {
         WebDriver driver = new MockedDriver();
@@ -51,12 +54,12 @@ public class GalenTest {
         LayoutReport layoutReport = Galen.checkLayout(driver, "/specs/galen4j/sample-spec-with-error.spec", new SectionFilter(asList("mobile"), null), new Properties(), null, null);
 
         assertThat(layoutReport.getValidationErrorResults(), contains(
-                new ValidationResult(
+                new ValidationResult(NO_SPEC,
                         asList(
                                 new ValidationObject(new Rect(10, 10, 100, 50), "save-button"),
                                 new ValidationObject(new Rect(120, 10, 200, 50), "name-textfield")),
                         new ValidationError().withMessage("\"save-button\" is 10px left instead of 50px")),
-                new ValidationResult(
+                new ValidationResult(NO_SPEC,
                         asList(
                                 new ValidationObject(new Rect(10, 10, 100, 50), "save-button")),
                         new ValidationError().withMessage("\"save-button\" text is \"Save\" but should be \"Store\""))));
@@ -205,11 +208,11 @@ public class GalenTest {
 
         assertThat(layoutReport.errors(), is(2));
         assertThat(layoutReport.getValidationErrorResults(), contains(
-                new ValidationResult(
+                new ValidationResult(NO_SPEC,
                         asList(
                                 new ValidationObject(new Rect(10, 10, 100, 50), "save-button")),
                         new ValidationError().withMessage("\"save-button\" width is 100px instead of 140px")),
-                new ValidationResult(
+                new ValidationResult(NO_SPEC,
                         asList(
                                 new ValidationObject(new Rect(10, 10, 100, 50), "save-button")),
                         new ValidationError().withMessage("\"save-button\" width is 200% [100px] instead of 100% [50px]"))));

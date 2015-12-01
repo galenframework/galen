@@ -61,6 +61,7 @@ public class ValidationTest {
     private static final List<ValidationObject> NO_AREA = null;
     private static final boolean PIXEL_UNIT = true;
     private static final boolean PERCENTAGE_UNIT = false;
+    private static final Spec NO_SPEC = null;
 
 
     private BufferedImage testImage = loadTestImage("/color-scheme-image-1.png");
@@ -1483,21 +1484,21 @@ public class ValidationTest {
                     put("object", invisibleElement(10, 10, 400, 300));
                 }}, testImage)),
 
-            row(new ValidationResult(areas(new ValidationObject(new Rect(100, 90, 100, 40), "object")),
+            row(new ValidationResult(NO_SPEC, areas(new ValidationObject(new Rect(100, 90, 100, 40), "object")),
                         new ValidationError(messages("Element does not look like \"/imgs/button-sample-incorrect.png\". " +
                                 "There are 3820 mismatching pixels but max allowed is 600"))),
                 specImage(asList("/imgs/button-sample-incorrect.png"), 600, PIXEL_UNIT, 0, 10), page(new HashMap<String, PageElement>() {{
                         put("object", element(100, 90, 100, 40));
                     }}, imageComparisonTestScreenshot)),
 
-            row(new ValidationResult(areas(new ValidationObject(new Rect(100, 90, 100, 40), "object")),
+            row(new ValidationResult(NO_SPEC, areas(new ValidationObject(new Rect(100, 90, 100, 40), "object")),
                             new ValidationError(messages("Element does not look like \"/imgs/button-sample-incorrect.png\". " +
                                     "There are 95.5% mismatching pixels but max allowed is 2.0%"))),
                     specImage(asList("/imgs/button-sample-incorrect.png"), 2.0, PERCENTAGE_UNIT, 0, 10), page(new HashMap<String, PageElement>() {{
                         put("object", element(100, 90, 100, 40));
                     }}, imageComparisonTestScreenshot)),
 
-            row(new ValidationResult(areas(new ValidationObject(new Rect(100, 90, 100, 40), "object")),
+            row(new ValidationResult(NO_SPEC, areas(new ValidationObject(new Rect(100, 90, 100, 40), "object")),
                             new ValidationError(messages("Couldn't load image: /imgs/undefined-image.png"))),
                     specImage(asList("/imgs/undefined-image.png"), 1.452, PERCENTAGE_UNIT, 0, 10), page(new HashMap<String, PageElement>() {{
                         put("object", element(100, 90, 100, 40));
@@ -1506,7 +1507,7 @@ public class ValidationTest {
 
             /* Spec Count */
 
-            row(new ValidationResult(areas(new ValidationObject(new Rect(100, 90, 100, 40), "object")),
+            row(new ValidationResult(NO_SPEC, areas(new ValidationObject(new Rect(100, 90, 100, 40), "object")),
                             new ValidationError(messages("There are 3 objects matching \"menu-item-*\" instead of 2"))),
                     new SpecCount(SpecCount.FetchType.ANY, "menu-item-*", exact(2)), page(new HashMap<String, PageElement>() {{
                         put("object", element(100, 90, 100, 40));
@@ -1514,7 +1515,7 @@ public class ValidationTest {
                         put("menu-item-2", element(100, 90, 100, 40));
                         put("menu-item-3", element(100, 90, 100, 40));
                     }})),
-            row(new ValidationResult(areas(new ValidationObject(new Rect(100, 90, 100, 40), "object")),
+            row(new ValidationResult(NO_SPEC, areas(new ValidationObject(new Rect(100, 90, 100, 40), "object")),
                             new ValidationError(messages("There are 2 visible objects matching \"menu-item-*\" instead of 3"))),
                     new SpecCount(SpecCount.FetchType.VISIBLE, "menu-item-*", exact(3)), page(new HashMap<String, PageElement>() {{
                         put("object", element(100, 90, 100, 40));
@@ -1522,7 +1523,7 @@ public class ValidationTest {
                         put("menu-item-2", element(100, 90, 100, 40));
                         put("menu-item-3", absentElement(100, 90, 100, 40));
                     }})),
-            row(new ValidationResult(areas(new ValidationObject(new Rect(100, 90, 100, 40), "object")),
+            row(new ValidationResult(NO_SPEC, areas(new ValidationObject(new Rect(100, 90, 100, 40), "object")),
                             new ValidationError(messages("There are 1 absent objects matching \"menu-item-*\" instead of 3"))),
                     new SpecCount(SpecCount.FetchType.ABSENT, "menu-item-*", exact(3)), page(new HashMap<String, PageElement>() {{
                         put("object", element(100, 90, 100, 40));
@@ -1534,7 +1535,7 @@ public class ValidationTest {
     }
 
     private ValidationResult validationResult(List<ValidationObject> areas, List<String> messages) {
-        return new ValidationResult(areas, new ValidationError(messages));
+        return new ValidationResult(NO_SPEC, areas, new ValidationError(messages));
     }
 
     @Test

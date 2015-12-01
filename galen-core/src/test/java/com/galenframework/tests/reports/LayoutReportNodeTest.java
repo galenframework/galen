@@ -20,6 +20,7 @@ import com.galenframework.reports.nodes.TestReportNode;
 import com.galenframework.reports.nodes.LayoutReportNode;
 import com.galenframework.reports.TestStatistic;
 import com.galenframework.reports.nodes.TestReportNode;
+import com.galenframework.specs.SpecAbsent;
 import com.galenframework.validation.ValidationError;
 import com.galenframework.validation.ValidationObject;
 import com.galenframework.validation.ValidationResult;
@@ -59,11 +60,11 @@ public class LayoutReportNodeTest {
         List<ValidationResult> list = new LinkedList<ValidationResult>();
         report.setValidationErrorResults(list);
 
-        list.add(new ValidationResult(EMPTY_OBJECTS, new ValidationError().withOnlyWarn(true)));
-        list.add(new ValidationResult(EMPTY_OBJECTS, new ValidationError()));
-        list.add(new ValidationResult(EMPTY_OBJECTS, new ValidationError()));
-        list.add(new ValidationResult(EMPTY_OBJECTS, new ValidationError().withOnlyWarn(true)));
-        list.add(new ValidationResult(EMPTY_OBJECTS, new ValidationError()));
+        list.add(new ValidationResult(new SpecAbsent(), EMPTY_OBJECTS, new ValidationError().withOnlyWarn(true)));
+        list.add(new ValidationResult(new SpecAbsent(), EMPTY_OBJECTS, new ValidationError()));
+        list.add(new ValidationResult(new SpecAbsent(), EMPTY_OBJECTS, new ValidationError()));
+        list.add(new ValidationResult(new SpecAbsent(), EMPTY_OBJECTS, new ValidationError().withOnlyWarn(true)));
+        list.add(new ValidationResult(new SpecAbsent(), EMPTY_OBJECTS, new ValidationError()));
 
 
 

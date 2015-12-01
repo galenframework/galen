@@ -77,7 +77,7 @@ public class SpecValidationContains extends SpecValidation<SpecContains> {
             throw new ValidationErrorException(objects, errorMessages).withValidationObject(new ValidationObject(objectArea, objectName));
         }
 
-        return new ValidationResult(objects);
+        return new ValidationResult(spec, objects);
     }
 
     

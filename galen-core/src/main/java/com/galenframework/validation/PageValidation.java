@@ -71,7 +71,7 @@ public class PageValidation {
             return specValidation.check(this, objectName, spec);
         }
         catch (ValidationErrorException ex) {
-            return ex.asValidationResult();
+            return ex.asValidationResult(spec);
         }
     }
 

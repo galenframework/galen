@@ -19,7 +19,6 @@ import java.util.LinkedList;
 import java.util.List;
 
 import com.galenframework.specs.Spec;
-import com.galenframework.specs.Spec;
 
 public class ObjectSpecs {
 

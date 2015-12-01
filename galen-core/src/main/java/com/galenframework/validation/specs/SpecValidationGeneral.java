@@ -65,7 +65,7 @@ public abstract class SpecValidationGeneral<T extends SpecComplex> extends SpecV
                 .withValidationObjects(validationObjects);
         }
 
-        return new ValidationResult(validationObjects);
+        return new ValidationResult(spec, validationObjects);
     }
 
     private String createMessage(List<String> messages, String objectName) {

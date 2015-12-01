@@ -36,7 +36,7 @@ public class SpecValidationVisible extends SpecValidation<SpecVisible> {
             throw new ValidationErrorException((format(OBJECT_S_IS_NOT_VISIBLE_ON_PAGE, objectName)));
         }
 
-        return new ValidationResult(asList(new ValidationObject(mainObject.getArea(), objectName)));
+        return new ValidationResult(spec, asList(new ValidationObject(mainObject.getArea(), objectName)));
     }
 
 }

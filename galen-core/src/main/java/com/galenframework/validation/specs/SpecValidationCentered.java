@@ -59,7 +59,7 @@ public class SpecValidationCentered extends SpecValidation<SpecCentered> {
             throw exception;
         }
 
-        return new ValidationResult(objects);
+        return new ValidationResult(spec, objects);
     }
 
     private void checkCentered(int offsetLeft, int offsetRight, int offsetTop, int offsetBottom, String objectName, SpecCentered spec, String location) throws ValidationErrorException {

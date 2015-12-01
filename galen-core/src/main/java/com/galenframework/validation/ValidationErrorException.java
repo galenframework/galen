@@ -15,6 +15,8 @@
 ******************************************************************************/
 package com.galenframework.validation;
 
+import com.galenframework.specs.Spec;
+
 import java.util.LinkedList;
 import java.util.List;
 
@@ -96,8 +98,9 @@ public class ValidationErrorException extends Exception {
         return this;
     }
 
-    public ValidationResult asValidationResult() {
+    public ValidationResult asValidationResult(Spec spec) {
         ValidationResult validationResult = new ValidationResult(
+                spec,
                 this.getValidationObjects(),
                 new ValidationError(this.getErrorMessages(), this.getImageComparison()));
 

@@ -15,7 +15,7 @@
 ******************************************************************************/
 package com.galenframework.junit;
 
-import com.galenframework.GalenJavaTestBase;
+import com.galenframework.support.GalenJavaTestBase;
 import com.galenframework.support.GalenReportsContainer;
 import org.junit.After;
 import org.junit.Before;
