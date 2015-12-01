@@ -17,7 +17,10 @@ package com.galenframework;
 
 import com.galenframework.api.Galen;
 import com.galenframework.reports.TestReport;
+import com.galenframework.reports.model.LayoutObject;
 import com.galenframework.reports.model.LayoutReport;
+import com.galenframework.reports.model.LayoutSection;
+import com.galenframework.reports.model.LayoutSpec;
 import com.galenframework.specs.reader.page.SectionFilter;
 import com.galenframework.utils.GalenUtils;
 import org.openqa.selenium.Dimension;
@@ -120,7 +123,29 @@ public abstract class GalenJavaTestBase {
         getReport().layout(layoutReport, title);
 
         if (layoutReport.errors() > 0) {
-            throw new RuntimeException("Incorrect layout: " + title);
+            final StringBuffer errorDetails = new StringBuffer();
+            for (LayoutSection layoutSection : layoutReport.getSections()) {
+                final StringBuffer layoutDetails = new StringBuffer();
+                layoutDetails.append("\n").append("Layout Section: ").append(layoutSection.getName())
+                        .append("\n");
+                for (LayoutObject layoutObject : layoutSection.getObjects()) {
+                    boolean hasErrors = false;
+                    final StringBuffer errorElementDetails = new StringBuffer();
+                    errorElementDetails.append("  Element: ").append(layoutObject.getName());
+                    for (LayoutSpec layoutSpec : layoutObject.getSpecs()) {
+                        if (layoutSpec.getErrors() != null && layoutSpec.getErrors().size() > 0) {
+                            errorElementDetails.append(layoutSpec.getErrors().toString());
+                            hasErrors = true;
+                        }
+                    }
+                    if (hasErrors) {
+                        errorDetails.append("Tag Details: ").append(sectionFilter.getIncludedTags()).append("\n");
+                        errorDetails.append(layoutDetails);
+                        errorDetails.append(errorElementDetails).append("\n");
+                    }
+                }
+            }
+            throw new RuntimeException(errorDetails.toString());
         }
     }
 
