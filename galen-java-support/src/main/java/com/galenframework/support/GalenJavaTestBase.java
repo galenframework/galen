@@ -17,11 +17,8 @@ package com.galenframework.support;
 
 import com.galenframework.api.Galen;
 import com.galenframework.reports.TestReport;
-import com.galenframework.reports.model.LayoutObject;
 import com.galenframework.reports.model.LayoutReport;
-import com.galenframework.reports.model.LayoutSection;
-import com.galenframework.reports.model.LayoutSpec;
-import com.galenframework.specs.reader.page.SectionFilter;
+import com.galenframework.speclang2.pagespec.SectionFilter;
 import com.galenframework.utils.GalenUtils;
 import org.openqa.selenium.Dimension;
 import org.openqa.selenium.WebDriver;

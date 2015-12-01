@@ -15,9 +15,6 @@
 ******************************************************************************/
 package com.galenframework.parser;
 
-import com.galenframework.specs.reader.StringCharReader;
-import com.galenframework.specs.reader.StringCharReader;
-
 public interface Expectation<T> {
     public T read(StringCharReader charReader);
     

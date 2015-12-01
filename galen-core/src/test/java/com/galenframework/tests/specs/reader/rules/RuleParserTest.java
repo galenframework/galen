@@ -16,8 +16,8 @@
 package com.galenframework.tests.specs.reader.rules;
 
 import com.galenframework.parser.SyntaxException;
-import com.galenframework.specs.reader.page.rules.Rule;
-import com.galenframework.specs.reader.page.rules.RuleParser;
+import com.galenframework.speclang2.pagespec.rules.Rule;
+import com.galenframework.speclang2.pagespec.rules.RuleParser;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 

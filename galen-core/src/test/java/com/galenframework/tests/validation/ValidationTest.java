@@ -42,7 +42,7 @@ import com.galenframework.page.PageElement;
 import com.galenframework.page.Rect;
 import com.galenframework.specs.colors.ColorRange;
 import com.galenframework.specs.page.Locator;
-import com.galenframework.specs.reader.page.PageSpec;
+import com.galenframework.specs.page.PageSpec;
 import com.galenframework.validation.ValidationObject;
 import com.galenframework.validation.PageValidation;
 import com.galenframework.validation.ValidationError;

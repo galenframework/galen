@@ -23,13 +23,7 @@ import com.galenframework.specs.Location;
 import com.galenframework.specs.Side;
 import com.galenframework.specs.colors.ColorRange;
 import com.galenframework.specs.page.CorrectionsRect;
-import com.galenframework.specs.reader.StringCharReader;
-import com.galenframework.specs.Location;
 import com.galenframework.specs.Range;
-import com.galenframework.specs.Side;
-import com.galenframework.specs.colors.ColorRange;
-import com.galenframework.specs.page.CorrectionsRect;
-import com.galenframework.specs.reader.StringCharReader;
 import org.apache.commons.lang3.tuple.Pair;
 
 public class Expectations {

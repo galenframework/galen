@@ -31,7 +31,7 @@ import com.galenframework.specs.RangeValue;
 import com.galenframework.specs.Side;
 import com.galenframework.config.GalenConfig;
 import com.galenframework.specs.Range;
-import com.galenframework.specs.reader.StringCharReader;
+import com.galenframework.parser.StringCharReader;
 
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.commons.lang3.tuple.Pair;

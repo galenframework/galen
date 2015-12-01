@@ -15,14 +15,11 @@
 ******************************************************************************/
 package com.galenframework.parser;
 
-import com.galenframework.specs.reader.StringCharReader;
 import com.galenframework.suite.reader.Line;
-import com.galenframework.specs.reader.StringCharReader;
 
 import static java.lang.String.format;
 import static com.galenframework.parser.Expectations.isDelimeter;
 import static com.galenframework.parser.Expectations.isNumeric;
-import static com.galenframework.suite.reader.Line.UNKNOWN_LINE;
 
 public class ExpectNumber implements Expectation<Double> {
 

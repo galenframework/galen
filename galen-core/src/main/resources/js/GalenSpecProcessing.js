@@ -2,7 +2,7 @@
 /*jslint nomen: true*/
 /*global importClass, com, PageRule, StructNode, _pageSpecHandler*/
 
-importClass(com.galenframework.speclang2.reader.pagespec.PageRule);
+importClass(com.galenframework.speclang2.pagespec.PageRule);
 importClass(com.galenframework.parser.StructNode);
 
 function _readDataFromProperties(properties) {

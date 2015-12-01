@@ -18,7 +18,7 @@ package com.galenframework.tests.api;
 import com.galenframework.api.GalenPageDump;
 import com.galenframework.page.Rect;
 import com.galenframework.specs.Spec;
-import com.galenframework.specs.reader.page.SectionFilter;
+import com.galenframework.speclang2.pagespec.SectionFilter;
 import com.google.common.io.Files;
 import com.google.gson.JsonParser;
 

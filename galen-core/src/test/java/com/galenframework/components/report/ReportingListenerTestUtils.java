@@ -32,7 +32,7 @@ import com.galenframework.runner.SuiteListener;
 import com.galenframework.runner.TestListener;
 import com.galenframework.specs.*;
 import com.galenframework.specs.page.PageSection;
-import com.galenframework.specs.reader.Place;
+import com.galenframework.specs.Place;
 import com.galenframework.suite.actions.GalenPageActionCheck;
 import com.galenframework.tests.GalenBasicTest;
 import com.galenframework.validation.*;

@@ -16,20 +16,16 @@
 package com.galenframework.api;
 
 import com.galenframework.browser.Browser;
-import com.galenframework.page.Rect;
-import com.galenframework.speclang2.reader.pagespec.PageSpecReader;
+import com.galenframework.speclang2.pagespec.PageSpecReader;
 import com.galenframework.specs.page.Locator;
 import com.galenframework.validation.*;
 import com.galenframework.browser.SeleniumBrowser;
 import com.galenframework.page.Page;
-import com.galenframework.page.PageElement;
 import com.galenframework.reports.LayoutReportListener;
 import com.galenframework.reports.model.LayoutReport;
-import com.galenframework.specs.reader.page.PageSpec;
-import com.galenframework.specs.reader.page.SectionFilter;
+import com.galenframework.specs.page.PageSpec;
+import com.galenframework.speclang2.pagespec.SectionFilter;
 
-import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.IOUtils;
 import org.openqa.selenium.WebDriver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

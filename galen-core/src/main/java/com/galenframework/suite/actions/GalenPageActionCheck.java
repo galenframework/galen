@@ -17,11 +17,10 @@ package com.galenframework.suite.actions;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.galenframework.specs.reader.page.SectionFilter;
+import com.galenframework.speclang2.pagespec.SectionFilter;
 import com.galenframework.validation.ValidationListener;
 import com.galenframework.api.Galen;
 import com.galenframework.browser.Browser;
@@ -31,7 +30,6 @@ import com.galenframework.reports.nodes.TestReportNode;
 import com.galenframework.reports.model.LayoutReport;
 import com.galenframework.suite.GalenPageAction;
 import com.galenframework.suite.GalenPageTest;
-import com.galenframework.validation.ValidationListener;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;

@@ -17,7 +17,7 @@ package com.galenframework.specs;
 
 import com.galenframework.page.Rect;
 import com.galenframework.parser.SyntaxException;
-import com.galenframework.specs.reader.StringCharReader;
+import com.galenframework.parser.StringCharReader;
 import com.galenframework.rainbow4j.filters.ImageFilter;
 
 import java.util.LinkedList;

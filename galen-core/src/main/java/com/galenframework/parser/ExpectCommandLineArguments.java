@@ -18,8 +18,6 @@ package com.galenframework.parser;
 import java.util.LinkedList;
 import java.util.List;
 
-import com.galenframework.specs.reader.StringCharReader;
-
 public class ExpectCommandLineArguments implements Expectation<String[]> {
 
     @Override

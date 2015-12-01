@@ -1,7 +1,7 @@
 package com.galenframework.support;
 
 import com.galenframework.reports.model.LayoutReport;
-import com.galenframework.specs.reader.page.SectionFilter;
+import com.galenframework.speclang2.pagespec.SectionFilter;
 import com.galenframework.validation.ValidationResult;
 
 import java.util.List;

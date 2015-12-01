@@ -22,10 +22,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.galenframework.specs.colors.ColorRange;
-import com.galenframework.specs.reader.StringCharReader;
 import com.galenframework.specs.Range;
-import com.galenframework.specs.colors.ColorRange;
-import com.galenframework.specs.reader.StringCharReader;
 
 public class ExpectColorRanges implements Expectation<List<ColorRange>> {
 

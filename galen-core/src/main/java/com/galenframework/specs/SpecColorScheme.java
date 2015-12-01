@@ -18,7 +18,6 @@ package com.galenframework.specs;
 import java.util.List;
 
 import com.galenframework.specs.colors.ColorRange;
-import com.galenframework.specs.colors.ColorRange;
 
 public class SpecColorScheme extends Spec {
 

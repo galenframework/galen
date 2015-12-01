@@ -15,8 +15,6 @@
 ******************************************************************************/
 package com.galenframework.parser;
 
-import com.galenframework.specs.reader.StringCharReader;
-
 public class CommandLineParser {
 
     public static String[] parseCommandLine(String text) {

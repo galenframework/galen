@@ -18,8 +18,6 @@ package com.galenframework.specs;
 import java.util.Map;
 import java.util.Properties;
 
-import com.galenframework.specs.reader.Place;
-
 public abstract class Spec {
     private String originalText;
     private Properties properties;
