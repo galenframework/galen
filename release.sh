@@ -7,7 +7,7 @@ die() {
     exit 1
 }
 
-verify_version_data() {
+verify_changelog_for_version() {
     match=`echo $1 | grep -Ex '##.*\[([0-9]{1,}\.){2}[0-9]{1,}\]\[[0-9]{4}(\-[0-9]{2}){2}\]'`
     if [[ ! -n "$match" ]]; then
         die "Incorrect header in changelog: $1"
@@ -15,7 +15,7 @@ verify_version_data() {
 }
 
 while read -r line ; do
-    verify_version_data "$line"
+    verify_changelog_for_version "$line"
 done < <(grep "\\#.*\\[" CHANGELOG.md)
 
 
@@ -30,5 +30,7 @@ version=$(git describe --abbrev=0 --tags)
 git checkout ${version}
 
 ./makeDist.sh
+
+mvn javadoc:aggregate
 
 git checkout master
