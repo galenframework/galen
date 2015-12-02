@@ -19,7 +19,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import com.galenframework.reports.nodes.TestReportNode;
-import com.galenframework.specs.reader.Place;
+import com.galenframework.specs.Place;
 
 public class LayoutSpec {
 

@@ -41,7 +41,7 @@ public class SpecValidationCss extends SpecValidationText<SpecCss> {
 
         checkValue(spec, objectName, realText, "css property \"" + spec.getCssPropertyName() + "\"", area);
 
-        return new ValidationResult(asList(new ValidationObject(area, objectName)));
+        return new ValidationResult(spec, asList(new ValidationObject(area, objectName)));
     }
 
 }

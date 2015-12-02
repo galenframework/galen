@@ -17,9 +17,6 @@ package com.galenframework.parser;
 
 import java.util.ArrayList;
 
-import com.galenframework.specs.reader.StringCharReader;
-import com.galenframework.specs.reader.StringCharReader;
-
 
 public class ExpectWord implements Expectation<String> {
 

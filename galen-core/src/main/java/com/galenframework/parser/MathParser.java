@@ -17,8 +17,6 @@ package com.galenframework.parser;
 
 import com.galenframework.javascript.GalenJsExecutor;
 
-import com.galenframework.specs.reader.StringCharReader;
-
 public class MathParser {
 	
 	private char mathSymbol = '@';

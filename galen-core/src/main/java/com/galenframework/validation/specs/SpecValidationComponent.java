@@ -22,14 +22,14 @@ import java.util.List;
 import java.util.Map;
 
 import com.galenframework.browser.Browser;
-import com.galenframework.speclang2.reader.pagespec.PageSpecReader;
+import com.galenframework.speclang2.pagespec.PageSpecReader;
 import com.galenframework.specs.SpecComponent;
 import com.galenframework.validation.*;
 import com.galenframework.page.Page;
 import com.galenframework.page.PageElement;
 import com.galenframework.specs.page.Locator;
-import com.galenframework.specs.reader.page.PageSpec;
-import com.galenframework.specs.reader.page.SectionFilter;
+import com.galenframework.specs.page.PageSpec;
+import com.galenframework.speclang2.pagespec.SectionFilter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -64,7 +64,7 @@ public class SpecValidationComponent extends SpecValidation<SpecComponent> {
                     .withChildValidationResults(errorResults);
         }
 
-        return new ValidationResult(objects);
+        return new ValidationResult(spec, objects);
     }
 
     private void tellListenerAfterSubLayout(PageValidation pageValidation, String objectName) {

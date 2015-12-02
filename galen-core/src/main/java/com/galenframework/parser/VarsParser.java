@@ -15,9 +15,7 @@
 ******************************************************************************/
 package com.galenframework.parser;
 
-import com.galenframework.specs.reader.StringCharReader;
 import com.galenframework.suite.reader.Context;
-import org.mozilla.javascript.NativeArray;
 import org.mozilla.javascript.NativeJavaObject;
 
 import java.util.Properties;

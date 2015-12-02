@@ -40,7 +40,7 @@ import junit.framework.Assert;
 import com.galenframework.config.GalenConfig;
 import com.galenframework.page.Rect;
 import com.galenframework.parser.SyntaxException;
-import com.galenframework.speclang2.reader.specs.SpecReader;
+import com.galenframework.speclang2.specs.SpecReader;
 
 import com.galenframework.rainbow4j.filters.BlurFilter;
 import com.galenframework.rainbow4j.filters.DenoiseFilter;

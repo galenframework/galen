@@ -22,8 +22,8 @@ import java.lang.reflect.Method;
 import com.galenframework.browser.Browser;
 import com.galenframework.parser.SyntaxException;
 import com.galenframework.specs.page.Locator;
-import com.galenframework.specs.reader.page.PageSpec;
-import com.galenframework.specs.reader.page.SectionFilter;
+import com.galenframework.specs.page.PageSpec;
+import com.galenframework.speclang2.pagespec.SectionFilter;
 import com.galenframework.suite.reader.Line;
 import com.galenframework.page.Page;
 import com.galenframework.page.PageElement;
@@ -71,7 +71,7 @@ public class PageValidation {
             return specValidation.check(this, objectName, spec);
         }
         catch (ValidationErrorException ex) {
-            return ex.asValidationResult();
+            return ex.asValidationResult(spec);
         }
     }
 

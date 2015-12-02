@@ -17,11 +17,9 @@ package com.galenframework.parser;
 
 import static com.galenframework.parser.Expectations.isDelimeter;
 import static com.galenframework.parser.Expectations.isNumeric;
-import static com.galenframework.parser.Expectations.range;
 
 import com.galenframework.config.GalenConfig;
 import com.galenframework.specs.RangeValue;
-import com.galenframework.specs.reader.StringCharReader;
 import com.galenframework.suite.reader.Line;
 import com.galenframework.specs.Range;
 

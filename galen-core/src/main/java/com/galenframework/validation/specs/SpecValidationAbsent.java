@@ -32,7 +32,7 @@ public class SpecValidationAbsent extends SpecValidation<SpecAbsent> {
                 .withMessage(format("\"%s\" is not absent on page", objectName));
         }
 
-        return new ValidationResult();
+        return new ValidationResult(spec);
     }
 
 }

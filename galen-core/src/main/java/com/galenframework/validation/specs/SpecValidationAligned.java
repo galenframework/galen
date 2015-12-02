@@ -43,7 +43,7 @@ public abstract class SpecValidationAligned<T extends SpecAligned> extends SpecV
                     asList(errorMisalignedObjects(objectName, spec.getObject(), spec, offset)));
         }
 
-        return new ValidationResult(objects);
+        return new ValidationResult(spec, objects);
     }
 
     private String errorMisalignedObjects(String objectName, String misalignedObjectName, T spec, int offset) {

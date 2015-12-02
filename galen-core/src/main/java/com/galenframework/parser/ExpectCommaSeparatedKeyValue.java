@@ -15,7 +15,6 @@
 ******************************************************************************/
 package com.galenframework.parser;
 
-import com.galenframework.specs.reader.StringCharReader;
 import org.apache.commons.lang3.tuple.MutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 

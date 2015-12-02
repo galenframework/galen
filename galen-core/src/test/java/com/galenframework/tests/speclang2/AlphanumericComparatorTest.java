@@ -15,7 +15,7 @@
 ******************************************************************************/
 package com.galenframework.tests.speclang2;
 
-import com.galenframework.speclang2.AlphanumericComparator;
+import com.galenframework.parser.AlphanumericComparator;
 import org.testng.annotations.Test;
 
 import java.util.Collections;

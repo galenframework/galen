@@ -25,7 +25,7 @@ import com.galenframework.page.PageElement;
 import com.galenframework.specs.Range;
 import com.galenframework.specs.RangeValue;
 import com.galenframework.specs.Spec;
-import com.galenframework.specs.reader.page.PageSpec;
+import com.galenframework.specs.page.PageSpec;
 
 public abstract class SpecValidation<T extends Spec> {
     

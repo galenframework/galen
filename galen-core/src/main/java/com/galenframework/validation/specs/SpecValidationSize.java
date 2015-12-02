@@ -47,7 +47,7 @@ public abstract class SpecValidationSize<T extends SpecRange> extends SpecValida
                             getReadableRangeAndValue(spec.getRange(), realValue, convertedValue, pageValidation)));
         }
 
-        return new ValidationResult(validationObjects);
+        return new ValidationResult(spec, validationObjects);
     }
 
     protected abstract String getUnitName();

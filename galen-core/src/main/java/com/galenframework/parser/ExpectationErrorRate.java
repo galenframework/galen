@@ -15,9 +15,6 @@
 ******************************************************************************/
 package com.galenframework.parser;
 
-import com.galenframework.specs.reader.StringCharReader;
-import com.galenframework.specs.reader.StringCharReader;
-
 public class ExpectationErrorRate implements Expectation<Integer> {
 
     @Override

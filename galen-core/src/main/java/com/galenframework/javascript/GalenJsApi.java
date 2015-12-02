@@ -17,13 +17,12 @@ package com.galenframework.javascript;
 
 import com.galenframework.api.UnregisteredTestSession;
 import com.galenframework.page.Page;
-import com.galenframework.page.selenium.SeleniumPage;
 import com.galenframework.reports.nodes.LayoutReportNode;
 import com.galenframework.reports.nodes.TestReportNode;
-import com.galenframework.speclang2.reader.pagespec.PageSpecReader;
+import com.galenframework.speclang2.pagespec.PageSpecReader;
 import com.galenframework.specs.page.Locator;
-import com.galenframework.specs.reader.page.PageSpec;
-import com.galenframework.specs.reader.page.SectionFilter;
+import com.galenframework.specs.page.PageSpec;
+import com.galenframework.speclang2.pagespec.SectionFilter;
 import com.galenframework.tests.TestSession;
 import com.galenframework.utils.GalenUtils;
 import com.galenframework.api.Galen;

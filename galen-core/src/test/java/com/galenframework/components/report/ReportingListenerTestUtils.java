@@ -32,7 +32,7 @@ import com.galenframework.runner.SuiteListener;
 import com.galenframework.runner.TestListener;
 import com.galenframework.specs.*;
 import com.galenframework.specs.page.PageSection;
-import com.galenframework.specs.reader.Place;
+import com.galenframework.specs.Place;
 import com.galenframework.suite.actions.GalenPageActionCheck;
 import com.galenframework.tests.GalenBasicTest;
 import com.galenframework.validation.*;
@@ -41,6 +41,7 @@ import com.galenframework.rainbow4j.Rainbow4J;
 
 public class ReportingListenerTestUtils {
 
+    private static final com.galenframework.specs.Spec NO_SPEC = null;
     private static String comparisonMapImagePath = ReportingListenerTestUtils.class.getResource("/imgs/page-sample-correct.png").getFile();
 
     public static void performSampleReporting(String suiteName, TestListener testListener, ValidationListener validationListener, SuiteListener suiteListener) throws IOException {
@@ -75,7 +76,7 @@ public class ReportingListenerTestUtils {
                             new SpecInside("other-object", asList(new Location(exact(10), asList(Side.LEFT))))
                                     .withOriginalText("inside other-object 10px left")
                                     .withPlace(new Place("specs.spec", 12)),
-                            new ValidationResult(
+                            new ValidationResult(NO_SPEC,
                                     asList(
                                             new ValidationObject(new Rect(10, 10, 100, 50), "objectA1"),
                                             new ValidationObject(new Rect(1, 1, 90, 100), "other-object")),
@@ -88,13 +89,13 @@ public class ReportingListenerTestUtils {
                                 .withOriginalText("width 10 to 20px")
                                 .withPlace(new Place("specs.spec", 12))
                                 .withAlias("Some alias"),
-                        new ValidationResult(asList(new ValidationObject(new Rect(10, 10, 100, 50), "objectA1"))));
+                        new ValidationResult(NO_SPEC, asList(new ValidationObject(new Rect(10, 10, 100, 50), "objectA1"))));
 
                 onSpecSuccess(validationListener, pageValidation, "objectA1",
                         new SpecWidth(between(10, 20))
                                 .withOriginalText("width 10 to 20px")
                                 .withPlace(new Place("specs.spec", 12)),
-                        new ValidationResult(asList(new ValidationObject(new Rect(10, 10, 100, 50), "objectA1"))));
+                        new ValidationResult(NO_SPEC, asList(new ValidationObject(new Rect(10, 10, 100, 50), "objectA1"))));
             }
             validationListener.onAfterObject(pageValidation, "objectA1");
             
@@ -103,13 +104,13 @@ public class ReportingListenerTestUtils {
                         new SpecWidth(between(10, 20))
                                 .withOriginalText("width 10 to 20px")
                                 .withPlace(new Place("specs.spec", 12)),
-                        new ValidationResult(asList(new ValidationObject(new Rect(200, 300, 50, 30), "objectA2"))));
+                        new ValidationResult(NO_SPEC, asList(new ValidationObject(new Rect(200, 300, 50, 30), "objectA2"))));
 
                 onSpecError(validationListener, pageValidation,
                         "objectA2",
                         new SpecWidth(exact(10)).withOriginalText("width 10px")
                                 .withPlace(new Place("specs.spec", 12)),
-                        new ValidationResult(asList(new ValidationObject(new Rect(200, 300, 50, 30), "objectA2")),
+                        new ValidationResult(NO_SPEC, asList(new ValidationObject(new Rect(200, 300, 50, 30), "objectA2")),
                                 new ValidationError(asList("objectA2 width is 20px instead of 10px"))));
 
 
@@ -118,7 +119,7 @@ public class ReportingListenerTestUtils {
                         new SpecText(SpecText.Type.IS, "Login").withOriginalText("text is \"Login\"")
                                 .withPlace(new Place("specs.spec", 12))
                                 .withOnlyWarn(true),
-                        new ValidationResult(asList(new ValidationObject(new Rect(200, 300, 50, 30), "objectA2")),
+                        new ValidationResult(NO_SPEC, asList(new ValidationObject(new Rect(200, 300, 50, 30), "objectA2")),
                                 new ValidationError(asList("objectA2 text is \"Logout\" instead of \"Login\""))));
             }
             validationListener.onAfterObject(pageValidation, "objectA2");
@@ -133,7 +134,7 @@ public class ReportingListenerTestUtils {
                         new SpecHeight(between(10, 20))
                                 .withOriginalText("height 10 to 20px")
                                 .withPlace(new Place("specs.spec", 12)),
-                        new ValidationResult(asList(new ValidationObject(new Rect(10, 10, 100, 50), "objectA1"))));
+                        new ValidationResult(NO_SPEC, asList(new ValidationObject(new Rect(10, 10, 100, 50), "objectA1"))));
 
                 /* Calling before spec event as after it will be a sub-layout */
                 validationListener.onBeforeSpec(pageValidation, "objectA1",
@@ -151,14 +152,14 @@ public class ReportingListenerTestUtils {
                                 new SpecHeight(between(10, 20))
                                         .withOriginalText("height 10 to 20px")
                                         .withPlace(new Place("specs.spec", 12)),
-                                new ValidationResult(asList(new ValidationObject(new Rect(200, 300, 50, 30), "sub-objectA1"))));
+                                new ValidationResult(NO_SPEC, asList(new ValidationObject(new Rect(200, 300, 50, 30), "sub-objectA1"))));
 
 
                         onSpecError(validationListener, pageValidation,
                                 "sub-objectA1",
                                 new SpecWidth(exact(10)).withOriginalText("width 10px")
                                         .withPlace(new Place("specs.spec", 12)),
-                                new ValidationResult(
+                                new ValidationResult(NO_SPEC,
                                         asList(new ValidationObject(new Rect(200, 300, 50, 30), "sub-objectA1")),
                                         new ValidationError(asList("sub-objectA1 width is 20px instead of 10px"))));
                     }
@@ -172,7 +173,7 @@ public class ReportingListenerTestUtils {
                         new SpecHeight(between(10, 20))
                                 .withOriginalText("component some-component.spec")
                                 .withPlace(new Place("specs.spec", 12)),
-                        new ValidationResult(asList(new ValidationObject(new Rect(10, 10, 100, 50), "objectA1"))));
+                        new ValidationResult(NO_SPEC, asList(new ValidationObject(new Rect(10, 10, 100, 50), "objectA1"))));
             }
             validationListener.onAfterObject(pageValidation, "objectA1");
             
@@ -193,13 +194,13 @@ public class ReportingListenerTestUtils {
                         new SpecWidth(between(10, 20))
                                 .withOriginalText("width 10 to 20px")
                                 .withPlace(new Place("specs.spec", 12)),
-                        new ValidationResult(asList(new ValidationObject(new Rect(10, 10, 100, 50), "objectB1"))));
+                        new ValidationResult(NO_SPEC, asList(new ValidationObject(new Rect(10, 10, 100, 50), "objectB1"))));
                 
                 onSpecError(validationListener, pageValidation,
                         "objectB1",
                         new SpecInside("other-object", asList(new Location(exact(10), asList(Side.LEFT)))).withOriginalText("inside other-object 10px left")
                                 .withPlace(new Place("specs.spec", 12)),
-                        new ValidationResult(
+                        new ValidationResult(NO_SPEC,
                                 asList(new ValidationObject(new Rect(10, 10, 100, 50), "objectB1")),
                                 new ValidationError(asList("objectB1 is not inside other-object", "second error message with <xml> &tags"))
                                     .withImageComparison(
@@ -215,7 +216,7 @@ public class ReportingListenerTestUtils {
                         new SpecHeight(exact(100))
                                 .withOriginalText("height 100px")
                                 .withPlace(new Place("specs.spec", 12)),
-                        new ValidationResult(asList(new ValidationObject(new Rect(200, 300, 50, 30), "objectB2"))));
+                        new ValidationResult(NO_SPEC, asList(new ValidationObject(new Rect(200, 300, 50, 30), "objectB2"))));
             }
             validationListener.onAfterObject(pageValidation, "objectB2");
 
@@ -224,7 +225,7 @@ public class ReportingListenerTestUtils {
                     new SpecWidth(exact(100))
                             .withOriginalText("width 100px")
                             .withPlace(new Place("specs.spec", 13)),
-                    new ValidationResult(asList(new ValidationObject(new Rect(200, 300, 50, 30), "objectB2"))));
+                    new ValidationResult(NO_SPEC, asList(new ValidationObject(new Rect(200, 300, 50, 30), "objectB2"))));
         }
             validationListener.onAfterObject(pageValidation, "objectB2");
 

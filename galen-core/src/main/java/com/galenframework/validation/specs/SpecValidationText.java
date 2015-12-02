@@ -43,7 +43,7 @@ public class SpecValidationText<T extends SpecText> extends SpecValidation<T> {
         realText = applyOperationsTo(realText, spec.getOperations());
         checkValue(spec, objectName, realText, "text", area);
 
-        return new ValidationResult(asList(new ValidationObject(area, objectName)));
+        return new ValidationResult(spec, asList(new ValidationObject(area, objectName)));
     }
 
     private String applyOperationsTo(String text, List<String> operations) {

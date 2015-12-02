@@ -16,18 +16,13 @@
 package com.galenframework.parser;
 
 import static com.galenframework.parser.Expectations.range;
-import static com.galenframework.suite.reader.Line.UNKNOWN_LINE;
 
 import java.util.LinkedList;
 import java.util.List;
 
 import com.galenframework.specs.Location;
 import com.galenframework.specs.Side;
-import com.galenframework.specs.reader.StringCharReader;
-import com.galenframework.specs.Location;
 import com.galenframework.specs.Range;
-import com.galenframework.specs.Side;
-import com.galenframework.specs.reader.StringCharReader;
 
 public class ExpectLocations implements Expectation<List<Location>> {
 

@@ -19,10 +19,6 @@ import static com.galenframework.parser.Expectations.isDelimeter;
 import static com.galenframework.suite.reader.Line.UNKNOWN_LINE;
 
 import com.galenframework.specs.page.CorrectionsRect;
-import com.galenframework.specs.reader.StringCharReader;
-import com.galenframework.specs.page.CorrectionsRect;
-import com.galenframework.specs.page.CorrectionsRect.Correction;
-import com.galenframework.specs.reader.StringCharReader;
 
 public class ExpectCorrection implements Expectation<CorrectionsRect> {
 

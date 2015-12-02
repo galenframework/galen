@@ -27,10 +27,10 @@ import com.galenframework.page.PageElement;
 import com.galenframework.page.Rect;
 import com.galenframework.rainbow4j.Rainbow4J;
 
-import com.galenframework.speclang2.reader.pagespec.PageSpecReader;
+import com.galenframework.speclang2.pagespec.PageSpecReader;
 import com.galenframework.specs.page.Locator;
-import com.galenframework.specs.reader.page.PageSpec;
-import com.galenframework.specs.reader.page.SectionFilter;
+import com.galenframework.specs.page.PageSpec;
+import com.galenframework.speclang2.pagespec.SectionFilter;
 import com.galenframework.utils.GalenUtils;
 import com.galenframework.validation.PageValidation;
 import org.apache.commons.io.FileUtils;

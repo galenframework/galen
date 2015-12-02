@@ -82,7 +82,7 @@ public class SpecValidationDirectionPosition extends SpecValidation<SpecDirectio
         		.withValidationObjects(objects);
         }
 
-        return new ValidationResult(objects);
+        return new ValidationResult(spec, objects);
 	}
 
 

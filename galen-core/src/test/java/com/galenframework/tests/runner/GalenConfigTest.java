@@ -27,8 +27,7 @@ import java.util.List;
 import java.util.Properties;
 
 import com.galenframework.actions.GalenAction;
-import com.galenframework.specs.reader.StringCharReader;
-import com.galenframework.GalenMain;
+import com.galenframework.parser.StringCharReader;
 import com.galenframework.components.DummyCompleteListener;
 import com.galenframework.config.GalenConfig;
 import com.galenframework.parser.Expectations;
