@@ -19,6 +19,7 @@ import java.util.*;
 import java.util.regex.Pattern;
 
 import com.galenframework.parser.AlphanumericComparator;
+import com.galenframework.speclang2.specs.SpecReader;
 import com.galenframework.utils.GalenUtils;
 
 
@@ -207,6 +208,41 @@ public class PageSpec {
         sections.addAll(spec.getSections());
         objectGroups.putAll(spec.getObjectGroups());
 	}
+
+    /**
+     * Clears all existing sections
+     */
+    public void clearSections() {
+        sections.clear();
+    }
+
+    /**
+     * Parses the spec from specText and adds it to the page spec inside specified section. If section does not exit, it will create it
+     * @param sectionName
+     * @param objectName
+     * @param specText
+     */
+    public void addSpec(String sectionName, String objectName, String specText) {
+        PageSection pageSection = findSection(sectionName);
+
+        if (pageSection == null) {
+            pageSection = new PageSection(sectionName);
+            sections.add(pageSection);
+        }
+
+        ObjectSpecs objectSpecs = new ObjectSpecs(objectName);
+        objectSpecs.addSpec(new SpecReader().read(specText));
+        pageSection.addObjects(objectSpecs);
+    }
+
+    private PageSection findSection(String sectionName) {
+        for (PageSection section : sections) {
+            if (section.getName().equals(sectionName)) {
+                return section;
+            }
+        }
+        return null;
+    }
 
     public Map<String, List<String>> getObjectGroups() {
         return objectGroups;

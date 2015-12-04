@@ -61,4 +61,11 @@ public class ObjectSpecs {
         }
         specGroups.add(specGroup);
     }
+
+    public void addSpec(Spec spec) {
+        if (specs == null) {
+            specs = new LinkedList<>();
+        }
+        specs.add(spec);
+    }
 }
