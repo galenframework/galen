@@ -132,8 +132,42 @@
         if (!Array.isArray(excludedTags) && excludedTags !== null) {
             excludedTags = [excludedTags];
         }
+        return GalenJsApi.checkLayout(driver, pageSpecFile, includedTags, excludedTags, properties, screenshotFile, jsVariables, jsPageObjects);
+    }
 
-        GalenJsApi.checkLayout(driver, pageSpecFile, includedTags, excludedTags, properties, screenshotFile, jsVariables, jsPageObjects);
+    function checkPageSpecLayout(driver, pageSpec, includedTags, excludedTags) {
+        var settings,
+            screenshotFile = null;
+
+        if (arguments.length === 1) {
+            settings = driver;
+
+            driver = settings.driver;
+            pageSpec = settings.pageSpec;
+            includedTags = settings.tags;
+            excludedTags = settings.excludedTags;
+            screenshotFile = settings.screenshot;
+        }
+
+        if (includedTags === undefined) {
+            includedTags = null;
+        }
+        if (excludedTags === undefined) {
+            excludedTags = null;
+        }
+
+        if (screenshotFile === undefined) {
+            screenshotFile = null;
+        }
+
+
+        if (!Array.isArray(includedTags) && includedTags !== null) {
+            includedTags = [includedTags];
+        }
+        if (!Array.isArray(excludedTags) && excludedTags !== null) {
+            excludedTags = [excludedTags];
+        }
+        return GalenJsApi.checkPageSpecLayout(driver, pageSpec, includedTags, excludedTags, screenshotFile);
     }
 
     function takeScreenshot(driver) {
@@ -156,7 +190,23 @@
     }
 
     function readFile(fileName) {
-        return GalenUtils.readFile(fileName);
+        return GalenJsApi.readFile(fileName);
+    }
+
+    function listDirectory(dirPath) {
+        return GalenJsApi.listDirectory(dirPath);
+    }
+
+    function fileExists(path) {
+        return GalenJsApi.fileExists(path);
+    }
+
+    function isDirectory(path) {
+        return GalenJsApi.isDirectory(path);
+    }
+
+    function makeDirectory(dirPath) {
+        return GalenJsApi.makeDirectory(dirPath);
     }
 
     function resize(driver, size) {
@@ -288,12 +338,17 @@
     exports.createDriver = createDriver;
     exports.createGridDriver = createGridDriver;
     exports.checkLayout = checkLayout;
+    exports.checkPageSpecLayout = checkPageSpecLayout;
     exports.session = session;
     exports.takeScreenshot = takeScreenshot;
     exports.loadProperties = loadProperties;
     exports.cookie = cookie;
     exports.inject = inject;
     exports.readFile = readFile;
+    exports.listDirectory = listDirectory;
+    exports.makeDirectory = makeDirectory;
+    exports.fileExists = fileExists;
+    exports.isDirectory = isDirectory;
     exports.parsePageSpec = parsePageSpec;
     exports.console = galenConsole;
     exports.dumpPage = dumpPage;

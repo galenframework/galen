@@ -3,6 +3,15 @@ All changes to Galen Framework project will be documented in this file
 
 ## [2.2.0][Unreleased]
 
+### Added
+- An error handling when specs are indented below each other
+- checkPageSpecLayout function in JS API
+- File system related JS Api functions:
+    - makeDirectory
+    - listDirectory
+    - fileExists
+    - isDirectory
+
 
 ## [2.1.3][2015-11-11]
 ### Fixed

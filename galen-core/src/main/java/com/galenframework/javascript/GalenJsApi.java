@@ -17,8 +17,6 @@ package com.galenframework.javascript;
 
 import com.galenframework.api.UnregisteredTestSession;
 import com.galenframework.page.Page;
-import com.galenframework.reports.nodes.LayoutReportNode;
-import com.galenframework.reports.nodes.TestReportNode;
 import com.galenframework.speclang2.pagespec.PageSpecReader;
 import com.galenframework.specs.page.Locator;
 import com.galenframework.specs.page.PageSpec;
@@ -29,9 +27,11 @@ import com.galenframework.api.Galen;
 import com.galenframework.browser.SeleniumBrowser;
 import com.galenframework.reports.TestReport;
 import com.galenframework.reports.model.LayoutReport;
+import org.apache.commons.io.FileUtils;
 import org.openqa.selenium.WebDriver;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
@@ -73,7 +73,7 @@ public class GalenJsApi {
      * @param screenshotFilePath
      * @throws IOException
      */
-    public static void checkLayout(WebDriver driver, String fileName, String[]includedTags, String[]excludedTags,
+    public static LayoutReport checkLayout(WebDriver driver, String fileName, String[]includedTags, String[]excludedTags,
                                    Properties properties, String screenshotFilePath, JsVariable[] vars, JsPageObject[] jsPageObjects) throws IOException {
 
         TestSession session = TestSession.current();
@@ -107,15 +107,53 @@ public class GalenJsApi {
                 screenshotFile,
                 session.getListener(), convertObjects(jsPageObjects));
 
-        if (report != null) {
-            String reportTitle = "Check layout: " + fileName + " included tags: " + GalenUtils.toCommaSeparated(includedTagsList);
-            TestReportNode layoutReportNode = new LayoutReportNode(report.getFileStorage(), layoutReport, reportTitle);
-            if (layoutReport.errors() > 0) {
-                layoutReportNode.setStatus(TestReportNode.Status.ERROR);
-            }
-            report.addNode(layoutReportNode);
-        }
+        GalenUtils.attachLayoutReport(layoutReport, report, fileName, includedTagsList);
+        return layoutReport;
     }
+
+    /**
+     * Used in GalenApi.js
+     * @param driver
+     * @param pageSpec
+     * @param includedTags
+     * @param excludedTags
+     * @param screenshotFilePath
+     * @return
+     * @throws IOException
+     */
+    public static LayoutReport checkPageSpecLayout(WebDriver driver, PageSpec pageSpec, String[]includedTags, String[]excludedTags,
+                                           String screenshotFilePath) throws IOException {
+        TestSession session = TestSession.current();
+        if (session == null) {
+            throw new UnregisteredTestSession("Cannot check layout as there was no TestSession created");
+        }
+
+        TestReport report = session.getReport();
+
+        File screenshotFile = null;
+
+        if (screenshotFilePath != null) {
+            screenshotFile = new File(screenshotFilePath);
+            if (!screenshotFile.exists() || !screenshotFile.isFile()) {
+                throw new IOException("Couldn't find screenshot in " + screenshotFilePath);
+            }
+        }
+
+        if (pageSpec == null) {
+            throw new IOException("Page spec is not defined");
+        }
+
+        List<String> includedTagsList = toList(includedTags);
+
+        LayoutReport layoutReport = Galen.checkLayout(new SeleniumBrowser(driver), pageSpec,
+                new SectionFilter(includedTagsList, toList(excludedTags)),
+                screenshotFile,
+                session.getListener());
+
+        GalenUtils.attachLayoutReport(layoutReport, report, "<unknown>", includedTagsList);
+        return layoutReport;
+    }
+
 
     private static Map<String, Locator> convertObjects(JsPageObject[] jsPageObjects) {
         Map<String, Locator> objects = new HashMap<>();
@@ -172,6 +210,34 @@ public class GalenJsApi {
         return reader.read(specPath, page, sectionFilter, properties, jsVariables, convertObjects(jsPageObjects));
     }
 
+
+    public static String readFile(String fileName) throws IOException {
+        return FileUtils.readFileToString(new File(fileName));
+    }
+
+    public static boolean makeDirectory(String dirPath) {
+        return new File(dirPath).mkdirs();
+    }
+
+    public static boolean isDirectory(String dirPath) {
+        return new File(dirPath).isDirectory();
+    }
+
+    public static boolean fileExists(String filePath) {
+        return new File(filePath).exists();
+    }
+
+    public static String[] listDirectory(String dirPath) throws IOException {
+        File file = new File(dirPath);
+
+        if (!file.exists()) {
+            throw new FileNotFoundException(dirPath);
+        } else if (!file.isDirectory()) {
+            throw new IOException("Not a directory: " + dirPath);
+        }
+
+        return file.list();
+    }
 
     public static List<String> toList(String[] array) {
         if (array != null) {

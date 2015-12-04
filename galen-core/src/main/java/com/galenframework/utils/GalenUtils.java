@@ -35,6 +35,10 @@ import javax.imageio.ImageIO;
 
 import com.galenframework.browser.SeleniumGridBrowserFactory;
 import com.galenframework.page.selenium.ByChain;
+import com.galenframework.reports.TestReport;
+import com.galenframework.reports.model.LayoutReport;
+import com.galenframework.reports.nodes.LayoutReportNode;
+import com.galenframework.reports.nodes.TestReportNode;
 import com.galenframework.specs.page.Locator;
 import com.galenframework.tests.GalenProperties;
 import com.galenframework.tests.TestSession;
@@ -338,10 +342,7 @@ public class GalenUtils {
         return ((JavascriptExecutor)driver).executeScript(script);
     }
     
-    public static String readFile(String fileName) throws IOException {
-        return FileUtils.readFileToString(new File(fileName));
-    }
-    
+
     public static Object[] listToArray(List<?> list) {
         if (list == null) {
             return new Object[]{};
@@ -513,5 +514,16 @@ public class GalenUtils {
 
     public static List<WebElement> findWebElements(WebDriver driver, Locator locator) {
         return ByChain.fromLocator(locator).findElements(driver);
+    }
+
+    public static void attachLayoutReport(LayoutReport layoutReport, TestReport report, String fileName, List<String> includedTagsList) {
+        if (report != null) {
+            String reportTitle = "Check layout: " + fileName + " included tags: " + GalenUtils.toCommaSeparated(includedTagsList);
+            TestReportNode layoutReportNode = new LayoutReportNode(report.getFileStorage(), layoutReport, reportTitle);
+            if (layoutReport.errors() > 0) {
+                layoutReportNode.setStatus(TestReportNode.Status.ERROR);
+            }
+            report.addNode(layoutReportNode);
+        }
     }
 }

@@ -21,6 +21,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.galenframework.speclang2.pagespec.SectionFilter;
+import com.galenframework.utils.GalenUtils;
 import com.galenframework.validation.ValidationListener;
 import com.galenframework.api.Galen;
 import com.galenframework.browser.Browser;
@@ -50,15 +51,7 @@ public class GalenPageActionCheck extends GalenPageAction {
     public void execute(TestReport report, Browser browser, GalenPageTest pageTest, ValidationListener validationListener) throws IOException {
         SectionFilter sectionFilter = new SectionFilter(getIncludedTags(), getExcludedTags());
         LayoutReport layoutReport = Galen.checkLayout(browser, specPath, sectionFilter, getCurrentProperties(), jsVariables, NO_SCREENSHOT, validationListener);
-
-        if (report != null) {
-            String reportTitle = "Check layout: " + specPath + " included tags: " + toCommaSeparated(includedTags);
-            TestReportNode layoutReportNode = new LayoutReportNode(report.getFileStorage(), layoutReport, reportTitle);
-            if (layoutReport.errors() > 0) {
-                layoutReportNode.setStatus(TestReportNode.Status.ERROR);
-            }
-            report.addNode(layoutReportNode);
-        }
+        GalenUtils.attachLayoutReport(layoutReport, report, specPath, includedTags);
     }
 
 
