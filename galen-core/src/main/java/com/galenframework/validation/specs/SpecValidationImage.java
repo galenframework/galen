@@ -18,6 +18,7 @@ package com.galenframework.validation.specs;
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 import java.io.InputStream;
+import java.text.DecimalFormat;
 import java.util.Iterator;
 import java.util.List;
 
@@ -214,7 +215,12 @@ public class SpecValidationImage extends SpecValidation<SpecImage> {
     }
 
     private String createErrorMessageForPercentage(String msgPrefix, Double maxPercentage, double percentage) throws ValidationErrorException {
-        return String.format("%sThere are %s%% mismatching pixels but max allowed is %s%%", msgPrefix, percentage, maxPercentage);
+        return String.format("%sThere are %s%% mismatching pixels but max allowed is %s%%", msgPrefix, formatDouble(percentage), formatDouble(maxPercentage));
+    }
+
+    private static final DecimalFormat _doubleFormat = new DecimalFormat("#.##");
+    private String formatDouble(Double value) {
+        return _doubleFormat.format(value);
     }
 
     private Rectangle toRectangle(Rect area) {
