@@ -904,6 +904,12 @@ public class PageSpecReaderTest {
         assertThat(object.getSpecs().get(0).getOriginalText(), is("width 100px"));
     }
 
+    @Test(expectedExceptions = FileSyntaxException.class,
+            expectedExceptionsMessageRegExp = "\\QSpecs cannot have inner blocks\\E\\s+\\Qin speclang2/incorrect/nested-spec.gspec:7\\E")
+    public void shouldGiveError_whenSpecIsNested_belowAnotherSpec() throws IOException {
+        readPageSpec("speclang2/incorrect/nested-spec.gspec");
+    }
+
     private PageSpec readPageSpec(String resource) throws IOException {
         return readPageSpec(resource, EMPTY_PAGE, EMPTY_TAGS, EMPTY_TAGS);
     }

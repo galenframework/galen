@@ -188,36 +188,41 @@ public class PageSectionProcessor {
     }
 
     private void processSpec(ObjectSpecs objectSpecs, StructNode specNode) {
+        if (specNode.getChildNodes() != null && !specNode.getChildNodes().isEmpty()) {
+            throw new SyntaxException(specNode, "Specs cannot have inner blocks");
+        }
+        String specText = specNode.getName();
+        boolean onlyWarn = false;
+        if (specText.startsWith("%")) {
+            specText = specText.substring(1);
+            onlyWarn = true;
+        }
+
+        String alias = null;
+        StringCharReader reader = new StringCharReader(specText);
+        if (reader.firstNonWhiteSpaceSymbol() == '"') {
+            alias = Expectations.doubleQuotedText().read(reader);
+            specText = reader.getTheRest();
+        }
+
+
+
+        Spec spec;
         try {
-            String specText = specNode.getName();
-            boolean onlyWarn = false;
-            if (specText.startsWith("%")) {
-                specText = specText.substring(1);
-                onlyWarn = true;
-            }
-
-            String alias = null;
-            StringCharReader reader = new StringCharReader(specText);
-            if (reader.firstNonWhiteSpaceSymbol() == '"') {
-                alias = Expectations.doubleQuotedText().read(reader);
-                specText = reader.getTheRest();
-            }
-
-
-            Spec spec = pageSpecHandler.getSpecReader().read(specText, pageSpecHandler.getContextPath());
-            spec.setOnlyWarn(onlyWarn);
-            spec.setAlias(alias);
-            if (specNode.getSource() != null) {
-                spec.setPlace(new Place(specNode.getSource(), specNode.getFileLineNumber()));
-            }
-            spec.setProperties(pageSpecHandler.getProperties());
-            spec.setJsVariables(pageSpecHandler.getJsVariables());
-
-            objectSpecs.getSpecs().add(spec);
+            spec = pageSpecHandler.getSpecReader().read(specText, pageSpecHandler.getContextPath());
         } catch (SyntaxException ex) {
             ex.setLine(new Line(specNode.getSource(), specNode.getFileLineNumber()));
             throw ex;
         }
+        spec.setOnlyWarn(onlyWarn);
+        spec.setAlias(alias);
+        if (specNode.getSource() != null) {
+            spec.setPlace(new Place(specNode.getSource(), specNode.getFileLineNumber()));
+        }
+        spec.setProperties(pageSpecHandler.getProperties());
+        spec.setJsVariables(pageSpecHandler.getJsVariables());
+
+        objectSpecs.getSpecs().add(spec);
     }
 
     private ObjectSpecs findObjectSpecsInSection(PageSection section, String objectName) {
