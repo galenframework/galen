@@ -6,6 +6,8 @@ jdk:
   - openjdk7
 addons:
   firefox: "38.0"
+env:
+  - DISPLAY=:99
 script:
   - mvn clean test -Dgpg.skip=true -Dgalen.use.fail.exit.code=false
   - mvn test-compile failsafe:integration-test failsafe:verify -Dgpg.skip=true -Dgalen.use.fail.exit.code=false
