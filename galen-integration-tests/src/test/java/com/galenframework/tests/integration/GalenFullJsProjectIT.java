@@ -17,8 +17,8 @@ import java.util.*;
 
 import static com.galenframework.tests.integration.RegexBuilder.regex;
 import static java.util.Arrays.asList;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.*;
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertTrue;
 
 
 public class GalenFullJsProjectIT {
@@ -47,25 +47,25 @@ public class GalenFullJsProjectIT {
 
             JsonNode jsonTree = mapper.readTree(FileUtils.readFileToString(new File(jsonReportPath + "/report.json")));
 
-            assertThat(toMap(jsonTree), is((Map<String, TestStatistic>)new HashMap<String, TestStatistic>(){{
-                    put("Welcome page long words test on mobile device", new TestStatistic(32, 10, 0, 42));
-                    put("Welcome page long words test on tablet device", new TestStatistic(43, 10, 0, 53));
-                    put("Welcome page long words test on desktop device", new TestStatistic(47, 9, 0, 56));
-                    put("Add note page on desktop device", new TestStatistic(60, 0, 0, 60));
-                    put("Add note page on mobile device", new TestStatistic(43, 0, 0, 43));
-                    put("Add note page on tablet device", new TestStatistic(57, 0, 0, 57));
-                    put("Login page on desktop device", new TestStatistic(65, 0, 0, 65));
-                    put("Login page on mobile device", new TestStatistic(50, 0, 0, 50));
-                    put("Login page on tablet device", new TestStatistic(62, 0, 0, 62));
-                    put("Menu Highlight on desktop device", new TestStatistic(3, 0, 0, 3));
-                    put("My notes page on desktop device", new TestStatistic(63, 0, 0, 63));
-                    put("My notes page on mobile device", new TestStatistic(47, 0, 0, 47));
-                    put("My notes page on tablet device", new TestStatistic(60, 0, 0, 60));
-                    put("Welcome page on desktop device", new TestStatistic(49, 0, 0, 49));
-                    put("Welcome page on mobile device", new TestStatistic(35, 0, 0, 35));
-                    put("Welcome page on tablet device", new TestStatistic(46, 0, 0, 46));
-                }}
-            ));
+            assertMap(toMap(jsonTree), new HashMap<String, TestStatistic>() {{
+                        put("Welcome page long words test on mobile device", new TestStatistic(32, 10, 0, 42));
+                        put("Welcome page long words test on tablet device", new TestStatistic(43, 10, 0, 53));
+                        put("Welcome page long words test on desktop device", new TestStatistic(47, 9, 0, 56));
+                        put("Add note page on desktop device", new TestStatistic(60, 0, 0, 60));
+                        put("Add note page on mobile device", new TestStatistic(43, 0, 0, 43));
+                        put("Add note page on tablet device", new TestStatistic(57, 0, 0, 57));
+                        put("Login page on desktop device", new TestStatistic(65, 0, 0, 65));
+                        put("Login page on mobile device", new TestStatistic(50, 0, 0, 50));
+                        put("Login page on tablet device", new TestStatistic(62, 0, 0, 62));
+                        put("Menu Highlight on desktop device", new TestStatistic(3, 0, 0, 3));
+                        put("My notes page on desktop device", new TestStatistic(63, 0, 0, 63));
+                        put("My notes page on mobile device", new TestStatistic(47, 0, 0, 47));
+                        put("My notes page on tablet device", new TestStatistic(60, 0, 0, 60));
+                        put("Welcome page on desktop device", new TestStatistic(49, 0, 0, 49));
+                        put("Welcome page on mobile device", new TestStatistic(35, 0, 0, 35));
+                        put("Welcome page on tablet device", new TestStatistic(46, 0, 0, 46));
+                    }}
+            );
 
 
             List<String> errorMessages = collectAllErrorMessages(jsonTree, jsonReportPath);
@@ -107,8 +107,19 @@ public class GalenFullJsProjectIT {
         }
     }
 
+    private void assertMap(Map<String, TestStatistic> realMap,  Map<String, TestStatistic> expectedMap) {
+        assertEquals(realMap.size(), expectedMap.size());
+
+        for (Map.Entry<String, TestStatistic> expected : expectedMap.entrySet()) {
+            assertTrue(realMap.containsKey(expected.getKey()), "Should contain: " + expected.getKey());
+            assertEquals(realMap.get(expected.getKey()), expected.getValue(),
+                    "Should have same value for key:" + expected.getKey() + " \nas: " + expected.getValue()
+                            + ", but got: " + realMap.get(expected.getKey()));
+        }
+    }
+
     private void assertErrorMessages(List<String> errorMessages, List<String> expected) {
-        assertThat(errorMessages.size(), is(expected.size()));
+        assertEquals(errorMessages.size(), expected.size());
 
         Iterator<String> expectedIterator = expected.iterator();
 
