@@ -11,15 +11,3 @@ testOnAllDevices("Welcome page long words test", "/", function (driver, device) 
     checkLongWordsLayout(driver, "specs/welcomePage.gspec", device.tags);
 });
 
-
-testOnDevice(devices.desktopFirefox, "Menu Highlight", "/", function (driver, device) {
-    var welcomePage = new WelcomePage(driver).waitForIt();
-    logged("Checking color for menu item", function () {
-        customCheckLayout(driver, "specs/menuHighlight.gspec", ["usual"]);
-    })
-
-    logged("Checking color for highlighted menu item", function () {
-        welcomePage.hoverFirstMenuItem();
-        customCheckLayout(driver, "specs/menuHighlight.gspec", ["hovered"]);
-    });
-});

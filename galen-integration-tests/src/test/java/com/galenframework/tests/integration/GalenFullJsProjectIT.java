@@ -57,7 +57,6 @@ public class GalenFullJsProjectIT {
                         put("Login page on desktop device", new TestStatistic(65, 0, 0, 65));
                         put("Login page on mobile device", new TestStatistic(50, 0, 0, 50));
                         put("Login page on tablet device", new TestStatistic(62, 0, 0, 62));
-                        put("Menu Highlight on desktop device", new TestStatistic(3, 0, 0, 3));
                         put("My notes page on desktop device", new TestStatistic(63, 0, 0, 63));
                         put("My notes page on mobile device", new TestStatistic(47, 0, 0, 47));
                         put("My notes page on tablet device", new TestStatistic(60, 0, 0, 60));
