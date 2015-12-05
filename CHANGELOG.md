@@ -4,13 +4,36 @@ All changes to Galen Framework project will be documented in this file
 ## [2.2.0][Unreleased]
 
 ### Added
+- Object groups in page spec
+- Arguments for component spec
+- Code blocks processing for custom rules
+- Alpha channel for area avoidance in image comparison
+- "mask" filter in image spec
 - An error handling when specs are indented below each other
-- checkPageSpecLayout function in JS API
-- File system related JS Api functions:
+- "viewport" and "screen" objects in page spec JS API
+- Support for JUnit report
+- New function in JS API
+    - parsePageSpec
+    - checkPageSpecLayout
     - makeDirectory
     - listDirectory
     - fileExists
     - isDirectory
+- "screen" and "viewport" objects in page dump
+
+### Changed
+- Using galen.config file by default for configuration
+- All object statements in spec files are now strict
+- Improved denoise filter in image spec
+- Removed objects text properties from page dump
+- Removed visiblity caching for web elements when checking layout
+- Added sorting objects by size in heatmap and screenshot popup in html report
+
+### Fixed
+- Second level components had broken scope
+- Tabs indentation in test suites
+- dumpPage js function could not work with undefined excludedObjects
+- Fixed error of 1 extra pixel in image spec, which was caused due to pixel rounding 
 
 
 ## [2.1.3][2015-11-11]
