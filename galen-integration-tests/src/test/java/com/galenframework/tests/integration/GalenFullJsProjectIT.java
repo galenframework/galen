@@ -8,6 +8,7 @@ import com.galenframework.config.GalenProperty;
 import com.galenframework.reports.TestStatistic;
 import com.google.common.io.Files;
 import org.apache.commons.io.FileUtils;
+import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import java.io.File;
@@ -16,7 +17,6 @@ import java.util.*;
 
 import static com.galenframework.tests.integration.RegexBuilder.regex;
 import static java.util.Arrays.asList;
-import static org.cthul.matchers.CthulMatchers.matchesPattern;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 
@@ -115,8 +115,8 @@ public class GalenFullJsProjectIT {
         int number = 0;
         for (String errorMessage : errorMessages) {
             number ++;
-
-            assertThat("Error message #" + number + " should match", errorMessage, matchesPattern(expectedIterator.next()));
+            String pattern = expectedIterator.next();
+            Assert.assertTrue(errorMessage.matches(pattern), "Error message #" + number + ": " + errorMessage + ",\n should match pattern: " + pattern);
         }
     }
 
