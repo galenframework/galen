@@ -1,7 +1,7 @@
 # Change log
 All changes to Galen Framework project will be documented in this file
 
-## [2.2.0][Unreleased]
+## [2.2.0][2015-12-05]
 
 ### Added
 - Object groups in page spec
