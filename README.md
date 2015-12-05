@@ -2,8 +2,6 @@
 ==============
 master: [![Build Status](https://travis-ci.org/galenframework/galen.svg?branch=master)](https://travis-ci.org/galenframework/galen)
 
-release-2.2: [![Build Status](https://travis-ci.org/galenframework/galen.svg?branch=release-2.2)](https://travis-ci.org/galenframework/galen)
-
 [![Gitter](https://badges.gitter.im/Join Chat.svg)](https://gitter.im/galenframework/galen?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
 
 
