@@ -22,18 +22,21 @@ import static org.hamcrest.Matchers.*;
 
 
 public class GalenFullJsProjectIT {
-    public static final String PATH_TO_TEST_PROJECT = System.getProperty("user.dir")
-            + "/galen-integration-tests/src/test/resources/galen-sample-js-project/tests/";
+    public static final String PATH_TO_TEST_PROJECT = GalenFullJsProjectIT.class.getResource("/galen-sample-js-project").getFile();
+    public static final String PATH_TO_TEST_WEBSITE = GalenFullJsProjectIT.class.getResource("/sample-test-website/index.html").getFile();
+
 
     @Test
     public void shouldExecute_completeJsSampleProject() throws Exception {
         GalenConfig.getConfig().setProperty(GalenProperty.GALEN_USE_FAIL_EXIT_CODE, "false");
         GalenConfig.getConfig().setProperty(GalenProperty.GALEN_BROWSER_VIEWPORT_ADJUSTSIZE, "true");
+        System.setProperty("sample.test.website", PATH_TO_TEST_WEBSITE);
+        System.setProperty("sample.project.path", PATH_TO_TEST_PROJECT);
 
         String jsonReportPath = Files.createTempDir().getAbsolutePath() + "/json-report";
         String htmlReportPath = Files.createTempDir().getAbsolutePath() + "/html-report";
 
-        new GalenMain().execute("test", PATH_TO_TEST_PROJECT, "--htmlreport", htmlReportPath, "--jsonreport", jsonReportPath);
+        new GalenMain().execute("test", PATH_TO_TEST_PROJECT + "/tests/", "--htmlreport", htmlReportPath, "--jsonreport", jsonReportPath);
 
         assertReports(htmlReportPath, jsonReportPath);
     }
@@ -44,23 +47,24 @@ public class GalenFullJsProjectIT {
 
             JsonNode jsonTree = mapper.readTree(FileUtils.readFileToString(new File(jsonReportPath + "/report.json")));
 
-            assertThat(toMap(jsonTree), allOf(
-                    hasEntry("Welcome page long words test on mobile device", new TestStatistic(32, 10, 0, 42)),
-                    hasEntry("Welcome page long words test on tablet device", new TestStatistic(43, 10, 0, 53)),
-                    hasEntry("Welcome page long words test on desktop device", new TestStatistic(47, 9, 0, 56)),
-                    hasEntry("Add note page on desktop device", new TestStatistic(60, 0, 0, 60)),
-                    hasEntry("Add note page on mobile device", new TestStatistic(43, 0, 0, 43)),
-                    hasEntry("Add note page on tablet device", new TestStatistic(57, 0, 0, 57)),
-                    hasEntry("Login page on desktop device", new TestStatistic(65, 0, 0, 65)),
-                    hasEntry("Login page on mobile device", new TestStatistic(50, 0, 0, 50)),
-                    hasEntry("Login page on tablet device", new TestStatistic(62, 0, 0, 62)),
-                    hasEntry("Menu Highlight on desktop device", new TestStatistic(3, 0, 0, 3)),
-                    hasEntry("My notes page on desktop device", new TestStatistic(63, 0, 0, 63)),
-                    hasEntry("My notes page on mobile device", new TestStatistic(47, 0, 0, 47)),
-                    hasEntry("My notes page on tablet device", new TestStatistic(60, 0, 0, 60)),
-                    hasEntry("Welcome page on desktop device", new TestStatistic(49, 0, 0, 49)),
-                    hasEntry("Welcome page on mobile device", new TestStatistic(35, 0, 0, 35)),
-                    hasEntry("Welcome page on tablet device", new TestStatistic(46, 0, 0, 46))
+            assertThat(toMap(jsonTree), is((Map<String, TestStatistic>)new HashMap<String, TestStatistic>(){{
+                    put("Welcome page long words test on mobile device", new TestStatistic(32, 10, 0, 42));
+                    put("Welcome page long words test on tablet device", new TestStatistic(43, 10, 0, 53));
+                    put("Welcome page long words test on desktop device", new TestStatistic(47, 9, 0, 56));
+                    put("Add note page on desktop device", new TestStatistic(60, 0, 0, 60));
+                    put("Add note page on mobile device", new TestStatistic(43, 0, 0, 43));
+                    put("Add note page on tablet device", new TestStatistic(57, 0, 0, 57));
+                    put("Login page on desktop device", new TestStatistic(65, 0, 0, 65));
+                    put("Login page on mobile device", new TestStatistic(50, 0, 0, 50));
+                    put("Login page on tablet device", new TestStatistic(62, 0, 0, 62));
+                    put("Menu Highlight on desktop device", new TestStatistic(3, 0, 0, 3));
+                    put("My notes page on desktop device", new TestStatistic(63, 0, 0, 63));
+                    put("My notes page on mobile device", new TestStatistic(47, 0, 0, 47));
+                    put("My notes page on tablet device", new TestStatistic(60, 0, 0, 60));
+                    put("Welcome page on desktop device", new TestStatistic(49, 0, 0, 49));
+                    put("Welcome page on mobile device", new TestStatistic(35, 0, 0, 35));
+                    put("Welcome page on tablet device", new TestStatistic(46, 0, 0, 46));
+                }}
             ));
 
 

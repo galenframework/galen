@@ -23,9 +23,7 @@ import java.io.IOException;
 import java.util.List;
 
 import com.galenframework.api.Galen;
-import com.galenframework.page.Rect;
 import com.galenframework.reports.model.LayoutReport;
-import com.galenframework.util.DriverTestFactory;
 import com.galenframework.validation.ValidationError;
 import com.galenframework.validation.ValidationObject;
 import com.galenframework.validation.ValidationResult;
@@ -72,9 +70,12 @@ public class ComponentFrameIT {
         ValidationObject validationObject = validationResult.getValidationObjects().get(0);
 
         assertThat(validationObject.getArea().getLeft(), is(8));
-        assertThat(validationObject.getArea().getTop(), allOf(greaterThan(30), lessThan(35)));
-        assertThat(validationObject.getArea().getWidth(), allOf(greaterThan(300), lessThan(304)));
-        assertThat(validationObject.getArea().getHeight(), allOf(greaterThan(150), lessThan(154)));
+        assertThat(validationObject.getArea().getTop(), greaterThan(30));
+        assertThat(validationObject.getArea().getTop(), lessThan(35));
+        assertThat(validationObject.getArea().getWidth(), greaterThan(300));
+        assertThat(validationObject.getArea().getWidth(), lessThan(304));
+        assertThat(validationObject.getArea().getHeight(), greaterThan(150));
+        assertThat(validationObject.getArea().getHeight(), lessThan(154));
 
         assertThat(validationResult.getError(), is(new ValidationError(asList("Child component spec contains 1 errors"))));
 

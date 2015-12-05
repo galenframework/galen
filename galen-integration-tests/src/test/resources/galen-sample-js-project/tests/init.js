@@ -1,4 +1,5 @@
-this._fullProjectPath = System.getProperty("user.dir") + "/galen-integration-tests/src/test/resources/galen-sample-js-project";
+this._fullProjectPath = System.getProperty("sample.project.path");
+this._websitePath = System.getProperty("sample.test.website");
 
 function copyProperties(dest, source) {
     for (var propertyName in source) {
@@ -45,7 +46,7 @@ afterTestSuite(function (){
 
 function openDriverForDevice(device, url) {
     var fullPath = System.getProperty("user.dir");
-    var driver = device.openDriver("file://" + fullPath + "/galen-integration-tests/src/test/resources/sample-test-website/index.html");
+    var driver = device.openDriver("file://" + _websitePath);
 
     session.put("driver", driver);
 
