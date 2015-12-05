@@ -4,6 +4,8 @@ jdk:
   - oraclejdk8
   - oraclejdk7
   - openjdk7
+addons:
+  firefox: "38.0"
 script:
   - mvn clean test -Dgpg.skip=true -Dgalen.use.fail.exit.code=false
   - mvn test-compile failsafe:integration-test failsafe:verify -Dgpg.skip=true -Dgalen.use.fail.exit.code=false
