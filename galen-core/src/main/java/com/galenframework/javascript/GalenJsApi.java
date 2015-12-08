@@ -45,6 +45,8 @@ import static java.util.Arrays.asList;
  */
 public class GalenJsApi {
 
+    private static final boolean APPEND = true;
+
     public static class JsVariable {
         private final String name;
         private final Object value;
@@ -238,6 +240,29 @@ public class GalenJsApi {
 
         return file.list();
     }
+
+    public static boolean createFile(String filePath) throws IOException {
+        return new File(filePath).createNewFile();
+    }
+
+    public static boolean deleteFile(String filePath) throws IOException {
+        return new File(filePath).delete();
+    }
+
+    public static void writeFile(String filePath, String text) throws IOException {
+        File file = new File(filePath);
+        if (!file.exists()) {
+            if (!file.createNewFile()) {
+                throw new IOException("Couldn't create file: " + filePath);
+            }
+        }
+        FileUtils.writeStringToFile(file, text);
+    }
+
+    public static void appendFile(String filePath, String text) throws IOException {
+        FileUtils.writeStringToFile(new File(filePath), text, APPEND);
+    }
+
 
     public static List<String> toList(String[] array) {
         if (array != null) {

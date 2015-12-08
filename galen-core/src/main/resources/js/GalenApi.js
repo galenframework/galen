@@ -209,9 +209,26 @@
         return GalenJsApi.makeDirectory(dirPath);
     }
 
+    function createFile(filePath) {
+        return GalenJsApi.createFile(filePath);
+    }
+
+    function deleteFile(filePath) {
+        return GalenJsApi.deleteFile(filePath);
+    }
+
+    function writeFile(filePath, text) {
+        GalenJsApi.writeFile(filePath, text);
+    }
+
+    function appendFile(filePath, text) {
+        return GalenJsApi.appendFile(filePath, text);
+    }
+
     function resize(driver, size) {
         GalenJsApi.resizeDriver(driver, size);
     }
+
 
 
 
@@ -350,6 +367,10 @@
     exports.fileExists = fileExists;
     exports.isDirectory = isDirectory;
     exports.parsePageSpec = parsePageSpec;
+    exports.createFile = createFile;
+    exports.writeFile = writeFile;
+    exports.appendFile = appendFile;
+    exports.deleteFile = deleteFile;
     exports.console = galenConsole;
     exports.dumpPage = dumpPage;
     exports.resize = resize;
