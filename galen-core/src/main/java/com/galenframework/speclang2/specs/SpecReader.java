@@ -114,6 +114,10 @@ public class SpecReader {
         if (specProcessor != null) {
             Spec spec = specProcessor.process(reader, contextPath);
             spec.setOriginalText(specText);
+
+            if (reader.hasMoreNormalSymbols()) {
+                throw new SyntaxException("Couldn't process: " + reader.getTheRest());
+            }
             return spec;
         } else {
             throw new SyntaxException("Unknown spec: " + firstWord);

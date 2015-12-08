@@ -1140,6 +1140,13 @@ public class SpecsReaderV2Test {
         assertThat(spec.getOriginalText(), is("count any menu-item-* is > 8"));
     }
 
+    @Test(expectedExceptions = SyntaxException.class,
+            expectedExceptionsMessageRegExp = "Couldn't process: whatever non parsed arguments"
+    )
+    public void shouldThrowError_whenSpecHasNotParsed_theWholeText() {
+        readSpec("left-of some-object 10 px whatever non parsed arguments");
+    }
+
     private Spec readSpec(String specText) {
         return new SpecReader().read(specText);
     }

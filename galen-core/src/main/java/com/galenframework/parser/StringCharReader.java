@@ -61,6 +61,15 @@ public class StringCharReader {
         else return text.charAt(length - 1);
     }
 
+    public String takeTheRest() {
+        if (cursor < length) {
+            String theRest = text.substring(cursor);
+            cursor = length;
+            return theRest;
+        }
+        else return "";
+    }
+
     public String getTheRest() {
         if (cursor < length) {
             return text.substring(cursor);

@@ -37,7 +37,7 @@ public class SpecContainsProcessor implements SpecProcessor {
             reader.moveCursorTo(initialCursorPosition);
         }
 
-        List<String> objectNames = Expectations.readAllWords(reader.getTheRest());
+        List<String> objectNames = Expectations.readAllWords(reader.takeTheRest());
 
         if (objectNames.size() == 0) {
             throw new SyntaxException(MISSING_OBJECT_NAME);

@@ -1,6 +1,13 @@
 # Change log
 All changes to Galen Framework project will be documented in this file
 
+
+## [2.2.0][Unreleased]
+
+### Fixed
+- Spec parser now gives error when there is incorrect text in the end of spec
+
+
 ## [2.2.0][2015-12-05]
 
 ### Added
