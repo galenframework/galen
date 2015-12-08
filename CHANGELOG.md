@@ -2,10 +2,12 @@
 All changes to Galen Framework project will be documented in this file
 
 
-## [2.2.0][Unreleased]
+## [2.2.1][2015-12-08]
 
 ### Fixed
 - Spec parser now gives error when there is incorrect text in the end of spec
+- Added missing file js api: createFile, writeFile, appendFile, deleteFile
+- Fixed report css for attachments and extras link
 
 
 ## [2.2.0][2015-12-05]
