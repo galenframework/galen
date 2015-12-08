@@ -346,6 +346,7 @@ function onLayoutHeatmapClick() {
 function onNodeExtrasClick() {
     var html = $(this).next(".node-extras-content").html();
     showPopup(html);
+    return false;
 }
 
 function onNotificationCloseClick() {

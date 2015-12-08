@@ -141,6 +141,9 @@ a.node-expand-button.contains-children-true.collapsed:before {
 .report-node-attachments  {
     margin-top: 5px;
 }
+.report-node-attachments li {
+    display: inline-block;
+}
 .report-node-attachments li a {
     position: relative;
     display: inline-block;
