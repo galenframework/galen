@@ -21,8 +21,9 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 
 import static java.util.Arrays.asList;
+
+import static org.hamcrest.CoreMatchers.*;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.core.IsNull.notNullValue;
 
 public class GalenJUnitTestBaseTest extends GalenJUnitTestBase {
 
@@ -34,6 +35,12 @@ public class GalenJUnitTestBaseTest extends GalenJUnitTestBase {
     @Test
     public void shouldInitDriver() {
         assertThat(getDriver(), notNullValue());
+    }
+
+    @Test
+    public void shouldConcatenateClassAndMethodNameForTestName() {
+        assertThat(getTestName(), is(equalTo(
+                "com.galenframework.junit.GalenJUnitTestBaseTest#>shouldConcatenateClassAndMethodNameForTestName")));
     }
 
     @Parameters
