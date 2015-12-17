@@ -16,12 +16,11 @@
 package com.galenframework.junit;
 
 import org.junit.Test;
-import org.junit.runners.Parameterized;
+import org.junit.runners.Parameterized.*;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 
-import java.util.Arrays;
-
+import static java.util.Arrays.asList;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.IsNull.notNullValue;
 
@@ -37,9 +36,11 @@ public class GalenJUnitTestBaseTest extends GalenJUnitTestBase {
         assertThat(getDriver(), notNullValue());
     }
 
-
-    @Parameterized.Parameters
-    public static Iterable<Object[]> devices() {
-        return Arrays.asList(new Object[][]{});
+    @Parameters
+    public static Iterable<String> devices() {
+        return asList("dummy device");
     }
+
+    @Parameter
+    public Object device;
 }
