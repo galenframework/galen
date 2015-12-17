@@ -13,9 +13,8 @@
 * See the License for the specific language governing permissions and
 * limitations under the License.
 ******************************************************************************/
-package com.galenframework;
+package com.galenframework.junit;
 
-import com.galenframework.junit.GalenJUnitTestBase;
 import org.junit.Test;
 import org.junit.runners.Parameterized;
 import org.openqa.selenium.WebDriver;
@@ -26,7 +25,7 @@ import java.util.Arrays;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.IsNull.notNullValue;
 
-public class JunitTest extends GalenJUnitTestBase {
+public class GalenJUnitTestBaseTest extends GalenJUnitTestBase {
 
     @Override
     public WebDriver createDriver() {
