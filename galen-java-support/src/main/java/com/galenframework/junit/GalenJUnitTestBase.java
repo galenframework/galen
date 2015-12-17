@@ -37,12 +37,7 @@ public abstract class GalenJUnitTestBase extends GalenJavaTestBase {
     }
 
     public String getTestName() {
-        String method = "";
-        try {
-            method = getCaller();
-        } catch (ClassNotFoundException e) {
-        }
-        return method;
+        return getCaller();
     }
 
     public abstract WebDriver createDriver();
@@ -68,7 +63,7 @@ public abstract class GalenJUnitTestBase extends GalenJavaTestBase {
         super.quitDriver();
     }
 
-    private static String getCaller() throws ClassNotFoundException {
+    private static String getCaller() {
         Throwable t = new Throwable();
         StackTraceElement[] elements = t.getStackTrace();
         String callerMethodName = elements[2].getMethodName();
