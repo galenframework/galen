@@ -113,6 +113,16 @@
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-surefire-plugin</artifactId>
         <version>${maven-surefire-plugin.version}</version>
+        <configuration>
+          <!-- Sets the VM argument line used when unit tests are run. -->
+          <argLine>${surefireArgLine}</argLine>
+          <!-- Skips unit tests if the value of skip.unit.tests property is true -->
+          <skipTests>${skipTests}</skipTests>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-failsafe-plugin</artifactId>
         <dependencies>
           <dependency>
             <groupId>org.apache.maven.surefire</groupId>
@@ -121,11 +131,19 @@
           </dependency>
         </dependencies>
         <configuration>
-          <!-- Sets the VM argument line used when unit tests are run. -->
-          <argLine>${surefireArgLine}</argLine>
-          <!-- Skips unit tests if the value of skip.unit.tests property is true -->
+          <!-- Sets the VM argument line used when integration tests are run. -->
+          <argLine>${failsafeArgLine}</argLine>
+          <!-- Skips tests if the value of skip.tests property is true -->
           <skipTests>${skipTests}</skipTests>
         </configuration>
+        <executions>
+          <execution>
+            <goals>
+              <goal>integration-test</goal>
+              <goal>verify</goal>
+            </goals>
+          </execution>
+        </executions>
       </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
