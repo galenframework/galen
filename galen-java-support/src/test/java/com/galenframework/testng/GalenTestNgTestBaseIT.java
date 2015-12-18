@@ -13,7 +13,7 @@
 * See the License for the specific language governing permissions and
 * limitations under the License.
 ******************************************************************************/
-package com.galenframework;
+package com.galenframework.testng;
 
 import com.galenframework.testng.GalenTestNgTestBase;
 import org.openqa.selenium.WebDriver;
@@ -23,7 +23,7 @@ import org.testng.annotations.Test;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.IsNull.notNullValue;
 
-public class TestNGTest extends GalenTestNgTestBase {
+public class GalenTestNgTestBaseIT extends GalenTestNgTestBase {
 
     @Override
     public WebDriver createDriver(Object[] args) {
