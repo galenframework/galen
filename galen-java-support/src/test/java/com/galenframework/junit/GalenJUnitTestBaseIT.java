@@ -40,7 +40,7 @@ public class GalenJUnitTestBaseIT extends GalenJUnitTestBase {
     @Test
     public void shouldConcatenateClassAndMethodNameForTestName() {
         assertThat(getTestName(), is(equalTo(
-                "com.galenframework.junit.GalenJUnitTestBaseTest#>shouldConcatenateClassAndMethodNameForTestName")));
+                "com.galenframework.junit.GalenJUnitTestBaseIT#>shouldConcatenateClassAndMethodNameForTestName")));
     }
 
     @Parameters
