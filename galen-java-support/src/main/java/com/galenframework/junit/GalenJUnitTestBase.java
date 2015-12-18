@@ -22,6 +22,8 @@ import org.junit.Before;
 import org.junit.runner.RunWith;
 import org.openqa.selenium.WebDriver;
 
+import static java.lang.Thread.currentThread;
+
 /**
  * This class is used as a base test class for Junit tests, see {@link GalenJavaTestBase}
  */
@@ -64,10 +66,9 @@ public abstract class GalenJUnitTestBase extends GalenJavaTestBase {
     }
 
     private static String getCaller() {
-        Throwable t = new Throwable();
-        StackTraceElement[] elements = t.getStackTrace();
-        String callerMethodName = elements[2].getMethodName();
-        String callerClassName = elements[2].getClassName();
+        StackTraceElement[] elements = currentThread().getStackTrace();
+        String callerMethodName = elements[3].getMethodName();
+        String callerClassName = elements[3].getClassName();
         return callerClassName + "#>" + callerMethodName;
     }
 
