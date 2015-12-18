@@ -25,7 +25,7 @@ import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.*;
 import static org.hamcrest.MatcherAssert.assertThat;
 
-public class GalenJUnitTestBaseTest extends GalenJUnitTestBase {
+public class GalenJUnitTestBaseIT extends GalenJUnitTestBase {
 
     @Override
     public WebDriver createDriver() {
