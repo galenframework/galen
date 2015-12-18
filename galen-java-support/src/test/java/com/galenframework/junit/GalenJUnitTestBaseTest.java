@@ -13,20 +13,19 @@
 * See the License for the specific language governing permissions and
 * limitations under the License.
 ******************************************************************************/
-package com.galenframework;
+package com.galenframework.junit;
 
-import com.galenframework.junit.GalenJUnitTestBase;
 import org.junit.Test;
-import org.junit.runners.Parameterized;
+import org.junit.runners.Parameterized.*;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 
-import java.util.Arrays;
+import static java.util.Arrays.asList;
 
+import static org.hamcrest.CoreMatchers.*;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.core.IsNull.notNullValue;
 
-public class JunitTest extends GalenJUnitTestBase {
+public class GalenJUnitTestBaseTest extends GalenJUnitTestBase {
 
     @Override
     public WebDriver createDriver() {
@@ -38,9 +37,17 @@ public class JunitTest extends GalenJUnitTestBase {
         assertThat(getDriver(), notNullValue());
     }
 
-
-    @Parameterized.Parameters
-    public static Iterable<Object[]> devices() {
-        return Arrays.asList(new Object[][]{});
+    @Test
+    public void shouldConcatenateClassAndMethodNameForTestName() {
+        assertThat(getTestName(), is(equalTo(
+                "com.galenframework.junit.GalenJUnitTestBaseTest#>shouldConcatenateClassAndMethodNameForTestName")));
     }
+
+    @Parameters
+    public static Iterable<String> devices() {
+        return asList("dummy device");
+    }
+
+    @Parameter
+    public Object device;
 }
