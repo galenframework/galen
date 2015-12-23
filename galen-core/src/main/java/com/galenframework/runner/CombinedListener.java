@@ -36,7 +36,7 @@ public class CombinedListener implements CompleteListener {
 
     private final static Logger LOG = LoggerFactory.getLogger(CombinedListener.class);
 
-    List<CompleteListener> listeners = new LinkedList<CompleteListener>();
+    List<CompleteListener> listeners = new LinkedList<>();
     
     public void add(CompleteListener listener) {
         listeners.add(listener);

@@ -65,7 +65,7 @@ public class SpecValidationColorScheme extends SpecValidation<SpecColorScheme> {
             throw new ValidationErrorException(String.format("Couldn't fetch spectrum for \"%s\"", objectName));
         }
         
-        List<String> messages = new LinkedList<String>();
+        List<String> messages = new LinkedList<>();
         
         for (ColorRange colorRange : spec.getColorRanges()) {
             Color color = colorRange.getColor();

@@ -35,9 +35,9 @@ public class XmlBuilder {
     public static class XmlNode {
         private XmlNode parent;
         private XmlNodeType type = XmlNodeType.NODE;
-        private List<Pair<String, String>> attributes = new LinkedList<Pair<String,String>>();
+        private List<Pair<String, String>> attributes = new LinkedList<>();
         private String name;
-        private List<XmlNode> childNodes = new LinkedList<XmlBuilder.XmlNode>();
+        private List<XmlNode> childNodes = new LinkedList<>();
         
         public XmlNode(String name) {
             this.setName(name);

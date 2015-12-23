@@ -84,7 +84,7 @@ public class MockedDriverElement implements WebElement, TakesScreenshot {
 
     @Override
     public List<WebElement> findElements(By by) {
-        List<WebElement> webElements = new LinkedList<WebElement>();
+        List<WebElement> webElements = new LinkedList<>();
         if (item.getSubItems() != null) {
             for (MockedPageItem subItem : item.getSubItems()) {
                 if (subItem.matches(by)) {

@@ -27,7 +27,7 @@ public class ExpectSides implements Expectation<List<Side>>{
     public List<Side> read(StringCharReader reader) {
         ExpectWord expectWord = new ExpectWord().stopOnTheseSymbols(',');
         
-        List<Side> sides = new LinkedList<Side>();
+        List<Side> sides = new LinkedList<>();
         
         while(reader.hasMore()) {
             String side = expectWord.read(reader);

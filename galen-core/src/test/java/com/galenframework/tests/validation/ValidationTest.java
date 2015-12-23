@@ -1710,7 +1710,7 @@ public class ValidationTest {
 
         spec.setImagePaths(imagePaths);
 
-        List<ImageFilter> filters = new LinkedList<ImageFilter>();
+        List<ImageFilter> filters = new LinkedList<>();
         spec.setOriginalFilters(filters);
         spec.setSampleFilters(filters);
 

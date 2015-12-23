@@ -29,7 +29,7 @@ import java.util.List;
 public class ValidationResult {
 
     private Spec spec;
-    private List<ValidationObject> validationObjects = new LinkedList<ValidationObject>();
+    private List<ValidationObject> validationObjects = new LinkedList<>();
     private ValidationError error;
     private List<ValidationResult> childValidationResults;
 
@@ -111,7 +111,7 @@ public class ValidationResult {
     }
 
     public static List<ValidationResult> filterOnlyErrorResults(List<ValidationResult> results) {
-        List<ValidationResult> filtered = new LinkedList<ValidationResult>();
+        List<ValidationResult> filtered = new LinkedList<>();
 
         for (ValidationResult result : results) {
             if (result.getError() != null)

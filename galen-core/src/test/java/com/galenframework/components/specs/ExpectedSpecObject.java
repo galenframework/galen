@@ -37,8 +37,8 @@ import static java.util.Arrays.asList;
 public class ExpectedSpecObject {
 
     private String expectedName;
-    private List<String> specs = new LinkedList<String>();
-    private Map<String, List<String>> specGroups = new HashMap<String, List<String>>();
+    private List<String> specs = new LinkedList<>();
+    private Map<String, List<String>> specGroups = new HashMap<>();
 
     public ExpectedSpecObject(String expectedName) {
         this.expectedName = expectedName;
@@ -54,7 +54,7 @@ public class ExpectedSpecObject {
     }
 
     public static List<ExpectedSpecObject> convertSection(PageSection pageSection) {
-        List<ExpectedSpecObject> objects = new LinkedList<ExpectedSpecObject>();
+        List<ExpectedSpecObject> objects = new LinkedList<>();
 
         for (ObjectSpecs objectSpecs : pageSection.getObjects()) {
             ExpectedSpecObject object = convertExpectedSpecObject(objectSpecs);
@@ -80,7 +80,7 @@ public class ExpectedSpecObject {
     }
 
     private static List<String> convertSpecs(List<Spec> originalSpecs) {
-        List<String> specs = new LinkedList<String>();
+        List<String> specs = new LinkedList<>();
         for (Spec spec : originalSpecs) {
             specs.add(spec.getOriginalText());
         }

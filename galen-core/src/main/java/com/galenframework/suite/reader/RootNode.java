@@ -51,7 +51,7 @@ public class RootNode extends Node<List<GalenBasicTest>> {
     public List<GalenBasicTest> build(VarsContext context) {
         rearrangeNodes();
         
-        List<GalenBasicTest> suites = new LinkedList<GalenBasicTest>();
+        List<GalenBasicTest> suites = new LinkedList<>();
         for (Node<?> childNode : getChildNodes()) {
             if (childNode instanceof TestNode) {
                 TestNode suiteNode = (TestNode)childNode;

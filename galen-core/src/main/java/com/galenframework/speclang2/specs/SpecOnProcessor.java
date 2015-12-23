@@ -30,7 +30,7 @@ public class SpecOnProcessor implements SpecProcessor {
     @Override
     public Spec process(StringCharReader reader, String contextPath) {
 
-        List<String> allEdges = new LinkedList<String>();
+        List<String> allEdges = new LinkedList<>();
 
         boolean edgesAreNotRead = true;
 

@@ -442,7 +442,7 @@ public class PageSpecHandler implements VarsParserJsFunctions {
 
     public void addRule(String ruleText, PageRule pageRule) {
         Rule rule = new RuleParser().parse(ruleText);
-        pageRules.add(new ImmutablePair<Rule, PageRule>(rule, pageRule));
+        pageRules.add(new ImmutablePair<>(rule, pageRule));
     }
 
     public List<Pair<Rule, PageRule>> getPageRules() {

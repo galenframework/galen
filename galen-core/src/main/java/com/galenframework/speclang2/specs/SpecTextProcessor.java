@@ -32,7 +32,7 @@ public class SpecTextProcessor implements SpecProcessor {
 
         /* first building up a list of text operations */
 
-        List<String>  textOperations = new LinkedList<String>();
+        List<String>  textOperations = new LinkedList<>();
 
         SpecText.Type textCheckType = null;
         while(textCheckType == null && reader.hasMoreNormalSymbols()) {

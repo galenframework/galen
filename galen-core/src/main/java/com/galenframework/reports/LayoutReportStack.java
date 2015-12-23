@@ -32,7 +32,7 @@ public class LayoutReportStack {
 
     private LayoutObject currentObject = null;
     private final LayoutReport layoutReport;
-    private final Stack<LayoutSection> sectionStack = new Stack<LayoutSection>();
+    private final Stack<LayoutSection> sectionStack = new Stack<>();
     private LayoutSpec currentSpec;
     private List<LayoutSpec> currentSpecCollector;
 

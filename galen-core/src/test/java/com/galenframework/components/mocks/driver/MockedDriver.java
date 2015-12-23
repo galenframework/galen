@@ -36,7 +36,7 @@ public class MockedDriver implements WebDriver, TakesScreenshot, JavascriptExecu
     private String currrentUrl;
 
     private Dimension screenSize = new Dimension(1024, 768);
-    private List<String> allExecutedJavascript = new LinkedList<String>();
+    private List<String> allExecutedJavascript = new LinkedList<>();
 
     private List<Object> expectedJavaScriptReturnValues;
 
@@ -77,7 +77,7 @@ public class MockedDriver implements WebDriver, TakesScreenshot, JavascriptExecu
 
     @Override
     public List<WebElement> findElements(By by) {
-        List<WebElement> elements = new LinkedList<WebElement>();
+        List<WebElement> elements = new LinkedList<>();
 
         for (MockedPageItem item : page.getItems()) {
             if (item.matches(by)) {

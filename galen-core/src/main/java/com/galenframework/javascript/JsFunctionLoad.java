@@ -38,9 +38,9 @@ public class JsFunctionLoad extends BaseFunction {
 
     private static final long serialVersionUID = 1L;
 
-    private Stack<String> contextPathStack = new Stack<String>();
+    private Stack<String> contextPathStack = new Stack<>();
 
-    private Set<String> loadedFileIds = new HashSet<String>();
+    private Set<String> loadedFileIds = new HashSet<>();
 
     public JsFunctionLoad() {
     }

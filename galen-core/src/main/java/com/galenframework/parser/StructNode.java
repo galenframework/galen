@@ -54,7 +54,7 @@ public class StructNode {
 
     public void addChildNode(StructNode childNode) {
         if (childNodes == null) {
-            childNodes = new LinkedList<StructNode>();
+            childNodes = new LinkedList<>();
         }
 
         childNodes.add(childNode);

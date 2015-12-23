@@ -253,7 +253,7 @@ public class GalenPageActionWait extends GalenPageAction {
 
     public GalenPageActionWait withUntilElements(List<Until> list) {
         if (this.untilElements == null) {
-            this.untilElements = new LinkedList<GalenPageActionWait.Until>();
+            this.untilElements = new LinkedList<>();
         }
         this.untilElements.addAll(list);
         return this;

@@ -89,9 +89,9 @@ public class SpecImage extends Spec {
     private ErrorRate errorRate;
 
     private Integer tolerance;
-    private List<ImageFilter> originalFilters = new LinkedList<ImageFilter>();
-    private List<ImageFilter> sampleFilters = new LinkedList<ImageFilter>();
-    private List<ImageFilter> mapFilters = new LinkedList<ImageFilter>();
+    private List<ImageFilter> originalFilters = new LinkedList<>();
+    private List<ImageFilter> sampleFilters = new LinkedList<>();
+    private List<ImageFilter> mapFilters = new LinkedList<>();
     private Rect selectedArea;
     private boolean stretch = false;
     private boolean cropIfOutside = false;

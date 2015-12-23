@@ -46,7 +46,7 @@ public class ValidationErrorException extends Exception {
     
     public ValidationErrorException withMessage(String message) {
 		if (errorMessages == null) {
-			errorMessages = new LinkedList<String>();
+			errorMessages = new LinkedList<>();
 		}
 		errorMessages.add(message);
 		
@@ -55,7 +55,7 @@ public class ValidationErrorException extends Exception {
 
 	public ValidationErrorException withValidationObject(ValidationObject validationObject) {
     	if (this.validationObjects== null) {
-    		this.validationObjects = new LinkedList<ValidationObject>();
+    		this.validationObjects = new LinkedList<>();
     	}
         this.validationObjects.add(validationObject);
 

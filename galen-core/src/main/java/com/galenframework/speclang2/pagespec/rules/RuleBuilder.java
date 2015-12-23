@@ -27,7 +27,7 @@ import java.util.regex.Pattern;
  */
 public class RuleBuilder {
 
-    private List<Chunk> chunks = new LinkedList<Chunk>();
+    private List<Chunk> chunks = new LinkedList<>();
 
     public NormalTextChunk newNormalTextChunk() {
         return addChunk(new NormalTextChunk());

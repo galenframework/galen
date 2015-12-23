@@ -34,7 +34,7 @@ public class SeleniumGridBrowserFactory implements BrowserFactory {
     private String browser;
     private String browserVersion;
     private Platform platform;
-    private Map<String, String> desiredCapabilities = new HashMap<String, String>();
+    private Map<String, String> desiredCapabilities = new HashMap<>();
 
     public SeleniumGridBrowserFactory(String gridUrl) {
         this.setGridUrl(gridUrl);

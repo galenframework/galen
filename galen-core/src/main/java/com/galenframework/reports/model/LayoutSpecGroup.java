@@ -43,7 +43,7 @@ public class LayoutSpecGroup {
 
     public void addSpec(LayoutSpec spec) {
         if (specs == null) {
-            specs = new LinkedList<LayoutSpec>();
+            specs = new LinkedList<>();
         }
         specs.add(spec);
     }

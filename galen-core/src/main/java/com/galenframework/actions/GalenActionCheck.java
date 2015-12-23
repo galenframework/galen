@@ -44,7 +44,7 @@ public class GalenActionCheck extends GalenAction {
     public void execute() {
         verifyArgumentsForPageCheck();
 
-        List<GalenTest> galenTests = new LinkedList<GalenTest>();
+        List<GalenTest> galenTests = new LinkedList<>();
 
         for (String pageSpecPath : checkArguments.getPaths()) {
             GalenBasicTest test = new GalenBasicTest();

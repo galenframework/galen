@@ -37,7 +37,7 @@ public class SeleniumPage implements Page {
 
     private WebDriver driver;
     
-    private Map<String, PageElement> cachedPageElements = new HashMap<String, PageElement>();
+    private Map<String, PageElement> cachedPageElements = new HashMap<>();
     
     private PageElement parentObject;
 

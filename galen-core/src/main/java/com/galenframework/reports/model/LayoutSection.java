@@ -22,7 +22,7 @@ public class LayoutSection {
 
     private String name;
     
-    private List<LayoutObject> objects = new LinkedList<LayoutObject>();
+    private List<LayoutObject> objects = new LinkedList<>();
     private List<LayoutSection> sections;
 
     public LayoutSection(){
@@ -69,7 +69,7 @@ public class LayoutSection {
 
     public void addSection(LayoutSection section) {
         if (sections == null) {
-            sections = new LinkedList<LayoutSection>();
+            sections = new LinkedList<>();
         }
         sections.add(section);
     }

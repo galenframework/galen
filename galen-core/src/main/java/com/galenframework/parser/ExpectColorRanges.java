@@ -46,7 +46,7 @@ public class ExpectColorRanges implements Expectation<List<ColorRange>> {
         ExpectRange expectRange = new ExpectRange();
         expectRange.setEndingWord("%");
         
-        List<ColorRange> colorRanges = new LinkedList<ColorRange>();
+        List<ColorRange> colorRanges = new LinkedList<>();
         while(reader.hasMore()) {
             
             Range range = expectRange.read(reader);

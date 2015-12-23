@@ -30,8 +30,8 @@ import java.util.Map;
 public class FileTempStorage {
 
     private final String storageName;
-    private Map<String, File> files = new HashMap<String, File>();
-    private List<FileTempStorage> childStorages = new LinkedList<FileTempStorage>();
+    private Map<String, File> files = new HashMap<>();
+    private List<FileTempStorage> childStorages = new LinkedList<>();
 
     private static long _uniqueId = 0;
 

@@ -45,8 +45,8 @@ public abstract class SpecValidationGeneral<T extends SpecComplex> extends SpecV
         Rect mainArea = mainObject.getArea();
         Rect secondArea = secondObject.getArea();
         
-        List<String> messages = new LinkedList<String>();
-        
+        List<String> messages = new LinkedList<>();
+
         for (Location location : spec.getLocations()) {
             String message = verifyLocation(mainArea, secondArea, location, pageValidation, spec);
             if (message != null) {
@@ -55,7 +55,7 @@ public abstract class SpecValidationGeneral<T extends SpecComplex> extends SpecV
         }
 
 
-        List<ValidationObject> validationObjects = new LinkedList<ValidationObject>();
+        List<ValidationObject> validationObjects = new LinkedList<>();
         validationObjects.add(new ValidationObject(mainArea, objectName));
         validationObjects.add(new ValidationObject(secondArea, spec.getObject()));
 
@@ -85,7 +85,7 @@ public abstract class SpecValidationGeneral<T extends SpecComplex> extends SpecV
     }
 
     protected String verifyLocation(Rect mainArea, Rect secondArea, Location location, PageValidation pageValidation, T spec) {
-        List<String> messages = new LinkedList<String>();
+        List<String> messages = new LinkedList<>();
 
 
         Range range = location.getRange();

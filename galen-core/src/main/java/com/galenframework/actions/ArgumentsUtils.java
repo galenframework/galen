@@ -25,7 +25,7 @@ import java.util.List;
 public class ArgumentsUtils {
 
     public static String[] processSystemProperties(String[] args) {
-        ArrayList<String> list = new ArrayList<String>();
+        ArrayList<String> list = new ArrayList<>();
 
         for (String arg : args) {
             if (arg.startsWith("-D")) {
@@ -51,7 +51,7 @@ public class ArgumentsUtils {
 
     public static List<String> convertTags(String optionValue) {
         if (optionValue != null) {
-            List<String> tags = new LinkedList<String>();
+            List<String> tags = new LinkedList<>();
             String[] array = optionValue.split(",");
 
             for (String item : array) {

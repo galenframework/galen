@@ -42,7 +42,7 @@ public class ConsoleReportingListener implements CompleteListener {
     private PrintStream out;
     private PrintStream err;
     
-    private ThreadLocal<Integer> currentObjectLevel = new ThreadLocal<Integer>();
+    private ThreadLocal<Integer> currentObjectLevel = new ThreadLocal<>();
     
     private int logLevel = getLogLevel();
     
@@ -238,7 +238,7 @@ public class ConsoleReportingListener implements CompleteListener {
         out.println("----------------------------------------");
         out.println("========================================");
         
-        List<String> failedTests = new LinkedList<String>();
+        List<String> failedTests = new LinkedList<>();
         
         TestStatistic allStatistic = new TestStatistic();
         

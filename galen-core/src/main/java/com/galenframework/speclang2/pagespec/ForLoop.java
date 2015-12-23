@@ -120,7 +120,7 @@ public class ForLoop {
             throw new SyntaxException("Cannot process: " + theRest);
         }
 
-        return new ImmutablePair<String, String>(type, varName);
+        return new ImmutablePair<>(type, varName);
     }
 
     private static String[] readSequenceFromPageObjects(String sequenceStatement, PageSpecHandler pageSpecHandler) {
@@ -184,7 +184,7 @@ public class ForLoop {
     }
 
     public List<StructNode> apply(LoopVisitor loopVisitor) throws IOException {
-        List<StructNode> resultingNodes = new LinkedList<StructNode>();
+        List<StructNode> resultingNodes = new LinkedList<>();
 
         int begin = 0;
         int end = sequence.length;

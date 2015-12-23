@@ -42,7 +42,7 @@ public class TestNode extends Node<GalenBasicTest> {
     @Override
     public GalenBasicTest build(VarsContext context) {
         GalenBasicTest test = new GalenBasicTest();
-        List<GalenPageTest> pageTests = new LinkedList<GalenPageTest>();
+        List<GalenPageTest> pageTests = new LinkedList<>();
        
         test.setName(context.process(getArguments()));
         test.setPageTests(pageTests);

@@ -34,7 +34,7 @@ import static org.hamcrest.Matchers.is;
 
 public class LayoutReportNodeTest {
 
-    private static final List<ValidationObject> EMPTY_OBJECTS = new LinkedList<ValidationObject>();
+    private static final List<ValidationObject> EMPTY_OBJECTS = new LinkedList<>();
 
     @Test
     public void should_fetchStatistics_properly() {
@@ -57,7 +57,7 @@ public class LayoutReportNodeTest {
 
     private LayoutReport createSampleLayoutReport() {
         LayoutReport report = new LayoutReport();
-        List<ValidationResult> list = new LinkedList<ValidationResult>();
+        List<ValidationResult> list = new LinkedList<>();
         report.setValidationErrorResults(list);
 
         list.add(new ValidationResult(new SpecAbsent(), EMPTY_OBJECTS, new ValidationError().withOnlyWarn(true)));
@@ -68,19 +68,19 @@ public class LayoutReportNodeTest {
 
 
 
-        List<LayoutSection> sections = new LinkedList<LayoutSection>();
+        List<LayoutSection> sections = new LinkedList<>();
         LayoutSection section = new LayoutSection();
         sections.add(section);
         report.setSections(sections);
 
 
-        List<LayoutObject> objects = new LinkedList<LayoutObject>();
+        List<LayoutObject> objects = new LinkedList<>();
         section.setObjects(objects);
         LayoutObject object = new LayoutObject();
         objects.add(object);
 
 
-        List<LayoutSpec> specs = new LinkedList<LayoutSpec>();
+        List<LayoutSpec> specs = new LinkedList<>();
         object.setSpecs(specs);
 
         specs.add(passedSpec());

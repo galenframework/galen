@@ -27,7 +27,7 @@ public class GalenReportsContainer {
 
 	private static final GalenReportsContainer _instance = new GalenReportsContainer();
 
-	private final ThreadLocal<Collection<GalenTestInfo>> tests = new ThreadLocal<Collection<GalenTestInfo>>();
+	private final ThreadLocal<Collection<GalenTestInfo>> tests = new ThreadLocal<>();
 
 	private GalenReportsContainer() {
 		tests.set(new HashSet<GalenTestInfo>());
@@ -44,7 +44,7 @@ public class GalenReportsContainer {
 	}
 
 	public List<GalenTestInfo> getAllTests() {
-		return new ArrayList<GalenTestInfo>(tests.get());
+		return new ArrayList<>(tests.get());
 	}
 
 }

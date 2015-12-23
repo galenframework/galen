@@ -83,7 +83,7 @@ public class ExpectWord implements Expectation<String> {
 	}
 
     public static String[] readAllWords(StringCharReader reader) {
-        ArrayList<String> words = new ArrayList<String>();
+        ArrayList<String> words = new ArrayList<>();
         
         while(reader.hasMore()) {
             String word = new ExpectWord().read(reader);

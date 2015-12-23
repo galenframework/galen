@@ -29,7 +29,7 @@ public class ExpectLocations implements Expectation<List<Location>> {
     @Override
     public List<Location> read(StringCharReader reader) {
         
-        List<Location> locations = new LinkedList<Location>();
+        List<Location> locations = new LinkedList<>();
         while(reader.hasMore()) {
             Range range = range().read(reader);
             List<Side> sides = Expectations.sides().read(reader);

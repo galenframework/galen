@@ -27,7 +27,7 @@ public class ExpectCommandLineArguments implements Expectation<String[]> {
         ExpectString expectString = new ExpectString();
         
         
-        List<String> arguments = new LinkedList<String>();
+        List<String> arguments = new LinkedList<>();
         
         while(reader.hasMore()) {
             String word = expectWord.read(reader);

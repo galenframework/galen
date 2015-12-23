@@ -24,7 +24,7 @@ import java.util.regex.Pattern;
  */
 public class Rule {
     private Pattern pattern;
-    private List<String> parameters = new LinkedList<String>();
+    private List<String> parameters = new LinkedList<>();
 
     public Pattern getPattern() {
         return pattern;

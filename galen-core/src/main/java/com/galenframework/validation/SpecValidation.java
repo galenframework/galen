@@ -64,8 +64,8 @@ public abstract class SpecValidation<T extends Spec> {
      * @throws ValidationErrorException
      */
     protected List<String> fetchChildObjets(List<String> childObjects, PageSpec pageSpec) throws ValidationErrorException {
-        List<String> resultObjects = new LinkedList<String>();
-        
+        List<String> resultObjects = new LinkedList<>();
+
         for (String objectName : childObjects) {
             if (objectName.contains("*")) {
                 

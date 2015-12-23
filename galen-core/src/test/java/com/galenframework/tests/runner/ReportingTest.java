@@ -70,7 +70,7 @@ public class ReportingTest {
     @Test
     public void shouldReportWithEmptyScreenshot_inJsonFormat() throws Exception {
         String reportPath = Files.createTempDir().getAbsolutePath() + "/json-report";
-        List<GalenTestInfo> testInfos = new LinkedList<GalenTestInfo>();
+        List<GalenTestInfo> testInfos = new LinkedList<>();
         GalenTestInfo testInfo = new GalenTestInfo("Home page test", new GalenEmptyTest("Home page test", asList("mobile", "HOMEPAGE")));
         TestReport report = new TestReport();
         LayoutReport layoutReport = new LayoutReport();
@@ -112,7 +112,7 @@ public class ReportingTest {
     @Test
     public void shouldReport_inJsonFormat() throws Exception {
         String reportPath = Files.createTempDir().getAbsolutePath() + "/json-report";
-        List<GalenTestInfo> testInfos = new LinkedList<GalenTestInfo>();
+        List<GalenTestInfo> testInfos = new LinkedList<>();
         GalenTestInfo testInfo = new GalenTestInfo("Home page test", new GalenEmptyTest("Home page test", asList("mobile", "HOMEPAGE")));
         TestReport report = new TestReport();
         LayoutReport layoutReport = new LayoutReport();
@@ -162,7 +162,7 @@ public class ReportingTest {
     @Test public void shouldReport_inTestNgFormat_successfully() throws IOException, TemplateException {
         String reportPath = Files.createTempDir().getAbsolutePath() + "/testng-report/report.xml";
         
-        List<GalenTestInfo> testInfos = new LinkedList<GalenTestInfo>();
+        List<GalenTestInfo> testInfos = new LinkedList<>();
         
         GalenTestInfo testInfo = new GalenTestInfo("Home page test", null);
 
@@ -196,8 +196,8 @@ public class ReportingTest {
     @Test public void shouldReport_inHtmlFormat_withException_andAttachments() throws IOException, TemplateException {
         String reportDirPath = Files.createTempDir().getAbsolutePath() + "/reports";
         
-        List<GalenTestInfo> testInfos = new LinkedList<GalenTestInfo>();
-        
+        List<GalenTestInfo> testInfos = new LinkedList<>();
+
         GalenTestInfo testInfo = new GalenTestInfo("Home page test", null);
         testInfo.setStartedAt(new Date(1399741000000L));
         testInfo.setEndedAt(new Date(1399746930000L));
@@ -218,7 +218,7 @@ public class ReportingTest {
     @Test public void shouldReport_inHtmlWithJsonFormat_successfully_andSplitFiles_perTest() throws IOException, TemplateException {
         String reportDirPath = Files.createTempDir().getAbsolutePath() + "/reports";
         
-        List<GalenTestInfo> testInfos = new LinkedList<GalenTestInfo>();
+        List<GalenTestInfo> testInfos = new LinkedList<>();
         
         GalenTestInfo testInfo = new GalenTestInfo("Home page test", null);
 

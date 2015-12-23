@@ -70,7 +70,7 @@ public class GalenConfig {
     private List<String> convertCommaSeparatedList(String text) {
         String[] arr = text.split(",");
         
-        List<String> list = new LinkedList<String>();
+        List<String> list = new LinkedList<>();
         for (String item : arr) {
             String itemText = item.trim();
             if (!itemText.isEmpty()) {

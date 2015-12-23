@@ -62,7 +62,7 @@ public class Table {
     public void forEach(RowVisitor visitor) {
         for (List<String> row : rows) {
             int index = -1;
-            Map<String, String> values = new HashMap<String, String>();
+            Map<String, String> values = new HashMap<>();
             for (String cell : row) {
                 index++;
                 values.put(headers.get(index), cell);

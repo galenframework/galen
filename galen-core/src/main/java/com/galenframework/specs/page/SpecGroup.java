@@ -23,7 +23,7 @@ import java.util.List;
 public class SpecGroup {
     private String name;
 
-    private List<Spec> specs = new LinkedList<Spec>();
+    private List<Spec> specs = new LinkedList<>();
 
     public String getName() {
         return name;
@@ -43,7 +43,7 @@ public class SpecGroup {
 
     public void addSpec(Spec spec) {
         if (specs == null) {
-            specs = new LinkedList<Spec>();
+            specs = new LinkedList<>();
         }
         specs.add(spec);
     }

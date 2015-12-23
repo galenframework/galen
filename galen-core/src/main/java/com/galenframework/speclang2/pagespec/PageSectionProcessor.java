@@ -105,7 +105,7 @@ public class PageSectionProcessor {
             if (matcher.matches()) {
                 int index = 1;
 
-                Map<String, String> parameters = new HashMap<String, String>();
+                Map<String, String> parameters = new HashMap<>();
 
                 for (String parameterName : rulePair.getKey().getParameters()) {
                     String value = matcher.group(index);
@@ -115,7 +115,7 @@ public class PageSectionProcessor {
                     index += 1;
                 }
 
-                return new ImmutablePair<PageRule, Map<String, String>>(rulePair.getValue(), parameters);
+                return new ImmutablePair<>(rulePair.getValue(), parameters);
             }
         }
         throw new SyntaxException(ruleNode, "Couldn't find rule matching: " + ruleText);

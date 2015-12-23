@@ -53,7 +53,7 @@ public class PageNode extends Node<GalenPageTest> {
             throw e;
         }
         
-        List<GalenPageAction> actions = new LinkedList<GalenPageAction>();
+        List<GalenPageAction> actions = new LinkedList<>();
         pageTest.setActions(actions);
         
         

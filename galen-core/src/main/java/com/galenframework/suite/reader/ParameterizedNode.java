@@ -41,7 +41,7 @@ public class ParameterizedNode extends Node<List<GalenBasicTest>>{
         Table table = createTable(context);
         
         final VarsContext parameterizedContext = new VarsContext(new Properties(), context);
-        final List<GalenBasicTest> tests = new LinkedList<GalenBasicTest>();
+        final List<GalenBasicTest> tests = new LinkedList<>();
         
         table.forEach(new RowVisitor() {
             @Override

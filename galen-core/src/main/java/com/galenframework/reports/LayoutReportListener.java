@@ -29,7 +29,7 @@ import com.galenframework.suite.GalenPageAction;
 
 public class LayoutReportListener implements ValidationListener {
 
-    private Stack<LayoutReportStack> reportStack = new Stack<LayoutReportStack>();
+    private Stack<LayoutReportStack> reportStack = new Stack<>();
     private LayoutReport rootLayoutReport;
 
     public LayoutReportListener(LayoutReport layoutReport) {
@@ -157,7 +157,7 @@ public class LayoutReportListener implements ValidationListener {
     }
 
     private List<String> convertToObjectNames(List<ValidationObject> validationObjects) {
-        List<String> names = new LinkedList<String>();
+        List<String> names = new LinkedList<>();
         if (validationObjects != null) {
             for (ValidationObject validationObject : validationObjects) {
                 names.add(validationObject.getName());

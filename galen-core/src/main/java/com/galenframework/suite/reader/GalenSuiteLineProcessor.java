@@ -140,7 +140,7 @@ public class GalenSuiteLineProcessor {
 
         String[] groupsArray = commaSeparatedGroups.split(",");
 
-        List<String> groups = new LinkedList<String>();
+        List<String> groups = new LinkedList<>();
         for (String group : groupsArray) {
             String trimmedGroup = group.trim();
             if (!trimmedGroup.isEmpty()) {

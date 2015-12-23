@@ -31,7 +31,7 @@ public class MockedPageItem {
     private String locatorType;
     private String locatorValue;
     private boolean visible = true;
-    private List<String> mockedEvents = new LinkedList<String>();
+    private List<String> mockedEvents = new LinkedList<>();
 
     private String getLocatorType() {
         return locatorType;
