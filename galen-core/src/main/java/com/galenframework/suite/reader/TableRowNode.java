@@ -40,7 +40,7 @@ public class TableRowNode extends Node<List<String>> {
         
         String[] rawCells = rowText.split("\\|");
         
-        List<String> cells = new LinkedList<String>();
+        List<String> cells = new LinkedList<>();
         if (rawCells.length > 1) {
             for (int i=1; i<rawCells.length; i++) {
                 cells.add(context.process(rawCells[i].trim()));

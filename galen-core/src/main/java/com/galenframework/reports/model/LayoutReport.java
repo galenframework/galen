@@ -32,11 +32,11 @@ import java.util.Map;
 public class LayoutReport {
     
     private String title;
-    private List<String> includedTags = new ArrayList<String>();
-    private List<String> excludedTags = new ArrayList<String>();
+    private List<String> includedTags = new ArrayList<>();
+    private List<String> excludedTags = new ArrayList<>();
     
-    private List<LayoutSection> sections = new LinkedList<LayoutSection>();
-    private Map<String, LayoutObjectDetails> objects = new HashMap<String, LayoutObjectDetails>();
+    private List<LayoutSection> sections = new LinkedList<>();
+    private Map<String, LayoutObjectDetails> objects = new HashMap<>();
 
     private String screenshot;
 

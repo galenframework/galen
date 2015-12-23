@@ -120,7 +120,7 @@ public class PageSpec {
         String[] parts = objectExpression.split(",");
 
         List<String> allSortedObjectNames = getSortedObjectNames();
-        List<String> resultingObjectNames = new LinkedList<String>();
+        List<String> resultingObjectNames = new LinkedList<>();
 
         for (String part : parts) {
             String singleExpression = part.trim();
@@ -153,7 +153,7 @@ public class PageSpec {
         String[] parts = objectExpression.split(",");
 
         List<String> allSortedObjectNames = getSortedObjectNames();
-        List<String> resultingObjectNames = new LinkedList<String>();
+        List<String> resultingObjectNames = new LinkedList<>();
 
         for (String part : parts) {
             String singleExpression = part.trim();
@@ -179,7 +179,7 @@ public class PageSpec {
      * Returns an alphanumericly sorted list of names of all declared objects
      */
     public List<String> getSortedObjectNames() {
-        List<String> list = new ArrayList<String>(getObjects().keySet());
+        List<String> list = new ArrayList<>(getObjects().keySet());
         Collections.sort(list, new AlphanumericComparator());
         return list;
     }

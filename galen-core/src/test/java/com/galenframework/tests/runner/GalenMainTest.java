@@ -317,7 +317,7 @@ public class GalenMainTest {
         String testUrl = getClass().getResource("/suites/suite-for-filtering.test").getFile();
         GalenMain galen = new GalenMain();
         
-        final List<String> executedSuites = new LinkedList<String>();
+        final List<String> executedSuites = new LinkedList<>();
         
         CompleteListener listener = new DummyCompleteListener() {
             @Override

@@ -26,11 +26,11 @@ import com.galenframework.runner.CompleteListener;
 
 public class TestSession {
     
-    private static final ThreadLocal<TestSession> _sessions = new ThreadLocal<TestSession>();
+    private static final ThreadLocal<TestSession> _sessions = new ThreadLocal<>();
     private static final ReentrantLock lock = new ReentrantLock();
 
     private GalenTestInfo testInfo;
-    private Map<String, Object> data = new HashMap<String, Object>();
+    private Map<String, Object> data = new HashMap<>();
     private TestReport report = new TestReport();
     private CompleteListener listener;
     private GalenProperties properties = new GalenProperties();

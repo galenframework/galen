@@ -60,8 +60,8 @@ public class GalenActionTest extends GalenAction {
 
     @Override
     public void execute() throws Exception {
-        List<File> basicTestFiles = new LinkedList<File>();
-        List<File> jsTestFiles = new LinkedList<File>();
+        List<File> basicTestFiles = new LinkedList<>();
+        List<File> jsTestFiles = new LinkedList<>();
 
         for (String path : testArguments.getPaths()) {
             File file = new File(path);
@@ -91,7 +91,7 @@ public class GalenActionTest extends GalenAction {
     private void runTestFiles(List<File> basicTestFiles, List<File> jsTestFiles) throws IOException {
         GalenSuiteReader reader = new GalenSuiteReader();
 
-        List<GalenTest> tests = new LinkedList<GalenTest>();
+        List<GalenTest> tests = new LinkedList<>();
         for (File file : basicTestFiles) {
             tests.addAll(reader.read(file));
         }

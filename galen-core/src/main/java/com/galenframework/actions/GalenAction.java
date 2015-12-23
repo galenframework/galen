@@ -88,7 +88,7 @@ public abstract class GalenAction {
     @SuppressWarnings("unchecked")
     public static List<CompleteListener> getConfiguredListeners() throws ClassNotFoundException, SecurityException, NoSuchMethodException, IllegalArgumentException,
             InstantiationException, IllegalAccessException, InvocationTargetException {
-        List<CompleteListener> configuredListeners = new LinkedList<CompleteListener>();
+        List<CompleteListener> configuredListeners = new LinkedList<>();
         List<String> classNames = GalenConfig.getConfig().getReportingListeners();
 
         for (String className : classNames) {

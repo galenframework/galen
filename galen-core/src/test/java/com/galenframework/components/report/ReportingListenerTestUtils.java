@@ -51,7 +51,7 @@ public class ReportingListenerTestUtils {
         
         if (testListener != null) testListener.onTestStarted(suite);
         
-        Map<String, PageElement> pageElements = new HashMap<String, PageElement>();
+        Map<String, PageElement> pageElements = new HashMap<>();
 
         pageElements.put("objectA1", new MockedPageElement(10, 10, 100, 50));
         pageElements.put("objectA2", new MockedPageElement(200, 300, 50, 30));

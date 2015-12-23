@@ -91,7 +91,7 @@ public class Expectations {
     }
 
     public static List<String> readAllWords(String arguments) {
-        List<String> words = new LinkedList<String>();
+        List<String> words = new LinkedList<>();
         StringCharReader reader = new StringCharReader(arguments);
 
         ExpectWord expectWord = new ExpectWord();

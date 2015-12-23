@@ -85,7 +85,7 @@ public class GalenPageActionReader {
     
     
     private static GalenPageAction propertiesActionFrom(String[] args) {
-        List<String> files = new LinkedList<String>();
+        List<String> files = new LinkedList<>();
         for (int i = 1; i < args.length; i++) {
             files.add(args[i]);
         }
@@ -99,7 +99,7 @@ public class GalenPageActionReader {
 
     private static GalenPageAction cookieActionFrom(String[] args) {
         GalenPageActionCookie action = new GalenPageActionCookie();
-        List<String> cookies = new LinkedList<String>();
+        List<String> cookies = new LinkedList<>();
         for(int i = 1; i<args.length; i++) {
             cookies.add(args[i]);
         }
@@ -203,7 +203,7 @@ public class GalenPageActionReader {
         if (tagsCommaSeparated != null) {
             String tagsArray[] = tagsCommaSeparated.split(",");
             
-            List<String> tags = new LinkedList<String>();
+            List<String> tags = new LinkedList<>();
             for (String tag : tagsArray) {
                 tag = tag.trim();
                 if (!tag.isEmpty()) {
@@ -243,7 +243,7 @@ public class GalenPageActionReader {
     private static void parseUntilConditions(GalenPageActionWait wait, String[] args) {
         if (args[2].equals("until")) {
             if (args.length > 3) {
-                List<GalenPageActionWait.Until> untilElements = new LinkedList<GalenPageActionWait.Until>();
+                List<GalenPageActionWait.Until> untilElements = new LinkedList<>();
                 
                 UntilType currentType = null;
                 

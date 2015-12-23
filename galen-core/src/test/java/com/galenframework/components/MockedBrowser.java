@@ -32,7 +32,7 @@ import com.galenframework.page.Page;
 public class MockedBrowser implements Browser {
 
     
-    private List<String> recordedActions = new LinkedList<String>();
+    private List<String> recordedActions = new LinkedList<>();
     
     private String url;
     private Dimension screenSize;

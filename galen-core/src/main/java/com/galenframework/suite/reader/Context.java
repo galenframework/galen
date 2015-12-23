@@ -20,7 +20,7 @@ import java.util.Map;
 
 public class Context {
     
-    private Map<String, Object> parameters = new HashMap<String, Object>(); 
+    private Map<String, Object> parameters = new HashMap<>();
 
     public Context withParameter(String name, Object value) {
         getParameters().put(name, value);

@@ -25,7 +25,7 @@ import java.util.List;
  */
 public class ReportOverview {
 
-    List<GalenTestAggregatedInfo> tests = new LinkedList<GalenTestAggregatedInfo>();
+    List<GalenTestAggregatedInfo> tests = new LinkedList<>();
 
     public ReportOverview() {
     }

@@ -23,9 +23,9 @@ import com.galenframework.specs.Spec;
 public class ObjectSpecs {
 
     private String objectName;
-    private List<Spec> specs = new LinkedList<Spec>();
+    private List<Spec> specs = new LinkedList<>();
 
-    private List<SpecGroup> specGroups = new LinkedList<SpecGroup>();
+    private List<SpecGroup> specGroups = new LinkedList<>();
 
     public ObjectSpecs(String objectName) {
         this.objectName = objectName;
@@ -57,7 +57,7 @@ public class ObjectSpecs {
 
     public void addSpecGroup(SpecGroup specGroup) {
         if (specGroups == null) {
-            specGroups = new LinkedList<SpecGroup>();
+            specGroups = new LinkedList<>();
         }
         specGroups.add(specGroup);
     }

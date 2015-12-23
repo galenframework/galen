@@ -39,10 +39,10 @@ public class SpecValidationContains extends SpecValidation<SpecContains> {
         List<String> childObjects = fetchChildObjets(spec.getChildObjects(), pageValidation.getPageSpec());
 
         
-        List<String> errorMessages = new LinkedList<String>();
+        List<String> errorMessages = new LinkedList<>();
 
 
-        List<ValidationObject> objects = new LinkedList<ValidationObject>();
+        List<ValidationObject> objects = new LinkedList<>();
         objects.add(new ValidationObject(objectArea, objectName));
         
         for (String childObjectName : childObjects) {

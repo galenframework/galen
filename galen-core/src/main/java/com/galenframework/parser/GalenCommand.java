@@ -27,8 +27,8 @@ public class GalenCommand {
         this.leftovers = leftovers;
         this.parameters = parameters;
     }
-    private List<String> leftovers = new LinkedList<String>();
-    private Map<String, String> parameters = new HashMap<String, String>();
+    private List<String> leftovers = new LinkedList<>();
+    private Map<String, String> parameters = new HashMap<>();
     
     public List<String> getLeftovers() {
         return leftovers;

@@ -35,7 +35,7 @@ import com.galenframework.tests.GalenTest;
 
 public class JsTestCollector {
 
-    private List<GalenTest> collectedTests = new LinkedList<GalenTest>();
+    private List<GalenTest> collectedTests = new LinkedList<>();
     private EventHandler eventHandler = new EventHandler();
     
     private GalenJsExecutor js = createExecutor();

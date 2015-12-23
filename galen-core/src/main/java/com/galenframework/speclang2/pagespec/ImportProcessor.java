@@ -36,7 +36,7 @@ public class ImportProcessor {
 
     public List<StructNode> process(StringCharReader reader, StructNode statementNode) throws IOException {
 
-        List<StructNode> importedNodes = new LinkedList<StructNode>();
+        List<StructNode> importedNodes = new LinkedList<>();
 
         if (reader.hasMoreNormalSymbols()) {
             importedNodes.addAll(importPageSpec(reader.getTheRest().trim(), statementNode));

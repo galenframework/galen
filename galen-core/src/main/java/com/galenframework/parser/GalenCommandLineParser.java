@@ -25,8 +25,8 @@ public class GalenCommandLineParser {
     public GalenCommand parse(String[] args) {
         int i = 0;
         
-        List<String> leftovers = new LinkedList<String>();
-        Map<String, String> parameters = new HashMap<String, String>();
+        List<String> leftovers = new LinkedList<>();
+        Map<String, String> parameters = new HashMap<>();
         
         
         while(i<args.length) {

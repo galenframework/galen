@@ -84,7 +84,7 @@ public class Spectrum {
     public List<ColorDistribution> getColorDistribution(int minPercentage) {
         double usage = 0;
         
-        List<ColorDistribution> colors = new LinkedList<ColorDistribution>(); 
+        List<ColorDistribution> colors = new LinkedList<>();
         for (int r = 0; r<precision; r++) {
             for (int g = 0; g<precision; g++) {
                 for (int b = 0; b<precision; b++) {

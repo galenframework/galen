@@ -22,7 +22,7 @@ import java.util.Map;
 
 public class PageDump {
     private String title;
-    private Map<String, Element> items = new HashMap<String, Element>();
+    private Map<String, Element> items = new HashMap<>();
     private String pageName;
 
     public String getTitle() {

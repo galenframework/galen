@@ -35,13 +35,13 @@ public class EventHandler {
 
     private final static Logger LOG = LoggerFactory.getLogger(EventHandler.class);
 
-    private List<TestEvent> beforeTestEvents = new LinkedList<TestEvent>();
-    private List<TestEvent> afterTestEvents = new LinkedList<TestEvent>();
-    private List<TestFilterEvent> testFilterEvents = new LinkedList<TestFilterEvent>();
-    private List<TestRetryEvent> testRetryEvents = new LinkedList<TestRetryEvent>();
+    private List<TestEvent> beforeTestEvents = new LinkedList<>();
+    private List<TestEvent> afterTestEvents = new LinkedList<>();
+    private List<TestFilterEvent> testFilterEvents = new LinkedList<>();
+    private List<TestRetryEvent> testRetryEvents = new LinkedList<>();
 
-    private List<TestSuiteEvent> beforeTestSuiteEvents = new LinkedList<TestSuiteEvent>();
-    private List<TestSuiteEvent> afterTestSuiteEvents = new LinkedList<TestSuiteEvent>();
+    private List<TestSuiteEvent> beforeTestSuiteEvents = new LinkedList<>();
+    private List<TestSuiteEvent> afterTestSuiteEvents = new LinkedList<>();
 
     public List<TestEvent> getBeforeTestEvents() {
         return beforeTestEvents;

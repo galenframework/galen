@@ -42,7 +42,7 @@ import org.testng.annotations.Test;
 
 public class GalenSuiteReaderTest {
 
-    private static final List<String> EMPTY_TAGS = new LinkedList<String>();
+    private static final List<String> EMPTY_TAGS = new LinkedList<>();
     private static final Map<String, Object> EMPTY_VARIABLES = Collections.emptyMap();
 
 
@@ -378,7 +378,7 @@ public class GalenSuiteReaderTest {
     }
 
     private List<GalenPageAction> actions(GalenPageAction...actions) {
-        List<GalenPageAction> list = new LinkedList<GalenPageAction>();
+        List<GalenPageAction> list = new LinkedList<>();
         for (GalenPageAction action : actions) {
             list.add(action);
         }

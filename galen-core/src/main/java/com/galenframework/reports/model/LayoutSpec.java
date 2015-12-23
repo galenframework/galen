@@ -30,7 +30,7 @@ public class LayoutSpec {
     private List<String> errors;
 
     // List of object names to be highlighted in report
-    private List<String> highlight = new LinkedList<String>();
+    private List<String> highlight = new LinkedList<>();
     private LayoutImageComparison imageComparison;
 
     // Here it will temporarily store sub objects that will be later picked up by spec

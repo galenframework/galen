@@ -24,7 +24,7 @@ import com.galenframework.validation.specs.*;
 public class ValidationFactory {
     
     @SuppressWarnings("rawtypes")
-    private Map<Class<? extends Spec>, SpecValidation> validations = new HashMap<Class<? extends Spec>, SpecValidation>();
+    private Map<Class<? extends Spec>, SpecValidation> validations = new HashMap<>();
     
     private static ValidationFactory _instance = null;
     

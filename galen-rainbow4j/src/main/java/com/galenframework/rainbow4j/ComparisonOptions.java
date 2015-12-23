@@ -54,14 +54,14 @@ public class ComparisonOptions {
 
     public void addFilterSample(ImageFilter filter) {
         if (sampleFilters == null) {
-            sampleFilters = new LinkedList<ImageFilter>();
+            sampleFilters = new LinkedList<>();
         }
         sampleFilters.add(filter);
     }
 
     public void addFilterOriginal(ImageFilter filter) {
         if (originalFilters == null) {
-            originalFilters = new LinkedList<ImageFilter>();
+            originalFilters = new LinkedList<>();
         }
         originalFilters.add(filter);
     }
@@ -76,7 +76,7 @@ public class ComparisonOptions {
 
     public void addMapFilter(ImageFilter imageFilter) {
         if (mapFilters == null) {
-            mapFilters = new LinkedList<ImageFilter>();
+            mapFilters = new LinkedList<>();
         }
 
         mapFilters.add(imageFilter);

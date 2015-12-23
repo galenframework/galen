@@ -55,7 +55,7 @@ public class IndentationStructureParser {
     }
 
     public List<StructNode> parse(InputStream stream, String source) throws IOException {
-        Stack<IndentationNode> nodeStack = new Stack<IndentationNode>();
+        Stack<IndentationNode> nodeStack = new Stack<>();
 
 
         StructNode rootNode = new StructNode();

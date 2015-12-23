@@ -35,7 +35,7 @@ public class JunitReportBuilder {
     private TestIdGenerator testIdGenerator = new TestIdGenerator();
 
     public void build(List<GalenTestInfo> tests, String reportPath) throws IOException, TemplateException {
-        List<GalenTestAggregatedInfo> aggregatedTests = new LinkedList<GalenTestAggregatedInfo>();
+        List<GalenTestAggregatedInfo> aggregatedTests = new LinkedList<>();
         
         for (GalenTestInfo test : tests) {
             GalenTestAggregatedInfo aggregatedInfo = new GalenTestAggregatedInfo(testIdGenerator.generateTestId(test.getName()), test);
@@ -51,7 +51,7 @@ public class JunitReportBuilder {
         file.createNewFile();
         
         FileWriter fileWriter = new FileWriter(file);
-        Map<String, Object> model = new HashMap<String, Object>();
+        Map<String, Object> model = new HashMap<>();
         model.put("tests", tests);
         
         Template template = new Template("report-main", new InputStreamReader(getClass().getResourceAsStream("/junit-report/junit-report.ftl.xml")), freemarkerConfiguration);

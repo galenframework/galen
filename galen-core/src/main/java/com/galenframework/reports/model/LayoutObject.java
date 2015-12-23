@@ -23,7 +23,7 @@ import com.galenframework.page.Rect;
 public class LayoutObject {
     
     private String name;
-    private List<LayoutSpec> specs = new LinkedList<LayoutSpec>();
+    private List<LayoutSpec> specs = new LinkedList<>();
     private List<LayoutSpecGroup> specGroups;
 
 
@@ -66,7 +66,7 @@ public class LayoutObject {
 
     public void addSpecGroup(LayoutSpecGroup specGroup) {
         if (this.specGroups == null) {
-            this.specGroups = new LinkedList<LayoutSpecGroup>();
+            this.specGroups = new LinkedList<>();
         }
 
         specGroups.add(specGroup);

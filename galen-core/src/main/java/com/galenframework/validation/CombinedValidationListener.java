@@ -28,7 +28,7 @@ public class CombinedValidationListener implements ValidationListener {
 
     private final static Logger LOG = LoggerFactory.getLogger(CombinedValidationListener.class);
 
-    private List<ValidationListener> listeners = new LinkedList<ValidationListener>();
+    private List<ValidationListener> listeners = new LinkedList<>();
     
     
     @Override

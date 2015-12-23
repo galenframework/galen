@@ -307,7 +307,7 @@ public class ExpectationsTest {
     }
 
     private <T> Object[] row(String textForParsing, T expectedRange) {
-        return new Object[]{new TestData<T>(textForParsing, expectedRange)};
+        return new Object[]{new TestData<>(textForParsing, expectedRange)};
     }
 
 

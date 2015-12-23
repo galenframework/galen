@@ -34,7 +34,7 @@ public class ExpectCommaSeparatedKeyValue implements Expectation<List<Pair<Strin
             if (currentParam == null) {
                 String word = new ExpectWord().read(reader);
                 if (!word.isEmpty()) {
-                    currentParam = new MutablePair<String, String>(word, "");
+                    currentParam = new MutablePair<>(word, "");
                     data.add(currentParam);
                 }
             }

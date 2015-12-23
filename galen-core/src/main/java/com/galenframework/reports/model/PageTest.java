@@ -39,8 +39,8 @@ public class PageTest {
     }
     
     private String title = "";
-    private List<LayoutReport> pageActions = new LinkedList<LayoutReport>();
-    private List<GlobalError> globalErrors = new LinkedList<GlobalError>();
+    private List<LayoutReport> pageActions = new LinkedList<>();
+    private List<GlobalError> globalErrors = new LinkedList<>();
 
     public String getTitle() {
         return title;

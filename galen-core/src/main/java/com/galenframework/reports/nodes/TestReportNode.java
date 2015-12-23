@@ -59,7 +59,7 @@ public class TestReportNode {
 
     public TestReportNode withAttachment(String name, File file) {
         if (attachments == null) {
-            attachments = new LinkedList<String>();
+            attachments = new LinkedList<>();
         }
 
         String attachmentName = getFileStorage().registerFile(name, file);
@@ -163,7 +163,7 @@ public class TestReportNode {
 
     public synchronized void addNode(TestReportNode node) {
         if (nodes == null) {
-            nodes = new LinkedList<TestReportNode>();
+            nodes = new LinkedList<>();
         }
         
         nodes.add(node);

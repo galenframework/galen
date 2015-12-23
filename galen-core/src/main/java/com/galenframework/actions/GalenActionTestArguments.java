@@ -30,8 +30,8 @@ public class GalenActionTestArguments {
 
     private List<String> paths;
     private Boolean recursive = false;
-    private List<String> includedTags = new LinkedList<String>();
-    private List<String> excludedTags = new LinkedList<String>();
+    private List<String> includedTags = new LinkedList<>();
+    private List<String> excludedTags = new LinkedList<>();
     private String htmlReport;
     private String testngReport;
     private String junitReport;

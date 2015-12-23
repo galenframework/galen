@@ -83,7 +83,7 @@ public class ValidationError {
 
     public ValidationError withMessage(String message) {
         if (messages == null) {
-            messages = new LinkedList<String>();
+            messages = new LinkedList<>();
         }
         messages.add(message);
         return this;

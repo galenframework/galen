@@ -62,7 +62,7 @@ public class MacroProcessor {
 
     public List<StructNode> process(List<StructNode> nodes) throws IOException {
         if (nodes != null) {
-            List<StructNode> resultingNodes = new LinkedList<StructNode>();
+            List<StructNode> resultingNodes = new LinkedList<>();
             ListIterator<StructNode> it = nodes.listIterator();
 
             while (it.hasNext()) {
@@ -91,7 +91,7 @@ public class MacroProcessor {
     }
 
     private List<StructNode> processConditionStatements(StructNode ifNode, ListIterator<StructNode> it) throws IOException {
-        List<StructNode> elseIfNodes = new LinkedList<StructNode>();
+        List<StructNode> elseIfNodes = new LinkedList<>();
         StructNode elseNode = null;
         boolean finishedConditions = false;
 

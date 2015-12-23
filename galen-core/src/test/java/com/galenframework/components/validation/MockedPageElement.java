@@ -25,7 +25,7 @@ public class MockedPageElement extends PageElement {
 
     private Rect rect;
     private String innerText;
-    private Map<String, String> cssProperties = new HashMap<String, String>();
+    private Map<String, String> cssProperties = new HashMap<>();
 
     public MockedPageElement(int left, int top, int width, int height) {
         this.rect = new Rect(left, top, width, height);
