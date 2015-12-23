@@ -24,6 +24,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import static com.galenframework.actions.ArgumentsUtils.convertTags;
+import static java.util.Arrays.asList;
 
 public class GalenActionTestArguments {
 
@@ -92,18 +93,9 @@ public class GalenActionTestArguments {
         arguments.setJsonReport(cmd.getOptionValue("j"));
         arguments.setGroups(convertTags(cmd.getOptionValue("G")));
         arguments.setExcludedGroups(convertTags(cmd.getOptionValue("Q")));
+        arguments.setPaths(asList(cmd.getArgs()));
 
-        String[] leftovers = cmd.getArgs();
-
-        List<String> paths = new LinkedList<String>();
-        if (leftovers.length > 0) {
-            for (int i = 0; i<leftovers.length; i++) {
-                paths.add(leftovers[i]);
-            }
-        }
-        arguments.setPaths(paths);
-
-        if (paths.isEmpty()) {
+        if (arguments.getPaths().isEmpty()) {
             throw new IllegalArgumentException("Missing test files");
         }
         return arguments;
