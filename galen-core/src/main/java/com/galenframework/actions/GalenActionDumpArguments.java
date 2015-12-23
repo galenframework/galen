@@ -21,11 +21,11 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import java.awt.*;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.regex.Pattern;
 
 import static java.lang.Integer.parseInt;
+import static java.util.Arrays.asList;
 
 public class GalenActionDumpArguments {
     private List<String> paths;
@@ -63,15 +63,7 @@ public class GalenActionDumpArguments {
         arguments.setMaxWidth(parseOptionalInt(cmd.getOptionValue("W")));
         arguments.setMaxHeight(parseOptionalInt(cmd.getOptionValue("H")));
         arguments.setExport(cmd.getOptionValue("E"));
-
-        String[] leftovers = cmd.getArgs();
-        List<String> paths = new LinkedList<String>();
-        if (leftovers.length > 0) {
-            for (int i = 0; i < leftovers.length; i++) {
-                paths.add(leftovers[i]);
-            }
-        }
-        arguments.setPaths(paths);
+        arguments.setPaths(asList(cmd.getArgs()));
         return arguments;
     }
 

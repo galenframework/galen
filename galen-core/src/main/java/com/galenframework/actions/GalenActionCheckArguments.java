@@ -21,12 +21,12 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import java.awt.*;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.regex.Pattern;
 
 import static com.galenframework.actions.ArgumentsUtils.convertTags;
 import static java.lang.Integer.parseInt;
+import static java.util.Arrays.asList;
 
 public class GalenActionCheckArguments {
     private List<String> paths;
@@ -76,17 +76,9 @@ public class GalenActionCheckArguments {
         arguments.setJavascript(cmd.getOptionValue("J"));
         arguments.setIncludedTags(convertTags(cmd.getOptionValue("i")));
         arguments.setExcludedTags(convertTags(cmd.getOptionValue("e")));
+        arguments.setPaths(asList(cmd.getArgs()));
 
-        String[] leftovers = cmd.getArgs();
-        List<String> paths = new LinkedList<String>();
-        if (leftovers.length > 0) {
-            for (int i = 0; i<leftovers.length; i++) {
-                paths.add(leftovers[i]);
-            }
-        }
-        arguments.setPaths(paths);
-
-        if (paths.isEmpty()) {
+        if (arguments.getPaths().isEmpty()) {
             throw new IllegalArgumentException("Missing spec files");
         }
 
