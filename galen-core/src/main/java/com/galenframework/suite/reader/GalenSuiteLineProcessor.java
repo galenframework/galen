@@ -132,8 +132,17 @@ public class GalenSuiteLineProcessor {
         if (!file.exists()) {
             throw new SyntaxException(line, "File doesn't exist: " + file.getAbsolutePath());
         }
-        childProcessor.readLines(new FileInputStream(file));
-        return childProcessor.rootNode.getChildNodes();
+
+        FileInputStream fileInputStream = null;
+        try {
+            fileInputStream = new FileInputStream(file);
+            childProcessor.readLines(fileInputStream);
+            return childProcessor.rootNode.getChildNodes();
+        } finally {
+            if (fileInputStream != null) {
+                fileInputStream.close();
+            }
+        }
     }
 
     private void markNextSuiteGroupedWith(String commaSeparatedGroups) {
