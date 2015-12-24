@@ -17,6 +17,7 @@ package com.galenframework.browser;
 
 import java.io.File;
 import java.io.FileReader;
+import java.io.IOException;
 import java.io.Reader;
 
 import com.galenframework.javascript.GalenJsExecutor;
@@ -26,9 +27,12 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.mozilla.javascript.NativeJavaObject;
 import org.openqa.selenium.WebDriver;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class JsBrowserFactory implements BrowserFactory {
 
+    private final static Logger LOG = LoggerFactory.getLogger(JsBrowserFactory.class);
     private String scriptPath;
     private String[] args;
 
@@ -44,38 +48,47 @@ public class JsBrowserFactory implements BrowserFactory {
         GalenJsExecutor js = new GalenJsExecutor();
         js.putObject("args", args);
         
-        Reader scriptFileReader;
+        Reader scriptFileReader = null;
         Object result;
         try {
             scriptFileReader = new FileReader(file);
             result = js.eval(scriptFileReader, scriptPath);
+            if (result == null) {
+                throw new RuntimeException("You need to return either WebDriver either Browser instance from script");
+            }
+            else {
+
+                if (result instanceof NativeJavaObject) {
+                    NativeJavaObject nativeJavaObject = (NativeJavaObject)result;
+                    Object object = nativeJavaObject.unwrap();
+
+                    if (object instanceof WebDriver) {
+                        return new SeleniumBrowser((WebDriver)object);
+                    }
+                    else if (object instanceof Browser){
+                        return (Browser)object;
+                    }
+                    else {
+                        throw new RuntimeException("Expecting WebDriver or Browser but got " + object.getClass());
+                    }
+                }
+                else {
+                    throw new RuntimeException("Expecting NativeJavaObject but got " + result.getClass());
+                }
+            }
         } catch (Exception e) {
             throw new RuntimeException("Error opening browser", e);
         }
-        
-        if (result == null) {
-            throw new RuntimeException("You need to return either WebDriver either Browser instance from script");
+        finally {
+            if(scriptFileReader!=null) {
+                try {
+                    scriptFileReader.close();
+                } catch (IOException e) {
+                    LOG.error("Error during closing file reader", e);
+                }
+            }
         }
-        else {
 
-            if (result instanceof NativeJavaObject) {
-                NativeJavaObject nativeJavaObject = (NativeJavaObject)result;
-                Object object = nativeJavaObject.unwrap();
-                
-                if (object instanceof WebDriver) {
-                    return new SeleniumBrowser((WebDriver)object);
-                }
-                else if (object instanceof Browser){
-                    return (Browser)object;
-                }
-                else {
-                    throw new RuntimeException("Expecting WebDriver or Browser but got " + object.getClass()); 
-                }
-            }
-            else {
-                throw new RuntimeException("Expecting NativeJavaObject but got " + result.getClass());
-            }
-        }
     }
     
     @Override

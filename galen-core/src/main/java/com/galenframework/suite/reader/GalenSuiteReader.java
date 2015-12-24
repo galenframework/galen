@@ -15,10 +15,7 @@
 ******************************************************************************/
 package com.galenframework.suite.reader;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.util.List;
 import java.util.Properties;
 
@@ -30,7 +27,16 @@ import com.galenframework.tests.GalenBasicTest;
 public class GalenSuiteReader {
 
     public List<GalenBasicTest> read(File file) throws IOException {
-        return read(new FileInputStream(file), file.getAbsolutePath());
+
+        FileInputStream fileInputStream = null;
+        try {
+            fileInputStream = new FileInputStream(file);
+            return read(fileInputStream, file.getAbsolutePath());
+        } finally {
+            if (fileInputStream != null) {
+                fileInputStream.close();
+            }
+        }
     }
     public List<GalenBasicTest> read(InputStream inputStream) throws IOException {
         return read(inputStream, "< unknown file >");

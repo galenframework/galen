@@ -32,9 +32,12 @@ import com.galenframework.javascript.GalenJsExecutor;
 import com.galenframework.runner.events.TestEvent;
 import com.galenframework.runner.events.TestSuiteEvent;
 import com.galenframework.tests.GalenTest;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class JsTestCollector {
 
+    private final static Logger LOG = LoggerFactory.getLogger(JsTestCollector.class);
     private List<GalenTest> collectedTests = new LinkedList<>();
     private EventHandler eventHandler = new EventHandler();
     
@@ -59,8 +62,20 @@ public class JsTestCollector {
     }
 
     public void execute(File file) throws IOException {
-        Reader scriptFileReader = new FileReader(file);
-        js.eval(scriptFileReader, file.getAbsolutePath());
+        Reader scriptFileReader = null;
+        try {
+             scriptFileReader = new FileReader(file);
+            js.eval(scriptFileReader, file.getAbsolutePath());
+        } finally {
+            if(scriptFileReader!=null) {
+                try {
+                    scriptFileReader.close();
+                } catch (IOException e) {
+                    LOG.error("Error during closing file reader", e);
+                }
+            }
+
+        }
     }
 
     public void addTest(GalenTest test) {
