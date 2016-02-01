@@ -557,7 +557,7 @@
 
         dragAndDrop.perform();
     };
-    GalenPages.PageElement.prototype.dragByOffset = function(deltaX, deltaY) {
+    GalenPages.PageElement.prototype.dragByOffset = function (deltaX, deltaY) {
         this._report("Drag " + this.name + " by offset [" + deltaX + ", " + deltaY + "]");
         new Actions(this.getDriver())
             .dragAndDropBy(this.getWebElement(), deltaX, deltaY)
