@@ -58,7 +58,7 @@ public class SpecValidationInside extends SpecValidationGeneral<SpecInside> {
             if (maxOffset > 2) {
                 throw new ValidationErrorException()
                         .withValidationObjects(objects)
-                        .withMessage(String.format("\"%s\" is not completely inside. The maximum offset is %dpx.", objectName, maxOffset));
+                        .withMessage(String.format("\"%s\" is not completely inside. The offset is %dpx.", objectName, maxOffset));
             }
         }
 

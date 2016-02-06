@@ -689,21 +689,21 @@ public class ValidationTest {
           // Inside
 
           row(validationResult(areas(new ValidationObject(new Rect(10, 10, 500, 50), "object"), new ValidationObject(new Rect(0, 0, 130, 120), "container")),
-                          messages("\"object\" is not completely inside. The maximum offset is 380px.")),
+                          messages("\"object\" is not completely inside. The offset is 380px.")),
                   specInside("container"), page(new HashMap<String, PageElement>(){{
                       put("object", element(10, 10, 500, 50));
                       put("container", element(0, 0, 130, 120));
           }})),
 
           row(validationResult(areas(new ValidationObject(new Rect(10, 10, 500, 50), "object"), new ValidationObject(new Rect(0, 0, 130, 120), "container")),
-                  messages("\"object\" is not completely inside. The maximum offset is 380px.")),
+                  messages("\"object\" is not completely inside. The offset is 380px.")),
               specInside("container", location(exact(10), LEFT)), page(new HashMap<String, PageElement>(){{
                   put("object", element(10, 10, 500, 50));
                   put("container", element(0, 0, 130, 120));
           }})),
           
           row(validationResult(areas(new ValidationObject(new Rect(10, 10, 500, 50), "object"), new ValidationObject(new Rect(0, 0, 130, 120), "container")),
-                  messages("\"object\" is not completely inside. The maximum offset is 380px.")),
+                  messages("\"object\" is not completely inside. The offset is 380px.")),
               specInside("container", location(exact(10), LEFT)), page(new HashMap<String, PageElement>(){{
                   put("object", element(10, 10, 500, 50));
                   put("container", element(0, 0, 130, 120));
