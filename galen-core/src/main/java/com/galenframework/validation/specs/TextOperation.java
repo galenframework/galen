@@ -41,6 +41,13 @@ public abstract class TextOperation {
                 return text.toUpperCase();
             }
         });
+
+        put("singleline", new TextOperation() {
+            @Override
+            public String apply(String text) {
+                return text.replaceAll("(\\r|\\n|\\r\\n)+", " ");
+            }
+        });
     }};
 
     public static TextOperation find(String operation) {
