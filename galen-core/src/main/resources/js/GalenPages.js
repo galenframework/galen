@@ -421,6 +421,14 @@
         this._report("Click " + this.name);
         this.getWebElement().click();
     };
+    GalenPages.PageElement.prototype.clickAt = function (x, y) {
+        this._report("Click " + this.name + " with offset [" + x + ", " + y + "]");
+        new Actions(this.getDriver())
+            .moveToElement(this.getWebElement(), x, y)
+            .click()
+            .build()
+            .perform();
+    };
     GalenPages.PageElement.prototype.typeText = function (text) {
         this._report("Type \"" + text + "\" to " + this.name);
         this.getWebElement().sendKeys(text);
@@ -548,6 +556,13 @@
                 .build();
 
         dragAndDrop.perform();
+    };
+    GalenPages.PageElement.prototype.dragByOffset = function (deltaX, deltaY) {
+        this._report("Drag " + this.name + " by offset [" + deltaX + ", " + deltaY + "]");
+        new Actions(this.getDriver())
+            .dragAndDropBy(this.getWebElement(), deltaX, deltaY)
+            .build()
+            .perform();
     };
 
     GalenPages.PageElementList = function (name, locator, elementConstructor, parent) {
