@@ -48,12 +48,17 @@ public class SpecValidationInside extends SpecValidationGeneral<SpecInside> {
         if (!spec.getPartly()) {
             Point[] points = mainArea.getPoints();
 
+            int maxOffset = 0;
             for (Point point : points) {
-                if (!secondArea.contains(point)) {
-                    throw new ValidationErrorException()
-                            .withValidationObjects(objects)
-                            .withMessage(String.format("\"%s\" is not completely inside", objectName));
+                int offset = secondArea.calculatePointOffsetDistance(point);
+                if (maxOffset < offset) {
+                    maxOffset = offset;
                 }
+            }
+            if (maxOffset > 2) {
+                throw new ValidationErrorException()
+                        .withValidationObjects(objects)
+                        .withMessage(String.format("\"%s\" is not completely inside. The offset is %dpx.", objectName, maxOffset));
             }
         }
 

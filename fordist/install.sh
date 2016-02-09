@@ -26,7 +26,7 @@ if [[ -f /usr/bin/galen ]]; then
     rm /usr/bin/galen
 fi
 
-ln -s $DEST/galen/galen /usr/bin/galen
+ln -s $DEST/galen/galen /usr/local/bin/galen
 
 echo "Galen is successfully installed"
 echo "You can now check it with the command: galen -v"
