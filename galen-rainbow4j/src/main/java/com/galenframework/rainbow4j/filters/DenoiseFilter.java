@@ -15,10 +15,11 @@
 ******************************************************************************/
 package com.galenframework.rainbow4j.filters;
 
+import com.galenframework.rainbow4j.BufferUtils;
 import com.galenframework.rainbow4j.ImageHandler;
-import org.apache.commons.lang3.ArrayUtils;
 
 import java.awt.*;
+import java.nio.ByteBuffer;
 
 public class DenoiseFilter implements ImageFilter {
     private int radius;
@@ -28,14 +29,14 @@ public class DenoiseFilter implements ImageFilter {
     }
 
     @Override
-    public void apply(byte[] bytes, int width, int height, Rectangle area) {
+    public void apply(ByteBuffer bytes, int width, int height, Rectangle area) {
         radius = Math.min(radius, Math.min(width / 2, height / 2));
 
         int normalThreshold = 100;
 
         if (radius > 0) {
 
-            byte[] copyBytes = ArrayUtils.clone(bytes);
+            ByteBuffer copyBytes = BufferUtils.clone(bytes);
 
             for (int yc = area.y; yc < area.y + area.height; yc++) {
                 for (int xc = area.x; xc < area.x + area.width; xc++) {
@@ -59,9 +60,9 @@ public class DenoiseFilter implements ImageFilter {
                                    && y >= area.y && y < area.y + area.height) {
 
                                 int k = y * width * ImageHandler.BLOCK_SIZE + x * ImageHandler.BLOCK_SIZE;
-                                r = copyBytes[k] & 0xff;
-                                g = copyBytes[k + 1] & 0xff;
-                                b = copyBytes[k + 2] & 0xff;
+                                r = copyBytes.get(k) & 0xff;
+                                g = copyBytes.get(k + 1) & 0xff;
+                                b = copyBytes.get(k + 2) & 0xff;
                             } else {
                                 r = 0;
                                 g = 0;
@@ -88,9 +89,9 @@ public class DenoiseFilter implements ImageFilter {
                             && blurredGreen < normalThreshold
                             && blurredBlue < normalThreshold
                             ) {
-                        bytes[k] = 0;
-                        bytes[k + 1] = 0;
-                        bytes[k + 2] = 0;
+                        bytes.put(k, (byte) 0);
+                        bytes.put(k + 1, (byte) 0);
+                        bytes.put(k + 2, (byte) 0);
                     }
                 }
             }

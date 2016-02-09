@@ -381,18 +381,25 @@ public class GalenUtils {
     }
 
     public static String calculateFileId(String fullPath) {
+        InputStream is = null;
         try {
             String fileName = new File(fullPath).getName();
             MessageDigest md = MessageDigest.getInstance("MD5");
-            InputStream is = GalenUtils.findFileOrResourceAsStream(fullPath);
+            is = GalenUtils.findFileOrResourceAsStream(fullPath);
             new DigestInputStream(is, md);
-            byte [] hashBytes = md.digest();
+            byte[] hashBytes = md.digest();
             return fileName + convertHashBytesToString(hashBytes);
-
         } catch (Exception ex) {
             throw new RuntimeException("Could not calculate file id", ex);
+        } finally {
+            if (is != null) {
+                try {
+                    is.close();
+                } catch (IOException e) {
+                    LOG.error("Error closing input stream", e);
+                }
+            }
         }
-
     }
 
     private static String convertHashBytesToString(byte[] hashBytes) {

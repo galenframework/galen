@@ -49,6 +49,6 @@ public class FileSyntaxException extends RuntimeException {
         return withFileInfo(super.getMessage());
     }
     private String withFileInfo(String message) {
-        return String.format("%s\n    in %s:%d", message, filePath, line);
+        return String.format("%s%n    in %s:%d", message, filePath, line);
     }
 }

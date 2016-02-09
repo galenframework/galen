@@ -17,6 +17,7 @@ package com.galenframework.suite.actions;
 
 import java.io.File;
 import java.io.FileReader;
+import java.io.IOException;
 import java.io.Reader;
 
 import com.galenframework.browser.Browser;
@@ -39,9 +40,12 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.openqa.selenium.WebDriver;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class GalenPageActionRunJavascript extends GalenPageAction{
 
+    private final static Logger LOG = LoggerFactory.getLogger(GalenPageActionRunJavascript.class);
     private String javascriptPath;
     private String jsonArguments;
 
@@ -54,15 +58,25 @@ public class GalenPageActionRunJavascript extends GalenPageAction{
     public void execute(TestReport report, Browser browser, GalenPageTest pageTest, ValidationListener validationListener) throws Exception {
         
         File file = GalenUtils.findFile(javascriptPath);
-        Reader scriptFileReader = new FileReader(file);
-        
-        GalenJsExecutor js = new GalenJsExecutor();
-        js.eval(GalenJsExecutor.loadJsFromLibrary("GalenPages.js"));
-        js.putObject("browser", browser);
-        provideWebDriverInstance(js, browser);
-        
-        js.eval("var arg = " + jsonArguments);
-        js.eval(scriptFileReader, javascriptPath);
+        Reader scriptFileReader = null;
+        try {
+            scriptFileReader = new FileReader(file);
+            GalenJsExecutor js = new GalenJsExecutor();
+            js.eval(GalenJsExecutor.loadJsFromLibrary("GalenPages.js"));
+            js.putObject("browser", browser);
+            provideWebDriverInstance(js, browser);
+
+            js.eval("var arg = " + jsonArguments);
+            js.eval(scriptFileReader, javascriptPath);
+        }  finally {
+            if(scriptFileReader!=null) {
+                try {
+                    scriptFileReader.close();
+                } catch (IOException e) {
+                    LOG.error("Error during closing file reader", e);
+                }
+            }
+        }
     }
     
     private void provideWebDriverInstance(GalenJsExecutor jsExecutor, Browser browser) {

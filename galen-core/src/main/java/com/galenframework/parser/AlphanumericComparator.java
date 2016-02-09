@@ -15,9 +15,10 @@
 ******************************************************************************/
 package com.galenframework.parser;
 
+import java.io.Serializable;
 import java.util.Comparator;
 
-public class AlphanumericComparator implements Comparator<String> {
+public class AlphanumericComparator implements Comparator<String>, Serializable {
 
 
     @Override
