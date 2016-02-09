@@ -38,7 +38,7 @@ public class ImageHandler {
     public ImageHandler(int width, int height) {
         this.width = width;
         this.height = height;
-        this.bytes = ByteBuffer.allocate(width * height * BLOCK_SIZE);
+        this.bytes = ByteBuffer.allocateDirect(width * height * BLOCK_SIZE);
     }
 
 
@@ -49,7 +49,8 @@ public class ImageHandler {
         int[] pixels = new int[w * h];
         image.getRGB(0, 0, w, h, pixels, 0, w);
 
-        ByteBuffer rgbBytes = ByteBuffer.allocate(w * h * BLOCK_SIZE);
+        // use direct byte buffer to resolve heap errors here
+        ByteBuffer rgbBytes = ByteBuffer.allocateDirect(w * h * BLOCK_SIZE);
         for (int r = 0; r < h; r++) {
             for (int c = 0; c < w; c++) {
                 int index = r * w + c;
