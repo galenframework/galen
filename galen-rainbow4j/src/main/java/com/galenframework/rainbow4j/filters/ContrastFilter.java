@@ -18,6 +18,7 @@ package com.galenframework.rainbow4j.filters;
 import com.galenframework.rainbow4j.ImageHandler;
 
 import java.awt.*;
+import java.nio.ByteBuffer;
 
 public class ContrastFilter implements  ImageFilter{
     private int level;
@@ -35,7 +36,7 @@ public class ContrastFilter implements  ImageFilter{
     }
 
     @Override
-    public void apply(byte[] bytes, int width, int height, Rectangle area) {
+    public void apply(ByteBuffer bytes, int width, int height, Rectangle area) {
         if (level > 259) {
             level = 258;
         }
@@ -45,9 +46,9 @@ public class ContrastFilter implements  ImageFilter{
             for (int x = area.x; x < area.x + area.width; x++) {
                 int k = y * width * ImageHandler.BLOCK_SIZE + x * ImageHandler.BLOCK_SIZE;
 
-                bytes[k] = contrast(bytes[k], factor);
-                bytes[k + 1] = contrast(bytes[k + 1], factor);
-                bytes[k + 2] = contrast(bytes[k + 2], factor);
+                bytes.put(k, contrast(bytes.get(k), factor));
+                bytes.put(k + 1, contrast(bytes.get(k + 1), factor));
+                bytes.put(k + 2, contrast(bytes.get(k + 2), factor));
             }
         }
     }

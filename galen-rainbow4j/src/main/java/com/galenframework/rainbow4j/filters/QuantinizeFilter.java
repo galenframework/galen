@@ -18,6 +18,7 @@ package com.galenframework.rainbow4j.filters;
 import com.galenframework.rainbow4j.ImageHandler;
 
 import java.awt.*;
+import java.nio.ByteBuffer;
 
 public class QuantinizeFilter implements ImageFilter {
     private int colorsAmount;
@@ -35,7 +36,7 @@ public class QuantinizeFilter implements ImageFilter {
     }
 
     @Override
-    public void apply(byte[] bytes, int width, int height, Rectangle area) {
+    public void apply(ByteBuffer bytes, int width, int height, Rectangle area) {
 
         if (colorsAmount > 255) {
             colorsAmount = 255;
@@ -50,14 +51,14 @@ public class QuantinizeFilter implements ImageFilter {
         for (int y = area.y; y < area.y + area.height; y++) {
             for (int x = area.x; x < area.x + area.width; x++) {
                 int k = y * width * ImageHandler.BLOCK_SIZE + x * ImageHandler.BLOCK_SIZE;
-                double red = (bytes[k] & 0xff) / d;
-                double green = (bytes[k + 1] & 0xff) / d;
-                double blue = (bytes[k + 2] & 0xff) / d;
+                double red = (bytes.get(k) & 0xff) / d;
+                double green = (bytes.get(k + 1) & 0xff) / d;
+                double blue = (bytes.get(k + 2) & 0xff) / d;
 
 
-                bytes[k] = (byte) (Math.ceil(red) * d);
-                bytes[k + 1] = (byte) (Math.ceil(green) * d);
-                bytes[k + 2] = (byte) (Math.ceil(blue) * d);
+                bytes.put(k, (byte) (Math.ceil(red) * d));
+                bytes.put(k + 1, (byte) (Math.ceil(green) * d));
+                bytes.put(k + 2, (byte) (Math.ceil(blue) * d));
             }
         }
     }

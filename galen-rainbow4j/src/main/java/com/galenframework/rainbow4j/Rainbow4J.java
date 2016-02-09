@@ -24,6 +24,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.ByteBuffer;
 import java.util.List;
 
 public class Rainbow4J {
@@ -204,10 +205,10 @@ public class Rainbow4J {
 
         long totalMismatchingPixels = 0;
 
-        byte[] bytes = mapHandler.getBytes();
+        ByteBuffer bytes = mapHandler.getBytes();
 
-        for (int k = 0; k < bytes.length - ImageHandler.BLOCK_SIZE; k += ImageHandler.BLOCK_SIZE) {
-            if (((int)bytes[k] &0xff) > 0 || ((int)bytes[k + 1] &0xff) > 0 || ((int)bytes[k + 2] &0xff) > 0) {
+        for (int k = 0; k < bytes.capacity() - ImageHandler.BLOCK_SIZE; k += ImageHandler.BLOCK_SIZE) {
+            if (((int)bytes.get(k) &0xff) > 0 || ((int)bytes.get(k + 1) &0xff) > 0 || ((int)bytes.get(k + 2) &0xff) > 0) {
                 totalMismatchingPixels++;
             }
         }
