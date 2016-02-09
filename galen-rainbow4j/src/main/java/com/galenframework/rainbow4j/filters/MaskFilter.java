@@ -18,6 +18,7 @@ package com.galenframework.rainbow4j.filters;
 import com.galenframework.rainbow4j.ImageHandler;
 
 import java.awt.Rectangle;
+import java.nio.ByteBuffer;
 
 public class MaskFilter implements ImageFilter {
     private final ImageHandler maskImage;
@@ -27,10 +28,10 @@ public class MaskFilter implements ImageFilter {
     }
 
     @Override
-    public void apply(byte[] bytes, int width, int height, Rectangle area) {
+    public void apply(ByteBuffer bytes, int width, int height, Rectangle area) {
         int maskX, maskY, m, k, averageMaskPixel;
 
-        byte[] maskBytes = maskImage.getBytes();
+        ByteBuffer maskBytes = maskImage.getBytes();
         int maskWidth = maskImage.getWidth();
         int maskHeight = maskImage.getHeight();
 
@@ -45,15 +46,15 @@ public class MaskFilter implements ImageFilter {
                 if (maskX < maskWidth && maskY < maskHeight) {
                     m = maskY * maskWidth * ImageHandler.BLOCK_SIZE + maskX * ImageHandler.BLOCK_SIZE;
 
-                    averageMaskPixel = (((int) maskBytes[m]) +
-                            ((int) maskBytes[m + 1]) +
-                            ((int) maskBytes[m + 2])) / 3;
+                    averageMaskPixel = (((int) maskBytes.get(m)) +
+                            ((int) maskBytes.get(m + 1)) +
+                            ((int) maskBytes.get(m + 2))) / 3;
                 } else {
                     averageMaskPixel = 255;
                 }
 
                 // Changing only alpha
-                bytes[k + 3] = (byte) (Math.min(averageMaskPixel, 255) & 0xFF);
+                bytes.put(k + 3, (byte) (Math.min(averageMaskPixel, 255) & 0xFF));
             }
         }
     }

@@ -15,10 +15,11 @@
 ******************************************************************************/
 package com.galenframework.rainbow4j.filters;
 
+import com.galenframework.rainbow4j.BufferUtils;
 import com.galenframework.rainbow4j.ImageHandler;
-import org.apache.commons.lang3.ArrayUtils;
 
 import java.awt.*;
+import java.nio.ByteBuffer;
 
 /**
  * Created by ishubin on 2014/09/14.
@@ -39,13 +40,13 @@ public class BlurFilter implements ImageFilter {
     }
 
     @Override
-    public void apply(byte[] bytes, int width, int height, Rectangle area) {
+    public void apply(ByteBuffer bytes, int width, int height, Rectangle area) {
         if (area.width + area.x > width || area.height + area.y > height) {
             throw new RuntimeException("Specified area is outside of image");
         }
 
         if (radius > 0) {
-            byte[] copyBytes = ArrayUtils.clone(bytes);
+            ByteBuffer copyBytes = BufferUtils.clone(bytes);
 
             for (int yc = area.y; yc < area.y + area.height; yc++) {
                 for (int xc = area.x; xc < area.x + area.width; xc++) {
@@ -63,9 +64,9 @@ public class BlurFilter implements ImageFilter {
                     for (int y = startY; y <= endY; y++) {
                         for (int x = startX; x <= endX; x++) {
                             int k = y * width * ImageHandler.BLOCK_SIZE + x * ImageHandler.BLOCK_SIZE;
-                            int r = copyBytes[k] & 0xff;
-                            int g = copyBytes[k + 1] & 0xff;
-                            int b = copyBytes[k + 2] & 0xff;
+                            int r = copyBytes.get(k) & 0xff;
+                            int g = copyBytes.get(k + 1) & 0xff;
+                            int b = copyBytes.get(k + 2) & 0xff;
 
                             distance = Math.max(Math.abs(x - xc), Math.abs(y - yc));
                             dWeight = 1 - distance/(radius + 1);
@@ -79,9 +80,9 @@ public class BlurFilter implements ImageFilter {
 
 
                     int k = yc * width * ImageHandler.BLOCK_SIZE + xc * ImageHandler.BLOCK_SIZE;
-                    bytes[k] = (byte) (ar / sumWeight);
-                    bytes[k + 1] = (byte) (ag / sumWeight);
-                    bytes[k + 2] = (byte) (ab / sumWeight);
+                    bytes.put(k, (byte) (ar / sumWeight));
+                    bytes.put(k + 1, (byte) (ag / sumWeight));
+                    bytes.put(k + 2, (byte) (ab / sumWeight));
                 }
             }
 

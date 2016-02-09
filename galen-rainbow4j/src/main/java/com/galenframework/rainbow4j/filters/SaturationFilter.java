@@ -18,6 +18,7 @@ package com.galenframework.rainbow4j.filters;
 import com.galenframework.rainbow4j.ImageHandler;
 
 import java.awt.*;
+import java.nio.ByteBuffer;
 
 public class SaturationFilter implements ImageFilter {
     private int level;
@@ -36,7 +37,7 @@ public class SaturationFilter implements ImageFilter {
     }
 
     @Override
-    public void apply(byte[] bytes, int width, int height, Rectangle area) {
+    public void apply(ByteBuffer bytes, int width, int height, Rectangle area) {
 
         if (level > 100) {
             level = 100;
@@ -49,14 +50,14 @@ public class SaturationFilter implements ImageFilter {
         for (int y = area.y; y < area.y + area.height; y++) {
             for (int x = area.x; x < area.x + area.width; x++) {
                 int k = y * width * ImageHandler.BLOCK_SIZE + x * ImageHandler.BLOCK_SIZE;
-                double red = bytes[k] & 0xff;
-                double green = bytes[k + 1] & 0xff;
-                double blue = bytes[k + 2] & 0xff;
+                double red = bytes.get(k & 0xff);
+                double green = bytes.get(k + 1 & 0xff);
+                double blue = bytes.get(k + 2 & 0xff);
 
                 double gray = green * 0.59 + red * 0.3 + blue * 0.11;
-                bytes[k] = (byte) colorRange(gray * (1.0 - t) + red * t);
-                bytes[k + 1] = (byte) colorRange(gray * (1.0 - t) + green * t);
-                bytes[k + 2] = (byte) colorRange(gray * (1.0 - t) + blue * t);
+                bytes.put(k, (byte) colorRange(gray * (1.0 - t) + red * t));
+                bytes.put(k + 1, (byte) colorRange(gray * (1.0 - t) + green * t));
+                bytes.put(k + 2, (byte) colorRange(gray * (1.0 - t) + blue * t));
             }
         }
     }
