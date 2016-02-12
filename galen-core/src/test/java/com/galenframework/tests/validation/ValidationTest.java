@@ -194,7 +194,12 @@ public class ValidationTest {
               put("object", element(10, 15, 100, 20));
               put("container", element(5, 5, 120, 50));
           }})),
-          
+                // checking that it allows 2 pixels overlap
+          row(specInside("container", location(exact(5), TOP)), page(new HashMap<String, PageElement>(){{
+            put("object", element(0, 5, 102, 97));
+            put("container", element(0, 0, 100, 100));
+          }})),
+
           
           // Near 
           
@@ -684,21 +689,21 @@ public class ValidationTest {
           // Inside
 
           row(validationResult(areas(new ValidationObject(new Rect(10, 10, 500, 50), "object"), new ValidationObject(new Rect(0, 0, 130, 120), "container")),
-                          messages("\"object\" is not completely inside")),
+                          messages("\"object\" is not completely inside. The offset is 380px.")),
                   specInside("container"), page(new HashMap<String, PageElement>(){{
                       put("object", element(10, 10, 500, 50));
                       put("container", element(0, 0, 130, 120));
           }})),
 
           row(validationResult(areas(new ValidationObject(new Rect(10, 10, 500, 50), "object"), new ValidationObject(new Rect(0, 0, 130, 120), "container")),
-                  messages("\"object\" is not completely inside")),
+                  messages("\"object\" is not completely inside. The offset is 380px.")),
               specInside("container", location(exact(10), LEFT)), page(new HashMap<String, PageElement>(){{
                   put("object", element(10, 10, 500, 50));
                   put("container", element(0, 0, 130, 120));
           }})),
           
           row(validationResult(areas(new ValidationObject(new Rect(10, 10, 500, 50), "object"), new ValidationObject(new Rect(0, 0, 130, 120), "container")),
-                  messages("\"object\" is not completely inside")),
+                  messages("\"object\" is not completely inside. The offset is 380px.")),
               specInside("container", location(exact(10), LEFT)), page(new HashMap<String, PageElement>(){{
                   put("object", element(10, 10, 500, 50));
                   put("container", element(0, 0, 130, 120));

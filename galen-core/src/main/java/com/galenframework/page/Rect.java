@@ -16,10 +16,11 @@
 package com.galenframework.page;
 
 
-import static java.lang.Math.max;
+import static java.lang.Math.abs;
 import static java.lang.Math.min;
 import static java.lang.String.format;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
@@ -71,7 +72,17 @@ public class Rect {
     public int getHeight() {
         return height;
     }
-    
+
+    @JsonIgnore
+    public int getRight() {
+        return left + width;
+    }
+
+    @JsonIgnore
+    public int getBottom() {
+        return top + height;
+    }
+
     @Override
     public int hashCode() {
         return new HashCodeBuilder(17, 31).append(left).append(top).append(width).append(height).toHashCode();
@@ -104,8 +115,8 @@ public class Rect {
                points[0].setLeft(min(points[0].getLeft(), pointsNext[0].getLeft()));
                points[0].setTop(min(points[0].getTop(), pointsNext[0].getTop()));
                
-               points[1].setLeft(max(points[1].getLeft(), pointsNext[1].getLeft()));
-               points[1].setTop(max(points[1].getTop(), pointsNext[1].getTop()));
+               points[1].setLeft(Math.max(points[1].getLeft(), pointsNext[1].getLeft()));
+               points[1].setTop(Math.max(points[1].getTop(), pointsNext[1].getTop()));
             }
             return new Rect(points[0].getLeft(), points[0].getTop(), points[1].getLeft() - points[0].getLeft(), points[1].getTop() - points[0].getTop());
         }
@@ -125,5 +136,81 @@ public class Rect {
     public Rect offset(int offsetLeft, int offsetTop) {
         return new Rect(left + offsetLeft, top + offsetTop, width, height);
     }
+
+    /**
+     * Calculates the distance of given point to one of the rect edges.
+     * If the point is located inside the return result will be negative.
+     * If the point is located on edge the result will be zero
+     * If the point is located outside of the rect - it will return positive value
+     * @param point
+     * @return
+     */
+    public int calculatePointOffsetDistance(Point point) {
+        int right = left + width;
+        int bottom = top + height;
+        int pointLeft = point.getLeft();
+        int pointTop = point.getTop();
+
+        if (contains(point)) {
+            return max(top - pointTop, pointTop - bottom, left - pointLeft, pointLeft - right);
+        } else if (isQuadrant1(point)) {
+            return max(abs(left - pointLeft), abs(top - pointTop));
+        } else if (isQuadrant2(point)) {
+            return abs(top - pointTop);
+        } else if (isQuadrant3(point)) {
+            return max(abs(pointLeft - right), abs(top - pointTop));
+        } else if (isQuadrant4(point)) {
+            return abs(pointLeft - right);
+        } else if (isQuadrant5(point)) {
+            return max(abs(pointLeft - right), abs(pointTop - bottom));
+        } else if (isQuadrant6(point)) {
+            return abs(pointTop - bottom);
+        } else if (isQuadrant7(point)) {
+            return max(abs(left - pointLeft), abs(pointTop - bottom));
+        } else {
+            return abs(left - pointLeft);
+        }
+    }
+
+    private boolean isQuadrant1(Point point) {
+        return point.getLeft() <= left && point.getTop() <= top;
+    }
+    private boolean isQuadrant2(Point point) {
+        return point.getLeft() >= left && point.getLeft() <= getRight() && point.getTop() <= top;
+    }
+    private boolean isQuadrant3(Point point) {
+        return point.getLeft() >= getRight() && point.getTop() <= top;
+    }
+    private boolean isQuadrant4(Point point) {
+        return point.getLeft() >= getRight() && point.getTop() >= top && point.getTop() <= getBottom();
+    }
+    private boolean isQuadrant5(Point point) {
+        return point.getLeft() >= getRight() && point.getTop() >= getBottom();
+    }
+    private boolean isQuadrant6(Point point) {
+        return point.getTop() >= getBottom() && point.getLeft() >= left && point.getLeft() <= getRight();
+    }
+    private boolean isQuadrant7(Point point) {
+        return point.getLeft() <= left && point.getTop() >= getBottom();
+    }
+    private boolean isQuadrant8(Point point) {
+        return point.getLeft() <= left && point.getTop() >= top && point.getTop() <= getBottom();
+    }
+
+
+    public int max(int ... values) {
+        if (values.length > 0) {
+            int max = values[0];
+            for (int i = 0; i < values.length; i++) {
+                if (max < values[i]) {
+                    max = values[i];
+                }
+            }
+            return max;
+        } else {
+            throw new IllegalArgumentException("Empty array");
+        }
+    }
+
 }
 

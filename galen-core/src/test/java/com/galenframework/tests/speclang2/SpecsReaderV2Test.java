@@ -526,6 +526,14 @@ public class SpecsReaderV2Test {
     }
 
     @Test
+    public void shouldReadSpec_text_singleline() throws IOException {
+        SpecText spec = (SpecText)readSpec("text singleline is \"Some text\"");
+        assertThat(spec.getText(), is("Some text"));
+        assertThat(spec.getType(), is(SpecText.Type.IS));
+        assertThat(spec.getOperations(), contains("singleline"));
+    }
+
+    @Test
     public void shouldReadSpec_css_fontsize_is_18px() throws IOException {
         SpecCss spec = (SpecCss)readSpec("css font-size is \"18px\"");
         assertThat(spec.getCssPropertyName(), is("font-size"));

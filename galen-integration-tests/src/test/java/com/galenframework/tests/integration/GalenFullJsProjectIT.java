@@ -85,7 +85,7 @@ public class GalenFullJsProjectIT {
             List<String> errorMessages = collectAllErrorMessages(jsonTree, jsonReportPath);
             assertErrorMessages(errorMessages, asList(
                     regex().exact("\"header\" is not centered horizontally inside \"screen\". Offset is ").digits(2).exact("px").toString(),
-                    regex().exact("\"header.text\" is not completely inside").toString(),
+                    regex().exact("\"header.text\" is not completely inside. The offset is 54px.").toString(),
                     regex().exact("\"header.text\" text is \"Freundschaftsbezeigungen\" but should be \"Sample Website\"").toString(),
                     regex().exact("\"menu\" is not centered horizontally inside \"screen\". Offset is ").digits(2).exact("px").toString(),
                     regex().exact("\"menu.item-1\" width is ").digits().exact("% [").digits(3).exact("px] which is not in range of 48 to 50% [").digits(3).exact(" to ").digits(3).exact("px]").toString(),
