@@ -179,7 +179,7 @@ public class GalenUtils {
         try {
             devicePixelRatio = ((Number) ((JavascriptExecutor) driver).executeScript(JS_RETRIEVE_DEVICE_PIXEL_RATIO)).doubleValue();
         } catch (Exception ex) {
-            LOG.error("Unkown error during getting device ratio for driver: " + driver ,ex);
+            LOG.error("Unkown error during getting device ratio for driver: " + driver, ex);
         }
 
         if (devicePixelRatio > 1.0 && screenshotImage.getWidth() > 0) {
@@ -359,7 +359,7 @@ public class GalenUtils {
             return new FileInputStream(file);
         }
         else {
-            if (!filePath.startsWith("/") && !filePath.startsWith(".")) {
+            if (!filePath.startsWith("/")) {
                 filePath = "/" + filePath;
             }
             InputStream stream = GalenUtils.class.getResourceAsStream(filePath);
