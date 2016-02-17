@@ -132,6 +132,16 @@ public class MockedDriverElement implements WebElement, TakesScreenshot {
     }
 
     @Override
+    public Rectangle getRect() {
+        Integer[] rect = item.getArea();
+        if (rect != null) {
+            return new Rectangle(rect[0], rect[1], rect[2], rect[3]);
+        } else {
+            return new Rectangle(0, 0, 0, 0);
+        }
+    }
+
+    @Override
     public String getCssValue(String s) {
         return null;
     }

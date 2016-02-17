@@ -197,6 +197,11 @@ public class MockedDriver implements WebDriver, TakesScreenshot, JavascriptExecu
                     public void maximize() {
 
                     }
+
+                    @Override
+                    public void fullscreen() {
+
+                    }
                 };
             }
 
