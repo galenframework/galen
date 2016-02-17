@@ -87,15 +87,7 @@
             return locator.type + ": " + locator.value;
         },
         extendPage: function (page, driver, name, mainFields, secondaryFields) {
-            var obj = new GalenPages.Page(driver, name, mainFields, secondaryFields),
-                key;
-
-            for (key in obj) {
-                if (obj.hasOwnProperty(key)) {
-                    page[key] = obj[key];
-                }
-            }
-
+            var obj, key;
             /* Adding all the page functions defined in prototype */
             for (key in GalenPages.Page.prototype) {
                 if (GalenPages.Page.prototype.hasOwnProperty(key)) {
@@ -103,6 +95,13 @@
                 }
             }
 
+            obj = new GalenPages.Page(driver, name, mainFields, secondaryFields);
+
+            for (key in obj) {
+                if (obj.hasOwnProperty(key)) {
+                    page[key] = obj[key];
+                }
+            }
         },
 
         convertLocator: function (galenLocator) {
