@@ -564,6 +564,24 @@ describe("GalenPages", function (){
             should.exist(loginPage.login.locator);
             should.exist(loginPage.password.locator);
         });
+
+        it("should create a page and replace the default functions fron GalenPage.prototype.", function () {
+            var LoginPage = $page("Login page", {
+                login: "#login",
+                password: "#password",
+
+                waitForIt: function () {
+                    return "waitForIt stub";
+                }
+            });
+
+            var loginPage = new LoginPage(dummyDriver);
+
+            should.exist(loginPage.login.locator);
+            should.exist(loginPage.password.locator);
+            assertThat("Should invoke replaced waitForIt function", loginPage.waitForIt())
+                .is("waitForIt stub")
+        });
     });
 
     describe("$list", function () {

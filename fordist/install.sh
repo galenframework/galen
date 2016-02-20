@@ -22,11 +22,7 @@ cp galen.jar $DEST/galen/.
 cp galen $DEST/galen
 
 
-if [[ -f /usr/bin/galen ]]; then
-    rm /usr/bin/galen
-fi
-
-ln -s $DEST/galen/galen /usr/local/bin/galen
+ln -sf $DEST/galen/galen /usr/local/bin/galen
 
 echo "Galen is successfully installed"
 echo "You can now check it with the command: galen -v"
