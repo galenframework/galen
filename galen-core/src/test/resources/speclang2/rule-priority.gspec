@@ -11,5 +11,15 @@
         width 300px
 
 
+@rule should be small
+    width 10px
+
+
+@rule should be small
+    width 30px
+
 = Main =
     |login_button should be big
+
+    cancel_button:
+        |should be small
