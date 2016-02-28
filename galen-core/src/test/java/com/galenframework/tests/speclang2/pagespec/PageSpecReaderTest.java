@@ -904,6 +904,39 @@ public class PageSpecReaderTest {
         assertThat(object.getSpecs().get(0).getOriginalText(), is("width 100px"));
     }
 
+    @Test
+    public void ruleShouldHave_priorityOverRules_thatWereDeclaredFirst() throws IOException {
+        PageSpec pageSpec = readPageSpec("speclang2/rule-priority.gspec");
+
+        assertThat(pageSpec.getSections().size(), is(1));
+        assertThat(pageSpec.getSections().get(0).getObjects().size(), is(1));
+        assertThat(pageSpec.getSections().get(0).getObjects().get(0).getObjectName(), is("cancel_button"));
+        assertThat(pageSpec.getSections().get(0).getObjects().get(0).getSpecGroups().size(), is(1));
+        assertThat(pageSpec.getSections().get(0).getObjects().get(0).getSpecGroups().get(0).getSpecs().size(), is(1));
+        assertThat(pageSpec.getSections().get(0).getObjects().get(0).getSpecGroups().get(0).getSpecs().get(0).getOriginalText(), is("width 30px"));
+
+
+        assertThat(pageSpec.getSections().get(0).getSections().size(), is(1));
+        assertThat(pageSpec.getSections().get(0).getSections().get(0).getObjects().size(), is(1));
+
+        ObjectSpecs object = pageSpec.getSections().get(0).getSections().get(0).getObjects().get(0);
+        assertThat(object.getObjectName(), is("login_button"));
+        assertThat(object.getSpecs().size(), is(1));
+        assertThat(object.getSpecs().get(0).getOriginalText(), is("width 300px"));
+    }
+
+    @Test(expectedExceptions = FileSyntaxException.class,
+            expectedExceptionsMessageRegExp = "\\QError processing rule: button is located at the left side inside main_container with 10px margin\\E\\s+\\Qin speclang2/rule-error.gspec:7\\E")
+    public void shouldThrownInformativeError_whenThereIsProblemParsingTheRule() throws  IOException {
+            readPageSpec("speclang2/rule-error.gspec");
+    }
+
+    @Test(expectedExceptions = FileSyntaxException.class,
+            expectedExceptionsMessageRegExp = "\\QError processing rule: is located at the left side inside main_container with 10px margin\\E\\s+\\Qin speclang2/rule-error-object-level.gspec:7\\E")
+    public void shouldThrownInformativeError_whenThereIsProblemParsingTheRule_inObjectLevel() throws  IOException {
+        readPageSpec("speclang2/rule-error-object-level.gspec");
+    }
+
     @Test(expectedExceptions = FileSyntaxException.class,
             expectedExceptionsMessageRegExp = "\\QSpecs cannot have inner blocks\\E\\s+\\Qin speclang2/incorrect/nested-spec.gspec:7\\E")
     public void shouldGiveError_whenSpecIsNested_belowAnotherSpec() throws IOException {

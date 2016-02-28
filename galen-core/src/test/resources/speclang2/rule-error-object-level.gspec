@@ -1,0 +1,7 @@
+
+@rule is located at the %{side} side inside %{parentObject}
+    inside ${parentObject} 0px ${side}
+
+= Main =
+    button:
+        |is located at the left side inside main_container with 10px margin

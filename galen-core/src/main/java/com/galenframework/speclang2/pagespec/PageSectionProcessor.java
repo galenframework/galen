@@ -30,9 +30,7 @@ import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.regex.Matcher;
 
 public class PageSectionProcessor {
@@ -93,14 +91,21 @@ public class PageSectionProcessor {
         List<StructNode> resultingNodes;
         try {
             resultingNodes = rule.getKey().apply(pageSpecHandler, ruleText, NO_OBJECT_NAME, rule.getValue(), ruleNode.getChildNodes());
+            processSection(ruleSection, resultingNodes);
         } catch (Exception ex) {
-            throw new SyntaxException(ruleNode, "Error processing custom rule", ex);
+            throw new SyntaxException(ruleNode, "Error processing rule: " + ruleText, ex);
         }
-        processSection(ruleSection, resultingNodes);
     }
 
     private Pair<PageRule, Map<String, String>> findAndProcessRule(String ruleText, StructNode ruleNode) {
-        for (Pair<Rule, PageRule> rulePair : pageSpecHandler.getPageRules()) {
+        ListIterator<Pair<Rule, PageRule>> iterator = pageSpecHandler.getPageRules().listIterator(pageSpecHandler.getPageRules().size());
+        /*
+        It is important to make a reversed iteration over all rules so that
+        it is possible for the end user to override previously defined rules
+         */
+
+        while (iterator.hasPrevious()) {
+            Pair<Rule, PageRule> rulePair = iterator.previous();
             Matcher matcher = rulePair.getKey().getPattern().matcher(ruleText);
             if (matcher.matches()) {
                 int index = 1;
@@ -125,17 +130,21 @@ public class PageSectionProcessor {
         String ruleText = sourceNode.getName().substring(1).trim();
         Pair<PageRule, Map<String, String>> rule = findAndProcessRule(ruleText, sourceNode);
 
-        pageSpecHandler.setGlobalVariable("objectName", objectSpecs.getObjectName(), sourceNode);
+        try {
+            pageSpecHandler.setGlobalVariable("objectName", objectSpecs.getObjectName(), sourceNode);
 
-        List<StructNode> specNodes = rule.getKey().apply(pageSpecHandler, ruleText, objectSpecs.getObjectName(), rule.getValue(), sourceNode.getChildNodes());
+            List<StructNode> specNodes = rule.getKey().apply(pageSpecHandler, ruleText, objectSpecs.getObjectName(), rule.getValue(), sourceNode.getChildNodes());
 
 
-        SpecGroup specGroup = new SpecGroup();
-        specGroup.setName(ruleText);
-        objectSpecs.addSpecGroup(specGroup);
+            SpecGroup specGroup = new SpecGroup();
+            specGroup.setName(ruleText);
+            objectSpecs.addSpecGroup(specGroup);
 
-        for (StructNode specNode : specNodes) {
-            specGroup.addSpec(pageSpecHandler.getSpecReader().read(specNode.getName(), pageSpecHandler.getContextPath()));
+            for (StructNode specNode : specNodes) {
+                specGroup.addSpec(pageSpecHandler.getSpecReader().read(specNode.getName(), pageSpecHandler.getContextPath()));
+            }
+        } catch (Exception ex) {
+            throw new SyntaxException(sourceNode, "Error processing rule: " + ruleText, ex);
         }
     }
 
