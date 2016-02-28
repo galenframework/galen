@@ -1,6 +1,15 @@
 # Change log
 All changes to Galen Framework project will be documented in this file
 
+## [2.2.2][2015-02-28]
+
+### Fixed
+- Updated selenium version to 2.52.0
+- Fixed rules overriding and added more informative error message in case there was error inside rule
+- Installation script for Mac. Now it creates a symlink in /usr/local/bin/galen
+- Fixed default functions replacement when using $page in GalenPages
+- Added 'singleline' text operation for text validation
+
 
 ## [2.2.1][2015-12-08]
 
