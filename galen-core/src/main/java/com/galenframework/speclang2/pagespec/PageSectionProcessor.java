@@ -30,6 +30,7 @@ import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 
 import java.io.IOException;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -100,7 +101,14 @@ public class PageSectionProcessor {
     }
 
     private Pair<PageRule, Map<String, String>> findAndProcessRule(String ruleText, StructNode ruleNode) {
-        for (Pair<Rule, PageRule> rulePair : pageSpecHandler.getPageRules()) {
+        List<Pair<Rule, PageRule>> rulePairs = pageSpecHandler.getPageRules();
+        /*
+        It is important to reverse the rules list so that
+        it is possible for the end user to override previously defined rules
+         */
+        Collections.reverse(rulePairs);
+
+        for (Pair<Rule, PageRule> rulePair : rulePairs) {
             Matcher matcher = rulePair.getKey().getPattern().matcher(ruleText);
             if (matcher.matches()) {
                 int index = 1;

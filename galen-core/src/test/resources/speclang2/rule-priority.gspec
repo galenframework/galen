@@ -1,0 +1,15 @@
+@objects
+    login_button            #login
+
+@rule %{item} should be big
+    ${item}:
+        width 100px
+
+
+@rule %{item} should be big
+    ${item}:
+        width 300px
+
+
+= Main =
+    |login_button should be big
