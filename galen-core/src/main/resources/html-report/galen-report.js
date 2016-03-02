@@ -125,6 +125,15 @@ function findScreenSize(objects) {
     };
 }
 
+function findClosestScreenshotData($element) {
+    var $closest = $element.closest("[data-screenshot]");
+    if ($closest.length > 0) {
+        return $closest.attr("data-screenshot");
+    } else {
+        return null;
+    }
+}
+
 function onLayoutCheckClick() {
     $this = $(this);
     var objectNames = $this.attr("data-highlight-objects").split(",");
@@ -133,6 +142,7 @@ function onLayoutCheckClick() {
     var errorText = $this.next(".layout-check-error-message").find(".layout-check-error-message-text").text();
 
     var layoutId = $this.closest(".layout-report").attr("data-layout-id");
+    var screenshot = findClosestScreenshotData($this);
 
     if (layoutId !== "" && layoutId >= 0) {
         var layout = _GalenReport.layouts[layoutId];
@@ -141,9 +151,6 @@ function onLayoutCheckClick() {
             var objects = collectObjectsToHighlight(layout.objects, function (objectName, object) {
                 return objectNames.indexOf(objectName) > -1;
             });
-
-
-            var screenshot = layout.screenshot;
 
             if (screenshot === null || screenshot === undefined) {
                 screenshot = _GalenReport.layouts[0].screenshot;
@@ -879,8 +886,3 @@ function createGalenTestOverview() {
         }
     };
 }
-
-
-
-
-
