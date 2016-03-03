@@ -74,7 +74,7 @@ var reportData = ##REPORT-DATA##;
             </li>
         </script>
         <script id="report-layout-sublayout-tpl" type="text/x-handlebars-template">
-            <div class="layout-report" data-layout-id="{{layoutId}}" data-screenshot="{{screenshot}}">
+            <div class="layout-report" data-layout-id="{{layoutId}}" {{#if screenshot}}data-screenshot="{{screenshot}}"{{/if}}>
                 <ul class="layout-sections">
                     {{#each sections}}
                         {{renderLayoutSection this}}
