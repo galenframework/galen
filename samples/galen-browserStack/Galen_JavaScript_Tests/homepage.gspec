@@ -1,0 +1,13 @@
+@objects
+    searchButton              xpath      //input[@name='q']
+
+= Main section =
+    @on mobile
+        searchButton:
+        	width ~ 235 px
+            height 20 to 30px
+
+    @on desktop
+        searchButton:
+        	width 400 to 500px
+            height 20 to 30px 

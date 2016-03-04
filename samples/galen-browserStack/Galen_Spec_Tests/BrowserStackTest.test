@@ -1,0 +1,14 @@
+@@ set 
+	base_url http://www.google.com/ncr
+	browser_size 1024x780
+	browserstack_url http://${browserstack.username}:${browserstack.key}@hub.browserstack.com/wd/hub
+
+@@ Parameterized
+    | deviceName     | tags       | gridArgs | 
+    | iPhone 5S      | mobile     | --dc.browserName iPhone --dc.platform "MAC" --dc.device "iPhone 5S" --dc.emulator "true"| 
+    | Win-Chrome 43  | desktop    | --size ${browser_size} --browser chrome --dc.browser_version 43 --dc.os Windows --dc.os_version 8.1 --dc.browserstack.debug true | 
+    | OSX-Firefox 39 | desktop    | --size ${browser_size} --browser firefox --dc.browser_version 39 --dc.os OSX --dc.os_version MountainLion --dc.browserstack.debug true | 
+    
+Check height/width of search in ${deviceName}
+    selenium grid ${browserstack_url} --page ${base_url} ${gridArgs}
+        check   homepage.gspec --include ${tags}
