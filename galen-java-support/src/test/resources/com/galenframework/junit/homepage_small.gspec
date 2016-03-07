@@ -1,0 +1,12 @@
+@objects
+    first_paragraph     id    p1
+    second_paragraph    id    p2
+
+= Main section =
+    first_paragraph:
+        height > 10 px
+        width < 1000 px
+
+    second_paragraph:
+        height > 10 px
+        width < 1000 px

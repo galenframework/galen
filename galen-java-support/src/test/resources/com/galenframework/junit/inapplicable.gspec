@@ -1,0 +1,8 @@
+@objects
+    first_paragraph    id    p1
+
+= Main section =
+    first_paragraph:
+        width < 10 px
+        width > 2000 px
+        width > 20 px
