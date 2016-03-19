@@ -33,6 +33,7 @@ import com.galenframework.specs.page.PageSpec;
 import com.galenframework.speclang2.pagespec.SectionFilter;
 import org.testng.annotations.Test;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.*;
 import java.util.List;
@@ -393,8 +394,32 @@ public class PageSpecReaderTest {
     }
 
     @Test
+    public void shouldImportOtherSpecs_whenMainSpecIsLoaded_fromAbsolutePath() throws IOException {
+        PageSpec pageSpec = readPageSpec(new File(getClass().getResource("/speclang2/import-other-pagespecs.gspec").getFile()).getAbsolutePath());
+
+        assertThat(pageSpec.getObjects(), is((Map<String, Locator>) new HashMap<String, Locator>() {{
+            put("header", new Locator("css", "#header"));
+            put("main-container", new Locator("css", "#main"));
+        }}));
+    }
+
+    @Test
     public void shouldExecute_customJavaScript_fromSeparateFile() throws IOException {
         PageSpec pageSpec = readPageSpec("speclang2/script-importing.gspec");
+
+        assertThat(pageSpec.getSections().size(), is(1));
+        List<ObjectSpecs> objects = pageSpec.getSections().get(0).getObjects();
+        assertThat(objects.size(), is(2));
+        assertThat(objects.get(0).getObjectName(), is("caption"));
+        assertThat(objects.get(0).getSpecs().get(0).getOriginalText(), is("text is \"Awesome website!\""));
+        assertThat(objects.get(1).getObjectName(), is("caption-2"));
+        assertThat(objects.get(1).getSpecs().get(0).getOriginalText(), is("text is \"Welcome, Johny\""));
+    }
+
+    @Test
+    public void scriptsPath_shouldBeResolved_whenSpecIsLoaded_fromAbsolutePath() throws IOException {
+        String absolutePath = new File(getClass().getResource("/speclang2/script-importing.gspec").getFile()).getAbsolutePath();
+        PageSpec pageSpec = readPageSpec(absolutePath);
 
         assertThat(pageSpec.getSections().size(), is(1));
         List<ObjectSpecs> objects = pageSpec.getSections().get(0).getObjects();

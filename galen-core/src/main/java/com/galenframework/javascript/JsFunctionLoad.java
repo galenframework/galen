@@ -84,9 +84,12 @@ public class JsFunctionLoad extends BaseFunction {
             if (filePath.startsWith("/")) {
                 /*
                  * In case load function is called with leading slash - it means that Galen should search for script from root
-                 * folder of the project
+                 * folder of the project first and only then load it as absolute path
                  */
-                fullPath = filePath.substring(1);
+                String localPath = filePath.substring(1);
+                if (new File(localPath).exists()) {
+                    fullPath = localPath;
+                }
             } else {
                 fullPath = contextPath + File.separator + filePath;
             }
