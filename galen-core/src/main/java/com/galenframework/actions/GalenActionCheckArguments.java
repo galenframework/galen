@@ -39,6 +39,7 @@ public class GalenActionCheckArguments {
     private String junitReport;
     private String jsonReport;
     private String javascript;
+    private String config;
 
 
     public static GalenActionCheckArguments parse(String[] args) {
@@ -54,9 +55,10 @@ public class GalenActionCheckArguments {
         options.addOption("u", "url", true, "Initial test url");
         options.addOption("s", "size", true, "Browser window size");
         options.addOption("J", "javascript", true, "JavaScript code that should be executed before checking layout");
+        options.addOption("c", "config", true, "Path to config");
 
         CommandLineParser parser = new PosixParser();
-        CommandLine cmd = null;
+        CommandLine cmd;
 
         try {
             cmd = parser.parse(options, args);
@@ -77,6 +79,7 @@ public class GalenActionCheckArguments {
         arguments.setIncludedTags(convertTags(cmd.getOptionValue("i")));
         arguments.setExcludedTags(convertTags(cmd.getOptionValue("e")));
         arguments.setPaths(asList(cmd.getArgs()));
+        arguments.setConfig(cmd.getOptionValue("c"));
 
         if (arguments.getPaths().isEmpty()) {
             throw new IllegalArgumentException("Missing spec files");
@@ -203,6 +206,7 @@ public class GalenActionCheckArguments {
                 .append(junitReport)
                 .append(jsonReport)
                 .append(javascript)
+                .append(config)
                 .toHashCode();
     }
 
@@ -229,6 +233,7 @@ public class GalenActionCheckArguments {
                 .append(rhs.junitReport, junitReport)
                 .append(rhs.jsonReport, jsonReport)
                 .append(rhs.javascript, javascript)
+                .append(rhs.config, config)
                 .isEquals();
     }
 
@@ -245,6 +250,16 @@ public class GalenActionCheckArguments {
                 .append("junitReport", junitReport)
                 .append("jsonReport", jsonReport)
                 .append("javascript", javascript)
+                .append("config", config)
                 .toString();
+    }
+
+    public GalenActionCheckArguments setConfig(String config) {
+        this.config = config;
+        return this;
+    }
+
+    public String getConfig() {
+        return config;
     }
 }

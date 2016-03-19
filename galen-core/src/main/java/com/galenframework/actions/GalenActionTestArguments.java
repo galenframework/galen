@@ -40,6 +40,7 @@ public class GalenActionTestArguments {
     private String jsonReport;
     private List<String> groups;
     private List<String> excludedGroups;
+    private String config;
 
 
     public static GalenActionTestArguments parse(String[] args) {
@@ -58,9 +59,10 @@ public class GalenActionTestArguments {
         options.addOption("f", "filter", true, "Test filter");
         options.addOption("G", "groups", true, "Test groups");
         options.addOption("Q", "excluded-groups", true, "Excluded test groups");
+        options.addOption("c", "config", true, "Path to galen config file");
 
         CommandLineParser parser = new PosixParser();
-        CommandLine cmd = null;
+        CommandLine cmd;
 
         try {
             cmd = parser.parse(options, args);
@@ -94,6 +96,7 @@ public class GalenActionTestArguments {
         arguments.setGroups(convertTags(cmd.getOptionValue("G")));
         arguments.setExcludedGroups(convertTags(cmd.getOptionValue("Q")));
         arguments.setPaths(asList(cmd.getArgs()));
+        arguments.setConfig(cmd.getOptionValue("c"));
 
         if (arguments.getPaths().isEmpty()) {
             throw new IllegalArgumentException("Missing test files");
@@ -224,6 +227,7 @@ public class GalenActionTestArguments {
                 .append(jsonReport)
                 .append(groups)
                 .append(excludedGroups)
+                .append(config)
                 .toHashCode();
     }
 
@@ -252,6 +256,7 @@ public class GalenActionTestArguments {
                 .append(jsonReport, rhs.jsonReport)
                 .append(groups, rhs.groups)
                 .append(excludedGroups, rhs.excludedGroups)
+                .append(config, rhs.config)
                 .isEquals();
     }
 
@@ -270,7 +275,16 @@ public class GalenActionTestArguments {
                 .append("jsonReport", jsonReport)
                 .append("groups", groups)
                 .append("excludedGroups", excludedGroups)
+                .append("config", config)
                 .toString();
     }
 
+    public GalenActionTestArguments setConfig(String config) {
+        this.config = config;
+        return this;
+    }
+
+    public String getConfig() {
+        return config;
+    }
 }

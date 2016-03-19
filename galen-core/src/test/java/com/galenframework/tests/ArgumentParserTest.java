@@ -148,6 +148,14 @@ public class ArgumentParserTest {
                             .setExcludedTags(EMPTY_TAGS)},
 
 
+            {args("test", "mysuite", "mysuite2", "--config", "/some/config"),
+                    new GalenActionTestArguments()
+                            .setPaths(asList("mysuite", "mysuite2"))
+                            .setRecursive(false)
+                            .setIncludedTags(EMPTY_TAGS)
+                            .setExcludedTags(EMPTY_TAGS)
+                            .setConfig("/some/config")
+            },
         };
     }
 
@@ -181,6 +189,27 @@ public class ArgumentParserTest {
                 .setExport("export-page-dir")
                 .setMaxWidth(100)
                 .setMaxHeight(150)));
+    }
+
+    @Test
+    public void shouldParse_dumpAction_withConfig() {
+        GalenActionDump action = (GalenActionDump) GalenAction.create("dump",
+                new String[]{"my-page.gspec",
+                        "--url", "http://mindengine.net",
+                        "--export", "export-page-dir",
+                        "--max-width", "100",
+                        "--max-height", "150",
+                        "--config", "/some/config"
+                },
+                System.out, System.err, NO_LISTENER);
+        assertThat(action.getDumpArguments(), is(new GalenActionDumpArguments()
+                .setPaths(asList("my-page.gspec"))
+                .setUrl("http://mindengine.net")
+                .setExport("export-page-dir")
+                .setMaxWidth(100)
+                .setMaxHeight(150)
+                .setConfig("/some/config")
+        ));
     }
 
     @Test(dataProvider = "goodSamples_checkAction")
@@ -233,7 +262,14 @@ public class ArgumentParserTest {
                     new GalenActionCheckArguments()
                             .setUrl("http://mindengine.net")
                             .setPaths(asList("some1.spec", "some2.spec"))
-            },
+                },
+
+                {args("check", "some1.spec", "some2.spec", "--url", "http://mindengine.net", "--config", "/some/config"),
+                        new GalenActionCheckArguments()
+                                .setUrl("http://mindengine.net")
+                                .setPaths(asList("some1.spec", "some2.spec"))
+                                .setConfig("/some/config")
+                },
         };
     }
     

@@ -34,6 +34,7 @@ public class GalenActionDumpArguments {
     private String export;
     private Dimension screenSize;
     private String url;
+    private String config;
 
 
     public static GalenActionDumpArguments parse(String[] args) {
@@ -45,9 +46,10 @@ public class GalenActionDumpArguments {
         options.addOption("W", "max-width", true, "Maximum width of element area image");
         options.addOption("H", "max-height", true, "Maximum height of element area image");
         options.addOption("E", "export", true, "Export path for page dump");
+        options.addOption("c", "config", true, "Path to config");
 
         CommandLineParser parser = new PosixParser();
-        CommandLine cmd = null;
+        CommandLine cmd;
 
         try {
             cmd = parser.parse(options, args);
@@ -64,6 +66,7 @@ public class GalenActionDumpArguments {
         arguments.setMaxHeight(parseOptionalInt(cmd.getOptionValue("H")));
         arguments.setExport(cmd.getOptionValue("E"));
         arguments.setPaths(asList(cmd.getArgs()));
+        arguments.setConfig(cmd.getOptionValue("c"));
         return arguments;
     }
 
@@ -153,6 +156,7 @@ public class GalenActionDumpArguments {
                 .append(export)
                 .append(screenSize)
                 .append(url)
+                .append(config)
                 .toHashCode();
     }
 
@@ -175,6 +179,7 @@ public class GalenActionDumpArguments {
                 .append(rhs.export, export)
                 .append(rhs.screenSize, screenSize)
                 .append(rhs.url, url)
+                .append(rhs.config, config)
                 .isEquals();
     }
 
@@ -187,6 +192,16 @@ public class GalenActionDumpArguments {
                 .append("export", export)
                 .append("screenSize", screenSize)
                 .append("url", url)
+                .append("config", config)
                 .toString();
+    }
+
+    public GalenActionDumpArguments setConfig(String config) {
+        this.config = config;
+        return this;
+    }
+
+    public String getConfig() {
+        return config;
     }
 }
