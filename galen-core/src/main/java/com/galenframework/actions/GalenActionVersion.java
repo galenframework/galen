@@ -16,14 +16,13 @@
 package com.galenframework.actions;
 
 import com.galenframework.javascript.GalenJsExecutor;
-import com.galenframework.runner.CombinedListener;
 
 import java.io.PrintStream;
 
 public class GalenActionVersion extends GalenAction {
 
-    public GalenActionVersion(String[] arguments, PrintStream outStream, PrintStream errStream, CombinedListener listener) {
-        super(arguments, outStream, errStream, listener);
+    public GalenActionVersion(String[] arguments, PrintStream outStream, PrintStream errStream) {
+        super(arguments, outStream, errStream);
     }
 
     @Override

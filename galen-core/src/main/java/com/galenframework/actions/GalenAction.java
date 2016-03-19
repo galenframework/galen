@@ -21,6 +21,7 @@ import com.galenframework.reports.ConsoleReportingListener;
 import com.galenframework.runner.CombinedListener;
 import com.galenframework.runner.CompleteListener;
 
+import java.io.IOException;
 import java.io.PrintStream;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
@@ -33,10 +34,16 @@ public abstract class GalenAction {
     protected final PrintStream errStream;
     protected final String[] arguments;
 
-    public GalenAction(String[] arguments, PrintStream outStream, PrintStream errStream, CombinedListener listener) {
+    public GalenAction(String[] arguments, PrintStream outStream, PrintStream errStream) {
         this.arguments = arguments;
         this.outStream = outStream;
         this.errStream = errStream;
+    }
+
+    public void loadConfigIfNeeded(String configPath) throws IOException {
+        if (configPath != null) {
+            GalenConfig.reloadConfigFromPath(configPath);
+        }
     }
 
     public abstract void execute() throws Exception;
@@ -48,17 +55,17 @@ public abstract class GalenAction {
             case "check":
                 return new GalenActionCheck(arguments, outStream, errStream, combinedListener);
             case "dump":
-                return new GalenActionDump(arguments, outStream, errStream, combinedListener);
+                return new GalenActionDump(arguments, outStream, errStream);
             case "help":
             case "-h":
             case "--help":
-                return new GalenActionHelp(arguments, outStream, errStream, combinedListener);
+                return new GalenActionHelp(arguments, outStream, errStream);
             case "version":
             case "-v":
             case "--version":
-                return new GalenActionVersion(arguments, outStream, errStream, combinedListener);
+                return new GalenActionVersion(arguments, outStream, errStream);
             case "config":
-                return new GalenActionConfig(arguments, outStream, errStream, combinedListener);
+                return new GalenActionConfig(arguments, outStream, errStream);
         }
         throw new RuntimeException("Unknown action: " + actionName);
     }

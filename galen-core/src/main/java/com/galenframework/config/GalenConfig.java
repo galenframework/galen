@@ -15,6 +15,7 @@
 ******************************************************************************/
 package com.galenframework.config;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.LinkedList;
@@ -53,7 +54,6 @@ public class GalenConfig {
     private void loadConfig() throws IOException {
         this.properties = new Properties();
 
-
         InputStream stream = GalenUtils.findFileOrResourceAsStream(readProperty(GalenProperty.GALEN_CONFIG_FILE));
 
         if (stream == null) {
@@ -61,10 +61,24 @@ public class GalenConfig {
             stream = GalenUtils.findFileOrResourceAsStream("config");
         }
 
+        loadFromStream(stream);
+    }
+
+    private void loadFromStream(InputStream stream) throws IOException {
         if (stream != null) {
             properties.load(stream);
             stream.close();
         }
+    }
+
+    public static void reloadConfigFromPath(String configPath) throws IOException {
+        getConfig().reloadConfig(configPath);
+    }
+
+    private void reloadConfig(String configPath) throws IOException {
+        this.properties = new Properties();
+        InputStream stream = GalenUtils.findFileOrResourceAsStream("config");
+        loadFromStream(stream);
     }
 
     private List<String> convertCommaSeparatedList(String text) {
@@ -184,4 +198,5 @@ public class GalenConfig {
     public String getStringProperty(GalenProperty property) {
         return readProperty(property);
     }
+
 }

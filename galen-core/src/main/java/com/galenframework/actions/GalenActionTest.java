@@ -53,13 +53,15 @@ public class GalenActionTest extends GalenAction {
     private final CombinedListener listener;
 
     public GalenActionTest(String[] arguments, PrintStream outStream, PrintStream errStream, CombinedListener listener) {
-        super(arguments, outStream, errStream, listener);
+        super(arguments, outStream, errStream);
         this.testArguments = GalenActionTestArguments.parse(arguments);
         this.listener = createListeners(listener);
     }
 
     @Override
     public void execute() throws Exception {
+        loadConfigIfNeeded(getTestArguments().getConfig());
+
         List<File> basicTestFiles = new LinkedList<>();
         List<File> jsTestFiles = new LinkedList<>();
 

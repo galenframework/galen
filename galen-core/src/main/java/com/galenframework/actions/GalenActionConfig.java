@@ -15,14 +15,13 @@
 ******************************************************************************/
 package com.galenframework.actions;
 
-import com.galenframework.runner.CombinedListener;
 import org.apache.commons.io.IOUtils;
 
 import java.io.*;
 
 public class GalenActionConfig extends GalenAction {
-    public GalenActionConfig(String[] arguments, PrintStream outStream, PrintStream errStream, CombinedListener listener) {
-        super(arguments, outStream, errStream, listener);
+    public GalenActionConfig(String[] arguments, PrintStream outStream, PrintStream errStream) {
+        super(arguments, outStream, errStream);
     }
 
     @Override

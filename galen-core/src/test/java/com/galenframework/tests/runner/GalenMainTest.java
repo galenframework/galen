@@ -71,12 +71,11 @@ public class GalenMainTest {
 
         JsTestRegistry.get().clear();
 
-        new GalenMain().execute(new String[]{"test",
+        new GalenMain().execute("test",
                 getClass().getResource("/js-tests/simple-with-error.test.js").getFile(),
                 "--htmlreport", htmlReportPath,
                 "--testngreport", testngReportPath,
-                "--jsonreport", jsonReportPath
-        });
+                "--jsonreport", jsonReportPath);
 
         assertThat(JsTestRegistry.get().getEvents().size(), is(3));
         assertThat(JsTestRegistry.get().getEvents().get(0), is("Test #1 was invoked"));
@@ -117,10 +116,8 @@ public class GalenMainTest {
     public void shouldRun_javascriptTestWithEvents() throws Exception {
         JsTestRegistry.get().clear();
 
-        new GalenMain().execute(new String[]{
-                "test",
-                getClass().getResource("/js-tests/with-events.test.js").getFile()
-        });
+        new GalenMain().execute("test",
+                getClass().getResource("/js-tests/with-events.test.js").getFile());
 
         assertThat(JsTestRegistry.get().getEvents(), contains(
                 "Before test suite",
@@ -138,10 +135,8 @@ public class GalenMainTest {
     public void shouldRun_javascriptTest_regardlessOfItsSuffix() throws Exception {
         JsTestRegistry.get().clear();
 
-        new GalenMain().execute(new String[]{
-                "test",
-                getClass().getResource("/js-tests/test-without-galen-suffix.js").getFile()
-        });
+        new GalenMain().execute("test",
+                getClass().getResource("/js-tests/test-without-galen-suffix.js").getFile());
 
         assertThat(JsTestRegistry.get().getEvents(), contains(
                 "Test #1 was invoked"));
@@ -153,10 +148,8 @@ public class GalenMainTest {
 
         GalenConfig.getConfig().setProperty(GalenProperty.TEST_JS_SUFFIX, ".blahblah.js");
 
-        new GalenMain().execute(new String[]{
-                "test",
-                getClass().getResource("/js-tests/tests-with-custom-suffix").getFile()
-        });
+        new GalenMain().execute("test",
+                getClass().getResource("/js-tests/tests-with-custom-suffix").getFile());
 
         assertThat(JsTestRegistry.get().getEvents(), containsInAnyOrder(
                 "Test #1 was invoked",
@@ -170,10 +163,8 @@ public class GalenMainTest {
     public void shouldRunJavascriptTests_andFilterThem() throws Exception {
         JsTestRegistry.get().clear();
 
-        new GalenMain().execute(new String[]{
-                "test",
-                getClass().getResource("/js-tests/testfilter.test.js").getFile()
-        });
+        new GalenMain().execute("test",
+                getClass().getResource("/js-tests/testfilter.test.js").getFile());
 
         assertThat(JsTestRegistry.get().getEvents(), contains(
                 "Test D invoked",
@@ -187,11 +178,9 @@ public class GalenMainTest {
     public void shouldRunJavascriptTests_onlyForSpecifiedGroups_withTwoGroups() throws Exception {
         JsTestRegistry.get().clear();
 
-        new GalenMain().execute(new String[]{
-                        "test",
-                        getClass().getResource("/js-tests/testgroups.test.js").getFile(),
-                        "--groups", "mobile,tablet"
-        });
+        new GalenMain().execute("test",
+                getClass().getResource("/js-tests/testgroups.test.js").getFile(),
+                "--groups", "mobile,tablet");
 
         assertThat(JsTestRegistry.get().getEvents(), contains(
                 "Test A invoked",
@@ -204,11 +193,9 @@ public class GalenMainTest {
     public void shouldRunJavascriptTests_onlyForSpecifiedGroups_withOneGroup() throws Exception {
         JsTestRegistry.get().clear();
 
-        new GalenMain().execute(new String[] {
-                        "test",
-                        getClass().getResource("/js-tests/testgroups.test.js").getFile(),
-                        "--groups", "tablet"
-        });
+        new GalenMain().execute("test",
+                getClass().getResource("/js-tests/testgroups.test.js").getFile(),
+                "--groups", "tablet");
 
         assertThat(JsTestRegistry.get().getEvents(), contains(
                 "Test B invoked",
@@ -220,11 +207,9 @@ public class GalenMainTest {
     public void shouldRunJavascriptTests_withExcludedGroups() throws Exception {
         JsTestRegistry.get().clear();
 
-        new GalenMain().execute(new String[]{
-                "test",
+        new GalenMain().execute("test",
                 getClass().getResource("/js-tests/testgroups.test.js").getFile(),
-                "--excluded-groups", "tablet"
-        });
+                "--excluded-groups", "tablet");
 
         assertThat(JsTestRegistry.get().getEvents(), contains(
                 "Test A invoked",
@@ -242,11 +227,9 @@ public class GalenMainTest {
         File htmlReportDir = Files.createTempDir();
         JsTestRegistry.get().clear();
 
-        new GalenMain().execute(new String[]{
-                "test",
+        new GalenMain().execute("test",
                 getClass().getResource("/js-tests/testretry.test.js").getFile(),
-                "--htmlreport", htmlReportDir.getAbsolutePath()
-        });
+                "--htmlreport", htmlReportDir.getAbsolutePath());
 
         List<String> events = JsTestRegistry.get().getEvents();
 
@@ -293,7 +276,7 @@ public class GalenMainTest {
     
     @Test 
     public void shouldGenerate_configFile() throws Exception {
-        new GalenMain().execute(new String[]{"config"});
+        new GalenMain().execute("config");
         assertThat("config file should exist", new File("galen.config").exists(), is(true));
         new File("galen.config").delete();
     }
@@ -304,7 +287,7 @@ public class GalenMainTest {
         file.createNewFile();
         FileUtils.writeStringToFile(file, "someTestDate = qwertyuiop");
         
-        new GalenMain().execute(new String[]{"config"});
+        new GalenMain().execute("config");
 
         String data = FileUtils.readFileToString(file);
         assertThat(data, is("someTestDate = qwertyuiop"));
@@ -327,10 +310,8 @@ public class GalenMainTest {
         };
         galen.setListener(listener);
         
-        galen.execute(new String[]{
-                "test", testUrl,
-                "--filter", "*with filter*"
-        });
+        galen.execute("test", testUrl,
+                "--filter", "*with filter*");
         
         assertThat("Amount of executed tests should be", executedSuites.size(), is(3));
         assertThat(executedSuites, hasItems(
@@ -352,9 +333,7 @@ public class GalenMainTest {
             }
         };
         galen.setListener(listener);
-        galen.execute(new String[]{
-                "test", testUrl
-        });
+        galen.execute("test", testUrl);
 
         assertThat(errorMessages, hasItems("\"caption\" text is \"Hi my name is John\" but should be \"Hi my name is Jack\""));
     }
@@ -363,7 +342,7 @@ public class GalenMainTest {
     public void shouldPrintHelp() throws Exception {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         PrintStream ps = new PrintStream(baos);
-        new GalenMain(ps, System.err).execute(new String[]{"help"});
+        new GalenMain(ps, System.err).execute("help");
 
         String realText = baos.toString("UTF-8");
         assertThat(realText, allOf(containsString("Galen Framework is an open-source tool for testing layout"),

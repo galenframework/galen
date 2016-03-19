@@ -15,7 +15,6 @@
 ******************************************************************************/
 package com.galenframework.actions;
 
-import com.galenframework.runner.CombinedListener;
 import org.apache.commons.io.IOUtils;
 
 import java.io.IOException;
@@ -23,8 +22,8 @@ import java.io.InputStream;
 import java.io.PrintStream;
 
 public class GalenActionHelp extends GalenAction {
-    public GalenActionHelp(String[] arguments, PrintStream outStream, PrintStream errStream, CombinedListener listener) {
-        super(arguments, outStream, errStream, listener);
+    public GalenActionHelp(String[] arguments, PrintStream outStream, PrintStream errStream) {
+        super(arguments, outStream, errStream);
     }
 
     @Override

@@ -24,6 +24,7 @@ import com.galenframework.suite.actions.GalenPageActionCheck;
 import com.galenframework.tests.GalenBasicTest;
 import com.galenframework.tests.GalenTest;
 
+import java.io.IOException;
 import java.io.PrintStream;
 import java.util.LinkedList;
 import java.util.List;
@@ -35,14 +36,16 @@ public class GalenActionCheck extends GalenAction {
     private final CombinedListener listener;
 
     public GalenActionCheck(String[] arguments, PrintStream outStream, PrintStream errStream, CombinedListener listener) {
-        super(arguments, outStream, errStream, listener);
+        super(arguments, outStream, errStream);
         this.checkArguments = GalenActionCheckArguments.parse(arguments);
         this.listener = createListeners(listener);
     }
 
     @Override
-    public void execute() {
+    public void execute() throws IOException {
         verifyArgumentsForPageCheck();
+
+        loadConfigIfNeeded(getCheckArguments().getConfig());
 
         List<GalenTest> galenTests = new LinkedList<>();
 
@@ -68,6 +71,7 @@ public class GalenActionCheck extends GalenAction {
 
         GalenActionTest.runTests(new EventHandler(), galenTests, testArguments, listener);
     }
+
 
     private String originalCommand(String[] arguments) {
         StringBuilder builder = new StringBuilder("check ");

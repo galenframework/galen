@@ -19,26 +19,22 @@ import com.galenframework.api.GalenPageDump;
 import com.galenframework.browser.Browser;
 import com.galenframework.browser.SeleniumBrowserFactory;
 import com.galenframework.parser.SyntaxException;
-import com.galenframework.runner.CombinedListener;
 
 import java.io.IOException;
 import java.io.PrintStream;
-import java.util.Collections;
-import java.util.Map;
 
 public class GalenActionDump extends GalenAction {
-    private static final Map<String, Object> NO_JSVARIABLES = Collections.emptyMap();
     private final GalenActionDumpArguments dumpArguments;
-    private final CombinedListener listener;
 
-    public GalenActionDump(String[] arguments, PrintStream outStream, PrintStream errStream, CombinedListener listener) {
-        super(arguments, outStream, errStream, listener);
+    public GalenActionDump(String[] arguments, PrintStream outStream, PrintStream errStream) {
+        super(arguments, outStream, errStream);
         this.dumpArguments = GalenActionDumpArguments.parse(arguments);
-        this.listener = createListeners(listener);
     }
 
     @Override
     public void execute() throws IOException {
+        loadConfigIfNeeded(getDumpArguments().getConfig());
+
         SeleniumBrowserFactory browserFactory = new SeleniumBrowserFactory();
         Browser browser = browserFactory.openBrowser();
 

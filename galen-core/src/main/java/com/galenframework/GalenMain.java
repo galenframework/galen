@@ -61,7 +61,7 @@ public class GalenMain {
             }
 
         } else {
-            new GalenActionVersion(arguments, outStream, errStream, combinedListener).execute();
+            new GalenActionVersion(arguments, outStream, errStream).execute();
         }
 
         combinedListener.done();
