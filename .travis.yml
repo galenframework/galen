@@ -2,8 +2,6 @@ language: java
 install: mvn install -DskipTests -Dgpg.skip
 jdk:
   - oraclejdk8
-  - oraclejdk7
-  - openjdk7
 addons:
   firefox: "38.0"
 env:
