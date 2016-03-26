@@ -13,7 +13,7 @@
 * See the License for the specific language governing permissions and
 * limitations under the License.
 ******************************************************************************/
-package com.galenframework.rainbow4j;
+package com.galenframework.rainbow4j.colorscheme;
 
 import java.awt.Color;
 

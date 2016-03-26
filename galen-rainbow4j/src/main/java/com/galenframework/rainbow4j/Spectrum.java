@@ -15,6 +15,8 @@
 ******************************************************************************/
 package com.galenframework.rainbow4j;
 
+import com.galenframework.rainbow4j.colorscheme.ColorDistribution;
+
 import java.awt.Color;
 import java.util.LinkedList;
 import java.util.List;

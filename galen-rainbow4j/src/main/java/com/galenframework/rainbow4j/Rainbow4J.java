@@ -16,6 +16,8 @@
 package com.galenframework.rainbow4j;
 
 
+import com.galenframework.rainbow4j.colorscheme.ColorClassifier;
+import com.galenframework.rainbow4j.colorscheme.CustomSpectrum;
 import com.galenframework.rainbow4j.filters.ImageFilter;
 
 import javax.imageio.ImageIO;
@@ -25,7 +27,11 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.ByteBuffer;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Collectors;
 
 public class Rainbow4J {
 
@@ -283,6 +289,62 @@ public class Rainbow4J {
         return new Spectrum(spectrum, spectrumWidth, spectrumHeight);
     }
 
+    public static CustomSpectrum readCustomSpectrum(BufferedImage image, List<ColorClassifier> colorClassifiers) {
+        return readCustomSpectrum(image, null, colorClassifiers);
+    }
+
+    public static CustomSpectrum readCustomSpectrum(BufferedImage image, Rectangle area, List<ColorClassifier> colorClassifiers) {
+        Map<String, AtomicInteger> colorPickers = new HashMap<>();
+        for (ColorClassifier classifier : colorClassifiers) {
+            colorPickers.put(classifier.getName(), new AtomicInteger(0));
+        }
+
+        int amountOfUnmatchedColor = 0;
+
+
+        int width = image.getWidth();
+        int height = image.getHeight();
+
+        int[] a = new int[width * height];
+
+        image.getRGB(0, 0, width, height, a, 0, width);
+
+        if (area == null) {
+            area = new Rectangle(0, 0, width, height);
+        }
+
+        int k = 0;
+        int r,g,b;
+
+
+        for (int y = area.y; y < area.y + area.height; y++) {
+            for (int x = area.x; x < area.x + area.width; x++) {
+                k = y * width + x;
+
+                r = ((a[k] >> 16) & 0xff);
+                g = ((a[k] >> 8) & 0xff);
+                b = ((a[k]) & 0xff);
+
+                boolean colorMatched = false;
+                for (ColorClassifier classifier : colorClassifiers) {
+                    if (classifier.holdsColor(r, g, b, 20)) {
+                        colorPickers.get(classifier.getName()).incrementAndGet();
+                        colorMatched = true;
+                    }
+                }
+
+                if (!colorMatched) {
+                    amountOfUnmatchedColor += 1;
+                }
+            }
+        }
+
+        int totalPixels = (area.height - area.y) * (area.width - area.x);
+        Map<String, Integer> collectedColors = colorPickers.entrySet().stream().collect(Collectors.toMap(Map.Entry::getKey, e -> e.getValue().get()));
+
+        return new CustomSpectrum(collectedColors, amountOfUnmatchedColor, totalPixels);
+    }
+
     public static BufferedImage loadImage(String filePath) throws IOException{
         return ImageIO.read(new File(filePath));
     }
@@ -294,4 +356,5 @@ public class Rainbow4J {
     public static void saveImage(BufferedImage image, File file) throws IOException {
         ImageIO.write(image, "png", file);
     }
+
 }
