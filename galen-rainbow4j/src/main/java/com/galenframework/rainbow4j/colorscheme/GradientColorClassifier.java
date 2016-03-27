@@ -21,9 +21,9 @@ public class GradientColorClassifier implements ColorClassifier {
     }
 
     @Override
-    public boolean holdsColor(int r, int g, int b, int maxDistance) {
+    public boolean holdsColor(int r, int g, int b, int maxColorSquareDistance) {
         for (int i = 1; i < colors.length; i++) {
-            if (holdsColorBetweenPoints(r, g, b, colors[i-1], colors[i], maxDistance)) {
+            if (holdsColorBetweenPoints(r, g, b, colors[i-1], colors[i], maxColorSquareDistance)) {
                 return true;
             }
         }

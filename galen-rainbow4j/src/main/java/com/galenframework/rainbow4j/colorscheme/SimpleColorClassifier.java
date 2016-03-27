@@ -21,8 +21,8 @@ public class SimpleColorClassifier implements ColorClassifier {
     }
 
     @Override
-    public boolean holdsColor(int r, int g, int b, int maxDistance) {
-        int distance = (r - red) * (r - red) + (g - green) * (g - green) + (b - blue) * (b - blue);
-        return distance < maxDistance;
+    public boolean holdsColor(int r, int g, int b, int maxColorSquareDistance) {
+        int distance = (r - red)*(r - red) + (g - green)*(g - green) + (b - blue)*(b - blue);
+        return distance < maxColorSquareDistance;
     }
 }

@@ -59,9 +59,13 @@ public class ExpectColorRanges implements Expectation<List<ColorRange>> {
             
             Color color = parseColor(colorText);
             
-            colorRanges.add(new ColorRange(color, range));
+            colorRanges.add(new ColorRange(colorText, color, range));
         }
         return colorRanges;
+    }
+
+    private String toHexColor(Color color) {
+        return String.format("#%02x%02x%02x", color.getRed(), color.getGreen(), color.getBlue());
     }
 
     private Color parseColor(String colorText) {

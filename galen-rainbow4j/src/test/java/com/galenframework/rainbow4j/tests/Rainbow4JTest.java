@@ -85,8 +85,6 @@ public class Rainbow4JTest {
         );
         CustomSpectrum spectrum = Rainbow4J.readCustomSpectrum(image, colorClassifiers);
 
-        spectrum.getCollectedColors().entrySet().stream().forEach(e -> System.out.println(e.getKey() + ": " + e.getValue()));
-
         assertThat(spectrum.getCollectedColors(), is(new HashMap<String, Integer>() {{
             put("green-blue", 10000);
             put("pink", 10000);
@@ -104,9 +102,8 @@ public class Rainbow4JTest {
         List<ColorClassifier> colorClassifiers = asList(
                 new GradientColorClassifier("green-blue", asList(new Color(5, 153, 0), new Color(9, 24, 184)))
         );
-        CustomSpectrum spectrum = Rainbow4J.readCustomSpectrum(image, new Rectangle(0, 0, 100, 100), colorClassifiers);
+        CustomSpectrum spectrum = Rainbow4J.readCustomSpectrum(image, colorClassifiers, new Rectangle(0, 0, 100, 100));
 
-        spectrum.getCollectedColors().entrySet().stream().forEach(e -> System.out.println(e.getKey() + ": " + e.getValue()));
 
         assertThat(spectrum.getCollectedColors(), is(new HashMap<String, Integer>(){{
             put("green-blue", 10000);
@@ -122,9 +119,8 @@ public class Rainbow4JTest {
         List<ColorClassifier> colorClassifiers = asList(
                 new GradientColorClassifier("green-blue", asList(new Color(5, 153, 0), new Color(9, 24, 184)))
         );
-        CustomSpectrum spectrum = Rainbow4J.readCustomSpectrum(image, new Rectangle(0, 0, 100, 100), colorClassifiers);
+        CustomSpectrum spectrum = Rainbow4J.readCustomSpectrum(image, colorClassifiers, new Rectangle(0, 0, 100, 100));
 
-        spectrum.getCollectedColors().entrySet().stream().forEach(e -> System.out.println(e.getKey() + ": " + e.getValue()));
 
         assertThat(spectrum.getCollectedColors(), is(new HashMap<String, Integer>(){{
             put("green-blue", 10000);
@@ -140,9 +136,8 @@ public class Rainbow4JTest {
         List<ColorClassifier> colorClassifiers = asList(
                 new GradientColorClassifier("green-blue", asList(new Color(6, 120, 46), new Color(8, 56, 138)))
         );
-        CustomSpectrum spectrum = Rainbow4J.readCustomSpectrum(image, new Rectangle(0, 0, 100, 100), colorClassifiers);
+        CustomSpectrum spectrum = Rainbow4J.readCustomSpectrum(image, colorClassifiers, new Rectangle(0, 0, 100, 100));
 
-        spectrum.getCollectedColors().entrySet().stream().forEach(e -> System.out.println(e.getKey() + ": " + e.getValue()));
 
         assertThat(spectrum.getCollectedColors(), is(new HashMap<String, Integer>(){{
             put("green-blue", 5780);
@@ -151,6 +146,21 @@ public class Rainbow4JTest {
         assertThat(spectrum.getTotalPixels(), is(10000));
     }
 
+    @Test
+    public void shouldRead_imageSpectrum_withPredefinedColorClassifiers_inSpecifiedArea_4() throws IOException {
+        BufferedImage image = Rainbow4J.loadImage(getClass().getResource("/colo-scheme-gradient.png").getFile());
+
+        List<ColorClassifier> colorClassifiers = asList(
+                new SimpleColorClassifier("pink", new Color(252, 18, 53))
+        );
+        CustomSpectrum spectrum = Rainbow4J.readCustomSpectrum(image, colorClassifiers, new Rectangle(100, 0, 100, 100));
+
+        assertThat(spectrum.getCollectedColors(), is(new HashMap<String, Integer>(){{
+            put("pink", 10000);
+        }}));
+        assertThat(spectrum.getOtherColors(), is(0));
+        assertThat(spectrum.getTotalPixels(), is(10000));
+    }
     @Test
     public void shouldRead_imageSpectrum_fromPNG() throws IOException {
         BufferedImage image = Rainbow4J.loadImage(getClass().getResource("/test-spectrum-black-white-1.png").getFile());

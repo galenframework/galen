@@ -23,8 +23,10 @@ public class ColorRange {
 
     private Range range;
     private Color color;
+    private String name;
 
-    public ColorRange(Color color, Range range) {
+    public ColorRange(String name, Color color, Range range) {
+        this.name = name;
         this.color = color;
         this.range = range;
     }
@@ -45,4 +47,11 @@ public class ColorRange {
         this.color = color;
     }
 
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
 }

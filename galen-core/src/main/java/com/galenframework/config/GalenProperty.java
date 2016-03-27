@@ -42,8 +42,7 @@ public enum GalenProperty {
     GALEN_LOG_LEVEL("galen.log.level", "10"),
     GALEN_USE_FAIL_EXIT_CODE("galen.use.fail.exit.code", "true"),
 
-    SPEC_COLORSCHEME_PRECISON("spec.colorscheme.precision", "256"),
-    SPEC_COLORSCHEME_TESTRANGE("spec.colorscheme.testrange", "6"),
+    SPEC_COLORSCHEME_TOLERANCE("spec.colorscheme.tolerance", "3"),
 
     GALEN_BROWSERFACTORY_SELENIUM_RUNINGRID("galen.browserFactory.selenium.runInGrid", "false"),
     GALEN_BROWSERFACTORY_SELENIUM_GRID_URL("galen.browserFactory.selenium.grid.url", null),

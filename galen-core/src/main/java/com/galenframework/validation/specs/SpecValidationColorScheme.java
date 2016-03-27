@@ -20,17 +20,20 @@ import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import com.galenframework.config.GalenConfig;
 import com.galenframework.config.GalenProperty;
 import com.galenframework.page.Rect;
+import com.galenframework.rainbow4j.colorscheme.ColorClassifier;
+import com.galenframework.rainbow4j.colorscheme.CustomSpectrum;
+import com.galenframework.rainbow4j.colorscheme.SimpleColorClassifier;
 import com.galenframework.specs.RangeValue;
 import com.galenframework.specs.SpecColorScheme;
 import com.galenframework.specs.colors.ColorRange;
 import com.galenframework.validation.*;
 import com.galenframework.page.PageElement;
 import com.galenframework.rainbow4j.Rainbow4J;
-import com.galenframework.rainbow4j.Spectrum;
 
 import static java.util.Arrays.asList;
 
@@ -38,8 +41,7 @@ public class SpecValidationColorScheme extends SpecValidation<SpecColorScheme> {
 
     @Override
     public ValidationResult check(PageValidation pageValidation, String objectName, SpecColorScheme spec) throws ValidationErrorException {
-        int colorPrecision = GalenConfig.getConfig().getIntProperty(GalenProperty.SPEC_COLORSCHEME_PRECISON, 8, 256);
-        int colorTestRange = GalenConfig.getConfig().getIntProperty(GalenProperty.SPEC_COLORSCHEME_TESTRANGE, 0, 256);
+        int colorTolerance = GalenConfig.getConfig().getIntProperty(GalenProperty.SPEC_COLORSCHEME_TOLERANCE, 0, 256);
 
         PageElement mainObject = pageValidation.findPageElement(objectName);
         checkAvailability(mainObject, objectName);
@@ -53,14 +55,15 @@ public class SpecValidationColorScheme extends SpecValidation<SpecColorScheme> {
                 .withValidationObject(new ValidationObject(area, objectName))
                 .withMessage("Can't fetch image for \"object\" as it is outside of screenshot");
         }
+
+        List<ColorClassifier> classifiers = spec.getColorRanges().stream().map(
+                cr -> new SimpleColorClassifier(cr.getName(), cr.getColor())
+        ).collect(Collectors.toList());
         
-        
-        
-        
-        
-        Spectrum spectrum;
+
+        CustomSpectrum spectrum;
         try {
-            spectrum = Rainbow4J.readSpectrum(pageImage, new Rectangle(area.getLeft(), area.getTop(), area.getWidth(), area.getHeight()), colorPrecision);
+            spectrum = Rainbow4J.readCustomSpectrum(pageImage, classifiers, new Rectangle(area.getLeft(), area.getTop(), area.getWidth(), area.getHeight()), colorTolerance);
         } catch (Exception e) {
             throw new ValidationErrorException(String.format("Couldn't fetch spectrum for \"%s\"", objectName));
         }
@@ -68,13 +71,19 @@ public class SpecValidationColorScheme extends SpecValidation<SpecColorScheme> {
         List<String> messages = new LinkedList<>();
         
         for (ColorRange colorRange : spec.getColorRanges()) {
-            Color color = colorRange.getColor();
-            double realPercentage = spectrum.getPercentage(color.getRed(), color.getGreen(), color.getBlue(), colorTestRange);
-            
+            double realPercentage = 0;
+            int totalPixels = spectrum.getTotalPixels();
+            if (totalPixels > 0) {
+                realPercentage = ((double)(spectrum.getCollectedColors().getOrDefault(colorRange.getName(), 0)) / totalPixels) * 100.0;
+                if (realPercentage > 151) {
+                    int j =0;
+                }
+            }
+
             if (!colorRange.getRange().holds(realPercentage)) {
                 String realPercentageText = new RangeValue(realPercentage, colorRange.getRange().findPrecision()).toString();
 
-                messages.add(String.format("color %s on \"%s\" is %s%% %s", toHexColor(color), objectName, realPercentageText, colorRange.getRange().getErrorMessageSuffix("%")));
+                messages.add(String.format("color %s on \"%s\" is %s%% %s", colorRange.getName(), objectName, realPercentageText, colorRange.getRange().getErrorMessageSuffix("%")));
             }
         }
 
@@ -90,8 +99,5 @@ public class SpecValidationColorScheme extends SpecValidation<SpecColorScheme> {
         return new ValidationResult(spec, objects);
     }
 
-    private String toHexColor(Color color) {
-        return String.format("#%02x%02x%02x", color.getRed(), color.getGreen(), color.getBlue());
-    }
 
 }

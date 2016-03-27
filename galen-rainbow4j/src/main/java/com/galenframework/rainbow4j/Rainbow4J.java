@@ -35,6 +35,8 @@ import java.util.stream.Collectors;
 
 public class Rainbow4J {
 
+    public static final int DEFAULT_COLOR_TOLERANCE_FOR_SPECTRUM = 3;
+
     public static Spectrum readSpectrum(BufferedImage image) throws IOException {
         return readSpectrum(image, null, 256);
     }
@@ -290,17 +292,22 @@ public class Rainbow4J {
     }
 
     public static CustomSpectrum readCustomSpectrum(BufferedImage image, List<ColorClassifier> colorClassifiers) {
-        return readCustomSpectrum(image, null, colorClassifiers);
+        return readCustomSpectrum(image, colorClassifiers, new Rectangle(0, 0, image.getWidth(), image.getHeight()));
     }
 
-    public static CustomSpectrum readCustomSpectrum(BufferedImage image, Rectangle area, List<ColorClassifier> colorClassifiers) {
+    public static CustomSpectrum readCustomSpectrum(BufferedImage image, List<ColorClassifier> colorClassifiers, Rectangle area) {
+        return readCustomSpectrum(image, colorClassifiers, area, DEFAULT_COLOR_TOLERANCE_FOR_SPECTRUM);
+    }
+
+    public static CustomSpectrum readCustomSpectrum(BufferedImage image, List<ColorClassifier> colorClassifiers, Rectangle area, int colorTolerance) {
+        int maxColorSquareDistance = colorTolerance*colorTolerance*3;
+
         Map<String, AtomicInteger> colorPickers = new HashMap<>();
         for (ColorClassifier classifier : colorClassifiers) {
             colorPickers.put(classifier.getName(), new AtomicInteger(0));
         }
 
         int amountOfUnmatchedColor = 0;
-
 
         int width = image.getWidth();
         int height = image.getHeight();
@@ -316,7 +323,6 @@ public class Rainbow4J {
         int k = 0;
         int r,g,b;
 
-
         for (int y = area.y; y < area.y + area.height; y++) {
             for (int x = area.x; x < area.x + area.width; x++) {
                 k = y * width + x;
@@ -327,7 +333,7 @@ public class Rainbow4J {
 
                 boolean colorMatched = false;
                 for (ColorClassifier classifier : colorClassifiers) {
-                    if (classifier.holdsColor(r, g, b, 20)) {
+                    if (classifier.holdsColor(r, g, b, maxColorSquareDistance)) {
                         colorPickers.get(classifier.getName()).incrementAndGet();
                         colorMatched = true;
                     }
@@ -339,7 +345,7 @@ public class Rainbow4J {
             }
         }
 
-        int totalPixels = (area.height - area.y) * (area.width - area.x);
+        int totalPixels = area.height * area.width;
         Map<String, Integer> collectedColors = colorPickers.entrySet().stream().collect(Collectors.toMap(Map.Entry::getKey, e -> e.getValue().get()));
 
         return new CustomSpectrum(collectedColors, amountOfUnmatchedColor, totalPixels);
