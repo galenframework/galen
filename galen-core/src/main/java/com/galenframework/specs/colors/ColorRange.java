@@ -17,17 +17,18 @@ package com.galenframework.specs.colors;
 
 import java.awt.Color;
 
+import com.galenframework.rainbow4j.colorscheme.ColorClassifier;
 import com.galenframework.specs.Range;
 
 public class ColorRange {
 
     private Range range;
-    private Color color;
+    private ColorClassifier colorClassifier;
     private String name;
 
-    public ColorRange(String name, Color color, Range range) {
+    public ColorRange(String name, ColorClassifier colorClassifier, Range range) {
         this.name = name;
-        this.color = color;
+        this.colorClassifier = colorClassifier;
         this.range = range;
     }
 
@@ -39,19 +40,19 @@ public class ColorRange {
         this.range = range;
     }
 
-    public Color getColor() {
-        return this.color;
-    }
-
-    public void setColor(Color color) {
-        this.color = color;
-    }
-
     public String getName() {
         return name;
     }
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public ColorClassifier getColorClassifier() {
+        return colorClassifier;
+    }
+
+    public void setColorClassifier(ColorClassifier colorClassifier) {
+        this.colorClassifier = colorClassifier;
     }
 }

@@ -15,6 +15,10 @@
 ******************************************************************************/
 package com.galenframework.rainbow4j.colorscheme;
 
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.lang3.builder.ToStringBuilder;
+
 import java.awt.*;
 
 public class SimpleColorClassifier implements ColorClassifier {
@@ -39,5 +43,43 @@ public class SimpleColorClassifier implements ColorClassifier {
     public boolean holdsColor(int r, int g, int b, int maxColorSquareDistance) {
         int distance = (r - red)*(r - red) + (g - green)*(g - green) + (b - blue)*(b - blue);
         return distance < maxColorSquareDistance;
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder()
+                .append(red)
+                .append(blue)
+                .append(green)
+                .append(name)
+                .toHashCode();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null)
+            return false;
+        if (obj == this)
+            return true;
+        if (!(obj instanceof SimpleColorClassifier))
+            return false;
+
+        SimpleColorClassifier rhs = (SimpleColorClassifier)obj;
+        return new EqualsBuilder()
+                .append(rhs.red, this.red)
+                .append(rhs.blue, this.blue)
+                .append(rhs.green, this.green)
+                .append(rhs.name, this.name)
+                .isEquals();
+    }
+
+    @Override
+    public String toString() {
+        return new ToStringBuilder(this)
+                .append("red", this.red)
+                .append("blue", this.blue)
+                .append("green", this.green)
+                .append("name", this.name)
+                .toString();
     }
 }

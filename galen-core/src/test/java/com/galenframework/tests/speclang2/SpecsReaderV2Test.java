@@ -21,6 +21,7 @@ import static com.galenframework.specs.Side.BOTTOM;
 import static com.galenframework.specs.Side.LEFT;
 import static com.galenframework.specs.Side.RIGHT;
 import static com.galenframework.specs.Side.TOP;
+import static java.util.Arrays.asList;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.instanceOf;
@@ -33,6 +34,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.galenframework.rainbow4j.colorscheme.GradientColorClassifier;
+import com.galenframework.rainbow4j.colorscheme.SimpleColorClassifier;
 import com.galenframework.rainbow4j.filters.MaskFilter;
 import com.galenframework.specs.*;
 import com.galenframework.specs.colors.ColorRange;
@@ -841,9 +844,9 @@ public class SpecsReaderV2Test {
         assertThat(colors.size(), is(2));
 
         assertThat(colors.get(0).getRange(), is(Range.exact(40)));
-        assertThat(colors.get(0).getColor(), is(new Color(0, 0, 0)));
+        assertThat(colors.get(0).getColorClassifier(), is(new SimpleColorClassifier("black", new Color(0, 0, 0))));
         assertThat(colors.get(1).getRange(), is(Range.between(28, 32)));
-        assertThat(colors.get(1).getColor(), is(new Color(255, 255, 255)));
+        assertThat(colors.get(1).getColorClassifier(), is(new SimpleColorClassifier("white", new Color(255, 255, 255))));
     }
 
     @Test
@@ -853,7 +856,7 @@ public class SpecsReaderV2Test {
         assertThat(colors.size(), is(1));
 
         assertThat(colors.get(0).getRange(), is(Range.greaterThan(40)));
-        assertThat(colors.get(0).getColor(), is(new Color(255, 170, 3)));
+        assertThat(colors.get(0).getColorClassifier(), is(new SimpleColorClassifier("#ffaa03", new Color(255, 170, 3))));
     }
 
     @Test
@@ -863,7 +866,7 @@ public class SpecsReaderV2Test {
         assertThat(colors.size(), is(1));
 
         assertThat(colors.get(0).getRange(), is(Range.between(40, 50)));
-        assertThat(colors.get(0).getColor(), is(new Color(255, 0, 0)));
+        assertThat(colors.get(0).getColorClassifier(), is(new SimpleColorClassifier("red", new Color(255, 0, 0))));
     }
 
 
@@ -874,9 +877,42 @@ public class SpecsReaderV2Test {
         assertThat(colors.size(), is(1));
 
         assertThat(colors.get(0).getRange(), is(Range.exact(40)));
-        assertThat(colors.get(0).getColor(), is(new Color(255, 51, 238)));
+        assertThat(colors.get(0).getColorClassifier(), is(new SimpleColorClassifier("#f3e", new Color(255, 51, 238))));
     }
 
+    @Test
+    public void shouldReadSpec_color_withGradients() throws Exception {
+        SpecColorScheme spec = (SpecColorScheme)readSpec("color-scheme 40% white-green-blue");
+        List<ColorRange> colors = spec.getColorRanges();
+        assertThat(colors.size(), is(1));
+
+        assertThat(colors.get(0).getRange(), is(Range.exact(40)));
+        assertThat(colors.get(0).getColorClassifier(), is(new GradientColorClassifier("white-green-blue", asList(
+                new Color(255, 255, 255),
+                new Color(0, 255, 0),
+                new Color(0, 0, 255)
+        ))));
+    }
+
+    @Test
+    public void shouldReadSpec_color_withGradients_2() throws Exception {
+        SpecColorScheme spec = (SpecColorScheme)readSpec("color-scheme 40% white - green - blue, 10 to 23% #a3f - #00e");
+        List<ColorRange> colors = spec.getColorRanges();
+        assertThat(colors.size(), is(2));
+
+        assertThat(colors.get(0).getRange(), is(Range.exact(40)));
+        assertThat(colors.get(0).getColorClassifier(), is(new GradientColorClassifier("white - green - blue", asList(
+                new Color(255, 255, 255),
+                new Color(0, 255, 0),
+                new Color(0, 0, 255)
+        ))));
+
+        assertThat(colors.get(1).getRange(), is(Range.between(10, 23)));
+        assertThat(colors.get(1).getColorClassifier(), is(new GradientColorClassifier("#a3f - #00e", asList(
+                new Color(170, 51, 255),
+                new Color(0, 0, 238)
+        ))));
+    }
     @Test
     public void shouldReadSpec_image_withMaxPercentageError() throws IOException {
         SpecImage spec = (SpecImage)readSpec("image file imgs/image.png, error 2.4%");
@@ -1164,6 +1200,6 @@ public class SpecsReaderV2Test {
     }
 
     private List<Side> sides(Side...sides) {
-        return Arrays.asList(sides);
+        return asList(sides);
     }
 }

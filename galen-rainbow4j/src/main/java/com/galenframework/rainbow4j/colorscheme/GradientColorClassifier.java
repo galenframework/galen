@@ -15,6 +15,10 @@
 ******************************************************************************/
 package com.galenframework.rainbow4j.colorscheme;
 
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.lang3.builder.ToStringBuilder;
+
 import java.awt.*;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -96,5 +100,39 @@ public class GradientColorClassifier implements ColorClassifier {
             }
         }
         return false;
+    }
+
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder()
+                .append(colors)
+                .append(name)
+                .toHashCode();
+    }
+
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null)
+            return false;
+        if (obj == this)
+            return true;
+        if (!(obj instanceof GradientColorClassifier))
+            return false;
+
+        GradientColorClassifier rhs = (GradientColorClassifier)obj;
+        return new EqualsBuilder()
+                .append(rhs.colors, this.colors)
+                .append(rhs.name, this.name)
+                .isEquals();
+    }
+
+    @Override
+    public String toString() {
+        return new ToStringBuilder(this)
+                .append("colors", colors)
+                .append("name", name)
+                .toString();
     }
 }

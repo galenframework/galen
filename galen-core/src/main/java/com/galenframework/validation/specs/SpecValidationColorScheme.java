@@ -56,14 +56,17 @@ public class SpecValidationColorScheme extends SpecValidation<SpecColorScheme> {
                 .withMessage("Can't fetch image for \"object\" as it is outside of screenshot");
         }
 
-        List<ColorClassifier> classifiers = spec.getColorRanges().stream().map(
-                cr -> new SimpleColorClassifier(cr.getName(), cr.getColor())
-        ).collect(Collectors.toList());
-        
+        List<ColorClassifier> classifiers = spec.getColorRanges().stream().map(ColorRange::getColorClassifier)
+                .collect(Collectors.toList());
+
 
         CustomSpectrum spectrum;
         try {
-            spectrum = Rainbow4J.readCustomSpectrum(pageImage, classifiers, new Rectangle(area.getLeft(), area.getTop(), area.getWidth(), area.getHeight()), colorTolerance);
+            spectrum = Rainbow4J.readCustomSpectrum(
+                    pageImage, classifiers,
+                    new Rectangle(area.getLeft(), area.getTop(), area.getWidth(), area.getHeight()),
+                    colorTolerance
+            );
         } catch (Exception e) {
             throw new ValidationErrorException(String.format("Couldn't fetch spectrum for \"%s\"", objectName));
         }

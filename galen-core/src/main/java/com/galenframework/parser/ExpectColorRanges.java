@@ -20,9 +20,14 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
+import com.galenframework.rainbow4j.colorscheme.GradientColorClassifier;
+import com.galenframework.rainbow4j.colorscheme.SimpleColorClassifier;
 import com.galenframework.specs.colors.ColorRange;
 import com.galenframework.specs.Range;
+
+import static java.util.Arrays.asList;
 
 public class ExpectColorRanges implements Expectation<List<ColorRange>> {
 
@@ -50,16 +55,29 @@ public class ExpectColorRanges implements Expectation<List<ColorRange>> {
         while(reader.hasMore()) {
             
             Range range = expectRange.read(reader);
-            
+
             String colorText = reader.readSafeUntilSymbol(',').trim();
-            
+
             if (colorText.isEmpty()) {
                 throw new SyntaxException("No color defined");
             }
-            
-            Color color = parseColor(colorText);
-            
-            colorRanges.add(new ColorRange(colorText, color, range));
+
+            if (colorText.contains("-")) {
+                //parsing gradients
+                List<Color> colors = asList(colorText.split("-")).stream()
+                        .map(String::trim)
+                        .filter(text -> !text.isEmpty())
+                        .map(this::parseColor)
+                        .collect(Collectors.toList());
+
+                colorRanges.add(new ColorRange(colorText, new GradientColorClassifier(colorText, colors), range));
+            } else {
+                //single color
+                Color color = parseColor(colorText);
+                colorRanges.add(new ColorRange(colorText, new SimpleColorClassifier(colorText, color), range));
+            }
+
+
         }
         return colorRanges;
     }
