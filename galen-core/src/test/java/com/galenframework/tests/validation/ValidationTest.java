@@ -545,6 +545,9 @@ public class ValidationTest {
               put("object", element(100, 90, 100, 40));
           }}, imageComparisonTestScreenshot)),
 
+            row(specImage(asList("/imgs/button-sample-*.png"), 1, PIXEL_UNIT, 0, 5), page(new HashMap<String, PageElement>(){{
+                put("object", element(100, 90, 100, 40));
+            }}, imageComparisonTestScreenshot)),
 
             row(new SpecCss("font-size", SpecText.Type.IS, "18px"), page(new HashMap<String, PageElement>(){{
                 put("object", elementWithCss("font-size", "18px"));

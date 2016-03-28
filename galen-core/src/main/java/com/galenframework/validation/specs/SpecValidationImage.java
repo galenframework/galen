@@ -20,6 +20,7 @@ import java.awt.image.BufferedImage;
 import java.io.InputStream;
 import java.text.DecimalFormat;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 
 import com.galenframework.page.Rect;
@@ -40,6 +41,8 @@ import static java.util.Arrays.asList;
 public class SpecValidationImage extends SpecValidation<SpecImage> {
 
     private final static Logger LOG = LoggerFactory.getLogger(SpecValidationImage.class);
+    private static final String NO_ERROR_MESSAGE = null;
+    private static final ImageCompareResult NO_RESULT = null;
 
     private static class ImageCheck {
 
@@ -79,13 +82,24 @@ public class SpecValidationImage extends SpecValidation<SpecImage> {
 
         Rect elementArea = pageElement.getArea();
 
-        ImageCheck minCheck = new ImageCheck(spec.getImagePaths().get(0), elementArea.getHeight() * elementArea.getWidth() * 2, null, null);
-
-        Iterator<String> it = spec.getImagePaths().iterator();
-
-        if (!it.hasNext()) {
-            throw new ValidationErrorException("There are now images defined to compare with").withValidationObject(new ValidationObject(pageElement.getArea(), objectName));
+        List<String> realPaths = new LinkedList<>();
+        for (String imagePossiblePath : spec.getImagePaths()) {
+            if (imagePossiblePath.contains("*") || imagePossiblePath.contains("#")) {
+                realPaths.addAll(GalenUtils.findFilesOrResourcesMatchingSearchExpression(imagePossiblePath));
+            } else {
+                realPaths.add(imagePossiblePath);
+            }
         }
+
+        if (realPaths.isEmpty()) {
+            throw new ValidationErrorException("There are no images found").withValidationObject(new ValidationObject(pageElement.getArea(), objectName));
+        }
+
+        int largetsPossibleDifference = elementArea.getHeight() * elementArea.getWidth() * 2;
+
+        ImageCheck minCheck = new ImageCheck(realPaths.get(0), largetsPossibleDifference, NO_RESULT, NO_ERROR_MESSAGE);
+
+        Iterator<String> it = realPaths.iterator();
 
         try {
             while (minCheck.difference > 0 && it.hasNext()) {

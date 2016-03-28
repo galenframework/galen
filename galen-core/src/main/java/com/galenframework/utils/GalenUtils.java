@@ -526,4 +526,52 @@ public class GalenUtils {
             report.addNode(layoutReportNode);
         }
     }
+
+    public static List<String> findFilesOrResourcesMatchingSearchExpression(String imagePossiblePath) {
+        String slash = File.separator;
+        int lastSlashPosition = imagePossiblePath.lastIndexOf(slash);
+        if (lastSlashPosition < 0) {
+            lastSlashPosition = imagePossiblePath.lastIndexOf("/");
+            if (lastSlashPosition >=0 ) {
+                slash = "/";
+            }
+        }
+
+        List<String> foundFilePaths = new LinkedList<>();
+
+        if (lastSlashPosition > 0) {
+            String dirPath = imagePossiblePath.substring(0, lastSlashPosition);
+            String namePatternText = imagePossiblePath.substring(lastSlashPosition + 1);
+            Pattern namePattern = convertObjectNameRegex(namePatternText);
+
+            File dir = new File(dirPath);
+            if (!dir.exists()) {
+                dir = new File(GalenUtils.class.getResource(dirPath).getFile());
+            }
+            if (dir.exists()) {
+                String[] candidateNames = dir.list();
+                for (String candidateName : candidateNames) {
+                    if (namePattern.matcher(candidateName).matches()) {
+                        foundFilePaths.add(dirPath + slash + candidateName);
+                    }
+                }
+            }
+        } else {
+            File dir = new File(".");
+            if (!dir.exists()) {
+                dir = new File(GalenUtils.class.getResource(".").getFile());
+            }
+            if (dir.exists()) {
+                Pattern namePattern = convertObjectNameRegex(imagePossiblePath);
+                String[] candidateNames = dir.list();
+                for (String candidateName : candidateNames) {
+                    if (namePattern.matcher(candidateName).matches()) {
+                        foundFilePaths.add(candidateName);
+                    }
+                }
+            }
+        }
+
+        return foundFilePaths;
+    }
 }
