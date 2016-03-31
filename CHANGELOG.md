@@ -1,6 +1,9 @@
 # Change log
 All changes to Galen Framework project will be documented in this file
 
+## [2.2.4][2015-03-31]
+- Updated selenium version to 2.53.0
+
 ## [2.2.2][2015-02-28]
 
 ### Fixed
