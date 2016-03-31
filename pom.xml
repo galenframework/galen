@@ -264,6 +264,7 @@
           <reportSet>
             <id>non-aggregate</id>
             <configuration>
+              <additionalparam>-Xdoclint:none</additionalparam>
             </configuration>
             <reports>
               <report>javadoc</report>
