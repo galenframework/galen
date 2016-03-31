@@ -272,6 +272,7 @@
           <reportSet>
             <id>aggregate</id>
             <configuration>
+              <additionalparam>-Xdoclint:none</additionalparam>
             </configuration>
             <reports>
               <report>aggregate</report>
