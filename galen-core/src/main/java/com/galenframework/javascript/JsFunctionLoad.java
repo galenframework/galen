@@ -81,18 +81,7 @@ public class JsFunctionLoad extends BaseFunction {
         String fullPath = filePath;
 
         try {
-            if (filePath.startsWith("/")) {
-                /*
-                 * In case load function is called with leading slash - it means that Galen should search for script from root
-                 * folder of the project first and only then load it as absolute path
-                 */
-                String localPath = filePath.substring(1);
-                if (new File(localPath).exists()) {
-                    fullPath = localPath;
-                }
-            } else {
-                fullPath = contextPath + File.separator + filePath;
-            }
+            fullPath = getPath(filePath, contextPath);
 
             String fileId = GalenUtils.calculateFileId(fullPath);
 
@@ -120,6 +109,25 @@ public class JsFunctionLoad extends BaseFunction {
         } catch (Exception ex) {
             throw new RuntimeException("Could not load script: " + fullPath, ex);
         }
+    }
+
+    public String getPath(String filePath, String contextPath) {
+        String fullPath = filePath;
+        if (!filePath.contains(":" + File.separator)) { // on Windows absolute path contain driver letter, e.g. C:\
+            if (filePath.startsWith("/")) {
+                /*
+                 * In case load function is called with leading slash - it means that Galen should search for script from root
+                 * folder of the project first and only then load it as absolute path
+                 */
+                String localPath = filePath.substring(1);
+                if (new File(localPath).exists()) {
+                    fullPath = localPath;
+                }
+            } else {
+                fullPath = contextPath + File.separator + filePath;
+            }
+        }
+        return fullPath;
     }
 
     public void print(String message) {
