@@ -358,11 +358,15 @@ public class GalenUtils {
         else return null;
     }
 
-    public static InputStream findFileOrResourceAsStream(String filePath) throws FileNotFoundException {
+    public static InputStream findFileOrResourceAsStream(String filePath) {
         File file = new File(filePath);
 
         if (file.exists()) {
-            return new FileInputStream(file);
+            try {
+                return new FileInputStream(file);
+            } catch (FileNotFoundException e) {
+                throw new RuntimeException(e);
+            }
         }
         else {
             if (!filePath.startsWith("/")) {
@@ -381,18 +385,21 @@ public class GalenUtils {
     }
 
     public static String calculateFileId(String fullPath) {
+        InputStream is = GalenUtils.findFileOrResourceAsStream(fullPath);
+        return calculateFileId(fullPath, is);
+    }
+
+    public static String calculateFileId(String fullPath, InputStream inputStream) {
         try {
             String fileName = new File(fullPath).getName();
             MessageDigest md = MessageDigest.getInstance("MD5");
-            InputStream is = GalenUtils.findFileOrResourceAsStream(fullPath);
-            new DigestInputStream(is, md);
+            new DigestInputStream(inputStream, md);
             byte [] hashBytes = md.digest();
             return fileName + convertHashBytesToString(hashBytes);
 
         } catch (Exception ex) {
             throw new RuntimeException("Could not calculate file id", ex);
         }
-
     }
 
     private static String convertHashBytesToString(byte[] hashBytes) {
