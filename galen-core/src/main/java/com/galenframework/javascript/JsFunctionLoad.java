@@ -70,14 +70,14 @@ public class JsFunctionLoad extends BaseFunction {
 
     public void load(String filePath, Context cx, Scriptable scope) {
         try {
-            String fullPath = constructFullPathToScript(filePath, filePath);
+            String fullPath = constructFullPathToScript(filePath);
             loadScript(cx, scope, fullPath);
         } catch (Exception ex) {
             throw new RuntimeException("Could not load script: " + filePath, ex);
         }
     }
 
-    private String constructFullPathToScript(String filePath, String fullPath) {
+    private String constructFullPathToScript(String filePath) {
         if (filePath.startsWith("/")) {
             /*
              * In case load function is called with leading slash - it means that Galen should search for script from root
@@ -93,7 +93,7 @@ public class JsFunctionLoad extends BaseFunction {
                 return contextPath + File.separator + filePath;
             }
         }
-        return fullPath;
+        return filePath;
     }
 
     private String peekContextPathStack() {
