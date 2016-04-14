@@ -1,6 +1,9 @@
 # Change log
 All changes to Galen Framework project will be documented in this file
 
+## [2.2.5][2015-04-14]
+- Fixed #318 Path was incorrectly resolved when loading js scripts
+
 ## [2.2.4][2015-03-31]
 - Updated selenium version to 2.53.0
 
