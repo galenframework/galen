@@ -64,15 +64,6 @@ public class ValidationResult {
         this.error = error;
     }
 
-    public static boolean doesNotHaveErrors(List<ValidationResult> validationResults) {
-        for (ValidationResult result : validationResults) {
-            if (result.getError() != null) {
-                return false;
-            }
-        }
-        return true;
-    }
-
     @Override
     public int hashCode() {
         return new HashCodeBuilder()
@@ -103,11 +94,11 @@ public class ValidationResult {
 
     @Override
     public String toString() {
-        return new ToStringBuilder(this) //@formatter:off
+        return new ToStringBuilder(this)
                 .append("objects", validationObjects)
                 .append("error", error)
                 .append("childValidationResults", childValidationResults)
-                .toString(); //@formatter:on
+                .toString();
     }
 
     public static List<ValidationResult> filterOnlyErrorResults(List<ValidationResult> results) {
