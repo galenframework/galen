@@ -25,11 +25,18 @@ mvn release:prepare -DskipTests=true -Darguments='-DskipTests=true'
 
 mvn release:perform -DskipTests=true -Darguments='-DskipTests=true'
 
-version=$(git describe --abbrev=0 --tags)
+last_tag=$(git describe --abbrev=0 --tags)
 
-git checkout ${version}
+echo "Making dist for tag $last_tag"
+
+git checkout ${last_tag}
 
 ./makeDist.sh
+
+version=`echo $last_tag | sed 's/.*-//g'`
+
+echo Singing and deploying galen-parent
+mvn gpg:sign-and-deploy-file -Dfile=pom.xml -Durl=https://oss.sonatype.org/service/local/staging/deploy/maven2/ -DgroupId=com.galenframework -DartifactId=galen-parent -Dversion=${version} -Dpackaging=pom -DrepositoryId=sonatype-nexus-staging
 
 mvn javadoc:aggregate
 

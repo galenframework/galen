@@ -15,10 +15,7 @@
 ******************************************************************************/
 package com.galenframework.javascript;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.Stack;
@@ -72,54 +69,68 @@ public class JsFunctionLoad extends BaseFunction {
     }
 
     public void load(String filePath, Context cx, Scriptable scope) {
-        String contextPath = ".";
-
-        if (!contextPathStack.isEmpty()) {
-            contextPath = contextPathStack.peek();
-        }
-
-        String fullPath = filePath;
-
         try {
-            if (filePath.startsWith("/")) {
-                /*
-                 * In case load function is called with leading slash - it means that Galen should search for script from root
-                 * folder of the project first and only then load it as absolute path
-                 */
-                String localPath = filePath.substring(1);
-                if (new File(localPath).exists()) {
-                    fullPath = localPath;
-                }
-            } else {
-                fullPath = contextPath + File.separator + filePath;
-            }
-
-            String fileId = GalenUtils.calculateFileId(fullPath);
-
-            if (!loadedFileIds.contains(fileId)) {
-
-                File file = new File(fullPath);
-                String parentPath = file.getParent();
-                if (parentPath != null) {
-                    contextPathStack.push(file.getParent());
-                }
-
-                InputStream is = GalenUtils.findFileOrResourceAsStream(fullPath);
-                if (is == null) {
-                    throw new FileNotFoundException(fullPath);
-                }
-
-
-                cx.evaluateReader(scope, new InputStreamReader(is), file.getAbsolutePath(), 1, null);
-                loadedFileIds.add(fileId);
-
-                if (!contextPathStack.isEmpty()) {
-                    contextPathStack.pop();
-                }
-            }
+            String fullPath = constructFullPathToScript(filePath);
+            loadScript(cx, scope, fullPath);
         } catch (Exception ex) {
-            throw new RuntimeException("Could not load script: " + fullPath, ex);
+            throw new RuntimeException("Could not load script: " + filePath, ex);
         }
+    }
+
+    private String constructFullPathToScript(String filePath) {
+        if (filePath.startsWith("/")) {
+            /*
+             * In case load function is called with leading slash - it means that Galen should search for script from root
+             * folder of the project first and only then load it as absolute path
+             */
+            String localPath = filePath.substring(1);
+            if (new File(localPath).exists()) {
+                return localPath;
+            }
+        } else {
+            String contextPath = peekContextPathStack();
+            if (contextPath != null && ! contextPath.isEmpty()) {
+                return contextPath + File.separator + filePath;
+            }
+        }
+        return filePath;
+    }
+
+    private String peekContextPathStack() {
+        if (!contextPathStack.isEmpty()) {
+            return contextPathStack.peek();
+        }
+        return null;
+    }
+
+    private void loadScript(Context cx, Scriptable scope, String fullPath) throws IOException {
+        InputStream is = retrieveScriptAsInputStream(fullPath);
+
+        String fileId = GalenUtils.calculateFileId(fullPath, is);
+
+        if (!loadedFileIds.contains(fileId)) {
+
+            File file = new File(fullPath);
+            String parentPath = file.getParent();
+            if (parentPath != null) {
+                contextPathStack.push(file.getParent());
+            }
+
+            cx.evaluateReader(scope, new InputStreamReader(is), file.getAbsolutePath(), 1, null);
+            loadedFileIds.add(fileId);
+
+            if (!contextPathStack.isEmpty()) {
+                contextPathStack.pop();
+            }
+        }
+    }
+
+    private InputStream retrieveScriptAsInputStream(String fullPath) throws FileNotFoundException {
+        InputStream is = GalenUtils.findFileOrResourceAsStream(fullPath);
+        if (is == null) {
+            throw new FileNotFoundException(fullPath);
+        }
+        return is;
     }
 
     public void print(String message) {
