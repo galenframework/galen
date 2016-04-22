@@ -77,7 +77,7 @@ public class GalenConfig {
 
     private void reloadConfig(String configPath) throws IOException {
         this.properties = new Properties();
-        InputStream stream = GalenUtils.findFileOrResourceAsStream("config");
+        InputStream stream = GalenUtils.findFileOrResourceAsStream(configPath);
         loadFromStream(stream);
     }
 
