@@ -585,8 +585,8 @@ public class PageSpecReaderTest {
     )
     public void shouldFail_whenThereIsAnError_insideIfStatement() throws IOException {
         readPageSpec("speclang2/condition-with-js-error.gspec",
-                new MockedPage(new HashMap<String, PageElement>()),
-                EMPTY_TAGS, EMPTY_TAGS);
+            new MockedPage(new HashMap<String, PageElement>()),
+            EMPTY_TAGS, EMPTY_TAGS);
 
     }
 
@@ -598,7 +598,7 @@ public class PageSpecReaderTest {
 
         assertThat(pageSpec.getSections().get(0).getName(), is("Main section for user John"));
         assertThat(pageSpec.getSections().get(0).getObjects().get(0).getSpecs().get(0).getOriginalText(),
-                is("text is \"Welcome, John!\""));
+            is("text is \"Welcome, John!\""));
     }
 
 
@@ -678,14 +678,14 @@ public class PageSpecReaderTest {
     @Test
     public void shouldAllow_toPassCustomJsObjects() throws  IOException {
         PageSpec pageSpec = new PageSpecReader().read(
-                "speclang2/custom-js-variables.gspec",
-                EMPTY_PAGE,
-                new SectionFilter(EMPTY_TAGS, EMPTY_TAGS),
-                NO_PROPERTIES,
-                new HashMap<String, Object>() {{
-                    put("age", 29);
-                    put("userName", "John");
-                }}, EMPTY_OBJECTS);
+            "speclang2/custom-js-variables.gspec",
+            EMPTY_PAGE,
+            new SectionFilter(EMPTY_TAGS, EMPTY_TAGS),
+            NO_PROPERTIES,
+            new HashMap<String, Object>() {{
+                put("age", 29);
+                put("userName", "John");
+            }}, EMPTY_OBJECTS);
 
         assertThat(pageSpec.getSections().get(0).getObjects().get(0).getSpecs().get(0).getOriginalText(),
             is("text is \"Name: John, age: 29\""));
@@ -725,6 +725,22 @@ public class PageSpecReaderTest {
         assertThat(objects.get(1).getObjectName(), is("menu-item-2"));
         assertThat(objects.get(2).getObjectName(), is("menu-item-12"));
         assertThat(objects.get(3).getObjectName(), is("menu-item-101"));
+    }
+
+    @Test
+    public void forEachLoop_shouldAllow_toUseIndex() throws IOException {
+        PageSpec pageSpec = readPageSpec("speclang2/forEach-loop-with-index.gspec");
+
+        List<ObjectSpecs> objects = pageSpec.getSections().get(0).getObjects();
+        assertThat(objects.size(), is(3));
+        assertThat(objects.get(0).getObjectName(), is("item-1"));
+        assertThat(objects.get(0).getSpecs().get(0).getOriginalText(), is("inside screen 100px top"));
+
+        assertThat(objects.get(1).getObjectName(), is("item-2"));
+        assertThat(objects.get(1).getSpecs().get(0).getOriginalText(), is("inside screen 200px top"));
+
+        assertThat(objects.get(2).getObjectName(), is("item-3"));
+        assertThat(objects.get(2).getSpecs().get(0).getOriginalText(), is("inside screen 300px top"));
     }
 
     @Test

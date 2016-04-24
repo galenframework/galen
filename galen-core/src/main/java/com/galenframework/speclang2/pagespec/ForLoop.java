@@ -31,17 +31,19 @@ import static com.galenframework.suite.reader.Line.UNKNOWN_LINE;
 
 public class ForLoop {
 
-    public static final String INDEX_DEFAULT_NAME = "index";
+    public static final String DEFAULT_VARIABLE_NAME = "index";
+    private String indexMapping;
     private String previousMapping;
     private String nextMapping;
     private Object[] sequence;
-    private String indexName;
+    private String variableName;
 
-    public ForLoop(Object[] sequence, String indexName, String previousMapping, String nextMapping) {
+    public ForLoop(Object[] sequence, String variableName, String previousMapping, String nextMapping, String indexMapping) {
         this.sequence = sequence;
-        this.indexName = indexName;
+        this.variableName = variableName;
         this.previousMapping = previousMapping;
         this.nextMapping = nextMapping;
+        this.indexMapping = indexMapping;
     }
 
 
@@ -61,22 +63,21 @@ public class ForLoop {
                 sequence = readSequenceFromPageObjects(sequenceStatement, pageSpecHandler);
             }
 
-            String indexName = INDEX_DEFAULT_NAME;
+            String variableName = DEFAULT_VARIABLE_NAME;
 
             String previousMapping = null;
             String nextMapping = null;
+            String indexMapping = null;
 
             if (reader.hasMoreNormalSymbols()) {
-                String as = reader.readWord();
-                if (as.equals("as")) {
-
-                } else {
-                    throw new SyntaxException("Invalid token: " + as);
+                String nextWord = reader.readWord();
+                if (!nextWord.equals("as")) {
+                    throw new SyntaxException("Invalid token: " + nextWord);
                 }
 
-                indexName = reader.readWord();
+                variableName = reader.readWord();
 
-                if (indexName.isEmpty()) {
+                if (variableName.isEmpty()) {
                     throw new SyntaxException("Missing index");
                 }
 
@@ -88,12 +89,14 @@ public class ForLoop {
                         previousMapping = extraMappings.getValue();
                     } else if ("next".equals(extraMappings.getKey())) {
                         nextMapping = extraMappings.getValue();
+                    } else if ("index".equals(extraMappings.getKey())) {
+                        indexMapping = extraMappings.getValue();
                     } else {
                         throw new SyntaxException("Unknown loop mapping: " + extraMappings.getKey());
                     }
                 }
             }
-            return new ForLoop(sequence, indexName, previousMapping, nextMapping);
+            return new ForLoop(sequence, variableName, previousMapping, nextMapping, indexMapping);
         } catch (SyntaxException ex) {
             ex.setLine(new Line(originNode.getSource(), originNode.getFileLineNumber()));
             throw ex;
@@ -125,7 +128,7 @@ public class ForLoop {
 
     private static String[] readSequenceFromPageObjects(String sequenceStatement, PageSpecHandler pageSpecHandler) {
         List<String> matchingObjects = pageSpecHandler.findAllObjectsMatchingStrictStatements(sequenceStatement);
-        return matchingObjects.toArray(new String[]{});
+        return matchingObjects.toArray(new String[matchingObjects.size()]);
     }
 
     private static Object[] readSequenceForSimpleLoop(String sequenceStatement) {
@@ -146,7 +149,7 @@ public class ForLoop {
                 }
             }
 
-            return sequence.toArray(new Object[]{});
+            return sequence.toArray(new Object[sequence.size()]);
         }
         catch (Exception ex) {
             throw new SyntaxException(UNKNOWN_LINE, "Incorrect sequence syntax: " + sequenceStatement, ex);
@@ -196,16 +199,24 @@ public class ForLoop {
             end = end - 1;
         }
 
+        int index = 0;
+
         for (int i = begin; i < end; i++) {
 
+            index += 1;
+
             Map<String, Object> vars = new HashMap<>();
-            vars.put(indexName, sequence[i]);
+            vars.put(variableName, sequence[i]);
 
             if (previousMapping != null) {
                 vars.put(previousMapping, sequence[i-1]);
             }
             if (nextMapping != null) {
                 vars.put(nextMapping, sequence[i+1]);
+            }
+
+            if (indexMapping != null) {
+                vars.put(indexMapping, index);
             }
 
             resultingNodes.addAll(loopVisitor.visitLoop(vars));

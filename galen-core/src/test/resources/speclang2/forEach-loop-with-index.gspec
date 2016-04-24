@@ -1,0 +1,10 @@
+@objects
+    item-1          #id1
+    item-2          #id2
+    item-3          #id3
+
+
+= Main =
+    @forEach [item-*] as itemName, index as number
+        ${itemName}:
+            inside screen ${number * 100}px top
