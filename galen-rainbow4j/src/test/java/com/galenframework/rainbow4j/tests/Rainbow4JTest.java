@@ -79,9 +79,9 @@ public class Rainbow4JTest {
         BufferedImage image = Rainbow4J.loadImage(getClass().getResource("/colo-scheme-gradient.png").getFile());
 
         List<ColorClassifier> colorClassifiers = asList(
-                new GradientColorClassifier("green-blue", asList(new Color(5, 153, 0), new Color(9, 24, 184))),
-                new SimpleColorClassifier("pink", new Color(252, 18, 53)),
-                new SimpleColorClassifier("blue", new Color(21, 2, 230))
+            new GradientColorClassifier("green-blue", asList(new Color(5, 153, 0), new Color(9, 24, 184))),
+            new SimpleColorClassifier("pink", new Color(252, 18, 53)),
+            new SimpleColorClassifier("blue", new Color(21, 2, 230))
         );
         CustomSpectrum spectrum = Rainbow4J.readCustomSpectrum(image, colorClassifiers);
 
@@ -171,12 +171,12 @@ public class Rainbow4JTest {
         Assert.assertEquals((int)spectrum.getPercentage(0, 0, 0, 0), 30);
         Assert.assertEquals((int)spectrum.getPercentage(128,128,128, 0), 0);
 
-        Assert.assertEquals((int)spectrum.getPercentage(254,254,254, 0), 0);
-        Assert.assertEquals((int)spectrum.getPercentage(254,254,254, 1), 68);
-        Assert.assertEquals((int)spectrum.getPercentage(254,250,254, 10), 68);
+        Assert.assertEquals((int) spectrum.getPercentage(254, 254, 254, 0), 0);
+        Assert.assertEquals((int) spectrum.getPercentage(254, 254, 254, 1), 68);
+        Assert.assertEquals((int) spectrum.getPercentage(254, 250, 254, 10), 68);
     }
     
-    @Test(enabled = false)
+    @Test
     public void shouldRead_imageSpectrum_fromJPG() throws IOException {
         BufferedImage image = Rainbow4J.loadImage(getClass().getResource("/test-spectrum-black-white-1.jpg").getFile());
 
@@ -209,18 +209,6 @@ public class Rainbow4JTest {
         Assert.assertEquals((int)spectrum.getPercentage(58, 112, 208, 5), 8);
         Assert.assertEquals((int)spectrum.getPercentage(207, 71, 29, 5), 32);
     }
-    
-    @Test(enabled = false)
-    public void shouldRead_imageSpectrum_fromJPG_2() throws IOException {
-        BufferedImage image = Rainbow4J.loadImage(getClass().getResource("/color-scheme-image-1.jpg").getFile());
-
-        Spectrum spectrum = Rainbow4J.readSpectrum(image);
-
-        Assert.assertEquals((int)spectrum.getPercentage(58, 112, 208, 5), 8);
-        Assert.assertEquals((int)spectrum.getPercentage(207, 71, 29, 5), 32);
-    }
-    
-    
     
     @Test
     public void shouldReadSpectrum_fromSpecifiedRegion() throws IOException {
@@ -505,7 +493,7 @@ public class Rainbow4JTest {
         BufferedImage imageExpected = Rainbow4J.loadImage(getClass().getResourceAsStream("/noise/menu-item-1-expected-spots-2.png"));
 
         List<Integer> expectedPixels = asList(
-                653, 765, 860, 982, 1068, 1168, 1263, 1334, 1415
+            653, 765, 860, 982, 1068, 1168, 1263, 1334, 1415
         );
 
         // Assert first that there are a lot of mismatching pixels
@@ -530,6 +518,23 @@ public class Rainbow4JTest {
                     result.getTotalPixels(),
                     is(expectedPixels.get(size - 1).longValue()));
         }
+    }
+
+    @Test
+    public void shouldApply_replaceColorsFilter_andCompareImages() throws IOException {
+        BufferedImage imageActual = Rainbow4J.loadImage(getClass().getResourceAsStream("/replace-colors-actual.png"));
+        BufferedImage imageExpected = Rainbow4J.loadImage(getClass().getResourceAsStream("/replace-colors-expected.png"));
+
+
+        ComparisonOptions options = new ComparisonOptions();
+        options.setOriginalFilters(asList(
+            new ReplaceColorsFilter(asList(
+                new ReplaceColorsDefinition(new Color(255, 255, 255), asList(
+                    new GradientColorClassifier("green-blue", asList(new Color(5, 153, 0), new Color(9, 24, 184))),
+                    new SimpleColorClassifier("grey", new Color(153, 153, 153))
+                ))))));
+        ImageCompareResult result = Rainbow4J.compare(imageActual, imageExpected, options);
+        assertThat(result.getTotalPixels(), is(0L));
     }
 
 
