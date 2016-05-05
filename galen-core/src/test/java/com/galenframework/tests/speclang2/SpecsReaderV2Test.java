@@ -23,9 +23,7 @@ import static com.galenframework.specs.Side.RIGHT;
 import static com.galenframework.specs.Side.TOP;
 import static java.util.Arrays.asList;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.contains;
-import static org.hamcrest.Matchers.instanceOf;
-import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.*;
 
 import java.awt.*;
 import java.io.IOException;
@@ -36,7 +34,7 @@ import java.util.Map;
 
 import com.galenframework.rainbow4j.colorscheme.GradientColorClassifier;
 import com.galenframework.rainbow4j.colorscheme.SimpleColorClassifier;
-import com.galenframework.rainbow4j.filters.MaskFilter;
+import com.galenframework.rainbow4j.filters.*;
 import com.galenframework.specs.*;
 import com.galenframework.specs.colors.ColorRange;
 import junit.framework.Assert;
@@ -45,9 +43,6 @@ import com.galenframework.page.Rect;
 import com.galenframework.parser.SyntaxException;
 import com.galenframework.speclang2.specs.SpecReader;
 
-import com.galenframework.rainbow4j.filters.BlurFilter;
-import com.galenframework.rainbow4j.filters.DenoiseFilter;
-import com.galenframework.rainbow4j.filters.SaturationFilter;
 import org.hamcrest.Matchers;
 import org.junit.BeforeClass;
 import org.testng.annotations.AfterMethod;
@@ -1093,6 +1088,33 @@ public class SpecsReaderV2Test {
 
         System.getProperties().remove("galen.spec.image.tolerance");
         System.getProperties().remove("galen.spec.image.error");
+    }
+
+    @Test
+    public void shouldReadSpec_image_replaceColors() throws IOException {
+        SpecImage specImage = (SpecImage) readSpec("image file image.png, filter replace-colors #000-#333 #f0f0f0 #a0a0a0-#a0b0a0-#a0b0c0 with #111");
+
+        assertThat(specImage.getOriginalFilters().size(), is(1));
+        assertThat(specImage.getOriginalFilters().get(0), is(instanceOf(ReplaceColorsFilter.class)));
+
+        ReplaceColorsFilter filter = (ReplaceColorsFilter) specImage.getOriginalFilters().get(0);
+
+        assertThat(filter.getReplaceColorsDefinitions().size(), is(1));
+        ReplaceColorsDefinition replaceColorsDefinitions = filter.getReplaceColorsDefinitions().get(0);
+        assertThat(replaceColorsDefinitions.getReplaceColor(), is(new Color(17, 17, 17)));
+
+        assertThat(replaceColorsDefinitions.getColorClassifiers().size(), is(3));
+        assertThat(replaceColorsDefinitions.getColorClassifiers().get(0), instanceOf(GradientColorClassifier.class));
+        GradientColorClassifier gradient = (GradientColorClassifier) replaceColorsDefinitions.getColorClassifiers().get(0);
+        assertThat(gradient.getName(), is("#000-#333"));
+
+        assertThat(replaceColorsDefinitions.getColorClassifiers().get(1), instanceOf(SimpleColorClassifier.class));
+        SimpleColorClassifier simple = (SimpleColorClassifier) replaceColorsDefinitions.getColorClassifiers().get(1);
+        assertThat(simple.getName(), is("#f0f0f0"));
+
+        assertThat(replaceColorsDefinitions.getColorClassifiers().get(2), instanceOf(GradientColorClassifier.class));
+        gradient = (GradientColorClassifier) replaceColorsDefinitions.getColorClassifiers().get(2);
+        assertThat(gradient.getName(), is("#a0a0a0-#a0b0a0-#a0b0c0"));
     }
 
     @Test

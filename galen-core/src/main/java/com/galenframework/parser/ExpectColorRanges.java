@@ -22,6 +22,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import com.galenframework.rainbow4j.colorscheme.ColorClassifier;
 import com.galenframework.rainbow4j.colorscheme.GradientColorClassifier;
 import com.galenframework.rainbow4j.colorscheme.SimpleColorClassifier;
 import com.galenframework.specs.colors.ColorRange;
@@ -62,31 +63,34 @@ public class ExpectColorRanges implements Expectation<List<ColorRange>> {
                 throw new SyntaxException("No color defined");
             }
 
-            if (colorText.contains("-")) {
-                //parsing gradients
-                List<Color> colors = asList(colorText.split("-")).stream()
-                        .map(String::trim)
-                        .filter(text -> !text.isEmpty())
-                        .map(this::parseColor)
-                        .collect(Collectors.toList());
 
-                colorRanges.add(new ColorRange(colorText, new GradientColorClassifier(colorText, colors), range));
-            } else {
-                //single color
-                Color color = parseColor(colorText);
-                colorRanges.add(new ColorRange(colorText, new SimpleColorClassifier(colorText, color), range));
-            }
-
-
+            ColorClassifier colorClassifier = parseColorClassifier(colorText);
+            colorRanges.add(new ColorRange(colorText, colorClassifier, range));
         }
         return colorRanges;
     }
 
-    private String toHexColor(Color color) {
-        return String.format("#%02x%02x%02x", color.getRed(), color.getGreen(), color.getBlue());
+    public static ColorClassifier parseColorClassifier(String colorText) {
+        if (colorText.contains("-")) {
+            return parseGradientClassifier(colorText);
+        } else {
+            Color color = parseColor(colorText);
+            return new SimpleColorClassifier(colorText, color);
+        }
     }
 
-    private Color parseColor(String colorText) {
+    public static GradientColorClassifier parseGradientClassifier(String colorText) {
+        //parsing gradients
+        List<Color> colors = asList(colorText.split("-")).stream()
+                .map(String::trim)
+                .filter(text -> !text.isEmpty())
+                .map(ExpectColorRanges::parseColor)
+                .collect(Collectors.toList());
+
+        return new GradientColorClassifier(colorText, colors);
+    }
+
+    public static Color parseColor(String colorText) {
         if (colorText.startsWith("#")) {
             if (colorText.length() == 4) {
                 return Color.decode(convertShortHandNotation(colorText));
@@ -101,7 +105,7 @@ public class ExpectColorRanges implements Expectation<List<ColorRange>> {
         else throw new SyntaxException("Unknown color: " + colorText);
     }
 
-    private String convertShortHandNotation(String colorText) {
+    private static String convertShortHandNotation(String colorText) {
         char r = colorText.charAt(1);
         char g = colorText.charAt(2);
         char b = colorText.charAt(3);

@@ -1,6 +1,12 @@
 # Change log
 All changes to Galen Framework project will be documented in this file
 
+
+## [2.3.0][Unknown]
+### Added
+- Added replace-colors filter to image spec
+
+
 ## [2.2.5][2015-04-14]
 - Fixed #318 Path was incorrectly resolved when loading js scripts
 

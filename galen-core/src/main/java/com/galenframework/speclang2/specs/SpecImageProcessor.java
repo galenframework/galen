@@ -21,6 +21,7 @@ import com.galenframework.parser.ExpectWord;
 import com.galenframework.parser.SyntaxException;
 import com.galenframework.rainbow4j.ImageHandler;
 import com.galenframework.rainbow4j.Rainbow4J;
+import com.galenframework.rainbow4j.colorscheme.ColorClassifier;
 import com.galenframework.rainbow4j.filters.*;
 import com.galenframework.specs.SpecImage;
 import com.galenframework.parser.StringCharReader;
@@ -31,11 +32,17 @@ import com.galenframework.utils.GalenUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.Pair;
 
+import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.LinkedList;
 import java.util.List;
+
+import static com.galenframework.parser.ExpectColorRanges.parseColor;
+import static com.galenframework.parser.ExpectColorRanges.parseColorClassifier;
+import static com.galenframework.parser.ExpectColorRanges.parseGradientClassifier;
+import static java.util.Collections.singletonList;
 
 public class SpecImageProcessor implements SpecProcessor {
     @Override
@@ -116,44 +123,80 @@ public class SpecImageProcessor implements SpecProcessor {
 
 
         if ("mask".equals(filterName)) {
-            String imagePath = reader.getTheRest().trim();
-
-            if (imagePath.isEmpty()) {
-                throw new SyntaxException("Mask filter image path is not defined");
-            }
-
-            String fullImagePath = imagePath;
-
-            if (contextPath != null && !contextPath.isEmpty()) {
-                fullImagePath = contextPath + File.separator + imagePath;
-            }
-            try {
-
-                InputStream stream = GalenUtils.findMandatoryFileOrResourceAsStream(fullImagePath);
-
-                return new MaskFilter(new ImageHandler(Rainbow4J.loadImage(stream)));
-            } catch (IOException exception) {
-                throw new SyntaxException("Couldn't load " + fullImagePath, exception);
-            }
+            return parseMaskFilter(contextPath, reader);
+        } else if ("replace-colors".equals(filterName)) {
+            return parseReplaceColorsFilter(reader);
         } else {
-            Double value = new ExpectNumber().read(reader);
-            if ("contrast".equals(filterName)) {
-                return new ContrastFilter(value.intValue());
-            }
-            else if ("blur".equals(filterName)) {
-                return new BlurFilter(value.intValue());
-            }
-            else if ("denoise".equals(filterName)) {
-                return new DenoiseFilter(value.intValue());
-            }
-            else if ("saturation".equals(filterName)) {
-                return new SaturationFilter(value.intValue());
-            }
-            else if ("quantinize".equals(filterName)) {
-                return new QuantinizeFilter(value.intValue());
+            return parseSimpleFilter(reader, filterName);
+        }
+    }
+
+    private ImageFilter parseReplaceColorsFilter(StringCharReader reader) {
+        List<ColorClassifier> classifiers = new LinkedList<>();
+        Color replaceColor = null;
+
+        boolean isCollectingClassifiers = true;
+
+        while (reader.hasMore()) {
+            String word = reader.readWord();
+            if (word.equals("with")) {
+                isCollectingClassifiers = false;
+            } else {
+                if (isCollectingClassifiers) {
+                    classifiers.add(parseColorClassifier(word));
+                } else {
+                    replaceColor = parseColor(word);
+                }
             }
         }
-        throw new SyntaxException("Unknown image filter: " + filterName);
+
+        if (replaceColor == null) {
+            throw new SyntaxException("Replace color was not specified");
+        }
+        return new ReplaceColorsFilter(singletonList(new ReplaceColorsDefinition(replaceColor, classifiers)));
+    }
+
+    private ImageFilter parseSimpleFilter(StringCharReader reader, String filterName) {
+        Double value = new ExpectNumber().read(reader);
+        if ("contrast".equals(filterName)) {
+            return new ContrastFilter(value.intValue());
+        }
+        else if ("blur".equals(filterName)) {
+            return new BlurFilter(value.intValue());
+        }
+        else if ("denoise".equals(filterName)) {
+            return new DenoiseFilter(value.intValue());
+        }
+        else if ("saturation".equals(filterName)) {
+            return new SaturationFilter(value.intValue());
+        }
+        else if ("quantinize".equals(filterName)) {
+            return new QuantinizeFilter(value.intValue());
+        } else {
+            throw new SyntaxException("Unknown image filter: " + filterName);
+        }
+    }
+
+    private ImageFilter parseMaskFilter(String contextPath, StringCharReader reader) {
+        String imagePath = reader.getTheRest().trim();
+
+        if (imagePath.isEmpty()) {
+            throw new SyntaxException("Mask filter image path is not defined");
+        }
+
+        String fullImagePath = imagePath;
+
+        if (contextPath != null && !contextPath.isEmpty()) {
+            fullImagePath = contextPath + File.separator + imagePath;
+        }
+        try {
+
+            InputStream stream = GalenUtils.findMandatoryFileOrResourceAsStream(fullImagePath);
+
+            return new MaskFilter(new ImageHandler(Rainbow4J.loadImage(stream)));
+        } catch (IOException exception) {
+            throw new SyntaxException("Couldn't load " + fullImagePath, exception);
+        }
     }
 
     private Rect parseRect(String text) {
