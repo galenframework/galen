@@ -68,12 +68,18 @@ public class RangeTest {
                 {Range.lessThan(new RangeValue(10, 1)), 1.012, false},
                 {Range.lessThan(new RangeValue(11, 1)), 1.012, true},
                 {Range.lessThan(new RangeValue(10, 1)), 0.999, true},
+                {Range.lessThanOrEquals(new RangeValue(10, 0)), 9.0, true},
+                {Range.lessThanOrEquals(new RangeValue(10, 0)), 10.0, true},
+                {Range.lessThanOrEquals(new RangeValue(10, 0)), 11.0, false},
 
                 {Range.greaterThan(new RangeValue(10, 1)), 0.0, false},
                 {Range.greaterThan(new RangeValue(10, 1)), 1.0, false},
                 {Range.greaterThan(new RangeValue(10, 1)), 1.09999, false},
                 {Range.greaterThan(new RangeValue(10, 1)), 1.1, true},
-                {Range.greaterThan(new RangeValue(10, 1)), 1.1999, true}
+                {Range.greaterThan(new RangeValue(10, 1)), 1.1999, true},
+                {Range.greaterThanOrEquals(new RangeValue(10, 0)), 10.0, true},
+                {Range.greaterThanOrEquals(new RangeValue(10, 0)), 11.0, true},
+                {Range.greaterThanOrEquals(new RangeValue(10, 0)), 9.0, false}
         };
     }
 }

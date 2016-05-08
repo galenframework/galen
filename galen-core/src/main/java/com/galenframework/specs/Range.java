@@ -45,7 +45,7 @@ public class Range {
     }
 
     public enum RangeType {
-        BETWEEN, EXACT, GREATER_THAN, LESS_THAN
+        BETWEEN, EXACT, GREATER_THAN, LESS_THAN, LESS_THAN_OR_EQUALS, GREATER_THAN_OR_EQUALS
     }
     
     public RangeValue getFrom() {
@@ -79,6 +79,14 @@ public class Range {
 
     public static Range lessThan(int value) {
         return lessThan(new RangeValue(value));
+    }
+
+    public static Range lessThanOrEquals(int value) {
+        return lessThanOrEquals(new RangeValue(value));
+    }
+
+    public static Range greaterThanOrEquals(int value) {
+        return greaterThanOrEquals(new RangeValue(value));
     }
 
     @Override
@@ -119,15 +127,18 @@ public class Range {
         }
         return format("Range{%s%s}", prettyString(), withPercentage);
     }
-    public boolean isExact() {
-        return rangeType == RangeType.EXACT;
-    }
     public boolean holds(double offset) {
-    	if (isGreaterThan()) {
+    	if (rangeType == RangeType.GREATER_THAN) {
             return from.isLessThan(offset);
     	}
-    	else if (isLessThan()) {
-    		return to.isGreaterThan(offset);
+        else if (rangeType == RangeType.GREATER_THAN_OR_EQUALS) {
+            return from.isLessThanOrEquals(offset);
+        }
+    	else if (rangeType == RangeType.LESS_THAN) {
+            return to.isGreaterThan(offset);
+        }
+        else if (rangeType == RangeType.LESS_THAN_OR_EQUALS) {
+            return to.isGreaterThanOrEquals(offset);
     	} else {
             return from.isLessThanOrEquals(offset) && to.isGreaterThanOrEquals(offset);
         }
@@ -137,25 +148,24 @@ public class Range {
     }
     
     public String prettyString(String dimension) {
-        if (isExact()) {
+        if (rangeType == RangeType.EXACT) {
             return String.format("%s%s", from.toString(), dimension);
         }
-        else if (isGreaterThan()) {
+        else if (rangeType == RangeType.GREATER_THAN) {
             return String.format("> %s%s", from.toString(), dimension);
         }
-        else if (isLessThan()) {
+        else if (rangeType == RangeType.LESS_THAN) {
             return String.format("< %s%s", to.toString(), dimension);
+        }
+        else if (rangeType == RangeType.LESS_THAN_OR_EQUALS) {
+            return String.format("<= %s%s", to.toString(), dimension);
+        }
+        else if (rangeType == RangeType.GREATER_THAN_OR_EQUALS) {
+            return String.format(">= %s%s", from.toString(), dimension);
         }
         else return String.format("%s to %s%s", from.toString(), to.toString(), dimension);
     }
-    
-    private boolean isLessThan() {
-		return rangeType == RangeType.LESS_THAN;
-	}
-	private boolean isGreaterThan() {
-	    return rangeType == RangeType.GREATER_THAN;
-	}
-    
+
 	public Range withPercentOf(String percentageOfValue) {
         this.setPercentageOfValue(percentageOfValue);
         return this;
@@ -175,6 +185,15 @@ public class Range {
 	public static Range lessThan(RangeValue value) {
 		return new Range(null, value).withType(RangeType.LESS_THAN);
 	}
+
+    public static Range lessThanOrEquals(RangeValue value) {
+        return new Range(null, value).withType(RangeType.LESS_THAN_OR_EQUALS);
+    }
+
+    public static Range greaterThanOrEquals(RangeValue value) {
+        return new Range(value, null).withType(RangeType.GREATER_THAN_OR_EQUALS);
+    }
+
     public RangeType getRangeType() {
         return rangeType;
     }

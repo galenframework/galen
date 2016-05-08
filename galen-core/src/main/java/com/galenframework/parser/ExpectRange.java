@@ -33,24 +33,12 @@ public class ExpectRange implements Expectation<Range>{
     }
 
     private enum RangeType {
-		NOTHING, APPROXIMATE, LESS_THAN, GREATER_THAN
+		NOTHING, APPROXIMATE, LESS_THAN, GREATER_THAN, LESS_THAN_OR_EQUALS, GREATER_THAN_OR_EQUALS
 	}
 
     @Override
     public Range read(StringCharReader reader) {
-        
-        RangeType rangeType = RangeType.NOTHING;
-        
-        char firstNonWhiteSpaceSymbol = reader.firstNonWhiteSpaceSymbol();
-        if (firstNonWhiteSpaceSymbol == '~') {
-            rangeType = RangeType.APPROXIMATE;
-        }
-        else if (firstNonWhiteSpaceSymbol == '>') {
-        	rangeType = RangeType.GREATER_THAN;
-        }
-        else if (firstNonWhiteSpaceSymbol == '<') {
-        	rangeType = RangeType.LESS_THAN;
-        }
+        RangeType rangeType = identifyRangeType(reader);
         
         RangeValue firstValue = new ExpectRangeValue().read(reader);
         
@@ -92,6 +80,32 @@ public class ExpectRange implements Expectation<Range>{
         }
     }
 
+    private RangeType identifyRangeType(StringCharReader reader) {
+        RangeType rangeType = RangeType.NOTHING;
+
+        char firstNonWhiteSpaceSymbol = reader.firstNonWhiteSpaceSymbol();
+        if (firstNonWhiteSpaceSymbol == '~') {
+            rangeType = RangeType.APPROXIMATE;
+        }
+        else if (firstNonWhiteSpaceSymbol == '>') {
+        	rangeType = RangeType.GREATER_THAN;
+            reader.readSafeUntilSymbol('>');
+            if (reader.firstNonWhiteSpaceSymbol() == '=') {
+                reader.readSafeUntilSymbol('=');
+                rangeType = RangeType.GREATER_THAN_OR_EQUALS;
+            }
+        }
+        else if (firstNonWhiteSpaceSymbol == '<') {
+        	rangeType = RangeType.LESS_THAN;
+            reader.readSafeUntilSymbol('<');
+            if (reader.firstNonWhiteSpaceSymbol() == '=') {
+                reader.readSafeUntilSymbol('=');
+                rangeType = RangeType.LESS_THAN_OR_EQUALS;
+            }
+        }
+        return rangeType;
+    }
+
     private Range createRange(RangeValue firstValue, RangeType rangeType) {
         if (rangeType == RangeType.APPROXIMATE) {
             Double delta = (double) GalenConfig.getConfig().getRangeApproximation();
@@ -107,6 +121,12 @@ public class ExpectRange implements Expectation<Range>{
         }
         else if (rangeType == RangeType.LESS_THAN) {
         	return Range.lessThan(firstValue);
+        }
+        else if (rangeType == RangeType.LESS_THAN_OR_EQUALS) {
+            return Range.lessThanOrEquals(firstValue);
+        }
+        else if (rangeType == RangeType.GREATER_THAN_OR_EQUALS) {
+            return Range.greaterThanOrEquals(firstValue);
         }
         else {
             return Range.exact(firstValue);
