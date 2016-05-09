@@ -984,6 +984,12 @@ public class PageSpecReaderTest {
         readPageSpec("speclang2/incorrect/nested-spec.gspec");
     }
 
+    @Test(expectedExceptions = FileSyntaxException.class,
+        expectedExceptionsMessageRegExp = "\\QNot enough menu items\\E\\s+\\Qin speclang2/die.gspec:6\\E")
+    public void shouldGiveError_whenUsingDieStatement() throws IOException {
+        readPageSpec("speclang2/die.gspec");
+    }
+
     private PageSpec readPageSpec(String resource) throws IOException {
         return readPageSpec(resource, EMPTY_PAGE, EMPTY_TAGS, EMPTY_TAGS);
     }

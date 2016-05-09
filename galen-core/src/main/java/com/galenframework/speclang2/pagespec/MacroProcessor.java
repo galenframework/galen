@@ -15,6 +15,7 @@
 ******************************************************************************/
 package com.galenframework.speclang2.pagespec;
 
+import com.galenframework.parser.Expectations;
 import com.galenframework.parser.SyntaxException;
 import com.galenframework.parser.StructNode;
 import com.galenframework.parser.StringCharReader;
@@ -22,6 +23,7 @@ import com.galenframework.parser.StringCharReader;
 import java.io.IOException;
 import java.util.*;
 
+import static com.galenframework.parser.Expectations.doubleQuotedText;
 import static java.util.Arrays.asList;
 
 public class MacroProcessor {
@@ -38,6 +40,7 @@ public class MacroProcessor {
     public static final String IF_KEYWORD = "@if";
     public static final String ELSEIF_KEYWORD = "@elseif";
     public static final String ELSE_KEYWORD = "@else";
+    public static final String DIE_KEYWORD = "@die";
 
 
     private final PageSpecHandler pageSpecHandler;
@@ -52,7 +55,8 @@ public class MacroProcessor {
             IMPORT_KEYWORD,
             SCRIPT_KEYWORD,
             RULE_KEYWORD,
-            RULE_BODY
+            RULE_BODY,
+            DIE_KEYWORD
     );
     private List<StructNode> currentRuleBody;
 
@@ -69,11 +73,7 @@ public class MacroProcessor {
                 StructNode node = it.next();
 
                 if (isConditionStatement(node.getName())) {
-                    try {
-                        resultingNodes.addAll(processConditionStatements(node, it));
-                    } catch (Exception ex) {
-                        throw new SyntaxException(node, "JavaScript error inside statement", ex);
-                    }
+                    resultingNodes.addAll(processConditionStatements(node, it));
                 } else {
                     StructNode processedNode = pageSpecHandler.processExpressionsIn(node);
                     if (isMacroStatement(processedNode.getName())) {
@@ -95,7 +95,7 @@ public class MacroProcessor {
         StructNode elseNode = null;
         boolean finishedConditions = false;
 
-        while(it.hasNext() && !finishedConditions) {
+        while (it.hasNext() && !finishedConditions) {
             StructNode nextNode = it.next();
 
             String firstWord = new StringCharReader(nextNode.getName()).readWord();
@@ -103,20 +103,28 @@ public class MacroProcessor {
                 if (elseNode != null) {
                     throw new SyntaxException(nextNode, "Cannot use elseif statement after else block");
                 }
-                elseIfNodes.add(pageSpecHandler.processStrictExpressionsIn(nextNode));
+                elseIfNodes.add(processStrictExpressionsIn(nextNode));
             } else if (firstWord.equals(ELSE_KEYWORD)) {
                 if (elseNode != null) {
                     throw new SyntaxException(nextNode, "Cannot use else statement after else block");
                 }
-                elseNode = pageSpecHandler.processStrictExpressionsIn(nextNode);
+                elseNode = processStrictExpressionsIn(nextNode);
             } else {
                 finishedConditions = true;
                 it.previous();
             }
         }
 
-        List<StructNode> nodesFromConditions = applyConditions(pageSpecHandler.processStrictExpressionsIn(ifNode), elseIfNodes, elseNode);
+        List<StructNode> nodesFromConditions = applyConditions(processStrictExpressionsIn(ifNode), elseIfNodes, elseNode);
         return process(nodesFromConditions);
+    }
+
+    private StructNode processStrictExpressionsIn(StructNode ifNode) {
+        try {
+            return pageSpecHandler.processStrictExpressionsIn(ifNode);
+        } catch (Exception ex) {
+            throw new SyntaxException(ifNode, "JavaScript error inside statement");
+        }
     }
 
     private List<StructNode> applyConditions(StructNode ifNode, List<StructNode> elseIfNodes, StructNode elseNode) {
@@ -204,6 +212,8 @@ public class MacroProcessor {
             throw new SyntaxException(statementNode, "elseif statement without if block");
         } else if (ELSE_KEYWORD.equals(firstWord)) {
             throw new SyntaxException(statementNode, "else statement without if block");
+        } else if (DIE_KEYWORD.equals(firstWord)) {
+            throw new SyntaxException(statementNode, doubleQuotedText().read(reader));
         } else if (RULE_BODY.equals(firstWord)) {
             if (currentRuleBody != null) {
                 return currentRuleBody;

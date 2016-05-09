@@ -1,0 +1,6 @@
+@objects
+    menu_item-1      #menu-item-1
+
+= Menu =
+    @if ${count("menu_item-*") < 2}
+        @die "Not enough menu items"
