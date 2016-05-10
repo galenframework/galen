@@ -101,17 +101,6 @@ public class ValidationResult {
                 .toString();
     }
 
-    public static List<ValidationResult> filterOnlyErrorResults(List<ValidationResult> results) {
-        List<ValidationResult> filtered = new LinkedList<>();
-
-        for (ValidationResult result : results) {
-            if (result.getError() != null)
-            filtered.add(result);
-        }
-
-        return filtered;
-    }
-
     public List<ValidationResult> getChildValidationResults() {
         return childValidationResults;
     }

@@ -1,0 +1,15 @@
+@objects
+    comment-*       ul.comments li
+
+
+
+
+= Comments =
+    comment-1:
+        component component-with-warnings.gspec, userName Johny, message "Awesome!!!"
+
+    comment-2:
+        component component-with-warnings.gspec, userName Piet, message "Cool!"
+
+    comment-3:
+        component component-with-warnings.gspec, userName Tom, message "Meh..."

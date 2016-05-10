@@ -77,15 +77,6 @@ public class LayoutReportListener implements ValidationListener {
     }
 
 
-    public void addResultToSpec(LayoutSpec spec, ValidationResult result) {
-        currentReport().putObjects(result.getValidationObjects());
-        spec.setHighlight(convertToObjectNames(result.getValidationObjects()));
-
-        if (result.getError() != null) {
-            spec.setErrors(result.getError().getMessages());
-        }
-    }
-
     @Override
     public void onBeforeSpec(PageValidation pageValidation, String objectName, Spec originalSpec) {
         LayoutSpec spec = new LayoutSpec();
@@ -117,9 +108,8 @@ public class LayoutReportListener implements ValidationListener {
 
         if (originalSpec.isOnlyWarn()) {
             spec.setStatus(TestReportNode.Status.WARN);
-        } else {
-            spec.setStatus(TestReportNode.Status.ERROR);
         }
+
         try {
             if (result.getError().getImageComparison() != null) {
                 spec.setImageComparison(convertImageComparison(objectName, result.getError().getImageComparison()));
@@ -182,7 +172,6 @@ public class LayoutReportListener implements ValidationListener {
         // not needed here
     }
 
-
     private LayoutReportStack currentReport() {
         return reportStack.peek();
     }
@@ -191,9 +180,17 @@ public class LayoutReportListener implements ValidationListener {
         return reportStack.peek().peekSection();
     }
 
+    private void addResultToSpec(LayoutSpec spec, ValidationResult result) {
+        currentReport().putObjects(result.getValidationObjects());
+        spec.setHighlight(convertToObjectNames(result.getValidationObjects()));
 
-    private LayoutObject getCurrentObject() {
-        return reportStack.peek().getCurrentObject();
+        if (result.getError() != null) {
+            spec.setErrors(result.getError().getMessages());
+            if (result.getError().isOnlyWarn()) {
+                spec.setStatus(TestReportNode.Status.WARN);
+            } else {
+                spec.setStatus(TestReportNode.Status.ERROR);
+            }
+        }
     }
-
 }

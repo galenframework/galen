@@ -49,7 +49,7 @@ public class ComponentBasicIT {
 
     @Test
     public void componentSpec_shouldAllowToProvide_arguments_fromParentSpec() throws IOException {
-        driver.get(toFileProtocol(getClass().getResource("/complex-page/index.html").getPath()));
+        loadPage("/complex-page/index.html");
         LayoutReport layoutReport = Galen.checkLayout(driver, findSpec("/complex-page/using-component-arguments.gspec"), asList("desktop"));
 
         assertThat("Amount of failures should be", layoutReport.errors(), is(1));
@@ -65,7 +65,7 @@ public class ComponentBasicIT {
      */
     @Test
     public void componentSpec_shouldAllowToExecute_2ndLevel_componentSpec() throws IOException {
-        driver.get(toFileProtocol(getClass().getResource("/2nd-level-component/index.html").getPath()));
+        loadPage("/2nd-level-component/index.html");
         LayoutReport layoutReport = Galen.checkLayout(driver, findSpec("/2nd-level-component/quote-containers.gspec"), Collections.<String>emptyList());
 
         assertThat("Amount of failures should be", layoutReport.errors(), is(1));
@@ -78,6 +78,24 @@ public class ComponentBasicIT {
 
         ValidationResult thirdValidationError = secondValidationError.getChildValidationResults().get(0);
         assertThat(thirdValidationError.getError().getMessages().get(0), is("\"name\" text is \"Buggy component\" but should start with \"Title\""));
+    }
+
+    private void loadPage(String url) {
+        driver.get(toFileProtocol(getClass().getResource(url).getPath()));
+    }
+
+
+    @Test
+    public void componentSpec_shouldWarn_ifThereAreWarnings_inChildren() throws IOException {
+        loadPage("/complex-page/index.html");
+
+        LayoutReport layoutReport = Galen.checkLayout(driver, findSpec("/complex-page/using-component-warnings.gspec"), asList("desktop"));
+
+        assertThat("Amount of failures should be", layoutReport.errors(), is(0));
+        assertThat("Amount of warnings should be", layoutReport.warnings(), is(1));
+
+        assertThat(layoutReport.getValidationErrorResults().get(0).getChildValidationResults().get(0).getError().getMessages().get(0),
+            is("\"message\" text is \"OMG!\" but should be \"Cool!\""));
     }
 
 

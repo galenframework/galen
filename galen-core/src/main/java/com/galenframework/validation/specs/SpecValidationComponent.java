@@ -20,6 +20,8 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 import com.galenframework.browser.Browser;
 import com.galenframework.speclang2.pagespec.PageSpecReader;
@@ -57,15 +59,26 @@ public class SpecValidationComponent extends SpecValidation<SpecComponent> {
 
         List<ValidationObject> objects = asList(new ValidationObject(mainObject.getArea(), objectName));
 
-        List<ValidationResult> errorResults = ValidationResult.filterOnlyErrorResults(results);
-        if (errorResults.size() > 0) {
+        List<ValidationResult> errorResults = results.stream().filter(byOnlyError()).collect(Collectors.toList());
+
+        if (!errorResults.isEmpty()) {
             throw new ValidationErrorException("Child component spec contains " + errorResults.size() + " errors")
                     .withValidationObjects(objects)
                     .withChildValidationResults(errorResults);
+        } else {
+            List<ValidationResult> warningResults = results.stream().filter(byOnlyWarn()).collect(Collectors.toList());
+            if (!warningResults.isEmpty()) {
+                return new ValidationResult(spec, objects).withError(
+                    new ValidationError(asList("Child component spec contains " + warningResults.size() + " warnings"))
+                        .withOnlyWarn(true)
+                ).withChildValidationResults(warningResults);
+            }
+
         }
 
         return new ValidationResult(spec, objects);
     }
+
 
     private void tellListenerAfterSubLayout(PageValidation pageValidation, String objectName) {
         if (pageValidation.getValidationListener() != null) {
@@ -149,4 +162,11 @@ public class SpecValidationComponent extends SpecValidation<SpecComponent> {
                 pageValidation.getSectionFilter(), pageValidation.getValidationListener());
     }
 
+    private Predicate<ValidationResult> byOnlyWarn() {
+        return r -> r.getError() != null && r.getError().isOnlyWarn();
+    }
+
+    private Predicate<ValidationResult> byOnlyError() {
+        return r -> r.getError() != null && !r.getError().isOnlyWarn();
+    }
 }

@@ -1,0 +1,14 @@
+# This component takes two arguments: userName and message
+
+
+@objects
+    user-link       a.user
+    message         .message
+
+
+= Comment =
+    user-link:
+        % text is "${userName}"
+
+    message:
+        % text is "${message}"
