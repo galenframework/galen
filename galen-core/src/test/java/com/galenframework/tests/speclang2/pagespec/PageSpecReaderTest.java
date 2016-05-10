@@ -111,6 +111,15 @@ public class PageSpecReaderTest {
         }}));
     }
 
+    @Test
+    public void shouldRead_objectDefinitions_withJsBlocks() throws IOException {
+        PageSpec pageSpec = readPageSpec("speclang2/objects-with-js-blocks.gspec");
+
+        assertThat(pageSpec.getObjects(), is((Map<String, Locator>)new HashMap<String, Locator>(){{
+            put("header_caption", new Locator("css", ".some-header h1"));
+        }}));
+    }
+
 
     @Test
     public void shouldRead_sectionsWithObjectSpecs() throws  IOException {

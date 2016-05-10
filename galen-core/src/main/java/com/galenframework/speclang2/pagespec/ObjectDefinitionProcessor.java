@@ -65,7 +65,7 @@ public class ObjectDefinitionProcessor {
     }
 
     private void processObject(StructNode objectNode, String parentName, Locator parentLocator) {
-        StringCharReader reader = new StringCharReader(objectNode.getName());
+        StringCharReader reader = new StringCharReader(pageSpecHandler.processExpressionsIn(objectNode).getName());
 
         String objectName = reader.readWord();
 
