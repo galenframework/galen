@@ -23,8 +23,8 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import com.galenframework.tests.GalenEmptyTest;
 import com.galenframework.tests.GalenTest;
-import com.galenframework.tests.GalenEmptyTest;
-import com.galenframework.tests.GalenTest;
+import com.sun.org.apache.xpath.internal.operations.Bool;
+import org.apache.commons.lang3.StringEscapeUtils;
 
 public class GalenTestInfo {
 
@@ -108,8 +108,36 @@ public class GalenTestInfo {
     }
 
     public static GalenTestInfo fromMethod(Method method) {
-        String name = method.getDeclaringClass().getName() + "#" + method.getName();
+        String name = method.getDeclaringClass().getSimpleName() + "#" + method.getName();
         return GalenTestInfo.fromString(name);
     }
 
+    public static GalenTestInfo fromMethod(Method method, Object[] arguments) {
+        StringBuilder builder = new StringBuilder(method.getDeclaringClass().getSimpleName() + "#" + method.getName());
+        if (arguments != null && arguments.length > 0) {
+            builder.append('(');
+            boolean shouldUseComma = false;
+            for (Object argument : arguments) {
+                if (shouldUseComma) {
+                    builder.append(", ");
+                }
+                builder.append(convertArgumentToString(argument));
+                shouldUseComma = true;
+            }
+            builder.append(')');
+        }
+        return GalenTestInfo.fromString(builder.toString());
+    }
+
+    private static String convertArgumentToString(Object argument) {
+        if (argument == null) {
+            return "null";
+        } else if (argument instanceof String) {
+            return "\"" + StringEscapeUtils.escapeJava(argument.toString()) + "\"";
+        } else if (argument instanceof Boolean) {
+            return Boolean.toString((Boolean)argument);
+        } else {
+            return argument.toString();
+        }
+    }
 }

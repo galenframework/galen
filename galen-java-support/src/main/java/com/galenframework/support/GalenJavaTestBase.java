@@ -16,6 +16,7 @@
 package com.galenframework.support;
 
 import com.galenframework.api.Galen;
+import com.galenframework.reports.GalenTestInfo;
 import com.galenframework.reports.TestReport;
 import com.galenframework.reports.model.LayoutReport;
 import com.galenframework.speclang2.pagespec.SectionFilter;
@@ -24,6 +25,7 @@ import org.openqa.selenium.Dimension;
 import org.openqa.selenium.WebDriver;
 
 import java.io.IOException;
+import java.lang.reflect.Method;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -53,6 +55,9 @@ public abstract class GalenJavaTestBase {
         return report;
     }
 
+    public GalenTestInfo createTestInfo(Method method, Object[] arguments) {
+        return GalenTestInfo.fromMethod(method, arguments);
+    }
 
     /**
      * Loads the given url in the current driver for current test thread

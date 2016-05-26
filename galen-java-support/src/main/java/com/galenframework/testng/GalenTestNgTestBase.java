@@ -15,6 +15,7 @@
 ******************************************************************************/
 package com.galenframework.testng;
 
+import com.galenframework.reports.GalenTestInfo;
 import com.galenframework.support.GalenJavaTestBase;
 import com.galenframework.support.GalenReportsContainer;
 import org.testng.annotations.AfterMethod;
@@ -33,8 +34,8 @@ public abstract class GalenTestNgTestBase extends GalenJavaTestBase {
      * Initializes the TestReport instance with the name of current test method and stores it in {@link ThreadLocal}
      */
     @BeforeMethod(alwaysRun = true)
-    public void initReport(Method method) {
-        report.set(GalenReportsContainer.get().registerTest(method));
+    public void initReport(Method method, Object[] arguments) {
+        report.set(GalenReportsContainer.get().registerTest(createTestInfo(method, arguments)));
     }
 
     /**

@@ -17,6 +17,7 @@ package com.galenframework.support;
 
 import com.galenframework.reports.GalenTestInfo;
 import com.galenframework.reports.TestReport;
+import org.testng.annotations.TestInstance;
 
 import java.lang.reflect.Method;
 import java.util.LinkedList;
@@ -25,20 +26,17 @@ import java.util.List;
 /**
  * A singleton class which is used for storing Galen test reports
  */
-public class GalenReportsContainer {
+public enum GalenReportsContainer {
+    INSTANCE;
 
-    private static final GalenReportsContainer _instance = new GalenReportsContainer();
     private final List<GalenTestInfo> tests = new LinkedList<>();
 
-    private GalenReportsContainer() {
-    }
-
     /**
-     * Returns a single instance of {@link #GalenReportsContainer}
-     * @return an instance of {@link #GalenReportsContainer}
+     * Returns a single instance of {@link GalenReportsContainer}
+     * @return an instance of {@link GalenReportsContainer}
      */
-    public static final GalenReportsContainer get() {
-        return _instance;
+    public static GalenReportsContainer get() {
+        return INSTANCE;
     }
 
     public TestReport registerTest(Method method) {
@@ -47,8 +45,13 @@ public class GalenReportsContainer {
         return testInfo.getReport();
     }
 
-    public synchronized TestReport registerTest(final String name, final List<String> groups) {
-        final GalenTestInfo testInfo = GalenTestInfo.fromString(name, groups);
+    public TestReport registerTest(String name, List<String> groups) {
+        GalenTestInfo testInfo = GalenTestInfo.fromString(name, groups);
+        tests.add(testInfo);
+        return testInfo.getReport();
+    }
+
+    public TestReport registerTest(GalenTestInfo testInfo) {
         tests.add(testInfo);
         return testInfo.getReport();
     }
