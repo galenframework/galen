@@ -537,6 +537,26 @@ public class PageSpecReaderTest {
     }
 
     @Test
+    public void shouldRead_customRules_andNotCare_aboutExtraWhiteSpace() throws IOException {
+        PageSpec pageSpec = readPageSpec("speclang2/custom-rules-white-space.gspec",
+            new MockedPage(new HashMap<String, PageElement>()),
+            EMPTY_TAGS, EMPTY_TAGS);
+
+        assertThat(pageSpec.getSections().size(), is(1));
+
+        PageSection section = pageSpec.getSections().get(0);
+        assertThat(section.getSections().size(), is(1));
+
+        PageSection ruleSection = section.getSections().get(0);
+        assertThat(ruleSection.getName(), is("login_panel     should    stretch    to     screen"));
+
+        assertThat(ruleSection.getObjects().size(), is(1));
+        assertThat(ruleSection.getObjects().get(0).getObjectName(), is("login_panel"));
+        assertThat(ruleSection.getObjects().get(0).getSpecs().size(), is(1));
+        assertThat(ruleSection.getObjects().get(0).getSpecs().get(0).getOriginalText(), is("inside screen 0px left right"));
+    }
+
+    @Test
     public void shouldRead_conditionsWithMultipleElseBlocks()  throws  IOException {
         PageSpec pageSpec = readPageSpec("speclang2/conditions.gspec",
                 new MockedPage(new HashMap<String, PageElement>() {{

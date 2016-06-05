@@ -17,6 +17,9 @@ package com.galenframework.speclang2.pagespec.rules;
 
 import com.galenframework.parser.StringCharReader;
 
+import static com.galenframework.speclang2.pagespec.rules.RuleParserStateWhiteSpace.SPACE;
+import static com.galenframework.speclang2.pagespec.rules.RuleParserStateWhiteSpace.TAB;
+
 /**
  * Created by ishubin on 2015/02/22.
  */
@@ -33,6 +36,9 @@ public class RuleParserStateNormal extends RuleParseState {
                 reader.next();
 
                 new RuleParseStateParameter().process(ruleBuilder, reader);
+                chunk = ruleBuilder.newNormalTextChunk();
+            } else if (symbol == SPACE || symbol == TAB) {
+                new RuleParserStateWhiteSpace().process(ruleBuilder, reader);
                 chunk = ruleBuilder.newNormalTextChunk();
             } else {
                 chunk.appendSymbol(symbol);

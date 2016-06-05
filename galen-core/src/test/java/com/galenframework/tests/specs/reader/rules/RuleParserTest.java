@@ -1,12 +1,12 @@
 /*******************************************************************************
 * Copyright 2016 Ivan Shubin http://galenframework.com
-* 
+*
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
 * You may obtain a copy of the License at
-* 
+*
 *   http://www.apache.org/licenses/LICENSE-2.0
-* 
+*
 * Unless required by applicable law or agreed to in writing, software
 * distributed under the License is distributed on an "AS IS" BASIS,
 * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -36,7 +36,7 @@ public class RuleParserTest {
         Rule rule = new RuleParser().parse(" \tShould be squared ");
 
         Pattern rulePattern = rule.getPattern();
-        assertThat(rulePattern.pattern(), is("\\QShould be squared\\E"));
+        assertThat(rulePattern.pattern(), is("\\QShould\\E\\s+\\Qbe\\E\\s+\\Qsquared\\E"));
         assertThat(rule.getParameters(), is(emptyCollectionOf(String.class)));
     }
 
@@ -46,7 +46,7 @@ public class RuleParserTest {
         Rule rule = new RuleParser().parse("Should be placed near %{ secondObject } with %{  margin } % margin");
 
         Pattern rulePattern = rule.getPattern();
-        assertThat(rulePattern.pattern(), is("\\QShould be placed near \\E(.*)\\Q with \\E(.*)\\Q % margin\\E"));
+        assertThat(rulePattern.pattern(), is("\\QShould\\E\\s+\\Qbe\\E\\s+\\Qplaced\\E\\s+\\Qnear\\E\\s+(.*)\\s+\\Qwith\\E\\s+(.*)\\s+\\Q%\\E\\s+\\Qmargin\\E"));
         assertThat(rule.getParameters(), contains("secondObject", "margin"));
     }
 
@@ -55,7 +55,7 @@ public class RuleParserTest {
         Rule rule = new RuleParser().parse("Should be placed near %{secondObject: menu-item-.*  } with %{margin: \\d{3}:} margin");
 
         Pattern rulePattern = rule.getPattern();
-        assertThat(rulePattern.pattern(), is("\\QShould be placed near \\E(menu-item-.*)\\Q with \\E(\\d{3}:)\\Q margin\\E"));
+        assertThat(rulePattern.pattern(), is("\\QShould\\E\\s+\\Qbe\\E\\s+\\Qplaced\\E\\s+\\Qnear\\E\\s+(menu-item-.*)\\s+\\Qwith\\E\\s+(\\d{3}:)\\s+\\Qmargin\\E"));
         assertThat(rule.getParameters(), contains("secondObject", "margin"));
     }
 

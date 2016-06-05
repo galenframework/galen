@@ -1,0 +1,10 @@
+
+
+
+@rule %{item} should stretch to %{parentItem}
+    ${item}:
+        inside ${parentItem} 0px left right
+
+
+= Main section =
+    | login_panel     should    stretch    to     screen

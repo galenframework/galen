@@ -37,9 +37,25 @@ public class RuleBuilder {
         return addChunk(new ParameterChunk());
     }
 
+    public WhiteSpaceChunk newWhiteSpaceChunk() {
+        return addChunk(new WhiteSpaceChunk());
+    }
+
     public static abstract class Chunk {
         public abstract String build(Rule rule);
         public abstract void appendSymbol(char ch);
+    }
+
+    public class WhiteSpaceChunk extends Chunk {
+
+        @Override
+        public String build(Rule rule) {
+            return "\\s+";
+        }
+
+        @Override
+        public void appendSymbol(char ch) {
+        }
     }
 
     public static class NormalTextChunk extends Chunk {
