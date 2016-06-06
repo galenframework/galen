@@ -37,10 +37,10 @@ public class SpecValidationText<T extends SpecText> extends SpecValidation<T> {
         
         Rect area = mainObject.getArea();
         String realText = mainObject.getText();
-        realText = new String(realText.getBytes(Charset.forName("utf-8")));
         if (realText == null) {
             realText = "";
         }
+        realText = new String(realText.getBytes(Charset.forName("utf-8")));
 
         realText = applyOperationsTo(realText, spec.getOperations());
         checkValue(spec, objectName, realText, "text", area);
