@@ -23,6 +23,7 @@ import com.galenframework.specs.SpecText;
 import com.galenframework.validation.*;
 import com.galenframework.page.PageElement;
 
+import java.nio.charset.Charset;
 import java.util.List;
 import java.util.regex.Pattern;
 
@@ -39,6 +40,7 @@ public class SpecValidationText<T extends SpecText> extends SpecValidation<T> {
         if (realText == null) {
             realText = "";
         }
+        realText = new String(realText.getBytes(Charset.forName("utf-8")));
 
         realText = applyOperationsTo(realText, spec.getOperations());
         checkValue(spec, objectName, realText, "text", area);
