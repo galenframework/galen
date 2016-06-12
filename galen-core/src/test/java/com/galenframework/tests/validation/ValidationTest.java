@@ -57,8 +57,6 @@ import org.testng.annotations.Test;
 
 public class ValidationTest {
 
-    private static final boolean CONTAINS_FULLY = false;
-    private static final boolean CONTAINS_PARTLY = true;
     private static final List<ValidationObject> NO_AREA = null;
     private static final boolean PIXEL_UNIT = true;
     private static final boolean PERCENTAGE_UNIT = false;
@@ -109,30 +107,7 @@ public class ValidationTest {
     @DataProvider
     public Object[][] provideGoodSamples() {
         return new Object[][] {
-          // Contains
-          row(specContains(CONTAINS_FULLY, "menu", "button"), page(new HashMap<String, PageElement>(){{
-              put("object", element(10, 10, 100, 100));
-              put("menu", element(11, 11, 10, 10));
-              put("button", element(60, 50, 40, 40));
-          }})),
-          row(specContains(CONTAINS_PARTLY, "menu", "button"),  page(new HashMap<String, PageElement>(){{
-              put("object", element(10, 10, 100, 100));
-              put("menu", element(50, 50, 300, 10));
-              put("button", element(10, 10, 100, 40));
-          }})),
-          row(specContains(CONTAINS_PARTLY, "menu", "button"),  page(new HashMap<String, PageElement>(){{
-              put("object", element(70, 70, 100, 100));
-              put("menu", element(0, 0, 100, 72));
-              put("button", element(5, 5, 100, 70));
-          }})),
-          row(specContains(CONTAINS_FULLY, "menu-item-*", "button"),  page(new HashMap<String, PageElement>(){{
-              put("object", element(0, 0, 200, 100));
-              put("menu-item-1", element(10, 10, 10, 10));
-              put("menu-item-2", element(30, 10, 10, 10));
-              put("menu-item-3", element(50, 10, 10, 10));
-              put("button", element(70, 10, 10, 10));
-          }})),
-          
+
           
           // Absent 
 
@@ -576,50 +551,6 @@ public class ValidationTest {
     @DataProvider
     public Object[][] provideBadSamples() {
         return new Object[][] {
-          // Contains
-
-          row(validationResult(areas(new ValidationObject(new Rect(9, 11, 10, 10), "menu"), new ValidationObject(new Rect(10, 10, 100, 100), "object")), messages("\"menu\" is outside \"object\"")),
-              specContains(false, "menu", "button"), page(new HashMap<String, PageElement>(){{
-                  put("object", element(10, 10, 100, 100));
-                  put("menu", element(9, 11, 10, 10));
-                  put("button", element(60, 50, 40, 40));
-          }})),
-
-          row(validationResult(areas(new ValidationObject(new Rect(50, 50, 110, 10), "menu"), new ValidationObject(new Rect(10, 10, 101, 40), "button"), new ValidationObject(new Rect(10, 10, 100, 100), "object")), messages("\"menu\" is outside \"object\"", "\"button\" is outside \"object\"")),
-              specContains(false, "menu", "button"), page(new HashMap<String, PageElement>(){{
-                  put("object", element(10, 10, 100, 100));
-                  put("menu", element(50, 50, 110, 10));
-                  put("button", element(10, 10, 101, 40));
-          }})),
-
-          row(validationResult(NO_AREA, messages("\"menu\" is not visible on page")),
-              specContains(CONTAINS_FULLY, "menu", "button"), page(new HashMap<String, PageElement>(){{
-                  put("object", element(10, 10, 100, 100));
-                  put("menu", invisibleElement(11, 11, 10, 10));
-                  put("button", element(60, 50, 40, 40));
-          }})),
-
-          row(validationResult(NO_AREA, messages("\"menu\" is absent on page")),
-              specContains(CONTAINS_FULLY, "menu", "button"), page(new HashMap<String, PageElement>(){{
-                  put("object", element(10, 10, 100, 100));
-                  put("menu", absentElement(11, 11, 10, 10));
-                  put("button", element(60, 50, 40, 40));
-          }})),
-
-          row(validationResult(areas(new ValidationObject(new Rect(350, 10, 10, 10), "menu-item-3"), new ValidationObject(new Rect(0, 0, 200, 100), "object")), messages("\"menu-item-3\" is outside \"object\"")),
-                  specContains(CONTAINS_FULLY, "menu-item-*", "button"), page(new HashMap<String, PageElement>(){{
-                      put("object", element(0, 0, 200, 100));
-                      put("menu-item-1", element(10, 10, 10, 10));
-                      put("menu-item-2", element(30, 10, 10, 10));
-                      put("menu-item-3", element(350, 10, 10, 10));
-                      put("button", element(70, 10, 10, 10));
-          }})),
-          row(validationResult(NO_AREA, messages("There are no objects matching: menu-item-*")),
-                  specContains(CONTAINS_FULLY, "menu-item-*", "button"), page(new HashMap<String, PageElement>(){{
-                      put("object", element(0, 0, 200, 100));
-                      put("button", element(70, 10, 10, 10));
-          }})),
-
           // Absent
 
           row(validationResult(singleArea(new Rect(10, 10, 100, 100), "object"), messages("\"object\" is not absent on page")),
@@ -1484,11 +1415,7 @@ public class ValidationTest {
     private MockedPageElement absentElement(int left, int top, int width, int height) {
         return new MockedAbsentPageElement(left, top, width, height);
     }
-    
-    private SpecContains specContains(boolean isPartly, String...objects) {
-        return new SpecContains(asList(objects), isPartly);
-    }
-    
+
     private SpecAbsent specAbsent() {
         return new SpecAbsent();
     }
