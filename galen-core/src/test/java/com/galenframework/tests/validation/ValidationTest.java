@@ -24,7 +24,6 @@ import static com.galenframework.specs.Side.TOP;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
-import static org.hamcrest.Matchers.nullValue;
 
 import java.awt.Color;
 import java.awt.image.BufferedImage;
@@ -35,7 +34,6 @@ import java.util.List;
 
 import com.galenframework.rainbow4j.colorscheme.SimpleColorClassifier;
 import com.galenframework.specs.*;
-import com.galenframework.components.validation.MockedAbsentPageElement;
 import com.galenframework.components.validation.MockedInvisiblePageElement;
 import com.galenframework.components.validation.MockedPage;
 import com.galenframework.components.validation.MockedPageElement;
@@ -55,7 +53,7 @@ import com.galenframework.rainbow4j.filters.ImageFilter;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
-public class ValidationTest {
+public class ValidationTest extends ValidationTestBase {
 
     private static final List<ValidationObject> NO_AREA = null;
     private static final boolean PIXEL_UNIT = true;
@@ -66,15 +64,6 @@ public class ValidationTest {
     private BufferedImage testImage = loadTestImage("/color-scheme-image-1.png");
     private BufferedImage imageComparisonTestScreenshot = loadTestImage("/imgs/page-screenshot.png");
     
-    @Test(dataProvider="provideGoodSamples")
-    public void shouldPassValidation(Spec spec, MockedPage page) {
-        PageSpec pageSpec = createMockedPageSpec(page);
-        PageValidation validation = new PageValidation(null, page, pageSpec, null, null);
-        ValidationError error = validation.check("object", spec).getError();
-        
-        assertThat(error, is(nullValue()));
-    }
-    
     private BufferedImage loadTestImage(String imagePath) {
         try {
             return Rainbow4J.loadImage(getClass().getResource(imagePath).getFile());
@@ -83,17 +72,6 @@ public class ValidationTest {
         }
     }
 
-    @Test(dataProvider="provideBadSamples")
-    public void shouldGiveError(ValidationResult expectedResult, Spec spec, MockedPage page) {
-        PageSpec pageSpec = createMockedPageSpec(page);
-        PageValidation validation = new PageValidation(null, page, pageSpec, null, null);
-        ValidationError error = validation.check("object", spec).getError();
-        
-        assertThat(error, is(notNullValue()));
-        assertThat(error, is(expectedResult.getError()));
-    }
-    
-    
     private PageSpec createMockedPageSpec(MockedPage page) {
         PageSpec pageSpec = new PageSpec();
         
@@ -108,110 +86,6 @@ public class ValidationTest {
     public Object[][] provideGoodSamples() {
         return new Object[][] {
 
-          
-          // Absent 
-
-          row(specAbsent(), page(new HashMap<String, PageElement>(){{
-          }})),
-          row(specAbsent(), page(new HashMap<String, PageElement>(){{
-              put("object", invisibleElement(10, 10, 100, 100));
-          }})),
-          row(specAbsent(), page(new HashMap<String, PageElement>(){{
-              put("object", absentElement(10, 10, 100, 100));
-          }})),
-          
-          
-          // Visible
-          
-          row(specVisible(), page(new HashMap<String, PageElement>(){{
-              put("object", element(10, 10, 100, 100));
-          }})),
-          row(specVisible(), page(new HashMap<String, PageElement>(){{
-              put("object", element(10, 10, 100, 100));
-          }})),
-          
-
-          
-          // Near 
-          
-          row(specNear("button", location(exact(10), LEFT, TOP)), page(new HashMap<String, PageElement>(){{
-              put("object", element(90, 140, 100, 50));
-              put("button", element(200, 200, 100, 50));
-          }})),
-          
-          row(specNear("button", location(between(5, 12), LEFT, TOP)), page(new HashMap<String, PageElement>(){{
-              put("object", element(90, 140, 100, 50));
-              put("button", element(200, 200, 100, 50));
-          }})),
-          
-          row(specNear("button", location(between(5, 20), RIGHT, BOTTOM)), page(new HashMap<String, PageElement>(){{
-              put("object", element(310, 260, 100, 50));
-              put("button", element(200, 200, 100, 50));
-          }})),
-          
-          row(specNear("button", location(exact(5), RIGHT), location(between(5, 15), TOP)), page(new HashMap<String, PageElement>(){{
-              put("object", element(305, 140, 100, 50));
-              put("button", element(200, 200, 100, 50));
-          }})),
-          row(specNear("button", location(exact(100).withPercentOf("button/width"), RIGHT)), page(new HashMap<String, PageElement>(){{
-              put("object", element(200, 140, 100, 50));
-              put("button", element(100, 100, 50, 50));
-          }})),
-          row(specNear("button", location(between(95, 105).withPercentOf("button/width"), RIGHT)), page(new HashMap<String, PageElement>(){{
-              put("object", element(200, 140, 100, 50));
-              put("button", element(100, 100, 50, 50));
-          }})),
-          
-          
-          // Width 
-          
-          row(specWidth(Range.exact(20)), page(new HashMap<String, PageElement>(){{
-              put("object", element(305, 140, 20, 50));
-          }})),
-          row(specWidth(Range.between(20, 30)), page(new HashMap<String, PageElement>(){{
-              put("object", element(305, 140, 20, 50));
-          }})),
-          row(specWidth(Range.between(20, 30)), page(new HashMap<String, PageElement>(){{
-              put("object", element(305, 140, 30, 50));
-          }})),
-          row(specWidth(Range.between(20, 30)), page(new HashMap<String, PageElement>(){{
-              put("object", element(305, 140, 25, 50));
-          }})),
-          row(specWidth(Range.exact(50).withPercentOf("container/width")), page(new HashMap<String, PageElement>(){{
-              put("object", element(305, 140, 15, 50));
-              put("container", element(305, 400, 30, 50));
-          }})),
-          row(specWidth(Range.between(45, 55).withPercentOf("main-container-1/width")), page(new HashMap<String, PageElement>(){{
-              put("object", element(305, 140, 15, 50));
-              put("main-container-1", element(305, 400, 30, 50));
-          }})),
-          row(specWidth(Range.exact(new RangeValue(333, 1)).withPercentOf("main-container-1/width")), page(new HashMap<String, PageElement>(){{
-              put("object", element(0, 0, 100, 50));
-              put("main-container-1", element(0, 0, 300, 50));
-          }})),
-
-
-          
-          // Height 
-          
-          row(specHeight(Range.exact(20)), page(new HashMap<String, PageElement>(){{
-              put("object", element(305, 140, 60, 20));
-          }})),
-          row(specHeight(Range.between(20, 30)), page(new HashMap<String, PageElement>(){{
-              put("object", element(305, 140, 60, 20));
-          }})),
-          row(specHeight(Range.between(20, 30)), page(new HashMap<String, PageElement>(){{
-              put("object", element(305, 140, 60, 30));
-          }})),
-          row(specHeight(Range.between(20, 30)), page(new HashMap<String, PageElement>(){{
-              put("object", element(305, 140, 65, 25));
-          }})),
-          row(specHeight(Range.exact(50).withPercentOf("container/height")), page(new HashMap<String, PageElement>(){{
-              put("object", element(100, 140, 65, 20));
-              put("container", element(305, 140, 65, 40));
-          }})),
-          
-          
           // Horizontally 
           
           row(specHorizontally(Alignment.CENTERED, "item", 0), page(new HashMap<String, PageElement>(){{
@@ -551,196 +425,7 @@ public class ValidationTest {
     @DataProvider
     public Object[][] provideBadSamples() {
         return new Object[][] {
-          // Absent
-
-          row(validationResult(singleArea(new Rect(10, 10, 100, 100), "object"), messages("\"object\" is not absent on page")),
-              specAbsent(), page(new HashMap<String, PageElement>(){{
-                  put("object", element(10, 10, 100, 100));
-          }})),
-
-          // Visible
-
-          row(validationResult(NO_AREA, messages("\"object\" is not visible on page")),
-              specVisible(), page(new HashMap<String, PageElement>(){{
-                  put("object", invisibleElement(10, 10, 100, 100));
-          }})),
-
-          row(validationResult(NO_AREA, messages("Cannot find locator for \"object\" in page spec")),
-              specVisible(), page(new HashMap<String, PageElement>(){{
-                  put("blabla", absentElement(10, 10, 100, 100));
-          }})),
-
-          row(validationResult(NO_AREA, messages("\"object\" is absent on page")),
-                  specVisible(), page(new HashMap<String, PageElement>(){{
-                  put("object", absentElement(10, 10, 100, 100));
-              }})),
-
-
-          
-          // Near 
-          row(validationResult(areas(new ValidationObject(new Rect(90, 5, 100, 50), "object"), new ValidationObject(new Rect(200, 200, 100, 50), "button")),
-                  messages("\"object\" is 10px left instead of 30px")),
-                  specNear("button", location(exact(30), LEFT)), page(new HashMap<String, PageElement>(){{
-                      put("object", element(90, 5, 100, 50));
-                      put("button", element(200, 200, 100, 50));
-          }})),
-          
-          row(validationResult(areas(new ValidationObject(new Rect(90, 5, 100, 50), "object"), new ValidationObject(new Rect(200, 200, 100, 50), "button")),
-                  messages("\"object\" is 10px left which is not in range of 20 to 30px")),
-                  specNear("button", location(between(20, 30), LEFT)), page(new HashMap<String, PageElement>(){{
-                      put("object", element(90, 5, 100, 50));
-                      put("button", element(200, 200, 100, 50));
-          }})),
-              
-          row(validationResult(areas(new ValidationObject(new Rect(90, 130, 100, 50), "object"), new ValidationObject(new Rect(200, 200, 100, 50), "button")),
-                  messages("\"object\" is 10px left and 20px top instead of 30px")),
-                  specNear("button", location(exact(30), LEFT, TOP)), page(new HashMap<String, PageElement>(){{
-                      put("object", element(90, 130, 100, 50));
-                      put("button", element(200, 200, 100, 50));
-          }})),
-          
-          row(validationResult(areas(new ValidationObject(new Rect(310, 250, 100, 50), "object"), new ValidationObject(new Rect(200, 200, 100, 50), "button")),
-                  messages("\"object\" is 10px right instead of 30px, is 0px bottom which is not in range of 10 to 20px")),
-                  specNear("button", location(exact(30), RIGHT), location(between(10, 20), BOTTOM)), page(new HashMap<String, PageElement>(){{
-                      put("object", element(310, 250, 100, 50));
-                      put("button", element(200, 200, 100, 50));
-          }})),
-          
-
-          row(validationResult(areas(new ValidationObject(new Rect(90, 130, 100, 50), "object"), new ValidationObject(new Rect(200, 200, 50, 50), "button")),
-                  messages("\"object\" is 20% [10px] left instead of 40% [20px]")),
-                  specNear("button", location(exact(40).withPercentOf("button/width"), LEFT)), page(new HashMap<String, PageElement>(){{
-                      put("object", element(90, 130, 100, 50));
-                      put("button", element(200, 200, 50, 50));
-          }})),
-          
-          row(validationResult(areas(new ValidationObject(new Rect(90, 130, 100, 50), "object"), new ValidationObject(new Rect(200, 200, 50, 50), "button")),
-                  messages("\"object\" is 20% [10px] left which is not in range of 40 to 50% [20 to 25px]")),
-                  specNear("button", location(between(40, 50).withPercentOf("button/area/width"), LEFT)), page(new HashMap<String, PageElement>(){{
-                      put("object", element(90, 130, 100, 50));
-                      put("button", element(200, 200, 50, 50));
-          }})),
-          
-          row(validationResult(NO_AREA, messages("\"object\" is absent on page")),
-                  specNear("button", location(exact(30), RIGHT), location(between(10, 20), BOTTOM)), page(new HashMap<String, PageElement>(){{
-                      put("object", absentElement(310, 250, 100, 50));
-                      put("button", element(200, 200, 100, 50));
-          }})),
-          
-          row(validationResult(NO_AREA, messages("\"object\" is not visible on page")),
-                  specNear("button", location(exact(30), RIGHT), location(between(10, 20), BOTTOM)), page(new HashMap<String, PageElement>(){{
-                      put("object", invisibleElement(310, 250, 100, 50));
-                      put("button", element(200, 200, 100, 50));
-          }})),
-          
-          row(validationResult(NO_AREA, messages("\"button\" is absent on page")),
-                  specNear("button", location(exact(30), RIGHT), location(between(10, 20), BOTTOM)), page(new HashMap<String, PageElement>(){{
-                      put("object", element(310, 250, 100, 50));
-                      put("button", absentElement(200, 200, 100, 50));
-          }})),
-          
-          row(validationResult(NO_AREA, messages("\"button\" is not visible on page")),
-                  specNear("button", location(exact(30), RIGHT), location(between(10, 20), BOTTOM)), page(new HashMap<String, PageElement>(){{
-                      put("object", element(310, 250, 100, 50));
-                      put("button", invisibleElement(200, 200, 100, 50));
-          }})),
-          
-          row(validationResult(NO_AREA, messages("Cannot find locator for \"button\" in page spec")),
-                  specNear("button", location(exact(30), RIGHT), location(between(10, 20), BOTTOM)), page(new HashMap<String, PageElement>(){{
-                      put("object", element(310, 250, 100, 50));
-          }})),
-          
-          row(validationResult(NO_AREA, messages("Cannot find locator for \"object\" in page spec")),
-                  specNear("button", location(exact(30), RIGHT), location(between(10, 20), BOTTOM)), page(new HashMap<String, PageElement>(){{
-                      put("button", absentElement(200, 200, 100, 50));
-          }})),
-          
-          
-          // Width 
-          
-          row(validationResult(NO_AREA, messages("Cannot find locator for \"object\" in page spec")),
-                  specWidth(Range.exact(10)), page(new HashMap<String, PageElement>())),
-                  
-          row(validationResult(NO_AREA, messages("\"object\" is absent on page")),
-                  specWidth(Range.exact(10)), page(new HashMap<String, PageElement>(){{
-                      put("object", absentElement(310, 250, 100, 50));
-          }})),
-          
-          row(validationResult(NO_AREA, messages("\"object\" is not visible on page")),
-                  specWidth(Range.exact(10)), page(new HashMap<String, PageElement>(){{
-                      put("object", invisibleElement(310, 250, 100, 50));
-          }})),
-          
-          row(validationResult(singleArea(new Rect(100, 100, 100, 50), "object"), messages("\"object\" width is 100px instead of 10px")),
-                  specWidth(Range.exact(10)), page(new HashMap<String, PageElement>(){{
-                      put("object", element(100, 100, 100, 50));
-          }})),
-          
-          row(validationResult(singleArea(new Rect(100, 100, 100, 50), "object"), messages("\"object\" width is 100px but it should be greater than 110px")),
-                  specWidth(Range.greaterThan(110)), page(new HashMap<String, PageElement>(){{
-                      put("object", element(100, 100, 100, 50));
-          }})),
-          row(validationResult(singleArea(new Rect(100, 100, 100, 50), "object"), messages("\"object\" width is 100px but it should be less than 90px")),
-                  specWidth(Range.lessThan(90)), page(new HashMap<String, PageElement>(){{
-                      put("object", element(100, 100, 100, 50));
-          }})),
-          
-          row(validationResult(singleArea(new Rect(100, 100, 100, 50), "object"), messages("\"object\" width is 100px which is not in range of 10 to 40px")),
-                  specWidth(Range.between(10, 40)), page(new HashMap<String, PageElement>(){{
-                      put("object", element(100, 100, 100, 50));
-          }})),
-
-          row(validationResult(singleArea(new Rect(100, 100, 100, 50), "object"), messages("\"object\" width is 50% [100px] instead of 10% [20px]")),
-                  specWidth(exact(10).withPercentOf("container/width")), page(new HashMap<String, PageElement>(){{
-                      put("object", element(100, 100, 100, 50));
-                      put("container", element(100, 100, 200, 50));
-          }})),
-          
-          row(validationResult(singleArea(new Rect(100, 100, 100, 50), "object"), messages("\"object\" width is 50% [100px] which is not in range of 10 to 20% [20 to 40px]")),
-                  specWidth(between(10, 20).withPercentOf("container/width")), page(new HashMap<String, PageElement>(){{
-                      put("object", element(100, 100, 100, 50));
-                      put("container", element(100, 100, 200, 50));
-          }})),
-          
-          
-          // Height 
-          
-          row(validationResult(NO_AREA, messages("Cannot find locator for \"object\" in page spec")),
-                  specHeight(Range.exact(10)), page(new HashMap<String, PageElement>())),
-                  
-          row(validationResult(NO_AREA, messages("\"object\" is absent on page")),
-                  specHeight(Range.exact(10)), page(new HashMap<String, PageElement>(){{
-                      put("object", absentElement(310, 250, 100, 50));
-          }})),
-          
-          row(validationResult(NO_AREA, messages("\"object\" is not visible on page")),
-                  specHeight(Range.exact(10)), page(new HashMap<String, PageElement>(){{
-                      put("object", invisibleElement(310, 250, 100, 50));
-          }})),
-          
-          row(validationResult(singleArea(new Rect(100, 100, 100, 50), "object"), messages("\"object\" height is 50px instead of 10px")),
-                  specHeight(Range.exact(10)), page(new HashMap<String, PageElement>(){{
-                      put("object", element(100, 100, 100, 50));
-          }})),
-          
-          row(validationResult(singleArea(new Rect(100, 100, 100, 50), "object"), messages("\"object\" height is 50px which is not in range of 10 to 40px")),
-                  specHeight(Range.between(10, 40)), page(new HashMap<String, PageElement>(){{
-                      put("object", element(100, 100, 100, 50));
-          }})),
-          
-          row(validationResult(singleArea(new Rect(100, 100, 100, 50), "object"), messages("\"object\" height is 25% [50px] instead of 10% [20px]")),
-                  specHeight(exact(10).withPercentOf("container/height")), page(new HashMap<String, PageElement>(){{
-                      put("object", element(100, 100, 100, 50));
-                      put("container", element(100, 100, 100, 200));
-          }})),
-          
-          row(validationResult(singleArea(new Rect(100, 100, 100, 50), "object"), messages("\"object\" height is 25% [50px] which is not in range of 10 to 15% [20 to 30px]")),
-                  specHeight(between(10, 15).withPercentOf("container/height")), page(new HashMap<String, PageElement>(){{
-                      put("object", element(100, 100, 100, 50));
-                      put("container", element(100, 100, 100, 200));
-          }})),
-          
-          // Horizontally 
+          // Horizontally
           
           row(validationResult(NO_AREA, messages("Cannot find locator for \"item\" in page spec")),
                   specHorizontally(Alignment.CENTERED, "item", 0), page(new HashMap<String, PageElement>(){{
@@ -1309,9 +994,6 @@ public class ValidationTest {
         };
     }
 
-    private ValidationResult validationResult(List<ValidationObject> areas, List<String> messages) {
-        return new ValidationResult(NO_SPEC, areas, new ValidationError(messages));
-    }
 
     @Test
     public void imageSpec_shouldAlsoGenerate_imageComparisonMap() {
@@ -1327,17 +1009,6 @@ public class ValidationTest {
         assertThat("Comparison map should not be null", error.getImageComparison().getComparisonMap(), is(notNullValue()));
     }
     
-    private List<ValidationObject> areas(ValidationObject...errorAreas) {
-        return asList(errorAreas);
-    }
-
-    private List<String> messages(String...messages) {
-        return asList(messages);
-    }
-
-    private List<ValidationObject> singleArea(Rect rect, String tooltip) {
-        return asList(new ValidationObject(rect, tooltip));
-    }
 
     private SpecText specTextIs(String text) {
         return new SpecText(SpecText.Type.IS, text);
@@ -1370,38 +1041,13 @@ public class ValidationTest {
         spec.setErrorRate(errorRate);
         return spec;
     }
-    
-    private SpecHeight specHeight(Range range) {
-        return new SpecHeight(range);
-    }
-
-    private SpecWidth specWidth(Range range) {
-        return new SpecWidth(range);
-    }
-
-    private SpecNear specNear(String secondObjectName, Location...locations) {
-        return new SpecNear(secondObjectName, asList(locations));
-    }
-
 
     private SpecOn specOn(Side sideHorizontal, Side sideVertical, String parentObjectName, Location...locations) {
         return new SpecOn(parentObjectName, sideHorizontal, sideVertical, asList(locations));
     }
 
-    private Location location(Range exact, Side...sides) {
-        return new Location(exact, asList(sides));
-    }
-
-    private MockedPage page(HashMap<String, PageElement> elements) {
-        return new MockedPage(elements);
-    }
-    
     private MockedPage page(HashMap<String, PageElement> elements, BufferedImage screenshotImage) {
         return new MockedPage(elements, screenshotImage);
-    }
-
-    private MockedPageElement element(int left, int top, int width, int height) {
-        return new MockedPageElement(left, top, width, height);
     }
 
     private PageElement elementWithCss(String cssPropertyName, String value) {
@@ -1412,18 +1058,6 @@ public class ValidationTest {
         return new MockedInvisiblePageElement(left, top, width, height);
     }
     
-    private MockedPageElement absentElement(int left, int top, int width, int height) {
-        return new MockedAbsentPageElement(left, top, width, height);
-    }
-
-    private SpecAbsent specAbsent() {
-        return new SpecAbsent();
-    }
-    
-    private SpecVisible specVisible() {
-        return new SpecVisible();
-    }
-
     private SpecAbove specAbove(String object, Range range) {
 		return new SpecAbove(object, range);
 	}

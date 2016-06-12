@@ -22,6 +22,7 @@ import com.galenframework.components.validation.MockedAbsentPageElement;
 import com.galenframework.components.validation.MockedInvisiblePageElement;
 import com.galenframework.components.validation.MockedPageElement;
 import com.galenframework.page.PageElement;
+import com.galenframework.page.Rect;
 import com.galenframework.specs.*;
 import com.galenframework.components.validation.MockedPage;
 import com.galenframework.specs.page.Locator;
@@ -106,5 +107,9 @@ public abstract class ValidationTestBase {
 
     public MockedPageElement absentElement(int left, int top, int width, int height) {
         return new MockedAbsentPageElement(left, top, width, height);
+    }
+
+    public List<ValidationObject> singleArea(Rect rect, String tooltip) {
+        return asList(new ValidationObject(rect, tooltip));
     }
 }
