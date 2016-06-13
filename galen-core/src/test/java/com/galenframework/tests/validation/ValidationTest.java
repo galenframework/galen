@@ -86,44 +86,6 @@ public class ValidationTest extends ValidationTestBase {
     public Object[][] provideGoodSamples() {
         return new Object[][] {
 
-          // Text validation
-
-          row(specTextIs("Some text"), page(new HashMap<String, PageElement>(){{
-              put("object", element(10, 10, 10, 10).withText("Some text"));
-          }})),
-
-          row(specTextIs("some text").withOperations(asList("lowercase")), page(new HashMap<String, PageElement>(){{
-                put("object", element(10, 10, 10, 10).withText("Some teXt"));
-          }})),
-
-          row(specTextIs("SOME TEXT").withOperations(asList("uppercase")), page(new HashMap<String, PageElement>(){{
-              put("object", element(10, 10, 10, 10).withText("Some Text"));
-          }})),
-          
-          row(specTextIs(""), page(new HashMap<String, PageElement>(){{
-              put("object", element(10, 10, 10, 10).withText(""));
-          }})),
-          
-          row(specTextContains("good"), page(new HashMap<String, PageElement>(){{
-              put("object", element(10, 10, 10, 10).withText("Some good text"));
-          }})),
-          
-          row(specTextStarts("Some"), page(new HashMap<String, PageElement>(){{
-              put("object", element(10, 10, 10, 10).withText("Some text"));
-          }})),
-          
-          row(specTextEnds("text"), page(new HashMap<String, PageElement>(){{
-              put("object", element(10, 10, 10, 10).withText("Some text"));
-          }})),
-          
-          row(specTextMatches("Some text with [0-9]+ numbers"), page(new HashMap<String, PageElement>(){{
-              put("object", element(10, 10, 10, 10).withText("Some text with 12412512512521 numbers"));
-          }})),
-
-          row(specTextMatches(".* some.* multiline"), page(new HashMap<String, PageElement>(){{
-              put("object", element(10, 10, 10, 10).withText("A text with some \n more multiline"));
-          }})),
-
           // Above
           
           row(specAbove("button", Range.exact(20)), page(new HashMap<String, PageElement>(){{
@@ -369,53 +331,6 @@ public class ValidationTest extends ValidationTestBase {
     @DataProvider
     public Object[][] provideBadSamples() {
         return new Object[][] {
-          // Text validation
-          
-          row(validationResult(NO_AREA, messages("Cannot find locator for \"object\" in page spec")),
-                  specTextIs("some wrong text"), 
-                  page(new HashMap<String, PageElement>())),
-                  
-          row(validationResult(NO_AREA, messages("\"object\" is not visible on page")),
-                  specTextIs("some wrong text"), 
-                  page(new HashMap<String, PageElement>(){{
-                      put("object", invisibleElement(10, 10, 10, 10));
-          }})),
-          
-          row(validationResult(NO_AREA, messages("\"object\" is absent on page")),
-                  specTextIs("some wrong text"), 
-                  page(new HashMap<String, PageElement>(){{
-                      put("object", absentElement(10, 10, 10, 10));
-          }})),
-          
-          row(validationResult(singleArea(new Rect(10, 10, 10, 10), "object"), messages("\"object\" text is \"Some text\" but should be \"some wrong text\"")),
-                  specTextIs("some wrong text"), 
-                  page(new HashMap<String, PageElement>(){{
-                      put("object", element(10, 10, 10, 10).withText("Some text"));
-          }})),
-          
-          row(validationResult(singleArea(new Rect(10, 10, 10, 10), "object"), messages("\"object\" text is \"Some text\" but should contain \"good\"")),
-                  specTextContains("good"), 
-                  page(new HashMap<String, PageElement>(){{
-                      put("object", element(10, 10, 10, 10).withText("Some text"));
-          }})),
-          
-          row(validationResult(singleArea(new Rect(10, 10, 10, 10), "object"), messages("\"object\" text is \"Some text\" but should start with \"text\"")),
-                  specTextStarts("text"), 
-                  page(new HashMap<String, PageElement>(){{
-                      put("object", element(10, 10, 10, 10).withText("Some text"));
-          }})),
-          
-          row(validationResult(singleArea(new Rect(10, 10, 10, 10), "object"), messages("\"object\" text is \"Some text\" but should end with \"Some\"")),
-                  specTextEnds("Some"), 
-                  page(new HashMap<String, PageElement>(){{
-                      put("object", element(10, 10, 10, 10).withText("Some text"));
-          }})),
-          
-          row(validationResult(singleArea(new Rect(10, 10, 10, 10), "object"), messages("\"object\" text is \"Some text\" but should match \"Some [0-9]+ text\"")),
-                  specTextMatches("Some [0-9]+ text"), 
-                  page(new HashMap<String, PageElement>(){{
-                      put("object", element(10, 10, 10, 10).withText("Some text"));
-          }})),
 
 
           // Css
@@ -823,26 +738,6 @@ public class ValidationTest extends ValidationTestBase {
         assertThat("Comparison map should not be null", error.getImageComparison().getComparisonMap(), is(notNullValue()));
     }
     
-
-    private SpecText specTextIs(String text) {
-        return new SpecText(SpecText.Type.IS, text);
-    }
-    
-    private SpecText specTextContains(String text) {
-        return new SpecText(SpecText.Type.CONTAINS, text);
-    }
-    
-    private SpecText specTextStarts(String text) {
-        return new SpecText(SpecText.Type.STARTS, text);
-    }
-    
-    private SpecText specTextEnds(String text) {
-        return new SpecText(SpecText.Type.ENDS, text);
-    }
-    
-    private SpecText specTextMatches(String text) {
-        return new SpecText(SpecText.Type.MATCHES, text);
-    }
 
     private SpecOn specOn(Side sideHorizontal, Side sideVertical, String parentObjectName, Location...locations) {
         return new SpecOn(parentObjectName, sideHorizontal, sideVertical, asList(locations));
