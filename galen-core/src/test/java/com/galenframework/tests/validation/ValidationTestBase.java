@@ -23,6 +23,7 @@ import com.galenframework.components.validation.MockedInvisiblePageElement;
 import com.galenframework.components.validation.MockedPageElement;
 import com.galenframework.page.PageElement;
 import com.galenframework.page.Rect;
+import com.galenframework.rainbow4j.Rainbow4J;
 import com.galenframework.specs.*;
 import com.galenframework.components.validation.MockedPage;
 import com.galenframework.specs.page.Locator;
@@ -34,6 +35,8 @@ import com.galenframework.validation.ValidationResult;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
+import java.awt.image.BufferedImage;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 
@@ -52,7 +55,7 @@ public abstract class ValidationTestBase {
         assertThat(error, is(nullValue()));
     }
 
-    private PageSpec createMockedPageSpec(MockedPage page) {
+    public PageSpec createMockedPageSpec(MockedPage page) {
         PageSpec pageSpec = new PageSpec();
 
         for (String objectName : page.getElements().keySet()) {
@@ -81,6 +84,11 @@ public abstract class ValidationTestBase {
         return new MockedPage(elements);
     }
 
+    public MockedPage page(HashMap<String, PageElement> elements, BufferedImage screenshotImage) {
+        return new MockedPage(elements, screenshotImage);
+    }
+
+
     public MockedPageElement element(int left, int top, int width, int height) {
         return new MockedPageElement(left, top, width, height);
     }
@@ -101,7 +109,7 @@ public abstract class ValidationTestBase {
         return asList(messages);
     }
 
-    protected PageElement invisibleElement(int left, int top, int width, int height) {
+    public PageElement invisibleElement(int left, int top, int width, int height) {
         return new MockedInvisiblePageElement(left, top, width, height);
     }
 
@@ -111,5 +119,13 @@ public abstract class ValidationTestBase {
 
     public List<ValidationObject> singleArea(Rect rect, String tooltip) {
         return asList(new ValidationObject(rect, tooltip));
+    }
+
+    public BufferedImage loadTestImage(String imagePath) {
+        try {
+            return Rainbow4J.loadImage(getClass().getResource(imagePath).getFile());
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 }
