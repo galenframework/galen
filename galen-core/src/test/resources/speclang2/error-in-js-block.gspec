@@ -1,0 +1,8 @@
+@script
+    function someFunc() {
+        throw new Error("From js block");
+    }
+
+= Main section =
+    screen:
+        text is "${someFunc()}"

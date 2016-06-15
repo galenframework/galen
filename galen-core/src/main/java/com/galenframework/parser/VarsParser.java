@@ -42,15 +42,7 @@ public class VarsParser {
         this(context, properties, null);
     }
 
-    public String parseStrict(String templateText) {
-        return parse(templateText, true);
-    }
-
     public String parse(String templateText) {
-        return parse(templateText, false);
-    }
-
-    private String parse(String templateText, boolean strict) {
         StringCharReader reader = new StringCharReader(templateText);
         
         StringBuffer buffer = new StringBuffer();
@@ -76,7 +68,7 @@ public class VarsParser {
             else if (state ==  PARSING_PARAM) {
                 if (symbol == '}') {
                     String expression = currentExpression.toString().trim();
-                    String value = getExpressionValueString(expression, context, strict);
+                    String value = getExpressionValueString(expression, context);
                     if (value == null) {
                         value = "";
                     }
@@ -93,7 +85,7 @@ public class VarsParser {
     }
 
     
-    private String getExpressionValueString(String expression, Context context, boolean strict) {
+    private String getExpressionValueString(String expression, Context context) {
         Object value = context.getValue(expression);
         if (value == null) {
             //Looking for value in properties
@@ -107,7 +99,7 @@ public class VarsParser {
             }
         }
         if (value == null){
-            value = readJsExpression(expression, context, strict);
+            value = readJsExpression(expression);
         }
 
         if (value instanceof NativeJavaObject) {
@@ -122,13 +114,9 @@ public class VarsParser {
         }
     }
 
-    private String readJsExpression(String expression, Context context, boolean strict) {
+    private String readJsExpression(String expression) {
         if (jsProcessor != null) {
-            if (strict) {
-                return jsProcessor.evalStrictToString(expression);
-            } else {
-                return jsProcessor.evalSafeToString(expression);
-            }
+            return jsProcessor.evalStrictToString(expression);
         }
         else return null;
     }

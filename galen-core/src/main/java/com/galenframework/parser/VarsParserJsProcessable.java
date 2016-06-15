@@ -16,7 +16,5 @@
 package com.galenframework.parser;
 
 public interface VarsParserJsProcessable {
-    String evalSafeToString(String script);
-
     String evalStrictToString(String expression);
 }

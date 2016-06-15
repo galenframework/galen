@@ -453,6 +453,15 @@ public class PageSpecReaderTest {
 
     }
 
+    @Test(expectedExceptions = FileSyntaxException.class,
+        expectedExceptionsMessageRegExp = "JavaScript error inside statement\n    in speclang2/error-in-js-block.gspec:8"
+    )
+    public void shouldFail_whenThereIsError_inJavaScriptBlock() throws IOException {
+        readPageSpec("speclang2/error-in-js-block.gspec",
+            new MockedPage(new HashMap<String, PageElement>()),
+            EMPTY_TAGS, EMPTY_TAGS);
+    }
+
 
     @Test
     public void shouldRead_customSpecRules_andProcessThem() throws IOException {
@@ -618,6 +627,7 @@ public class PageSpecReaderTest {
             EMPTY_TAGS, EMPTY_TAGS);
 
     }
+
 
     @Test
     public void shouldAllow_toPassProperties() throws IOException {

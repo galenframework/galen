@@ -100,23 +100,6 @@ public class GalenJsExecutor implements VarsParserJsProcessable {
     }
 
 
-    /**
-     * Used for processing js expressions in page spec reader. In case of failure in script returns null
-     * @param script - JavaScript code
-     * @return result of JavaScript code execution
-     */
-    @Override
-    public String evalSafeToString(String script) {
-        try {
-            Object returnedObject = context.evaluateString(scope, script, "<cmd>", 1, null);
-            return unwrapProcessedObjectToString(returnedObject);
-        }
-        catch (Exception ex) {
-            LOG.error("Unknown error during processing javascript expressions.", ex);
-            return null;
-        }
-    }
-
     private String unwrapProcessedObjectToString(Object returnedObject) {
         if (returnedObject != null) {
             if (returnedObject instanceof NativeJavaObject) {

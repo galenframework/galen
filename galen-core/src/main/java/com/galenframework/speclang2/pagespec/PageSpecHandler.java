@@ -310,22 +310,12 @@ public class PageSpecHandler implements VarsParserJsFunctions {
 
     @Override
     public JsPageElement first(String objectsStatements) {
-        return extractSingleElement(objectsStatements, new FilterFunction<String>() {
-            @Override
-            public String filter(List<String> list) {
-                return list.get(0);
-            }
-        });
+        return extractSingleElement(objectsStatements, list -> list.get(0));
     }
 
     @Override
     public JsPageElement last(String objectsStatements) {
-        return extractSingleElement(objectsStatements, new FilterFunction<String>() {
-            @Override
-            public String filter(List<String> list) {
-                return list.get(list.size() - 1);
-            }
-        });
+        return extractSingleElement(objectsStatements, list -> list.get(list.size() - 1));
     }
 
     private JsPageElement extractSingleElement(String objectsStatements, FilterFunction<String> filterFunction) {
@@ -386,21 +376,13 @@ public class PageSpecHandler implements VarsParserJsFunctions {
         return varsParser;
     }
 
-    public StructNode processStrictExpressionsIn(StructNode originNode) {
-        return processExpressionsIn(originNode, true);
-    }
-
     public StructNode processExpressionsIn(StructNode originNode) {
-        return processExpressionsIn(originNode, false);
-    }
 
-    private StructNode processExpressionsIn(StructNode originNode, boolean strict) {
         String result;
-
-        if (strict) {
-            result = getVarsParser().parseStrict(originNode.getName());
-        } else {
+        try {
             result = getVarsParser().parse(originNode.getName());
+        } catch (Exception ex) {
+            throw new SyntaxException(originNode, "JavaScript error inside statement", ex);
         }
 
         StructNode processedNode = new StructNode(result);

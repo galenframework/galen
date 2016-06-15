@@ -15,7 +15,6 @@
 ******************************************************************************/
 package com.galenframework.speclang2.pagespec;
 
-import com.galenframework.parser.Expectations;
 import com.galenframework.parser.SyntaxException;
 import com.galenframework.parser.StructNode;
 import com.galenframework.parser.StringCharReader;
@@ -103,25 +102,25 @@ public class MacroProcessor {
                 if (elseNode != null) {
                     throw new SyntaxException(nextNode, "Cannot use elseif statement after else block");
                 }
-                elseIfNodes.add(processStrictExpressionsIn(nextNode));
+                elseIfNodes.add(processExpressionsIn(nextNode));
             } else if (firstWord.equals(ELSE_KEYWORD)) {
                 if (elseNode != null) {
                     throw new SyntaxException(nextNode, "Cannot use else statement after else block");
                 }
-                elseNode = processStrictExpressionsIn(nextNode);
+                elseNode = processExpressionsIn(nextNode);
             } else {
                 finishedConditions = true;
                 it.previous();
             }
         }
 
-        List<StructNode> nodesFromConditions = applyConditions(processStrictExpressionsIn(ifNode), elseIfNodes, elseNode);
+        List<StructNode> nodesFromConditions = applyConditions(processExpressionsIn(ifNode), elseIfNodes, elseNode);
         return process(nodesFromConditions);
     }
 
-    private StructNode processStrictExpressionsIn(StructNode ifNode) {
+    private StructNode processExpressionsIn(StructNode ifNode) {
         try {
-            return pageSpecHandler.processStrictExpressionsIn(ifNode);
+            return pageSpecHandler.processExpressionsIn(ifNode);
         } catch (Exception ex) {
             throw new SyntaxException(ifNode, "JavaScript error inside statement");
         }
