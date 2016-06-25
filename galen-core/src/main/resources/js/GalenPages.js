@@ -69,17 +69,18 @@
                 typeText = locatorText.substr(0, index).trim();
                 value = locatorText.substr(index + 1, locatorText.length - 1 - index).trim();
                 type = "css";
-                if (typeText === "id") {
-                    type = typeText;
-                } else if (typeText === "xpath") {
-                    type = typeText;
-                } else if (typeText === "css") {
-                    type = typeText;
-                } else {
-                    throw new Error("Unknown locator type: " + typeText);
+                if (typeText.match(/^[a-z]+$/)) {
+                    if (typeText === "id") {
+                        type = typeText;
+                    } else if (typeText === "xpath") {
+                        type = typeText;
+                    } else if (typeText === "css") {
+                        type = typeText;
+                    } else {
+                        throw new Error("Unknown locator type: " + typeText);
+                    }
+                    return new this.Locator(type, value);
                 }
-
-                return new this.Locator(type, value);
             }
             return new this.Locator(this.identifyLocatorType(locatorText), locatorText);
         },
