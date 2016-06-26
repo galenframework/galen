@@ -183,17 +183,28 @@ public class GalenPageDump {
         for (PageDump.Element element : pageDump.getItems().values()) {
             if (element.getHasImage()) {
                 int[] area = element.getArea();
-                int availableHeight = image.getHeight() - area[1];
-                int availableWidth = image.getWidth() - area[0];
-                int subimageWidth = Math.min(area[2], availableWidth);
-                int subimageHeight = Math.min(area[3], availableHeight);
 
-                try {
-                    BufferedImage subImage = image.getSubimage(area[0], area[1], subimageWidth, subimageHeight);
-                    Rainbow4J.saveImage(subImage, new File(objectsFolder.getAbsolutePath() + File.separator + element.getObjectName() + ".png"));
-                }
-                catch (Exception ex) {
-                    LOG.error("Got error during saving image", ex);
+                if (area[0] < image.getWidth() && area[1] < image.getHeight()) {
+                    int x = Math.max(area[0], 0);
+                    int y = Math.max(area[1], 0);
+
+                    int x2 = Math.min(area[0] + area[2], image.getWidth());
+                    int y2 = Math.min(area[1] + area[3], image.getHeight());
+
+                    int availableWidth = x2 - x;
+                    int availableHeight = y2 - y;
+
+                    try {
+                        if (availableWidth > 0 && availableHeight > 0) {
+                            BufferedImage subImage = image.getSubimage(x, y, availableWidth, availableHeight);
+                            Rainbow4J.saveImage(subImage, new File(objectsFolder.getAbsolutePath() + File.separator + element.getObjectName() + ".png"));
+                        } else {
+                            element.setHasImage(false);
+                        }
+                    }
+                    catch (Exception ex) {
+                        LOG.error("Got error during saving image", ex);
+                    }
                 }
             }
         }
