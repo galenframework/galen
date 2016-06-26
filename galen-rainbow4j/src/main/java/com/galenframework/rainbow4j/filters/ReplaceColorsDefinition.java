@@ -21,8 +21,13 @@ import java.awt.*;
 import java.util.List;
 
 public class ReplaceColorsDefinition {
+    public static final int DEFAULT_COLOR_TOLERANCE_FOR_SPECTRUM = 50;
+    public static final int DEFAULT_RADIUS = 1;
+
     private Color replaceColor;
     private List<ColorClassifier> colorClassifiers;
+    private int tolerance =  DEFAULT_COLOR_TOLERANCE_FOR_SPECTRUM;
+    private int radius = DEFAULT_RADIUS;
 
     public ReplaceColorsDefinition(Color replaceColor, List<ColorClassifier> colorClassifiers) {
         this.replaceColor = replaceColor;
@@ -43,5 +48,21 @@ public class ReplaceColorsDefinition {
 
     public void setColorClassifiers(List<ColorClassifier> colorClassifiers) {
         this.colorClassifiers = colorClassifiers;
+    }
+
+    public int getTolerance() {
+        return tolerance;
+    }
+
+    public void setTolerance(int tolerance) {
+        this.tolerance = tolerance;
+    }
+
+    public int getRadius() {
+        return radius;
+    }
+
+    public void setRadius(int radius) {
+        this.radius = radius;
     }
 }

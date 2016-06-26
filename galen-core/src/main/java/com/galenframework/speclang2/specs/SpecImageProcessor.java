@@ -41,10 +41,10 @@ import java.util.List;
 
 import static com.galenframework.parser.ExpectColorRanges.parseColor;
 import static com.galenframework.parser.ExpectColorRanges.parseColorClassifier;
-import static com.galenframework.parser.ExpectColorRanges.parseGradientClassifier;
 import static java.util.Collections.singletonList;
 
 public class SpecImageProcessor implements SpecProcessor {
+
     @Override
     public Spec process(StringCharReader reader, String contextPath) {
         List<Pair<String, String>> parameters = Expectations.commaSeparatedRepeatedKeyValues().read(reader);
@@ -131,29 +131,42 @@ public class SpecImageProcessor implements SpecProcessor {
         }
     }
 
+
     private ImageFilter parseReplaceColorsFilter(StringCharReader reader) {
         List<ColorClassifier> classifiers = new LinkedList<>();
         Color replaceColor = null;
 
-        boolean isCollectingClassifiers = true;
+        int tolerance = ReplaceColorsDefinition.DEFAULT_COLOR_TOLERANCE_FOR_SPECTRUM;
+        int radius = ReplaceColorsDefinition.DEFAULT_RADIUS;
 
         while (reader.hasMore()) {
             String word = reader.readWord();
-            if (word.equals("with")) {
-                isCollectingClassifiers = false;
+            if ("with".equals(word)) {
+                replaceColor = parseColor(reader.readWord());
+            } else if ("tolerance".equals(word)) {
+                tolerance = parseInt(reader);
+            } else if ("radius".equals(word)) {
+                radius = parseInt(reader);
             } else {
-                if (isCollectingClassifiers) {
-                    classifiers.add(parseColorClassifier(word));
-                } else {
-                    replaceColor = parseColor(word);
-                }
+                classifiers.add(parseColorClassifier(word));
             }
         }
 
         if (replaceColor == null) {
             throw new SyntaxException("Replace color was not specified");
         }
-        return new ReplaceColorsFilter(singletonList(new ReplaceColorsDefinition(replaceColor, classifiers)));
+        ReplaceColorsDefinition colorDefinition = new ReplaceColorsDefinition(replaceColor, classifiers);
+        colorDefinition.setTolerance(tolerance);
+        colorDefinition.setRadius(radius);
+        return new ReplaceColorsFilter(singletonList(colorDefinition));
+    }
+
+    private int parseInt(StringCharReader reader) {
+        Double value = Expectations.number().read(reader);
+        if (value != null) {
+            return value.intValue();
+        }
+        return 0;
     }
 
     private ImageFilter parseSimpleFilter(StringCharReader reader, String filterName) {

@@ -1092,7 +1092,7 @@ public class SpecsReaderV2Test {
 
     @Test
     public void shouldReadSpec_image_replaceColors() throws IOException {
-        SpecImage specImage = (SpecImage) readSpec("image file image.png, filter replace-colors #000-#333 #f0f0f0 #a0a0a0-#a0b0a0-#a0b0c0 with #111");
+        SpecImage specImage = (SpecImage) readSpec("image file image.png, filter replace-colors #000-#333 #f0f0f0 #a0a0a0-#a0b0a0-#a0b0c0 with #111 tolerance 30 radius 2");
 
         assertThat(specImage.getOriginalFilters().size(), is(1));
         assertThat(specImage.getOriginalFilters().get(0), is(instanceOf(ReplaceColorsFilter.class)));
@@ -1102,6 +1102,9 @@ public class SpecsReaderV2Test {
         assertThat(filter.getReplaceColorsDefinitions().size(), is(1));
         ReplaceColorsDefinition replaceColorsDefinitions = filter.getReplaceColorsDefinitions().get(0);
         assertThat(replaceColorsDefinitions.getReplaceColor(), is(new Color(17, 17, 17)));
+
+        assertThat(replaceColorsDefinitions.getTolerance(), is(30));
+        assertThat(replaceColorsDefinitions.getRadius(), is(2));
 
         assertThat(replaceColorsDefinitions.getColorClassifiers().size(), is(3));
         assertThat(replaceColorsDefinitions.getColorClassifiers().get(0), instanceOf(GradientColorClassifier.class));

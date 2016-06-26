@@ -24,7 +24,6 @@ import java.util.List;
 import java.util.function.Predicate;
 
 public class ReplaceColorsFilter implements ImageFilter {
-    public static final int DEFAULT_COLOR_TOLERANCE_FOR_SPECTRUM = 3;
     private List<ReplaceColorsDefinition> replaceColorsDefinitions;
 
     public ReplaceColorsFilter(List<ReplaceColorsDefinition> replaceColorsDefinitions) {
@@ -34,11 +33,15 @@ public class ReplaceColorsFilter implements ImageFilter {
     @Override
     public void apply(ByteBuffer bytes, int width, int height, Rectangle area) {
         int k, r, g, b;
-        int maxColorDistance = DEFAULT_COLOR_TOLERANCE_FOR_SPECTRUM * DEFAULT_COLOR_TOLERANCE_FOR_SPECTRUM * 3;
+
+        int ya = area.y;
+        int yb = area.y + area.height;
+        int xa = area.x;
+        int xb = area.x + area.width;
 
         if (replaceColorsDefinitions != null && !replaceColorsDefinitions.isEmpty()) {
-            for (int y = area.y; y < area.y + area.height; y++) {
-                for (int x = area.x; x < area.x + area.width; x++) {
+            for (int y = ya; y < yb; y++) {
+                for (int x = xa; x < xb; x++) {
                     k = y * width * ImageHandler.BLOCK_SIZE + x * ImageHandler.BLOCK_SIZE;
                     r = bytes.get(k) & 0xff;
                     g = bytes.get(k + 1) & 0xff;
@@ -46,12 +49,20 @@ public class ReplaceColorsFilter implements ImageFilter {
 
                     for (ReplaceColorsDefinition colorDefinition : replaceColorsDefinitions) {
                         if (colorDefinition.getColorClassifiers() != null) {
+                            int maxColorDistance = colorDefinition.getTolerance() * colorDefinition.getTolerance() * 3;
                             if (colorDefinition.getColorClassifiers().stream().filter(byHoldingColor(r, g, b, maxColorDistance)).findAny().isPresent()) {
                                 //replace color
                                 Color replaceColor = colorDefinition.getReplaceColor();
-                                bytes.put(k, (byte) replaceColor.getRed());
-                                bytes.put(k + 1, (byte) replaceColor.getGreen());
-                                bytes.put(k + 2, (byte) replaceColor.getBlue());
+                                int radius = colorDefinition.getRadius();
+
+                                for (int yr = Math.max(y - radius, ya); yr <= Math.min(y + radius, yb - 1); yr++) {
+                                    for (int xr = Math.max(x - radius, xa); xr <= Math.min(x + radius, xb - 1); xr++) {
+                                        k = yr * width * ImageHandler.BLOCK_SIZE + xr * ImageHandler.BLOCK_SIZE;
+                                        bytes.put(k, (byte) replaceColor.getRed());
+                                        bytes.put(k + 1, (byte) replaceColor.getGreen());
+                                        bytes.put(k + 2, (byte) replaceColor.getBlue());
+                                    }
+                                }
                             }
                         }
                     }
