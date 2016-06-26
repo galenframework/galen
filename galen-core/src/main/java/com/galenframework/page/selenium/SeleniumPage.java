@@ -17,18 +17,21 @@ package com.galenframework.page.selenium;
 
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.galenframework.config.GalenConfig;
+import com.galenframework.config.GalenProperty;
 import com.galenframework.page.Rect;
-import com.galenframework.browser.SeleniumBrowser;
 import com.galenframework.page.AbsentPageElement;
 import com.galenframework.page.Page;
 import com.galenframework.page.PageElement;
 import com.galenframework.specs.page.Locator;
 import com.galenframework.rainbow4j.Rainbow4J;
 
+import com.galenframework.utils.GalenUtils;
 import org.openqa.selenium.*;
 
 import static com.galenframework.page.selenium.ByChain.fromLocator;
@@ -156,12 +159,27 @@ public class SeleniumPage implements Page {
     }
 
     @Override
-    public File createScreenshot() {
+    public File getScreenshotFile() {
         if (this.cachedScreenshotFile == null) {
-            cachedScreenshotFile = new SeleniumBrowser(driver).createScreenshot();
+            cachedScreenshotFile = createNewScreenshot();
         }
 
         return this.cachedScreenshotFile;
+    }
+
+    private File createNewScreenshot() {
+        try {
+            if (GalenConfig.getConfig().getBooleanProperty(GalenProperty.SCREENSHOT_FULLPAGE)) {
+                return GalenUtils.makeFullScreenshot(driver);
+            }
+            else return makeSimpleScreenshot();
+        } catch (Exception e) {
+            throw new RuntimeException("Error making screenshot", e);
+        }
+    }
+
+    private File makeSimpleScreenshot() throws IOException {
+        return GalenUtils.takeScreenshot(driver);
     }
 
     @Override
@@ -173,7 +191,7 @@ public class SeleniumPage implements Page {
     public BufferedImage getScreenshotImage() {
         if (this.cachedScreenshotImage == null) {
             try {
-                cachedScreenshotImage = Rainbow4J.loadImage(createScreenshot().getAbsolutePath());
+                cachedScreenshotImage = Rainbow4J.loadImage(getScreenshotFile().getAbsolutePath());
             } catch (Exception e) {
                 throw new RuntimeException("Couldn't take screenshot for page", e);
             }

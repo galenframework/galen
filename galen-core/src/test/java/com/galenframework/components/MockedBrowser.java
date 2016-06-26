@@ -77,19 +77,6 @@ public class MockedBrowser implements Browser {
         return this.screenSize;
     }
 
-    @Override
-    public File createScreenshot() {
-        File tempDir = Files.createTempDir();
-        
-        File file = new File(tempDir.getAbsolutePath() + UUID.randomUUID().toString() + ".png");
-        try {
-            file.createNewFile();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return file;
-    }
-
     public Page getMockedPage() {
         return mockedPage;
     }

@@ -170,7 +170,7 @@ public class GalenPageDump {
 
     public void exportAllScreenshots(PageDump pageDump, Browser browser, File reportFolder) throws IOException {
 
-        File screenshotOriginalFile = browser.createScreenshot();
+        File screenshotOriginalFile = browser.getPage().getScreenshotFile();
 
         FileUtils.copyFile(screenshotOriginalFile, new File(reportFolder.getAbsolutePath() + File.separator + "page.png"));
 
