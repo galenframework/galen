@@ -23,6 +23,7 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Listeners;
 
 import java.lang.reflect.Method;
+import java.util.Date;
 
 /**
  * This class is used as a base test class for TestNG tests, see {@link GalenJavaTestBase}
@@ -35,7 +36,9 @@ public abstract class GalenTestNgTestBase extends GalenJavaTestBase {
      */
     @BeforeMethod(alwaysRun = true)
     public void initReport(Method method, Object[] arguments) {
-        report.set(GalenReportsContainer.get().registerTest(createTestInfo(method, arguments)));
+        GalenTestInfo ti = createTestInfo(method, arguments);
+        testInfo.set(ti);
+        report.set(GalenReportsContainer.get().registerTest(ti));
     }
 
     /**
@@ -52,6 +55,14 @@ public abstract class GalenTestNgTestBase extends GalenJavaTestBase {
     @AfterMethod(alwaysRun = true)
     public void quitDriver() {
         super.quitDriver();
+    }
+
+    @AfterMethod
+    public void provideTestEndDate() {
+        GalenTestInfo ti = testInfo.get();
+        if (ti != null) {
+            ti.setEndedAt(new Date());
+        }
     }
 
 }

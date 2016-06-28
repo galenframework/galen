@@ -198,6 +198,45 @@ describe("GalenPages", function (){
         });
     });
 
+    describe("#parseLocator", function () {
+        it("should parse a css locator by default when type is not specified", function () {
+            var locator = GalenPages.parseLocator(".div ul li");
+            assertThat("locator should be", locator).is(new GalenPages.Locator("css", ".div ul li"));
+        });
+
+        it("should parse a locator by specified type", function () {
+            assertThat("locator should be",
+                GalenPages.parseLocator("css: .div ul li")
+            ).is(
+                new GalenPages.Locator("css", ".div ul li")
+            );
+            assertThat("locator should be",
+                GalenPages.parseLocator("id: list")
+            ).is(
+                new GalenPages.Locator("id", "list")
+            );
+            assertThat("locator should be",
+                GalenPages.parseLocator("xpath: //div/ul/li")
+            ).is(
+                new GalenPages.Locator("xpath", "//div/ul/li")
+            );
+        });
+
+        it("should throw error in case of unknown locator", function () {
+            assertError(function () {
+                GalenPages.parseLocator("unknowntype: first-child div")
+            }).is("Unknown locator type: unknowntype");
+        });
+
+        it("should not parse type in case of advanced css selectors", function () {
+            assertThat("locator should be",
+                GalenPages.parseLocator(".section li:first-child div")
+            ).is(
+                new GalenPages.Locator("css", ".section li:first-child div")
+            );
+        });
+    });
+
     describe("#wait", function () {
         it("should throw error if waiting for nothing", function () {
             assertError(function () {

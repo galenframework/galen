@@ -16,7 +16,6 @@
 package com.galenframework.browser;
 
 import java.awt.Dimension;
-import java.io.File;
 
 import com.galenframework.page.Page;
 
@@ -41,11 +40,4 @@ public interface Browser {
     String getUrl();
 
     Dimension getScreenSize();
-
-    /**
-     * Makes a screenshot in a temporary folder
-     * @return File instance for the created screenshot
-     */
-    File createScreenshot();
-
 }

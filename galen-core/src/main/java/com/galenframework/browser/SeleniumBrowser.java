@@ -82,22 +82,6 @@ public class SeleniumBrowser implements Browser {
     }
 
     @Override
-    public File createScreenshot() {
-        try {
-            if (GalenConfig.getConfig().getBooleanProperty(GalenProperty.SCREENSHOT_FULLPAGE)) {
-                return GalenUtils.makeFullScreenshot(driver);
-            }
-            else return makeSimpleScreenshot();
-        } catch (Exception e) {
-            throw new RuntimeException("Error making screenshot", e);
-        }
-    }
-    
-    private File makeSimpleScreenshot() throws IOException {
-        return GalenUtils.takeScreenshot(driver);
-    }
-    
-    @Override
     public void refresh() {
         driver.navigate().refresh();
     }

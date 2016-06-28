@@ -97,7 +97,7 @@ public class Galen {
         layoutReport.setIncludedTags(sectionFilter.getIncludedTags());
         layoutReport.setExcludedTags(sectionFilter.getExcludedTags());
         try {
-            File screenshot = page.createScreenshot();
+            File screenshot = page.getScreenshotFile();
             if (screenshot != null) {
                 layoutReport.setScreenshot(layoutReport.registerFile("screenshot.png", screenshot));
             }

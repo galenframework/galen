@@ -98,7 +98,7 @@ public class MockedPage implements Page {
     }
 
     @Override
-    public File createScreenshot() {
+    public File getScreenshotFile() {
         return null;
     }
 

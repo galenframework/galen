@@ -527,12 +527,13 @@ public class Rainbow4JTest {
 
 
         ComparisonOptions options = new ComparisonOptions();
-        options.setOriginalFilters(asList(
-            new ReplaceColorsFilter(asList(
-                new ReplaceColorsDefinition(new Color(255, 255, 255), asList(
-                    new GradientColorClassifier("green-blue", asList(new Color(5, 153, 0), new Color(9, 24, 184))),
-                    new SimpleColorClassifier("grey", new Color(153, 153, 153))
-                ))))));
+        ReplaceColorsDefinition colorDefinition = new ReplaceColorsDefinition(new Color(255, 255, 255), asList(
+            new GradientColorClassifier("green-blue", asList(new Color(5, 153, 0), new Color(9, 24, 184))),
+            new SimpleColorClassifier("grey", new Color(153, 153, 153))
+        ));
+        colorDefinition.setRadius(0);
+
+        options.setOriginalFilters(asList(new ReplaceColorsFilter(asList(colorDefinition))));
         ImageCompareResult result = Rainbow4J.compare(imageActual, imageExpected, options);
         assertThat(result.getTotalPixels(), is(0L));
     }

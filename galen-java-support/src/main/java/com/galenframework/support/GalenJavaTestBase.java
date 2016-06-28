@@ -41,6 +41,7 @@ public abstract class GalenJavaTestBase {
 
     protected ThreadLocal<WebDriver> driver = new ThreadLocal<>();
     protected ThreadLocal<TestReport> report = new ThreadLocal<>();
+    protected ThreadLocal<GalenTestInfo> testInfo = new ThreadLocal<>();
 
     /**
      * Returns the report for current test thread

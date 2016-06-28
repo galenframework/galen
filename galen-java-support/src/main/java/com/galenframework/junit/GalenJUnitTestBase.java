@@ -15,12 +15,15 @@
 ******************************************************************************/
 package com.galenframework.junit;
 
+import com.galenframework.reports.GalenTestInfo;
 import com.galenframework.support.GalenJavaTestBase;
 import com.galenframework.support.GalenReportsContainer;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.runner.RunWith;
 import org.openqa.selenium.WebDriver;
+
+import java.util.Date;
 
 import static java.lang.Thread.currentThread;
 
@@ -35,7 +38,9 @@ public abstract class GalenJUnitTestBase extends GalenJavaTestBase {
      */
     @Before
     public void initReport() {
-        report.set(GalenReportsContainer.get().registerTest(getTestName(), null));
+        GalenTestInfo ti = GalenTestInfo.fromString(getTestName());
+        testInfo.set(ti);
+        report.set(GalenReportsContainer.get().registerTest(ti));
     }
 
     public String getTestName() {
@@ -64,6 +69,18 @@ public abstract class GalenJUnitTestBase extends GalenJavaTestBase {
     public void quitDriver() {
         super.quitDriver();
     }
+
+    /**
+     * {@inheritDoc}
+     */
+    @After
+    public void provideTestEndDate() {
+        GalenTestInfo ti = testInfo.get();
+        if (ti != null) {
+            ti.setEndedAt(new Date());
+        }
+    }
+
 
     private static String getCaller() {
         StackTraceElement[] elements = currentThread().getStackTrace();
