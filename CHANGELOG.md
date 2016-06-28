@@ -6,6 +6,10 @@ All changes to Galen Framework project will be documented in this file
 ### Added
 - Added replace-colors filter to image spec
 
+### Fixed
+- Fixed test report duration reporting for TestNG and JUnit tests
+
+
 
 ## [2.2.5][2015-04-14]
 - Fixed #318 Path was incorrectly resolved when loading js scripts

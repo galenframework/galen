@@ -115,7 +115,7 @@ public class GalenTestInfo {
     public static GalenTestInfo fromMethod(Method method, Object[] arguments) {
         StringBuilder builder = new StringBuilder(method.getDeclaringClass().getSimpleName() + "#" + method.getName());
         if (arguments != null && arguments.length > 0) {
-            builder.append('(');
+            builder.append(" (");
             boolean shouldUseComma = false;
             for (Object argument : arguments) {
                 if (shouldUseComma) {
@@ -124,7 +124,7 @@ public class GalenTestInfo {
                 builder.append(convertArgumentToString(argument));
                 shouldUseComma = true;
             }
-            builder.append(')');
+            builder.append(") ");
         }
         return GalenTestInfo.fromString(builder.toString());
     }
