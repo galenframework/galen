@@ -124,7 +124,7 @@ public class GalenTestInfo {
                 builder.append(convertArgumentToString(argument));
                 shouldUseComma = true;
             }
-            builder.append(") ");
+            builder.append(")");
         }
         return GalenTestInfo.fromString(builder.toString());
     }

@@ -61,7 +61,7 @@ public class GalenTestInfoTest {
     public void shouldCreate_testInfo_fromMethod_withArguments() throws NoSuchMethodException {
         Method method = getClass().getMethod("shouldCreate_testInfo_fromMethod_withArguments");
         GalenTestInfo testInfo = GalenTestInfo.fromMethod(method, new Object[] {1, null, false, "encoded \"string\"" });
-        verifyTestInfo(testInfo, "GalenTestInfoTest#shouldCreate_testInfo_fromMethod_withArguments(1, null, false, \"encoded \\\"string\\\"\")");
+        verifyTestInfo(testInfo, "GalenTestInfoTest#shouldCreate_testInfo_fromMethod_withArguments (1, null, false, \"encoded \\\"string\\\"\")");
     }
 
     private void verifyTestInfo(GalenTestInfo testInfo, String name) {
