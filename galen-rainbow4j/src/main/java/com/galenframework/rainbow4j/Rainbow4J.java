@@ -53,9 +53,9 @@ public class Rainbow4J {
 
     public static ImageCompareResult compare(BufferedImage imageA, BufferedImage imageB, ComparisonOptions options) throws IOException {
         return compare(imageA, imageB,
-                new Rectangle(0, 0, imageA.getWidth(), imageA.getHeight()),
-                new Rectangle(0, 0, imageB.getWidth(), imageB.getHeight()),
-                options);
+            new Rectangle(0, 0, imageA.getWidth(), imageA.getHeight()),
+            new Rectangle(0, 0, imageB.getWidth(), imageB.getHeight()),
+            options);
     }
 
 
@@ -139,7 +139,7 @@ public class Rainbow4J {
                     int xA = x + Cax + offsetX;
                     int yA = y + Cay + offsetY;
 
-                    if (xA >= 0 && xA < imageAWidth && yA >= 0 && yA < imageAHeight) {
+                    if (xA >= 0 && xA < imageAWidth && yA >= 0 && yA < imageAHeight && !shouldPixelBeIgnored(xA, yA, options)) {
 
                         Color cA = handlerA.pickColor(xA, yA);
 
@@ -206,6 +206,17 @@ public class Rainbow4J {
         result.setSampleFilteredImage(handlerB.getImage().getSubimage(areaB.x, areaB.y, areaB.width, areaB.height));
 
         return result;
+    }
+
+    private static boolean shouldPixelBeIgnored(int x, int y, ComparisonOptions options) {
+        if (options != null && options.getIgnoreRegions() != null) {
+            for (Rectangle rectangle : options.getIgnoreRegions()) {
+                if (rectangle.contains(x, y)) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     private static ImageCompareResult analyzeComparisonMap(ImageHandler mapHandler) {

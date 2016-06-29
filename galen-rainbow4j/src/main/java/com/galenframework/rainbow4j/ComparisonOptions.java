@@ -17,6 +17,7 @@ package com.galenframework.rainbow4j;
 
 import com.galenframework.rainbow4j.filters.ImageFilter;
 
+import java.awt.*;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -28,6 +29,7 @@ public class ComparisonOptions {
     private List<ImageFilter> sampleFilters = new LinkedList<>();
     private List<ImageFilter> mapFilters = new LinkedList<>();
     private int analyzeOffset = 0;
+    private List<Rectangle> ignoreRegions;
 
     public void setTolerance(int tolerance) {
         this.tolerance = tolerance;
@@ -104,5 +106,13 @@ public class ComparisonOptions {
 
     public int getAnalyzeOffset() {
         return analyzeOffset;
+    }
+
+    public void setIgnoreRegions(List<Rectangle> ignoreRegions) {
+        this.ignoreRegions = ignoreRegions;
+    }
+
+    public List<Rectangle> getIgnoreRegions() {
+        return ignoreRegions;
     }
 }

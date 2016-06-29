@@ -525,7 +525,6 @@ public class Rainbow4JTest {
         BufferedImage imageActual = Rainbow4J.loadImage(getClass().getResourceAsStream("/replace-colors-actual.png"));
         BufferedImage imageExpected = Rainbow4J.loadImage(getClass().getResourceAsStream("/replace-colors-expected.png"));
 
-
         ComparisonOptions options = new ComparisonOptions();
         ReplaceColorsDefinition colorDefinition = new ReplaceColorsDefinition(new Color(255, 255, 255), asList(
             new GradientColorClassifier("green-blue", asList(new Color(5, 153, 0), new Color(9, 24, 184))),
@@ -536,6 +535,25 @@ public class Rainbow4JTest {
         options.setOriginalFilters(asList(new ReplaceColorsFilter(asList(colorDefinition))));
         ImageCompareResult result = Rainbow4J.compare(imageActual, imageExpected, options);
         assertThat(result.getTotalPixels(), is(0L));
+    }
+
+    @Test
+    public void shouldExclude_definedRegions_whenComparingImages() throws IOException {
+        BufferedImage imageActual = Rainbow4J.loadImage(getClass().getResourceAsStream("/ignore-regions/ignore-regions-actual.png"));
+        BufferedImage imageExpected = Rainbow4J.loadImage(getClass().getResourceAsStream("/ignore-regions/ignore-regions-expected.png"));
+
+        ComparisonOptions options = new ComparisonOptions();
+        options.setIgnoreRegions(asList(new Rectangle(0, 70, 243, 64), new Rectangle(243, 134, 243, 64)));
+
+        ImageCompareResult result = Rainbow4J.compare(imageActual, imageExpected, options);
+        assertThat(result.getTotalPixels(), is(greaterThan(1600L)));
+        assertThat(result.getTotalPixels(), is(lessThan(1700L)));
+
+        ImageCompareResult mapResult = Rainbow4J.compare(result.getComparisonMap(),
+            Rainbow4J.loadImage(getClass().getResourceAsStream("/ignore-regions/ignore-regions-map.png")),
+            new ComparisonOptions()
+        );
+        assertThat(mapResult.getTotalPixels(), is(0L));
     }
 
 
