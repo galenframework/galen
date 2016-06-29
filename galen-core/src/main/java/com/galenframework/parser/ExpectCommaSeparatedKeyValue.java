@@ -18,44 +18,84 @@ package com.galenframework.parser;
 import org.apache.commons.lang3.tuple.MutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 
 public class ExpectCommaSeparatedKeyValue implements Expectation<List<Pair<String, String>>> {
+
+    private final Integer SQUARE_BRACKET = 1;
+    private final Integer CURLY_BRACKET = 2;
+    private final Integer ROUND_BRACKET = 3;
 
     @Override
     public List<Pair<String, String>> read(StringCharReader reader) {
         List<Pair<String, String>> data = new LinkedList<Pair<String, String>>();
 
-        Pair<String, String> currentParam = null;
-
         while(reader.hasMore()) {
-            if (currentParam == null) {
-                String word = new ExpectWord().read(reader);
-                if (!word.isEmpty()) {
-                    currentParam = new MutablePair<>(word, "");
-                    data.add(currentParam);
-                }
-            }
-            else {
-                String value;
-
-                if (reader.firstNonWhiteSpaceSymbol() == '\"') {
-                    value = Expectations.doubleQuotedText().read(reader);
-
-                    String leftover = reader.readSafeUntilSymbol(',').trim();
-                    if (!leftover.isEmpty()) {
-                        throw new SyntaxException("Cannot parse text after double-quoted text: " + leftover);
-                    }
-                } else {
-                    value = reader.readSafeUntilSymbol(',').trim();
-                }
-                currentParam.setValue(value);
-                currentParam = null;
+            String word = new ExpectWord().read(reader);
+            if (!word.isEmpty()) {
+                MutablePair<String, String> currentParam = new MutablePair<>(word, readParamValue(reader).trim());
+                data.add(currentParam);
             }
         }
 
         return data;
+    }
+
+    private String readParamValue(StringCharReader reader) {
+        Stack<Integer> bracketStack = new Stack<>();
+        StringBuilder text = new StringBuilder();
+
+        while(reader.hasMore()) {
+            char symbol = reader.next();
+
+            if (bracketStack.isEmpty() && symbol == ',') {
+                return text.toString();
+            } else {
+                if (symbol == '\"') {
+                    reader.back();
+                    text.append(Expectations.doubleQuotedText().read(reader));
+                } else if (isOpeningBracket(symbol)) {
+                    bracketStack.push(bracketType(symbol));
+                    text.append(symbol);
+                } else if (isClosingBracket(symbol)) {
+                    if (Objects.equals(bracketStack.peek(), bracketType(symbol))) {
+                        text.append(symbol);
+                        bracketStack.pop();
+                    } else {
+                        throw new SyntaxException("Unexpected closing bracket: " + symbol);
+                    }
+                } else {
+                    text.append(symbol);
+                }
+            }
+        }
+        return text.toString();
+    }
+
+
+    private Map<Character, Integer> bracketsToType = new HashMap<Character, Integer>() {{
+        put('[', SQUARE_BRACKET);
+        put(']', SQUARE_BRACKET);
+        put('(', ROUND_BRACKET);
+        put(')', ROUND_BRACKET);
+        put('{', CURLY_BRACKET);
+        put('}', CURLY_BRACKET);
+    }};
+
+    private Integer bracketType(char symbol) {
+        if (bracketsToType.containsKey(symbol)) {
+            return bracketsToType.get(symbol);
+        } else {
+            throw new SyntaxException("Not a bracket: " + symbol);
+        }
+    }
+
+    private boolean isClosingBracket(char symbol) {
+        return symbol == ']' || symbol == ')' || symbol == '}';
+    }
+
+    private boolean isOpeningBracket(char symbol) {
+        return symbol == '[' || symbol == '(' || symbol == '{';
     }
 }

@@ -98,6 +98,9 @@ public class SpecImageProcessor implements SpecProcessor {
             else if ("crop-if-outside".equals(parameter.getKey())) {
                 spec.setCropIfOutside(true);
             }
+            else if ("exclude-objects".equals(parameter.getKey())) {
+                spec.setExcludedObjects(parseExcludeObjects(parameter.getValue()));
+            }
             else {
                 throw new SyntaxException("Unknown parameter: " + parameter.getKey());
             }
@@ -107,6 +110,13 @@ public class SpecImageProcessor implements SpecProcessor {
             throw new SyntaxException("There are no images defined");
         }
         return spec;
+    }
+
+    private String parseExcludeObjects(String value) {
+        if (value.startsWith("[") && value.endsWith("]")) {
+            return value.substring(1, value.length() - 1);
+        }
+        return value;
     }
 
     private Integer parseIntegerParameter(String name, String value) {

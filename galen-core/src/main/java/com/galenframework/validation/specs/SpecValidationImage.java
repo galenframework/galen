@@ -95,9 +95,9 @@ public class SpecValidationImage extends SpecValidation<SpecImage> {
             throw new ValidationErrorException("There are no images found").withValidationObject(new ValidationObject(pageElement.getArea(), objectName));
         }
 
-        int largetsPossibleDifference = elementArea.getHeight() * elementArea.getWidth() * 2;
+        int largestPossibleDifference = elementArea.getHeight() * elementArea.getWidth() * 2;
 
-        ImageCheck minCheck = new ImageCheck(realPaths.get(0), largetsPossibleDifference, NO_RESULT, NO_ERROR_MESSAGE);
+        ImageCheck minCheck = new ImageCheck(realPaths.get(0), largestPossibleDifference, NO_RESULT, NO_ERROR_MESSAGE);
 
         Iterator<String> it = realPaths.iterator();
 

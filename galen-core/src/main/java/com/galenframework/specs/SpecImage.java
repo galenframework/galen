@@ -28,6 +28,16 @@ import static com.galenframework.parser.Expectations.number;
 public class SpecImage extends Spec {
 
 
+    private String excludedObjects;
+
+    public String getExcludedObjects() {
+        return excludedObjects;
+    }
+
+    public void setExcludedObjects(String excludedObjects) {
+        this.excludedObjects = excludedObjects;
+    }
+
     public enum ErrorRateType {
         PIXELS("px"), PERCENT("%");
         private final String name;

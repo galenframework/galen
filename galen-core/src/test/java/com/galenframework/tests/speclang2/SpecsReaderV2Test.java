@@ -1121,6 +1121,15 @@ public class SpecsReaderV2Test {
     }
 
     @Test
+    public void shouldReadSpec_image_exlcudedObjects() throws IOException {
+        SpecImage spec = (SpecImage) readSpec("image file img.png, exclude-objects [menu_item-*, &excluded_objects], error 10px");
+        assertThat(spec.getImagePaths(), contains("img.png"));
+        assertThat(spec.getExcludedObjects(), is("menu_item-*, &excluded_objects"));
+        assertThat(spec.getErrorRate().getValue(), is(10.0));
+        assertThat(spec.getErrorRate().getType(), is(SpecImage.ErrorRateType.PIXELS));
+    }
+
+    @Test
     public void shouldReadSpec_component() throws IOException {
         SpecComponent spec = (SpecComponent)readSpec("component some.spec");
         assertThat(spec.isFrame(), is(false));
