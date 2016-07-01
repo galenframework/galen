@@ -98,8 +98,12 @@ public class SpecImageProcessor implements SpecProcessor {
             else if ("crop-if-outside".equals(parameter.getKey())) {
                 spec.setCropIfOutside(true);
             }
-            else if ("exclude-objects".equals(parameter.getKey())) {
-                spec.setExcludedObjects(parseExcludeObjects(parameter.getValue()));
+            else if ("ignore-objects".equals(parameter.getKey())) {
+                String ignoreObjects = parseExcludeObjects(parameter.getValue());
+                if (spec.getIgnoredObjectExpressions() == null) {
+                    spec.setIgnoredObjectExpressions(new LinkedList<>());
+                }
+                spec.getIgnoredObjectExpressions().add(ignoreObjects);
             }
             else {
                 throw new SyntaxException("Unknown parameter: " + parameter.getKey());

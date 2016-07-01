@@ -24,6 +24,8 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
+import java.awt.*;
+
 public class Rect {
 
     private int left;
@@ -212,5 +214,8 @@ public class Rect {
         }
     }
 
+    public Rectangle toAwtRectangle() {
+        return new Rectangle(left, top, width, height);
+    }
 }
 

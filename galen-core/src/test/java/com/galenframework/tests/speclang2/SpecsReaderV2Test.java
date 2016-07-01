@@ -27,7 +27,6 @@ import static org.hamcrest.Matchers.*;
 
 import java.awt.*;
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -1121,10 +1120,10 @@ public class SpecsReaderV2Test {
     }
 
     @Test
-    public void shouldReadSpec_image_exlcudedObjects() throws IOException {
-        SpecImage spec = (SpecImage) readSpec("image file img.png, exclude-objects [menu_item-*, &excluded_objects], error 10px");
+    public void shouldReadSpec_image_ignoredObjects() throws IOException {
+        SpecImage spec = (SpecImage) readSpec("image file img.png, ignore-objects [menu_item-*, &excluded_objects], error 10px, ignore-objects one_more_obj");
         assertThat(spec.getImagePaths(), contains("img.png"));
-        assertThat(spec.getExcludedObjects(), is("menu_item-*, &excluded_objects"));
+        assertThat(spec.getIgnoredObjectExpressions(), contains("menu_item-*, &excluded_objects", "one_more_obj"));
         assertThat(spec.getErrorRate().getValue(), is(10.0));
         assertThat(spec.getErrorRate().getType(), is(SpecImage.ErrorRateType.PIXELS));
     }

@@ -139,41 +139,45 @@ public class Rainbow4J {
                     int xA = x + Cax + offsetX;
                     int yA = y + Cay + offsetY;
 
-                    if (xA >= 0 && xA < imageAWidth && yA >= 0 && yA < imageAHeight && !shouldPixelBeIgnored(xA, yA, options)) {
+                    if (xA >= 0 && xA < imageAWidth && yA >= 0 && yA < imageAHeight ) {
+                        if (!shouldPixelBeIgnored(xA, yA, options)) {
+                            Color cA = handlerA.pickColor(xA, yA);
 
-                        Color cA = handlerA.pickColor(xA, yA);
+                            int xB, yB;
 
-                        int xB, yB;
-
-                        if (options.isStretchToFit()) {
-                            xB = (int) Math.round((((double) x) * Kx) + Cbx);
-                            yB = (int) Math.round(((double) y) * Ky + Cby);
-                            xB = Math.min(xB, Cbx + Wb - 1);
-                            yB = Math.min(yB, Cby + Hb - 1);
-                        } else {
-                            xB = x + Cbx;
-                            yB = y + Cby;
-                        }
-
-                        Color cB = handlerB.pickColor(xB, yB);
-
-                        long colorError = ImageHandler.colorDiff(cA, cB);
-                        if (colorError > tolerance) {
-
-                            Color color = Color.red;
-
-                            int diff = (int) (colorError - tolerance);
-                            if (diff > 30 && diff < 80) {
-                                color = Color.yellow;
-                            } else if (diff <= 30) {
-                                color = Color.green;
+                            if (options.isStretchToFit()) {
+                                xB = (int) Math.round((((double) x) * Kx) + Cbx);
+                                yB = (int) Math.round(((double) y) * Ky + Cby);
+                                xB = Math.min(xB, Cbx + Wb - 1);
+                                yB = Math.min(yB, Cby + Hb - 1);
+                            } else {
+                                xB = x + Cbx;
+                                yB = y + Cby;
                             }
-                            mapHandler.setRGBA(x, y, color.getRed(), color.getGreen(), color.getBlue(), 255);
 
-                            mismatchingPixels += 1;
+                            Color cB = handlerB.pickColor(xB, yB);
+
+                            long colorError = ImageHandler.colorDiff(cA, cB);
+                            if (colorError > tolerance) {
+
+                                Color color = Color.red;
+
+                                int diff = (int) (colorError - tolerance);
+                                if (diff > 30 && diff < 80) {
+                                    color = Color.yellow;
+                                } else if (diff <= 30) {
+                                    color = Color.green;
+                                }
+                                mapHandler.setRGBA(x, y, color.getRed(), color.getGreen(), color.getBlue(), 255);
+
+                                mismatchingPixels += 1;
+                            } else {
+                                mapHandler.setRGBA(x, y, 0, 0, 0, 255);
+                            }
                         } else {
-                            mapHandler.setRGBA(x, y, 0, 0, 0, 255);
+                            mapHandler.setRGBA(x, y, 0, 0, 0, 160);
                         }
+
                     } else {
                         mapHandler.setRGBA(x, y, 0, 0, 0, 255);
                     }

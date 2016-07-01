@@ -73,6 +73,8 @@ public class SpecValidationImage extends SpecValidation<SpecImage> {
         }
 
         ComparisonOptions options = new ComparisonOptions();
+
+        options.setIgnoreRegions(convertIgnoreObjectsToRegions(pageValidation, spec));
         options.setStretchToFit(spec.isStretch());
         options.setOriginalFilters(spec.getOriginalFilters());
         options.setSampleFilters(spec.getSampleFilters());
@@ -133,6 +135,23 @@ public class SpecValidationImage extends SpecValidation<SpecImage> {
         return new ValidationResult(spec, objects);
     }
 
+    private List<Rectangle> convertIgnoreObjectsToRegions(PageValidation pageValidation, SpecImage spec) {
+        List<Rectangle> ignoreRegions = new LinkedList<>();
+        if (spec.getIgnoredObjectExpressions() != null) {
+            for (String objectSearchExpression : spec.getIgnoredObjectExpressions()) {
+                List<String> ignoreObjects = pageValidation.getPageSpec().findAllObjectsMatchingStrictStatements(objectSearchExpression);
+                if (ignoreObjects != null) {
+                    for (String objectName: ignoreObjects) {
+                        PageElement pageElement = pageValidation.findPageElement(objectName);
+                        if (pageElement.isPresent() && pageElement.isVisible()) {
+                            ignoreRegions.add(pageElement.getArea().toAwtRectangle());
+                        }
+                    }
+                }
+            }
+        }
+        return ignoreRegions;
+    }
 
 
     private ImageCheck checkImages(SpecImage spec, BufferedImage pageImage, ComparisonOptions options, Rect elementArea, String imagePath)
