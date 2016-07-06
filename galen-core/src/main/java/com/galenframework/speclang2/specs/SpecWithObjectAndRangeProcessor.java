@@ -39,7 +39,7 @@ public abstract class SpecWithObjectAndRangeProcessor implements SpecProcessor {
             range = Expectations.range().read(reader);
         }
         else {
-            range = Range.greaterThan(new RangeValue(-1));
+            range = Range.greaterThanOrEquals(new RangeValue(0));
         }
 
 

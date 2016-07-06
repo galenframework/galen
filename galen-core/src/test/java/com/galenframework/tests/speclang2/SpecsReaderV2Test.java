@@ -588,14 +588,14 @@ public class SpecsReaderV2Test {
     public void shouldReadSpec_above()  throws IOException {
         SpecAbove spec = (SpecAbove)readSpec("above object");
         assertThat(spec.getObject(), is("object"));
-        assertThat(spec.getRange(), is(Range.greaterThan(-1)));
+        assertThat(spec.getRange(), is(Range.greaterThanOrEquals(0)));
     }
 
     @Test
     public void shouldReadSpec_below()  throws IOException {
         SpecBelow spec = (SpecBelow)readSpec("below object");
         assertThat(spec.getObject(), is("object"));
-        assertThat(spec.getRange(), is(Range.greaterThan(-1)));
+        assertThat(spec.getRange(), is(Range.greaterThanOrEquals(0)));
     }
 
     @Test
@@ -631,7 +631,7 @@ public class SpecsReaderV2Test {
     public void shouldReadSpec_left_of_object() throws IOException {
         SpecLeftOf specLeftOf = (SpecLeftOf)readSpec("left-of object");
         assertThat(specLeftOf.getObject(), is("object"));
-        assertThat(specLeftOf.getRange(), is(Range.greaterThan(-1)));
+        assertThat(specLeftOf.getRange(), is(Range.greaterThanOrEquals(0)));
     }
 
 
@@ -654,7 +654,7 @@ public class SpecsReaderV2Test {
     public void shouldReadSpec_right_of_object() throws IOException {
         SpecRightOf specRightOf = (SpecRightOf)readSpec("right-of object");
         assertThat(specRightOf.getObject(), is("object"));
-        assertThat(specRightOf.getRange(), is(Range.greaterThan(-1)));
+        assertThat(specRightOf.getRange(), is(Range.greaterThanOrEquals(0)));
     }
 
 
