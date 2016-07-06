@@ -218,8 +218,14 @@ public class Range {
         else if (rangeType == RangeType.GREATER_THAN) {
             return String.format("but it should be greater than %s%s", from.toString(), dimension);
         }
+        else if (rangeType == RangeType.GREATER_THAN_OR_EQUALS) {
+            return String.format("but it should be greater than or equal to %s%s", from.toString(), dimension);
+        }
         else if (rangeType == RangeType.LESS_THAN) {
             return String.format("but it should be less than %s%s", to.toString(), dimension);
+        }
+        else if (rangeType == RangeType.LESS_THAN_OR_EQUALS) {
+            return String.format("but it should be less than or equal to %s%s", to.toString(), dimension);
         }
         else return "but the expected range is unknown";
     }

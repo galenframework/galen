@@ -30,6 +30,17 @@ public class RangeTest {
         assertThat(range.holds(value), is(expected));
     }
 
+    @Test
+    public void should_getErrorMessageSuffix() {
+        assertThat(Range.between(1, 5).getErrorMessageSuffix(), is("which is not in range of 1 to 5px"));
+        assertThat(Range.between(1, 5).withPercentOf("other-object").getErrorMessageSuffix(), is("which is not in range of 1 to 5%"));
+        assertThat(Range.exact(4).getErrorMessageSuffix(), is("instead of 4px"));
+        assertThat(Range.greaterThan(4).getErrorMessageSuffix(), is("but it should be greater than 4px"));
+        assertThat(Range.greaterThanOrEquals(4).getErrorMessageSuffix(), is("but it should be greater than or equal to 4px"));
+        assertThat(Range.lessThan(4).getErrorMessageSuffix(), is("but it should be less than 4px"));
+        assertThat(Range.lessThanOrEquals(4).getErrorMessageSuffix(), is("but it should be less than or equal to 4px"));
+    }
+
     @DataProvider
     public Object[][] holdsData() {
         return new Object[][] {
