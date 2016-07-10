@@ -108,13 +108,13 @@ public class PageValidation {
         }
         else {
             if (objectValue instanceof Integer) {
-                return ((Integer)objectValue).intValue();
+                return (Integer) objectValue;
             }
             else if (objectValue instanceof Double) {
                 return ((Double)objectValue).intValue();
             }
             else {
-                throw new SyntaxException(Line.UNKNOWN_LINE, format("Cannot convert value to integer. The obtained value is of %s type", objectValue.getClass()));
+                throw new SyntaxException(format("Cannot convert value to integer. The obtained value is of %s type", objectValue.getClass()));
             }
         }
     }
@@ -126,7 +126,7 @@ public class PageValidation {
             String fieldName = fieldPath.substring(0, index);
             String leftOverPath = fieldPath.substring(index + 1);
             if (leftOverPath.isEmpty()) {
-                throw new SyntaxException(Line.UNKNOWN_LINE, format("Cannot read path %s", fieldPath));
+                throw new SyntaxException(format("Cannot read path %s", fieldPath));
             }
             
             Object field = getField(object, fieldName);
@@ -145,7 +145,7 @@ public class PageValidation {
             Method getterMethod = object.getClass().getMethod(getterForField(fieldName));
             return getterMethod.invoke(object);
         } catch (Exception e) {
-            throw new SyntaxException(Line.UNKNOWN_LINE, format("Cannot read field: \"%s\"", fieldName));
+            throw new SyntaxException(format("Cannot read field: \"%s\"", fieldName));
         }
     }
 
@@ -174,9 +174,9 @@ public class PageValidation {
                 Object objectValue = getObjectValue(pageElement, fieldPath);
                 return convertToInt(objectValue);
             }
-            else throw new SyntaxException(Line.UNKNOWN_LINE, format("Locator for object \"%s\" is not specified", objectName));
+            else throw new SyntaxException(format("Locator for object \"%s\" is not specified", objectName));
         }
-        else throw new SyntaxException(Line.UNKNOWN_LINE, format("Value path is incorrect %s", objectValuePath));
+        else throw new SyntaxException(format("Value path is incorrect %s", objectValuePath));
 
     }
 

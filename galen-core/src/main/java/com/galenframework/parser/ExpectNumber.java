@@ -37,7 +37,7 @@ public class ExpectNumber implements Expectation<Double> {
             }
             else if (symbol == '.') {
                 if (hadPointAlready) {
-                    throw new SyntaxException(Line.UNKNOWN_LINE, String.format("Cannot parse number: \"%s\"", symbol));
+                    throw new SyntaxException(String.format("Cannot parse number: \"%s\"", symbol));
                 }
                 hadPointAlready = true;
                 buffer.append(symbol);
@@ -57,7 +57,7 @@ public class ExpectNumber implements Expectation<Double> {
             return Double.parseDouble(doubleText);
         }
         catch (Exception e) {
-            throw new SyntaxException(Line.UNKNOWN_LINE, format("Cannot parse number: \"%s\"", doubleText), e);
+            throw new SyntaxException(format("Cannot parse number: \"%s\"", doubleText), e);
         }
     }
 }

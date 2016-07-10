@@ -15,18 +15,15 @@
 ******************************************************************************/
 package com.galenframework.tests.speclang2.pagespec;
 
-import com.galenframework.components.validation.MockedInvisiblePageElement;
-import com.galenframework.components.validation.MockedPageElement;
 import com.galenframework.page.selenium.SeleniumPage;
+import com.galenframework.parser.SyntaxException;
 import com.galenframework.speclang2.pagespec.PageSpecReader;
 import com.galenframework.specs.page.CorrectionsRect;
 import com.galenframework.specs.page.PageSection;
 import com.galenframework.browser.SeleniumBrowser;
 import com.galenframework.components.mocks.driver.MockedDriver;
 import com.galenframework.components.validation.MockedPage;
-import com.galenframework.page.Page;
 import com.galenframework.page.PageElement;
-import com.galenframework.parser.FileSyntaxException;
 import com.galenframework.specs.page.Locator;
 import com.galenframework.specs.page.ObjectSpecs;
 import com.galenframework.specs.page.PageSpec;
@@ -42,13 +39,7 @@ import static java.util.Arrays.asList;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 
-public class PageSpecReaderTest {
-
-    private static final Page EMPTY_PAGE = new MockedPage();
-    private static final List<String> EMPTY_TAGS = Collections.emptyList();
-    private static final Properties NO_PROPERTIES = null;
-    private static final Map<String, Object> NO_VARS = null;
-    private static final Map<String, Locator> EMPTY_OBJECTS = null;
+public class PageSpecReaderTest extends PageSpecReaderTestBase {
 
     @Test
     public void shouldRead_objectDefinitions() throws IOException {
@@ -453,7 +444,7 @@ public class PageSpecReaderTest {
 
     }
 
-    @Test(expectedExceptions = FileSyntaxException.class,
+    @Test(expectedExceptions = SyntaxException.class,
         expectedExceptionsMessageRegExp = "JavaScript error inside statement\n    in speclang2/error-in-js-block.gspec:8"
     )
     public void shouldFail_whenThereIsError_inJavaScriptBlock() throws IOException {
@@ -462,108 +453,6 @@ public class PageSpecReaderTest {
             EMPTY_TAGS, EMPTY_TAGS);
     }
 
-
-    @Test
-    public void shouldRead_customSpecRules_andProcessThem() throws IOException {
-        PageSpec pageSpec = readPageSpec("speclang2/custom-rules.gspec");
-
-        assertThat(pageSpec.getSections().size(), is(1));
-        assertThat(pageSpec.getSections().get(0).getName(), is("Main section"));
-        assertThat(pageSpec.getSections().get(0).getSections().size(), is(1));
-
-        PageSection subSection = pageSpec.getSections().get(0).getSections().get(0);
-        assertThat(subSection.getName(), is("menu-item-* should be aligned horizontally"));
-        assertThat(subSection.getObjects().size(), is(2));
-
-        assertThat(subSection.getObjects().get(0).getObjectName(), is("menu-item-2"));
-        assertThat(subSection.getObjects().get(0).getSpecs().size(), is(1));
-        assertThat(subSection.getObjects().get(0).getSpecs().get(0).getOriginalText(), is("aligned horizontally all menu-item-1"));
-
-        assertThat(subSection.getObjects().get(1).getObjectName(), is("menu-item-3"));
-        assertThat(subSection.getObjects().get(1).getSpecs().size(), is(1));
-        assertThat(subSection.getObjects().get(1).getSpecs().get(0).getOriginalText(), is("aligned horizontally all menu-item-2"));
-
-
-        assertThat(pageSpec.getSections().get(0).getObjects().size(), is(1));
-        assertThat(pageSpec.getSections().get(0).getObjects().get(0).getObjectName(), is("menu-item-1"));
-        assertThat(pageSpec.getSections().get(0).getObjects().get(0).getSpecs().size(), is(0));
-        assertThat(pageSpec.getSections().get(0).getObjects().get(0).getSpecGroups().size(), is(1));
-        assertThat(pageSpec.getSections().get(0).getObjects().get(0).getSpecGroups().get(0).getSpecs().size(), is(1));
-        assertThat(pageSpec.getSections().get(0).getObjects().get(0).getSpecGroups().get(0).getName(), is("squared"));
-        assertThat(pageSpec.getSections().get(0).getObjects().get(0).getSpecGroups().get(0).getSpecs().get(0).getOriginalText(),
-                is("width 100 % of menu-item-1/height"));
-    }
-
-    @Test
-    public void shouldRead_customSpecRulesInSections_withoutOtherObjects_andProcessThem() throws IOException {
-        PageSpec pageSpec = readPageSpec("speclang2/custom-rules-only-per-section.gspec");
-
-        assertThat(pageSpec.getSections().size(), is(1));
-        assertThat(pageSpec.getSections().get(0).getName(), is("Main section"));
-        assertThat(pageSpec.getSections().get(0).getSections().size(), is(1));
-
-        PageSection subSection = pageSpec.getSections().get(0).getSections().get(0);
-        assertThat(subSection.getName(), is("menu-item-1 is squared"));
-        assertThat(subSection.getObjects().size(), is(1));
-
-        assertThat(subSection.getObjects().get(0).getObjectName(), is("menu-item-1"));
-        assertThat(subSection.getObjects().get(0).getSpecs().size(), is(1));
-        assertThat(subSection.getObjects().get(0).getSpecs().get(0).getOriginalText(), is("width 100 % of menu-item-1/height"));
-    }
-
-
-    @Test
-    public void shouldRead_customRulesFromJavaScript_andProcessThem() throws IOException {
-        PageSpec pageSpec = readPageSpec("speclang2/custom-js-rules.gspec",
-                new MockedPage(new HashMap<String, PageElement>()),
-                EMPTY_TAGS, EMPTY_TAGS);
-
-        assertThat(pageSpec.getSections().size(), is(1));
-        assertThat(pageSpec.getSections().get(0).getName(), is("Main section"));
-        assertThat(pageSpec.getSections().get(0).getSections().size(), is(1));
-
-        PageSection subSection = pageSpec.getSections().get(0).getSections().get(0);
-        assertThat(subSection.getName(), is("menu-item-* should be aligned horizontally"));
-        assertThat(subSection.getObjects().size(), is(2));
-
-        assertThat(subSection.getObjects().get(0).getObjectName(), is("menu-item-2"));
-        assertThat(subSection.getObjects().get(0).getSpecs().size(), is(1));
-        assertThat(subSection.getObjects().get(0).getSpecs().get(0).getOriginalText(), is("aligned horizontally all menu-item-1"));
-
-        assertThat(subSection.getObjects().get(1).getObjectName(), is("menu-item-3"));
-        assertThat(subSection.getObjects().get(1).getSpecs().size(), is(1));
-        assertThat(subSection.getObjects().get(1).getSpecs().get(0).getOriginalText(), is("aligned horizontally all menu-item-2"));
-
-
-        assertThat(pageSpec.getSections().get(0).getObjects().size(), is(1));
-        assertThat(pageSpec.getSections().get(0).getObjects().get(0).getObjectName(), is("menu-item-1"));
-        assertThat(pageSpec.getSections().get(0).getObjects().get(0).getSpecs().size(), is(0));
-        assertThat(pageSpec.getSections().get(0).getObjects().get(0).getSpecGroups().size(), is(1));
-        assertThat(pageSpec.getSections().get(0).getObjects().get(0).getSpecGroups().get(0).getSpecs().size(), is(1));
-        assertThat(pageSpec.getSections().get(0).getObjects().get(0).getSpecGroups().get(0).getName(), is("squared"));
-        assertThat(pageSpec.getSections().get(0).getObjects().get(0).getSpecGroups().get(0).getSpecs().get(0).getOriginalText(),
-                is("width 100 % of menu-item-1/height"));
-    }
-
-    @Test
-    public void shouldRead_customRules_andNotCare_aboutExtraWhiteSpace() throws IOException {
-        PageSpec pageSpec = readPageSpec("speclang2/custom-rules-white-space.gspec",
-            new MockedPage(new HashMap<String, PageElement>()),
-            EMPTY_TAGS, EMPTY_TAGS);
-
-        assertThat(pageSpec.getSections().size(), is(1));
-
-        PageSection section = pageSpec.getSections().get(0);
-        assertThat(section.getSections().size(), is(1));
-
-        PageSection ruleSection = section.getSections().get(0);
-        assertThat(ruleSection.getName(), is("login_panel     should    stretch    to     screen"));
-
-        assertThat(ruleSection.getObjects().size(), is(1));
-        assertThat(ruleSection.getObjects().get(0).getObjectName(), is("login_panel"));
-        assertThat(ruleSection.getObjects().get(0).getSpecs().size(), is(1));
-        assertThat(ruleSection.getObjects().get(0).getSpecs().get(0).getOriginalText(), is("inside screen 0px left right"));
-    }
 
     @Test
     public void shouldRead_conditionsWithMultipleElseBlocks()  throws  IOException {
@@ -618,7 +507,7 @@ public class PageSpecReaderTest {
         assertThat(section.getObjects().get(0).getSpecs().get(0).getOriginalText(), is("visible"));
     }
 
-    @Test(expectedExceptions = FileSyntaxException.class,
+    @Test(expectedExceptions = SyntaxException.class,
             expectedExceptionsMessageRegExp = "JavaScript error inside statement\n    in speclang2/condition-with-js-error.gspec:5"
     )
     public void shouldFail_whenThereIsAnError_insideIfStatement() throws IOException {
@@ -641,16 +530,10 @@ public class PageSpecReaderTest {
     }
 
 
-    @Test
+    @Test(expectedExceptions = SyntaxException.class,
+        expectedExceptionsMessageRegExp = "\\QExpecting \"px\", \"to\" or \"%\", got \"\"\n    in \\E.*speclang2/syntax-error.gspec:9")
     public void shouldThrow_fileSyntaxException_ifThereIsAnErrorInSpec() throws IOException {
-        try {
-            readPageSpec("speclang2/syntax-error.gspec");
-            throw new RuntimeException("FileSyntaxException was not thrown from page spec reader");
-        } catch (FileSyntaxException ex) {
-            assertThat(ex.getLine(), is(9));
-            assertThat(ex.getFilePath(), endsWith("speclang2/syntax-error.gspec"));
-            assertThat(ex.getCause().getMessage(), is("Expecting \"px\", \"to\" or \"%\", got \"\""));
-        }
+        readPageSpec("speclang2/syntax-error.gspec");
     }
 
     @Test
@@ -1005,56 +888,29 @@ public class PageSpecReaderTest {
         assertThat(object.getSpecs().get(0).getOriginalText(), is("width 300px"));
     }
 
-    @Test(expectedExceptions = FileSyntaxException.class,
+    @Test(expectedExceptions = SyntaxException.class,
             expectedExceptionsMessageRegExp = "\\QError processing rule: button is located at the left side inside main_container with 10px margin\\E\\s+\\Qin speclang2/rule-error.gspec:7\\E")
     public void shouldThrownInformativeError_whenThereIsProblemParsingTheRule() throws  IOException {
             readPageSpec("speclang2/rule-error.gspec");
     }
 
-    @Test(expectedExceptions = FileSyntaxException.class,
+    @Test(expectedExceptions = SyntaxException.class,
             expectedExceptionsMessageRegExp = "\\QError processing rule: is located at the left side inside main_container with 10px margin\\E\\s+\\Qin speclang2/rule-error-object-level.gspec:7\\E")
     public void shouldThrownInformativeError_whenThereIsProblemParsingTheRule_inObjectLevel() throws  IOException {
         readPageSpec("speclang2/rule-error-object-level.gspec");
     }
 
-    @Test(expectedExceptions = FileSyntaxException.class,
+    @Test(expectedExceptions = SyntaxException.class,
             expectedExceptionsMessageRegExp = "\\QSpecs cannot have inner blocks\\E\\s+\\Qin speclang2/incorrect/nested-spec.gspec:7\\E")
     public void shouldGiveError_whenSpecIsNested_belowAnotherSpec() throws IOException {
         readPageSpec("speclang2/incorrect/nested-spec.gspec");
     }
 
-    @Test(expectedExceptions = FileSyntaxException.class,
+    @Test(expectedExceptions = SyntaxException.class,
         expectedExceptionsMessageRegExp = "\\QNot enough menu items\\E\\s+\\Qin speclang2/die.gspec:6\\E")
     public void shouldGiveError_whenUsingDieStatement() throws IOException {
         readPageSpec("speclang2/die.gspec");
     }
 
-    private PageSpec readPageSpec(String resource) throws IOException {
-        return readPageSpec(resource, EMPTY_PAGE, EMPTY_TAGS, EMPTY_TAGS);
-    }
-
-    private PageSpec readPageSpec(String resource, Page page) throws IOException {
-        return readPageSpec(resource, page, EMPTY_TAGS, EMPTY_TAGS);
-    }
-
-    private PageSpec readPageSpec(String resource, Page page, List<String> tags, List<String> excludedTags) throws IOException {
-        return new PageSpecReader().read(resource, page, new SectionFilter(tags, excludedTags), NO_PROPERTIES, NO_VARS, EMPTY_OBJECTS);
-    }
-
-    private MockedPageElement element(int left, int top, int width, int height) {
-        return new MockedPageElement(left, top, width, height);
-    }
-
-    protected PageElement invisibleElement(int left, int top, int width, int height) {
-        return new MockedInvisiblePageElement(left, top, width, height);
-    }
-
-    private String firstAppearingSpecIn(PageSpec pageSpec) {
-        return pageSpec.getSections().get(0).getObjects().get(0).getSpecs().get(0).getOriginalText();
-    }
-
-    private ObjectSpecs firstAppearingObjectIn(PageSpec pageSpec) {
-        return pageSpec.getSections().get(0).getObjects().get(0);
-    }
 
 }

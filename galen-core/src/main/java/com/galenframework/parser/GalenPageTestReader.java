@@ -15,7 +15,6 @@
 ******************************************************************************/
 package com.galenframework.parser;
 
-import static com.galenframework.suite.reader.Line.UNKNOWN_LINE;
 import static com.galenframework.utils.GalenUtils.isUrl;
 import static com.galenframework.utils.GalenUtils.readSize;
 
@@ -24,15 +23,15 @@ import java.util.List;
 import com.galenframework.browser.SeleniumGridBrowserFactory;
 import com.galenframework.browser.JsBrowserFactory;
 import com.galenframework.browser.SeleniumBrowserFactory;
-import com.galenframework.browser.SeleniumGridBrowserFactory;
 import com.galenframework.suite.GalenPageTest;
+import com.galenframework.suite.reader.Line;
 import com.galenframework.utils.GalenUtils;
 
 import org.openqa.selenium.Platform;
 
 public class GalenPageTestReader {
 
-    public static GalenPageTest readFrom(String text) {
+    public static GalenPageTest readFrom(String text, Line line) {
         
         String title = text.trim();
         
@@ -44,7 +43,7 @@ public class GalenPageTestReader {
         
         String[] args = CommandLineParser.parseCommandLine(text);
         if (args.length == 0) {
-            throw new SyntaxException(UNKNOWN_LINE, "Incorrect amount of arguments: " + text.trim());
+            throw new SyntaxException(line, "Incorrect amount of arguments: " + text.trim());
         }
         
         
@@ -59,12 +58,12 @@ public class GalenPageTestReader {
         else {
             String first = args[0].toLowerCase();
             if (first.equals("selenium")) {
-                return seleniumGalenPageTest(title, args, text.trim());
+                return seleniumGalenPageTest(title, args, text.trim(), line);
             }
             else if (first.equals("jsfactory")) {
                 return jsBrowserFactory(title, args);
             }
-            else   throw new SyntaxException(UNKNOWN_LINE, "Unknown browser factory: " + first);
+            else   throw new SyntaxException(line, "Unknown browser factory: " + first);
         }
     }
     private static GalenPageTest jsBrowserFactory(String title, String[] args) {
@@ -75,13 +74,13 @@ public class GalenPageTestReader {
             .withBrowserFactory(new JsBrowserFactory(args[1], stripFirst(2, args)))
             .withTitle(title);
     }
-    private static GalenPageTest seleniumGalenPageTest(String title, String[] args, String originalText) {
+    private static GalenPageTest seleniumGalenPageTest(String title, String[] args, String originalText, Line line) {
         if (args.length < 3) {
-            throw new SyntaxException(UNKNOWN_LINE, "Incorrect amount of arguments: " + originalText);
+            throw new SyntaxException(line, "Incorrect amount of arguments: " + originalText);
         }
         String seleniumType = args[1].toLowerCase();
         if ("grid".equals(seleniumType)) {
-            return gridGalenPageTest(stripFirst(2, args), originalText);
+            return gridGalenPageTest(stripFirst(2, args), originalText, line);
         }
         else {
             String size = null;
@@ -101,12 +100,12 @@ public class GalenPageTestReader {
         }
         else return args;
     }
-    private static GalenPageTest gridGalenPageTest(String[] args, String originalText) {
+    private static GalenPageTest gridGalenPageTest(String[] args, String originalText, Line line) {
         GalenCommand command = new GalenCommandLineParser().parse(args);
         List<String> leftovers = command.getLeftovers();
         
         if (leftovers.size() == 0) {
-            throw new SyntaxException(UNKNOWN_LINE, "Cannot parse grid arguments: " + originalText);
+            throw new SyntaxException(line, "Cannot parse grid arguments: " + originalText);
         }
 
         String gridUrl = leftovers.get(0);

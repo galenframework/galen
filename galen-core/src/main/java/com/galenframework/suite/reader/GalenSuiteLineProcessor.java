@@ -45,19 +45,19 @@ public class GalenSuiteLineProcessor {
         this.properties = properties;
     }
 
-    public void processLine(String line, int number) throws IOException {
-        if (!isBlank(line) && !isCommented(line) && !isSeparator(line)) {
-            if (line.startsWith("@@")) {
-                Node<?> node = processSpecialInstruction(new Line(line.substring(2).trim(), number));
+    public void processLine(String text, Line line) throws IOException {
+        if (!isBlank(text) && !isCommented(text) && !isSeparator(text)) {
+            if (text.startsWith("@@")) {
+                Node<?> node = processSpecialInstruction(text.substring(2).trim(), line);
                 if (node != null) {
                     currentNode = node;
                 }
             }
             else {
-                int spaces = calculateIndentationSpaces(line);
+                int spaces = calculateIndentationSpaces(text);
                 
                 Node<?> processingNode = currentNode.findProcessingNodeByIndentation(spaces);
-                Node<?> newNode = processingNode.processNewNode(new Line(line, number));
+                Node<?> newNode = processingNode.processNewNode(text, line);
                 
                 if (newNode instanceof TestNode) {
                     if (disableNextSuite) {
@@ -76,8 +76,7 @@ public class GalenSuiteLineProcessor {
         }
     }
     
-    private Node<?> processSpecialInstruction(Line line) throws FileNotFoundException, IOException {
-        String text = line.getText();
+    private Node<?> processSpecialInstruction(String text, Line line) throws FileNotFoundException, IOException {
         currentNode = rootNode;
         int indexOfFirstSpace = text.indexOf(' ');
         
@@ -92,16 +91,14 @@ public class GalenSuiteLineProcessor {
             leftover = "";
         }
         
-        Line leftoverLine = new Line(leftover, line.getNumber());
-        
         if (firstWord.equals("set")) {
-            return processInstructionSet(leftoverLine);
+            return processInstructionSet(leftover, line);
         }
         else if (firstWord.equals("table")){
-            return processTable(leftoverLine);
+            return processTable(leftover, line);
         }
         else if (firstWord.equals("parameterized")){
-            return processParameterized(leftoverLine);
+            return processParameterized(leftover, line);
         }
         else if (firstWord.equals("disabled")) {
             markNextSuiteAsDisabled();
@@ -119,7 +116,7 @@ public class GalenSuiteLineProcessor {
         else throw new SuiteReaderException("Unknown instruction: " + firstWord);
     }
 
-    private List<Node<?>> importSuite(String path, Line line) throws FileNotFoundException, IOException {
+    private List<Node<?>> importSuite(String path, Line line) throws IOException {
         if (path.isEmpty()) {
             throw new SyntaxException(line, "No path specified for importing");
         }
@@ -132,7 +129,7 @@ public class GalenSuiteLineProcessor {
         if (!file.exists()) {
             throw new SyntaxException(line, "File doesn't exist: " + file.getAbsolutePath());
         }
-        childProcessor.readLines(new FileInputStream(file));
+        childProcessor.readLines(new FileInputStream(file), fullChildPath);
         return childProcessor.rootNode.getChildNodes();
     }
 
@@ -155,8 +152,8 @@ public class GalenSuiteLineProcessor {
         this.disableNextSuite = true;
     }
 
-    private Node<?> processParameterized(Line line) {
-        ParameterizedNode parameterizedNode = new ParameterizedNode(line);
+    private Node<?> processParameterized(String text, Line line) {
+        ParameterizedNode parameterizedNode = new ParameterizedNode(text, line);
         
         if (disableNextSuite) {
             parameterizedNode.setDisabled(true);
@@ -172,14 +169,14 @@ public class GalenSuiteLineProcessor {
         return parameterizedNode;
     }
 
-    private Node<?> processTable(Line line) {
-        TableNode tableNode = new TableNode(line);
+    private Node<?> processTable(String text, Line line) {
+        TableNode tableNode = new TableNode(text, line);
         currentNode.add(tableNode);
         return tableNode;
     }
 
-    private Node<?> processInstructionSet(Line line) {
-        SetNode newNode = new SetNode(line);
+    private Node<?> processInstructionSet(String text, Line line) {
+        SetNode newNode = new SetNode(text, line);
         currentNode.add(newNode);
         return newNode;
     }
@@ -188,12 +185,12 @@ public class GalenSuiteLineProcessor {
         return rootNode.build(new VarsContext(properties));
     }
 
-    public static int calculateIndentationSpaces(String line) {
+    public static int calculateIndentationSpaces(String text) {
         int spacesCount = 0;
-        for (int i=0; i<line.length(); i++) {
-            if (line.charAt(i) == ' ') {
+        for (int i=0; i< text.length(); i++) {
+            if (text.charAt(i) == ' ') {
                 spacesCount++;
-            } else if (line.charAt(i) == '\t') {
+            } else if (text.charAt(i) == '\t') {
                 spacesCount += 4;
             }
             else {
@@ -203,12 +200,12 @@ public class GalenSuiteLineProcessor {
         return 0;
     }
     
-    private boolean isSeparator(String line) {
-        line = line.trim();
-        if (line.length() > 3) {
-            char ch = line.charAt(0);
-            for (int i = 1; i < line.length(); i++) {
-                if (ch != line.charAt(i)) {
+    private boolean isSeparator(String text) {
+        text = text.trim();
+        if (text.length() > 3) {
+            char ch = text.charAt(0);
+            for (int i = 1; i < text.length(); i++) {
+                if (ch != text.charAt(i)) {
                     return false;
                 }
             }
@@ -217,25 +214,25 @@ public class GalenSuiteLineProcessor {
         else return false;
     }
 
-    private boolean isBlank(String line) {
-        return line.trim().isEmpty();
+    private boolean isBlank(String text) {
+        return text.trim().isEmpty();
     }
 
-    private boolean isCommented(String line) {
-        return line.trim().startsWith("#");
+    private boolean isCommented(String text) {
+        return text.trim().startsWith("#");
     }
 
-    public void readLines(InputStream inputStream) throws IOException {
+    public void readLines(InputStream inputStream, String sourceName) throws IOException {
         BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream, "UTF-8"));
         
-        String line = bufferedReader.readLine();
+        String lineText = bufferedReader.readLine();
         int lineNumber = 0;
-        while(line != null){
+        while(lineText != null){
             lineNumber++;
 
-            line = GalenUtils.removeNonPrintableControlSymbols(line);
-            processLine(line, lineNumber);
-            line = bufferedReader.readLine();
+            lineText = GalenUtils.removeNonPrintableControlSymbols(lineText);
+            processLine(lineText, new Line(sourceName, lineNumber));
+            lineText = bufferedReader.readLine();
         }
     }
 

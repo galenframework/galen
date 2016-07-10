@@ -47,7 +47,7 @@ public class SyntaxException extends RuntimeException {
     }
 
     public SyntaxException(Line line, Throwable paramThrowable) {
-        super(paramThrowable);
+        super(null, paramThrowable);
         this.line = line;
     }
     
@@ -56,11 +56,11 @@ public class SyntaxException extends RuntimeException {
 	}
 
     public SyntaxException(StructNode originNode, String message) {
-        this(new Line(originNode.getSource(), originNode.getFileLineNumber()), message);
+        this(originNode.getLine(), message);
     }
 
     public SyntaxException(StructNode originNode, String message, Throwable cause) {
-        this(new Line(originNode.getSource(), originNode.getFileLineNumber()), message, cause);
+        this(originNode.getLine(), message, cause);
     }
 
     public Line getLine() {
@@ -71,4 +71,20 @@ public class SyntaxException extends RuntimeException {
         this.line = line;
     }
 
+    @Override
+    public String getMessage() {
+        String message = super.getMessage();
+        StringBuilder builder = new StringBuilder();
+        if (message != null) {
+            builder.append(message);
+            if (line != null) {
+                builder.append("\n    ");
+            }
+        }
+        if (line != null) {
+            builder.append(line.toString());
+        }
+
+        return builder.toString();
+    }
 }

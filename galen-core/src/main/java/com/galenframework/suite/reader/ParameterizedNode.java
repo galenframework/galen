@@ -31,8 +31,8 @@ public class ParameterizedNode extends Node<List<GalenBasicTest>>{
     private boolean disabled = false;
     private List<String> groups;
 
-    public ParameterizedNode(Line line) {
-        super(line);
+    public ParameterizedNode(String text, Line line) {
+        super(text, line);
     }
 
     @Override
@@ -43,19 +43,16 @@ public class ParameterizedNode extends Node<List<GalenBasicTest>>{
         final VarsContext parameterizedContext = new VarsContext(new Properties(), context);
         final List<GalenBasicTest> tests = new LinkedList<>();
         
-        table.forEach(new RowVisitor() {
-            @Override
-            public void visit(Map<String, String> values) {
-                parameterizedContext.addValuesFromMap(values);
-                
-                if (toParameterize instanceof ParameterizedNode) {
-                    ParameterizedNode parameterizedNode = (ParameterizedNode)toParameterize;
-                    tests.addAll(wrapTestsWithGroups(parameterizedNode.build(parameterizedContext), groups));
-                }
-                else if (toParameterize instanceof TestNode) {
-                    TestNode suiteNode = (TestNode) toParameterize;
-                    tests.add(wrapTestWithGroups(suiteNode.build(parameterizedContext), groups));
-                }
+        table.forEach(values -> {
+            parameterizedContext.addValuesFromMap(values);
+
+            if (toParameterize instanceof ParameterizedNode) {
+                ParameterizedNode parameterizedNode = (ParameterizedNode)toParameterize;
+                tests.addAll(wrapTestsWithGroups(parameterizedNode.build(parameterizedContext), groups));
+            }
+            else if (toParameterize instanceof TestNode) {
+                TestNode suiteNode = (TestNode) toParameterize;
+                tests.add(wrapTestWithGroups(suiteNode.build(parameterizedContext), groups));
             }
         });
         
@@ -147,21 +144,15 @@ public class ParameterizedNode extends Node<List<GalenBasicTest>>{
         for (Node<?> childNode : getChildNodes()) {
             if (childNode instanceof TableRowNode) {
                 TableRowNode row = (TableRowNode)childNode;
-                try {
-                    table.addRow(row.build(context));
-                }
-                catch (SyntaxException e) {
-                    throw new SyntaxException(row.getLine(), e.getMessage());
-                }
-                
+                table.addRow(row.build(context), row.getLine());
             }
         }
         return table;
     }
 
     @Override
-    public Node<?> processNewNode(Line line) {
-        add(new TableRowNode(line));
+    public Node<?> processNewNode(String text, Line line) {
+        add(new TableRowNode(text, line));
         return this;
     }
 

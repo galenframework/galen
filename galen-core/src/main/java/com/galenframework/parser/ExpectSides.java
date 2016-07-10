@@ -19,7 +19,6 @@ import java.util.LinkedList;
 import java.util.List;
 
 import com.galenframework.specs.Side;
-import com.galenframework.suite.reader.Line;
 
 public class ExpectSides implements Expectation<List<Side>>{
 
@@ -39,7 +38,7 @@ public class ExpectSides implements Expectation<List<Side>>{
             }
         }
         if (sides.size() == 0) {
-            throw new SyntaxException(Line.UNKNOWN_LINE, "There are no sides defined for location");
+            throw new SyntaxException("There are no sides defined for location");
         }
         return sides;
     }

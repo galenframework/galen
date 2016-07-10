@@ -15,33 +15,58 @@
 ******************************************************************************/
 package com.galenframework.suite.reader;
 
-public class Line {
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
-    public static final Line UNKNOWN_LINE = new Line("", -1);
-    
-    private String text;
-    private int number;
-    public Line(String text, int number) {
-        this.text = text;
+public class Line {
+    private final String location;
+    private final int number;
+    public Line(String location, int number) {
+        this.location = location;
         this.number = number;
     }
-    public String getText() {
-        return text;
+
+    public String toString() {
+        StringBuilder builder = new StringBuilder("in ");
+        builder.append(location);
+        if (number >= 0) {
+            builder.append(':');
+            builder.append(Integer.toString(number));
+        }
+        return builder.toString();
     }
-    public void setText(String text) {
-        this.text = text;
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder()
+            .append(location)
+            .append(number)
+            .toHashCode();
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (obj == this) {
+            return true;
+        }
+        if (!(obj instanceof Line)) {
+            return false;
+        }
+        Line rhs = (Line)obj;
+        return new EqualsBuilder()
+            .append(this.location, rhs.location)
+            .append(this.number, rhs.number)
+            .isEquals();
+    }
+
     public int getNumber() {
         return number;
     }
-    public void setNumber(int number) {
-        this.number = number;
-    }
-    public Line trim() {
-        return new Line(text.trim(), number);
-    }
-    public boolean startsWith(String string) {
-        return text.startsWith(string);
-    }
 
+    public String getLocation() {
+        return location;
+    }
 }

@@ -17,7 +17,6 @@ package com.galenframework.parser;
 
 
 import com.galenframework.suite.reader.Line;
-import com.galenframework.suite.reader.Line;
 import org.apache.commons.io.IOUtils;
 
 import java.io.ByteArrayInputStream;
@@ -33,7 +32,7 @@ public class IndentationStructureParser {
     private static final int TAB_SIZE = 4;
 
     public List<StructNode> parse(String contentWithTabs) throws IOException {
-        return parse(new ByteArrayInputStream(contentWithTabs.getBytes()), "<unknown source>");
+        return parse(new ByteArrayInputStream(contentWithTabs.getBytes()), "<unknown>");
     }
 
 
@@ -74,12 +73,11 @@ public class IndentationStructureParser {
         return rootNode.getChildNodes();
     }
 
-    private void processLine(Stack<IndentationNode> stack, String line, int lineNumber, String source) {
-        StructNode newStructNode = new StructNode(line.trim());
-        newStructNode.setFileLineNumber(lineNumber);
-        newStructNode.setSource(source);
+    private void processLine(Stack<IndentationNode> stack, String text, int lineNumber, String source) {
+        StructNode newStructNode = new StructNode(text.trim());
+        newStructNode.setLine(new Line(source, lineNumber));
 
-        int calculatedIndentation = calculateIndentation(line, lineNumber);
+        int calculatedIndentation = calculateIndentation(text, lineNumber);
 
         while (calculatedIndentation <= stack.peek().indentation && stack.peek().parent != null) {
             stack.pop();
@@ -90,7 +88,7 @@ public class IndentationStructureParser {
 
         if (parent.getChildNodes() != null && parent.getChildNodes().size() > 0
                 && calculatedIndentation != stack.peek().childIndentation) {
-            throw new SyntaxException(new Line(line, lineNumber), "Inconsistent indentation");
+            throw new SyntaxException(new Line(source, lineNumber), "Inconsistent indentation");
         }
 
 

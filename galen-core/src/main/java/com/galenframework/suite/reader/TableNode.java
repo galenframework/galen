@@ -18,13 +18,11 @@ package com.galenframework.suite.reader;
 
 import com.galenframework.parser.SyntaxException;
 import com.galenframework.parser.VarsContext;
-import com.galenframework.parser.SyntaxException;
-import com.galenframework.parser.VarsContext;
 
 public class TableNode extends Node<Void>{
 
-    public TableNode(Line line) {
-        super(line);
+    public TableNode(String text, Line line) {
+        super(text, line);
     }
 
     @Override
@@ -41,7 +39,7 @@ public class TableNode extends Node<Void>{
             if (childNode instanceof TableRowNode) {
                 TableRowNode rowNode = (TableRowNode) childNode;
                 try {
-                    table.addRow(rowNode.build(context));
+                    table.addRow(rowNode.build(context), rowNode.getLine());
                 }
                 catch (SyntaxException e) {
                     e.setLine(childNode.getLine());
@@ -56,8 +54,8 @@ public class TableNode extends Node<Void>{
     }
 
     @Override
-    public Node<?> processNewNode(Line line) {
-        add(new TableRowNode(line));
+    public Node<?> processNewNode(String text, Line line) {
+        add(new TableRowNode(text, line));
         return this;
     }
 

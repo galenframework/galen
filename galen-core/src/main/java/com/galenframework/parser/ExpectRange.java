@@ -62,7 +62,7 @@ public class ExpectRange implements Expectation<Range>{
                 range = Range.between(firstValue, secondValue);
             }
             else if (shouldUseEndingWord) {
-                throw new SyntaxException(Line.UNKNOWN_LINE, "Expecting \"px\", \"to\" or \"%\", got \"" + text + "\"");
+                throw new SyntaxException("Expecting \"px\", \"to\" or \"%\", got \"" + text + "\"");
             } else {
                 range = Range.exact(firstValue);
             }
@@ -73,7 +73,7 @@ public class ExpectRange implements Expectation<Range>{
             } else if (end.equals("%")) {
                 return range.withPercentOf(readPercentageOf(reader));
             } else if (shouldUseEndingWord) {
-                throw new SyntaxException(Line.UNKNOWN_LINE, "Expecting \"" + endingWord + "\", got \"" + end + "\"");
+                throw new SyntaxException("Expecting \"" + endingWord + "\", got \"" + end + "\"");
             } else {
                 return range;
             }
@@ -138,11 +138,11 @@ public class ExpectRange implements Expectation<Range>{
         if (firstWord.equals("of")) {
             String valuePath = expectAnyWord(reader).trim();
             if (valuePath.isEmpty()) {
-                throw new SyntaxException(Line.UNKNOWN_LINE, "Missing value path for relative range");
+                throw new SyntaxException("Missing value path for relative range");
             }
             else return valuePath;
         }
-        else throw new SyntaxException(Line.UNKNOWN_LINE, "Missing value path for relative range");
+        else throw new SyntaxException("Missing value path for relative range");
     }
 
     private String expectNonNumeric(StringCharReader reader) {

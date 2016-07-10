@@ -27,8 +27,6 @@ import java.io.IOException;
 import java.util.*;
 import java.util.regex.Pattern;
 
-import static com.galenframework.suite.reader.Line.UNKNOWN_LINE;
-
 public class ForLoop {
 
     public static final String DEFAULT_VARIABLE_NAME = "index";
@@ -58,7 +56,7 @@ public class ForLoop {
             String sequenceStatement = reader.readUntilSymbol(']');
             Object[] sequence;
             if (isSimpleLoop) {
-                sequence = readSequenceForSimpleLoop(sequenceStatement);
+                sequence = readSequenceForSimpleLoop(sequenceStatement, originNode.getLine());
             } else {
                 sequence = readSequenceFromPageObjects(sequenceStatement, pageSpecHandler);
             }
@@ -98,7 +96,7 @@ public class ForLoop {
             }
             return new ForLoop(sequence, variableName, previousMapping, nextMapping, indexMapping);
         } catch (SyntaxException ex) {
-            ex.setLine(new Line(originNode.getSource(), originNode.getFileLineNumber()));
+            ex.setLine(originNode.getLine());
             throw ex;
         }
     }
@@ -131,7 +129,7 @@ public class ForLoop {
         return matchingObjects.toArray(new String[matchingObjects.size()]);
     }
 
-    private static Object[] readSequenceForSimpleLoop(String sequenceStatement) {
+    private static Object[] readSequenceForSimpleLoop(String sequenceStatement, Line line) {
         sequenceStatement = sequenceStatement.replace(" ", "");
         sequenceStatement = sequenceStatement.replace("\t", "");
         Pattern sequencePattern = Pattern.compile(".*\\-.*");
@@ -152,7 +150,7 @@ public class ForLoop {
             return sequence.toArray(new Object[sequence.size()]);
         }
         catch (Exception ex) {
-            throw new SyntaxException(UNKNOWN_LINE, "Incorrect sequence syntax: " + sequenceStatement, ex);
+            throw new SyntaxException(line, "Incorrect sequence syntax: " + sequenceStatement, ex);
         }
     }
 

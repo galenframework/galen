@@ -19,19 +19,15 @@ import com.galenframework.parser.GalenPageActionReader;
 import com.galenframework.parser.SyntaxException;
 import com.galenframework.parser.VarsContext;
 import com.galenframework.suite.GalenPageAction;
-import com.galenframework.parser.GalenPageActionReader;
-import com.galenframework.parser.SyntaxException;
-import com.galenframework.parser.VarsContext;
-import com.galenframework.suite.GalenPageAction;
 
 public class ActionNode extends Node<GalenPageAction> {
 
-    public ActionNode(Line line) {
-        super(line);
+    public ActionNode(String text, Line line) {
+        super(text, line);
     }
 
     @Override
-    public Node<?> processNewNode(Line line) {
+    public Node<?> processNewNode(String text, Line line) {
         throw new SyntaxException(line, "Incorrect nesting");
     }
 
@@ -39,7 +35,7 @@ public class ActionNode extends Node<GalenPageAction> {
     public GalenPageAction build(VarsContext context) {
         try {
             String actionText = context.process(getArguments());
-            GalenPageAction pageAction = GalenPageActionReader.readFrom(actionText);
+            GalenPageAction pageAction = GalenPageActionReader.readFrom(actionText, getLine());
             pageAction.setOriginalCommand(actionText);
             return pageAction;
         }

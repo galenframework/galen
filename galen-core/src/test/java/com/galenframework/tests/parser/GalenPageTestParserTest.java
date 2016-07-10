@@ -58,7 +58,7 @@ public class GalenPageTestParserTest {
     }
     
     @Test(dataProvider="provideGoodSamples") public void shouldParse_galenPageTest_successfully(String text, GalenPageTest expected) {
-        GalenPageTest real = GalenPageTestReader.readFrom(text);
+        GalenPageTest real = GalenPageTestReader.readFrom(text, null);
         assertThat(real, is(expected));
     }
     

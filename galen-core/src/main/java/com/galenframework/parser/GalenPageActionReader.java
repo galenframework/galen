@@ -15,7 +15,6 @@
 ******************************************************************************/
 package com.galenframework.parser;
 
-import static com.galenframework.suite.reader.Line.UNKNOWN_LINE;
 
 import java.awt.Dimension;
 import java.util.HashMap;
@@ -27,10 +26,8 @@ import com.galenframework.specs.page.Locator;
 import com.galenframework.suite.actions.*;
 import com.galenframework.suite.reader.Line;
 import com.galenframework.utils.GalenUtils;
-import com.galenframework.specs.page.Locator;
 import com.galenframework.suite.GalenPageAction;
 import com.galenframework.suite.actions.GalenPageActionWait.UntilType;
-import com.galenframework.utils.GalenUtils;
 
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.Options;
@@ -39,11 +36,11 @@ import org.apache.commons.lang3.tuple.Pair;
 
 public class GalenPageActionReader {
 
-    public static GalenPageAction readFrom(String actionText) {
+    public static GalenPageAction readFrom(String actionText, Line line) {
         String[] args = CommandLineParser.parseCommandLine(actionText);
         
         if (args.length < 2) {
-            throw new SyntaxException(Line.UNKNOWN_LINE, "Cannot parse: " + actionText);
+            throw new SyntaxException(line, "Cannot parse: " + actionText);
         }
         
         if (args[0].equals("inject")) {
@@ -73,7 +70,7 @@ public class GalenPageActionReader {
         else if (args[0].equals("dump")) {
             return dumpPageActionFrom(args, actionText);
         }
-        else throw new SyntaxException(Line.UNKNOWN_LINE, "Unknown action: " + args[0]);
+        else throw new SyntaxException(line, "Unknown action: " + args[0]);
     }
 
 
@@ -167,7 +164,7 @@ public class GalenPageActionReader {
             String[] leftoverArgs = cmd.getArgs();
 
             if (leftoverArgs == null || leftoverArgs.length < 2) {
-                throw new SyntaxException(Line.UNKNOWN_LINE, "There are no page specs: " + originalText);
+                throw new SyntaxException("There are no page specs: " + originalText);
             }
 
             Integer maxWidth = null;
@@ -195,7 +192,7 @@ public class GalenPageActionReader {
                     .withOnlyImages(onlyImages);
         }
         catch (Exception e) {
-            throw new SyntaxException(Line.UNKNOWN_LINE, "Couldn't parse: " + originalText, e);
+            throw new SyntaxException("Couldn't parse: " + originalText, e);
         }
     }
 

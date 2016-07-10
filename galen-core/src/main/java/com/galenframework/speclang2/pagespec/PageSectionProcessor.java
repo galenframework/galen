@@ -220,13 +220,13 @@ public class PageSectionProcessor {
         try {
             spec = pageSpecHandler.getSpecReader().read(specText, pageSpecHandler.getContextPath());
         } catch (SyntaxException ex) {
-            ex.setLine(new Line(specNode.getSource(), specNode.getFileLineNumber()));
+            ex.setLine(specNode.getLine());
             throw ex;
         }
         spec.setOnlyWarn(onlyWarn);
         spec.setAlias(alias);
-        if (specNode.getSource() != null) {
-            spec.setPlace(new Place(specNode.getSource(), specNode.getFileLineNumber()));
+        if (specNode.getLine() != null) {
+            spec.setPlace(new Place(specNode.getLine().getLocation(), specNode.getLine().getNumber()));
         }
         spec.setProperties(pageSpecHandler.getProperties());
         spec.setJsVariables(pageSpecHandler.getJsVariables());

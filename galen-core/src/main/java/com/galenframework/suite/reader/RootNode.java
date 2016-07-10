@@ -26,7 +26,7 @@ import com.galenframework.tests.GalenBasicTest;
 public class RootNode extends Node<List<GalenBasicTest>> {
 
     public RootNode() {
-        super(null);
+        super(null, null);
     }
     
     
@@ -36,12 +36,12 @@ public class RootNode extends Node<List<GalenBasicTest>> {
     }
 
     @Override
-    public Node<?> processNewNode(Line line) {
-        if (line.startsWith(" ")) {
+    public Node<?> processNewNode(String text, Line line) {
+        if (text.startsWith(" ")) {
             throw new SyntaxException(line, "Should not start with space");
         }
         
-        TestNode suiteNode = new TestNode(line);
+        TestNode suiteNode = new TestNode(text, line);
         add(suiteNode);
         return suiteNode;
     }

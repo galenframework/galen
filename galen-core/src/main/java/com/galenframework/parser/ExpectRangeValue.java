@@ -58,7 +58,7 @@ public class ExpectRangeValue implements Expectation<RangeValue> {
             return RangeValue.parseRangeValue(doubleText);
         }
         catch (Exception e) {
-            throw new SyntaxException(Line.UNKNOWN_LINE, format("Cannot parse range value: \"%s\"", doubleText), e);
+            throw new SyntaxException(format("Cannot parse range value: \"%s\"", doubleText), e);
         }
     }
 }

@@ -15,6 +15,7 @@
 ******************************************************************************/
 package com.galenframework.parser;
 
+import com.galenframework.suite.reader.Line;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -26,8 +27,7 @@ public class StructNode {
     public static final StructNode UNKNOWN_SOURCE = new StructNode();
     private String name;
     private List<StructNode> childNodes;
-    private int fileLineNumber = -1;
-    private String source = "<unknown source>";
+    private Line line;
 
     public StructNode(String name) {
         this.name = name;
@@ -75,8 +75,7 @@ public class StructNode {
         return new EqualsBuilder()
                 .append(this.name, rhs.name)
                 .append(this.childNodes, rhs.childNodes)
-                .append(this.fileLineNumber, rhs.fileLineNumber)
-                .append(this.source, rhs.source)
+                .append(this.line, rhs.line)
                 .isEquals();
     }
 
@@ -85,8 +84,7 @@ public class StructNode {
         return new HashCodeBuilder()
                 .append(name)
                 .append(childNodes)
-                .append(fileLineNumber)
-                .append(source)
+                .append(line)
                 .toHashCode();
     }
 
@@ -95,25 +93,8 @@ public class StructNode {
         return new ToStringBuilder(this)
                 .append("name", name)
                 .append("childNodes", childNodes)
-                .append("fileLineNumber", fileLineNumber)
-                .append("source", source)
+                .append("line", line)
                 .toString();
-    }
-
-    public int getFileLineNumber() {
-        return fileLineNumber;
-    }
-
-    public void setFileLineNumber(int fileLineNumber) {
-        this.fileLineNumber = fileLineNumber;
-    }
-
-    public String getSource() {
-        return source;
-    }
-
-    public void setSource(String source) {
-        this.source = source;
     }
 
     public boolean hasChildNodes() {
@@ -146,5 +127,13 @@ public class StructNode {
             }
         }
         return builder.toString();
+    }
+
+    public Line getLine() {
+        return line;
+    }
+
+    public void setLine(Line line) {
+        this.line = line;
     }
 }

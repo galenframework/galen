@@ -386,8 +386,7 @@ public class PageSpecHandler implements VarsParserJsFunctions {
         }
 
         StructNode processedNode = new StructNode(result);
-        processedNode.setFileLineNumber(originNode.getFileLineNumber());
-        processedNode.setSource(originNode.getSource());
+        processedNode.setLine(originNode.getLine());
         processedNode.setChildNodes(originNode.getChildNodes());
         return processedNode;
     }

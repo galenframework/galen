@@ -30,7 +30,7 @@ import java.util.Map;
 import com.galenframework.browser.SeleniumGridBrowserFactory;
 import com.galenframework.browser.BrowserFactory;
 import com.galenframework.browser.SeleniumGridBrowserFactory;
-import com.galenframework.parser.FileSyntaxException;
+import com.galenframework.parser.SyntaxException;
 import com.galenframework.suite.GalenPageAction;
 import com.galenframework.suite.GalenPageActions;
 import com.galenframework.suite.GalenPageTest;
@@ -390,11 +390,11 @@ public class GalenSuiteReaderTest {
     
     
     @Test(dataProvider="provideBadSamples") public void shouldGiveError_withLineNumberInformation_whenParsingIncorrectSuite(String filePath, int expectedLine, String expectedMessage) throws IOException {
-        FileSyntaxException exception = null;
+        SyntaxException exception = null;
         try {
             new GalenSuiteReader().read(new File(getClass().getResource(filePath).getFile()));
         }
-        catch (FileSyntaxException e) {
+        catch (SyntaxException e) {
             exception = e;
             System.out.println("***************");
             e.printStackTrace();
@@ -404,8 +404,7 @@ public class GalenSuiteReaderTest {
         String fullPath = getClass().getResource(filePath).getFile();
         assertThat("Exception should be thrown", exception, notNullValue());
         assertThat("Message should be", exception.getMessage(), is(expectedMessage + "\n    in " + fullPath + ":" + expectedLine));
-        assertThat("Line should be", exception.getLine(), is(expectedLine));
-        
+
     }
     
     

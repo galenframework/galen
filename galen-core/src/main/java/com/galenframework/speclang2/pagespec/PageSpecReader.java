@@ -16,7 +16,6 @@
 package com.galenframework.speclang2.pagespec;
 
 import com.galenframework.page.Page;
-import com.galenframework.parser.FileSyntaxException;
 import com.galenframework.parser.IndentationStructureParser;
 import com.galenframework.parser.StructNode;
 import com.galenframework.parser.SyntaxException;
@@ -53,29 +52,17 @@ public class PageSpecReader {
                          SectionFilter sectionFilter,
                          Properties properties,
                          Map<String, Object> jsVariables, Map<String, Locator> objects) throws IOException {
-        try {
-            IndentationStructureParser structParser = new IndentationStructureParser();
-            List<StructNode> structs = structParser.parse(inputStream, source);
+        IndentationStructureParser structParser = new IndentationStructureParser();
+        List<StructNode> structs = structParser.parse(inputStream, source);
 
-            PageSpec pageSpec = new PageSpec(objects);
+        PageSpec pageSpec = new PageSpec(objects);
 
-            PageSpecHandler pageSpecHandler = new PageSpecHandler(pageSpec, page, sectionFilter, contextPath, properties, jsVariables);
+        PageSpecHandler pageSpecHandler = new PageSpecHandler(pageSpec, page, sectionFilter, contextPath, properties, jsVariables);
 
-            List<StructNode> allProcessedChildNodes = new MacroProcessor(pageSpecHandler).process(structs);
-            new PostProcessor(pageSpecHandler).process(allProcessedChildNodes);
+        List<StructNode> allProcessedChildNodes = new MacroProcessor(pageSpecHandler).process(structs);
+        new PostProcessor(pageSpecHandler).process(allProcessedChildNodes);
 
-
-            return pageSpecHandler.buildPageSpec();
-        } catch (SyntaxException ex) {
-            String exceptionSource = "<unknown location>";
-            Integer lineNumber = -1;
-            if (ex.getLine() != null) {
-                exceptionSource = ex.getLine().getText();
-                lineNumber = ex.getLine().getNumber();
-            }
-
-            throw new FileSyntaxException(ex, exceptionSource, lineNumber);
-        }
+        return pageSpecHandler.buildPageSpec();
     }
 
 

@@ -43,7 +43,7 @@ public class ObjectDefinitionProcessor {
 
     public List<StructNode> process(StringCharReader reader, StructNode structNode) {
         if (!reader.getTheRest().isEmpty()) {
-            throw new SyntaxException(new Line(structNode.getSource(), structNode.getFileLineNumber()), "Objects definition does not take any arguments");
+            throw new SyntaxException(structNode.getLine(), "Objects definition does not take any arguments");
         }
 
         if (structNode.getChildNodes() != null) {
@@ -155,7 +155,7 @@ public class ObjectDefinitionProcessor {
     private Locator readLocatorFromString(StructNode structNode, String objectName, String locatorText) {
 
         if (locatorText.isEmpty()) {
-            throw new SyntaxException(new Line(structNode.getSource(), structNode.getFileLineNumber()),
+            throw new SyntaxException(structNode.getLine(),
                     "Missing locator for object \"" + objectName + "\"");
         }
 
@@ -193,7 +193,7 @@ public class ObjectDefinitionProcessor {
     private String expectCorrectionsOrId(StructNode structNode, StringCharReader reader, String objectName) {
         String word = new ExpectWord().stopOnTheseSymbols('(').read(reader).trim();
         if (word.isEmpty()) {
-            throw new SyntaxException(new Line(structNode.getSource(), structNode.getFileLineNumber()),
+            throw new SyntaxException(structNode.getLine(),
                     format("Missing locator for object \"%s\"", objectName));
         }
         return word;

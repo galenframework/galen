@@ -16,7 +16,6 @@
 package com.galenframework.specs;
 
 import static java.lang.String.format;
-import static com.galenframework.suite.reader.Line.UNKNOWN_LINE;
 import com.galenframework.parser.SyntaxException;
 
 public enum Alignment {
@@ -42,7 +41,7 @@ public enum Alignment {
         else if (alignmentText.equals("all")) {
             return ALL;
         }
-        else throw new SyntaxException(UNKNOWN_LINE, format("Unknown alignment \"%s\"", alignmentText));
+        else throw new SyntaxException(format("Unknown alignment \"%s\"", alignmentText));
     }
     
     @Override

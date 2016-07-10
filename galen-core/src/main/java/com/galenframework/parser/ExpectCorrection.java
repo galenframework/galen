@@ -16,8 +16,6 @@
 package com.galenframework.parser;
 
 import static com.galenframework.parser.Expectations.isDelimeter;
-import static com.galenframework.suite.reader.Line.UNKNOWN_LINE;
-
 import com.galenframework.specs.page.CorrectionsRect;
 
 public class ExpectCorrection implements Expectation<CorrectionsRect> {
@@ -38,13 +36,13 @@ public class ExpectCorrection implements Expectation<CorrectionsRect> {
             }
             else if (!isDelimeter(symbol)) {
                 if (!started) {
-                    throw new SyntaxException(UNKNOWN_LINE, "Error parsing corrections. Missing starting '(' symbol");
+                    throw new SyntaxException("Error parsing corrections. Missing starting '(' symbol");
                 }
                 numbersText.append(symbol);
             }
         }
         
-        throw new SyntaxException(UNKNOWN_LINE, "Error parsing corrections. Missing closing ')' symbol");
+        throw new SyntaxException("Error parsing corrections. Missing closing ')' symbol");
     }
 
     private CorrectionsRect processCorrection(String numbersText) {
@@ -53,9 +51,9 @@ public class ExpectCorrection implements Expectation<CorrectionsRect> {
             if (values.length == 4) {
                 return new CorrectionsRect(readCorrection(values[0]), readCorrection(values[1]), readCorrection(values[2]), readCorrection(values[3]));
             }
-            else throw new SyntaxException(UNKNOWN_LINE, "Wrong number of arguments in corrections: " + values.length);
+            else throw new SyntaxException("Wrong number of arguments in corrections: " + values.length);
         }
-        else throw new SyntaxException(UNKNOWN_LINE, "Error parsing corrections. No values provided");
+        else throw new SyntaxException("Error parsing corrections. No values provided");
     }
 
     private CorrectionsRect.Correction readCorrection(String value) {

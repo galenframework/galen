@@ -23,21 +23,16 @@ import com.galenframework.parser.SyntaxException;
 import com.galenframework.parser.VarsContext;
 import com.galenframework.suite.GalenPageAction;
 import com.galenframework.suite.GalenPageTest;
-import com.galenframework.parser.GalenPageTestReader;
-import com.galenframework.parser.SyntaxException;
-import com.galenframework.parser.VarsContext;
-import com.galenframework.suite.GalenPageAction;
-import com.galenframework.suite.GalenPageTest;
 
 public class PageNode extends Node<GalenPageTest> {
 
-    public PageNode(Line line) {
-        super(line);
+    public PageNode(String text, Line line) {
+        super(text, line);
     }
 
     @Override
-    public Node<?> processNewNode(Line line) {
-        ActionNode actionNode = new ActionNode(line);
+    public Node<?> processNewNode(String text, Line line) {
+        ActionNode actionNode = new ActionNode(text, line);
         add(actionNode);
         return actionNode;
     }
@@ -46,7 +41,7 @@ public class PageNode extends Node<GalenPageTest> {
     public GalenPageTest build(VarsContext context) {
         GalenPageTest pageTest;
         try {
-            pageTest = GalenPageTestReader.readFrom(context.process(getArguments()));
+            pageTest = GalenPageTestReader.readFrom(context.process(getArguments()), getLine());
         }
         catch (SyntaxException e) {
             e.setLine(getLine());

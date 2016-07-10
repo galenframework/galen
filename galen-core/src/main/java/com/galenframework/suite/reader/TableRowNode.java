@@ -23,8 +23,8 @@ import com.galenframework.parser.VarsContext;
 
 public class TableRowNode extends Node<List<String>> {
 
-    public TableRowNode(Line line) {
-        super(line);
+    public TableRowNode(String text, Line line) {
+        super(text, line);
     }
 
     @Override
@@ -52,7 +52,7 @@ public class TableRowNode extends Node<List<String>> {
     }
 
     @Override
-    public Node<?> processNewNode(Line line) {
+    public Node<?> processNewNode(String text, Line line) {
         throw new SyntaxException(line, "Wrong nesting");
     }
 

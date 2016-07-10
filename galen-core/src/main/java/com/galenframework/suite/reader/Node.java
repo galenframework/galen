@@ -26,9 +26,11 @@ public abstract class Node<T> {
     private int level = 0;
     private Node<?> parent;
     private Line line;
+    private String text;
     private int spacesIndentation = 0;
 
-    public Node(Line line) {
+    public Node(String text, Line line) {
+        this.setText(text);
         this.setLine(line);
         this.setSpacesIndentation(calculateSpacesIndentation());
     }
@@ -36,14 +38,14 @@ public abstract class Node<T> {
     private int calculateSpacesIndentation() {
         int spaces = 0;
 
-        if (line != null && line.getText() != null) {
-            return GalenSuiteLineProcessor.calculateIndentationSpaces(line.getText());
+        if (text != null) {
+            return GalenSuiteLineProcessor.calculateIndentationSpaces(text);
         }
         return spaces;
     }
 
-    private List<Node<?>> childNodes = new LinkedList<Node<?>>();
-    
+    private List<Node<?>> childNodes = new LinkedList<>();
+
     protected void add(Node<?> childNode) {
         childNode.parent = this;
         childNode.level = this.level + 1;
@@ -75,7 +77,7 @@ public abstract class Node<T> {
     }
 
 
-    public abstract Node<?> processNewNode(Line line);
+    public abstract Node<?> processNewNode(String text, Line line);
 
     public List<Node<?>> getChildNodes() {
         return childNodes;
@@ -88,7 +90,7 @@ public abstract class Node<T> {
     }
     
     public String getArguments() {
-        return line.getText().trim();
+        return text.trim();
     }
 
 
@@ -106,4 +108,11 @@ public abstract class Node<T> {
     }
 
 
+    public String getText() {
+        return text;
+    }
+
+    public void setText(String text) {
+        this.text = text;
+    }
 }

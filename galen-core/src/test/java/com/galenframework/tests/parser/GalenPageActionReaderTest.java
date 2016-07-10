@@ -43,7 +43,7 @@ public class GalenPageActionReaderTest {
     private static final Map<String, Object> EMPTY_VARIABLES = Collections.emptyMap();
 
     @Test(dataProvider="provideGoodSamples") public void shouldParse_action_successfully(String actionText, GalenPageAction expectedAction) {
-        GalenPageAction realAction = GalenPageActionReader.readFrom(actionText);
+        GalenPageAction realAction = GalenPageActionReader.readFrom(actionText, null);
         assertThat(realAction, is(expectedAction));
     }
     

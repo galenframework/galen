@@ -20,6 +20,7 @@ import com.galenframework.parser.SyntaxException;
 import com.galenframework.parser.IndentationStructureParser;
 import com.galenframework.parser.StructNode;
 import com.galenframework.parser.SyntaxException;
+import com.galenframework.suite.reader.Line;
 import org.apache.commons.io.FileUtils;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
@@ -34,8 +35,6 @@ import static org.hamcrest.Matchers.is;
 
 public class IndentationStructureParserTest {
 
-    private static final String UNKNOWN_SOURCE = "<unknown source>";
-
     @Test
     public void shouldRead_structuresFromFile() throws IOException {
         IndentationStructureParser parser = new IndentationStructureParser();
@@ -46,28 +45,32 @@ public class IndentationStructureParserTest {
         List<StructNode> nodes = parser.parse(contentWithTabs);
 
         assertThat(nodes, is(asList(
-                node("Node A 0", 6, UNKNOWN_SOURCE),
-                node("Node A 1", 8, UNKNOWN_SOURCE, asList(
-                        node("Node A 1 1", 9, UNKNOWN_SOURCE, asList(
-                                node("Node A 1 1 1", 10, UNKNOWN_SOURCE),
-                                node("Node A 1 1 2", 11, UNKNOWN_SOURCE)
-                        )),
-                        node("Node A 1 2", 12, UNKNOWN_SOURCE, asList(
-                                node("Node A 1 2 1", 13, UNKNOWN_SOURCE)
-                        ))
+            node("Node A 0", unknownLine(6)),
+            node("Node A 1", unknownLine(8), asList(
+                node("Node A 1 1", unknownLine(9), asList(
+                    node("Node A 1 1 1", unknownLine(10)),
+                    node("Node A 1 1 2", unknownLine(11))
                 )),
-                node("Node B 1", 18, UNKNOWN_SOURCE, asList(
-                        node("Node B 1 1", 19, UNKNOWN_SOURCE, asList(
-                                node("Node B 1 1 1", 20, UNKNOWN_SOURCE)
-                        )),
-                        node("Node B 1 2", 21, UNKNOWN_SOURCE),
-                        node("Node B 1 3", 22, UNKNOWN_SOURCE)
+                node("Node A 1 2", unknownLine(12), asList(
+                    node("Node A 1 2 1", unknownLine(13))
                 ))
+            )),
+            node("Node B 1", unknownLine(18), asList(
+                node("Node B 1 1", unknownLine(19), asList(
+                    node("Node B 1 1 1", unknownLine(20))
+                )),
+                node("Node B 1 2", unknownLine(21)),
+                node("Node B 1 3", unknownLine(22))
+            ))
         )));
     }
 
+    private Line unknownLine(int number) {
+        return new Line("<unknown>", number);
+    }
+
     @Test(expectedExceptions = SyntaxException.class,
-        expectedExceptionsMessageRegExp = "Inconsistent indentation",
+        expectedExceptionsMessageRegExp = "\\QInconsistent indentation\\E\n    in <unknown>:[0-9]+",
         dataProvider = "provideWrongIndentSamples")
     public void shouldGiveError_forInconsistentIndentation(String filePath) throws IOException {
         IndentationStructureParser parser = new IndentationStructureParser();
@@ -83,16 +86,14 @@ public class IndentationStructureParserTest {
         };
     }
 
-    private StructNode node(String name, int line, String source) {
+    private StructNode node(String name, Line line) {
         StructNode node = new StructNode(name);
-        node.setFileLineNumber(line);
-        node.setSource(source);
+        node.setLine(line);
         return node;
     }
-    private StructNode node(String name, int line, String source, List<StructNode> childNodes) {
-        StructNode node =  new StructNode(name);
-        node.setFileLineNumber(line);
-        node.setSource(source);
+    private StructNode node(String name, Line line, List<StructNode> childNodes) {
+        StructNode node = new StructNode(name);
+        node.setLine(line);
         node.setChildNodes(childNodes);
         return node;
     }

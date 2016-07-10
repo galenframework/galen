@@ -22,8 +22,6 @@ import java.io.InputStream;
 import java.util.List;
 import java.util.Properties;
 
-import com.galenframework.parser.FileSyntaxException;
-import com.galenframework.parser.SyntaxException;
 import com.galenframework.tests.GalenBasicTest;
 
 
@@ -37,19 +35,9 @@ public class GalenSuiteReader {
     }
     
     private List<GalenBasicTest> read(InputStream inputStream, String filePath) throws IOException {
-        try {
-            GalenSuiteLineProcessor lineProcessor = new GalenSuiteLineProcessor(new Properties(), getContextPath(filePath));
-            lineProcessor.readLines(inputStream);
-            return lineProcessor.buildSuites();
-        }
-        catch (SyntaxException e) {
-            
-            int lineNumber = -1;
-            if (e.getLine() != null) {
-                lineNumber = e.getLine().getNumber();
-            }
-            throw new FileSyntaxException(e, filePath, lineNumber);
-        }
+        GalenSuiteLineProcessor lineProcessor = new GalenSuiteLineProcessor(new Properties(), getContextPath(filePath));
+        lineProcessor.readLines(inputStream, filePath);
+        return lineProcessor.buildSuites();
     }
     private String getContextPath(String filePath) {
         return new File(filePath).getParent();

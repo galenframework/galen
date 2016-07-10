@@ -15,12 +15,12 @@
 ******************************************************************************/
 package com.galenframework.specs;
 
-import static com.galenframework.suite.reader.Line.UNKNOWN_LINE;
-
 import java.util.Arrays;
 import java.util.List;
 
 import com.galenframework.parser.SyntaxException;
+
+import static java.lang.String.format;
 
 public enum Side {
     
@@ -39,7 +39,7 @@ public enum Side {
         else if("bottom".equals(side)){
             return BOTTOM;
         }
-        throw new SyntaxException(UNKNOWN_LINE,String.format("Unknown side: \"%s\"", side));
+        throw new SyntaxException(format("Unknown side: \"%s\"", side));
     }
 
     @Override

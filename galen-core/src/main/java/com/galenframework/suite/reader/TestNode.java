@@ -20,7 +20,6 @@ import java.util.List;
 
 import com.galenframework.suite.GalenPageTest;
 import com.galenframework.parser.VarsContext;
-import com.galenframework.suite.GalenPageTest;
 import com.galenframework.tests.GalenBasicTest;
 
 public class TestNode extends Node<GalenBasicTest> {
@@ -28,13 +27,13 @@ public class TestNode extends Node<GalenBasicTest> {
     private boolean disabled = false;
     private List<String> groups;
 
-    public TestNode(Line line) {
-        super(line);
+    public TestNode(String text, Line line) {
+        super(text, line);
     }
 
     @Override
-    public Node<?> processNewNode(Line line) {
-        PageNode pageNode = new PageNode(line);
+    public Node<?> processNewNode(String text, Line line) {
+        PageNode pageNode = new PageNode(text, line);
         add(pageNode);
         return pageNode;
     }
