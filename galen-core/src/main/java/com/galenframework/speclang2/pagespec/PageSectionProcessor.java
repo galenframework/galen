@@ -25,7 +25,6 @@ import com.galenframework.parser.StructNode;
 import com.galenframework.specs.Spec;
 import com.galenframework.specs.page.ObjectSpecs;
 import com.galenframework.specs.Place;
-import com.galenframework.suite.reader.Line;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 
@@ -54,7 +53,7 @@ public class PageSectionProcessor {
             String sectionName = sectionNode.getName().substring(1, sectionNode.getName().length() - 1).trim();
             PageSection section = findSection(sectionName);
             if (section == null) {
-                section = new PageSection(sectionName);
+                section = new PageSection(sectionName, sectionNode.getPlace());
                 if (parentSection != null) {
                     parentSection.addSubSection(section);
                 } else {
@@ -67,15 +66,15 @@ public class PageSectionProcessor {
 
     private void processSection(PageSection section, List<StructNode> childNodes) throws IOException {
         for (StructNode sectionChildNode : childNodes) {
-            String childLine = sectionChildNode.getName();
-            if (isSectionDefinition(childLine)) {
+            String childPlace = sectionChildNode.getName();
+            if (isSectionDefinition(childPlace)) {
                 new PageSectionProcessor(pageSpecHandler, section).process(sectionChildNode);
-            } else if (isRule(childLine)) {
+            } else if (isRule(childPlace)) {
                 processSectionRule(section, sectionChildNode);
-            } else if (isObject(childLine)) {
+            } else if (isObject(childPlace)) {
                 processObject(section, sectionChildNode);
             } else {
-                throw new SyntaxException(sectionChildNode, "Unknown statement: " + childLine);
+                throw new SyntaxException(sectionChildNode, "Unknown statement: " + childPlace);
             }
         }
     }
@@ -85,7 +84,7 @@ public class PageSectionProcessor {
 
         Pair<PageRule, Map<String, String>> rule = findAndProcessRule(ruleText, ruleNode);
 
-        PageSection ruleSection = new PageSection(ruleText);
+        PageSection ruleSection = new PageSection(ruleText, ruleNode.getPlace());
         section.addSubSection(ruleSection);
 
         List<StructNode> resultingNodes;
@@ -220,13 +219,13 @@ public class PageSectionProcessor {
         try {
             spec = pageSpecHandler.getSpecReader().read(specText, pageSpecHandler.getContextPath());
         } catch (SyntaxException ex) {
-            ex.setLine(specNode.getLine());
+            ex.setPlace(specNode.getPlace());
             throw ex;
         }
         spec.setOnlyWarn(onlyWarn);
         spec.setAlias(alias);
-        if (specNode.getLine() != null) {
-            spec.setPlace(new Place(specNode.getLine().getLocation(), specNode.getLine().getNumber()));
+        if (specNode.getPlace() != null) {
+            spec.setPlace(new Place(specNode.getPlace().getFilePath(), specNode.getPlace().getLineNumber()));
         }
         spec.setProperties(pageSpecHandler.getProperties());
         spec.setJsVariables(pageSpecHandler.getJsVariables());
@@ -246,8 +245,8 @@ public class PageSectionProcessor {
     }
 
 
-    private boolean isObject(String childLine) {
-        return childLine.endsWith(":");
+    private boolean isObject(String childPlace) {
+        return childPlace.endsWith(":");
     }
 
     public static boolean isSectionDefinition(String name) {

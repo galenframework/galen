@@ -16,11 +16,12 @@
 package com.galenframework.suite.reader;
 
 import com.galenframework.parser.VarsContext;
+import com.galenframework.specs.Place;
 
 public class SetNode extends Node<Void> {
 
-    public SetNode(String text, Line line) {
-        super(text, line);
+    public SetNode(String text, Place place) {
+        super(text, place);
     }
 
     @Override
@@ -48,8 +49,8 @@ public class SetNode extends Node<Void> {
     }
 
     @Override
-    public Node<?> processNewNode(String text, Line line) {
-        add(new SetNode(text.trim(), line));
+    public Node<?> processNewNode(String text, Place place) {
+        add(new SetNode(text.trim(), place));
         return this;
     }
 

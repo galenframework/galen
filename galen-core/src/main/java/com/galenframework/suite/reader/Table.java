@@ -22,22 +22,23 @@ import java.util.List;
 import java.util.Map;
 
 import com.galenframework.parser.SyntaxException;
+import com.galenframework.specs.Place;
 
 public class Table {
 
     private List<String> headers;
-    private List<List<String>> rows = new LinkedList<List<String>>();
+    private List<List<String>> rows = new LinkedList<>();
 
     public Table() {
     }
 
-    public void addRow(List<String> row, Line line) {
+    public void addRow(List<String> row, Place place) {
         if (headers == null) {
             headers = row;
         }
         else {
             if (row.size() != headers.size()) {
-                throw new SyntaxException(line, "Amount of cells in a row is not the same in header");
+                throw new SyntaxException(place, "Amount of cells in a row is not the same in header");
             }
             rows.add(row);
         }

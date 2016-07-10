@@ -24,7 +24,6 @@ import com.galenframework.parser.SyntaxException;
 import com.galenframework.specs.page.Locator;
 import com.galenframework.specs.page.PageSpec;
 import com.galenframework.speclang2.pagespec.SectionFilter;
-import com.galenframework.suite.reader.Line;
 import com.galenframework.page.Page;
 import com.galenframework.page.PageElement;
 import com.galenframework.specs.Range;

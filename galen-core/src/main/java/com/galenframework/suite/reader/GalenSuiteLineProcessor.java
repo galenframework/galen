@@ -27,6 +27,7 @@ import java.util.List;
 import java.util.Properties;
 
 import com.galenframework.parser.SyntaxException;
+import com.galenframework.specs.Place;
 import com.galenframework.utils.GalenUtils;
 import com.galenframework.parser.VarsContext;
 import com.galenframework.tests.GalenBasicTest;
@@ -45,10 +46,10 @@ public class GalenSuiteLineProcessor {
         this.properties = properties;
     }
 
-    public void processLine(String text, Line line) throws IOException {
+    public void processLine(String text, Place place) throws IOException {
         if (!isBlank(text) && !isCommented(text) && !isSeparator(text)) {
             if (text.startsWith("@@")) {
-                Node<?> node = processSpecialInstruction(text.substring(2).trim(), line);
+                Node<?> node = processSpecialInstruction(text.substring(2).trim(), place);
                 if (node != null) {
                     currentNode = node;
                 }
@@ -57,7 +58,7 @@ public class GalenSuiteLineProcessor {
                 int spaces = calculateIndentationSpaces(text);
                 
                 Node<?> processingNode = currentNode.findProcessingNodeByIndentation(spaces);
-                Node<?> newNode = processingNode.processNewNode(text, line);
+                Node<?> newNode = processingNode.processNewNode(text, place);
                 
                 if (newNode instanceof TestNode) {
                     if (disableNextSuite) {
@@ -76,7 +77,7 @@ public class GalenSuiteLineProcessor {
         }
     }
     
-    private Node<?> processSpecialInstruction(String text, Line line) throws FileNotFoundException, IOException {
+    private Node<?> processSpecialInstruction(String text, Place place) throws IOException {
         currentNode = rootNode;
         int indexOfFirstSpace = text.indexOf(' ');
         
@@ -92,13 +93,13 @@ public class GalenSuiteLineProcessor {
         }
         
         if (firstWord.equals("set")) {
-            return processInstructionSet(leftover, line);
+            return processInstructionSet(leftover, place);
         }
         else if (firstWord.equals("table")){
-            return processTable(leftover, line);
+            return processTable(leftover, place);
         }
         else if (firstWord.equals("parameterized")){
-            return processParameterized(leftover, line);
+            return processParameterized(leftover, place);
         }
         else if (firstWord.equals("disabled")) {
             markNextSuiteAsDisabled();
@@ -109,16 +110,16 @@ public class GalenSuiteLineProcessor {
             return null;
         }
         else if (firstWord.equals("import")) {
-            List<Node<?>> nodes = importSuite(leftover, line);
+            List<Node<?>> nodes = importSuite(leftover, place);
             rootNode.getChildNodes().addAll(nodes);
             return null;
         }
         else throw new SuiteReaderException("Unknown instruction: " + firstWord);
     }
 
-    private List<Node<?>> importSuite(String path, Line line) throws IOException {
+    private List<Node<?>> importSuite(String path, Place place) throws IOException {
         if (path.isEmpty()) {
-            throw new SyntaxException(line, "No path specified for importing");
+            throw new SyntaxException(place, "No path specified for importing");
         }
         
         String fullChildPath = contextPath + File.separator + path;
@@ -127,7 +128,7 @@ public class GalenSuiteLineProcessor {
         
         File file = new File(fullChildPath);
         if (!file.exists()) {
-            throw new SyntaxException(line, "File doesn't exist: " + file.getAbsolutePath());
+            throw new SyntaxException(place, "File doesn't exist: " + file.getAbsolutePath());
         }
         childProcessor.readLines(new FileInputStream(file), fullChildPath);
         return childProcessor.rootNode.getChildNodes();
@@ -152,8 +153,8 @@ public class GalenSuiteLineProcessor {
         this.disableNextSuite = true;
     }
 
-    private Node<?> processParameterized(String text, Line line) {
-        ParameterizedNode parameterizedNode = new ParameterizedNode(text, line);
+    private Node<?> processParameterized(String text, Place place) {
+        ParameterizedNode parameterizedNode = new ParameterizedNode(text, place);
         
         if (disableNextSuite) {
             parameterizedNode.setDisabled(true);
@@ -169,14 +170,14 @@ public class GalenSuiteLineProcessor {
         return parameterizedNode;
     }
 
-    private Node<?> processTable(String text, Line line) {
-        TableNode tableNode = new TableNode(text, line);
+    private Node<?> processTable(String text, Place place) {
+        TableNode tableNode = new TableNode(text, place);
         currentNode.add(tableNode);
         return tableNode;
     }
 
-    private Node<?> processInstructionSet(String text, Line line) {
-        SetNode newNode = new SetNode(text, line);
+    private Node<?> processInstructionSet(String text, Place place) {
+        SetNode newNode = new SetNode(text, place);
         currentNode.add(newNode);
         return newNode;
     }
@@ -231,7 +232,7 @@ public class GalenSuiteLineProcessor {
             lineNumber++;
 
             lineText = GalenUtils.removeNonPrintableControlSymbols(lineText);
-            processLine(lineText, new Line(sourceName, lineNumber));
+            processLine(lineText, new Place(sourceName, lineNumber));
             lineText = bufferedReader.readLine();
         }
     }

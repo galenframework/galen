@@ -18,7 +18,6 @@ package com.galenframework.speclang2.pagespec;
 import com.galenframework.page.Page;
 import com.galenframework.parser.IndentationStructureParser;
 import com.galenframework.parser.StructNode;
-import com.galenframework.parser.SyntaxException;
 import com.galenframework.specs.page.Locator;
 import com.galenframework.specs.page.PageSpec;
 import com.galenframework.utils.GalenUtils;

@@ -77,4 +77,8 @@ public class Place {
     public String toPrettyString() {
         return filePath + ":" + lineNumber;
     }
+
+    public String toExceptionMessage() {
+        return "in " + toPrettyString();
+    }
 }

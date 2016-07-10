@@ -21,6 +21,7 @@ import java.util.List;
 
 import com.galenframework.parser.SyntaxException;
 import com.galenframework.parser.VarsContext;
+import com.galenframework.specs.Place;
 import com.galenframework.tests.GalenBasicTest;
 
 public class RootNode extends Node<List<GalenBasicTest>> {
@@ -36,12 +37,12 @@ public class RootNode extends Node<List<GalenBasicTest>> {
     }
 
     @Override
-    public Node<?> processNewNode(String text, Line line) {
+    public Node<?> processNewNode(String text, Place place) {
         if (text.startsWith(" ")) {
-            throw new SyntaxException(line, "Should not start with space");
+            throw new SyntaxException(place, "Should not start with space");
         }
         
-        TestNode suiteNode = new TestNode(text, line);
+        TestNode suiteNode = new TestNode(text, place);
         add(suiteNode);
         return suiteNode;
     }

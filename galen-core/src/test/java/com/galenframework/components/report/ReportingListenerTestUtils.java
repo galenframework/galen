@@ -67,7 +67,7 @@ public class ReportingListenerTestUtils {
         action.setOriginalCommand("check homepage.spec --include all,mobile");
         validationListener.onBeforePageAction(action);
         {
-            PageSection section1 = sectionWithName("");
+            PageSection section1 = new PageSection("", new Place("specs.spec", 5));
             validationListener.onBeforeSection(pageValidation, section1);
             
             validationListener.onObject(pageValidation, "objectA1"); {
@@ -85,17 +85,17 @@ public class ReportingListenerTestUtils {
                 validationListener.onAfterSpecGroup(pageValidation, "some spec group");
 
                 onSpecSuccess(validationListener, pageValidation, "objectA1",
-                        new SpecWidth(between(10, 20))
-                                .withOriginalText("width 10 to 20px")
-                                .withPlace(new Place("specs.spec", 12))
-                                .withAlias("Some alias"),
-                        new ValidationResult(NO_SPEC, asList(new ValidationObject(new Rect(10, 10, 100, 50), "objectA1"))));
+                    new SpecWidth(between(10, 20))
+                        .withOriginalText("width 10 to 20px")
+                        .withPlace(new Place("specs.spec", 12))
+                        .withAlias("Some alias"),
+                    new ValidationResult(NO_SPEC, asList(new ValidationObject(new Rect(10, 10, 100, 50), "objectA1"))));
 
                 onSpecSuccess(validationListener, pageValidation, "objectA1",
-                        new SpecWidth(between(10, 20))
-                                .withOriginalText("width 10 to 20px")
-                                .withPlace(new Place("specs.spec", 12)),
-                        new ValidationResult(NO_SPEC, asList(new ValidationObject(new Rect(10, 10, 100, 50), "objectA1"))));
+                    new SpecWidth(between(10, 20))
+                        .withOriginalText("width 10 to 20px")
+                        .withPlace(new Place("specs.spec", 12)),
+                    new ValidationResult(NO_SPEC, asList(new ValidationObject(new Rect(10, 10, 100, 50), "objectA1"))));
             }
             validationListener.onAfterObject(pageValidation, "objectA1");
             
@@ -126,7 +126,7 @@ public class ReportingListenerTestUtils {
             
             validationListener.onAfterSection(pageValidation, section1);
             
-            PageSection section2 = sectionWithName("some section 2");
+            PageSection section2 = new PageSection("some section 2", new Place("specs.spec", 14));
             validationListener.onBeforeSection(pageValidation, section2);
             
             validationListener.onObject(pageValidation, "objectA1"); {
@@ -144,7 +144,7 @@ public class ReportingListenerTestUtils {
                 //Doing sub-layout call
                 {
                     validationListener.onSubLayout(pageValidation, "objectA1");
-                    PageSection subSection = sectionWithName("Sub section");
+                    PageSection subSection = new PageSection("Sub section", new Place("specs.spec", 15));
                     validationListener.onBeforeSection(pageValidation, subSection);
 
                     validationListener.onObject(pageValidation, "sub-objectA1"); {
@@ -185,7 +185,7 @@ public class ReportingListenerTestUtils {
 
         validationListener.onBeforePageAction(action);
         {
-            PageSection section1 = sectionWithName("some section 1");
+            PageSection section1 = new PageSection("some section 1", new Place("specs.spec", 16));
             validationListener.onBeforeSection(pageValidation, section1);
             
             validationListener.onObject(pageValidation, "objectB1"); {
@@ -263,11 +263,4 @@ public class ReportingListenerTestUtils {
         test.setReport(report);
         suiteListener.afterTestSuite(asList(test));
     }
-
-    private static PageSection sectionWithName(String name) {
-        PageSection section = new PageSection();
-        section.setName(name);
-        return section;
-    }
-
 }

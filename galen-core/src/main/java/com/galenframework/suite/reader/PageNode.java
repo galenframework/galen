@@ -21,18 +21,19 @@ import java.util.List;
 import com.galenframework.parser.GalenPageTestReader;
 import com.galenframework.parser.SyntaxException;
 import com.galenframework.parser.VarsContext;
+import com.galenframework.specs.Place;
 import com.galenframework.suite.GalenPageAction;
 import com.galenframework.suite.GalenPageTest;
 
 public class PageNode extends Node<GalenPageTest> {
 
-    public PageNode(String text, Line line) {
-        super(text, line);
+    public PageNode(String text, Place place) {
+        super(text, place);
     }
 
     @Override
-    public Node<?> processNewNode(String text, Line line) {
-        ActionNode actionNode = new ActionNode(text, line);
+    public Node<?> processNewNode(String text, Place place) {
+        ActionNode actionNode = new ActionNode(text, place);
         add(actionNode);
         return actionNode;
     }
@@ -41,10 +42,10 @@ public class PageNode extends Node<GalenPageTest> {
     public GalenPageTest build(VarsContext context) {
         GalenPageTest pageTest;
         try {
-            pageTest = GalenPageTestReader.readFrom(context.process(getArguments()), getLine());
+            pageTest = GalenPageTestReader.readFrom(context.process(getArguments()), getPlace());
         }
         catch (SyntaxException e) {
-            e.setLine(getLine());
+            e.setPlace(getPlace());
             throw e;
         }
         

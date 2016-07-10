@@ -20,18 +20,19 @@ import java.util.List;
 
 import com.galenframework.parser.SyntaxException;
 import com.galenframework.parser.VarsContext;
+import com.galenframework.specs.Place;
 
 public abstract class Node<T> {
 
     private int level = 0;
     private Node<?> parent;
-    private Line line;
+    private Place place;
     private String text;
     private int spacesIndentation = 0;
 
-    public Node(String text, Line line) {
+    public Node(String text, Place line) {
         this.setText(text);
-        this.setLine(line);
+        this.setPlace(line);
         this.setSpacesIndentation(calculateSpacesIndentation());
     }
     
@@ -52,12 +53,12 @@ public abstract class Node<T> {
         
         int spaceDiff = childNode.getSpacesIndentation() - this.getSpacesIndentation();
         if (spaceDiff > 8) {
-            throw new SyntaxException(childNode.line, "Incorrect indentation. Should use from 1 to 8 spaces");
+            throw new SyntaxException(childNode.place, "Incorrect indentation. Should use from 1 to 8 spaces");
         }
         
         if (getChildNodes().size() > 0) {
             if (getChildNodes().get(0).getSpacesIndentation() != childNode.getSpacesIndentation()) {
-                throw new SyntaxException(childNode.line, "Incorrect indentation. Amount of spaces in indentation should be the same within one level");
+                throw new SyntaxException(childNode.place, "Incorrect indentation. Amount of spaces in indentation should be the same within one level");
             }
         }
         
@@ -77,7 +78,7 @@ public abstract class Node<T> {
     }
 
 
-    public abstract Node<?> processNewNode(String text, Line line);
+    public abstract Node<?> processNewNode(String text, Place line);
 
     public List<Node<?>> getChildNodes() {
         return childNodes;
@@ -85,8 +86,8 @@ public abstract class Node<T> {
 
 
 
-    public Line getLine() {
-        return line;
+    public Place getPlace() {
+        return place;
     }
     
     public String getArguments() {
@@ -95,8 +96,8 @@ public abstract class Node<T> {
 
 
 
-    public void setLine(Line line) {
-        this.line = line;
+    public void setPlace(Place place) {
+        this.place = place;
     }
 
     public int getSpacesIndentation() {

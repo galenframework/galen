@@ -23,15 +23,15 @@ import java.util.List;
 import com.galenframework.browser.SeleniumGridBrowserFactory;
 import com.galenframework.browser.JsBrowserFactory;
 import com.galenframework.browser.SeleniumBrowserFactory;
+import com.galenframework.specs.Place;
 import com.galenframework.suite.GalenPageTest;
-import com.galenframework.suite.reader.Line;
 import com.galenframework.utils.GalenUtils;
 
 import org.openqa.selenium.Platform;
 
 public class GalenPageTestReader {
 
-    public static GalenPageTest readFrom(String text, Line line) {
+    public static GalenPageTest readFrom(String text, Place line) {
         
         String title = text.trim();
         
@@ -74,7 +74,7 @@ public class GalenPageTestReader {
             .withBrowserFactory(new JsBrowserFactory(args[1], stripFirst(2, args)))
             .withTitle(title);
     }
-    private static GalenPageTest seleniumGalenPageTest(String title, String[] args, String originalText, Line line) {
+    private static GalenPageTest seleniumGalenPageTest(String title, String[] args, String originalText, Place line) {
         if (args.length < 3) {
             throw new SyntaxException(line, "Incorrect amount of arguments: " + originalText);
         }
@@ -100,12 +100,12 @@ public class GalenPageTestReader {
         }
         else return args;
     }
-    private static GalenPageTest gridGalenPageTest(String[] args, String originalText, Line line) {
+    private static GalenPageTest gridGalenPageTest(String[] args, String originalText, Place place) {
         GalenCommand command = new GalenCommandLineParser().parse(args);
         List<String> leftovers = command.getLeftovers();
         
         if (leftovers.size() == 0) {
-            throw new SyntaxException(line, "Cannot parse grid arguments: " + originalText);
+            throw new SyntaxException(place, "Cannot parse grid arguments: " + originalText);
         }
 
         String gridUrl = leftovers.get(0);

@@ -23,7 +23,6 @@ import com.galenframework.specs.page.CorrectionsRect;
 import com.galenframework.page.Page;
 import com.galenframework.specs.page.Locator;
 import com.galenframework.parser.StringCharReader;
-import com.galenframework.suite.reader.Line;
 import com.galenframework.utils.GalenUtils;
 
 import java.util.*;
@@ -43,7 +42,7 @@ public class ObjectDefinitionProcessor {
 
     public List<StructNode> process(StringCharReader reader, StructNode structNode) {
         if (!reader.getTheRest().isEmpty()) {
-            throw new SyntaxException(structNode.getLine(), "Objects definition does not take any arguments");
+            throw new SyntaxException(structNode.getPlace(), "Objects definition does not take any arguments");
         }
 
         if (structNode.getChildNodes() != null) {
@@ -155,7 +154,7 @@ public class ObjectDefinitionProcessor {
     private Locator readLocatorFromString(StructNode structNode, String objectName, String locatorText) {
 
         if (locatorText.isEmpty()) {
-            throw new SyntaxException(structNode.getLine(),
+            throw new SyntaxException(structNode.getPlace(),
                     "Missing locator for object \"" + objectName + "\"");
         }
 
@@ -193,7 +192,7 @@ public class ObjectDefinitionProcessor {
     private String expectCorrectionsOrId(StructNode structNode, StringCharReader reader, String objectName) {
         String word = new ExpectWord().stopOnTheseSymbols('(').read(reader).trim();
         if (word.isEmpty()) {
-            throw new SyntaxException(structNode.getLine(),
+            throw new SyntaxException(structNode.getPlace(),
                     format("Missing locator for object \"%s\"", objectName));
         }
         return word;

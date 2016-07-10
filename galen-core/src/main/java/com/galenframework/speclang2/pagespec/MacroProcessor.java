@@ -169,7 +169,7 @@ public class MacroProcessor {
     private StructNode processNonMacroStatement(StructNode processedNode) throws IOException {
         if (processedNode.getChildNodes() != null) {
             StructNode fullyProcessed = new StructNode(processedNode.getName());
-            fullyProcessed.setLine(processedNode.getLine());
+            fullyProcessed.setPlace(processedNode.getPlace());
             fullyProcessed.setChildNodes(process(processedNode.getChildNodes()));
             return fullyProcessed;
         } else {

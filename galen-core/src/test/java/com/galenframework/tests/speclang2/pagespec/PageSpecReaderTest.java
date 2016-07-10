@@ -18,6 +18,7 @@ package com.galenframework.tests.speclang2.pagespec;
 import com.galenframework.page.selenium.SeleniumPage;
 import com.galenframework.parser.SyntaxException;
 import com.galenframework.speclang2.pagespec.PageSpecReader;
+import com.galenframework.specs.Place;
 import com.galenframework.specs.page.CorrectionsRect;
 import com.galenframework.specs.page.PageSection;
 import com.galenframework.browser.SeleniumBrowser;
@@ -151,6 +152,7 @@ public class PageSpecReaderTest extends PageSpecReaderTestBase {
 
         assertThat(section.getName(), is("Main section"));
         assertThat(section.getObjects().size(), is(6));
+        assertThat(section.getPlace(), is(new Place("speclang2/complex-object-expressions.gspec", 16)));
 
 
         assertThat(section.getObjects().get(0).getObjectName(), is("header"));

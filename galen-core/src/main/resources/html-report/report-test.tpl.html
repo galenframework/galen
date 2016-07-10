@@ -85,7 +85,7 @@ var reportData = ##REPORT-DATA##;
         </script>
         <script id="report-layout-section-tpl" type="text/x-handlebars-template">
             <li>
-                <a class="layout-section icon-sprite-before expand-link contains-children-true" href="#">{{name}}</a>
+                <a class="layout-section icon-sprite-before expand-link contains-children-true" href="#" title="{{place.filePath}}#{{place.lineNumber}}">{{name}}</a>
                 <div class="layout-details expand-container">
                     {{#if sections}}
                         <ul class="layout-sections">

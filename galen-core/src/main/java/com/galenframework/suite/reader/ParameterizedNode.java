@@ -20,8 +20,8 @@ import static java.lang.String.format;
 import java.util.*;
 
 import com.galenframework.parser.SyntaxException;
-import com.galenframework.parser.SyntaxException;
 import com.galenframework.parser.VarsContext;
+import com.galenframework.specs.Place;
 import com.galenframework.tests.GalenBasicTest;
 
 public class ParameterizedNode extends Node<List<GalenBasicTest>>{
@@ -31,8 +31,8 @@ public class ParameterizedNode extends Node<List<GalenBasicTest>>{
     private boolean disabled = false;
     private List<String> groups;
 
-    public ParameterizedNode(String text, Line line) {
-        super(text, line);
+    public ParameterizedNode(String text, Place place) {
+        super(text, place);
     }
 
     @Override
@@ -90,12 +90,12 @@ public class ParameterizedNode extends Node<List<GalenBasicTest>>{
         if (!line.isEmpty()) {
             int indexOfFirstSpace = line.indexOf(' ');
             if (indexOfFirstSpace < 0) {
-                throw new SyntaxException(getLine(), "Incorrect syntax.");
+                throw new SyntaxException(getPlace(), "Incorrect syntax.");
             }
             String firstWord = line.substring(0, indexOfFirstSpace).toLowerCase();
             
             if (!firstWord.equals("using")) {
-                throw new SyntaxException(getLine(), "Unknown statement: " + firstWord);
+                throw new SyntaxException(getPlace(), "Unknown statement: " + firstWord);
             }
             
             String leftover = line.substring(indexOfFirstSpace);
@@ -106,7 +106,7 @@ public class ParameterizedNode extends Node<List<GalenBasicTest>>{
                 if (!trimmedTableName.isEmpty()) {
                     Table contextTable = (Table) context.getValue(trimmedTableName);
                     if (contextTable == null) {
-                        throw new SyntaxException(getLine(), format("Table with name \"%s\" does not exist", trimmedTableName));
+                        throw new SyntaxException(getPlace(), format("Table with name \"%s\" does not exist", trimmedTableName));
                     }
                     
                     if (table == null) {
@@ -117,7 +117,7 @@ public class ParameterizedNode extends Node<List<GalenBasicTest>>{
                             table.mergeWith(contextTable);
                         }
                         catch (Exception ex) {
-                            throw new SyntaxException(getLine(), format("Cannot merge table \"%s\". Perhaps it has different amount of columns", trimmedTableName));
+                            throw new SyntaxException(getPlace(), format("Cannot merge table \"%s\". Perhaps it has different amount of columns", trimmedTableName));
                         } 
                     }
                 }
@@ -127,7 +127,7 @@ public class ParameterizedNode extends Node<List<GalenBasicTest>>{
                 table.mergeWith(tableFromChild);
             }
             catch (Exception ex) {
-                throw new SyntaxException(getLine(), format("Cannot merge in-built table. It probably has different amount of columns then in \"%s\"", line));
+                throw new SyntaxException(getPlace(), format("Cannot merge in-built table. It probably has different amount of columns then in \"%s\"", line));
             }
             
         }
@@ -144,15 +144,15 @@ public class ParameterizedNode extends Node<List<GalenBasicTest>>{
         for (Node<?> childNode : getChildNodes()) {
             if (childNode instanceof TableRowNode) {
                 TableRowNode row = (TableRowNode)childNode;
-                table.addRow(row.build(context), row.getLine());
+                table.addRow(row.build(context), row.getPlace());
             }
         }
         return table;
     }
 
     @Override
-    public Node<?> processNewNode(String text, Line line) {
-        add(new TableRowNode(text, line));
+    public Node<?> processNewNode(String text, Place place) {
+        add(new TableRowNode(text, place));
         return this;
     }
 

@@ -15,7 +15,8 @@
 ******************************************************************************/
 package com.galenframework.parser;
 
-import com.galenframework.suite.reader.Line;
+
+import com.galenframework.specs.Place;
 
 public class SyntaxException extends RuntimeException {
 
@@ -23,52 +24,52 @@ public class SyntaxException extends RuntimeException {
      * 
      */
     private static final long serialVersionUID = 421348434010710101L;
-    private static final Line NULL_LINE = null;
+    private static final Place NULL_PLACE = null;
 
-    private Line line;
+    private Place place;
     
-    public SyntaxException(Line line) {
+    public SyntaxException(Place place) {
         super();
-        this.line = line; 
+        this.place = place;
     }
 
-    public SyntaxException(Line line, String paramString, Throwable paramThrowable) {
+    public SyntaxException(Place place, String paramString, Throwable paramThrowable) {
         super(paramString, paramThrowable);
-        this.line = line;
+        this.place = place;
     }
 
     public SyntaxException(String paramString, Throwable paramThrowable) {
         super(paramString, paramThrowable);
     }
 
-    public SyntaxException(Line line, String paramString) {
+    public SyntaxException(Place place, String paramString) {
         super(paramString);
-        this.line = line;
+        this.place = place;
     }
 
-    public SyntaxException(Line line, Throwable paramThrowable) {
+    public SyntaxException(Place place, Throwable paramThrowable) {
         super(null, paramThrowable);
-        this.line = line;
+        this.place = place;
     }
     
     public SyntaxException(String message) {
-		this(NULL_LINE, message);
+		this(NULL_PLACE, message);
 	}
 
     public SyntaxException(StructNode originNode, String message) {
-        this(originNode.getLine(), message);
+        this(originNode.getPlace(), message);
     }
 
     public SyntaxException(StructNode originNode, String message, Throwable cause) {
-        this(originNode.getLine(), message, cause);
+        this(originNode.getPlace(), message, cause);
     }
 
-    public Line getLine() {
-        return line;
+    public Place getPlace() {
+        return place;
     }
 
-    public void setLine(Line line) {
-        this.line = line;
+    public void setPlace(Place place) {
+        this.place = place;
     }
 
     @Override
@@ -77,12 +78,12 @@ public class SyntaxException extends RuntimeException {
         StringBuilder builder = new StringBuilder();
         if (message != null) {
             builder.append(message);
-            if (line != null) {
+            if (place != null) {
                 builder.append("\n    ");
             }
         }
-        if (line != null) {
-            builder.append(line.toString());
+        if (place != null) {
+            builder.append(place.toExceptionMessage());
         }
 
         return builder.toString();

@@ -15,8 +15,6 @@
 ******************************************************************************/
 package com.galenframework.parser;
 
-import com.galenframework.suite.reader.Line;
-
 import static java.lang.String.format;
 import static com.galenframework.parser.Expectations.isDelimeter;
 import static com.galenframework.parser.Expectations.isNumeric;

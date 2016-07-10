@@ -15,7 +15,7 @@
 ******************************************************************************/
 package com.galenframework.parser;
 
-import com.galenframework.suite.reader.Line;
+import com.galenframework.specs.Place;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -27,7 +27,7 @@ public class StructNode {
     public static final StructNode UNKNOWN_SOURCE = new StructNode();
     private String name;
     private List<StructNode> childNodes;
-    private Line line;
+    private Place place;
 
     public StructNode(String name) {
         this.name = name;
@@ -75,7 +75,7 @@ public class StructNode {
         return new EqualsBuilder()
                 .append(this.name, rhs.name)
                 .append(this.childNodes, rhs.childNodes)
-                .append(this.line, rhs.line)
+                .append(this.place, rhs.place)
                 .isEquals();
     }
 
@@ -84,7 +84,7 @@ public class StructNode {
         return new HashCodeBuilder()
                 .append(name)
                 .append(childNodes)
-                .append(line)
+                .append(place)
                 .toHashCode();
     }
 
@@ -93,7 +93,7 @@ public class StructNode {
         return new ToStringBuilder(this)
                 .append("name", name)
                 .append("childNodes", childNodes)
-                .append("line", line)
+                .append("place", place)
                 .toString();
     }
 
@@ -129,11 +129,11 @@ public class StructNode {
         return builder.toString();
     }
 
-    public Line getLine() {
-        return line;
+    public void setPlace(Place place) {
+        this.place = place;
     }
 
-    public void setLine(Line line) {
-        this.line = line;
+    public Place getPlace() {
+        return place;
     }
 }

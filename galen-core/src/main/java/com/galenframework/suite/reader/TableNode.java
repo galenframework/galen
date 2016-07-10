@@ -18,11 +18,12 @@ package com.galenframework.suite.reader;
 
 import com.galenframework.parser.SyntaxException;
 import com.galenframework.parser.VarsContext;
+import com.galenframework.specs.Place;
 
 public class TableNode extends Node<Void>{
 
-    public TableNode(String text, Line line) {
-        super(text, line);
+    public TableNode(String text, Place place) {
+        super(text, place);
     }
 
     @Override
@@ -30,7 +31,7 @@ public class TableNode extends Node<Void>{
         
         String name = getArguments().trim();
         if (name.isEmpty()) {
-            throw new SyntaxException(getLine(), "Table name should not be empty");
+            throw new SyntaxException(getPlace(), "Table name should not be empty");
         }
         
         Table table = new Table();
@@ -39,10 +40,10 @@ public class TableNode extends Node<Void>{
             if (childNode instanceof TableRowNode) {
                 TableRowNode rowNode = (TableRowNode) childNode;
                 try {
-                    table.addRow(rowNode.build(context), rowNode.getLine());
+                    table.addRow(rowNode.build(context), rowNode.getPlace());
                 }
                 catch (SyntaxException e) {
-                    e.setLine(childNode.getLine());
+                    e.setPlace(childNode.getPlace());
                     throw e;
                 }
             }
@@ -54,8 +55,8 @@ public class TableNode extends Node<Void>{
     }
 
     @Override
-    public Node<?> processNewNode(String text, Line line) {
-        add(new TableRowNode(text, line));
+    public Node<?> processNewNode(String text, Place place) {
+        add(new TableRowNode(text, place));
         return this;
     }
 

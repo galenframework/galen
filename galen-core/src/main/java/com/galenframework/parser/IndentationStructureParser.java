@@ -16,7 +16,7 @@
 package com.galenframework.parser;
 
 
-import com.galenframework.suite.reader.Line;
+import com.galenframework.specs.Place;
 import org.apache.commons.io.IOUtils;
 
 import java.io.ByteArrayInputStream;
@@ -66,16 +66,16 @@ public class IndentationStructureParser {
         for (String line : lines) {
             lineNumber++;
             if (isProcessable(line)) {
-                processLine(nodeStack, line, lineNumber, source);
+                processPlace(nodeStack, line, lineNumber, source);
             }
         }
 
         return rootNode.getChildNodes();
     }
 
-    private void processLine(Stack<IndentationNode> stack, String text, int lineNumber, String source) {
+    private void processPlace(Stack<IndentationNode> stack, String text, int lineNumber, String source) {
         StructNode newStructNode = new StructNode(text.trim());
-        newStructNode.setLine(new Line(source, lineNumber));
+        newStructNode.setPlace(new Place(source, lineNumber));
 
         int calculatedIndentation = calculateIndentation(text, lineNumber);
 
@@ -88,7 +88,7 @@ public class IndentationStructureParser {
 
         if (parent.getChildNodes() != null && parent.getChildNodes().size() > 0
                 && calculatedIndentation != stack.peek().childIndentation) {
-            throw new SyntaxException(new Line(source, lineNumber), "Inconsistent indentation");
+            throw new SyntaxException(new Place(source, lineNumber), "Inconsistent indentation");
         }
 
 
@@ -112,7 +112,7 @@ public class IndentationStructureParser {
             }
         }
 
-        throw new SyntaxException(new Line(line, lineNumber), "This line does not have any text");
+        throw new SyntaxException(new Place(line, lineNumber), "This line does not have any text");
     }
 
     private boolean isProcessable(String line) {

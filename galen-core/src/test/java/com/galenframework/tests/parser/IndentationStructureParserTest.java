@@ -18,9 +18,7 @@ package com.galenframework.tests.parser;
 import com.galenframework.parser.StructNode;
 import com.galenframework.parser.SyntaxException;
 import com.galenframework.parser.IndentationStructureParser;
-import com.galenframework.parser.StructNode;
-import com.galenframework.parser.SyntaxException;
-import com.galenframework.suite.reader.Line;
+import com.galenframework.specs.Place;
 import org.apache.commons.io.FileUtils;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
@@ -45,28 +43,28 @@ public class IndentationStructureParserTest {
         List<StructNode> nodes = parser.parse(contentWithTabs);
 
         assertThat(nodes, is(asList(
-            node("Node A 0", unknownLine(6)),
-            node("Node A 1", unknownLine(8), asList(
-                node("Node A 1 1", unknownLine(9), asList(
-                    node("Node A 1 1 1", unknownLine(10)),
-                    node("Node A 1 1 2", unknownLine(11))
+            node("Node A 0", unknownPlace(6)),
+            node("Node A 1", unknownPlace(8), asList(
+                node("Node A 1 1", unknownPlace(9), asList(
+                    node("Node A 1 1 1", unknownPlace(10)),
+                    node("Node A 1 1 2", unknownPlace(11))
                 )),
-                node("Node A 1 2", unknownLine(12), asList(
-                    node("Node A 1 2 1", unknownLine(13))
+                node("Node A 1 2", unknownPlace(12), asList(
+                    node("Node A 1 2 1", unknownPlace(13))
                 ))
             )),
-            node("Node B 1", unknownLine(18), asList(
-                node("Node B 1 1", unknownLine(19), asList(
-                    node("Node B 1 1 1", unknownLine(20))
+            node("Node B 1", unknownPlace(18), asList(
+                node("Node B 1 1", unknownPlace(19), asList(
+                    node("Node B 1 1 1", unknownPlace(20))
                 )),
-                node("Node B 1 2", unknownLine(21)),
-                node("Node B 1 3", unknownLine(22))
+                node("Node B 1 2", unknownPlace(21)),
+                node("Node B 1 3", unknownPlace(22))
             ))
         )));
     }
 
-    private Line unknownLine(int number) {
-        return new Line("<unknown>", number);
+    private Place unknownPlace(int number) {
+        return new Place("<unknown>", number);
     }
 
     @Test(expectedExceptions = SyntaxException.class,
@@ -86,14 +84,14 @@ public class IndentationStructureParserTest {
         };
     }
 
-    private StructNode node(String name, Line line) {
+    private StructNode node(String name, Place place) {
         StructNode node = new StructNode(name);
-        node.setLine(line);
+        node.setPlace(place);
         return node;
     }
-    private StructNode node(String name, Line line, List<StructNode> childNodes) {
+    private StructNode node(String name, Place place, List<StructNode> childNodes) {
         StructNode node = new StructNode(name);
-        node.setLine(line);
+        node.setPlace(place);
         node.setChildNodes(childNodes);
         return node;
     }

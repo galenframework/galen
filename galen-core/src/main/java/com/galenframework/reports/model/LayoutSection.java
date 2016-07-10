@@ -15,12 +15,15 @@
 ******************************************************************************/
 package com.galenframework.reports.model;
 
+import com.galenframework.specs.Place;
+
 import java.util.LinkedList;
 import java.util.List;
 
 public class LayoutSection {
 
     private String name;
+    private Place place;
     
     private List<LayoutObject> objects = new LinkedList<>();
     private List<LayoutSection> sections;
@@ -28,8 +31,9 @@ public class LayoutSection {
     public LayoutSection(){
     }
 
-    public LayoutSection(String name) {
+    public LayoutSection(String name, Place place) {
         this.setName(name);
+        this.setPlace(place);
     }
 
     public List<LayoutObject> getObjects() {
@@ -72,5 +76,13 @@ public class LayoutSection {
             sections = new LinkedList<>();
         }
         sections.add(section);
+    }
+
+    public Place getPlace() {
+        return place;
+    }
+
+    public void setPlace(Place place) {
+        this.place = place;
     }
 }

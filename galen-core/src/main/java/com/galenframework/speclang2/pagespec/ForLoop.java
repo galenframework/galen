@@ -18,7 +18,7 @@ package com.galenframework.speclang2.pagespec;
 import com.galenframework.parser.SyntaxException;
 import com.galenframework.parser.StringCharReader;
 import com.galenframework.parser.StructNode;
-import com.galenframework.suite.reader.Line;
+import com.galenframework.specs.Place;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
@@ -56,7 +56,7 @@ public class ForLoop {
             String sequenceStatement = reader.readUntilSymbol(']');
             Object[] sequence;
             if (isSimpleLoop) {
-                sequence = readSequenceForSimpleLoop(sequenceStatement, originNode.getLine());
+                sequence = readSequenceForSimpleLoop(sequenceStatement, originNode.getPlace());
             } else {
                 sequence = readSequenceFromPageObjects(sequenceStatement, pageSpecHandler);
             }
@@ -96,7 +96,7 @@ public class ForLoop {
             }
             return new ForLoop(sequence, variableName, previousMapping, nextMapping, indexMapping);
         } catch (SyntaxException ex) {
-            ex.setLine(originNode.getLine());
+            ex.setPlace(originNode.getPlace());
             throw ex;
         }
     }
@@ -129,7 +129,7 @@ public class ForLoop {
         return matchingObjects.toArray(new String[matchingObjects.size()]);
     }
 
-    private static Object[] readSequenceForSimpleLoop(String sequenceStatement, Line line) {
+    private static Object[] readSequenceForSimpleLoop(String sequenceStatement, Place place) {
         sequenceStatement = sequenceStatement.replace(" ", "");
         sequenceStatement = sequenceStatement.replace("\t", "");
         Pattern sequencePattern = Pattern.compile(".*\\-.*");
@@ -150,7 +150,7 @@ public class ForLoop {
             return sequence.toArray(new Object[sequence.size()]);
         }
         catch (Exception ex) {
-            throw new SyntaxException(line, "Incorrect sequence syntax: " + sequenceStatement, ex);
+            throw new SyntaxException(place, "Incorrect sequence syntax: " + sequenceStatement, ex);
         }
     }
 

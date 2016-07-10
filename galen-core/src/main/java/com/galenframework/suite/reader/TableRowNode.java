@@ -20,11 +20,12 @@ import java.util.List;
 
 import com.galenframework.parser.SyntaxException;
 import com.galenframework.parser.VarsContext;
+import com.galenframework.specs.Place;
 
 public class TableRowNode extends Node<List<String>> {
 
-    public TableRowNode(String text, Line line) {
-        super(text, line);
+    public TableRowNode(String text, Place place) {
+        super(text, place);
     }
 
     @Override
@@ -32,10 +33,10 @@ public class TableRowNode extends Node<List<String>> {
         String rowText = getArguments().trim();
         
         if (!rowText.startsWith("|")) {
-            throw new SyntaxException(getLine(), "Incorrect format. Should start with '|'");
+            throw new SyntaxException(getPlace(), "Incorrect format. Should start with '|'");
         }
         if (!rowText.endsWith("|")) {
-            throw new SyntaxException(getLine(), "Incorrect format. Should end with '|'");
+            throw new SyntaxException(getPlace(), "Incorrect format. Should end with '|'");
         }
         
         String[] rawCells = rowText.split("\\|");
@@ -46,14 +47,14 @@ public class TableRowNode extends Node<List<String>> {
                 cells.add(context.process(rawCells[i].trim()));
             }
         }
-        else throw new SyntaxException(getLine(), "Incorrect row. Use '|' symbol to split values");
+        else throw new SyntaxException(getPlace(), "Incorrect row. Use '|' symbol to split values");
         
         return cells;
     }
 
     @Override
-    public Node<?> processNewNode(String text, Line line) {
-        throw new SyntaxException(line, "Wrong nesting");
+    public Node<?> processNewNode(String text, Place place) {
+        throw new SyntaxException(place, "Wrong nesting");
     }
 
     

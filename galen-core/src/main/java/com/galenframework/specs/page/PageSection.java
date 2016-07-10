@@ -16,6 +16,8 @@
 package com.galenframework.specs.page;
 
 
+import com.galenframework.specs.Place;
+
 import java.util.LinkedList;
 import java.util.List;
 
@@ -23,6 +25,8 @@ public class PageSection {
 
     private List<ObjectSpecs> objects = new LinkedList<>();
     private String name;
+    private Place place;
+
     private List<PageSection> sections = new LinkedList<>();
 
     public PageSection() {
@@ -30,6 +34,11 @@ public class PageSection {
 
     public PageSection(String name) {
         setName(name);
+    }
+
+    public PageSection(String name, Place place) {
+        this.name = name;
+        this.place = place;
     }
 
 
@@ -113,7 +122,7 @@ public class PageSection {
     }
 
     public PageSection cleanSection() {
-        PageSection cleanedSection = new PageSection(name);
+        PageSection cleanedSection = new PageSection(name, place);
         cleanedSection.setObjects(objects);
 
         if (sections != null) {
@@ -126,5 +135,13 @@ public class PageSection {
         }
 
         return cleanedSection;
+    }
+
+    public Place getPlace() {
+        return place;
+    }
+
+    public void setPlace(Place place) {
+        this.place = place;
     }
 }

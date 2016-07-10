@@ -42,7 +42,7 @@ public class LayoutReportStack {
     }
 
     public void pushSection(PageSection pageSection) {
-        LayoutSection section = new LayoutSection(pageSection.getName());
+        LayoutSection section = new LayoutSection(pageSection.getName(), pageSection.getPlace());
 
         if (!sectionStack.isEmpty()) {
             sectionStack.peek().addSection(section);

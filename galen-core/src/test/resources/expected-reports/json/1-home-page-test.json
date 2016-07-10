@@ -19,6 +19,10 @@
         "sections": [
           {
             "name": "",
+            "place": {
+              "filePath": "specs.spec",
+              "lineNumber": 5
+            },
             "objects": [
               {
                 "name": "objectA1",
@@ -106,6 +110,10 @@
           },
           {
             "name": "some section 2",
+            "place": {
+              "filePath": "specs.spec",
+              "lineNumber": 14
+            },
             "objects": [
               {
                 "name": "objectA1",
@@ -133,6 +141,10 @@
                       "sections": [
                         {
                           "name": "Sub section",
+                          "place": {
+                            "filePath": "specs.spec",
+                            "lineNumber": 15
+                          },
                           "objects": [
                             {
                               "name": "sub-objectA1",
@@ -179,6 +191,10 @@
           },
           {
             "name": "some section 1",
+            "place": {
+              "filePath": "specs.spec",
+              "lineNumber": 16
+            },
             "objects": [
               {
                 "name": "objectB1",

@@ -20,7 +20,6 @@ import static com.galenframework.parser.Expectations.isNumeric;
 
 import com.galenframework.config.GalenConfig;
 import com.galenframework.specs.RangeValue;
-import com.galenframework.suite.reader.Line;
 import com.galenframework.specs.Range;
 
 public class ExpectRange implements Expectation<Range>{
