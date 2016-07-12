@@ -46,6 +46,8 @@
     <jacoco.version>0.7.4.201502262128</jacoco.version>
     <mockito.version>1.9.5</mockito.version>
     <powermock.version>1.5.3</powermock.version>
+    <node.version>v4.4.7</node.version>
+    <npm.version>3.9.5</npm.version>
 
     <!-- maven plugins -->
     <maven-assembly-plugin.version>2.5.3</maven-assembly-plugin.version>

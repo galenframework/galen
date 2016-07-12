@@ -1,6 +1,6 @@
 {
   "name": "galen",
-  "version": "1.6.3",
+  "version": "2.3",
   "private": true,
   "dependencies": {},
   "repository": "git://github.com/galenframework/galen",
@@ -21,8 +21,10 @@
     "grunt-mocha-test": "~0.12.7",
     "grunt-jslint": "~1.1.12"
   },
+  "engine-strict": true,
   "engines": {
-    "node": ">=0.8.0"
+    "node": ">= 4.2.1",
+    "npm": ">= 3"
   },
   "scripts": {
     "test": "grunt test"
