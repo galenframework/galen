@@ -205,11 +205,11 @@
           <execution>
             <id>javascript tests</id>
             <goals>
-              <goal>grunt</goal>
+              <goal>npm</goal>
             </goals>
             <phase>test</phase>
             <configuration>
-              <arguments>test</arguments>
+              <arguments>run test</arguments>
             </configuration>
           </execution>
         </executions>
