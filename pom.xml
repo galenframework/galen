@@ -46,13 +46,15 @@
     <jacoco.version>0.7.4.201502262128</jacoco.version>
     <mockito.version>1.9.5</mockito.version>
     <powermock.version>1.5.3</powermock.version>
+    <node.version>v4.4.7</node.version>
+    <npm.version>3.9.5</npm.version>
 
     <!-- maven plugins -->
     <maven-assembly-plugin.version>2.5.3</maven-assembly-plugin.version>
     <maven-compiler-plugin.version>2.3.2</maven-compiler-plugin.version>
     <maven-release-plugin.version>2.5.2</maven-release-plugin.version>
     <maven-gpg-plugin.version>1.6</maven-gpg-plugin.version>
-    <maven-frontend-plugin.version>0.0.20</maven-frontend-plugin.version>
+    <maven-frontend-plugin.version>1.0</maven-frontend-plugin.version>
     <maven-eclipse-plugin.version>2.7</maven-eclipse-plugin.version>
     <maven-surefire-plugin.version>2.19</maven-surefire-plugin.version>
     <maven-failsafe-plugin.version>2.19</maven-failsafe-plugin.version>
