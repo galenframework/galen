@@ -140,6 +140,7 @@
               </goals>
               <phase>site</phase>
               <configuration>
+                <additionalparam>-Xdoclint:none</additionalparam>
               </configuration>
             </execution>
           </executions>
@@ -263,6 +264,7 @@
         <artifactId>maven-javadoc-plugin</artifactId>
         <version>2.10.3</version>
         <configuration>
+          <additionalparam>-Xdoclint:none</additionalparam>
         </configuration>
         <reportSets>
           <reportSet>
