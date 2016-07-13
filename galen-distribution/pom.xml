@@ -5,7 +5,7 @@
   <parent>
     <groupId>com.galenframework</groupId>
     <artifactId>galen-parent</artifactId>
-    <version>2.3.1-SNAPSHOT</version>
+    <version>2.2.7-SNAPSHOT</version>
   </parent>
   
   <artifactId>galen-distribution</artifactId>
