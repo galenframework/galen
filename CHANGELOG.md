@@ -2,12 +2,31 @@
 All changes to Galen Framework project will be documented in this file
 
 
-## [2.3.0][Unknown]
+## [2.3.0][2016-07-13]
 ### Added
-- Added replace-colors filter to image spec
+- 'replace-colors' filter in 'image' spec
+- Feature to ignore regions in 'image' spec
+- Wildcard character for matching multiple files in image spec
+- Index mapping in 'forEach' loop
+- 'clickAt' function in GalenPages for PageElement object
+- 'dragByOffset' function in GalenPages for PageElement object
+- '@die' operator for failure support in Galen Specs language
+- '>=' and '<=' operators in pixel validations
+- Support for custom name in TestNG and JUnit tests
+- Gradient color support in 'color-scheme' spec
+- Added support for object groups in spec 'contains'
+- 'singleline' transformation in 'text' spec
+
+
+### Changed
+- Exceptions in JavaScript expressions in Galen Specs will crash parser
+
 
 ### Fixed
 - Fixed test report duration reporting for TestNG and JUnit tests
+- Added file and line number to all syntax exceptions
+- Fixed locator parser in GalenPages for advanced CSS expressions
+- Fixed warnings rendering in Html report for 'component' specs
 
 
 
