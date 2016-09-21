@@ -28,6 +28,8 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
+import static com.galenframework.utils.GalenUtils.makeSureFolderExists;
+
 /**
  * Created by ishubin on 2015/02/15.
  */
@@ -91,10 +93,6 @@ public class JsonReportBuilder {
         file.createNewFile();
 
         jsonMapper.writerWithDefaultPrettyPrinter().writeValue(file, aggregatedInfo);
-    }
-
-    private void makeSureFolderExists(String reportPath) throws IOException {
-        FileUtils.forceMkdir(new File(reportPath));
     }
 
     public String exportTestReportToJsonString(GalenTestAggregatedInfo info) throws JsonProcessingException {

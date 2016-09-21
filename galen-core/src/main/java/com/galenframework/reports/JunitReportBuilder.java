@@ -15,6 +15,7 @@
 ******************************************************************************/
 package com.galenframework.reports;
 
+import com.galenframework.utils.GalenUtils;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
@@ -27,6 +28,8 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+
+import static com.galenframework.utils.GalenUtils.makeSureFolderExists;
 
 public class JunitReportBuilder {
     
@@ -47,7 +50,7 @@ public class JunitReportBuilder {
 
     private void exportJunitReport(List<GalenTestAggregatedInfo> tests, String reportPath) throws IOException, TemplateException {
         File file = new File(reportPath);
-        makeSurePathExists(file);
+        makeSureParentPathExists(file);
         file.createNewFile();
         
         FileWriter fileWriter = new FileWriter(file);
@@ -59,15 +62,11 @@ public class JunitReportBuilder {
         fileWriter.flush();
         fileWriter.close();
     }
-    
-    private void makeSurePathExists(File file) throws IOException {
+
+    private void makeSureParentPathExists(File file) throws IOException {
         File parentDir = file.getParentFile();
         if (parentDir != null) {
-            if (!parentDir.exists()) {
-                if (!parentDir.mkdirs()) {
-                    throw new IOException("Could not create path: " + parentDir.getAbsolutePath());
-                }
-            }
+            makeSureFolderExists(parentDir);
         }
     }
 

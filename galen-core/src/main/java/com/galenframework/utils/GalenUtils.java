@@ -54,6 +54,9 @@ import org.openqa.selenium.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import static com.galenframework.config.GalenProperty.FILE_CREATE_TIMEOUT;
+import static java.lang.String.format;
+
 public class GalenUtils {
 
     private final static Logger LOG = LoggerFactory.getLogger(GalenUtils.class);
@@ -75,7 +78,7 @@ public class GalenUtils {
     
     public static String formatScreenSize(Dimension screenSize) {
         if (screenSize != null) {
-            return String.format("%dx%d", screenSize.width, screenSize.height);
+            return format("%dx%d", screenSize.width, screenSize.height);
         }
         else return "0x0";
     }
@@ -580,5 +583,18 @@ public class GalenUtils {
         }
 
         return foundFilePaths;
+    }
+
+
+    public static void makeSureFolderExists(String reportFolderPath) throws IOException {
+        File newDirectory = new File(reportFolderPath);
+        makeSureFolderExists(newDirectory);
+    }
+
+    public static void makeSureFolderExists(File dir) throws IOException {
+        FileUtils.forceMkdir(dir);
+        if (!FileUtils.waitFor(dir, GalenConfig.getConfig().getIntProperty(FILE_CREATE_TIMEOUT))) {
+            throw new IOException(format("Couldn't create folder: %s", dir.getAbsolutePath()));
+        }
     }
 }

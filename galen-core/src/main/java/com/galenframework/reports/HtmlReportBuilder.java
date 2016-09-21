@@ -21,8 +21,9 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 
 import java.io.*;
-import java.lang.reflect.Field;
 import java.util.List;
+
+import static com.galenframework.utils.GalenUtils.makeSureFolderExists;
 
 public class HtmlReportBuilder {
     private static final String[] resources = new String[]{
@@ -37,7 +38,7 @@ public class HtmlReportBuilder {
 
 
     public void build(List<GalenTestInfo> tests, String reportFolderPath) throws IOException {
-        makeSureReportFolderExists(reportFolderPath);
+        makeSureFolderExists(reportFolderPath);
 
         JsonReportBuilder jsonBuilder = new JsonReportBuilder();
         ReportOverview reportOverview = jsonBuilder.createReportOverview(tests);
@@ -66,13 +67,6 @@ public class HtmlReportBuilder {
         FileUtils.writeStringToFile(new File(reportFolderPath + File.separator + "report.json"), overviewJson);
 
         copyHtmlResources(reportFolderPath);
-    }
-
-    private void makeSureReportFolderExists(String reportFolderPath) throws IOException {
-    	File newDirectory = new File(reportFolderPath);
-        FileUtils.forceMkdir(newDirectory);
-        // TODO: seconds to wait should be defined somewhere :)
-        FileUtils.waitFor(newDirectory, 30);
     }
 
     private void copyHtmlResources(String reportFolderPath) throws IOException {

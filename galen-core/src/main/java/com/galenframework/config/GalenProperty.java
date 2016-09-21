@@ -53,7 +53,10 @@ public enum GalenProperty {
     GALEN_BROWSER_VIEWPORT_ADJUSTSIZE("galen.browser.viewport.adjustSize", "false"),
 
     GALEN_BROWSER_PAGELEMENT_AREAFINDER("galen.browser.pageElement.areaFinder", "native"),
-    GALEN_BROWSER_PAGELEMENT_AREAFINDER_CUSTOM_SCRIPT("galen.browser.pageElement.areaFinder.custom.script", null);
+    GALEN_BROWSER_PAGELEMENT_AREAFINDER_CUSTOM_SCRIPT("galen.browser.pageElement.areaFinder.custom.script", null),
+
+    FILE_CREATE_TIMEOUT("galen.file.wait.timeout", "30");
+
 
     protected final String propertyName;
     protected final String defaultValue;
