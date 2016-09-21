@@ -69,7 +69,10 @@ public class HtmlReportBuilder {
     }
 
     private void makeSureReportFolderExists(String reportFolderPath) throws IOException {
-        FileUtils.forceMkdir(new File(reportFolderPath));
+    	File newDirectory = new File(reportFolderPath);
+        FileUtils.forceMkdir(newDirectory);
+        // TODO: seconds to wait should be defined somewhere :)
+        FileUtils.waitFor(newDirectory, 30);
     }
 
     private void copyHtmlResources(String reportFolderPath) throws IOException {
