@@ -30,6 +30,7 @@
     <sonatypeOssDistMgmtSnapshotsUrl>https://oss.sonatype.org/content/repositories/snapshots/</sonatypeOssDistMgmtSnapshotsUrl>
 
     <!-- VERSION NUMBERS -->
+    <selenium.version>3.0.0</selenium.version>
     <commons-io.version>2.4</commons-io.version>
     <commons-cli.version>1.2</commons-cli.version>
     <phantomjsdriver.version>1.2.1</phantomjsdriver.version>
@@ -46,8 +47,8 @@
     <jacoco.version>0.7.4.201502262128</jacoco.version>
     <mockito.version>1.9.5</mockito.version>
     <powermock.version>1.5.3</powermock.version>
-    <node.version>v4.4.7</node.version>
-    <npm.version>3.9.5</npm.version>
+    <node.version>v6.0.0</node.version>
+    <npm.version>3.10.7</npm.version>
 
     <!-- maven plugins -->
     <maven-assembly-plugin.version>2.5.3</maven-assembly-plugin.version>
