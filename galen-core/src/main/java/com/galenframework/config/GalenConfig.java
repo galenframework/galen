@@ -15,9 +15,9 @@
 ******************************************************************************/
 package com.galenframework.config;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Enumeration;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Properties;
@@ -35,6 +35,7 @@ public class GalenConfig {
 
 
     public final static GalenConfig instance = new GalenConfig();
+    public static final String GALEN_USER_HOME_CONFIG_NAME = ".galen.config";
     private Properties properties;
     
     private GalenConfig() {
@@ -53,7 +54,18 @@ public class GalenConfig {
     
     private void loadConfig() throws IOException {
         this.properties = new Properties();
+        loadConfigFromUserHome();
+        loadConfigFromLocal();
+    }
 
+    private void loadConfigFromUserHome() throws IOException {
+        InputStream stream = GalenUtils.findFileOrResourceAsStream(System.getProperty("user.home") + "/" + GALEN_USER_HOME_CONFIG_NAME);
+        if (stream != null) {
+            loadFromStream(stream);
+        }
+    }
+
+    private void loadConfigFromLocal() throws IOException {
         InputStream stream = GalenUtils.findFileOrResourceAsStream(readProperty(GalenProperty.GALEN_CONFIG_FILE));
 
         if (stream == null) {
@@ -68,6 +80,17 @@ public class GalenConfig {
         if (stream != null) {
             properties.load(stream);
             stream.close();
+        }
+        setSystemPropertiesFromConfig();
+    }
+
+    private void setSystemPropertiesFromConfig() {
+        Enumeration<?> names = properties.propertyNames();
+        while (names.hasMoreElements()) {
+            String name = names.nextElement().toString();
+            if (name.startsWith("$.")) {
+                System.setProperty(name.substring(2), properties.getProperty(name));
+            }
         }
     }
 

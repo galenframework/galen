@@ -16,9 +16,7 @@
 package com.galenframework.tests.runner;
 
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.instanceOf;
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.notNullValue;
+import static org.hamcrest.Matchers.*;
 
 import java.io.File;
 import java.io.IOException;
@@ -51,13 +49,8 @@ public class GalenConfigTest {
     }
     
     @Test public void shouldRead_configForLocalProject_fromFile() throws IOException {
-        //copying file from resources to local folder
-        //so it can be picked up by
-        
-        File configFile = new File("config");
-        configFile.createNewFile();
-        FileUtils.copyFile(new File(getClass().getResource("/config1").getFile()), configFile);
-        
+        File configFile = copyConfigFromResources("/config1", "config");
+
         GalenConfig config = GalenConfig.getConfig();
         config.reset();
         
@@ -69,15 +62,13 @@ public class GalenConfigTest {
     }
 
     @Test public void shouldRead_configFile_fromSpecifiedLocation() throws IOException {
-
-        File configFile = new File("config2");
-        configFile.createNewFile();
-        FileUtils.copyFile(new File(getClass().getResource("/config2").getFile()), configFile);
+        File configFile = copyConfigFromResources("/config2", "config2");
 
         System.setProperty("galen.config.file", "config2");
 
         GalenConfig config = GalenConfig.getConfig();
         config.reset();
+        configFile.delete();
 
         MatcherAssert.assertThat(config.getRangeApproximation(), is(12345));
     }
@@ -135,7 +126,41 @@ public class GalenConfigTest {
         
         deleteSystemProperty("galen.reporting.listeners");
     }
-    
+
+    @Test public void should_load_property_into_system_if_it_starts_with_dollar_dot() throws IOException {
+        System.clearProperty("some.system.property");
+        System.clearProperty("some.second.system.property");
+
+        File configFile = copyConfigFromResources("/config-system-properties", "config");
+        GalenConfig config = GalenConfig.getConfig();
+        config.reset();
+        configFile.delete();
+
+        assertThat(System.getProperty("some.system.property"), is("First Value"));
+        assertThat(System.getProperty("some.second.system.property"), is("Second Value"));
+        assertThat(System.getProperty("non.system.property"), is(nullValue()));
+    }
+
+    @Test public void should_load_config_from_user_home_dir_first_and_then_overwrite_with_local_config() throws IOException {
+        File globalConfigFile = copyConfigFromResources("/global-config", System.getProperty("user.home") + "/.galen.config");
+        File configFile = copyConfigFromResources("/override-global-config", "config");
+
+        GalenConfig config = GalenConfig.getConfig();
+        config.reset();
+        configFile.delete();
+        globalConfigFile.delete();
+
+        assertThat(config.getRangeApproximation(), is(34));
+        assertThat(config.getImageSpecDefaultTolerance(), is(32));
+    }
+
+    private File copyConfigFromResources(String resourcesConfig, String destConfig) throws IOException {
+        File configFile = new File(destConfig);
+        configFile.createNewFile();
+        FileUtils.copyFile(new File(getClass().getResource(resourcesConfig).getFile()), configFile);
+        return configFile;
+    }
+
     private void deleteSystemProperty(String key) {
         Properties properties = System.getProperties();
         if (properties.containsKey(key)) {
