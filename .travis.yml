@@ -3,7 +3,7 @@ install: mvn install -DskipTests -Dgpg.skip
 jdk:
   - oraclejdk8
 addons:
-  firefox: "49.0"
+  firefox: "48.0"
 env:
   - DISPLAY=:99
 script:
