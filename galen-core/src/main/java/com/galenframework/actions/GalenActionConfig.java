@@ -20,13 +20,25 @@ import org.apache.commons.io.IOUtils;
 import java.io.*;
 
 public class GalenActionConfig extends GalenAction {
+    public static final String GALEN_USER_HOME_CONFIG_NAME = ".galen.config";
+    private final GalenActionConfigArguments configArguments;
+
     public GalenActionConfig(String[] arguments, PrintStream outStream, PrintStream errStream) {
         super(arguments, outStream, errStream);
+        configArguments = GalenActionConfigArguments.parse(arguments);
     }
 
     @Override
     public void execute() throws IOException {
-        File file = new File("galen.config");
+        if (configArguments.getGlobal()) {
+            createConfigFor(System.getProperty("user.home") + File.separator + GALEN_USER_HOME_CONFIG_NAME);
+        } else {
+            createConfigFor("galen.config");
+        }
+    }
+
+    private void createConfigFor(String filePath) throws IOException {
+        File file = new File(filePath);
 
         if (!file.exists()) {
             if (!file.createNewFile()) {
@@ -39,7 +51,7 @@ public class GalenActionConfig extends GalenAction {
             IOUtils.write(writer.toString(), fos, "UTF-8");
             fos.flush();
             fos.close();
-            outStream.println("Created config file");
+            outStream.println("Created config file: " + file.getAbsolutePath());
         } else {
             errStream.println("Config file already exists");
         }
