@@ -26,7 +26,7 @@ function inLocalBrowser(name, size, tags) {
 var devices = {
     mobileEmulation: inLocalBrowser("mobile", "450x800", ["mobile"]),
     tabletEmulation: inLocalBrowser("tablet", "600x800", ["tablet"]),
-    desktopFirefox: inLocalBrowser("desktop", "1100x800", ["desktop"], "firefox"),
+    desktopFirefox: inLocalBrowser("desktop", "1100x800", ["desktop"]),
 };
 
 var TEST_USER = {

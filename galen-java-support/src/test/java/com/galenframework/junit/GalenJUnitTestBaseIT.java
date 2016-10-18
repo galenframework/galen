@@ -15,10 +15,10 @@
 ******************************************************************************/
 package com.galenframework.junit;
 
+import com.galenframework.utils.GalenUtils;
 import org.junit.Test;
 import org.junit.runners.Parameterized.*;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.firefox.FirefoxDriver;
 
 import static java.util.Arrays.asList;
 
@@ -29,7 +29,7 @@ public class GalenJUnitTestBaseIT extends GalenJUnitTestBase {
 
     @Override
     public WebDriver createDriver() {
-        return new FirefoxDriver();
+        return GalenUtils.createDriver(null, null, null);
     }
 
     @Test

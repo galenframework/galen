@@ -19,6 +19,7 @@ import com.galenframework.browser.SeleniumBrowser;
 import com.galenframework.reports.TestReport;
 import com.galenframework.suite.GalenPageTest;
 import com.galenframework.suite.actions.GalenPageActionRunJavascript;
+import com.galenframework.utils.GalenUtils;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.testng.annotations.AfterClass;
@@ -26,11 +27,8 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Map;
 
-import static java.util.Arrays.asList;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 
@@ -42,7 +40,7 @@ public class GalenPagesIT {
 
     @BeforeClass
     public void initDriver() {
-        driver = new FirefoxDriver();
+        driver = GalenUtils.createDriver(null, null, null);
     }
 
     @AfterClass

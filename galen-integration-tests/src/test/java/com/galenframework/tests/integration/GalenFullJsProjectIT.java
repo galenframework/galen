@@ -51,6 +51,7 @@ public class GalenFullJsProjectIT {
         String jsonReportPath = Files.createTempDir().getAbsolutePath() + "/json-report";
         String htmlReportPath = Files.createTempDir().getAbsolutePath() + "/html-report";
 
+
         new GalenMain().execute("test", PATH_TO_TEST_PROJECT + "/tests/", "--htmlreport", htmlReportPath, "--jsonreport", jsonReportPath);
 
         assertReports(htmlReportPath, jsonReportPath);

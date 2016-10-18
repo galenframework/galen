@@ -18,6 +18,7 @@ package com.galenframework.tests.integration;
 
 import com.galenframework.api.Galen;
 import com.galenframework.reports.model.LayoutReport;
+import com.galenframework.utils.GalenUtils;
 import com.galenframework.validation.ValidationResult;
 import org.openqa.selenium.Dimension;
 import org.openqa.selenium.WebDriver;
@@ -38,7 +39,7 @@ public class ComponentBasicIT {
 
     @BeforeMethod
     public void createDriver() {
-        driver = new FirefoxDriver();
+        driver = GalenUtils.createDriver(null, null, null);
         driver.manage().window().setSize(new Dimension(1024, 768));
     }
 
