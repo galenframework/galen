@@ -16,7 +16,7 @@ script:
   - mvn clean test -Dgpg.skip=true -Dgalen.use.fail.exit.code=false
   - mvn verify -Dgpg.skip=true -Dgalen.use.fail.exit.code=false -Dwebdriver.chrome.driver=$CHROMEDRIVER_PATH -Dgalen.default.browser=chrome
 before_install:
-    - export CHROME_BIN=chromium-browser
+  - export CHROME_BIN=chromium-browser
   - "/sbin/start-stop-daemon --start --quiet --pidfile /tmp/custom_xvfb_99.pid --make-pidfile --background --exec /usr/bin/Xvfb -- :99 +extension RANDR -ac -screen 0 1280x1024x16"
 after_failure:
   - find . -name "TestSuite.txt" | xargs cat
