@@ -30,8 +30,8 @@
             size = null;
         }
 
-        if (browserType === undefined || browserType === null) {
-            browserType = "firefox";
+        if (browserType === undefined) {
+            browserType = null;
         }
 
         var driver = GalenUtils.createDriver(browserType, url, size);
