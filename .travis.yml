@@ -10,9 +10,14 @@ before_script:
   - sleep 3
 script:
   - |
+      sudo apt-get -y purge chromium-browser
+      export CHROME_REVISION=`curl -s http://commondatastorage.googleapis.com/chromium-browser-snapshots/Linux_x64/LAST_CHANGE`
+      curl -L -O "http://commondatastorage.googleapis.com/chromium-browser-snapshots/Linux_x64/${CHROME_REVISION}/chrome-linux.zip"
+      unzip chrome-linux.zip
+      sudo ln -sf $PWD/chrome-linux/chrome-wrapper /usr/local/bin/chrome
       curl -L -o chromedriver.zip http://chromedriver.storage.googleapis.com/2.24/chromedriver_linux64.zip
       unzip chromedriver.zip
-      export CHROMEDRIVER_PATH=$(pwd)/chromedriver
+      export CHROMEDRIVER_PATH=$PWD/chromedriver
   - mvn clean test -Dgpg.skip=true -Dgalen.use.fail.exit.code=false
   - mvn verify -Dgpg.skip=true -Dgalen.use.fail.exit.code=false -Dwebdriver.chrome.driver=$CHROMEDRIVER_PATH -Dgalen.default.browser=chrome
 before_install:
