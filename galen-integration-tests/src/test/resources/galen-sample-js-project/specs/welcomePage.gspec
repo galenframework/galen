@@ -38,7 +38,7 @@
             inside welcome_block ~ 68 px top
 
         login_button:
-            width ~ 78px
+            width 70 to 90px
 
 
     @on tablet
@@ -47,7 +47,7 @@
             inside welcome_block ~ 50 px top
 
         login_button:
-            width ~ 78px
+            width 70 to 90px
 
     @on mobile
         greeting:
