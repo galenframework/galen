@@ -19,7 +19,6 @@ import java.util.List;
 
 import com.galenframework.page.Rect;
 import com.galenframework.page.PageElement;
-import com.galenframework.page.Rect;
 
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
@@ -35,7 +34,7 @@ public class ScreenElement extends PageElement {
     @SuppressWarnings("unchecked")
     @Override
     public Rect calculateArea() {
-        List<Long> size = (List<Long>)((JavascriptExecutor)driver).executeScript("return [Math.max(" +
+        List<Number> size = (List<Number>)((JavascriptExecutor)driver).executeScript("return [Math.max(" +
                     "document.documentElement.scrollWidth," +
                     "document.body.offsetWidth, document.documentElement.offsetWidth," +
                     "document.body.clientWidth, document.documentElement.clientWidth)," +

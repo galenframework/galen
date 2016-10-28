@@ -113,11 +113,11 @@ public class GalenUtils {
         int capturedWidth = image.getWidth();
         int capturedHeight = image.getHeight();
 
-        long longScrollHeight = (Long)((JavascriptExecutor)driver).executeScript("return Math.max(" +
+        long longScrollHeight = ((Number)((JavascriptExecutor)driver).executeScript("return Math.max(" +
                 "document.body.scrollHeight, document.documentElement.scrollHeight," +
                 "document.body.offsetHeight, document.documentElement.offsetHeight," +
                 "document.body.clientHeight, document.documentElement.clientHeight);"
-            );
+            )).longValue();
 
         Double devicePixelRatio = ((Number)((JavascriptExecutor)driver).executeScript(JS_RETRIEVE_DEVICE_PIXEL_RATIO)).doubleValue();
 
@@ -192,11 +192,11 @@ public class GalenUtils {
         }
 
         if (devicePixelRatio > 1.0 && screenshotImage.getWidth() > 0) {
-            Long screenSize = (Long) ((JavascriptExecutor) driver).executeScript("return Math.max(" +
+            Long screenSize = ((Number) ((JavascriptExecutor) driver).executeScript("return Math.max(" +
                             "document.body.scrollWidth, document.documentElement.scrollWidth," +
                             "document.body.offsetWidth, document.documentElement.offsetWidth," +
                             "document.body.clientWidth, document.documentElement.clientWidth);"
-            );
+            )).longValue();
 
             Double estimatedPixelRatio = ((double)screenshotImage.getWidth()) / ((double)screenSize);
 
@@ -243,7 +243,7 @@ public class GalenUtils {
     }
 
     private static int obtainVerticalScrollPosition(WebDriver driver) {
-        Long scrollLong = (Long) ((JavascriptExecutor)driver).executeScript("return (window.pageYOffset !== undefined) ? window.pageYOffset : (document.documentElement || document.body.parentNode || document.body).scrollTop;");
+        Number scrollLong = (Number) ((JavascriptExecutor)driver).executeScript("return (window.pageYOffset !== undefined) ? window.pageYOffset : (document.documentElement || document.body.parentNode || document.body).scrollTop;");
         return scrollLong.intValue();
     }
 
@@ -467,7 +467,7 @@ public class GalenUtils {
     }
 
     public static Dimension getViewportArea(WebDriver driver) {
-        List<Long> size = (List<Long>)((JavascriptExecutor)driver).executeScript("return [document.documentElement.clientWidth" +
+        List<Number> size = (List<Number>)((JavascriptExecutor)driver).executeScript("return [document.documentElement.clientWidth" +
                         "|| document.body.clientWidth" +
                         "|| window.innerWidth," +
                         "document.documentElement.clientHeight" +
