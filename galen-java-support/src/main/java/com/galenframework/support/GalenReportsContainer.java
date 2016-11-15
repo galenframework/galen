@@ -17,10 +17,10 @@ package com.galenframework.support;
 
 import com.galenframework.reports.GalenTestInfo;
 import com.galenframework.reports.TestReport;
-import org.testng.annotations.TestInstance;
 
 import java.lang.reflect.Method;
-import java.util.LinkedList;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -29,7 +29,7 @@ import java.util.List;
 public enum GalenReportsContainer {
     INSTANCE;
 
-    private final List<GalenTestInfo> tests = new LinkedList<>();
+    private final List<GalenTestInfo> tests = Collections.synchronizedList(new ArrayList<GalenTestInfo>());
 
     /**
      * Returns a single instance of {@link GalenReportsContainer}
