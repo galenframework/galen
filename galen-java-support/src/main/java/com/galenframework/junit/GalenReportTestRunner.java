@@ -38,7 +38,7 @@ public class GalenReportTestRunner extends Parameterized {
     @Override
     public void run(final RunNotifier pRunNotifier) {
         this.notifier = pRunNotifier;
-        notifier.addFirstListener(new JUnitStepListener());
-        super.run(notifier);
+        this.notifier.addFirstListener(new JUnitStepListener());
+        super.run(this.notifier);
     }
 }
