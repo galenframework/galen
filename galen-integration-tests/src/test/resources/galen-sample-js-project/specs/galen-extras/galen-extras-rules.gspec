@@ -1,0 +1,583 @@
+
+@if ${this.GEXTRAS_NO_MARGIN === undefined || this.GEXTRAS_NO_MARGIN === null}
+    @set GEXTRAS_NO_MARGIN  -1 to 1px
+
+
+@script galen-extras-rules.js
+
+
+# Check that all matching elements are squared
+# e.g.
+#
+#   | header-icon, menu-button should be squared
+#
+@rule %{objectPattern} should be squared
+    @forEach [${objectPattern}] as item
+        ${item}:
+            width 100% of ${item}/height
+
+
+
+# Check that all matching elements are almost squared
+# allowing 10% difference between width and height
+# e.g.
+#
+#   | header-icon, menu-button should be almost squared
+#
+@rule %{objectPattern} should be almost squared
+    @forEach [${objectPattern}] as item
+        ${item}:
+            width 90 to 110% of ${item}/height
+
+
+
+# Check that some element is squared and has a specific size
+# e.g.
+#
+#   icon:
+#       | squared with ~ 100px size
+#
+@rule squared with %{size} size
+    width ${size}
+    height ${size}
+
+
+# Check that multiple elements are squared and that they have a specific size
+# e.g.
+#
+#   | menu.item-* should be squared with ~ 100px size
+#
+@rule %{objectPattern} should be squared with %{size} size
+    ${objectPattern}
+        width ${size}
+        height ${size}
+
+
+# Check that element is strictly squared
+# e.g.
+#
+#   header.icon:
+#       | squared
+#
+@rule squared
+    width 100% of ${objectName}/height
+
+
+
+# Check that element is almost squared
+# allowing 10% difference between its width and height
+# e.g.
+#
+#   header.icon:
+#       | almost squared
+#
+@rule almost squared
+    width 90 to 110% of ${objectName}/height
+
+
+
+# Checks width/height ratio in percentage of all specified objects
+# e.g.
+#
+# | login_button, cancel_button should have 130% width/height ratio
+#
+@rule %{itemPattern} should have %{ratio}% width/height ratio
+    @forEach [${itemPattern}] as item
+        ${item}:
+            height ${ratio} % of ${item}/width
+
+
+
+# Checks width/height ratio in percentage
+# e.g.
+#
+# login_button:
+#   |has 130% width/height ratio
+#
+@rule has %{ratio}% width/height ratio
+    height ${ratio} % of ${objectName}/width
+
+
+
+# Checking amount of objects
+# e.g.
+#
+#   | amount of any menu.item should be > 4
+#
+# or
+#
+#   | amount of visible menu.item-* should be 5 to 6
+#
+@rule amount of %{visibilityType: any|visible|absent} %{objectPattern} should be %{amount}
+    global:
+        count ${visibilityType} "${objectPattern}" is ${amount}
+
+
+
+# Check elements horizontal alignment with zero distance
+# e.g.
+#
+#   | home_box_* are aligned horizontally next to each other
+#
+@rule %{objectPattern} are aligned horizontally next to each other
+    @forEach [${objectPattern}] as item, next as nextItem
+        ${item}:
+            aligned horizontally all ${nextItem}
+            left-of ${nextItem} ${GEXTRAS_NO_MARGIN}
+
+
+
+# Check elements vertical alignment with zero distance
+# e.g.
+#
+#   | home_box_* are aligned vertically above each other
+#
+@rule %{objectPattern} are aligned vertically above each other
+    @forEach [${objectPattern}] as item, next as nextItem
+        ${item}:
+            aligned vertically all ${nextItem}
+            above ${nextItem} ${GEXTRAS_NO_MARGIN}
+
+
+# Check elements horizontal alignment and equal distance between each other
+# e.g.
+#
+#   | home_box_* are aligned horizontally next to each other with equal distance
+#
+@rule %{objectPattern} are aligned horizontally next to each other with equal distance
+    @if ${count(objectPattern) > 1}
+        @set _distance_ ${var all = findAll(objectPattern); Math.abs(all[1].left() - all[0].right())}
+        @set _distance_a ${parseInt(_distance_) - 1}
+        @set _distance_b ${parseInt(_distance_) + 1}
+        @forEach [${objectPattern}] as item, next as nextItem
+            ${item}:
+                aligned horizontally all ${nextItem}
+                left-of ${nextItem} ${_distance_a} to ${_distance_b} px
+
+
+
+# Check elements vertical alignment and equal distance between each other
+# e.g.
+#
+#   | home_box_* are aligned vertically above each other with equal distance
+#
+@rule %{objectPattern} are aligned vertically above each other with equal distance
+    @if ${count(objectPattern) > 1}
+        @set _distance_ ${var all = findAll(objectPattern); Math.abs(all[1].top() - all[0].bottom())}
+        @set _distance_a ${parseInt(_distance_) - 1}
+        @set _distance_b ${parseInt(_distance_) + 1}
+        @forEach [${objectPattern}] as item, next as nextItem
+            ${item}:
+                aligned vertically all ${nextItem}
+                above ${nextItem} ${_distance_a} to ${_distance_b} px
+
+
+
+# Check elements horizontal alignment and specific margin between each other
+# e.g.
+#
+#   | home_box_* are aligned horizontally next to each other with 10 to 30px margin
+#
+@rule %{objectPattern} are aligned horizontally next to each other with %{margin} margin
+    @forEach [${objectPattern}] as item, next as nextItem
+        ${item}:
+            aligned horizontally all ${nextItem}
+            left-of ${nextItem} ${margin}
+
+
+
+# Check elements vertical alignment and specific margin between each other
+# e.g.
+#
+#   | home_box_* are aligned vertically above each other with 10 to 20 px margin
+#
+@rule %{objectPattern} are aligned vertically above each other with %{margin} margin
+    @forEach [${objectPattern}] as item, next as nextItem
+        ${item}:
+            aligned vertically all ${nextItem}
+            above ${nextItem} ${margin}
+
+
+# Check that elements are places vertically above each other 
+# without checking their alignment by sides
+# e.g.
+#
+#   | menu.item-* are placed above each other with 10px margin
+#
+@rule %{itemPattern} are placed above each other with %{margin} margin
+    @forEach [${itemPattern}] as item, next as nextItem
+        ${item}:
+            above ${nextItem} ${margin}
+
+
+
+# Check that elements are places horizontally above each other 
+# without checking their alignment by sides
+# e.g.
+#
+#   | menu.item-* are placed next to each other with 10px margin
+#
+@rule %{itemPattern} are placed next to each other with %{margin} margin
+    @forEach [${itemPattern}] as item, next as nextItem
+        ${item}:
+            left-of ${nextItem} ${margin}
+
+
+
+
+# Check that elements appear and hide on different tags
+# e.g.
+#
+#   | login_button, menu.item-* should be visible on desktop, tablet but absent on mobile
+#
+@rule %{objectPatterns} should be visible on %{tagsVisible} but absent on %{tagsAbsent}
+    ${objectPatterns}:
+        @on ${tagsVisible}
+            visible
+        @on ${tagsAbsent}
+            absent
+
+
+
+# Validate all matching objects using specified component spec
+# e.g.
+#
+#   | test all box-* with components/box.gspec
+#
+@rule test all %{objectPattern} with %{componentPath}
+    @forEach [${objectPattern}] as item
+        ${item}:
+            component ${componentPath}
+
+
+# Apply spec to all elements in a single line
+# e.g.
+#
+#   | every menu.item-* is inside menu 0px top bottom
+#
+# or
+#
+#   | every menu.item-* has width 100px
+#
+@rule %{subj: every|a|an} %{objectPattern} %{verb: is|has} %{spec}
+    @forEach [${objectPattern}] as item
+        ${item}:
+            ${spec}
+
+
+# Apply two specs to all elements in a single line
+# e.g.
+#
+#   | every menu.item-* is inside menu 0px top bottom and has width 100px
+#
+# or
+#
+#   | every menu.item-* has width and is inside menu 0px top bottom
+#
+@rule %{subj: every|a|an} %{objectPattern} %{verb: is|has} %{spec1} and %{verb2: is|has} %{spec2}
+    ${objectPattern}:
+        ${spec1}
+        ${spec2}
+
+
+
+# Apply spec to only first element in a single line
+# e.g.
+#
+#   | first menu.item-* is inside menu 0px top bottom
+#
+# or
+#
+#   | first menu.item-* has width 100px
+#
+@rule first %{objectPattern} %{verb: is|has} %{spec}
+    @if ${count(objectPattern) > 0}
+        ${first(objectPattern).name}:
+            ${spec}
+
+
+
+# Apply spec to only last element in a single line
+# e.g.
+#
+#   | last menu.item-* is inside menu 0px top bottom
+#
+# or
+#
+#   | last menu.item-* has width 100px
+#
+@rule last %{objectPattern} %{verb: is|has} %{spec}
+    @if ${count(objectPattern) > 0}
+        ${last(objectPattern).name}:
+            ${spec}
+
+
+
+# Apply rule body to only first element
+# e.g.
+#
+#   | first menu.item-* :
+#       below header 10px
+#       inside main_container 0px top left
+#
+@rule first %{objectPattern}:
+    @if ${count(objectPattern) > 0}
+        ${first(objectPattern).name}:
+            @ruleBody
+
+
+# Apply rule body to only last element
+# e.g.
+#
+#   | last menu.item-* :
+#       above footer 10px
+#       inside main_container 0px left right
+#
+@rule last %{objectPattern}:
+    @if ${count(objectPattern) > 0}
+        ${last(objectPattern).name}:
+            @ruleBody
+
+
+# Check that the element has non null width and height
+# e.g.
+#
+#   login_label:
+#       | is more or less readable
+#
+@rule is more or less readable
+    width > 30px
+    height > 10px
+
+
+# Check that multiple elements have non null width and height
+# e.g.
+#
+#    | menu.item-* should be more or less readable
+#
+@rule %{itemPatterns} should be more or less readable
+    ${itemPatterns}:
+        width > 30px
+        height > 10px
+
+
+# Check that an element is big enough so that you can tap it
+#
+#   login_button:
+#       | is tapable
+#
+@rule is tapable
+    width > 50px
+    height > 30px
+
+# Check that multiple elements are big enough so that you can tap them
+#
+#   | every menu.item-* is tapable
+#
+@rule %{itemPatterns} should be tapable
+    ${itemPatterns}:
+        width > 50px
+        height > 30px
+
+
+# Check that element stretches horizontally to another element with minimal margin from sides
+# e.g.
+#
+#   login_panel:
+#       | stretches to main_container
+#
+@rule stretches to %{parentObject}
+    inside ${parentObject} ${GEXTRAS_NO_MARGIN} left right
+
+
+
+# Check that element stretches horizontally to another element
+# and that it has some specific margin from sides
+# e.g.
+#
+#   login_panel:
+#       | stretches to main_container with 10px margin
+#
+@rule stretches to %{parentObject} with %{margin} margin
+    inside ${parentObject} ${margin} left right
+
+
+# Check that multiple elements stretch horizontally to another element with minimal margin from sides
+# e.g.
+#
+#   | login_panel, register_panel should stretch to main_container
+#
+@rule %{itemPattern} should stretch to %{parentObject}
+    ${itemPattern}:
+        inside ${parentObject} ${GEXTRAS_NO_MARGIN} left right
+
+
+
+# Check that multiple elements stretch horizontally to another element
+# and that it has some specific margin from sides
+# e.g.
+#
+#   | login_panel, register_panel should stretch to main_container with 10px margin
+#
+@rule %{itemPattern} should stretch to %{parentObject} with %{margin} margin
+    ${itemPattern}:
+        inside ${parentObject} ${margin} left right
+
+
+
+# Check that element stretches vertically to another element with minimal margin from sides
+# e.g.
+#
+#   login_panel:
+#       | stretches vertically to main_container
+#
+@rule stretches vertically to %{parentObject}
+    inside ${parentObject} ${GEXTRAS_NO_MARGIN} top bottom
+
+
+
+# Check that element stretches vertically to another element
+# and that it has some specific margin from sides
+# e.g.
+#
+#   login_panel:
+#       | stretches vertically to main_container with 10px margin
+#
+@rule stretches vertically to %{parentObject} with %{margin} margin
+    inside ${parentObject} ${margin} top bottom
+
+
+
+# Check that multiple elements stretch vertically to another element with minimal margin from sides
+# e.g.
+#
+#   | login_panel, register_panel should stretch vertically to main_container
+#
+@rule %{itemPattern} should stretch vertically to %{parentObject}
+    ${itemPattern}:
+        inside ${parentObject} ${GEXTRAS_NO_MARGIN} top bottom
+
+
+
+# Check that multiple elements stretch vertically to another element
+# and that it has some specific margin from sides
+# e.g.
+#
+#   | login_panel, register_panel should stretch vertically to main_container with 10px margin
+#
+@rule %{itemPattern} should stretch vertically to %{parentObject} with %{margin} margin
+    ${itemPattern}:
+        inside ${parentObject} ${margin} top bottom
+
+
+# Check that element is located inside another element on specific side with minimal margin
+# e.g.
+#
+#   login_button:
+#       | located at the top inside main_container
+#
+@rule located at the %{side} inside %{parentObject}
+    inside ${parentObject} ${GEXTRAS_NO_MARGIN} ${side}
+
+
+
+# Check that element is located inside another element on specific side with specific margin
+# e.g.
+#
+#   login_button:
+#       | located at the top inside main_container with 10px margin
+#
+@rule located at the %{side} inside %{parentObject} with %{margin} margin
+    inside ${parentObject} ${margin} ${side}
+
+
+
+# Check that multiple elements are located inside another element on specific side with minimal margin
+# e.g.
+#
+#   | menu.item-* should be located at the right inside menu with ~10px margin
+#
+@rule %{objectName} should be located at the %{side} inside %{parentObject}
+    ${objectName}:
+        inside ${parentObject} ${GEXTRAS_NO_MARGIN} ${side}
+
+
+# Check that multiple elements are located inside another element on specific side with specific margin
+# e.g.
+#
+#   | menu.item-* should be located at the right inside menu with ~10px margin
+#
+@rule %{objectName} should be located at the %{side} inside %{parentObject} with %{margin} margin
+    ${objectName}:
+        inside ${parentObject} ${margin} ${side}
+
+
+
+# Check that element is located on specific side inside another element
+# and that it takes some specific percentage of its width
+# e.g.
+#
+#   login_panel:
+#       | located on the left side of main_container and takes 70 % of its width
+#
+@rule located on the %{side} side of %{parentItem} and takes %{percentWidth}% of its %{sizeSide: width|height}
+    inside ${parentItem} ${GEXTRAS_NO_MARGIN} ${side}
+    width ${percentWidth} % of ${parentItem}/${sizeSide}
+
+
+
+# Check that element is located on specific side inside another element
+# and that it takes some specific percentage of its width
+# e.g.
+#
+#   login_panel:
+#       | located on the left side of main_container with ~10px margin and takes 70 % of its width
+#
+@rule located on the %{side} side of %{parentItem} with %{margin} margin and takes %{percentWidth}% of its %{sizeSide: width|height}
+    inside ${parentItem} ${margin} ${side}
+    width ${percentWidth} % of ${parentItem}/${sizeSide}
+
+
+
+
+# Check that multiple elements are located on specific side inside another element
+# and that they take some specific percentage of its width
+# e.g.
+#
+#   | message-* should be located on left side of main_container and take 70 % of its width
+#
+@rule %{itemPattern} should be located on the %{side} side of %{parentItem} and take %{percentWidth}% of its %{sizeSide: width|height}
+    ${itemPattern}:
+        inside ${parentItem} ${GEXTRAS_NO_MARGIN} ${side}
+        width ${percentWidth} % of ${parentItem}/${sizeSide}
+
+
+
+# Check that multiple elements are located on specific side inside another element
+# and that they take some specific percentage of its width
+# e.g.
+#
+#   | message-* should be located on left side of main_container and take 70 % of its width
+#
+@rule %{itemPattern} should be located on the %{side} side of %{parentItem} with %{margin} margin and take %{percentWidth}% of its %{sizeSide: width|height}
+    ${itemPattern}:
+        inside ${parentItem} ${margin} ${side}
+        width ${percentWidth} % of ${parentItem}/${sizeSide}
+
+
+
+
+# Apply some validations to the element only on a specific tag, and at the same time check that is absent on another tags
+# e.g.
+#
+#   | register_panel should be absent on mobile but on desktop,tablet:
+#       inside main_container 10 to 20px top left
+#
+@rule %{item} should be absent on %{absentTags} but on %{activeTags}:
+    ${item}:
+      @on ${absentTags}
+          absent
+      @on ${activeTags}
+          @ruleBody
+
+

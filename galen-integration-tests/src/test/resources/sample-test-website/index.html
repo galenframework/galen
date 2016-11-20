@@ -9,7 +9,7 @@
         <!-- Bootstrap -->
         <link href="css/bootstrap.min.css" rel="stylesheet">
         <link href="css/bootstrap-theme.min.css" rel="stylesheet">
-        <link href="main.css?v=3" rel="stylesheet">
+        <link href="main.css?v=7" rel="stylesheet">
 
         <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
         <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -27,9 +27,23 @@
         <script src="js/bootstrap.min.js"></script>
         <script src="js/myapp.js?v=3"></script>
         <script>
+            function onHashChange() {
+                var hash = window.location.hash;
+                if (hash === "#login") {
+                    App.showLoginPage();
+                    return true;
+                }
+
+                return false;
+            }
+
+
             $(function () {
                 App.init();
-                App.showWelcomePage();
+                if (!onHashChange()) {
+                    App.showWelcomePage();
+                }
+                window.onhashchange = onHashChange;
             });
         </script>
 
@@ -42,7 +56,7 @@
             <div id="menu">
                 <div class="middle-wrapper">
                     <ul>
-                        <li class="when-not-logged"><a href="#">Home</a></li>
+                        <li cass="when-not-logged"><a href="#">Home</a></li>
                         <li class="when-logged"><a href="#">My Notes</a></li>
                         <li class="when-logged"><a href="#">About</a></li>
                         <li class="when-logged"><a href="#">Contact</a></li>
@@ -56,16 +70,25 @@
             </div>
         </div>
         <div id="footer">
-            <div class="signature">
+            <div class="middle-wrapper">
+                <div class="footer-signature">
+                    Copyright (c) 2015
+                </div>
             </div>
         </div>
 
         <script id="tpl-welcome-page" type="text/x-handlebars-template">
             <div id="welcome-page" class="jumbotron">
                 <h1>Welcome to our test page!</h1>
-                <p>This app is used as a playground for <a href="http://galenframework.com">Galen Framework</a></p>
-                <p><button class="btn btn-lg btn-primary button-login" type="button" onclick="App.showLoginPage();">Login</button></p>
-                <p>To log in this website use the email <b>testuser@example.com</b> and password <b>test123</b>
+                <p>
+                    This app is used as a playground for <a href="http://galenframework.com">Galen Framework</a>
+                </p>
+                <p>
+                    To log in this website use the email <b>testuser@example.com</b> and password <b>test123</b>
+                </p>
+                <p>
+                    <button class="btn btn-lg btn-primary button-login" type="button" onclick="App.showLoginPage();">Login</button>
+                </p>
             </div>
         </script>
 

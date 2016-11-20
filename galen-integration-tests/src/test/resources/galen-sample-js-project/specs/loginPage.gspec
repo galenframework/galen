@@ -3,76 +3,56 @@
 @objects
     login_box           #login-page
     login_caption       #login-page h2
-
     username_textfield  input[name='login.username']
     password_textfield  input[name='login.password']
-
     login_button        .button-login
     cancel_button       .button-cancel
 
+@groups
+    (login_box_button, login_box_buttons)                   login_button, cancel_button
+    (login_box_textfield, login_box_textfields)             username_textfield, password_textfield
+    (login_box_form_element, login_box_form_elements)       login_caption, &login_box_textfields
+    (login_box_element, login_box_elements)                 &login_box_form_elements, &login_box_buttons
+
+@set
+    login_box_elements_vertical_margin  5 to 20px
+    login_box_elements_side_margin      ~ 40px
+    login_box_desktop_width             400px
+    login_caption_text                  Login
+    login_button_text                   Login
+    cancel_button_text                  Cancel
+
+@on mobile
+    @set login_box_elements_side_margin 0px
+
 
 = Login box =
-    @on *
-        login_box:
-            centered horizontally inside content 1px
-            below menu 20 to 45px
+    login_box:
+        | located at the top inside content with ${content_vertical_margin} margin
+        centered horizontally inside content 1px
 
-        login_caption:
-            height 20 to 35px
-            text is "Login"
+    | &login_box_elements should be more or less readable
+    | every &login_box_textfield has height ${form_textfield_height}
+    | &login_box_buttons should be tapable
 
-        username_textfield, password_textfield:
-            height 25 to 35 px
-
-        username_textfield:
-            below login_caption 5 to 15px
-            aligned vertically all password_textfield
-
-        password_textfield:
-            below username_textfield 5 to 15px
-            aligned vertically left login_button
-
-        login_button, cancel_button:
-            height 40 to 50 px
-
-        login_button:
-            text is "Login"
-
-        cancel_button:
-            text is "Cancel"
-
+    = Styling =
+        | login_button should look like a primary button
+        | cancel_button should look like a secondary button
 
     @on desktop, tablet
-        login_box:
-            width 400px
-
-        login_caption:
-            inside login_box ~ 40px top, ~ 20px left
-
-        username_textfield, password_textfield:
-            inside login_box ~ 20px left right
-
-        login_button:
-            below password_textfield 5 to 15px
-            width 70 to 90 px
-            aligned horizontally all cancel_button
-
-        cancel_button:
-            width 80 to 100 px
-            near login_button 3 to 8px right
-
-
+        | &login_box_form_elements are aligned vertically above each other with ${login_box_elements_vertical_margin} margin
+        | first &login_box_form_element is inside login_box ${login_box_elements_side_margin} top
+        | last &login_box_form_element is above login_button ${login_box_elements_vertical_margin}
+        | &login_box_buttons are aligned horizontally next to each other with 0 to 5px margin
     @on mobile
-        login_box:
-            inside screen ~ 20px left right
+        | &login_box_elements are aligned vertically above each other with ${login_box_elements_vertical_margin} margin
+        | &login_box_elements sides are vertically inside login_box with ${login_box_elements_side_margin} margin
 
-        username_textfield, password_textfield:
-            inside login_box 0px left right
+    login_caption:
+        text is "${login_caption_text}"
 
-        login_caption:
-            inside login_box 0px top, 0px left
+    login_button:
+        text is "${login_button_text}"
 
-        login_button:
-            inside login_box 0px left right
-            above cancel_button  4 to 10px
-            aligned vertically all cancel_button
+    cancel_button:
+        text is "${cancel_button_text}"

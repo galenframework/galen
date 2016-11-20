@@ -2,7 +2,7 @@ load("init.js");
 load("pages/LoginPage.js");
 
 
-testOnAllDevices("Login page", "/", function (driver, device) {
+testOnAllDevices("Login page", null, function (driver, device) {
 
     var loginPage = null;
 

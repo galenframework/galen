@@ -4,7 +4,7 @@ load("pages/MyNotesPage.js");
 load("pages/AddNotePage.js");
 load("commons.js");
 
-testOnAllDevices("Add note page", "/", function (driver, device) {
+testOnAllDevices("Add note page", null, function (driver, device) {
     loginAsTestUser(driver);
     var myNotesPage = new MyNotesPage(driver);
     myNotesPage.addNoteButton.click();

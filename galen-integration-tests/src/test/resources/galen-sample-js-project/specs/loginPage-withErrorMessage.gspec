@@ -1,4 +1,4 @@
-
+@import galen-extras/galen-extras-rules.gspec
 
 @objects
     password_textfield   input[name='login.password']
@@ -6,15 +6,20 @@
     error_message        #login-error-message
 
 
+@set
+    login_box_elements_vertical_margin  5 to 30px
+    error_message_height                30 to 70px
+
+
 = Error message =
-    @on *
+    | password_textfield, error_message are aligned vertically above each other with ${login_box_elements_vertical_margin} margin
+
+    error_message:
+        height ${error_message_height}
+
+
+    @on desktop
         error_message:
-            below password_textfield 5 to 15px
-            height ~ 52px
-            aligned vertically all password_textfield
-            above login_button 10 to 30px
-
-
+            above login_button ${login_box_elements_vertical_margin}
     @on mobile
-        error_message:
-            aligned vertically all login_button
+        | error_message, login_button are aligned vertically above each other with ${login_box_elements_vertical_margin} margin

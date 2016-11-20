@@ -1,0 +1,11 @@
+@set 
+    PRIMARY_BACKGROUND_COLOR        #2d6ca2
+    SECONDARY_BACKGROUND_COLOR      #f0f0f0
+
+@rule %{objectName} should look like a %{style} button
+    ${objectName}:
+        @if ${style === "primary"}
+            color-scheme > 70% ${PRIMARY_BACKGROUND_COLOR}, 0.1 to 10% white
+        @else
+            color-scheme > 70% ${SECONDARY_BACKGROUND_COLOR}, 0.1 to 10% black
+

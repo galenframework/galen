@@ -38,7 +38,7 @@ import static org.testng.Assert.assertTrue;
 
 public class GalenFullJsProjectIT {
     public static final String PATH_TO_TEST_PROJECT = GalenFullJsProjectIT.class.getResource("/galen-sample-js-project").getFile();
-    public static final String PATH_TO_TEST_WEBSITE = GalenFullJsProjectIT.class.getResource("/sample-test-website/index.html").getFile();
+    public static final String PATH_TO_TEST_WEBSITE = "file://" + GalenFullJsProjectIT.class.getResource("/sample-test-website/index.html").getFile();
 
 
     @Test
@@ -51,6 +51,7 @@ public class GalenFullJsProjectIT {
         String jsonReportPath = Files.createTempDir().getAbsolutePath() + "/json-report";
         String htmlReportPath = Files.createTempDir().getAbsolutePath() + "/html-report";
 
+        System.out.println(htmlReportPath);
 
         new GalenMain().execute("test", PATH_TO_TEST_PROJECT + "/tests/", "--htmlreport", htmlReportPath, "--jsonreport", jsonReportPath);
 
@@ -64,56 +65,27 @@ public class GalenFullJsProjectIT {
             JsonNode jsonTree = mapper.readTree(FileUtils.readFileToString(new File(jsonReportPath + "/report.json")));
 
             assertMap(toMap(jsonTree), new HashMap<String, TestStatistic>() {{
-                        put("Welcome page long words test on mobile device", new TestStatistic(32, 10, 0, 42));
-                        put("Welcome page long words test on tablet device", new TestStatistic(43, 10, 0, 53));
-                        put("Welcome page long words test on desktop device", new TestStatistic(47, 9, 0, 56));
-                        put("Add note page on desktop device", new TestStatistic(60, 0, 0, 60));
-                        put("Add note page on mobile device", new TestStatistic(43, 0, 0, 43));
-                        put("Add note page on tablet device", new TestStatistic(57, 0, 0, 57));
-                        put("Login page on desktop device", new TestStatistic(65, 0, 0, 65));
-                        put("Login page on mobile device", new TestStatistic(50, 0, 0, 50));
-                        put("Login page on tablet device", new TestStatistic(62, 0, 0, 62));
-                        put("My notes page on desktop device", new TestStatistic(63, 0, 0, 63));
-                        put("My notes page on mobile device", new TestStatistic(47, 0, 0, 47));
-                        put("My notes page on tablet device", new TestStatistic(60, 0, 0, 60));
-                        put("Welcome page on desktop device", new TestStatistic(49, 0, 0, 49));
-                        put("Welcome page on mobile device", new TestStatistic(35, 0, 0, 35));
-                        put("Welcome page on tablet device", new TestStatistic(46, 0, 0, 46));
+                        put("Add note page on desktop emulation device", new TestStatistic(74, 0, 0, 74));
+                        put("Add note page on mobile emulation device", new TestStatistic(73, 0, 0, 73));
+                        put("Add note page on tablet emulation device", new TestStatistic(74, 0, 0, 74));
+                        put("Login page on desktop emulation device", new TestStatistic(80, 0, 0, 80));
+                        put("Login page on mobile emulation device", new TestStatistic(84, 0, 0, 84));
+                        put("Login page on tablet emulation device", new TestStatistic(79, 0, 0, 79));
+                        put("My notes page on desktop emulation device", new TestStatistic(81, 0, 0, 81));
+                        put("My notes page on mobile emulation device", new TestStatistic(83, 0, 0, 83));
+                        put("My notes page on tablet emulation device", new TestStatistic(81, 0, 0, 81));
+                        put("Welcome page on desktop emulation device", new TestStatistic(70, 1, 0, 71));
+                        put("Welcome page on mobile emulation device", new TestStatistic(68, 0, 0, 68));
+                        put("Welcome page on tablet emulation device", new TestStatistic(70, 1, 0, 71));
+
                     }}
             );
 
 
             List<String> errorMessages = collectAllErrorMessages(jsonTree, jsonReportPath);
             assertErrorMessages(errorMessages, asList(
-                    regex().exact("\"header\" is not centered horizontally inside \"screen\". Offset is ").digits(2).exact("px").toString(),
-                    regex().exact("\"header.text\" is not completely inside. The offset is ").digits(2).exact("px.").toString(),
-                    regex().exact("\"header.text\" text is \"Freundschaftsbezeigungen\" but should be \"Sample Website\"").toString(),
-                    regex().exact("\"menu\" is not centered horizontally inside \"screen\". Offset is ").digits(2).exact("px").toString(),
-                    regex().exact("\"menu.item-1\" width is ").digits().exact("% [").digits(3).exact("px] which is not in range of 48 to 50% [").digits(3).exact(" to ").digits(3).exact("px]").toString(),
-                    regex().exact("\"menu.item-2\" width is ").digits().exact("% [").digits(3).exact("px] which is not in range of 48 to 50% [").digits(3).exact(" to ").digits(3).exact("px]").toString(),
-                    regex().exact("\"menu.item-3\" width is ").digits().exact("% [").digits(3).exact("px] which is not in range of 48 to 50% [").digits(3).exact(" to ").digits(3).exact("px]").toString(),
-                    regex().exact("\"menu.item-4\" width is ").digits().exact("% [").digits(3).exact("px] which is not in range of 48 to 50% [").digits(3).exact(" to ").digits(3).exact("px]").toString(),
-                    regex().exact("\"content\" is not centered horizontally inside \"screen\". Offset is ").digits(2).exact("px").toString(),
-                    regex().exact("\"greeting\" height is ").digits(2).exact("px which is not in range of 76 to 80px").toString(),
-                    regex().exact("\"header.text\" text is \"Freundschaftsbezeigungen\" but should be \"Sample Website\"").toString(),
-                    regex().exact("\"menu.item-1\" is ").digits(2).exact("px bottom which is not in range of -2 to 2px").toString(),
-                    regex().exact("\"menu.item-1\" width is ").digits(3).exact("px which is not in range of 90 to 130px").toString(),
-                    regex().exact("\"menu.item-2\" width is ").digits(3).exact("px which is not in range of 90 to 130px").toString(),
-                    regex().exact("\"menu.item-3\" width is ").digits(3).exact("px which is not in range of 90 to 130px").toString(),
-                    regex().exact("\"menu.item-3\" is ").digits(2).exact("px top which is not in range of -2 to 2px").toString(),
-                    regex().exact("\"menu.item-3\" is -").digits(3).exact("px right of \"menu.item-2\" which is not in range of 0 to 5px").toString(),
-                    regex().exact("\"menu.item-2\" is not aligned horizontally all with \"menu.item-3\". Offset is ").digits(2).exact("px").toString(),
-                    regex().exact("\"menu.item-4\" width is ").digits(3).exact("px which is not in range of 90 to 130px").toString(),
-                    regex().exact("\"menu.item-4\" is ").digits(2).exact("px top which is not in range of -2 to 2px").toString(),
-                    regex().exact("\"header.text\" text is \"Freundschaftsbezeigungen\" but should be \"Sample Website for Galen Framework\"").toString(),
-                    regex().exact("\"menu.item-1\" is ").digits(2).exact("px bottom which is not in range of -2 to 2px").toString(),
-                    regex().exact("\"menu.item-1\" width is ").digits(3).exact("px which is not in range of 90 to 130px").toString(),
-                    regex().exact("\"menu.item-2\" width is ").digits(3).exact("px which is not in range of 90 to 130px").toString(),
-                    regex().exact("\"menu.item-3\" width is ").digits(3).exact("px which is not in range of 90 to 130px").toString(),
-                    regex().exact("\"menu.item-4\" width is ").digits(3).exact("px which is not in range of 90 to 130px").toString(),
-                    regex().exact("\"menu.item-4\" is ").digits(2).exact("px top which is not in range of -2 to 2px").toString(),
-                    regex().exact("\"menu.item-4\" is -").digits(3).exact("px right of \"menu.item-3\" which is not in range of 0 to 5px").toString(),
-                    regex().exact("\"menu.item-3\" is not aligned horizontally all with \"menu.item-4\". Offset is ").digits(2).exact("px").toString()
+                regex().exact("\"login_button\" width is ").digits(2).exact("px instead of 20px").toString(),
+                regex().exact("\"login_button\" width is ").digits(2).exact("px instead of 20px").toString()
             ));
         } catch (Exception ex) {
             throw new RuntimeException("Report validation failed:\n" +

@@ -1,98 +1,38 @@
+@import common-data.gspec
 
-@objects
-    header                   #header .middle-wrapper
-        logo                    #header-logo
-        text                    h1
-    menu                     #menu ul
-        item-*                  li a
-    content                  #content
-    footer                   #footer
+= Skeleton =
+    | &skeleton_elements sides are vertically inside screen
+    | &skeleton_elements are aligned vertically above each other
 
-@groups
-    longWordTest             header.text, menu.item-*
+    = A page should be centered horizontally inside screen with ${skeleton_max_width} on desktop, but on mobile and tablet it should stretch to screen =
+        | every &skeleton_element is centered horizontally inside screen
 
+        @on desktop
+            | every &skeleton_element has width ${skeleton_max_width}
+        @on mobile, tablet
+            | every &skeleton_element is aligned vertically all screen
 
 = Header =
-    @on *
-        header:
-            inside screen 0px top
-            centered horizontally inside screen 1px
-            height ~ 70px
-
-        header.logo:
-            inside header 5 to 15px top, 0 to 10px left
-            near header.text 5 to 30px left
-
-        header.text:
-            inside header 10 to 25px top
-
-    @on desktop
-        header:
-            width 900px
-
-        header.text:
-            text is "Sample Website for Galen Framework"
-
-
-    @on mobile, tablet
-        header.text:
-            text is "Sample Website"
-
-
-
+    header:
+        height ${header_height}
+        @on mobile, tablet
+            text is "${header_mobile_text}"
+        @on desktop
+            text is "${header_desktop_text}"
 
 = Menu =
-    menu:
-        centered horizontally inside screen 1px
-        below header ~ 0px
-
-
-    @on desktop
-        menu:
-            width 900px
-
+    @on *
+        | amount of visible &menu_items should be > 3
+        | every &menu_item is inside menu and has height ${menu_height}
+        | first &menu_item is inside menu 0px top left
 
     @on desktop, tablet
-        menu.item-1:
-            inside menu ~ 0px top left bottom
-
-        menu.item-*:
-            width 90 to 130px
-            height ~ 64px
-            inside menu ~ 0px top
-
-        @forEach [menu.item-*] as menuItem, prev as previousMenuItem
-            ${menuItem}:
-                right-of ${previousMenuItem} 0 to 5px
-                aligned horizontally all ${previousMenuItem}
-
-
+        | &menu_items are aligned horizontally next to each other
+        | every &menu_item is aligned horizontally all menu
     @on mobile
-        menu.item-* :
-            width 48 to 50% of screen/width
-
-        @for [ 1, 2 ] as index
-            menu.item-${index}:
-                above menu.item-${index + 2} 0 to 5px
-
-        @for [ 1, 3 ] as index
-            menu.item-${index}:
-                near menu.item-${index + 1}  0 to 5 px left
-
-
-= Content =
-    @on *
-        content:
-            below menu ~ 0px
-            centered horizontally inside screen 1px
-
-
-    @on desktop
-        content:
-            width 900px
+        | &menu_items are rendered in 2 column table layout
 
 
 = Footer =
     footer:
-        height ~ 200px
-        below content 0px
+        height ${footer_height}

@@ -4,51 +4,37 @@
     caption                 #content h2
     title_textfield         input[name='note.title']
     description_textfield   textarea
-    button_add              button.btn-primary
-    button_cancel           button.btn-default
+    add_button              button.btn-primary
+    cancel_button           button.btn-default
+
+
+@groups
+    (add_note_form_element, add_note_form_elements)     caption, title_textfield, description_textfield
+    (add_note_form_button, add_note_form_buttons)       add_button, cancel_button
+    (add_note_element, add_note_elements)               &add_note_form_elements, &add_note_form_buttons
+
+
+@set
+    add_note_elements_vertical_margin   5 to 20px
+    description_height                  150 to 350px
 
 
 = Add note page =
-    @on *
-        caption:
-            below menu 20 to 45 px
-            inside content ~ 20px left right
-            height 20 to 40px
-            above title_textfield 10 to 20px
-            aligned vertically all title_textfield
+    | caption should be located at the top inside content with ${content_vertical_margin} margin
 
-        title_textfield:
-            inside content ~ 20px left right
-            below caption 10 to 20px
-            inside content ~ 20px left right
-            height 25 to 40px
-            above description_textfield 10 to 20px
-
-        description_textfield:
-            aligned vertically all title_textfield
-            height 150 to 350px
-
-
-        button_add, button_cancel:
-            height 40 to 50px
-
+    | &add_note_elements should be more or less readable
+    | &add_note_form_elements should stretch to content with ${content_horizontal_margin} margin
+    | &add_note_form_button should be tapable
 
     @on desktop, tablet
-        button_add:
-            width 80 to 140px
-            aligned horizontally all button_cancel
-            below description_textfield 10 to 20px
-            aligned vertically left description_textfield
-
-        button_cancel:
-            near button_add 0 to 10px right
-            width 80 to 140px
-
-
-
+        | &add_note_form_elements are aligned vertically above each other with ${add_note_elements_vertical_margin} margin
+        | last &add_note_form_element is above add_button ${add_note_elements_vertical_margin}
+        | &add_note_form_buttons are aligned horizontally next to each other with 0 to 5px margin
     @on mobile
-        button_add, button_cancel:
-            aligned vertically all description_textfield
+        | &add_note_elements are aligned vertically above each other with ${add_note_elements_vertical_margin} margin
 
-        button_cancel:
-            below button_add 10 to 20px
+    title_textfield:
+        height ${form_textfield_height}
+    
+    description_textfield:
+        height ${description_height}

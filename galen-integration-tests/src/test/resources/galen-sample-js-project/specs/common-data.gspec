@@ -1,0 +1,38 @@
+@import rules.gspec
+@import galen-extras/galen-extras-rules.gspec
+
+@objects
+    header                   #header .middle-wrapper
+        logo                    #header-logo
+        text                    h1
+    menu                     #menu ul
+        item-*                  li a
+    content                  #content
+    footer                   #footer .middle-wrapper
+
+@groups
+    (menu_item, menu_items)     menu.item-*
+    skeleton_elements           header, menu, content, footer
+    skeleton_element            &skeleton_elements
+
+@set
+    minimal             -1 to 1px
+    tiny                0 to 5px
+    small               5 to 15px
+    normal              15 to 25px
+    medium              25 to 35px
+
+    skeleton_max_width  900px
+    header_height       ~ 70px
+    menu_height         ~ 64px
+    menu_item_height    ${menu_height}
+    footer_height       ~ 150px
+
+    header_mobile_text  Sample Website
+    header_desktop_text Sample Website for Galen Framework
+
+    content_vertical_margin 20 to 45px
+    content_horizontal_margin ~ 20px
+
+    form_textfield_height   34px
+

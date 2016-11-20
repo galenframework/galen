@@ -7,52 +7,37 @@
     login_button        #welcome-page .button-login
 
 @groups
-    longWordTest greeting
+    (greeting_element, greeting_elements)   greeting, text_block-*
 
 
-= Content =
-    @on *
-        welcome_block:
-            inside content ~ 20px top left right
-
-        text_block-1, login_button, text_block-3:
-            inside welcome_block ~30px left
-
-        greeting:
-            above text_block-1 10 to 50 px
-            inside welcome_block ~ 30px left
-
-        text_block-1:
-            height > 20px
-            above login_button 10 to 50 px
-
-        login_button:
-            height ~ 45px
-            text is "Login"
-            above text_block-3 10 to 50px
+@set
+    welcome_block_margin                20px
+    greeting_height                     40 to 70px
+    greeting_elements_margin            30px
+    greeting_elements_outer_margin       60 to 75px
+    greeting_elements_vertical_margin   8 to 20px
+    login_button_text                   Login
+    login_button_desktop_width          ~ 78px
 
 
-    @on desktop
-        greeting:
-            height ~ 69px
-            inside welcome_block ~ 68 px top
-
-        login_button:
-            width 70 to 90px
+@on tablet, mobile
+    @set greeting_elements_outer_margin  45 to 60px
 
 
-    @on tablet
-        greeting:
-            height ~ 39px
-            inside welcome_block ~ 50 px top
+= Welcome block =
+    | welcome_block should be located at the top inside content with ${normal} margin
+    | welcome_block should stretch to content with ${welcome_block_margin} margin
 
-        login_button:
-            width 70 to 90px
+    | &greeting_elements should stretch to welcome_block with ${medium} margin
+    | &greeting_elements sides are vertically inside welcome_block with ${greeting_elements_outer_margin} margin
+    | &greeting_elements are aligned vertically above each other with ${greeting_elements_vertical_margin} margin
+    | &greeting_elements should be more or less readable
 
-    @on mobile
-        greeting:
-            height ~ 78px
-            inside welcome_block ~ 50 px top
+    login_button:
+        text is "${login_button_text}"
+        | is tapable
+        @on desktop, tablet
+            width 20px
+        @on mobile
+            | stretches to welcome_block with ${medium} margin
 
-        login_button:
-            inside welcome_block ~ 30px left right

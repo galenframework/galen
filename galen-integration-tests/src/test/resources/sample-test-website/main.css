@@ -16,18 +16,28 @@ body {
     padding: 0;
     list-style: none;
 }
-#menu li {
-    display: inline-block;
-}
 #menu ul:after {
+    position: relative;
+    display: block;
+    content: " ";
     clear: both;
 }
+#menu li {
+    position: relative;
+    display: block;
+    float: left;
+    margin: 0;
+    padding: 0;
+}
 #menu li a {
+    display: block;
+    margin: 0;
+    padding: 3px 10px;
+    position: relative;
     min-width: 100px;
     font-size: 1.2em;
     color: white;
     padding: 20px;
-    display: inline-block;
 }
 #menu li a:hover {
     background: url('images/menu-highlight.png');
@@ -60,7 +70,7 @@ body {
 
 #content {
     padding: 20px;
-    min-height: 400px;
+    min-height: 450px;
 }
 .error-message {
     color: red;
@@ -71,7 +81,13 @@ body {
 #footer {
     background: #333;
     color: white;
-    min-height: 200px;
+}
+#footer .middle-wrapper {
+    min-height: 150px;
+}
+#footer .footer-signature {
+    padding: 20px;
+    text-align: right;
 }
 
 @media (min-width: 501px) {
@@ -97,7 +113,7 @@ body {
         width: 100%;
     }
     #menu li {
-        width: 49%;
+        width: 50%;
     }
     #menu li a {
         width: 100%;
@@ -109,7 +125,14 @@ body {
     }
 }
 
+.btn-default {
+    background: #f0f0f0;
+    color: black;
+}
 
+.btn-primary {
+    background: #2d6ca2;
+}
 .btn-primary:hover {
     background: #22A30B;
     color: #fff;

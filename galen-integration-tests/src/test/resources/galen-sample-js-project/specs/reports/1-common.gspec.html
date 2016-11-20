@@ -1,0 +1,617 @@
+<html>
+    <head>
+        <title>Galen Reports</title>
+        <link rel="stylesheet" type="text/css" href="report.css"></link>
+        <script src="jquery-1.11.2.min.js"></script>
+        <script src="handlebars-v2.0.0.js"></script>
+        <script src="galen-report.js"></script>
+        <script>
+var reportData = {
+  "testId" : "1-common.gspec",
+  "name" : "common.gspec",
+  "report" : {
+    "nodes" : [ {
+      "name" : "Simple check",
+      "status" : "info",
+      "nodes" : [ {
+        "name" : "check  common.gspec --url http://testapp.galenframework.com --size 1024x768 --htmlreport reports",
+        "status" : "info",
+        "nodes" : [ {
+          "name" : "Check layout: common.gspec included tags: ",
+          "status" : "error",
+          "time" : 1464507625187,
+          "sections" : [ {
+            "name" : "Skeleton",
+            "objects" : [ ],
+            "sections" : [ {
+              "name" : "&skeleton_elements sides are vertically inside screen",
+              "objects" : [ {
+                "name" : "header",
+                "specs" : [ {
+                  "status" : "info",
+                  "place" : {
+                    "filePath" : "<unknown source>",
+                    "lineNumber" : -1
+                  },
+                  "name" : "inside screen -1 to 1 px top",
+                  "highlight" : [ "header", "screen" ]
+                } ]
+              }, {
+                "name" : "menu",
+                "specs" : [ {
+                  "status" : "info",
+                  "place" : {
+                    "filePath" : "<unknown source>",
+                    "lineNumber" : -1
+                  },
+                  "name" : "inside screen",
+                  "highlight" : [ "menu", "screen" ]
+                } ]
+              }, {
+                "name" : "content",
+                "specs" : [ {
+                  "status" : "info",
+                  "place" : {
+                    "filePath" : "<unknown source>",
+                    "lineNumber" : -1
+                  },
+                  "name" : "inside screen",
+                  "highlight" : [ "content", "screen" ]
+                } ]
+              }, {
+                "name" : "footer",
+                "specs" : [ {
+                  "status" : "info",
+                  "place" : {
+                    "filePath" : "<unknown source>",
+                    "lineNumber" : -1
+                  },
+                  "name" : "inside screen -1 to 1 px bottom",
+                  "highlight" : [ "footer", "screen" ]
+                } ]
+              } ]
+            }, {
+              "name" : "&skeleton_elements are aligned vertically above each other",
+              "objects" : [ {
+                "name" : "header",
+                "specs" : [ {
+                  "status" : "info",
+                  "place" : {
+                    "filePath" : "galen-extras/galen-extras-rules.gspec",
+                    "lineNumber" : 138
+                  },
+                  "name" : "aligned vertically all menu",
+                  "highlight" : [ "header", "menu" ]
+                }, {
+                  "status" : "info",
+                  "place" : {
+                    "filePath" : "galen-extras/galen-extras-rules.gspec",
+                    "lineNumber" : 139
+                  },
+                  "name" : "above menu -1 to 1px",
+                  "highlight" : [ "header", "menu" ]
+                } ]
+              }, {
+                "name" : "menu",
+                "specs" : [ {
+                  "status" : "info",
+                  "place" : {
+                    "filePath" : "galen-extras/galen-extras-rules.gspec",
+                    "lineNumber" : 138
+                  },
+                  "name" : "aligned vertically all content",
+                  "highlight" : [ "menu", "content" ]
+                }, {
+                  "status" : "info",
+                  "place" : {
+                    "filePath" : "galen-extras/galen-extras-rules.gspec",
+                    "lineNumber" : 139
+                  },
+                  "name" : "above content -1 to 1px",
+                  "highlight" : [ "menu", "content" ]
+                } ]
+              }, {
+                "name" : "content",
+                "specs" : [ {
+                  "status" : "info",
+                  "place" : {
+                    "filePath" : "galen-extras/galen-extras-rules.gspec",
+                    "lineNumber" : 138
+                  },
+                  "name" : "aligned vertically all footer",
+                  "highlight" : [ "content", "footer" ]
+                }, {
+                  "status" : "info",
+                  "place" : {
+                    "filePath" : "galen-extras/galen-extras-rules.gspec",
+                    "lineNumber" : 139
+                  },
+                  "name" : "above footer -1 to 1px",
+                  "highlight" : [ "content", "footer" ]
+                } ]
+              } ]
+            }, {
+              "name" : "A page should be centered horizontally inside screen with 900px on desktop, but on mobile and tablet it should stretch to screen",
+              "objects" : [ ],
+              "sections" : [ {
+                "name" : "every &skeleton_element is centered horizontally inside screen",
+                "objects" : [ {
+                  "name" : "header",
+                  "specs" : [ {
+                    "status" : "info",
+                    "place" : {
+                      "filePath" : "galen-extras/galen-extras-rules.gspec",
+                      "lineNumber" : 265
+                    },
+                    "name" : "centered horizontally inside screen",
+                    "highlight" : [ "header", "screen" ]
+                  } ]
+                }, {
+                  "name" : "menu",
+                  "specs" : [ {
+                    "status" : "info",
+                    "place" : {
+                      "filePath" : "galen-extras/galen-extras-rules.gspec",
+                      "lineNumber" : 265
+                    },
+                    "name" : "centered horizontally inside screen",
+                    "highlight" : [ "menu", "screen" ]
+                  } ]
+                }, {
+                  "name" : "content",
+                  "specs" : [ {
+                    "status" : "info",
+                    "place" : {
+                      "filePath" : "galen-extras/galen-extras-rules.gspec",
+                      "lineNumber" : 265
+                    },
+                    "name" : "centered horizontally inside screen",
+                    "highlight" : [ "content", "screen" ]
+                  } ]
+                }, {
+                  "name" : "footer",
+                  "specs" : [ {
+                    "status" : "info",
+                    "place" : {
+                      "filePath" : "galen-extras/galen-extras-rules.gspec",
+                      "lineNumber" : 265
+                    },
+                    "name" : "centered horizontally inside screen",
+                    "highlight" : [ "footer", "screen" ]
+                  } ]
+                } ]
+              } ]
+            } ]
+          }, {
+            "name" : "Header",
+            "objects" : [ {
+              "name" : "header",
+              "specs" : [ {
+                "status" : "info",
+                "place" : {
+                  "filePath" : "common.gspec",
+                  "lineNumber" : 17
+                },
+                "name" : "height 70px",
+                "highlight" : [ "header" ]
+              } ]
+            } ]
+          }, {
+            "name" : "Menu",
+            "objects" : [ {
+              "name" : "menu.item-1",
+              "specs" : [ {
+                "status" : "error",
+                "place" : {
+                  "filePath" : "common.gspec",
+                  "lineNumber" : 25
+                },
+                "name" : "image file imgs/menu.item-2.png, filter replace-colors #fff-#DBE5EE-#C5D4E3 with #2E65A0",
+                "errors" : [ "Element does not look like \"imgs/menu.item-2.png\". There are 297 mismatching pixels but max allowed is 0" ],
+                "highlight" : [ "menu.item-1" ],
+                "imageComparison" : {
+                  "actualImage" : "layout-2-menu.item-1-actual.png",
+                  "expectedImage" : "layout-3-menu.item-1-expected.png",
+                  "comparisonMapImage" : "layout-4-menu.item-1-map.png"
+                }
+              } ]
+            } ],
+            "sections" : [ {
+              "name" : "amount of visible &menu_items should be > 3",
+              "objects" : [ {
+                "name" : "global",
+                "specs" : [ {
+                  "status" : "info",
+                  "place" : {
+                    "filePath" : "galen-extras/galen-extras-rules.gspec",
+                    "lineNumber" : 113
+                  },
+                  "name" : "count visible \"&menu_items\" is > 3",
+                  "highlight" : [ "menu.item-3", "menu.item-4", "menu.item-1", "menu.item-2" ]
+                } ]
+              } ]
+            }, {
+              "name" : "every &menu_item is inside menu and has height 64px",
+              "objects" : [ {
+                "name" : "menu.item-1",
+                "specs" : [ {
+                  "status" : "info",
+                  "place" : {
+                    "filePath" : "galen-extras/galen-extras-rules.gspec",
+                    "lineNumber" : 279
+                  },
+                  "name" : "inside menu",
+                  "highlight" : [ "menu.item-1", "menu" ]
+                }, {
+                  "status" : "info",
+                  "place" : {
+                    "filePath" : "galen-extras/galen-extras-rules.gspec",
+                    "lineNumber" : 280
+                  },
+                  "name" : "height 64px",
+                  "highlight" : [ "menu.item-1" ]
+                } ]
+              }, {
+                "name" : "menu.item-2",
+                "specs" : [ {
+                  "status" : "info",
+                  "place" : {
+                    "filePath" : "galen-extras/galen-extras-rules.gspec",
+                    "lineNumber" : 279
+                  },
+                  "name" : "inside menu",
+                  "highlight" : [ "menu.item-2", "menu" ]
+                }, {
+                  "status" : "info",
+                  "place" : {
+                    "filePath" : "galen-extras/galen-extras-rules.gspec",
+                    "lineNumber" : 280
+                  },
+                  "name" : "height 64px",
+                  "highlight" : [ "menu.item-2" ]
+                } ]
+              }, {
+                "name" : "menu.item-3",
+                "specs" : [ {
+                  "status" : "info",
+                  "place" : {
+                    "filePath" : "galen-extras/galen-extras-rules.gspec",
+                    "lineNumber" : 279
+                  },
+                  "name" : "inside menu",
+                  "highlight" : [ "menu.item-3", "menu" ]
+                }, {
+                  "status" : "info",
+                  "place" : {
+                    "filePath" : "galen-extras/galen-extras-rules.gspec",
+                    "lineNumber" : 280
+                  },
+                  "name" : "height 64px",
+                  "highlight" : [ "menu.item-3" ]
+                } ]
+              }, {
+                "name" : "menu.item-4",
+                "specs" : [ {
+                  "status" : "info",
+                  "place" : {
+                    "filePath" : "galen-extras/galen-extras-rules.gspec",
+                    "lineNumber" : 279
+                  },
+                  "name" : "inside menu",
+                  "highlight" : [ "menu.item-4", "menu" ]
+                }, {
+                  "status" : "info",
+                  "place" : {
+                    "filePath" : "galen-extras/galen-extras-rules.gspec",
+                    "lineNumber" : 280
+                  },
+                  "name" : "height 64px",
+                  "highlight" : [ "menu.item-4" ]
+                } ]
+              } ]
+            }, {
+              "name" : "first &menu_item is inside menu 0px top left",
+              "objects" : [ {
+                "name" : "menu.item-1",
+                "specs" : [ {
+                  "status" : "info",
+                  "place" : {
+                    "filePath" : "galen-extras/galen-extras-rules.gspec",
+                    "lineNumber" : 296
+                  },
+                  "name" : "inside menu 0px top left",
+                  "highlight" : [ "menu.item-1", "menu" ]
+                } ]
+              } ]
+            } ]
+          }, {
+            "name" : "Footer",
+            "objects" : [ {
+              "name" : "footer",
+              "specs" : [ {
+                "status" : "info",
+                "place" : {
+                  "filePath" : "common.gspec",
+                  "lineNumber" : 40
+                },
+                "name" : "height 150px",
+                "highlight" : [ "footer" ]
+              } ]
+            } ]
+          } ],
+          "objects" : {
+            "menu.item-3" : {
+              "area" : [ 265, 70, 100, 64 ]
+            },
+            "menu.item-4" : {
+              "area" : [ 365, 70, 100, 64 ]
+            },
+            "footer" : {
+              "area" : [ 55, 584, 900, 150 ]
+            },
+            "header" : {
+              "area" : [ 55, 0, 900, 70 ]
+            },
+            "screen" : {
+              "area" : [ 0, 0, 1010, 734 ]
+            },
+            "menu" : {
+              "area" : [ 55, 70, 900, 64 ]
+            },
+            "content" : {
+              "area" : [ 55, 134, 900, 450 ]
+            },
+            "menu.item-1" : {
+              "area" : [ 55, 70, 100, 64 ]
+            },
+            "menu.item-2" : {
+              "area" : [ 155, 70, 110, 64 ]
+            }
+          },
+          "screenshot" : "layout-1-screenshot.png",
+          "type" : "layout"
+        } ],
+        "time" : 1464507622944,
+        "type" : "node"
+      } ],
+      "time" : 1464507619124,
+      "type" : "node"
+    } ]
+  }
+};
+        </script>
+        <script>
+
+            $(function () {
+                var galenReport = createGalenReport();
+                galenReport.render("main", reportData);
+            });
+        </script>
+    </head>
+    <body>
+        <script id="report-tpl" type="text/x-handlebars-template">
+            <ul class="report-nodes">
+            {{#each report.nodes}}
+                {{renderNode this}}
+            {{/each}}
+            </ul>
+        </script>
+        <script id="report-node-tpl" type="text/x-handlebars-template">
+            <li>
+                <span class="report-time">{{formatReportTime time}}</span>
+                <a class="expand-link node-expand-button node-status-{{status}} contains-children-{{hasChildElements nodes}} collapsed" href="#">{{status}}</a>
+                <div class="node-name node-status-{{status}}">{{name}}</div>
+                {{#if extras}}
+                    {{renderNodeExtras extras}}
+                {{/if}}
+                {{#if stacktrace}}
+                    <div class="stacktrace">{{stacktrace}}</div>
+                {{/if}}
+                {{#if attachments}}
+                    <ul class="report-node-attachments">
+                        {{#each attachments}}
+                            <li>
+                                <a class="icon-sprite-before node-attachment" href="{{this}}">{{this}}</a>
+                            </li>
+                        {{/each}}
+                    </ul>
+                {{/if}}
+                <div class="node-details expand-container">
+                    {{#if nodes}}
+                        <ul class="report-nodes">
+                            {{#each nodes}}
+                                {{renderNode this}}
+                            {{/each}}
+                        </ul>
+                    {{/if}}
+                </div>
+            </li>
+        </script>
+        <script id="report-node-text-tpl" type="text/x-handlebars-template">
+            <li>
+                <div class="node-simple-text">
+                    {{name}}
+                </div>
+            </li>
+        </script>
+        <script id="report-layout-tpl" type="text/x-handlebars-template">
+            <li>
+                <span class="report-time">{{formatReportTime time}}</span>
+                <a class="expand-link node-expand-button node-status-label node-status-info contains-children-true collapsed" href="#">LAYOUT</a>
+                <div class="node-name">{{name}}</div>
+                <div class="node-horizontal-menu" data-layout-id="{{layoutId}}"><a class="layout-heatmap-link" href="#">Heat Map</a></div>
+                <div class="node-details expand-container">
+                    {{renderSublayout this}}
+                </div>
+            </li>
+        </script>
+        <script id="report-layout-sublayout-tpl" type="text/x-handlebars-template">
+            <div class="layout-report" data-layout-id="{{layoutId}}" {{#if screenshot}}data-screenshot="{{screenshot}}"{{/if}}>
+                <ul class="layout-sections">
+                    {{#each sections}}
+                        {{renderLayoutSection this}}
+                    {{/each}}
+                </ul>
+            </div>
+        </script>
+        <script id="report-layout-section-tpl" type="text/x-handlebars-template">
+            <li>
+                <a class="layout-section icon-sprite-before expand-link contains-children-true" href="#">{{name}}</a>
+                <div class="layout-details expand-container">
+                    {{#if sections}}
+                        <ul class="layout-sections">
+                        {{#each sections}}
+                            {{renderLayoutSection this}}
+                        {{/each}}
+                        </ul>
+                    {{/if}}
+                    {{#if objects}}
+                        <ul class="layout-objects">
+                            {{#each objects}}
+                                {{renderLayoutObject this}}
+                            {{/each}}
+                        </ul>
+                    {{/if}}
+                </div>
+            </li>
+        </script>
+
+        <script id="report-layout-object-tpl" type="text/x-handlebars-template">
+            <li>
+                <a class="layout-object icon-sprite-before expand-link contains-children-true" href="#">{{name}}</a>
+                <ul class="layout-checks expand-container">
+                    {{#each specs}}
+                        {{renderLayoutCheck this}}
+                    {{/each}}
+                    {{#each specGroups}}
+                    <li>
+                        <a class="layout-specgroup icon-sprite-before expand-link contains-children-true" href="#">{{name}}</a>
+                        <ul class="layout-checks expand-container">
+                            {{#each specs}}
+                                {{renderLayoutCheck this}}
+                            {{/each}}
+                        </ul>
+                    </li>
+                    {{/each}}
+                </ul>
+            </li>
+        </script>
+        <script id="report-layout-check-tpl" type="text/x-handlebars-template">
+            <li>
+            <a class="layout-check icon-sprite-before layout-check-status-{{status}}" href="#"
+                data-highlight-objects="{{commaSeparated highlight}}"
+                title="{{place.filePath}}#{{place.lineNumber}}"
+                >{{name}}</a>
+
+                {{#if errors}}
+                    <div class="layout-check-error-message">
+                        {{#if imageComparison}}
+                        <a class="image-comparison-link"
+                            data-actual-image="{{imageComparison.actualImage}}"
+                            data-expected-image="{{imageComparison.expectedImage}}"
+                            data-map-image="{{imageComparison.comparisonMapImage}}"
+                            href="#">Show image comparison</a>
+                        {{/if}}
+                        <div class="layout-check-error-message-text">
+                            <ul>
+                            {{#each errors}}
+                                <li>{{this}}</li>
+                            {{/each}}
+                        </ul>
+                    </div>
+                </div>
+                {{/if}}
+
+                {{#if subLayout}}
+                {{renderSublayout subLayout}}
+                {{/if}}
+            </li>
+        </script>
+        <script id="screenshot-popup-tpl" type="text/x-handlebars-template">
+            <div class="screenshot-canvas">
+                {{#if screenshot}}
+                <img src="{{screenshot}}"/>
+                {{else}}
+                <div class="empty-screenshot" style="width: {{width}}; height: {{height}};"></div>
+                {{/if}}
+                {{#each objects}}
+                <div class="canvas-rect" style="left: {{area.left}}px; top: {{area.top}}px; width: {{area.width}}px; height: {{area.height}}px; {{#if drawBorder}}border-color: {{color}};{{else}}border:none;{{/if}}{{#if fillBackground}}background: {{color}};{{else}}background:none;{{/if}}">
+                    <div class="canvas-rect-wrapper">
+                        <div class="canvas-rect-hint" style="background: {{color}};">{{name}}</div>
+                    </div>
+                </div>
+                {{/each}}
+            </div>
+        </script>
+        <script id="image-comparison-tpl" type="text/x-handlebars-template">
+            <div class="image-comparison image-comparison-layout-{{layout}}">
+                <div class="actual-image">
+                    <h5>Actual</h5>
+                    <img src="{{actual}}"/>
+                </div>
+
+                <div class="expected-image">
+                    <h5>Expected</h5>
+                    <img src="{{expected}}"/>
+                </div>
+
+                <div class="comparison-map">
+                    <h5>Comparison map</h5>
+                    <img src="{{map}}"/>
+                </div>
+            </div>
+        </script>
+        <script id="node-extras-tpl" type="text/x-handlebars-template">
+            <div class="node-extras">
+                <a class="node-extras" href="#">extras</a>
+                <div class="node-extras-content">
+                    <table class="node-extras-table">
+                        <tbody>
+                        {{#each this}}
+                        <tr>
+                            <td><label>{{@key}}</label></td>
+                            {{#ifCond type 'text'}}
+                            <td>{{value}}</td>
+                            {{/ifCond}}
+                            {{#ifCond type 'link'}}
+                            <td><a href="{{value}}">{{value}}</a></td>
+                            {{/ifCond}}
+                            {{#ifCond type 'image'}}
+                            <td><a href="{{value}}"><img src="{{value}}"/></a></td>
+                            {{/ifCond}}
+                        </tr>
+                        {{/each}}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </script>
+
+
+
+        <div id="menu">
+            <ul>
+                <li><a href="report.html">Back to Test Overview</a></li>
+                <li><a class="menu-op-expand-all" href="#">Expand All</a></li>
+                <li><a class="menu-op-collapse-all" href="#">Collapse All</a></li>
+                <li><a class="menu-op-expand-errors" href="#">Expand Errors</a></li>
+            </ul>
+        </div>
+        <h2>common.gspec</h2>
+        <div id="main"></div>
+        <div id="screen-shadow"></div>
+        <div id="popup" class="popup">
+            <div class="popup-wrapper">
+                <a class="popup-close-link" href="#">close</a>
+                <div class="popup-content"></div>
+            </div>
+        </div>
+        <div id="notification" class="notification">
+            <div class="notification-wrapper">
+                <a class="notification-close-link" href="#">close</a>
+                <div class="notification-summary"></div>
+                <div class="notification-message"></div>
+            </div>
+        </div>
+    </body>
+</html>
