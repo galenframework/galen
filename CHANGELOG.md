@@ -1,6 +1,13 @@
 # Change log
 All changes to Galen Framework project will be documented in this file
 
+## [2.4.0][Unreleased]
+### Added
+- 'edges' filter in image spec
+
+
+
+
 
 ## [2.3.0][2016-07-13]
 ### Added
