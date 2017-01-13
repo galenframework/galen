@@ -31,7 +31,7 @@ public class EdgesFilter implements ImageFilter {
                     diffV = (int) (diffH + Math.pow(bytes.get(k + i) - bytes.get(kv + i), 2.0));
                 }
 
-                if (diffH > tolerance || diffV > tolerance) {
+                if (diffH > powTolerance || diffV > powTolerance) {
                     bytes.put(k, (byte) 255);
                     bytes.put(k + 1, (byte) 255);
                     bytes.put(k + 2, (byte) 255);
