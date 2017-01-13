@@ -56,6 +56,8 @@ public abstract class GalenAction {
                 return new GalenActionCheck(arguments, outStream, errStream, combinedListener);
             case "dump":
                 return new GalenActionDump(arguments, outStream, errStream);
+            case "mutate":
+                return new GalenActionMutate(arguments, outStream, errStream, combinedListener);
             case "help":
             case "-h":
             case "--help":
@@ -103,5 +105,14 @@ public abstract class GalenAction {
             configuredListeners.add(constructor.newInstance());
         }
         return configuredListeners;
+    }
+
+    protected String originalCommand(String[] arguments) {
+        StringBuilder builder = new StringBuilder("check ");
+        for (String argument : arguments) {
+            builder.append(" ");
+            builder.append(argument);
+        }
+        return builder.toString();
     }
 }

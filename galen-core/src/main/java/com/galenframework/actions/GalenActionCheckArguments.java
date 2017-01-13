@@ -15,6 +15,7 @@
 ******************************************************************************/
 package com.galenframework.actions;
 
+import com.galenframework.utils.GalenUtils;
 import org.apache.commons.cli.*;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
@@ -74,7 +75,7 @@ public class GalenActionCheckArguments {
         arguments.setHtmlReport(cmd.getOptionValue("h"));
         arguments.setJsonReport(cmd.getOptionValue("j"));
         arguments.setUrl(cmd.getOptionValue("u"));
-        arguments.setScreenSize(convertScreenSize(cmd.getOptionValue("s")));
+        arguments.setScreenSize(GalenUtils.readSize(cmd.getOptionValue("s")));
         arguments.setJavascript(cmd.getOptionValue("J"));
         arguments.setIncludedTags(convertTags(cmd.getOptionValue("i")));
         arguments.setExcludedTags(convertTags(cmd.getOptionValue("e")));
@@ -86,21 +87,6 @@ public class GalenActionCheckArguments {
         }
 
         return arguments;
-    }
-
-    private static Dimension convertScreenSize(String text) {
-        if (text == null) {
-            return null;
-        }
-
-        if (Pattern.matches("[0-9]+x[0-9]+", text)) {
-            String[] values = text.split("x");
-            if (values.length == 2) {
-                return new Dimension(parseInt(values[0]), parseInt(values[1]));
-            }
-        }
-
-        throw new IllegalArgumentException("Incorrect size: " + text);
     }
 
     public List<String> getPaths() {

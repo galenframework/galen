@@ -88,7 +88,7 @@ public class GalenUtils {
             return null;
         }
         if (!sizeText.matches("[0-9]+x[0-9]+")) {
-            throw new RuntimeException("Incorrect screen size: " + sizeText);
+            throw new IllegalArgumentException("Incorrect size: " + sizeText);
         }
         else {
             String[] arr = sizeText.split("x");
