@@ -53,4 +53,32 @@ public class GalenMutateTest {
             "menu.item-3: decrease width by 5px"
         ));
     }
+
+    @Test
+    public void should_perform_mutation_testing_2() throws IOException {
+        WebDriver driver = new MockedDriver();
+        driver.get("/mocks/pages/mutation-sample-page.json");
+
+        MutationReport mutationReport = GalenMutate.checkAllMutations(new SeleniumBrowser(driver), "/specs/mutation-2.gspec",
+            emptyList(), emptyList(), new Properties(), NO_VALIDATION_LISTENER);
+
+        assertThat("amount of passed mutations", mutationReport.getTotalPassed(), is(46));
+        assertThat("amount of failed mutations", mutationReport.getTotalFailed(), is(14));
+        assertThat("All failed mutations", mutationReport.allFailedMutations(), contains(
+            "container: increase height by 5px",
+            "container: decrease height by 5px",
+            "menu.item-3: drag left by 5px",
+            "menu.item-3: drag right by 5px",
+            "menu.item-3: increase width by 5px",
+            "menu.item-3: decrease width by 5px",
+            "menu.item-3: move left edge right by 5px",
+            "menu.item-1: increase width by 5px",
+            "menu.item-1: decrease width by 5px",
+            "menu.item-2: drag left by 5px",
+            "menu.item-2: drag right by 5px",
+            "menu.item-2: increase width by 5px",
+            "menu.item-2: decrease width by 5px",
+            "menu.item-2: move left edge right by 5px"
+        ));
+    }
 }
