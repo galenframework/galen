@@ -1,0 +1,31 @@
+{
+    "title": "My page",
+    "items": [
+        {
+          "locator": "css: #container",
+          "text": "",
+          "area": [0, 0, 500, 1000]
+        },
+        {
+            "locator": "css: #header",
+            "text": "",
+            "area": [10, 10, 480, 50]
+        },
+        {
+            "locator": "css: #menu",
+            "area": [10, 60, 480, 50]
+        },
+        {
+            "locator": "css: .menu-item",
+            "area": [10, 60, 100, 50]
+        },
+        {
+            "locator": "css: .menu-item",
+            "area": [110, 60, 100, 50]
+        },
+        {
+            "locator": "css: .menu-item",
+            "area": [210, 60, 100, 50]
+        }
+    ]
+}

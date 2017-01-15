@@ -15,16 +15,22 @@
 ******************************************************************************/
 package com.galenframework.suite.actions.mutation;
 
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.galenframework.reports.model.LayoutReport;
+
+import java.util.*;
+
+import static java.util.stream.Collectors.toList;
 
 public class MutationReport {
-
     private Map<String, MutationStatistic> objectMutationStatistics = new HashMap<>();
     private int totalPassed = 0;
     private int totalFailed = 0;
+
+    @JsonIgnore
+    private LayoutReport initialLayoutReport;
+
+    private String error;
 
     public void reportSuccessMutation(PageMutation pageMutation) {
         MutationStatistic mutationStatistic = obtainObjectMutationStatistic(pageMutation);
@@ -71,6 +77,32 @@ public class MutationReport {
 
     public int getTotalFailed() {
         return totalFailed;
+    }
+
+    public void setInitialLayoutReport(LayoutReport initialLayoutReport) {
+        this.initialLayoutReport = initialLayoutReport;
+    }
+
+    public LayoutReport getInitialLayoutReport() {
+        return initialLayoutReport;
+    }
+
+    public String getError() {
+        return error;
+    }
+
+    public void setError(String error) {
+        this.error = error;
+    }
+
+    public boolean hasErrors() {
+        return error != null || getTotalFailed() > 0;
+    }
+
+    public List<String> allFailedMutations() {
+        return objectMutationStatistics.values().stream()
+            .map(s -> s.failedMutations)
+            .flatMap(Collection::stream).collect(toList());
     }
 
     public class MutationStatistic {

@@ -1,0 +1,30 @@
+
+@objects
+    container       #container
+    header          #header
+    menu            #menu
+    menu.item-*     .menu-item
+
+
+
+= Main section =
+    header:
+        inside container 10px top left right
+        height 50px
+        above menu 0px
+
+    menu:
+        inside container 10px left right
+        aligned vertically all header
+        height 50px
+
+    @forEach [menu.item-*] as item, next as nextItem
+        ${item}:
+            height 50px
+            inside menu 0px top bottom
+            left-of ${nextItem} 0px
+            aligned horizontally all ${nextItem}
+
+    menu.item-1:
+        inside menu 0px left
+

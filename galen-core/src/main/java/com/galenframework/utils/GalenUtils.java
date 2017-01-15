@@ -38,8 +38,10 @@ import com.galenframework.page.selenium.ByChain;
 import com.galenframework.reports.TestReport;
 import com.galenframework.reports.model.LayoutReport;
 import com.galenframework.reports.nodes.LayoutReportNode;
+import com.galenframework.reports.nodes.MutationReportNode;
 import com.galenframework.reports.nodes.TestReportNode;
 import com.galenframework.specs.page.Locator;
+import com.galenframework.suite.actions.mutation.MutationReport;
 import com.galenframework.tests.GalenProperties;
 import com.galenframework.tests.TestSession;
 import com.galenframework.browser.SeleniumBrowser;
@@ -534,6 +536,17 @@ public class GalenUtils {
                 layoutReportNode.setStatus(TestReportNode.Status.ERROR);
             }
             report.addNode(layoutReportNode);
+        }
+    }
+
+    public static void attachMutationReport(MutationReport mutationReport, TestReport report, String specPath, List<String> includedTags) {
+        if (report != null) {
+            String reportTitle = "Mutation testing: " + specPath + " included tags: " + GalenUtils.toCommaSeparated(includedTags);
+            TestReportNode mutationReportNode = new MutationReportNode(report.getFileStorage(), mutationReport, reportTitle);
+            if (mutationReport.hasErrors()) {
+                mutationReportNode.setStatus(TestReportNode.Status.ERROR);
+            }
+            report.addNode(mutationReportNode);
         }
     }
 
