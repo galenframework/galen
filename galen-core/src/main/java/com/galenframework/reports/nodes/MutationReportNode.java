@@ -30,4 +30,9 @@ public class MutationReportNode extends TestReportNode {
     public MutationReport getMutationReport() {
         return mutationReport;
     }
+
+    @Override
+    public String getType() {
+        return "mutation";
+    }
 }

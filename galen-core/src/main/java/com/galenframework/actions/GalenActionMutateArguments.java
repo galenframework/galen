@@ -35,15 +35,23 @@ public class GalenActionMutateArguments {
     private Dimension screenSize;
     private String javascript;
     private String config;
+    private String htmlReport;
+    private String jsonReport;
+    private String testngReport;
+    private String junitReport;
 
     public static GalenActionMutateArguments parse(String[] args) {
-        args= ArgumentsUtils.processSystemProperties(args);
+        args = ArgumentsUtils.processSystemProperties(args);
 
         Options options = new Options();
         options.addOption("i", "include", true, "Tags for sections that should be included in test run");
         options.addOption("e", "exclude", true, "Tags for sections that should be excluded from test run");
         options.addOption("u", "url", true, "Initial test url");
         options.addOption("s", "size", true, "Browser window size");
+        options.addOption("h", "htmlreport", true, "Path for html output report");
+        options.addOption("j", "jsonreport", true, "Path for json report");
+        options.addOption("g", "testngreport", true, "Path for testng xml report");
+        options.addOption("x", "junitreport", true, "Path for junit xml report");
         options.addOption("J", "javascript", true, "JavaScript code that should be executed before checking layout");
         options.addOption("c", "config", true, "Path to config");
 
@@ -62,6 +70,10 @@ public class GalenActionMutateArguments {
         arguments.setUrl(cmd.getOptionValue("u"));
         arguments.setScreenSize(GalenUtils.readSize(cmd.getOptionValue("s")));
         arguments.setJavascript(cmd.getOptionValue("J"));
+        arguments.setHtmlReport(cmd.getOptionValue("h"));
+        arguments.setJsonReport(cmd.getOptionValue("j"));
+        arguments.setTestngReport(cmd.getOptionValue("g"));
+        arguments.setJunitReport(cmd.getOptionValue("x"));
         arguments.setIncludedTags(convertTags(cmd.getOptionValue("i")));
         arguments.setExcludedTags(convertTags(cmd.getOptionValue("e")));
         arguments.setPaths(asList(cmd.getArgs()));
@@ -128,5 +140,37 @@ public class GalenActionMutateArguments {
 
     public void setJavascript(String javascript) {
         this.javascript = javascript;
+    }
+
+    public void setHtmlReport(String htmlReport) {
+        this.htmlReport = htmlReport;
+    }
+
+    public String getHtmlReport() {
+        return htmlReport;
+    }
+
+    public void setJsonReport(String jsonReport) {
+        this.jsonReport = jsonReport;
+    }
+
+    public String getJsonReport() {
+        return jsonReport;
+    }
+
+    public void setTestngReport(String testngReport) {
+        this.testngReport = testngReport;
+    }
+
+    public String getTestngReport() {
+        return testngReport;
+    }
+
+    public void setJunitReport(String junitReport) {
+        this.junitReport = junitReport;
+    }
+
+    public String getJunitReport() {
+        return junitReport;
     }
 }

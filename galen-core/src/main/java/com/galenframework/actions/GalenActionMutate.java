@@ -65,6 +65,10 @@ public class GalenActionMutate extends GalenAction {
         }
 
         GalenActionTestArguments testArguments = new GalenActionTestArguments();
+        testArguments.setHtmlReport(mutateArguments.getHtmlReport());
+        testArguments.setJsonReport(mutateArguments.getJsonReport());
+        testArguments.setJunitReport(mutateArguments.getJunitReport());
+        testArguments.setTestngReport(mutateArguments.getTestngReport());
         GalenActionTest.runTests(new EventHandler(), galenTests, testArguments, listener);
     }
 

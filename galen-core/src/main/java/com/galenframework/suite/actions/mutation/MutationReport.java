@@ -95,6 +95,19 @@ public class MutationReport {
         this.error = error;
     }
 
+    public int getTotalMutations() {
+        return totalFailed + totalPassed;
+    }
+
+    public double getFailedRatio() {
+        int total = getTotalMutations();
+        if (total > 0) {
+            return 100.0 * (double)totalFailed / (double)total;
+        } else {
+            return 0;
+        }
+    }
+
     public boolean hasErrors() {
         return error != null || getTotalFailed() > 0;
     }
