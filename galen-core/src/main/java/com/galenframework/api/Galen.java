@@ -100,6 +100,7 @@ public class Galen {
             File screenshot = page.getScreenshotFile();
             if (screenshot != null) {
                 layoutReport.setScreenshot(layoutReport.registerFile("screenshot.png", screenshot));
+                screenshot.deleteOnExit();
             }
         }
         catch (Exception ex) {

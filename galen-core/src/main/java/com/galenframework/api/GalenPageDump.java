@@ -208,6 +208,7 @@ public class GalenPageDump {
                 }
             }
         }
+        screenshotOriginalFile.deleteOnExit();
     }
 
     private static void copyResource(String resourceName, File destFile) throws IOException {
