@@ -41,7 +41,7 @@ public class GalenFullJsProjectIT {
     public static final String PATH_TO_TEST_WEBSITE = "file://" + GalenFullJsProjectIT.class.getResource("/sample-test-website/index.html").getFile();
 
 
-    @Test
+    @Test(enabled = false)
     public void shouldExecute_completeJsSampleProject() throws Exception {
         GalenConfig.getConfig().setProperty(GalenProperty.GALEN_USE_FAIL_EXIT_CODE, "false");
         GalenConfig.getConfig().setProperty(GalenProperty.GALEN_BROWSER_VIEWPORT_ADJUSTSIZE, "true");
