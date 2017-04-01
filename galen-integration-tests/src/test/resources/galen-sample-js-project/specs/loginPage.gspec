@@ -23,7 +23,7 @@
     cancel_button_text                  Cancel
 
 @on mobile
-    @set login_box_elements_side_margin 0px
+    @set login_box_elements_side_margin 0 to 1px
 
 
 = Login box =
