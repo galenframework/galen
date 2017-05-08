@@ -23,7 +23,7 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
-public class OnFilterProcessor {
+public class OnFilterProcessor implements StructNodeProcessor {
     private final PageSpecHandler pageSpecHandler;
 
     public OnFilterProcessor(PageSpecHandler pageSpecHandler) {

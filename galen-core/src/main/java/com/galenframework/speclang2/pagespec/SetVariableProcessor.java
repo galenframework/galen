@@ -22,7 +22,7 @@ import com.galenframework.parser.StringCharReader;
 import java.util.Collections;
 import java.util.List;
 
-public class SetVariableProcessor {
+public class SetVariableProcessor implements StructNodeProcessor {
     private final PageSpecHandler pageSpecHandler;
 
     public SetVariableProcessor(PageSpecHandler pageSpecHandler) {
