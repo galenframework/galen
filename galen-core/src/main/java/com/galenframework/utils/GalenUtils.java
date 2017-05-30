@@ -1,12 +1,12 @@
 /*******************************************************************************
 * Copyright 2017 Ivan Shubin http://galenframework.com
-* 
+*
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
 * You may obtain a copy of the License at
-* 
+*
 *   http://www.apache.org/licenses/LICENSE-2.0
-* 
+*
 * Unless required by applicable law or agreed to in writing, software
 * distributed under the License is distributed on an "AS IS" BASIS,
 * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -15,26 +15,13 @@
 ******************************************************************************/
 package com.galenframework.utils;
 
-import java.awt.Dimension;
-import java.awt.Graphics2D;
-import java.awt.Image;
-import java.awt.image.BufferedImage;
-import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.URL;
-import java.security.DigestInputStream;
-import java.security.MessageDigest;
-import java.util.*;
-import java.util.regex.Pattern;
-
-import javax.imageio.ImageIO;
-
+import com.galenframework.browser.SeleniumBrowser;
+import com.galenframework.browser.SeleniumBrowserFactory;
 import com.galenframework.browser.SeleniumGridBrowserFactory;
+import com.galenframework.config.GalenConfig;
+import com.galenframework.config.GalenProperty;
 import com.galenframework.page.selenium.ByChain;
+import com.galenframework.rainbow4j.Rainbow4J;
 import com.galenframework.reports.TestReport;
 import com.galenframework.reports.model.LayoutReport;
 import com.galenframework.reports.nodes.LayoutReportNode;
@@ -42,17 +29,26 @@ import com.galenframework.reports.nodes.TestReportNode;
 import com.galenframework.specs.page.Locator;
 import com.galenframework.tests.GalenProperties;
 import com.galenframework.tests.TestSession;
-import com.galenframework.browser.SeleniumBrowser;
-import com.galenframework.browser.SeleniumBrowserFactory;
-import com.galenframework.config.GalenConfig;
-import com.galenframework.config.GalenProperty;
-import com.galenframework.rainbow4j.Rainbow4J;
-
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.openqa.selenium.*;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.chrome.ChromeOptions;
+import org.openqa.selenium.remote.DesiredCapabilities;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import javax.imageio.ImageIO;
+import java.awt.Dimension;
+import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.*;
+import java.net.URL;
+import java.security.DigestInputStream;
+import java.security.MessageDigest;
+import java.util.*;
+import java.util.List;
+import java.util.regex.Pattern;
 
 import static com.galenframework.config.GalenProperty.FILE_CREATE_TIMEOUT;
 import static java.lang.String.format;
@@ -60,7 +56,7 @@ import static java.lang.String.format;
 public class GalenUtils {
 
     private final static Logger LOG = LoggerFactory.getLogger(GalenUtils.class);
-    
+
     private static final String URL_REGEX = "[a-zA-Z0-9]+://.*";
     public static final String JS_RETRIEVE_DEVICE_PIXEL_RATIO =
             "window.devicePixelRatio = window.devicePixelRatio || " +
@@ -75,7 +71,7 @@ public class GalenUtils {
         }
         return url.matches(URL_REGEX) || url.equals("-");
     }
-    
+
     public static String formatScreenSize(Dimension screenSize) {
         if (screenSize != null) {
             return format("%dx%d", screenSize.width, screenSize.height);
@@ -103,8 +99,8 @@ public class GalenUtils {
         }
         else return new File(specFile);
     }
-    
-    
+
+
     public static File makeFullScreenshot(WebDriver driver) throws IOException, InterruptedException {
         // scroll up first
         scrollVerticallyTo(driver, 0);
@@ -131,7 +127,7 @@ public class GalenUtils {
 
         if (Math.abs(adaptedCapturedHeight - scrollHeight) > 40) {
             int scrollOffset = adaptedCapturedHeight;
-            
+
             int times = scrollHeight / adaptedCapturedHeight;
             int leftover = scrollHeight % adaptedCapturedHeight;
 
@@ -139,7 +135,7 @@ public class GalenUtils {
             Graphics2D g2dTile = tiledImage.createGraphics();
             g2dTile.drawImage(image, 0,0, null);
 
-            
+
             int scroll = 0;
             for (int i = 0; i < times - 1; i++) {
                 scroll += scrollOffset;
@@ -154,7 +150,7 @@ public class GalenUtils {
                 BufferedImage lastPart = nextImage.getSubimage(0, nextImage.getHeight() - (int)(((double)leftover) * devicePixelRatio), nextImage.getWidth(), leftover);
                 g2dTile.drawImage(lastPart, 0, times * capturedHeight, null);
             }
-            
+
             scrollVerticallyTo(driver, 0);
 
             resultingImage = tiledImage;
@@ -251,49 +247,71 @@ public class GalenUtils {
         return name.toLowerCase().replaceAll("[^\\dA-Za-z\\.\\-]", " ").replaceAll("\\s+", "-");
     }
 
-    
+
     /**
      * Needed for Javascript based tests
      * @param browserType
      * @return
      */
     public static WebDriver createDriver(String browserType, String url, String size) {
-        if (browserType == null) { 
+        if (browserType == null) {
             browserType = GalenConfig.getConfig().getDefaultBrowser();
         }
-        
+
         SeleniumBrowser browser = (SeleniumBrowser) new SeleniumBrowserFactory(browserType).openBrowser();
-        
+
         if (url != null && !url.trim().isEmpty()) {
-            browser.load(url);    
+            browser.load(url);
         }
-        
+
         if (size != null && !size.trim().isEmpty()) {
             browser.changeWindowSize(GalenUtils.readSize(size));
         }
-        
+
         return browser.getDriver();
     }
-    
+
+    public static WebDriver createMobileDriver(String url, String deviceName) {
+        DesiredCapabilities capabilities = DesiredCapabilities.chrome();
+
+        Map<String, String> mobileEmulation = new HashMap<String, String>();
+        mobileEmulation.put("deviceName", deviceName);
+
+        Map<String, Object> mobileOptions = new HashMap<String, Object>();
+        mobileOptions.put("mobileEmulation", mobileEmulation);
+        mobileOptions.put("args", Arrays.asList("disable-infobars", "disable-extensions", "test-type", "no-default-browser-check", "ignore-certificate-errors"));
+
+        capabilities.setCapability(ChromeOptions.CAPABILITY, mobileOptions);
+        WebDriver driver =  new ChromeDriver(capabilities);
+
+        if (url != null && !url.trim().isEmpty()) {
+            driver.get(url);
+            Dimension d = GalenUtils.getViewportArea(driver);
+            GalenUtils.autoAdjustBrowserWindowSizeToFitViewport(driver, d.width, d.height);
+        }
+
+        return driver;
+    }
+
     public static WebDriver createGridDriver(String gridUrl, String browserName, String browserVersion, String platform, Map<String, String> desiredCapabilities, String size) {
         SeleniumGridBrowserFactory factory = new SeleniumGridBrowserFactory(gridUrl);
         factory.setBrowser(browserName);
         factory.setBrowserVersion(browserVersion);
-        
+
         if (platform != null) {
             factory.setPlatform(Platform.valueOf(platform));
         }
-        
+
         if (desiredCapabilities != null) {
             factory.setDesiredCapabilites(desiredCapabilities);
         }
-        
+
         WebDriver driver = ((SeleniumBrowser)factory.openBrowser()).getDriver();
-        
+
         GalenUtils.resizeDriver(driver, size);
         return driver;
     }
-    
+
     public static void resizeDriver(WebDriver driver, String sizeText) {
         if (sizeText != null && !sizeText.trim().isEmpty()) {
             Dimension size = GalenUtils.readSize(sizeText);
@@ -323,28 +341,28 @@ public class GalenUtils {
         }
         else return file;
     }
-    
+
     public static Properties loadProperties(String fileName) throws IOException {
-        
+
         GalenProperties properties = null;
         if (TestSession.current() != null) {
             properties = TestSession.current().getProperties();
         }
         else properties = new GalenProperties();
-        
+
         properties.load(new File(fileName));
         return properties.getProperties();
     }
-    
+
     public static void cookie(WebDriver driver, String cookie) {
         String script = "document.cookie=\"" + StringEscapeUtils.escapeJava(cookie) + "\";";
         injectJavascript(driver, script);
     }
-    
+
     public static Object injectJavascript(WebDriver driver, String script) {
         return ((JavascriptExecutor)driver).executeScript(script);
     }
-    
+
 
     public static Object[] listToArray(List<?> list) {
         if (list == null) {

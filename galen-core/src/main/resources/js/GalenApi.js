@@ -38,6 +38,20 @@
         return driver;
     }
 
+    function createMobileSimDriver(url, deviceName) {
+
+        if (url === undefined) {
+            url = null;
+        }
+
+        if (deviceName === undefined) {
+            deviceName = "Apple iPhone 6";
+        }
+
+        var driver = GalenUtils.createMobileDriver(url, deviceName);
+        return driver;
+    }
+
     function __galen_getAttr(attrs, name) {
         if (attrs[name] !== undefined && attrs[name] !== null) {
             return attrs[name];
@@ -353,6 +367,7 @@
     }
 
     exports.createDriver = createDriver;
+    exports.createMobileSimDriver = createMobileSimDriver;
     exports.createGridDriver = createGridDriver;
     exports.checkLayout = checkLayout;
     exports.checkPageSpecLayout = checkPageSpecLayout;
