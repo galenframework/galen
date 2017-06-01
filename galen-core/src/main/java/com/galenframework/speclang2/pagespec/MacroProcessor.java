@@ -200,7 +200,7 @@ public class MacroProcessor {
         StringCharReader reader = new StringCharReader(statementNode.getName());
         String firstWord = reader.readWord();
         if (structNodeProcessorMap.containsKey(firstWord)) {
-            return structNodeProcessorMap.get(firstWord).process(reader, statementNode);
+            return process(structNodeProcessorMap.get(firstWord).process(reader, statementNode));
         } else if (FOR_LOOP_KEYWORD.equals(firstWord)
                 || FOR_EACH_LOOP_KEYWORD.equals(firstWord)) {
             ForLoop forLoop = ForLoop.read(FOR_LOOP_KEYWORD.equals(firstWord), pageSpecHandler, reader, statementNode);
