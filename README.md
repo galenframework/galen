@@ -122,6 +122,25 @@ Also you need [Maven 3.3](http://maven.apache.org/download.cgi) or greater and [
 * ```sudo npm install -g grunt-cli```
 * ```sudo npm install -g bower```
 
+Add GPG key to your maven settings.xml:
+
+```
+      <properties>
+          <gpg.keyname>C78F3CC4</gpg.keyname>
+          <gpg.passphrase>Password</gpg.passphrase>
+          ...
+```
+
+The test can be run via
+```mvn verify```
+
+To run integrations tests against chrome:
+
+```mvn clean verify -Dwebdriver.chrome.driver=/opt/dev/chromedriver -Dselenium.browser=chrome```
+
+Please ensure that you download chromedriver, see [here](https://sites.google.com/a/chromium.org/chromedriver/downloads)
+
+
 
 Building 
 -----------
