@@ -254,6 +254,7 @@
         <groupId>org.powermock</groupId>
         <artifactId>powermock-reflect</artifactId>
         <version>${powermock.version}</version>
+        <scope>test</scope>
       </dependency>
     </dependencies>
   </dependencyManagement>
