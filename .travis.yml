@@ -1,6 +1,6 @@
 language: java
 addons:
-    firefox: "45.4.0esr"
+    firefox: "53.0.3"
 install: mvn install -DskipTests -Dgpg.skip
 jdk:
   - oraclejdk8
