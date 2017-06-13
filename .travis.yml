@@ -1,4 +1,6 @@
 language: java
+services:
+  - docker
 addons:
     firefox: "45.4.0esr"
 install: mvn install -DskipTests -Dgpg.skip
@@ -13,6 +15,15 @@ before_script:
 script:
   - mvn verify -Dgpg.skip=true -Dgalen.use.fail.exit.code=false -Dwebdriver.gecko.driver=$PWD/geckodriver/geckodriver
 before_install:
+  - docker pull selenium/hub
+  - docker pull selenium/node-chrome
+  - docker pull selenium/node-firefox
+  - docker pull selenium/node-phantomjs
+  - docker run -d -p 4444:4444 -e SE_OPTS="-debug true" --name selenium-hub selenium/hub:3.2.0-actinium
+  - docker run -d --link selenium-hub:hub --name node-chrome selenium/node-chrome:3.2.0-actinium
+  - docker run -d --link selenium-hub:hub --name node-firefox selenium/node-firefox:3.2.0-actinium
+  - docker run -d --link selenium-hub:hub --name node-phantomjs selenium/node-phantomjs:3.2.0-actinium
+  - docker ps -a
   - wget https://github.com/mozilla/geckodriver/releases/download/v0.11.1/geckodriver-v0.11.1-linux64.tar.gz
   - mkdir geckodriver
   - tar -xzf geckodriver-v0.11.1-linux64.tar.gz -C geckodriver
