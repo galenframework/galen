@@ -5,6 +5,7 @@ All changes to Galen Framework project will be documented in this file
 ### Added
 - 'edges' filter in image spec
 - 'mutate' action for galen specs mutation testing
+- Embedded galen-extras lib
 
 
 
