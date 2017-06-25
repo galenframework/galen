@@ -1,0 +1,22 @@
+@objects
+    header       div[data-id="header"]
+    header.logo  div[data-id="header.logo"]
+    header.text  div[data-id="header.text"]
+
+= Skeleton =
+    header:
+        centered horizontally inside screen 1px
+        height 69px
+        inside screen 50px right, 0px top, 49px left, >= 0px bottom
+
+= header elements =
+    | header.logo should be squared with 48px size
+
+    header.logo:
+        inside header 13px top, 0px left, 8px bottom
+        left-of header.text 22px
+
+    header.text:
+        height 39px
+        inside header 20px top, 10px bottom, >= 0px right
+

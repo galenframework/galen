@@ -13,14 +13,21 @@
 * See the License for the specific language governing permissions and
 * limitations under the License.
 ******************************************************************************/
-package com.galenframework.speclang2.pagespec;
+package com.galenframework.generator.suggestions;
 
-import com.galenframework.parser.StringCharReader;
-import com.galenframework.parser.StructNode;
+import com.galenframework.generator.PageItemNode;
+import com.galenframework.generator.SuggestionOptions;
+import com.galenframework.generator.SuggestionTestResult;
 
-import java.io.IOException;
-import java.util.List;
+public abstract class SingleArgSpecSuggestion implements SpecSuggestion {
+    @Override
+    public SuggestionTestResult test(SuggestionOptions options, PageItemNode... pins) {
+        if (pins != null && pins.length == 1) {
+            return testIt(options, pins[0]);
+        }
+        return null;
+    }
 
-public interface StructNodeProcessor {
-    List<StructNode> process(StringCharReader reader, StructNode structNode) throws IOException;
+    protected abstract SuggestionTestResult testIt(SuggestionOptions options, PageItemNode pin);
+
 }

@@ -13,14 +13,39 @@
 * See the License for the specific language governing permissions and
 * limitations under the License.
 ******************************************************************************/
-package com.galenframework.speclang2.pagespec;
+package com.galenframework.generator.math;
 
-import com.galenframework.parser.StringCharReader;
-import com.galenframework.parser.StructNode;
+import static java.lang.String.format;
 
-import java.io.IOException;
-import java.util.List;
+public class Point {
 
-public interface StructNodeProcessor {
-    List<StructNode> process(StringCharReader reader, StructNode structNode) throws IOException;
+    private int left;
+    private int top;
+
+    public Point(int left, int top) {
+        this.setLeft(left);
+        this.setTop(top);
+    }
+
+    public int getLeft() {
+        return left;
+    }
+
+    public void setLeft(int left) {
+        this.left = left;
+    }
+
+    public int getTop() {
+        return top;
+    }
+
+    public void setTop(int top) {
+        this.top = top;
+    }
+
+    
+    @Override
+    public String toString() {
+        return format("Point(left: %d, top: %d)", left, top);
+    }
 }

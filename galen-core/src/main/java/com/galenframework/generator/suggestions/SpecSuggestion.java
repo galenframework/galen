@@ -13,14 +13,13 @@
 * See the License for the specific language governing permissions and
 * limitations under the License.
 ******************************************************************************/
-package com.galenframework.speclang2.pagespec;
+package com.galenframework.generator.suggestions;
 
-import com.galenframework.parser.StringCharReader;
-import com.galenframework.parser.StructNode;
+import com.galenframework.generator.PageItemNode;
+import com.galenframework.generator.SuggestionOptions;
+import com.galenframework.generator.SuggestionTestResult;
 
-import java.io.IOException;
-import java.util.List;
-
-public interface StructNodeProcessor {
-    List<StructNode> process(StringCharReader reader, StructNode structNode) throws IOException;
+public interface SpecSuggestion {
+    String getName();
+    SuggestionTestResult test(SuggestionOptions options, PageItemNode...pins);
 }
