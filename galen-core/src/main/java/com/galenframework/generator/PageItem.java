@@ -15,7 +15,7 @@
 ******************************************************************************/
 package com.galenframework.generator;
 
-import com.galenframework.generator.math.Rect;
+import com.galenframework.page.Rect;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 public class PageItem {

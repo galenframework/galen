@@ -18,7 +18,7 @@ package com.galenframework.generator.suggestions;
 import com.galenframework.generator.AssertionEdge;
 import com.galenframework.generator.SuggestionTestResult;
 import com.galenframework.generator.filters.AnyTwoArgsSpecFilter;
-import com.galenframework.generator.math.Rect;
+import com.galenframework.page.Rect;
 
 import java.util.*;
 

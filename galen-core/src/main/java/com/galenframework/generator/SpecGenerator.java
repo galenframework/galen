@@ -15,8 +15,8 @@
 ******************************************************************************/
 package com.galenframework.generator;
 
-import com.galenframework.generator.math.Point;
-import com.galenframework.generator.math.Rect;
+import com.galenframework.page.Point;
+import com.galenframework.page.Rect;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 

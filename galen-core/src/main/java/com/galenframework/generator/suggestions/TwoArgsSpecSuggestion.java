@@ -18,7 +18,7 @@ package com.galenframework.generator.suggestions;
 import com.galenframework.generator.PageItemNode;
 import com.galenframework.generator.SuggestionOptions;
 import com.galenframework.generator.SuggestionTestResult;
-import com.galenframework.generator.math.Rect;
+import com.galenframework.page.Rect;
 
 public abstract class TwoArgsSpecSuggestion implements SpecSuggestion {
 

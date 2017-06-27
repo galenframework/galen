@@ -16,7 +16,7 @@
 package com.galenframework.generator.suggestions;
 
 import com.galenframework.generator.*;
-import com.galenframework.generator.math.Rect;
+import com.galenframework.page.Rect;
 
 import java.util.*;
 

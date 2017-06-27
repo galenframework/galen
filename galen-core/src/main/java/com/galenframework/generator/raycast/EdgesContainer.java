@@ -16,7 +16,7 @@
 package com.galenframework.generator.raycast;
 
 import com.galenframework.generator.PageItemNode;
-import com.galenframework.generator.math.Point;
+import com.galenframework.page.Point;
 
 import java.util.LinkedList;
 import java.util.List;

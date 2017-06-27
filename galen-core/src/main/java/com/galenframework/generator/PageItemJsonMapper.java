@@ -17,10 +17,7 @@ package com.galenframework.generator;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.galenframework.generator.math.Rect;
-import org.apache.commons.io.FileUtils;
-
-import java.io.File;
+import com.galenframework.page.Rect;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.*;

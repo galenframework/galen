@@ -13,7 +13,7 @@
 * See the License for the specific language governing permissions and
 * limitations under the License.
 ******************************************************************************/
-package com.galenframework.tests.specgen;
+package com.galenframework.tests.generator;
 
 import com.galenframework.generator.PageSpecGenerationResult;
 import com.galenframework.generator.SpecGenerator;
@@ -34,6 +34,5 @@ public class SpecGeneratorTest {
         assertThat("Should generate complete page spec",
             SpecGenerator.generatePageSpec(result),
             is(IOUtils.toString(getClass().getResourceAsStream("/generator/simple-page.expected.gspec"))));
-        System.out.println(SpecGenerator.generatePageSpec(result));
     }
 }

@@ -21,7 +21,7 @@ import com.galenframework.generator.SpecAssertion;
 import com.galenframework.generator.SpecStatement;
 import com.galenframework.generator.filters.SpecFilter;
 import com.galenframework.generator.raycast.EdgesContainer;
-import com.galenframework.generator.math.Point;
+import com.galenframework.page.Point;
 
 import java.util.List;
 

@@ -18,7 +18,7 @@ package com.galenframework.generator.suggestions;
 import com.galenframework.generator.SpecStatement;
 import com.galenframework.generator.SuggestionOptions;
 import com.galenframework.generator.SuggestionTestResult;
-import com.galenframework.generator.math.Rect;
+import com.galenframework.page.Rect;
 
 import static java.lang.String.format;
 import static java.util.Collections.singletonList;

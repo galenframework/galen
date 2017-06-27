@@ -20,7 +20,8 @@ import com.galenframework.generator.PageItemNode;
 import com.galenframework.generator.SpecAssertion;
 import com.galenframework.generator.SpecStatement;
 import com.galenframework.generator.filters.SpecFilter;
-import com.galenframework.generator.math.Point;
+import com.galenframework.page.Point;
+import com.galenframework.page.Rect;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 
@@ -131,15 +132,15 @@ enum SBIEdge {
 
 public class SpecBuilderInside implements SpecBuilder {
     public static final String S_INSIDE = "s_inside";
-    private String itemName;
     private final Point[] points;
     private final PageItemNode parent;
+    private final PageItemNode itemNode;
 
     private List<SBIEdge> sbiEdges = new LinkedList<>();
 
-    public SpecBuilderInside(String itemName, Point[] points, PageItemNode parent) {
-        this.itemName = itemName;
-        this.points = points;
+    public SpecBuilderInside(PageItemNode itemNode, PageItemNode parent) {
+        this.itemNode = itemNode;
+        this.points = itemNode.getPageItem().getArea().getPoints();
         this.parent = parent;
     }
 
@@ -150,7 +151,7 @@ public class SpecBuilderInside implements SpecBuilder {
 
     @Override
     public String[] getArgs() {
-        return new String[] {itemName, parent.getPageItem().getName()};
+        return new String[] {itemNode.getPageItem().getName(), parent.getPageItem().getName()};
     }
 
     @Override
@@ -189,7 +190,7 @@ public class SpecBuilderInside implements SpecBuilder {
                 s.append(pair.getKey());
                 for (SBIEdgeResult result: pair.getValue()) {
                     s.append(' ').append(result.edgeName);
-                    assertions.add(new SpecAssertion(new AssertionEdge(itemName, result.assertionEdge.getEdgeType()), result.assertionEdge));
+                    assertions.add(new SpecAssertion(new AssertionEdge(itemNode.getPageItem().getName(), result.assertionEdge.getEdgeType()), result.assertionEdge));
                 }
                 isFirst[0] = false;
             });

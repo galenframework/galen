@@ -20,7 +20,7 @@ import com.galenframework.generator.filters.SpecFilter;
 import com.galenframework.generator.raycast.EdgesContainer;
 import com.galenframework.generator.raycast.EdgesContainer.Edge;
 import com.galenframework.generator.suggestions.*;
-import com.galenframework.generator.math.Point;
+import com.galenframework.page.Point;
 
 import java.util.*;
 import java.util.function.Function;
@@ -159,7 +159,7 @@ public class SpecSuggester {
             CompositeSpecBuilder compositeSpecBuilder = new CompositeSpecBuilder();
             allSpecBuilders.put(pin.getPageItem().getName(), compositeSpecBuilder);
 
-            SpecBuilderInside sbInside = new SpecBuilderInside(pin.getPageItem().getName(), points, pin.getParent());
+            SpecBuilderInside sbInside = new SpecBuilderInside(pin, pin.getParent());
             compositeSpecBuilder.add(sbInside);
 
             if (closestRightEdge != null) {

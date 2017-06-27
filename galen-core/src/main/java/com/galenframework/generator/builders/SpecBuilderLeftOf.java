@@ -16,14 +16,11 @@
 package com.galenframework.generator.builders;
 
 import com.galenframework.generator.AssertionEdge;
-import com.galenframework.generator.AssertionType;
 import com.galenframework.generator.SpecAssertion;
 import com.galenframework.generator.SpecStatement;
 import com.galenframework.generator.filters.SpecFilter;
 import com.galenframework.generator.raycast.EdgesContainer.Edge;
-import com.galenframework.generator.math.Point;
-
-import java.util.LinkedList;
+import com.galenframework.page.Point;
 import java.util.List;
 
 import static com.galenframework.generator.builders.SpecBuilderRightOf.S_RIGHT_OF;
