@@ -21,16 +21,12 @@ import com.galenframework.generator.SpecAssertion;
 import com.galenframework.generator.SpecStatement;
 import com.galenframework.generator.filters.SpecFilter;
 import com.galenframework.page.Point;
-import com.galenframework.page.Rect;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
-import java.util.function.Function;
-import java.util.stream.Collectors;
 
 import static com.galenframework.generator.builders.SBIEdge.*;
 import static java.util.Collections.singletonList;
@@ -198,19 +194,23 @@ public class SpecBuilderInside implements SpecBuilder {
         return singletonList(new SpecStatement(s.toString(), assertions));
     }
 
-    public void addRightEdge() {
+    public SpecBuilderInside addRightEdge() {
         sbiEdges.add(RIGHT);
+        return this;
     }
 
-    public void addLeftEdge() {
+    public SpecBuilderInside addLeftEdge() {
         sbiEdges.add(LEFT);
+        return this;
     }
 
-    public void addBottomEdge() {
+    public SpecBuilderInside addBottomEdge() {
         sbiEdges.add(BOTTOM);
+        return this;
     }
 
-    public void addTopEdge() {
+    public SpecBuilderInside addTopEdge() {
         sbiEdges.add(TOP);
+        return this;
     }
 }
