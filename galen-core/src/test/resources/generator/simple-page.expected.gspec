@@ -7,7 +7,7 @@
     header:
         centered horizontally inside screen 1px
         height 69px
-        inside screen 50px right, 0px top, 49px left, >= 0px bottom
+        inside screen 50px right, 0px top, 49px left
 
 = header elements =
     | header.logo should be squared with 48px size
@@ -18,5 +18,5 @@
 
     header.text:
         height 39px
-        inside header 20px top, 10px bottom, >= 0px right
+        inside header 20px top, 10px bottom
 
