@@ -56,9 +56,9 @@ public class SpecBuilderInsideTest {
 
         assertThat(specStatements.size(), is(1));
         SpecStatement statement = specStatements.get(0);
-        assertThat(statement.getStatement(), is("inside screen 10px top left right, >= 0px bottom"));
+        assertThat(statement.getStatement(), is("inside screen 10px top left right"));
 
-        assertThat(statement.getAssertions().size(), is(4));
+        assertThat(statement.getAssertions().size(), is(3));
         assertThat(statement.getAssertions(), containsInAnyOrder(
             new SpecAssertion(
                 new AssertionEdge("header", AssertionEdge.EdgeType.left),
@@ -71,10 +71,6 @@ public class SpecBuilderInsideTest {
             new SpecAssertion(
                 new AssertionEdge("header", AssertionEdge.EdgeType.top),
                 new AssertionEdge("screen", AssertionEdge.EdgeType.top)
-            ),
-            new SpecAssertion(
-                new AssertionEdge("header", AssertionEdge.EdgeType.bottom),
-                new AssertionEdge("screen", AssertionEdge.EdgeType.bottom)
             )
         ));
     }

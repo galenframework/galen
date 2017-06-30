@@ -27,6 +27,7 @@ import org.apache.commons.lang3.tuple.Pair;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.stream.Stream;
 
 import static com.galenframework.generator.builders.SBIEdge.*;
 import static java.util.Collections.singletonList;
@@ -41,11 +42,13 @@ class SBIEdgeResult {
     public final String validation;
     public final String edgeName;
     public final AssertionEdge assertionEdge;
+    public final Boolean isRedundant;
 
-    public SBIEdgeResult(String validation, String edgeName, AssertionEdge assertionEdge) {
+    public SBIEdgeResult(String validation, String edgeName, AssertionEdge assertionEdge, Boolean isRedundant) {
         this.validation = validation;
         this.edgeName = edgeName;
         this.assertionEdge = assertionEdge;
+        this.isRedundant = isRedundant;
     }
 }
 
@@ -53,61 +56,69 @@ enum SBIEdge {
     TOP(0, (parent, points, options) -> {
         int distance = points[0].getTop() - parent.getPageItem().getArea().getTop();
         String validation;
+        Boolean isRedundant = false;
         if (distance > options.getMinimalStickyParentDistance()) {
             if (parent.getMinimalPaddingTop() >= 0 && parent.getMinimalPaddingTop() <= options.getMinimalStickyParentDistance()) {
                 validation = ">= " + parent.getMinimalPaddingTop() + "px";
             } else {
                 validation = ">= 0px";
+                isRedundant = true;
             }
         } else {
             validation = distance + "px";
         }
-        return new SBIEdgeResult(validation, "top", new AssertionEdge(parent.getPageItem().getName(), AssertionEdge.EdgeType.top));
+        return new SBIEdgeResult(validation, "top", new AssertionEdge(parent.getPageItem().getName(), AssertionEdge.EdgeType.top), isRedundant);
     }),
 
     LEFT(1, (parent, points, options) -> {
         int distance = points[0].getLeft() - parent.getPageItem().getArea().getLeft();
         String validation;
+        Boolean isRedundant = false;
         if (distance > options.getMinimalStickyParentDistance()) {
             if (parent.getMinimalPaddingLeft() >= 0 && parent.getMinimalPaddingLeft() <= options.getMinimalStickyParentDistance()) {
                 validation = ">= " + parent.getMinimalPaddingLeft() + "px";
             } else {
                 validation = ">= 0px";
+                isRedundant = true;
             }
         } else {
             validation = distance + "px";
         }
-        return new SBIEdgeResult(validation, "left", new AssertionEdge(parent.getPageItem().getName(), AssertionEdge.EdgeType.left));
+        return new SBIEdgeResult(validation, "left", new AssertionEdge(parent.getPageItem().getName(), AssertionEdge.EdgeType.left), isRedundant);
     }),
 
     RIGHT(2, (parent, points, options) -> {
         int distance = parent.getPageItem().getArea().getRight() - points[1].getLeft();
         String validation;
+        Boolean isRedundant = false;
         if (distance > options.getMinimalStickyParentDistance()) {
             if (parent.getMinimalPaddingRight() >= 0 && parent.getMinimalPaddingRight() <= options.getMinimalStickyParentDistance()) {
                 validation = ">= " + parent.getMinimalPaddingRight() + "px";
             } else {
                 validation = ">= 0px";
+                isRedundant = true;
             }
         } else {
             validation = distance + "px";
         }
-        return new SBIEdgeResult(validation, "right", new AssertionEdge(parent.getPageItem().getName(), AssertionEdge.EdgeType.right));
+        return new SBIEdgeResult(validation, "right", new AssertionEdge(parent.getPageItem().getName(), AssertionEdge.EdgeType.right), isRedundant);
     }),
 
     BOTTOM(3, (parent, points, options) -> {
         int distance = parent.getPageItem().getArea().getBottom() - points[3].getTop();
         String validation;
+        Boolean isRedundant = false;
         if (distance > options.getMinimalStickyParentDistance()) {
             if (parent.getMinimalPaddingBottom() >= 0 && parent.getMinimalPaddingBottom() <= options.getMinimalStickyParentDistance()) {
                 validation = ">= " + parent.getMinimalPaddingBottom() + "px";
             } else {
                 validation = ">= 0px";
+                isRedundant = true;
             }
         } else {
             validation = distance + "px";
         }
-        return new SBIEdgeResult(validation, "bottom", new AssertionEdge(parent.getPageItem().getName(), AssertionEdge.EdgeType.bottom));
+        return new SBIEdgeResult(validation, "bottom", new AssertionEdge(parent.getPageItem().getName(), AssertionEdge.EdgeType.bottom), isRedundant);
     });
 
     private static Pair<String, AssertionEdge> pair(String specText, AssertionEdge assertionEdge) {
@@ -171,8 +182,14 @@ public class SpecBuilderInside implements SpecBuilder {
             s.append(" ");
             final boolean[] isFirst = {true};
             Collections.sort(sbiEdges, (a, b) -> a.order > b.order? 1: -1);
-            List<Pair<String, List<SBIEdgeResult>>> groupedResults = sbiEdges.stream()
-                .map(se -> se.build(parent, points, options))
+            Stream<SBIEdgeResult> resultStream = sbiEdges.stream()
+                .map(se -> se.build(parent, points, options));
+
+            if (!isPartly) {
+                resultStream = resultStream.filter(r -> !r.isRedundant);
+            }
+
+            List<Pair<String, List<SBIEdgeResult>>> groupedResults = resultStream
                 .collect(groupingBy(r -> r.validation, toList()))
                 .entrySet().stream()
                 .map(e -> new ImmutablePair<>(e.getKey(), e.getValue())).collect(toList());
