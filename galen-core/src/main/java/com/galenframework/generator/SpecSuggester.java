@@ -185,7 +185,7 @@ public class SpecSuggester {
                     closestBottomEdge.itemNode.updateMinimalPaddingBottom(closestBottomEdge.p1.getTop() - points[3].getTop());
                     sbInside.addBottomEdge();
                 } else {
-                    compositeSpecBuilder.add(new SpecBuilderAbove(pin.getPageItem().getName(), points, closestBottomEdge));
+                    compositeSpecBuilder.add(new SpecBuilderAbove(pin.getPageItem(), closestBottomEdge));
                 }
             }
 

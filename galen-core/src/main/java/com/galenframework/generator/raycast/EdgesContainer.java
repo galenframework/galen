@@ -46,7 +46,7 @@ public class EdgesContainer {
     }
 
     public static class Edge {
-        public PageItemNode itemNode;
+        public final PageItemNode itemNode;
         public final boolean isParent;
         public final Point p1;
         public final Point p2;

@@ -15,12 +15,9 @@
 ******************************************************************************/
 package com.galenframework.generator.builders;
 
-import com.galenframework.generator.AssertionEdge;
-import com.galenframework.generator.SpecAssertion;
-import com.galenframework.generator.SpecStatement;
+import com.galenframework.generator.*;
 import com.galenframework.generator.filters.SpecFilter;
 import com.galenframework.generator.raycast.EdgesContainer.Edge;
-import com.galenframework.page.Point;
 
 import java.util.List;
 
@@ -29,13 +26,11 @@ import static java.util.Collections.singletonList;
 
 public class SpecBuilderAbove extends AbstractSpecBuilder {
     public static final String S_ABOVE = "s_above";
-    private String itemName;
-    private final Point[] points;
+    private final PageItem pageItem;
     private final Edge bottomEdge;
 
-    public SpecBuilderAbove(String itemName, Point[] points, Edge bottomEdge) {
-        this.itemName = itemName;
-        this.points = points;
+    public SpecBuilderAbove(PageItem pageItem, Edge bottomEdge) {
+        this.pageItem = pageItem;
         this.bottomEdge = bottomEdge;
     }
 
@@ -43,14 +38,14 @@ public class SpecBuilderAbove extends AbstractSpecBuilder {
     public List<SpecStatement> buildSpecs(List<SpecFilter> excludedFilters, SpecGeneratorOptions options) {
         StringBuilder s = new StringBuilder("above ");
         s.append(bottomEdge.itemNode.getPageItem().getName());
-        int distance = bottomEdge.p1.getTop() - points[3].getTop();
+        int distance = bottomEdge.p1.getTop() - pageItem.getArea().getBottom();
         if (distance <= options.getMinimalStickyVerticalDistance()) {
             s.append(' ').append(distance).append("px");
         }
 
         extendSpecFilters(excludedFilters, S_BELOW);
         return singletonList(new SpecStatement(s.toString(), singletonList(new SpecAssertion(
-            AssertionEdge.bottom(itemName),
+            AssertionEdge.bottom(pageItem.getName()),
             AssertionEdge.top(bottomEdge)
         ))));
     }
@@ -62,6 +57,6 @@ public class SpecBuilderAbove extends AbstractSpecBuilder {
 
     @Override
     public String[] getArgs() {
-        return new String[] {itemName, bottomEdge.itemNode.getPageItem().getName()};
+        return new String[] {pageItem.getName(), bottomEdge.itemNode.getPageItem().getName()};
     }
 }
