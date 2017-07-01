@@ -34,7 +34,7 @@ import static java.util.stream.Collectors.toList;
 
 
 public class SpecGenerator {
-    public static final String SECTION_BUILDER = "sectionBuilder".intern();
+    public static final String SECTION_BUILDER = "sectionBuilder";
     private PageItemJsonMapper piJsonMapper = new PageItemJsonMapper();
 
     public PageSpecGenerationResult generate(InputStream stream) throws IOException {
@@ -92,7 +92,6 @@ public class SpecGenerator {
             new PageItemNode(new PageItem(missingObjectName)).moveToParent(rootPins.get(0));
             objectNamesPerPage.add(missingObjectName);
         });
-
 
         return new PageSpecGenerationResult(largestSize, objectNamesPerPage, rootPins, results);
     }
