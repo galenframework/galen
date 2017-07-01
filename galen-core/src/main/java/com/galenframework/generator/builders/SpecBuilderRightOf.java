@@ -16,6 +16,7 @@
 package com.galenframework.generator.builders;
 
 import com.galenframework.generator.AssertionEdge;
+import com.galenframework.generator.PageItem;
 import com.galenframework.generator.SpecAssertion;
 import com.galenframework.generator.SpecStatement;
 import com.galenframework.generator.filters.SpecFilter;
@@ -29,13 +30,11 @@ import static java.util.Collections.singletonList;
 
 public class SpecBuilderRightOf extends AbstractSpecBuilder {
     public static final String S_RIGHT_OF = "s_right_of";
-    private String itemName;
-    private final Point[] points;
     private final Edge leftEdge;
+    private final PageItem pageItem;
 
-    public SpecBuilderRightOf(String itemName, Point[] points, Edge leftEdge) {
-        this.itemName = itemName;
-        this.points = points;
+    public SpecBuilderRightOf(PageItem pageItem, Edge leftEdge) {
+        this.pageItem = pageItem;
         this.leftEdge = leftEdge;
     }
 
@@ -43,14 +42,14 @@ public class SpecBuilderRightOf extends AbstractSpecBuilder {
     public List<SpecStatement> buildSpecs(List<SpecFilter> excludedFilters, SpecGeneratorOptions options) {
         StringBuilder s = new StringBuilder("right-of ");
         s.append(leftEdge.itemNode.getPageItem().getName());
-        int distance = points[0].getLeft() - leftEdge.p1.getLeft();
+        int distance = pageItem.getArea().getLeft() - leftEdge.p1.getLeft();
         if (distance <= options.getMinimalStickyHorizontalDistance()) {
             s.append(' ').append(distance).append("px");
         }
 
         extendSpecFilters(excludedFilters, S_LEFT_OF);
         return singletonList(new SpecStatement(s.toString(), singletonList(new SpecAssertion(
-            AssertionEdge.left(itemName), AssertionEdge.right(leftEdge)
+            AssertionEdge.left(pageItem.getName()), AssertionEdge.right(leftEdge)
         ))));
     }
 
@@ -61,6 +60,6 @@ public class SpecBuilderRightOf extends AbstractSpecBuilder {
 
     @Override
     public String[] getArgs() {
-        return new String[]{itemName, leftEdge.itemNode.getPageItem().getName()};
+        return new String[]{pageItem.getName(), leftEdge.itemNode.getPageItem().getName()};
     }
 }
