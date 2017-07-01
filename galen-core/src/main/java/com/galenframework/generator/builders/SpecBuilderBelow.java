@@ -17,11 +17,11 @@ package com.galenframework.generator.builders;
 
 
 import com.galenframework.generator.AssertionEdge;
+import com.galenframework.generator.PageItem;
 import com.galenframework.generator.SpecAssertion;
 import com.galenframework.generator.SpecStatement;
 import com.galenframework.generator.filters.SpecFilter;
 import com.galenframework.generator.raycast.EdgesContainer;
-import com.galenframework.page.Point;
 
 import java.util.List;
 
@@ -30,13 +30,11 @@ import static java.util.Collections.singletonList;
 
 public class SpecBuilderBelow extends AbstractSpecBuilder {
     public static final String S_BELOW = "s_below";
-    private String itemName;
-    private final Point[] points;
     private final EdgesContainer.Edge topEdge;
+    private final PageItem pageItem;
 
-    public SpecBuilderBelow(String itemName, Point[] points, EdgesContainer.Edge topEdge) {
-        this.itemName = itemName;
-        this.points = points;
+    public SpecBuilderBelow(PageItem pageItem, EdgesContainer.Edge topEdge) {
+        this.pageItem = pageItem;
         this.topEdge = topEdge;
     }
 
@@ -44,14 +42,14 @@ public class SpecBuilderBelow extends AbstractSpecBuilder {
     public List<SpecStatement> buildSpecs(List<SpecFilter> excludedFilters, SpecGeneratorOptions options) {
         StringBuilder s = new StringBuilder("below ");
         s.append(topEdge.itemNode.getPageItem().getName());
-        int distance = points[0].getTop() - topEdge.p1.getTop();
+        int distance = pageItem.getArea().getTop() - topEdge.p1.getTop();
         if (distance <= options.getMinimalStickyVerticalDistance()) {
             s.append(' ').append(distance).append("px");
         }
 
         extendSpecFilters(excludedFilters, S_ABOVE);
         return singletonList(new SpecStatement(s.toString(), singletonList(new SpecAssertion(
-            AssertionEdge.top(itemName),
+            AssertionEdge.top(pageItem.getName()),
             AssertionEdge.bottom(topEdge)
         ))));
     }
@@ -63,6 +61,6 @@ public class SpecBuilderBelow extends AbstractSpecBuilder {
 
     @Override
     public String[] getArgs() {
-        return new String[]{itemName, topEdge.itemNode.getPageItem().getName()};
+        return new String[]{pageItem.getName(), topEdge.itemNode.getPageItem().getName()};
     }
 }

@@ -8,11 +8,9 @@ import com.galenframework.page.Point;
 import com.galenframework.page.Rect;
 import org.testng.annotations.Test;
 
-
 import java.util.LinkedList;
 import java.util.List;
 
-import static java.util.Collections.emptyList;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 
