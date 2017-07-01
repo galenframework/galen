@@ -167,7 +167,7 @@ public class SpecSuggester {
                     closestRightEdge.itemNode.updateMinimalPaddingRight(closestRightEdge.p1.getLeft() - points[1].getLeft());
                     sbInside.addRightEdge();
                 } else {
-                    compositeSpecBuilder.add(new SpecBuilderLeftOf(pin.getPageItem().getName(), points, closestRightEdge));
+                    compositeSpecBuilder.add(new SpecBuilderLeftOf(pin.getPageItem(), closestRightEdge));
                 }
             }
 

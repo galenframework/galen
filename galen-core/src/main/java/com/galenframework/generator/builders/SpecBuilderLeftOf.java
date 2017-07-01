@@ -16,11 +16,11 @@
 package com.galenframework.generator.builders;
 
 import com.galenframework.generator.AssertionEdge;
+import com.galenframework.generator.PageItem;
 import com.galenframework.generator.SpecAssertion;
 import com.galenframework.generator.SpecStatement;
 import com.galenframework.generator.filters.SpecFilter;
 import com.galenframework.generator.raycast.EdgesContainer.Edge;
-import com.galenframework.page.Point;
 import java.util.List;
 
 import static com.galenframework.generator.builders.SpecBuilderRightOf.S_RIGHT_OF;
@@ -28,13 +28,11 @@ import static java.util.Collections.singletonList;
 
 public class SpecBuilderLeftOf extends AbstractSpecBuilder {
     public static final String S_LEFT_OF = "s_left_of";
-    private String itemName;
-    private final Point[] points;
+    private final PageItem pageItem;
     private final Edge rightEdge;
 
-    public SpecBuilderLeftOf(String itemName, Point[] points, Edge rightEdge) {
-        this.itemName = itemName;
-        this.points = points;
+    public SpecBuilderLeftOf(PageItem pageItem, Edge rightEdge) {
+        this.pageItem = pageItem;
         this.rightEdge = rightEdge;
     }
 
@@ -43,14 +41,14 @@ public class SpecBuilderLeftOf extends AbstractSpecBuilder {
 
         StringBuilder s = new StringBuilder("left-of ");
         s.append(rightEdge.itemNode.getPageItem().getName());
-        int distance = rightEdge.p1.getLeft() - points[1].getLeft();
+        int distance = rightEdge.p1.getLeft() - pageItem.getArea().getRight();
         if (distance <= options.getMinimalStickyHorizontalDistance()) {
             s.append(' ').append(distance).append("px");
         }
 
         extendSpecFilters(excludedFilters, S_RIGHT_OF);
         return singletonList(new SpecStatement(s.toString(), singletonList(new SpecAssertion(
-           AssertionEdge.right(itemName), AssertionEdge.left(rightEdge)
+           AssertionEdge.right(pageItem.getName()), AssertionEdge.left(rightEdge)
         ))));
     }
 
@@ -61,6 +59,6 @@ public class SpecBuilderLeftOf extends AbstractSpecBuilder {
 
     @Override
     public String[] getArgs() {
-        return new String[] {itemName, rightEdge.itemNode.getPageItem().getName()};
+        return new String[] {pageItem.getName(), rightEdge.itemNode.getPageItem().getName()};
     }
 }
