@@ -39,4 +39,26 @@ public class SpecBuilderAboveTest {
             new AssertionEdge("title", AssertionEdge.EdgeType.bottom),
             new AssertionEdge("description", AssertionEdge.EdgeType.top))));
     }
+
+    @Test
+    public void should_generate_spec_above_without_ranges() {
+        SpecBuilderAbove specBuilderAbove = new SpecBuilderAbove(
+            new PageItem("title", new Rect(10, 10, 100, 30)),
+            new EdgesContainer.Edge(new PageItemNode(new PageItem("description")),
+                new Point(10, 250),
+                new Point(110, 250)
+            )
+        );
+
+        List<SpecStatement> specStatements = specBuilderAbove.buildSpecs(new LinkedList<>(), new SpecGeneratorOptions());
+
+        assertThat(specStatements.size(), is(1));
+        SpecStatement statement = specStatements.get(0);
+        assertThat(statement.getStatement(), is("above description"));
+
+        assertThat(statement.getAssertions().size(), is(1));
+        assertThat(statement.getAssertions().get(0), is(new SpecAssertion(
+            new AssertionEdge("title", AssertionEdge.EdgeType.bottom),
+            new AssertionEdge("description", AssertionEdge.EdgeType.top))));
+    }
 }
