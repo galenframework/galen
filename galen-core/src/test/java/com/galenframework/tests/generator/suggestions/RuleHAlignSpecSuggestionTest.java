@@ -5,7 +5,6 @@ import com.galenframework.generator.suggestions.RuleHAlignSpecSuggestion;
 import com.galenframework.page.Rect;
 import org.testng.annotations.Test;
 
-
 import java.util.List;
 
 import static java.util.Arrays.asList;
