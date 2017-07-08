@@ -227,19 +227,11 @@ public class SpecGenerator {
     }
 
     public static String generateSpecSections(PageSpecGenerationResult result, String initialIndentation) {
-        Map<String, Map<String, List<SpecStatement>>> optimizedObjectSpecs = convertWithoutOptimizationObjectSpecs(
-            result.getObjects(),
-            result.getObjectNames(),
-            result.getSuggestionResults().getGeneratedObjectSpecs()
-        );
-
-        sortSpecsWithinEachObject(optimizedObjectSpecs);
-
         StringBuilder finalSpec = new StringBuilder();
         List<Pair<String, StringBuilder>> sections = generateSpecSections(
             result.getObjects(),
             result.getSuggestionResults().getGeneratedRules(),
-            optimizedObjectSpecs,
+            result.getSuggestionResults().getGeneratedObjectSpecs(),
             initialIndentation
         );
 
@@ -253,24 +245,14 @@ public class SpecGenerator {
         return finalSpec.toString();
     }
 
-    private static void sortSpecsWithinEachObject(Map<String, Map<String, List<SpecStatement>>> optimizedObjectSpecs) {
-        optimizedObjectSpecs.forEach((name, objectSpecs) -> {
-            objectSpecs.forEach((n, specs) -> {
-                Collections.sort(specs, (a,b) -> a.getStatement().compareTo(b.getStatement()));
-            });
-        });
+    private static void sortSpecsWithinEachObject(Map<String, List<SpecStatement>> objectSpecs) {
+        objectSpecs.forEach((name, specs) ->
+            Collections.sort(specs, (a, b) -> a.getStatement().compareTo(b.getStatement()))
+        );
     }
 
-    private static Map<String, Map<String, List<SpecStatement>>> convertWithoutOptimizationObjectSpecs(List<PageItemNode> objects, List<String> objectNames, Map<String, List<SpecStatement>> generatedObjectSpecs) {
-        Map<String, Map<String, List<SpecStatement>>> converted = new HashMap<>();
-        generatedObjectSpecs.forEach((name, list) -> {
-            converted.put(name, new HashMap<String, List<SpecStatement>>(){{put(name, list);}});
-        });
-        return converted;
-    }
-
-
-    private static List<Pair<String, StringBuilder>> generateSpecSections(List<PageItemNode> objects, Map<String, List<SpecStatement>> generatedRules, Map<String, Map<String, List<SpecStatement>>> optimizedObjectSpecs, String indentation) {
+    private static List<Pair<String, StringBuilder>> generateSpecSections(List<PageItemNode> objects, Map<String, List<SpecStatement>> generatedRules, Map<String, List<SpecStatement>> objectSpecs, String indentation) {
+        sortSpecsWithinEachObject(objectSpecs);
         List<Pair<String, StringBuilder>> sections = new LinkedList<>();
         StringBuilder skeletonSectionBuilder = new StringBuilder();
         sections.add(new ImmutablePair<>("Skeleton", skeletonSectionBuilder));
@@ -295,7 +277,6 @@ public class SpecGenerator {
 
         objects.forEach(p -> p.visitTree(pin -> {
             StringBuilder sectionBuilder = pinStringBuilders.get(pin);
-
             if (generatedRules != null) {
                 List<SpecStatement> rules = generatedRules.get(pin.getPageItem().getName());
                 if (rules != null) {
@@ -305,24 +286,19 @@ public class SpecGenerator {
                     }
                 }
             }
-            Map<String, List<SpecStatement>> objectSpecs = optimizedObjectSpecs.get(pin.getPageItem().getName());
-            if (objectSpecs != null) {
-                objectSpecs.forEach((name, specs) -> {
-                    sectionBuilder.append(indentation).append("    ").append(name).append(":\n");
-                    specs.forEach(spec -> sectionBuilder.append(indentation).append("    ").append("    ").append(spec.getStatement()).append('\n'));
+
+            if (objectSpecs != null && !objectSpecs.isEmpty()) {
+                List<SpecStatement> specs = objectSpecs.get(pin.getPageItem().getName());
+                if (specs != null && !specs.isEmpty()) {
+                    sectionBuilder.append(indentation).append("    ").append(pin.getPageItem().getName()).append(":\n");
+                    specs.forEach(spec -> {
+                        sectionBuilder.append(indentation).append("    ").append("    ").append(spec.getStatement()).append('\n');
+                    });
                     sectionBuilder.append('\n');
-                });
+                }
             }
         }));
         return sections;
-    }
-
-    private static boolean isItemABigPin(PageItemNode pin) {
-        return pin.getParent() != null && pin.getParent().getPageItem().getName().equals("screen");
-    }
-
-    private static boolean isItemPlacedInsideBigPin(PageItemNode pin) {
-        return pin.getParent() != null && pin.getParent().getParent() != null && pin.getParent().getParent().getPageItem().getName().equals("screen");
     }
 
     private static List<ObjectDeclaration> generateSpecObjectsDeclaration(List<String> objectNames, List<PageItemNode> objects) {
@@ -350,63 +326,6 @@ public class SpecGenerator {
                     generateSpecObjectsDeclaration(objectDeclarations, childPin, objectNames, largestLength);
                 }
             }
-        }
-    }
-
-    public static String generateHtml(List<String> objectNames, List<PageItemNode> objects) {
-        StringBuilder s = new StringBuilder(
-            "<html>\n" +
-                "<head>\n" +
-                "</head>\n" +
-                "<body>\n");
-        objects.forEach(pin -> generateHtml(s, objectNames, pin, "  "));
-        s.append("</body>\n");
-        s.append("</html>");
-
-        return s.toString();
-    }
-
-    private static void generateHtml(StringBuilder s, List<String> objectNames, PageItemNode pin, String indentation) {
-        if (!pin.getPageItem().getName().equals("screen")) {
-            s.append(indentation).append("<div data-id=\"").append(pin.getPageItem().getName()).append("\">");
-        }
-
-        if (pin.getChildren() != null && !pin.getChildren().isEmpty()) {
-            s.append('\n');
-
-            PageItemNode[] childPins = pin.getChildren().toArray(new PageItemNode[pin.getChildren().size()]);
-
-            String namePattern = findNamingPattern(objectNames, childPins);
-            if (namePattern != null) {
-                String itemCssName = patternToCssName(namePattern);
-
-                s.append(indentation).append("  ").append("<ul class=\"").append(itemCssName).append("\">\n");
-                for (PageItemNode childPin : childPins) {
-                    s.append(indentation).append("    ").append("<li>");
-                    if (childPin.getChildren() != null && !childPin.getChildren().isEmpty()) {
-                        s.append('\n');
-                        childPin.getChildren().forEach(childChildPin -> generateHtml(s, objectNames, childChildPin, indentation + "      "));
-
-                        s.append(indentation).append("    ");
-                    } else {
-                        s.append("  ");
-                    }
-                    s.append("</li>\n");
-                }
-                s.append(indentation).append("  ").append("</ul>\n");
-            } else {
-                for (PageItemNode childPin : childPins) {
-                    generateHtml(s, objectNames, childPin, indentation + "  ");
-                }
-            }
-
-            s.append(indentation);
-        } else {
-            s.append("  ");
-        }
-
-        if (!pin.getPageItem().getName().equals("screen")) {
-            s.append("</div>\n");
         }
     }
 
