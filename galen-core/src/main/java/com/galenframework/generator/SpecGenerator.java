@@ -34,7 +34,6 @@ import static java.util.stream.Collectors.toList;
 
 
 public class SpecGenerator {
-    public static final String SECTION_BUILDER = "sectionBuilder";
     private PageItemJsonMapper piJsonMapper = new PageItemJsonMapper();
 
     public PageSpecGenerationResult generate(InputStream stream) throws IOException {
@@ -276,24 +275,26 @@ public class SpecGenerator {
         StringBuilder skeletonSectionBuilder = new StringBuilder();
         sections.add(new ImmutablePair<>("Skeleton", skeletonSectionBuilder));
 
+        Map<PageItemNode, StringBuilder> pinStringBuilders = new HashMap<>();
+
         //TODO fix this for the cases when there are more than one root notes. Could be done by making sure that we always have single root element upfront. if not -> make a boundary box
         PageItemNode screenPin = objects.get(0);
-        screenPin.setMetaData(SECTION_BUILDER, skeletonSectionBuilder);
+        pinStringBuilders.put(screenPin, skeletonSectionBuilder);
 
         screenPin.getChildren().forEach(bigPin -> {
             StringBuilder sectionBuilder = new StringBuilder();
             sections.add(new ImmutablePair<>(bigPin.getPageItem().getName() + " elements", sectionBuilder));
             bigPin.visitTree(p -> {
                 if (p == bigPin) {
-                    p.setMetaData(SECTION_BUILDER, skeletonSectionBuilder);
+                    pinStringBuilders.put(p, skeletonSectionBuilder);
                 } else {
-                    p.setMetaData(SECTION_BUILDER, sectionBuilder);
+                    pinStringBuilders.put(p, sectionBuilder);
                 }
             });
         });
 
         objects.forEach(p -> p.visitTree(pin -> {
-            StringBuilder sectionBuilder = (StringBuilder)pin.getMeta(SECTION_BUILDER);
+            StringBuilder sectionBuilder = pinStringBuilders.get(pin);
 
             if (generatedRules != null) {
                 List<SpecStatement> rules = generatedRules.get(pin.getPageItem().getName());

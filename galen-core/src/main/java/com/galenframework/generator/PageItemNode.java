@@ -17,10 +17,8 @@ package com.galenframework.generator;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 import java.util.function.Consumer;
 
 public class PageItemNode {
@@ -33,9 +31,6 @@ public class PageItemNode {
     private int minimalPaddingRight = -100;
     private int minimalPaddingTop = -100;
     private int minimalPaddingBottom = -100;
-
-    @JsonIgnore
-    private Map<String, Object> metaData;
 
     public PageItemNode(PageItem pageItem) {
         this.pageItem = pageItem;
@@ -130,20 +125,5 @@ public class PageItemNode {
 
     public PageItemNode findParentOrSelf() {
         return parent != null ? parent : this;
-    }
-
-    public void setMetaData(String propertyName, Object value) {
-        if (metaData == null) {
-            metaData = new HashMap<>();
-        }
-
-        metaData.put(propertyName, value);
-    }
-
-    public Object getMeta(String propertyName) {
-        if (metaData != null) {
-            return metaData.get(propertyName);
-        }
-        return null;
     }
 }
