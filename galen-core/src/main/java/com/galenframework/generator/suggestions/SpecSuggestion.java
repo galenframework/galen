@@ -18,8 +18,9 @@ package com.galenframework.generator.suggestions;
 import com.galenframework.generator.PageItemNode;
 import com.galenframework.generator.SuggestionOptions;
 import com.galenframework.generator.SuggestionTestResult;
+import com.galenframework.generator.builders.SpecGeneratorOptions;
 
 public interface SpecSuggestion {
     String getName();
-    SuggestionTestResult test(SuggestionOptions options, PageItemNode...pins);
+    SuggestionTestResult test(SuggestionOptions options, SpecGeneratorOptions specGeneratorOptions, PageItemNode... pins);
 }

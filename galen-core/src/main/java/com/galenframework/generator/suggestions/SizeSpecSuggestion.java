@@ -16,6 +16,7 @@
 package com.galenframework.generator.suggestions;
 
 import com.galenframework.generator.*;
+import com.galenframework.generator.builders.SpecGeneratorOptions;
 import com.galenframework.page.Rect;
 
 import java.util.LinkedList;
@@ -34,11 +35,11 @@ public class SizeSpecSuggestion extends SingleArgSpecSuggestion {
     }
 
     @Override
-    protected SuggestionTestResult testIt(SuggestionOptions options, PageItemNode pin) {
+    protected SuggestionTestResult testIt(SuggestionOptions options, SpecGeneratorOptions specGeneratorOptions, PageItemNode pin) {
         String itemName = pin.getPageItem().getName();
 
         Rect area = pin.getPageItem().getArea();
-        if (area.getWidth() == area.getHeight() && area.getWidth() <= 200) {
+        if (area.getWidth() == area.getHeight() && area.getWidth() <= 200 && specGeneratorOptions.isUseGalenExtras()) {
             return new SuggestionTestResult().addGeneratedRule(
                 itemName,
                 new SpecStatement(

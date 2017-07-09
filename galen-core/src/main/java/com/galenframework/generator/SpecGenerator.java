@@ -15,6 +15,7 @@
 ******************************************************************************/
 package com.galenframework.generator;
 
+import com.galenframework.generator.builders.SpecGeneratorOptions;
 import com.galenframework.page.Point;
 import com.galenframework.page.Rect;
 import org.apache.commons.lang3.tuple.ImmutablePair;
@@ -36,21 +37,21 @@ import static java.util.stream.Collectors.toList;
 public class SpecGenerator {
     private PageItemJsonMapper piJsonMapper = new PageItemJsonMapper();
 
-    public PageSpecGenerationResult generate(InputStream stream) throws IOException {
+    public PageSpecGenerationResult generate(InputStream stream, SpecGeneratorOptions specGeneratorOptions) throws IOException {
         List<PageItem> pageItems = piJsonMapper.loadItems(stream);
-        return generate(pageItems);
+        return generate(pageItems, specGeneratorOptions);
     }
 
-    private PageSpecGenerationResult generate(List<PageItem> pageItems) {
+    private PageSpecGenerationResult generate(List<PageItem> pageItems, SpecGeneratorOptions specGeneratorOptions) {
         Set<String> allObjectNames = extractItemNamesOnAllPages(pageItems);
-        return generate(pageItems, allObjectNames);
+        return generate(pageItems, allObjectNames, specGeneratorOptions);
     }
 
     private Set<String> extractItemNamesOnAllPages(List<PageItem> pageItems) {
         return pageItems.stream().map(PageItem::getName).distinct().collect(Collectors.toSet());
     }
 
-    private PageSpecGenerationResult generate(List<PageItem> pageItems, Set<String> allObjectNames) {
+    private PageSpecGenerationResult generate(List<PageItem> pageItems, Set<String> allObjectNames, SpecGeneratorOptions specGeneratorOptions) {
         List<PageItem> convertedItems = new LinkedList<>();
         PageItem screenItem = null;
         Size largestSize = new Size();
@@ -82,7 +83,7 @@ public class SpecGenerator {
         }));
 
         SuggestionTestResult results = new SuggestionTestResult();
-        rootPins.forEach(p -> p.visitTree(pin -> results.merge(proposeSpecsFor(pin, objectNamesPerPage))));
+        rootPins.forEach(p -> p.visitTree(pin -> results.merge(proposeSpecsFor(pin, objectNamesPerPage, specGeneratorOptions))));
 
         List<String> missingObjects = proposeAbsenseSpecs(results, pageItems, allObjectNames);
         // adding missing objects to pins. For now we will put missing objects inside a first root pin
@@ -161,22 +162,24 @@ public class SpecGenerator {
         return pins.stream().filter(pin -> pin.getParent() == null && pin.getChildren().size() > 0).collect(toList());
     }
 
-    private SuggestionTestResult proposeSpecsFor(PageItemNode pin, List<String> objectNamesPerPage) {
+    private SuggestionTestResult proposeSpecsFor(PageItemNode pin, List<String> objectNamesPerPage, SpecGeneratorOptions specGeneratorOptions) {
         SuggestionTestResult allResults = new SuggestionTestResult();
 
         SpecSuggester specSuggester = new SpecSuggester(new SuggestionOptions(objectNamesPerPage));
         if (pin.getParent() != null) {
-            allResults.merge(specSuggester.suggestSpecsForTwoObjects(asList(pin.getParent(), pin), SpecSuggester.parentSuggestions));
+            allResults.merge(specSuggester.suggestSpecsForTwoObjects(asList(pin.getParent(), pin), SpecSuggester.parentSuggestions, specGeneratorOptions));
         }
 
         if (pin.getChildren() != null && !pin.getChildren().isEmpty()) {
             List<PageItemNode> horizontallySortedPins = pin.getChildren();
             List<PageItemNode> verticallySortedPins = copySortedVertically(pin.getChildren());
 
-            allResults.merge(specSuggester.suggestSpecsForMultipleObjects(horizontallySortedPins, SpecSuggester.horizontallyOrderComplexRulesSuggestions));
-            allResults.merge(specSuggester.suggestSpecsForMultipleObjects(verticallySortedPins, SpecSuggester.verticallyOrderComplexRulesSuggestions));
-            allResults.merge(specSuggester.suggestSpecsRayCasting(pin, horizontallySortedPins));
-            allResults.merge(specSuggester.suggestSpecsForSingleObject(horizontallySortedPins, SpecSuggester.singleItemSuggestions));
+            if (specGeneratorOptions.isUseGalenExtras()) {
+                allResults.merge(specSuggester.suggestSpecsForMultipleObjects(horizontallySortedPins, SpecSuggester.horizontallyOrderComplexRulesSuggestions, specGeneratorOptions));
+                allResults.merge(specSuggester.suggestSpecsForMultipleObjects(verticallySortedPins, SpecSuggester.verticallyOrderComplexRulesSuggestions, specGeneratorOptions));
+            }
+            allResults.merge(specSuggester.suggestSpecsRayCasting(pin, horizontallySortedPins, specGeneratorOptions));
+            allResults.merge(specSuggester.suggestSpecsForSingleObject(horizontallySortedPins, SpecSuggester.singleItemSuggestions, specGeneratorOptions));
         }
         return allResults;
     }

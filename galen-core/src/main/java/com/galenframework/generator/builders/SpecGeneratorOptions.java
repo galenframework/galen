@@ -19,6 +19,10 @@ public class SpecGeneratorOptions {
     private int minimalStickyParentDistance = 60;
     private int minimalStickyHorizontalDistance = 60;
     private int minimalStickyVerticalDistance = 60;
+    private boolean useGalenExtras = true;
+
+    public SpecGeneratorOptions() {
+    }
 
     public int getMinimalStickyParentDistance() {
         return minimalStickyParentDistance;
@@ -42,5 +46,14 @@ public class SpecGeneratorOptions {
 
     public void setMinimalStickyVerticalDistance(int minimalStickyVerticalDistance) {
         this.minimalStickyVerticalDistance = minimalStickyVerticalDistance;
+    }
+
+    public boolean isUseGalenExtras() {
+        return useGalenExtras;
+    }
+
+    public SpecGeneratorOptions setUseGalenExtras(boolean useGalenExtras) {
+        this.useGalenExtras = useGalenExtras;
+        return this;
     }
 }

@@ -18,12 +18,13 @@ package com.galenframework.generator.suggestions;
 import com.galenframework.generator.PageItemNode;
 import com.galenframework.generator.SuggestionOptions;
 import com.galenframework.generator.SuggestionTestResult;
+import com.galenframework.generator.builders.SpecGeneratorOptions;
 import com.galenframework.page.Rect;
 
 public abstract class TwoArgsSpecSuggestion implements SpecSuggestion {
 
     @Override
-    public SuggestionTestResult test(SuggestionOptions options, PageItemNode... pins) {
+    public SuggestionTestResult test(SuggestionOptions options, SpecGeneratorOptions specGeneratorOptions, PageItemNode... pins) {
         if (pins != null && pins.length == 2) {
             return testThem(options, pins[0].getPageItem().getName(), pins[0].getPageItem().getArea(),
                 pins[1].getPageItem().getName(), pins[1].getPageItem().getArea());

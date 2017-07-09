@@ -17,6 +17,7 @@ package com.galenframework.actions;
 
 import com.galenframework.generator.PageSpecGenerationResult;
 import com.galenframework.generator.SpecGenerator;
+import com.galenframework.generator.builders.SpecGeneratorOptions;
 import com.galenframework.utils.GalenUtils;
 import org.apache.commons.io.FileUtils;
 
@@ -35,7 +36,7 @@ public class GalenActionGenerate extends GalenAction {
     @Override
     public void execute() throws Exception {
         SpecGenerator specGenerator = new SpecGenerator();
-        PageSpecGenerationResult result = specGenerator.generate(GalenUtils.findFileOrResourceAsStream(generateArguments.getPath()));
+        PageSpecGenerationResult result = specGenerator.generate(GalenUtils.findFileOrResourceAsStream(generateArguments.getPath()), new SpecGeneratorOptions());
         String text = SpecGenerator.generatePageSpec(result);
         File outputFile = new File(generateArguments.getExport());
         outputFile.createNewFile();

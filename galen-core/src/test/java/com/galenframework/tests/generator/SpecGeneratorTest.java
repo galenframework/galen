@@ -17,6 +17,7 @@ package com.galenframework.tests.generator;
 
 import com.galenframework.generator.PageSpecGenerationResult;
 import com.galenframework.generator.SpecGenerator;
+import com.galenframework.generator.builders.SpecGeneratorOptions;
 import org.apache.commons.io.IOUtils;
 import org.testng.annotations.Test;
 
@@ -30,9 +31,20 @@ public class SpecGeneratorTest {
     @Test
     public void should_generate_simple_spec_from_page_dump() throws IOException {
         SpecGenerator specGenerator = new SpecGenerator();
-        PageSpecGenerationResult result = specGenerator.generate(getClass().getResourceAsStream("/generator/simple-page.json"));
+        PageSpecGenerationResult result = specGenerator.generate(getClass().getResourceAsStream("/generator/simple-page.json"), new SpecGeneratorOptions());
         assertThat("Should generate complete page spec",
             SpecGenerator.generatePageSpec(result),
             is(IOUtils.toString(getClass().getResourceAsStream("/generator/simple-page.expected.gspec"))));
+    }
+
+    @Test
+    public void should_generate_spec_without_galen_extras() throws IOException {
+        SpecGenerator specGenerator = new SpecGenerator();
+        PageSpecGenerationResult result = specGenerator.generate(getClass().getResourceAsStream("/generator/simple-page.json"),
+            new SpecGeneratorOptions().setUseGalenExtras(false)
+        );
+        assertThat("Should generate complete page spec",
+            SpecGenerator.generatePageSpec(result),
+            is(IOUtils.toString(getClass().getResourceAsStream("/generator/simple-page.no-rules.expected.gspec"))));
     }
 }

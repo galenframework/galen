@@ -16,6 +16,7 @@
 package com.galenframework.tests.generator.suggestions;
 
 import com.galenframework.generator.*;
+import com.galenframework.generator.builders.SpecGeneratorOptions;
 import com.galenframework.generator.suggestions.RuleVAlignSpecSuggestion;
 import com.galenframework.page.Rect;
 import org.testng.annotations.Test;
@@ -34,6 +35,7 @@ public class RuleVAlignSpecSuggestionTest {
         RuleVAlignSpecSuggestion suggestionTest = new RuleVAlignSpecSuggestion();
         SuggestionTestResult result = suggestionTest.test(
             new SuggestionOptions(asList("menu.item-1", "menu.item-2", "menu.item-3")),
+            new SpecGeneratorOptions(),
             new PageItemNode(new PageItem("menu.item-1", new Rect(0, 20, 100, 20))),
             new PageItemNode(new PageItem("menu.item-2", new Rect(0, 40, 100, 20))),
             new PageItemNode(new PageItem("menu.item-3", new Rect(0, 60, 100, 20)))

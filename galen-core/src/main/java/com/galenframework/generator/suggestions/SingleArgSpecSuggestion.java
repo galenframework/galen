@@ -18,16 +18,17 @@ package com.galenframework.generator.suggestions;
 import com.galenframework.generator.PageItemNode;
 import com.galenframework.generator.SuggestionOptions;
 import com.galenframework.generator.SuggestionTestResult;
+import com.galenframework.generator.builders.SpecGeneratorOptions;
 
 public abstract class SingleArgSpecSuggestion implements SpecSuggestion {
     @Override
-    public SuggestionTestResult test(SuggestionOptions options, PageItemNode... pins) {
+    public SuggestionTestResult test(SuggestionOptions options, SpecGeneratorOptions specGeneratorOptions, PageItemNode... pins) {
         if (pins != null && pins.length == 1) {
-            return testIt(options, pins[0]);
+            return testIt(options, specGeneratorOptions, pins[0]);
         }
         return null;
     }
 
-    protected abstract SuggestionTestResult testIt(SuggestionOptions options, PageItemNode pin);
+    protected abstract SuggestionTestResult testIt(SuggestionOptions options, SpecGeneratorOptions specGeneratorOptions, PageItemNode pin);
 
 }

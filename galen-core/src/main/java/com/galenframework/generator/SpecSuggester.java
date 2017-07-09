@@ -57,7 +57,7 @@ public class SpecSuggester {
         this.options = options;
     }
 
-    public SuggestionTestResult suggestSpecsForMultipleObjects(List<PageItemNode> pins, List<SpecSuggestion> suggestions) {
+    public SuggestionTestResult suggestSpecsForMultipleObjects(List<PageItemNode> pins, List<SpecSuggestion> suggestions, SpecGeneratorOptions specGeneratorOptions) {
         SuggestionTestResult globalResult = new SuggestionTestResult();
 
         List<PageItemNode[]> pinsVariations = generateSequentialVariations(pins.toArray(new PageItemNode[pins.size()]));
@@ -67,7 +67,7 @@ public class SpecSuggester {
 
             for (SpecSuggestion suggestion : suggestions) {
                 if (!matchesExcludedFilter(suggestion.getName(), namesArray)) {
-                    SuggestionTestResult result = suggestion.test(options, pinsVariation);
+                    SuggestionTestResult result = suggestion.test(options, specGeneratorOptions, pinsVariation);
                     globalResult.merge(result);
 
                     if (result != null && result.isValid()) {
@@ -101,14 +101,14 @@ public class SpecSuggester {
     }
 
 
-    public SuggestionTestResult suggestSpecsForTwoObjects(List<PageItemNode> pins, List<SpecSuggestion> suggestions) {
+    public SuggestionTestResult suggestSpecsForTwoObjects(List<PageItemNode> pins, List<SpecSuggestion> suggestions, SpecGeneratorOptions specGeneratorOptions) {
         SuggestionTestResult globalResult = new SuggestionTestResult();
 
         for (int i = 0; i < pins.size() - 1; i++) {
             for (int j = i + 1; j < pins.size(); j++) {
                 for (SpecSuggestion suggestion : suggestions) {
                     if (!matchesExcludedFilter(suggestion.getName(), pins.get(i).getPageItem().getName(), pins.get(j).getPageItem().getName())) {
-                        SuggestionTestResult result = suggestion.test(options, pins.get(i), pins.get(j));
+                        SuggestionTestResult result = suggestion.test(options, specGeneratorOptions, pins.get(i), pins.get(j));
                         globalResult.merge(result);
 
                         if (result != null && result.isValid()) {
@@ -123,13 +123,13 @@ public class SpecSuggester {
         return globalResult;
     }
 
-    public SuggestionTestResult suggestSpecsForSingleObject(List<PageItemNode> pins, List<SpecSuggestion> suggestions) {
+    public SuggestionTestResult suggestSpecsForSingleObject(List<PageItemNode> pins, List<SpecSuggestion> suggestions, SpecGeneratorOptions specGeneratorOptions) {
         SuggestionTestResult globalResult = new SuggestionTestResult();
 
         for (PageItemNode pin: pins) {
             for (SpecSuggestion suggestion : suggestions) {
                 if (!matchesExcludedFilter(suggestion.getName(), pin.getPageItem().getName())) {
-                    SuggestionTestResult result = suggestion.test(options, pin);
+                    SuggestionTestResult result = suggestion.test(options, specGeneratorOptions, pin);
                     globalResult.merge(result);
                     if (result != null && result.isValid()) {
                         if (result.getFilters() != null) {
@@ -142,7 +142,7 @@ public class SpecSuggester {
         return globalResult;
     }
 
-    public SuggestionTestResult suggestSpecsRayCasting(PageItemNode parent, List<PageItemNode> pins) {
+    public SuggestionTestResult suggestSpecsRayCasting(PageItemNode parent, List<PageItemNode> pins, SpecGeneratorOptions specGeneratorOptions) {
         SuggestionTestResult globalResult = new SuggestionTestResult();
 
         EdgesContainer edges = EdgesContainer.create(parent, pins);
@@ -201,7 +201,7 @@ public class SpecSuggester {
 
         Map<String, List<SpecStatement>> objectSpecs = new HashMap<>();
         allSpecBuilders.forEach((itemName, specBuilder) -> {
-            List<SpecStatement> specs = specBuilder.buildSpecs(excludedFilters, new SpecGeneratorOptions());
+            List<SpecStatement> specs = specBuilder.buildSpecs(excludedFilters, specGeneratorOptions);
             if (specs != null && !specs.isEmpty()) {
                 objectSpecs.put(itemName, specs);
             }

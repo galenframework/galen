@@ -16,6 +16,7 @@
 package com.galenframework.generator.suggestions;
 
 import com.galenframework.generator.*;
+import com.galenframework.generator.builders.SpecGeneratorOptions;
 import com.galenframework.page.Rect;
 
 import java.util.*;
@@ -27,7 +28,7 @@ import static java.util.stream.Collectors.toList;
 public abstract class AbstractRuleAlignSpecSuggestion implements SpecSuggestion {
 
     @Override
-    public SuggestionTestResult test(SuggestionOptions options, PageItemNode... pins) {
+    public SuggestionTestResult test(SuggestionOptions options, SpecGeneratorOptions specGeneratorOptions, PageItemNode... pins) {
         Set<Integer> diffs = new HashSet<>();
         int previousDiff = 0;
 
