@@ -208,7 +208,7 @@ public class SpecBuilderInside implements SpecBuilder {
                 isFirst[0] = false;
             });
         }
-        return singletonList(new SpecStatement(s.toString(), assertions));
+        return singletonList(new SpecStatement(s.toString().trim(), assertions));
     }
 
     public SpecBuilderInside addRightEdge() {
