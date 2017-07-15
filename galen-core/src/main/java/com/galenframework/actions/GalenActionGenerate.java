@@ -36,7 +36,10 @@ public class GalenActionGenerate extends GalenAction {
     @Override
     public void execute() throws Exception {
         SpecGenerator specGenerator = new SpecGenerator();
-        PageSpecGenerationResult result = specGenerator.generate(GalenUtils.findFileOrResourceAsStream(generateArguments.getPath()), new SpecGeneratorOptions());
+        SpecGeneratorOptions specGeneratorOptions = new SpecGeneratorOptions();
+        specGeneratorOptions.setUseGalenExtras(generateArguments.isUseGalenExtras());
+
+        PageSpecGenerationResult result = specGenerator.generate(GalenUtils.findFileOrResourceAsStream(generateArguments.getPath()), specGeneratorOptions);
         String text = SpecGenerator.generatePageSpec(result);
         File outputFile = new File(generateArguments.getExport());
         outputFile.createNewFile();

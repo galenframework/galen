@@ -24,12 +24,14 @@ public class GalenActionGenerateArguments {
 
     private String path;
     private String export;
+    private boolean useGalenExtras = true;
 
     public static GalenActionGenerateArguments parse(String[] args) {
         args = ArgumentsUtils.processSystemProperties(args);
 
         Options options = new Options();
         options.addOption("E", "export", true, "Path to generated spec file");
+        options.addOption("G", "no-galen-extras", false, "Disable galen-extras expressions");
 
         CommandLineParser parser = new PosixParser();
         CommandLine cmd;
@@ -45,6 +47,7 @@ public class GalenActionGenerateArguments {
 
         GalenActionGenerateArguments arguments = new GalenActionGenerateArguments();
         arguments.setExport(cmd.getOptionValue("E"));
+        arguments.setUseGalenExtras(!cmd.hasOption("G"));
 
         if (cmd.getArgs() == null || cmd.getArgs().length < 1) {
             throw new IllegalArgumentException("Missing page dump file");
@@ -80,6 +83,7 @@ public class GalenActionGenerateArguments {
         GalenActionGenerateArguments that = (GalenActionGenerateArguments) o;
 
         return new EqualsBuilder()
+            .append(useGalenExtras, that.useGalenExtras)
             .append(path, that.path)
             .append(export, that.export)
             .isEquals();
@@ -90,6 +94,7 @@ public class GalenActionGenerateArguments {
         return new HashCodeBuilder(17, 37)
             .append(path)
             .append(export)
+            .append(useGalenExtras)
             .toHashCode();
     }
 
@@ -98,6 +103,16 @@ public class GalenActionGenerateArguments {
         return new ToStringBuilder(this)
             .append("path", path)
             .append("export", export)
+            .append("useGalenExtras", useGalenExtras)
             .toString();
+    }
+
+    public boolean isUseGalenExtras() {
+        return useGalenExtras;
+    }
+
+    public GalenActionGenerateArguments setUseGalenExtras(boolean useGalenExtras) {
+        this.useGalenExtras = useGalenExtras;
+        return this;
     }
 }
