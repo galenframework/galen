@@ -47,4 +47,15 @@ public class SpecGeneratorTest {
             SpecGenerator.generatePageSpec(result),
             is(IOUtils.toString(getClass().getResourceAsStream("/generator/simple-page.no-rules.expected.gspec"))));
     }
+
+    @Test
+    public void should_generate_spec_for_large_page() throws IOException {
+        SpecGenerator specGenerator = new SpecGenerator();
+        PageSpecGenerationResult result = specGenerator.generate(getClass().getResourceAsStream("/generator/large-page.json"),
+            new SpecGeneratorOptions()
+        );
+
+
+        System.out.println(SpecGenerator.generatePageSpec(result));
+    }
 }

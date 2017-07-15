@@ -16,10 +16,9 @@
 package com.galenframework.generator;
 
 import com.galenframework.generator.builders.SpecGeneratorOptions;
+import com.galenframework.generator.model.GmPageSpec;
 import com.galenframework.page.Point;
 import com.galenframework.page.Rect;
-import org.apache.commons.lang3.tuple.ImmutablePair;
-import org.apache.commons.lang3.tuple.Pair;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -231,20 +230,8 @@ public class SpecGenerator {
 
     public static String generateSpecSections(PageSpecGenerationResult result, String initialIndentation) {
         StringBuilder finalSpec = new StringBuilder();
-        List<Pair<String, StringBuilder>> sections = generateSpecSections(
-            result.getObjects(),
-            result.getSuggestionResults().getGeneratedRules(),
-            result.getSuggestionResults().getGeneratedObjectSpecs(),
-            initialIndentation
-        );
-
-        sections.forEach(section -> {
-            String sectionText = section.getValue().toString();
-            if (!sectionText.isEmpty()) {
-                finalSpec.append(initialIndentation).append("= ").append(section.getKey()).append(" =\n");
-                finalSpec.append(sectionText);
-            }
-        });
+        GmPageSpec pageSpecGM = GmPageSpec.create(result);
+        finalSpec.append(pageSpecGM.render());
         return finalSpec.toString();
     }
 
@@ -252,56 +239,6 @@ public class SpecGenerator {
         objectSpecs.forEach((name, specs) ->
             Collections.sort(specs, (a, b) -> a.getStatement().compareTo(b.getStatement()))
         );
-    }
-
-    private static List<Pair<String, StringBuilder>> generateSpecSections(List<PageItemNode> objects, Map<String, List<SpecStatement>> generatedRules, Map<String, List<SpecStatement>> objectSpecs, String indentation) {
-        sortSpecsWithinEachObject(objectSpecs);
-        List<Pair<String, StringBuilder>> sections = new LinkedList<>();
-        StringBuilder skeletonSectionBuilder = new StringBuilder();
-        sections.add(new ImmutablePair<>("Skeleton", skeletonSectionBuilder));
-
-        Map<PageItemNode, StringBuilder> pinStringBuilders = new HashMap<>();
-
-        //TODO fix this for the cases when there are more than one root notes. Could be done by making sure that we always have single root element upfront. if not -> make a boundary box
-        PageItemNode screenPin = objects.get(0);
-        pinStringBuilders.put(screenPin, skeletonSectionBuilder);
-
-        screenPin.getChildren().forEach(bigPin -> {
-            StringBuilder sectionBuilder = new StringBuilder();
-            sections.add(new ImmutablePair<>(bigPin.getPageItem().getName() + " elements", sectionBuilder));
-            bigPin.visitTree(p -> {
-                if (p == bigPin) {
-                    pinStringBuilders.put(p, skeletonSectionBuilder);
-                } else {
-                    pinStringBuilders.put(p, sectionBuilder);
-                }
-            });
-        });
-
-        objects.forEach(p -> p.visitTree(pin -> {
-            StringBuilder sectionBuilder = pinStringBuilders.get(pin);
-            if (generatedRules != null) {
-                List<SpecStatement> rules = generatedRules.get(pin.getPageItem().getName());
-                if (rules != null) {
-                    rules.forEach((rule) -> sectionBuilder.append(indentation).append("    ").append(rule.getStatement()).append('\n'));
-                    if (rules.size() > 0) {
-                        sectionBuilder.append('\n');
-                    }
-                }
-            }
-
-            if (objectSpecs != null && !objectSpecs.isEmpty()) {
-                List<SpecStatement> specs = objectSpecs.get(pin.getPageItem().getName());
-                if (specs != null && !specs.isEmpty()) {
-                    sectionBuilder.append(indentation).append("    ").append(pin.getPageItem().getName()).append(":\n");
-                    specs.forEach(spec -> {
-                        sectionBuilder.append(indentation).append("    ").append("    ").append(spec.getStatement()).append('\n');
-                    });
-                    sectionBuilder.append('\n');
-                }
-            }
-        }));
-        return sections;
     }
 
     private static List<ObjectDeclaration> generateSpecObjectsDeclaration(List<String> objectNames, List<PageItemNode> objects) {
