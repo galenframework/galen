@@ -54,7 +54,6 @@ public class SpecGeneratorTest {
         PageSpecGenerationResult result = specGenerator.generate(getClass().getResourceAsStream("/generator/large-page.json"),
             new SpecGeneratorOptions()
         );
-
         assertThat("Should generate complete page spec",
             SpecGenerator.generatePageSpec(result),
             is(IOUtils.toString(getClass().getResourceAsStream("/generator/large-page.expected.gspec"))));

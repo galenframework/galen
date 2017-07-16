@@ -16,23 +16,21 @@
 = Skeleton =
     | header, menu, content, footer are aligned vertically above each other with ~0px margin
 
-    header:
+    header, menu, content, footer:
         centered horizontally inside screen 1px
+
+    menu, content:
+        inside screen
+
+    footer:
+        inside screen 0px bottom
+
+    header:
         height 69px
         inside screen 0px top
 
     menu:
-        centered horizontally inside screen 1px
         height 63px
-        inside screen
-
-    content:
-        centered horizontally inside screen 1px
-        inside screen
-
-    footer:
-        centered horizontally inside screen 1px
-        inside screen 0px bottom
 
 = header elements =
     | header.logo should be squared with 48px size
@@ -48,52 +46,40 @@
 = menu elements =
     | menu.item-* are aligned horizontally next to each other with 0px margin
 
+    menu.item-1, menu.item-2, menu.item-3, menu.item-4:
+        height 63px
+
+    menu.item-2, menu.item-3, menu.item-4:
+        inside menu 0px top bottom
+
     menu.item-1:
-        height 63px
         inside menu 0px top left bottom
-
-    menu.item-2:
-        height 63px
-        inside menu 0px top bottom
-
-    menu.item-3:
-        height 63px
-        inside menu 0px top bottom
-
-    menu.item-4:
-        height 63px
-        inside menu 0px top bottom
 
 = content elements =
     | greeting, text_block-1 are aligned vertically above each other with 10px margin
     | text_block-* are aligned vertically above each other with 15px margin
+
+    text_block-2:
+        height 31px
+
+    greeting, text_block-1, text_block-2, text_block-3:
+        centered horizontally inside welcome_block 1px
+        inside welcome_block 30px left right
+
+    login_button:
+        inside text_block-3 0px top left bottom
+        width 79px
 
     welcome_block:
         centered horizontally inside content 1px
         inside content 20px top left right
 
     greeting:
-        centered horizontally inside welcome_block 1px
         height 69px
-        inside welcome_block 30px left right
 
     text_block-1:
-        centered horizontally inside welcome_block 1px
         height 30px
-        inside welcome_block 30px left right
 
-    text_block-2:
-        centered horizontally inside welcome_block 1px
-        height 31px
-        inside welcome_block 30px left right
-
-    text_block-3:
-        centered horizontally inside welcome_block 1px
+    text_block-3, login_button:
         height 45px
-        inside welcome_block 30px left right
-
-    login_button:
-        height 45px
-        inside text_block-3 0px top left bottom
-        width 79px
 
