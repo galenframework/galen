@@ -225,97 +225,14 @@ public class SpecGenerator {
     }
 
     public static String generateSpecSections(PageSpecGenerationResult result) {
-        return generateSpecSections(result, "");
-    }
-
-    public static String generateSpecSections(PageSpecGenerationResult result, String initialIndentation) {
         StringBuilder finalSpec = new StringBuilder();
         GmPageSpec pageSpecGM = GmPageSpec.create(result);
         finalSpec.append(pageSpecGM.render());
         return finalSpec.toString();
     }
 
-    private static void sortSpecsWithinEachObject(Map<String, List<SpecStatement>> objectSpecs) {
-        objectSpecs.forEach((name, specs) ->
-            Collections.sort(specs, (a, b) -> a.getStatement().compareTo(b.getStatement()))
-        );
-    }
-
-    private static List<ObjectDeclaration> generateSpecObjectsDeclaration(List<String> objectNames, List<PageItemNode> objects) {
-        int largestLength = objectNames.stream().max((a, b) -> a.length() > b.length()? 1: -1).get().length();
-        List<ObjectDeclaration> objectDeclarations = new LinkedList<>();
-        objects.forEach(pin -> generateSpecObjectsDeclaration(objectDeclarations, pin, objectNames, largestLength));
-        return objectDeclarations;
-    }
-
-    private static void generateSpecObjectsDeclaration(List<ObjectDeclaration> objectDeclarations, PageItemNode pin, List<String> objectNames, int largestLength) {
-        String pinName = pin.getPageItem().getName();
-        if (!"screen".equals(pinName) && ! "viewport".equals(pinName)) {
-            objectDeclarations.add(new ObjectDeclaration(pinName, "div[data-id=\"" + pinName + "\"]"));
-        }
-        if (pin.getChildren() != null && !pin.getChildren().isEmpty()) {
-            PageItemNode[] childPins = pin.getChildren().toArray(new PageItemNode[pin.getChildren().size()]);
-
-            String namePattern = findNamingPattern(objectNames, childPins);
-            if (namePattern != null) {
-                String itemCssName = patternToCssName(namePattern);
-                objectDeclarations.add(new ObjectDeclaration(namePattern, "ul." + itemCssName + " > li"));
-                //TODO think about child elements in each of these
-            } else {
-                for (PageItemNode childPin : childPins) {
-                    generateSpecObjectsDeclaration(objectDeclarations, childPin, objectNames, largestLength);
-                }
-            }
-        }
-    }
-
-    public static String generateObjectDeclaration(PageSpecGenerationResult result) {
-        final Set<String> knownItemNames = new HashSet<>();
-        final StringBuilder s = new StringBuilder("@objects\n");
-        List<ObjectDeclaration> objectDeclarations = new LinkedList<>();
-
-        final int[] maxSymbolsArr = {0};
-        generateSpecObjectsDeclaration(result.getObjectNames(), result.getObjects()).stream().forEach(objectDeclaration -> {
-            if (!knownItemNames.contains(objectDeclaration.getObjectName())) {
-                objectDeclarations.add(objectDeclaration);
-                knownItemNames.add(objectDeclaration.getObjectName());
-
-                int size = objectDeclaration.getObjectName().length();
-                if (maxSymbolsArr[0] < size) {
-                    maxSymbolsArr[0] = size;
-                }
-            }
-        });
-
-        int maxSymbols = maxSymbolsArr[0];
-
-        for (ObjectDeclaration objectDeclaration: objectDeclarations) {
-            s.append("    ")
-                .append(objectDeclaration.getObjectName())
-                .append(makeSpaces(2 + maxSymbols - objectDeclaration.getObjectName().length()))
-                .append(objectDeclaration.getLocator())
-                .append("\n");
-        }
-
-        return s.toString();
-    }
-
-    private static String makeSpaces(int amount) {
-        StringBuilder s = new StringBuilder();
-        for (int i = 0; i < amount; i++) {
-            s.append(' ');
-        }
-        return s.toString();
-    }
-
-    private static String patternToCssName(String namePattern) {
-        return namePattern.replaceAll("[^A-Za-z0-9]", " ").trim().replace(" ", "-");
-    }
-
     public static String generatePageSpec(PageSpecGenerationResult result) {
         return new StringBuilder()
-            .append(SpecGenerator.generateObjectDeclaration(result))
-            .append('\n')
             .append(SpecGenerator.generateSpecSections(result))
             .toString();
     }

@@ -1,8 +1,3 @@
-@objects
-    header       div[data-id="header"]
-    header.logo  div[data-id="header.logo"]
-    header.text  div[data-id="header.text"]
-
 = Skeleton =
     header:
         centered horizontally inside screen 1px
