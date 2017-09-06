@@ -30,7 +30,7 @@
     <sonatypeOssDistMgmtSnapshotsUrl>https://oss.sonatype.org/content/repositories/snapshots/</sonatypeOssDistMgmtSnapshotsUrl>
 
     <!-- VERSION NUMBERS -->
-    <selenium.version>3.4.0</selenium.version>
+    <selenium.version>3.5.3</selenium.version>
     <commons-io.version>2.4</commons-io.version>
     <commons-cli.version>1.2</commons-cli.version>
     <phantomjsdriver.version>1.2.1</phantomjsdriver.version>
