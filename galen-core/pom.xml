@@ -129,6 +129,16 @@
       <!-- see https://github.com/detro/ghostdriver/issues/397 -->
       <groupId>com.codeborne</groupId>
       <artifactId>phantomjsdriver</artifactId>
+      <exclusions>
+        <exclusion>
+          <groupId>org.seleniumhq.selenium</groupId>
+          <artifactId>selenium-java</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>org.seleniumhq.selenium</groupId>
+          <artifactId>selenium-remote-driver</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
     <dependency>
       <groupId>org.mockito</groupId>
