@@ -92,7 +92,7 @@ If you want to contribute to this project just look for current open issues. Ple
 
 All the work on the next version is performed in corresponding release branch (e.g. release-2.3). The master branch reflects the current live version. Most of the pull requests are accepted on release branch and not on master. If you think it is a crucial bugfix for current version, please consider asking in developers chat first.
 
-[![Gitter](https://badges.gitter.im/Join Chat.svg)](https://gitter.im/galenframework/galen?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
+[![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/galenframework/galen?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
 
 If you would like to make a change to the Galen Framework website (http://galenframework.com) you can do it here https://github.com/galenframework/galenframework.com
 
