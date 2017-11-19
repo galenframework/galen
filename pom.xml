@@ -3,7 +3,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.galenframework</groupId>
   <artifactId>galen-parent</artifactId>
-  <version>2.3.3-SNAPSHOT</version>
+  <version>2.3.6-SNAPSHOT</version>
   <name>Galen Framework Parent</name>
   <packaging>pom</packaging>
   <description>A library for layout testing of websites</description>
@@ -30,7 +30,7 @@
     <sonatypeOssDistMgmtSnapshotsUrl>https://oss.sonatype.org/content/repositories/snapshots/</sonatypeOssDistMgmtSnapshotsUrl>
 
     <!-- VERSION NUMBERS -->
-    <selenium.version>3.3.1</selenium.version>
+    <selenium.version>3.5.3</selenium.version>
     <commons-io.version>2.4</commons-io.version>
     <commons-cli.version>1.2</commons-cli.version>
     <phantomjsdriver.version>1.2.1</phantomjsdriver.version>
@@ -46,7 +46,6 @@
     <hamcrest.version>1.3</hamcrest.version>
     <jacoco.version>0.7.4.201502262128</jacoco.version>
     <mockito.version>1.9.5</mockito.version>
-    <powermock.version>1.5.3</powermock.version>
     <node.version>v6.0.0</node.version>
     <npm.version>3.10.7</npm.version>
 
@@ -231,29 +230,6 @@
         <artifactId>mockito-all</artifactId>
         <version>${mockito.version}</version>
         <scope>test</scope>
-      </dependency>
-      <dependency>
-        <groupId>org.powermock</groupId>
-        <artifactId>powermock-module-testng</artifactId>
-        <version>${powermock.version}</version>
-        <scope>test</scope>
-      </dependency>
-      <dependency>
-        <groupId>org.powermock</groupId>
-        <artifactId>powermock-api-support</artifactId>
-        <version>${powermock.version}</version>
-        <scope>test</scope>
-      </dependency>
-      <dependency>
-        <groupId>org.powermock</groupId>
-        <artifactId>powermock-api-mockito</artifactId>
-        <version>${powermock.version}</version>
-        <scope>test</scope>
-      </dependency>
-      <dependency>
-        <groupId>org.powermock</groupId>
-        <artifactId>powermock-reflect</artifactId>
-        <version>${powermock.version}</version>
       </dependency>
     </dependencies>
   </dependencyManagement>

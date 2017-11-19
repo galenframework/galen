@@ -1,6 +1,6 @@
 language: java
 addons:
-    firefox: "45.4.0esr"
+    firefox: "53.0.3"
 install: mvn install -DskipTests -Dgpg.skip
 jdk:
   - oraclejdk8
@@ -13,9 +13,9 @@ before_script:
 script:
   - mvn verify -Dgpg.skip=true -Dgalen.use.fail.exit.code=false -Dwebdriver.gecko.driver=$PWD/geckodriver/geckodriver
 before_install:
-  - wget https://github.com/mozilla/geckodriver/releases/download/v0.11.1/geckodriver-v0.11.1-linux64.tar.gz
+  - wget https://github.com/mozilla/geckodriver/releases/download/v0.17.0/geckodriver-v0.17.0-linux64.tar.gz
   - mkdir geckodriver
-  - tar -xzf geckodriver-v0.11.1-linux64.tar.gz -C geckodriver
+  - tar -xzf geckodriver-v0.17.0-linux64.tar.gz -C geckodriver
   - "/sbin/start-stop-daemon --start --quiet --pidfile /tmp/custom_xvfb_99.pid --make-pidfile --background --exec /usr/bin/Xvfb -- :99 +extension RANDR -ac -screen 0 1280x1024x16"
 after_failure:
   - find . -name "TestSuite.txt" | xargs cat
