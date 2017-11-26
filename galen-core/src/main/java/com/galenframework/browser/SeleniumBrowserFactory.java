@@ -116,7 +116,7 @@ public class SeleniumBrowserFactory implements BrowserFactory {
 
     public static DesiredCapabilities getBrowserCapabilities(String driverParameter) {
         DesiredCapabilities capabilities = null;
-        if (driverParameter.equalsIgnoreCase(FIREFOX)) {
+        if (driverParameter==null || driverParameter.equalsIgnoreCase(FIREFOX)) {
             capabilities = DesiredCapabilities.firefox();
         }
         if (driverParameter.equalsIgnoreCase(IE)) {
