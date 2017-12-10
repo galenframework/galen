@@ -40,7 +40,7 @@ public class GalenActionGenerate extends GalenAction {
         specGeneratorOptions.setUseGalenExtras(generateArguments.isUseGalenExtras());
 
         PageSpecGenerationResult result = specGenerator.generate(GalenUtils.findFileOrResourceAsStream(generateArguments.getPath()), specGeneratorOptions);
-        String text = SpecGenerator.generatePageSpec(result);
+        String text = SpecGenerator.generatePageSpec(result, specGeneratorOptions);
         File outputFile = new File(generateArguments.getExport());
         outputFile.createNewFile();
         FileUtils.writeStringToFile(outputFile, text);

@@ -26,7 +26,6 @@ import java.util.*;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static com.galenframework.generator.SpecGeneratorUtils.findNamingPattern;
 import static java.lang.String.format;
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
@@ -231,9 +230,13 @@ public class SpecGenerator {
         return finalSpec.toString();
     }
 
-    public static String generatePageSpec(PageSpecGenerationResult result) {
-        return new StringBuilder()
-            .append(SpecGenerator.generateSpecSections(result))
+    public static String generatePageSpec(PageSpecGenerationResult result, SpecGeneratorOptions specGeneratorOptions) {
+        StringBuilder builder = new StringBuilder();
+
+        if (specGeneratorOptions.isUseGalenExtras()) {
+            builder.append("@lib galen-extras\n\n");
+        }
+        return builder.append(SpecGenerator.generateSpecSections(result))
             .toString();
     }
 }

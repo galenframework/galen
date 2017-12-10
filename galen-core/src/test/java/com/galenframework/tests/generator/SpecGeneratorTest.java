@@ -30,32 +30,33 @@ public class SpecGeneratorTest {
 
     @Test
     public void should_generate_simple_spec_from_page_dump() throws IOException {
+        SpecGeneratorOptions specGeneratorOptions = new SpecGeneratorOptions();
         SpecGenerator specGenerator = new SpecGenerator();
-        PageSpecGenerationResult result = specGenerator.generate(getClass().getResourceAsStream("/generator/simple-page.json"), new SpecGeneratorOptions());
+        PageSpecGenerationResult result = specGenerator.generate(getClass().getResourceAsStream("/generator/simple-page.json"), specGeneratorOptions);
         assertThat("Should generate complete page spec",
-            SpecGenerator.generatePageSpec(result),
+            SpecGenerator.generatePageSpec(result, specGeneratorOptions),
             is(IOUtils.toString(getClass().getResourceAsStream("/generator/simple-page.expected.gspec"))));
     }
 
     @Test
     public void should_generate_spec_without_galen_extras() throws IOException {
+        SpecGeneratorOptions specGeneratorOptions = new SpecGeneratorOptions().setUseGalenExtras(false);
         SpecGenerator specGenerator = new SpecGenerator();
-        PageSpecGenerationResult result = specGenerator.generate(getClass().getResourceAsStream("/generator/simple-page.json"),
-            new SpecGeneratorOptions().setUseGalenExtras(false)
-        );
+        PageSpecGenerationResult result = specGenerator.generate(getClass().getResourceAsStream("/generator/simple-page.json"), specGeneratorOptions );
+
         assertThat("Should generate complete page spec",
-            SpecGenerator.generatePageSpec(result),
+            SpecGenerator.generatePageSpec(result, specGeneratorOptions),
             is(IOUtils.toString(getClass().getResourceAsStream("/generator/simple-page.no-rules.expected.gspec"))));
     }
 
     @Test
     public void should_generate_spec_for_large_page() throws IOException {
+        SpecGeneratorOptions specGeneratorOptions =  new SpecGeneratorOptions();
         SpecGenerator specGenerator = new SpecGenerator();
-        PageSpecGenerationResult result = specGenerator.generate(getClass().getResourceAsStream("/generator/large-page.json"),
-            new SpecGeneratorOptions()
-        );
+        PageSpecGenerationResult result = specGenerator.generate(getClass().getResourceAsStream("/generator/large-page.json"), specGeneratorOptions );
+
         assertThat("Should generate complete page spec",
-            SpecGenerator.generatePageSpec(result),
+            SpecGenerator.generatePageSpec(result, specGeneratorOptions),
             is(IOUtils.toString(getClass().getResourceAsStream("/generator/large-page.expected.gspec"))));
     }
 }
