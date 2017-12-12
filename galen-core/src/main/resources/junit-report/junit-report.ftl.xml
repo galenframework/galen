@@ -6,9 +6,12 @@
                   time="${(test.duration/1000)?c}" timestamp="${test.testInfo.startedAt?string('yyyy-MM-dd\'T\'HH:mm:ss\'Z\'')}">
             <#if test.failed>
                 <#if test.testInfo.exception?has_content>
-                    <failure message="Layout errors" type="${test.testInfo.exception.class.name}">
-                            ${test.exceptionMessage?html}
-                    </failure>
+                <error message="Exception" type="${test.testInfo.exception.class.name}">
+                    ${test.exceptionMessage?html}
+                </error>
+                <#else>
+                <failure type="${test.testInfo.name?html}" message="Layout errors">
+                </failure>
                 </#if>
             </#if>
         </testcase>
