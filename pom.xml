@@ -30,14 +30,13 @@
     <sonatypeOssDistMgmtSnapshotsUrl>https://oss.sonatype.org/content/repositories/snapshots/</sonatypeOssDistMgmtSnapshotsUrl>
 
     <!-- VERSION NUMBERS -->
-    <selenium.version>3.5.3</selenium.version>
+    <selenium.version>3.8.1</selenium.version>
     <commons-io.version>2.4</commons-io.version>
     <commons-cli.version>1.2</commons-cli.version>
     <phantomjsdriver.version>1.2.1</phantomjsdriver.version>
     <rhino.version>1.7R5</rhino.version>
     <slf4j.version>1.7.10</slf4j.version>
     <commons-lang3.version>3.0.1</commons-lang3.version>
-    <gson.version>2.3</gson.version>
     <jackson.version>2.4.2</jackson.version>
     <freemarker.version>2.3.19</freemarker.version>
     <!-- testing libs -->
@@ -188,11 +187,6 @@
         <groupId>commons-io</groupId>
         <artifactId>commons-io</artifactId>
         <version>${commons-io.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>com.google.code.gson</groupId>
-        <artifactId>gson</artifactId>
-        <version>${gson.version}</version>
       </dependency>
       <dependency>
         <groupId>commons-cli</groupId>
