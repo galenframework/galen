@@ -47,63 +47,9 @@
       <artifactId>commons-io</artifactId>
     </dependency>
     <dependency>
-      <groupId>com.google.code.gson</groupId>
-      <artifactId>gson</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.seleniumhq.selenium</groupId>
-      <artifactId>selenium-firefox-driver</artifactId>
-      <version>${selenium.version}</version>
-      <exclusions>
-        <exclusion>
-          <groupId>com.google.code.gson</groupId>
-          <artifactId>gson</artifactId>
-        </exclusion>
-      </exclusions>
-    </dependency>
-    <dependency>
-      <groupId>org.seleniumhq.selenium</groupId>
-      <artifactId>selenium-chrome-driver</artifactId>
-      <version>${selenium.version}</version>
-        <exclusions>
-            <exclusion>
-                <groupId>com.google.code.gson</groupId>
-                <artifactId>gson</artifactId>
-            </exclusion>
-        </exclusions>
-    </dependency>
-    <dependency>
-      <groupId>org.seleniumhq.selenium</groupId>
-      <artifactId>selenium-edge-driver</artifactId>
-      <version>${selenium.version}</version>
-        <exclusions>
-            <exclusion>
-                <groupId>com.google.code.gson</groupId>
-                <artifactId>gson</artifactId>
-            </exclusion>
-        </exclusions>
-    </dependency>
-    <dependency>
       <groupId>org.seleniumhq.selenium</groupId>
       <artifactId>selenium-java</artifactId>
       <version>${selenium.version}</version>
-        <exclusions>
-            <exclusion>
-                <groupId>com.google.code.gson</groupId>
-                <artifactId>gson</artifactId>
-            </exclusion>
-        </exclusions>
-    </dependency>
-    <dependency>
-      <groupId>org.seleniumhq.selenium</groupId>
-      <artifactId>selenium-support</artifactId>
-      <version>${selenium.version}</version>
-        <exclusions>
-            <exclusion>
-                <groupId>com.google.code.gson</groupId>
-                <artifactId>gson</artifactId>
-            </exclusion>
-        </exclusions>
     </dependency>
     <dependency>
       <groupId>commons-cli</groupId>
