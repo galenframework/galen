@@ -3,7 +3,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.galenframework</groupId>
   <artifactId>galen-parent</artifactId>
-  <version>2.3.3-SNAPSHOT</version>
+  <version>2.3.7-SNAPSHOT</version>
   <name>Galen Framework Parent</name>
   <packaging>pom</packaging>
   <description>A library for layout testing of websites</description>
@@ -30,14 +30,13 @@
     <sonatypeOssDistMgmtSnapshotsUrl>https://oss.sonatype.org/content/repositories/snapshots/</sonatypeOssDistMgmtSnapshotsUrl>
 
     <!-- VERSION NUMBERS -->
-    <selenium.version>3.3.1</selenium.version>
+    <selenium.version>3.8.1</selenium.version>
     <commons-io.version>2.4</commons-io.version>
     <commons-cli.version>1.2</commons-cli.version>
     <phantomjsdriver.version>1.2.1</phantomjsdriver.version>
     <rhino.version>1.7R5</rhino.version>
     <slf4j.version>1.7.10</slf4j.version>
     <commons-lang3.version>3.0.1</commons-lang3.version>
-    <gson.version>2.3</gson.version>
     <jackson.version>2.4.2</jackson.version>
     <freemarker.version>2.3.19</freemarker.version>
     <!-- testing libs -->
@@ -46,7 +45,6 @@
     <hamcrest.version>1.3</hamcrest.version>
     <jacoco.version>0.7.4.201502262128</jacoco.version>
     <mockito.version>1.9.5</mockito.version>
-    <powermock.version>1.5.3</powermock.version>
     <node.version>v6.0.0</node.version>
     <npm.version>3.10.7</npm.version>
 
@@ -191,11 +189,6 @@
         <version>${commons-io.version}</version>
       </dependency>
       <dependency>
-        <groupId>com.google.code.gson</groupId>
-        <artifactId>gson</artifactId>
-        <version>${gson.version}</version>
-      </dependency>
-      <dependency>
         <groupId>commons-cli</groupId>
         <artifactId>commons-cli</artifactId>
         <version>${commons-cli.version}</version>
@@ -231,29 +224,6 @@
         <artifactId>mockito-all</artifactId>
         <version>${mockito.version}</version>
         <scope>test</scope>
-      </dependency>
-      <dependency>
-        <groupId>org.powermock</groupId>
-        <artifactId>powermock-module-testng</artifactId>
-        <version>${powermock.version}</version>
-        <scope>test</scope>
-      </dependency>
-      <dependency>
-        <groupId>org.powermock</groupId>
-        <artifactId>powermock-api-support</artifactId>
-        <version>${powermock.version}</version>
-        <scope>test</scope>
-      </dependency>
-      <dependency>
-        <groupId>org.powermock</groupId>
-        <artifactId>powermock-api-mockito</artifactId>
-        <version>${powermock.version}</version>
-        <scope>test</scope>
-      </dependency>
-      <dependency>
-        <groupId>org.powermock</groupId>
-        <artifactId>powermock-reflect</artifactId>
-        <version>${powermock.version}</version>
       </dependency>
     </dependencies>
   </dependencyManagement>

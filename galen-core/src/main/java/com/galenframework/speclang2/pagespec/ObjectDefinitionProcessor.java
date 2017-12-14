@@ -146,7 +146,7 @@ public class ObjectDefinitionProcessor implements StructNodeProcessor {
 
         for (int index = 1; index <= count; index++) {
             addObjectToSpec(objectNode, objectName.replace("*", Integer.toString(index)),
-                    new Locator(locator.getLocatorType(), locator.getLocatorValue(), index).withParent(locator.getParent()),
+                    new Locator(locator.getLocatorType(), locator.getLocatorValue(), index).withParent(locator.getParent()).withCorrections(locator.getCorrections()),
                     groupsForThisObject);
         }
     }

@@ -73,7 +73,12 @@ public class WebPageElement extends PageElement {
     
     @Override
     public boolean isVisible() {
-        return getWebElement().isDisplayed();
+        try {
+            return getWebElement().isDisplayed();
+        }
+        catch (StaleElementReferenceException e) {
+            return false;
+        }
     }
 
     @Override
