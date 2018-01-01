@@ -13,14 +13,9 @@
 * See the License for the specific language governing permissions and
 * limitations under the License.
 ******************************************************************************/
-package com.galenframework.speclang2.pagespec;
+package com.galenframework.generator;
 
-import com.galenframework.parser.StringCharReader;
-import com.galenframework.parser.StructNode;
-
-import java.io.IOException;
-import java.util.List;
-
-public interface StructNodeProcessor {
-    List<StructNode> process(StringCharReader reader, StructNode structNode) throws IOException;
+public class Size {
+    public int width = 0;
+    public int height = 0;
 }

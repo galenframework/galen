@@ -68,6 +68,8 @@ public abstract class GalenAction {
                 return new GalenActionVersion(arguments, outStream, errStream);
             case "config":
                 return new GalenActionConfig(arguments, outStream, errStream);
+            case "generate":
+                return new GalenActionGenerate(arguments, outStream, errStream);
         }
         throw new RuntimeException("Unknown action: " + actionName);
     }

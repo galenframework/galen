@@ -13,14 +13,18 @@
 * See the License for the specific language governing permissions and
 * limitations under the License.
 ******************************************************************************/
-package com.galenframework.speclang2.pagespec;
+package com.galenframework.generator.builders;
 
-import com.galenframework.parser.StringCharReader;
-import com.galenframework.parser.StructNode;
+import com.galenframework.generator.filters.AnyTwoArgsSpecFilter;
+import com.galenframework.generator.filters.SpecFilter;
 
-import java.io.IOException;
 import java.util.List;
 
-public interface StructNodeProcessor {
-    List<StructNode> process(StringCharReader reader, StructNode structNode) throws IOException;
+import static java.util.Arrays.asList;
+
+public abstract class AbstractSpecBuilder implements SpecBuilder {
+
+    protected void extendSpecFilters(List<SpecFilter> specFilters, String otherSpecName) {
+        specFilters.add(new AnyTwoArgsSpecFilter(otherSpecName, asList(getArgs())));
+    }
 }

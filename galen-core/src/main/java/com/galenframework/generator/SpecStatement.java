@@ -13,14 +13,38 @@
 * See the License for the specific language governing permissions and
 * limitations under the License.
 ******************************************************************************/
-package com.galenframework.speclang2.pagespec;
+package com.galenframework.generator;
 
-import com.galenframework.parser.StringCharReader;
-import com.galenframework.parser.StructNode;
 
-import java.io.IOException;
 import java.util.List;
 
-public interface StructNodeProcessor {
-    List<StructNode> process(StringCharReader reader, StructNode structNode) throws IOException;
+public class SpecStatement {
+    private String statement;
+    private List<SpecAssertion> assertions;
+
+
+    public SpecStatement(String statement) {
+        this.statement = statement;
+    }
+
+    public SpecStatement(String statement, List<SpecAssertion> assertions) {
+        this.statement = statement;
+        this.assertions = assertions;
+    }
+
+    public String getStatement() {
+        return statement;
+    }
+
+    public void setStatement(String statement) {
+        this.statement = statement;
+    }
+
+    public List<SpecAssertion> getAssertions() {
+        return assertions;
+    }
+
+    public void setAssertions(List<SpecAssertion> assertions) {
+        this.assertions = assertions;
+    }
 }

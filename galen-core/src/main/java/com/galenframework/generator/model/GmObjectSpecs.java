@@ -13,14 +13,37 @@
 * See the License for the specific language governing permissions and
 * limitations under the License.
 ******************************************************************************/
-package com.galenframework.speclang2.pagespec;
+package com.galenframework.generator.model;
 
-import com.galenframework.parser.StringCharReader;
-import com.galenframework.parser.StructNode;
-
-import java.io.IOException;
+import java.util.LinkedList;
 import java.util.List;
 
-public interface StructNodeProcessor {
-    List<StructNode> process(StringCharReader reader, StructNode structNode) throws IOException;
+public class GmObjectSpecs {
+    private String objectName;
+    private List<GmSpec> specs = new LinkedList<>();
+
+    public GmObjectSpecs(String objectName) {
+        this.objectName = objectName;
+    }
+
+    public GmObjectSpecs(String objectName, List<GmSpec> specs) {
+        this.objectName = objectName;
+        this.specs = specs;
+    }
+
+    public List<GmSpec> getSpecs() {
+        return specs;
+    }
+
+    public void setSpecs(List<GmSpec> specs) {
+        this.specs = specs;
+    }
+
+    public String getObjectName() {
+        return objectName;
+    }
+
+    public void setObjectName(String objectName) {
+        this.objectName = objectName;
+    }
 }

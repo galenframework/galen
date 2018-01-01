@@ -13,14 +13,30 @@
 * See the License for the specific language governing permissions and
 * limitations under the License.
 ******************************************************************************/
-package com.galenframework.speclang2.pagespec;
+package com.galenframework.generator;
 
-import com.galenframework.parser.StringCharReader;
-import com.galenframework.parser.StructNode;
+public class ObjectDeclaration {
+    private String objectName;
+    private String locator;
 
-import java.io.IOException;
-import java.util.List;
+    public ObjectDeclaration(String objectName, String locator) {
+        this.objectName = objectName;
+        this.locator = locator;
+    }
 
-public interface StructNodeProcessor {
-    List<StructNode> process(StringCharReader reader, StructNode structNode) throws IOException;
+    public String getObjectName() {
+        return objectName;
+    }
+
+    public void setObjectName(String objectName) {
+        this.objectName = objectName;
+    }
+
+    public String getLocator() {
+        return locator;
+    }
+
+    public void setLocator(String locator) {
+        this.locator = locator;
+    }
 }

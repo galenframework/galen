@@ -13,14 +13,21 @@
 * See the License for the specific language governing permissions and
 * limitations under the License.
 ******************************************************************************/
-package com.galenframework.speclang2.pagespec;
+package com.galenframework.generator.model;
 
-import com.galenframework.parser.StringCharReader;
-import com.galenframework.parser.StructNode;
+public class GmSpec {
 
-import java.io.IOException;
-import java.util.List;
+    private String statement;
 
-public interface StructNodeProcessor {
-    List<StructNode> process(StringCharReader reader, StructNode structNode) throws IOException;
+    public GmSpec(String statement) {
+        this.statement = statement;
+    }
+
+    public String getStatement() {
+        return statement;
+    }
+
+    public void setStatement(String statement) {
+        this.statement = statement;
+    }
 }
