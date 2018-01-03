@@ -90,7 +90,7 @@ public class EventHandler {
                     try {
                         event.execute();
                     } catch (Throwable ex) {
-                        LOG.error("Unknow error during executing test suites.", ex);
+                        LOG.error("Unknown error during executing test suites.", ex);
                     }
                 }
             }
@@ -112,7 +112,7 @@ public class EventHandler {
                     try {
                         event.execute(testInfo);
                     } catch (Throwable ex) {
-                        LOG.error("Unknow error during executing test events.", ex);
+                        LOG.error("Unknown error during executing test events.", ex);
                     }
                 }
             }
