@@ -222,7 +222,7 @@ public class GalenActionTest extends GalenAction {
             try {
                 listener.beforeTestSuite(tests);
             } catch (Exception ex) {
-                LOG.error("Unknow error before running testsuites.", ex);
+                LOG.error("Unknown error before running testsuites.", ex);
             }
         }
     }
@@ -232,7 +232,7 @@ public class GalenActionTest extends GalenAction {
             try {
                 listener.afterTestSuite(testInfos);
             } catch (Exception ex) {
-                LOG.error("Unknow error after running testsuites.", ex);
+                LOG.error("Unknown error after running testsuites.", ex);
             }
         }
     }
