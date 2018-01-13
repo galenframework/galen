@@ -30,7 +30,7 @@ public class GalenActionGenerateArguments {
         args = ArgumentsUtils.processSystemProperties(args);
 
         Options options = new Options();
-        options.addOption("E", "export", true, "Path to generated spec file");
+        options.addOption("e", "export", true, "Path to generated spec file");
         options.addOption("G", "no-galen-extras", false, "Disable galen-extras expressions");
 
         CommandLineParser parser = new PosixParser();
@@ -46,7 +46,7 @@ public class GalenActionGenerateArguments {
 
 
         GalenActionGenerateArguments arguments = new GalenActionGenerateArguments();
-        arguments.setExport(cmd.getOptionValue("E"));
+        arguments.setExport(cmd.getOptionValue("e"));
         arguments.setUseGalenExtras(!cmd.hasOption("G"));
 
         if (cmd.getArgs() == null || cmd.getArgs().length < 1) {
