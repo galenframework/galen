@@ -18,6 +18,8 @@ package com.galenframework.config;
 public enum GalenProperty {
     SCREENSHOT_AUTORESIZE("galen.screenshot.autoresize", "true"),
     SCREENSHOT_FULLPAGE("galen.browser.screenshots.fullPage", "false"),
+    SCREENSHOT_HEADLESS("galen.browser.headless", "false"),
+
 
     // smart waiting for scroll position, but with a timeout, set to zero to turn off smart wait
     SCREENSHOT_FULLPAGE_SCROLLTIMEOUT("galen.browser.screenshots.fullPage.scrollTimeout", "250"),
