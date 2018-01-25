@@ -1,12 +1,12 @@
 /*******************************************************************************
 * Copyright 2017 Ivan Shubin http://galenframework.com
-* 
+*
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
 * You may obtain a copy of the License at
-* 
+*
 *   http://www.apache.org/licenses/LICENSE-2.0
-* 
+*
 * Unless required by applicable law or agreed to in writing, software
 * distributed under the License is distributed on an "AS IS" BASIS,
 * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -25,15 +25,17 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.openqa.selenium.Platform;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.edge.EdgeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.firefox.FirefoxOptions;
 import org.openqa.selenium.ie.InternetExplorerDriver;
 import org.openqa.selenium.phantomjs.PhantomJSDriver;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.safari.SafariDriver;
 
 /**
- * This is a general browser factory which could also 
+ * This is a general browser factory which could also
  * be configured to run in Selenium Grid via config file.
  * @author Ivan Shubin
  *
@@ -47,6 +49,7 @@ public class SeleniumBrowserFactory implements BrowserFactory {
     public static final String SAFARI = "safari";
     public static final String EDGE = "edge";
     private String browserType = GalenConfig.getConfig().getDefaultBrowser();
+    private boolean headless = GalenConfig.getConfig().shouldRunInHeadlessMode();
 
     public SeleniumBrowserFactory(String browserType) {
         this.browserType = browserType;
@@ -57,7 +60,7 @@ public class SeleniumBrowserFactory implements BrowserFactory {
 
     @Override
     public Browser openBrowser() {
-        
+
         if (shouldBeUsingGrid()) {
             return createSeleniumGridBrowser();
         }
@@ -67,17 +70,17 @@ public class SeleniumBrowserFactory implements BrowserFactory {
     }
 
     private Browser createSeleniumGridBrowser() {
-        
+
         String gridUrl = GalenConfig.getConfig().readMandatoryProperty(GalenProperty.GALEN_BROWSERFACTORY_SELENIUM_GRID_URL);
         SeleniumGridBrowserFactory gridFactory = new SeleniumGridBrowserFactory(gridUrl);
-        
+
         gridFactory.setBrowser(GalenConfig.getConfig().readProperty(GalenProperty.GALEN_BROWSERFACTORY_SELENIUM_GRID_BROWSER));
         gridFactory.setBrowserVersion(GalenConfig.getConfig().readProperty(GalenProperty.GALEN_BROWSERFACTORY_SELENIUM_GRID_BROWSERVERSION));
         String platform = GalenConfig.getConfig().readProperty(GalenProperty.GALEN_BROWSERFACTORY_SELENIUM_GRID_PLATFORM);
         if (platform != null && !platform.trim().isEmpty()) {
             gridFactory.setPlatform(Platform.valueOf(platform.toUpperCase()));
         }
-        
+
         return gridFactory.openBrowser();
     }
 
@@ -86,19 +89,19 @@ public class SeleniumBrowserFactory implements BrowserFactory {
     }
 
     private Browser createLocalBrowser() {
-        return new SeleniumBrowser(SeleniumBrowserFactory.getDriver(browserType));
+        return new SeleniumBrowser(SeleniumBrowserFactory.getDriver(browserType, headless));
     }
-    
-    public static WebDriver getDriver(String browserType){
-        
+
+    public static WebDriver getDriver(String browserType, boolean headless){
+
         if ( StringUtils.isEmpty(browserType) || FIREFOX.equals(browserType)) {
-            return new FirefoxDriver(SeleniumBrowserFactory.getBrowserCapabilities(browserType));
+            return new FirefoxDriver(SeleniumBrowserFactory.getBrowserCapabilities(browserType, headless));
         }
         else if (CHROME.equals(browserType)) {
-            return new ChromeDriver(SeleniumBrowserFactory.getBrowserCapabilities(browserType));
+            return new ChromeDriver(SeleniumBrowserFactory.getBrowserCapabilities(browserType, headless));
         }
         else if (IE.equals(browserType)) {
-            return new InternetExplorerDriver(SeleniumBrowserFactory.getBrowserCapabilities(browserType));
+            return new InternetExplorerDriver(SeleniumBrowserFactory.getBrowserCapabilities(browserType, false));
         }
         else if (PHANTOMJS.equals(browserType)) {
             return new PhantomJSDriver();
@@ -114,10 +117,13 @@ public class SeleniumBrowserFactory implements BrowserFactory {
         }
     }
 
-    public static DesiredCapabilities getBrowserCapabilities(String driverParameter) {
+    public static DesiredCapabilities getBrowserCapabilities(String driverParameter, boolean headless) {
         DesiredCapabilities capabilities = null;
         if (driverParameter == null || driverParameter.equalsIgnoreCase(FIREFOX)) {
             capabilities = DesiredCapabilities.firefox();
+            FirefoxOptions options = new FirefoxOptions();
+            options.setHeadless(headless);
+            capabilities.merge(options);
         }
         else if (driverParameter.equalsIgnoreCase(IE)) {
             capabilities = DesiredCapabilities.internetExplorer();
@@ -126,6 +132,9 @@ public class SeleniumBrowserFactory implements BrowserFactory {
         }
         else if (driverParameter.equalsIgnoreCase(CHROME)) {
             capabilities = DesiredCapabilities.chrome();
+            ChromeOptions options = new ChromeOptions();
+            options.setHeadless(headless);
+            capabilities.merge(options);
         }
         return capabilities;
     }
@@ -136,14 +145,14 @@ public class SeleniumBrowserFactory implements BrowserFactory {
             .append(browserType)
             .toHashCode();
     }
-    
+
     @Override
     public String toString() {
         return new ToStringBuilder(this)
             .append("browserType", this.browserType)
             .toString();
     }
-    
+
     @Override
     public boolean equals(Object obj) {
         if (obj == null) {
@@ -155,9 +164,9 @@ public class SeleniumBrowserFactory implements BrowserFactory {
         if (!(obj instanceof SeleniumBrowserFactory)) {
             return false;
         }
-        
+
         SeleniumBrowserFactory rhs = (SeleniumBrowserFactory)obj;
-        
+
         return new EqualsBuilder()
             .append(this.browserType, rhs.browserType)
             .isEquals();
