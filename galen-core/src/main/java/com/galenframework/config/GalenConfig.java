@@ -185,6 +185,10 @@ public class GalenConfig {
         }
         else return 10;
     }
+
+    public boolean shouldRunInHeadlessMode() {
+        return getBooleanProperty(GalenProperty.GALEN_BROWSER_HEADLESS);
+    }
     
     public boolean getUseFailExitCode() {
         return getBooleanProperty(GalenProperty.GALEN_USE_FAIL_EXIT_CODE);
