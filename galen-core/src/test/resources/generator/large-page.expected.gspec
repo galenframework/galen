@@ -1,0 +1,72 @@
+@lib galen-extras
+
+= Skeleton =
+    | header, menu, content, footer are aligned vertically above each other with ~0px margin
+
+    header, menu, content, footer:
+        centered horizontally inside screen 1px
+
+    menu, content:
+        inside screen
+
+    footer:
+        inside screen 0px bottom
+
+    header:
+        height 69px
+        inside screen 0px top
+
+    menu:
+        height 63px
+
+= header elements =
+    | header.logo should be squared with 48px size
+
+    header.logo:
+        inside header 13px top, 0px left, 8px bottom
+        left-of header.text 22px
+
+    header.text:
+        height 39px
+        inside header 20px top, 10px bottom
+
+= menu elements =
+    | menu.item-* are aligned horizontally next to each other with 0px margin
+
+    menu.item-1, menu.item-2, menu.item-3, menu.item-4:
+        height 63px
+
+    menu.item-2, menu.item-3, menu.item-4:
+        inside menu 0px top bottom
+
+    menu.item-1:
+        inside menu 0px top left bottom
+
+= content elements =
+    | greeting, text_block-1 are aligned vertically above each other with 10px margin
+    | text_block-* are aligned vertically above each other with 15px margin
+
+    text_block-2:
+        height 31px
+
+    greeting, text_block-1, text_block-2, text_block-3:
+        centered horizontally inside welcome_block 1px
+        inside welcome_block 30px left right
+
+    login_button:
+        inside text_block-3 0px top left bottom
+        width 79px
+
+    welcome_block:
+        centered horizontally inside content 1px
+        inside content 20px top left right
+
+    greeting:
+        height 69px
+
+    text_block-1:
+        height 30px
+
+    text_block-3, login_button:
+        height 45px
+

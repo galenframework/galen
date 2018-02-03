@@ -286,7 +286,7 @@ function collectObjectsForHeatmap(layout) {
         }
     });
 
-    for (objectName in objectsHeatMap) {
+    for (var objectName in objectsHeatMap) {
         if (objectsHeatMap.hasOwnProperty(objectName)) {
             var count = objectsHeatMap[objectName];
 
@@ -404,6 +404,35 @@ function collapseAllNodes() {
     $("a.expand-link.contains-children-true").removeClass("expanded").removeClass("collapsed").addClass("collapsed");
 }
 
+function enrichMutationNode(node) {
+    if (node && node.mutationReport && node.mutationReport.objectMutationStatistics) {
+        var oms = node.mutationReport.objectMutationStatistics;
+        var items = [];
+        for (var itemName in oms) {
+            if (oms.hasOwnProperty(itemName)) {
+                items.push({
+                    name: itemName,
+                    item: oms[itemName],
+                    status: oms[itemName].failed > 0 ? "error" : "passed"
+                });
+            }
+        }
+
+        items.sort(function (a, b) {
+            if (a.item.failed > b.item.failed) {
+                return -1;
+            } else if (a.item.failed < b.item.failed) {
+                return 1;
+            } else {
+                return a.name > b.name;
+            }
+        });
+
+        node.mutationReport._items = items;
+    }
+    return node;
+}
+
 
 function createGalenReport() {
 
@@ -430,7 +459,8 @@ function createGalenReport() {
            sublayout: createTemplate("report-layout-sublayout-tpl"),
            screenshotPopup: createTemplate("screenshot-popup-tpl"),
            imageComparison: createTemplate("image-comparison-tpl"),
-           nodeExtras: createTemplate("node-extras-tpl")
+           nodeExtras: createTemplate("node-extras-tpl"),
+           mutation: createTemplate("report-mutation-tpl")
         },
 
         render: function (id, reportData) {
@@ -498,6 +528,8 @@ Handlebars.registerHelper("renderNode", function (node) {
                 node.layoutId = _GalenReport.registerLayout(node);
             }
             return safeHtml(_GalenReport.tpl.layout(node));
+        } else if (node.type === "mutation") {
+            return safeHtml(_GalenReport.tpl.mutation(enrichMutationNode(node)));
         }
     }
     return "";
@@ -777,7 +809,7 @@ function createGalenTestOverview() {
 
             var groupsArray = [];
 
-            for (name in groups) {
+            for (var name in groups) {
                 if (groups.hasOwnProperty(name)) {
                     groupsArray.push(groups[name]);
                 }

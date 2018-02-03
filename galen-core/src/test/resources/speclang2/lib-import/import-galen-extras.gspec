@@ -1,0 +1,10 @@
+@lib galen-extras
+
+@objects
+    menu.item-1     id  item-1
+    menu.item-2     id  item-2
+    menu.item-3     id  item-3
+
+
+= Menu Items =
+    | menu.item-* are aligned horizontally next to each other

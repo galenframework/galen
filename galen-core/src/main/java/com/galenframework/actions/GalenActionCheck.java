@@ -73,15 +73,6 @@ public class GalenActionCheck extends GalenAction {
     }
 
 
-    private String originalCommand(String[] arguments) {
-        StringBuilder builder = new StringBuilder("check ");
-        for (String argument : arguments) {
-            builder.append(" ");
-            builder.append(argument);
-        }
-        return builder.toString();
-    }
-
     private void verifyArgumentsForPageCheck() {
         if (checkArguments.getUrl() == null) {
             throw new IllegalArgumentException("Url is not specified");

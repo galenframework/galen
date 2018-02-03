@@ -1,0 +1,26 @@
+{
+  "pageName": "http://testapp.galenframework.com/#login",
+  "items": {
+    "header": {
+      "hasImage": true,
+      "area": [49, 0, 900, 69]
+    },
+    "header.text": {
+      "hasImage": true,
+      "area": [119, 20, 610, 39]
+    },
+    "screen": {
+      "hasImage": true,
+      "area": [0, 0, 999, 733]
+    },
+    "header.logo": {
+      "hasImage": true,
+      "area": [49, 13, 48, 48]
+    },
+    "viewport": {
+      "hasImage": true,
+      "area": [0, 0, 999, 682]
+    }
+  },
+  "title": "Sample Website for Galen Framework"
+}

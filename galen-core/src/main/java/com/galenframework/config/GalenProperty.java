@@ -44,6 +44,7 @@ public enum GalenProperty {
 
     SPEC_COLORSCHEME_TOLERANCE("spec.colorscheme.tolerance", "3"),
 
+    GALEN_BROWSER_HEADLESS("galen.browser.headless", "false"),
     GALEN_BROWSERFACTORY_SELENIUM_RUNINGRID("galen.browserFactory.selenium.runInGrid", "false"),
     GALEN_BROWSERFACTORY_SELENIUM_GRID_URL("galen.browserFactory.selenium.grid.url", null),
     GALEN_BROWSERFACTORY_SELENIUM_GRID_BROWSER("galen.browserFactory.selenium.grid.browser", null),

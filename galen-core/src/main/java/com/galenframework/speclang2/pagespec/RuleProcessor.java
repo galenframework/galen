@@ -22,7 +22,7 @@ import com.galenframework.parser.StringCharReader;
 import java.util.Collections;
 import java.util.List;
 
-public class RuleProcessor {
+public class RuleProcessor implements StructNodeProcessor {
     private final PageSpecHandler pageSpecHandler;
 
     public RuleProcessor(PageSpecHandler pageSpecHandler) {

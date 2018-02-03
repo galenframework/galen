@@ -24,7 +24,7 @@ import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
 
-public class ScriptProcessor {
+public class ScriptProcessor implements StructNodeProcessor {
     private final PageSpecHandler pageSpecHandler;
 
     public ScriptProcessor(PageSpecHandler pageSpecHandler) {

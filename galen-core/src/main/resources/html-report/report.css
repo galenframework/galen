@@ -57,6 +57,11 @@ ul {
     margin-left: 14px;
 }
 
+.node-details .node-details-text {
+    padding: 10px;
+    color: #555;
+}
+
 .node-expand-button {
     position: relative;
     display: inline-block;
@@ -99,8 +104,15 @@ a.node-expand-button.contains-children-true.collapsed:before {
     background: #f04040;
     color: #fff;
 }
-.node-name.node-status-error {
+.node-name.node-status-error, .label-status-error {
     color: #DB4B4B;
+}
+.node-expand-button.node-status-passed {
+    background: #23772B;
+    color: #fff;
+}
+.node-name.node-status-passed, .label-status-passed {
+    color: #23772B;
 }
 
 .stacktrace {
@@ -539,3 +551,12 @@ table.node-extras-table td img {
     display: inline-block;
     background: #000;
 }
+
+ul.mutation-list {
+    list-style: circle;
+}
+
+ul.mutation-list .mutation-status-failed {
+    color: #f04040;
+}
+

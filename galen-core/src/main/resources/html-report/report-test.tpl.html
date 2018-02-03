@@ -215,7 +215,36 @@ var reportData = ##REPORT-DATA##;
                 </div>
             </div>
         </script>
+        <script id="report-mutation-tpl" type="text/x-handlebars-template">
+            <li>
+                <span class="report-time">{{formatReportTime time}}</span>
+                <a class="expand-link node-expand-button node-status-label node-status-{{status}} contains-children-true collapsed" href="#">MUTATION</a>
+                <div class="node-name">{{name}}</div>
+                <div class="node-details expand-container">
+                    <div class="node-details-text">
+                        Passed mutations: <span class="label-status-passed">{{mutationReport.totalPassed}}</span>
+                        <br/>
+                        Failed mutations: <span class="label-status-error">{{mutationReport.totalFailed}}</span>
+                    </div>
 
+                    <ul class="report-nodes">
+                        {{#each mutationReport._items}}
+                        <li>
+                            <a class="expand-link node-expand-button node-status-label node-status-{{status}} contains-children-true collapsed" href="#">{{status}}</a>
+                            <div class="node-name node-status-{{status}}">{{name}}: {{item.failed}} failed</div>
+                            <div class="node-details expand-container">
+                                <ul class="mutation-list">
+                                    {{#each item.failedMutations}}
+                                    <li class="mutation-status-failed">{{this}}</li>
+                                    {{/each}}
+                                </ul>
+                            </div>
+                        </li>
+                        {{/each}}
+                    </ul>
+                </div>
+            </li>
+        </script>
 
 
         <div id="menu">

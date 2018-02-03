@@ -25,8 +25,10 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.openqa.selenium.Platform;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.edge.EdgeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.firefox.FirefoxOptions;
 import org.openqa.selenium.ie.InternetExplorerDriver;
 import org.openqa.selenium.phantomjs.PhantomJSDriver;
 import org.openqa.selenium.remote.DesiredCapabilities;
@@ -47,6 +49,7 @@ public class SeleniumBrowserFactory implements BrowserFactory {
     public static final String SAFARI = "safari";
     public static final String EDGE = "edge";
     private String browserType = GalenConfig.getConfig().getDefaultBrowser();
+    private boolean headless = GalenConfig.getConfig().shouldRunInHeadlessMode();
 
     public SeleniumBrowserFactory(String browserType) {
         this.browserType = browserType;
@@ -86,19 +89,19 @@ public class SeleniumBrowserFactory implements BrowserFactory {
     }
 
     private Browser createLocalBrowser() {
-        return new SeleniumBrowser(SeleniumBrowserFactory.getDriver(browserType));
+        return new SeleniumBrowser(SeleniumBrowserFactory.getDriver(browserType, headless));
     }
     
-    public static WebDriver getDriver(String browserType){
+    public static WebDriver getDriver(String browserType, boolean headless){
         
         if ( StringUtils.isEmpty(browserType) || FIREFOX.equals(browserType)) {
-            return new FirefoxDriver(SeleniumBrowserFactory.getBrowserCapabilities(browserType));
+            return new FirefoxDriver(SeleniumBrowserFactory.getBrowserCapabilities(browserType, headless));
         }
         else if (CHROME.equals(browserType)) {
-            return new ChromeDriver(SeleniumBrowserFactory.getBrowserCapabilities(browserType));
+            return new ChromeDriver(SeleniumBrowserFactory.getBrowserCapabilities(browserType, headless));
         }
         else if (IE.equals(browserType)) {
-            return new InternetExplorerDriver(SeleniumBrowserFactory.getBrowserCapabilities(browserType));
+            return new InternetExplorerDriver(SeleniumBrowserFactory.getBrowserCapabilities(browserType, false));
         }
         else if (PHANTOMJS.equals(browserType)) {
             return new PhantomJSDriver();
@@ -114,10 +117,13 @@ public class SeleniumBrowserFactory implements BrowserFactory {
         }
     }
 
-    public static DesiredCapabilities getBrowserCapabilities(String driverParameter) {
+    public static DesiredCapabilities getBrowserCapabilities(String driverParameter, boolean headless) {
         DesiredCapabilities capabilities = null;
         if (driverParameter == null || driverParameter.equalsIgnoreCase(FIREFOX)) {
             capabilities = DesiredCapabilities.firefox();
+            FirefoxOptions options = new FirefoxOptions();
+            options.setHeadless(headless);
+            capabilities.merge(options);
         }
         else if (driverParameter.equalsIgnoreCase(IE)) {
             capabilities = DesiredCapabilities.internetExplorer();
@@ -126,6 +132,9 @@ public class SeleniumBrowserFactory implements BrowserFactory {
         }
         else if (driverParameter.equalsIgnoreCase(CHROME)) {
             capabilities = DesiredCapabilities.chrome();
+            ChromeOptions options = new ChromeOptions();
+            options.setHeadless(headless);
+            capabilities.merge(options);
         }
         return capabilities;
     }

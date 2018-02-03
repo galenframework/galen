@@ -217,5 +217,13 @@ public class Rect {
     public Rectangle toAwtRectangle() {
         return new Rectangle(left, top, width, height);
     }
+
+    public Rect drag(int offsetLeft, int offsetTop) {
+        return new Rect(left + offsetLeft, top + offsetTop, width, height);
+    }
+
+    public Rect distort(int offsetLeft, int offsetTop, int offsetWidth, int offsetHeight) {
+        return new Rect(left + offsetLeft, top + offsetTop, width + offsetWidth, height + offsetHeight);
+    }
 }
 

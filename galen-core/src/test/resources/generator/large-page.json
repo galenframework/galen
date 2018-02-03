@@ -1,0 +1,168 @@
+{
+  "title": "Sample Website for Galen Framework",
+  "items": {
+    "menu.item-3": {
+      "area": [
+        274,
+        70,
+        100,
+        63
+      ],
+      "hasImage": true
+    },
+    "menu.item-4": {
+      "area": [
+        374,
+        70,
+        100,
+        63
+      ],
+      "hasImage": true
+    },
+    "login_button": {
+      "area": [
+        112,
+        391,
+        79,
+        45
+      ],
+      "hasImage": true
+    },
+    "footer": {
+      "area": [
+        62,
+        583,
+        900,
+        150
+      ],
+      "hasImage": true
+    },
+    "welcome_block": {
+      "area": [
+        82,
+        153,
+        860,
+        346
+      ],
+      "hasImage": true
+    },
+    "greeting": {
+      "area": [
+        112,
+        221,
+        800,
+        69
+      ],
+      "hasImage": true
+    },
+    "screen": {
+      "area": [
+        0,
+        0,
+        1024,
+        733
+      ],
+      "hasImage": true
+    },
+    "header.text": {
+      "area": [
+        132,
+        20,
+        629,
+        39
+      ],
+      "hasImage": true
+    },
+    "menu": {
+      "area": [
+        62,
+        70,
+        900,
+        63
+      ],
+      "hasImage": true
+    },
+    "menu.item-1": {
+      "area": [
+        62,
+        70,
+        100,
+        63
+      ],
+      "hasImage": true
+    },
+    "content": {
+      "area": [
+        62,
+        133,
+        900,
+        450
+      ],
+      "hasImage": true
+    },
+    "text_block-1": {
+      "area": [
+        112,
+        300,
+        800,
+        30
+      ],
+      "hasImage": true
+    },
+    "menu.item-2": {
+      "area": [
+        162,
+        70,
+        112,
+        63
+      ],
+      "hasImage": true
+    },
+    "text_block-3": {
+      "area": [
+        112,
+        391,
+        800,
+        45
+      ],
+      "hasImage": true
+    },
+    "text_block-2": {
+      "area": [
+        112,
+        345,
+        800,
+        31
+      ],
+      "hasImage": true
+    },
+    "header.logo": {
+      "area": [
+        62,
+        13,
+        48,
+        48
+      ],
+      "hasImage": true
+    },
+    "viewport": {
+      "area": [
+        0,
+        0,
+        1024,
+        654
+      ],
+      "hasImage": true
+    },
+    "header": {
+      "area": [
+        62,
+        0,
+        900,
+        69
+      ],
+      "hasImage": true
+    }
+  },
+  "pageName": "http://testapp.galenframework.com"
+}

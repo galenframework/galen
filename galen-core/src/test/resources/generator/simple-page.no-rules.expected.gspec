@@ -1,0 +1,17 @@
+= Skeleton =
+    header:
+        centered horizontally inside screen 1px
+        height 69px
+        inside screen 50px right, 0px top, 49px left
+
+= header elements =
+    header.logo:
+        height 48px
+        inside header 13px top, 0px left, 8px bottom
+        left-of header.text 22px
+        width 48px
+
+    header.text:
+        height 39px
+        inside header 20px top, 10px bottom
+
