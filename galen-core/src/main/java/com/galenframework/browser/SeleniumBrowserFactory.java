@@ -34,6 +34,8 @@ import org.openqa.selenium.phantomjs.PhantomJSDriver;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.safari.SafariDriver;
 
+import java.util.Collections;
+
 /**
  * This is a general browser factory which could also 
  * be configured to run in Selenium Grid via config file.
@@ -134,6 +136,7 @@ public class SeleniumBrowserFactory implements BrowserFactory {
             capabilities = DesiredCapabilities.chrome();
             ChromeOptions options = new ChromeOptions();
             options.setHeadless(headless);
+            options.setExperimentalOption("excludeSwitches", Collections.singletonList("enable-automation"));
             capabilities.merge(options);
         }
         return capabilities;
