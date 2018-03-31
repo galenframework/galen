@@ -139,9 +139,9 @@ public class LayoutReportListener implements ValidationListener {
     private LayoutImageComparison convertImageComparison(String objectName, ImageComparison imageComparison) throws IOException {
         LayoutImageComparison layoutImageComparison = new LayoutImageComparison();
 
-        layoutImageComparison.setActualImage(rootLayoutReport.registerImageFile(objectName + "-actual", imageComparison.getOriginalFilteredImage()));
-        layoutImageComparison.setExpectedImage(rootLayoutReport.registerImageFile(objectName + "-expected", imageComparison.getSampleFilteredImage()));
-        layoutImageComparison.setComparisonMapImage(rootLayoutReport.registerImageFile(objectName + "-map", imageComparison.getComparisonMap()));
+        layoutImageComparison.setActualImage(rootLayoutReport.registerFile(objectName + "-actual.png", imageComparison.getOriginalFilteredImage()));
+        layoutImageComparison.setExpectedImage(rootLayoutReport.registerFile(objectName + "-expected.png", imageComparison.getSampleFilteredImage()));
+        layoutImageComparison.setComparisonMapImage(rootLayoutReport.registerFile(objectName + "-map.png", imageComparison.getComparisonMap()));
 
         return layoutImageComparison;
     }

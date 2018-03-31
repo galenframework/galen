@@ -19,6 +19,7 @@ import static java.util.Arrays.asList;
 import static com.galenframework.specs.Range.between;
 import static com.galenframework.specs.Range.exact;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
@@ -203,11 +204,7 @@ public class ReportingListenerTestUtils {
                         new ValidationResult(NO_SPEC,
                                 asList(new ValidationObject(new Rect(10, 10, 100, 50), "objectB1")),
                                 new ValidationError(asList("objectB1 is not inside other-object", "second error message with <xml> &tags"))
-                                    .withImageComparison(
-                                            new ImageComparison(
-                                                Rainbow4J.loadImage(comparisonMapImagePath),
-                                                Rainbow4J.loadImage(comparisonMapImagePath),
-                                                Rainbow4J.loadImage(comparisonMapImagePath)))));
+                                    .withImageComparison(createSampleImageComparison())));
             }
             validationListener.onAfterObject(pageValidation, "objectB1");
             
@@ -239,6 +236,11 @@ public class ReportingListenerTestUtils {
             tellAfterSuite(suiteListener);
         }
         
+    }
+
+    private static ImageComparison createSampleImageComparison() throws IOException {
+        File file = new File(comparisonMapImagePath);
+        return new ImageComparison(file, file, file);
     }
 
     private static void onSpecError(ValidationListener validationListener, MockedPageValidation pageValidation, String objectName, Spec spec, ValidationResult result) {

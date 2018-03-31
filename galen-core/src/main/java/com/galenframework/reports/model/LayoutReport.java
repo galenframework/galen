@@ -138,20 +138,6 @@ public class LayoutReport {
         return fileStorage;
     }
 
-    /**
-     * Saves image in temporary png file and generates a name for it.
-     * @param prefix
-     * @param image
-     * @return
-     */
-    public String registerImageFile(String prefix, BufferedImage image) throws IOException {
-        File file = File.createTempFile(prefix, ".png");
-        Rainbow4J.saveImage(image, file);
-
-        return fileStorage.registerFile(prefix + ".png", file);
-    }
-
-
     public String registerFile(String fileName, File file) {
         return fileStorage.registerFile(fileName, file);
 
