@@ -11,10 +11,9 @@ var AssertEvents = {
     clearEvents: function () {
         this.events = [];
     },
-    registerFunction: function (name, argumentsAmount) {
-        return function(arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10) {
-            var args = [arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10].splice(0, argumentsAmount);
-            AssertEvents.say(name, args);
+    registerFunction: function (name) {
+        return function() {
+            AssertEvents.say(name, Array.from(arguments));
         };
     },
     assert: function(callback) {
