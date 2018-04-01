@@ -25,9 +25,7 @@ import com.galenframework.utils.GalenUtils;
 import com.galenframework.validation.ValidationListener;
 import com.galenframework.api.Galen;
 import com.galenframework.browser.Browser;
-import com.galenframework.reports.nodes.LayoutReportNode;
 import com.galenframework.reports.TestReport;
-import com.galenframework.reports.nodes.TestReportNode;
 import com.galenframework.reports.model.LayoutReport;
 import com.galenframework.suite.GalenPageAction;
 import com.galenframework.suite.GalenPageTest;
@@ -36,8 +34,6 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
-import static com.galenframework.utils.GalenUtils.toCommaSeparated;
-
 public class GalenPageActionCheck extends GalenPageAction {
 
     private static final File NO_SCREENSHOT = null;
@@ -45,11 +41,13 @@ public class GalenPageActionCheck extends GalenPageAction {
     private List<String> includedTags;
     private List<String> excludedTags;
     private Map<String, Object> jsVariables;
+    private String sectionNameFilter;
 
 
     @Override
     public void execute(TestReport report, Browser browser, GalenPageTest pageTest, ValidationListener validationListener) throws IOException {
         SectionFilter sectionFilter = new SectionFilter(getIncludedTags(), getExcludedTags());
+        sectionFilter.setSectionName(sectionNameFilter);
         LayoutReport layoutReport = Galen.checkLayout(browser, specPath, sectionFilter, getCurrentProperties(), jsVariables, NO_SCREENSHOT, validationListener);
         GalenUtils.attachLayoutReport(layoutReport, report, specPath, includedTags);
     }
@@ -143,5 +141,18 @@ public class GalenPageActionCheck extends GalenPageAction {
     public GalenPageActionCheck withJsVariables(Map<String, Object> jsVariables) {
         setJsVariables(jsVariables);
         return this;
+    }
+
+    public GalenPageActionCheck withSectionNameFilter(String sectionFilter) {
+        setSectionNameFilter(sectionFilter);
+        return this;
+    }
+
+    public void setSectionNameFilter(String sectionNameFilter) {
+        this.sectionNameFilter = sectionNameFilter;
+    }
+
+    public String getSectionNameFilter() {
+        return sectionNameFilter;
     }
 }

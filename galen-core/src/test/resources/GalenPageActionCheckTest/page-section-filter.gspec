@@ -1,0 +1,25 @@
+
+
+@objects
+    header                  id  header
+    header-text-1           css #header h1
+    header-text-2           css #header h2
+    menu                    id  menu
+
+= Main section =
+    header :
+        height 150 to 185px
+
+= Excluded section =
+    header :
+        height 100px
+
+= Main section 2 =
+    menu :
+        below header 20px
+
+= Main section 3 =
+    menu :
+        width 100% of header/width
+
+
