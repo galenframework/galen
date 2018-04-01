@@ -17,10 +17,13 @@ package com.galenframework.validation;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.regex.Pattern;
 
+import com.galenframework.speclang2.pagespec.SectionFilter;
 import com.galenframework.specs.page.ObjectSpecs;
 import com.galenframework.specs.page.PageSection;
 import com.galenframework.specs.page.SpecGroup;
+import com.galenframework.utils.GalenUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -42,11 +45,30 @@ public class SectionValidation {
 
     public List<ValidationResult> check() {
         List<ValidationResult> validationResults = new LinkedList<>();
+
+        Pattern sectionFilter = createSectionFilter(pageValidation.getSectionFilter());
         
         for (PageSection section : pageSections) {
-            validationResults.addAll(checkPageSection(section));
+            if (appliesToFilter(section, sectionFilter)) {
+                validationResults.addAll(checkPageSection(section));
+            }
         }
         return validationResults;
+    }
+
+    private Pattern createSectionFilter(SectionFilter sectionFilter) {
+        if (sectionFilter != null && sectionFilter.getSectionName() != null) {
+            return Pattern.compile(sectionFilter.getSectionName().replace("*", ".*"));
+        } else {
+            return null;
+        }
+    }
+
+    private boolean appliesToFilter(PageSection section, Pattern sectionFilter) {
+        if (sectionFilter != null) {
+            return sectionFilter.matcher(section.getName()).matches();
+        }
+        return true;
     }
 
     private List<ValidationResult> checkPageSection(PageSection section) {
