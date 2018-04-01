@@ -73,13 +73,19 @@ public class GalenPageActionReaderTest {
                 .withIncludedTags(asList("mobile", "tablet"))
                 .withExcludedTags(asList("nomobile", "debug"))
                 .withJsVariables(EMPTY_VARIABLES)},
+            {"check page1.spec --section \"Some section * filter\"", new GalenPageActionCheck()
+                .withSpec("page1.spec")
+                .withIncludedTags(EMPTY_TAGS)
+                .withExcludedTags(EMPTY_TAGS)
+                .withSectionNameFilter("Some section * filter")
+                .withJsVariables(EMPTY_VARIABLES)},
             {"check page1.spec --VuserName John", new GalenPageActionCheck()
-                    .withSpec("page1.spec")
-                    .withIncludedTags(EMPTY_TAGS)
-                    .withExcludedTags(EMPTY_TAGS)
-                    .withJsVariables(new HashMap<String, Object>(){{
-                        put("userName", "John");
-                    }})
+                .withSpec("page1.spec")
+                .withIncludedTags(EMPTY_TAGS)
+                .withExcludedTags(EMPTY_TAGS)
+                .withJsVariables(new HashMap<String, Object>(){{
+                    put("userName", "John");
+                }})
             },
             {"cookie \"somecookie1\" \"somecookie2\" \"somecookie3\"", new GalenPageActionCookie().withCookies("somecookie1", "somecookie2", "somecookie3")},
             {"cookie \"somecookie1\"", new GalenPageActionCookie().withCookies("somecookie1")},
