@@ -23,7 +23,6 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import java.awt.*;
 import java.util.List;
-import java.util.regex.Pattern;
 
 import static com.galenframework.actions.ArgumentsUtils.convertTags;
 import static java.lang.Integer.parseInt;
@@ -41,6 +40,7 @@ public class GalenActionCheckArguments {
     private String jsonReport;
     private String javascript;
     private String config;
+    private String sectionNameFilter;
 
 
     public static GalenActionCheckArguments parse(String[] args) {
@@ -49,6 +49,7 @@ public class GalenActionCheckArguments {
         Options options = new Options();
         options.addOption("i", "include", true, "Tags for sections that should be included in test run");
         options.addOption("e", "exclude", true, "Tags for sections that should be excluded from test run");
+        options.addOption("S", "section", true, "Section name filter");
         options.addOption("h", "htmlreport", true, "Path for html output report");
         options.addOption("j", "jsonreport", true, "Path for json report");
         options.addOption("g", "testngreport", true, "Path for testng xml report");
@@ -81,6 +82,7 @@ public class GalenActionCheckArguments {
         arguments.setExcludedTags(convertTags(cmd.getOptionValue("e")));
         arguments.setPaths(asList(cmd.getArgs()));
         arguments.setConfig(cmd.getOptionValue("c"));
+        arguments.setSectionNameFilter(cmd.getOptionValue("S"));
 
         if (arguments.getPaths().isEmpty()) {
             throw new IllegalArgumentException("Missing spec files");
@@ -247,5 +249,14 @@ public class GalenActionCheckArguments {
 
     public String getConfig() {
         return config;
+    }
+
+    public GalenActionCheckArguments setSectionNameFilter(String sectionNameFilter) {
+        this.sectionNameFilter = sectionNameFilter;
+        return this;
+    }
+
+    public String getSectionNameFilter() {
+        return sectionNameFilter;
     }
 }

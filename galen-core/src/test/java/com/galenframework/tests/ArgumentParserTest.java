@@ -302,6 +302,14 @@ public class ArgumentParserTest {
                                 .setPaths(asList("some1.spec", "some2.spec"))
                                 .setConfig("/some/config")
                 },
+
+                {args("check", "some1.spec", "--url", "http://mindengine.net", "--config", "/some/config", "--section", "Main*"),
+                    new GalenActionCheckArguments()
+                        .setUrl("http://mindengine.net")
+                        .setPaths(asList("some1.spec"))
+                        .setSectionNameFilter("Main*")
+                        .setConfig("/some/config")
+                },
         };
     }
     
