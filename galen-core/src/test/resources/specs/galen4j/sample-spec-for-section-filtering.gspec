@@ -1,0 +1,16 @@
+
+@objects
+    save-button     css .save-button
+    name-textfield  id  name-textfield
+
+= Main section =
+    save-button:
+        width 100px
+
+= Main other section =
+    save-button:
+        height 50px
+
+= Third section that should not be visited =
+    save-button:
+        left-of name-textfield 10px

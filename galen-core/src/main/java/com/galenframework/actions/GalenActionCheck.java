@@ -58,8 +58,12 @@ public class GalenActionCheck extends GalenAction {
                     .withSize(checkArguments.getScreenSize())
                     .withBrowserFactory(new SeleniumBrowserFactory())
                     .withActions(
-                            asList((GalenPageAction) new GalenPageActionCheck().withSpec(pageSpecPath).withIncludedTags(checkArguments.getIncludedTags())
-                                    .withExcludedTags(checkArguments.getExcludedTags()).withOriginalCommand(originalCommand(arguments))))));
+                            asList((GalenPageAction) new GalenPageActionCheck()
+                                .withSpec(pageSpecPath)
+                                .withIncludedTags(checkArguments.getIncludedTags())
+                                .withExcludedTags(checkArguments.getExcludedTags())
+                                .withSectionNameFilter(checkArguments.getSectionNameFilter())
+                                .withOriginalCommand(originalCommand(arguments))))));
             galenTests.add(test);
         }
 

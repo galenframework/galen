@@ -1,0 +1,6 @@
+
+This is a name of suite
+------------------------------------------------
+    selenium firefox http://example.com/page1    320x240
+        check page1.spec --include mobile,tablet --exclude nomobile --section "Main*"
+

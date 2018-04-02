@@ -110,6 +110,7 @@ public class GalenPageActionReader {
         String specPath = null;
         List<String> includedTags = new LinkedList<>();
         List<String> excludedTags = new LinkedList<>();
+        String sectionNameFilter = null;
         Map<String, Object> jsVariables = new HashMap<>();
 
 
@@ -130,6 +131,8 @@ public class GalenPageActionReader {
                     String varName = argument.getKey().substring(1);
                     String varValue = argument.getValue();
                     jsVariables.put(varName, varValue);
+                } else if (argument.getKey().equals("section")) {
+                    sectionNameFilter = argument.getValue();
                 } else {
                     throw new SyntaxException("Unknown argument: " + argument.getKey());
                 }
@@ -145,6 +148,7 @@ public class GalenPageActionReader {
             .withSpec(specPath)
             .withIncludedTags(includedTags)
             .withExcludedTags(excludedTags)
+            .withSectionNameFilter(sectionNameFilter)
             .withJsVariables(jsVariables);
     }
 

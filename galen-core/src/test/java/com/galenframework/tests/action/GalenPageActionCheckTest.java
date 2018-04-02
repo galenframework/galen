@@ -21,9 +21,13 @@ import static org.hamcrest.Matchers.is;
 
 import java.awt.Dimension;
 import java.io.IOException;
+import java.util.LinkedList;
+import java.util.List;
 
 import com.galenframework.browser.Browser;
+import com.galenframework.components.DummyCompleteListener;
 import com.galenframework.components.TestGroups;
+import com.galenframework.specs.page.PageSection;
 import com.galenframework.suite.actions.GalenPageActionCheck;
 import com.galenframework.browser.SeleniumBrowser;
 import com.galenframework.components.mocks.driver.MockedDriver;
@@ -31,6 +35,8 @@ import com.galenframework.components.validation.TestValidationListener;
 import com.galenframework.reports.TestReport;
 import com.galenframework.suite.GalenPageTest;
 
+import com.galenframework.validation.PageValidation;
+import com.galenframework.validation.ValidationListener;
 import org.openqa.selenium.WebDriver;
 import org.testng.annotations.Test;
 
@@ -101,5 +107,36 @@ public class GalenPageActionCheckTest {
                 "</o menu>\n"
         ));
     }
-    
+
+    @Test
+    public void runsTestSuccessfully_onlyForFilteredSections() throws IOException {
+        WebDriver driver = new MockedDriver();
+
+        GalenPageActionCheck action = new GalenPageActionCheck()
+            .withIncludedTags(asList("mobile"))
+            .withExcludedTags(asList("debug"))
+            .withSectionNameFilter("Main*")
+            .withSpec(getClass().getResource("/GalenPageActionCheckTest/page-section-filter.gspec").getPath());
+
+        Browser browser = new SeleniumBrowser(driver);
+        browser.load(TEST_URL);
+        browser.changeWindowSize(new Dimension(400, 800));
+
+
+        List<String> visitedSections = new LinkedList<>();
+        ValidationListener validationListener = new DummyCompleteListener() {
+            @Override
+            public void onBeforeSection(PageValidation pageValidation, PageSection pageSection) {
+                visitedSections.add(pageSection.getName());
+            }
+        };
+        action.execute(new TestReport(), browser, new GalenPageTest(), validationListener);
+
+        assertThat("Visited sections should be", visitedSections, is(asList(
+            "Main section",
+            "Main section 2",
+            "Main section 3"
+        )));
+    }
+
 }

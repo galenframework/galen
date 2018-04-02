@@ -68,15 +68,11 @@ public class GalenJsApi {
 
     /**
      * Needed for Javascript based tests
-     * @param driver
-     * @param fileName
-     * @param includedTags
-     * @param excludedTags
-     * @param screenshotFilePath
      * @throws IOException
      */
     public static LayoutReport checkLayout(WebDriver driver, String fileName, String[]includedTags, String[]excludedTags,
-                                   Properties properties, String screenshotFilePath, JsVariable[] vars, JsPageObject[] jsPageObjects) throws IOException {
+                                           String sectionNameFilter, Properties properties, String screenshotFilePath,
+                                           JsVariable[] vars, JsPageObject[] jsPageObjects) throws IOException {
 
         TestSession session = TestSession.current();
         if (session == null) {
@@ -103,7 +99,7 @@ public class GalenJsApi {
         Map<String, Object> jsVariables = convertJsVariables(vars);
 
         LayoutReport layoutReport = Galen.checkLayout(new SeleniumBrowser(driver), fileName,
-                new SectionFilter(includedTagsList, toList(excludedTags)),
+                new SectionFilter(includedTagsList, toList(excludedTags)).withSectionName(sectionNameFilter),
                 properties,
                 jsVariables,
                 screenshotFile,

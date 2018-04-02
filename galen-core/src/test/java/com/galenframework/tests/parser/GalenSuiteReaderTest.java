@@ -115,7 +115,35 @@ public class GalenSuiteReaderTest {
             )));
         }
     }
-    
+
+    @Test
+    public void shouldRead_suite_withCheckAction_withSectionFilter() throws IOException {
+        GalenSuiteReader reader = new GalenSuiteReader();
+
+        List<GalenBasicTest> galenSuites = reader.read(new File(getClass().getResource("/suites/suite-check-section-filter.test").getFile()));
+        assertThat("Amount of suites should be", galenSuites.size(), is(1));
+        /* Checking suite 1*/
+        {
+            GalenBasicTest suite = galenSuites.get(0);
+            assertThat(suite.getName(), is("This is a name of suite"));
+            assertThat("Amount of pages for 1st suite should be", suite.getPageTests().size(), is(1));
+            // Checking page 1
+            {
+                GalenPageTest page = suite.getPageTests().get(0);
+                assertThat(page.getUrl(), is("http://example.com/page1"));
+                assertThat(page.getScreenSize(), is(new Dimension(320, 240)));
+
+                assertThat(page.getActions(), is(actions(
+                    GalenPageActions.check("page1.spec")
+                        .withIncludedTags(asList("mobile", "tablet"))
+                        .withExcludedTags(asList("nomobile"))
+                        .withJsVariables(EMPTY_VARIABLES)
+                        .withSectionNameFilter("Main*")
+                )));
+            }
+        }
+    }
+
     @Test
     public void shouldRead_allPageActions() throws IOException {
         GalenSuiteReader reader = new GalenSuiteReader();

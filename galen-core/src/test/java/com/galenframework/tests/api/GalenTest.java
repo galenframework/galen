@@ -16,25 +16,27 @@
 package com.galenframework.tests.api;
 
 import com.galenframework.api.GalenPageDump;
+import com.galenframework.components.DummyCompleteListener;
 import com.galenframework.page.Rect;
 import com.galenframework.specs.Spec;
 import com.galenframework.speclang2.pagespec.SectionFilter;
+import com.galenframework.specs.page.PageSection;
+import com.galenframework.validation.*;
 import com.google.common.io.Files;
 import com.google.gson.JsonParser;
 
 import com.galenframework.api.Galen;
 import com.galenframework.components.mocks.driver.MockedDriver;
 import com.galenframework.reports.model.LayoutReport;
-import com.galenframework.validation.ValidationObject;
-import com.galenframework.validation.ValidationError;
 
-import com.galenframework.validation.ValidationResult;
 import org.junit.Assert;
 import org.openqa.selenium.WebDriver;
 import org.testng.annotations.Test;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Properties;
 
 import static java.util.Arrays.asList;
@@ -63,6 +65,25 @@ public class GalenTest {
                         asList(
                                 new ValidationObject(new Rect(10, 10, 100, 50), "save-button")),
                         new ValidationError().withMessage("\"save-button\" text is \"Save\" but should be \"Store\""))));
+    }
+
+    @Test
+    public void checkLayout_shouldTestLayout_andFilterSectionsByName() throws IOException {
+        WebDriver driver = new MockedDriver();
+        driver.get("/mocks/pages/galen4j-sample-page.json");
+
+        SectionFilter sectionFilter = new SectionFilter().withSectionName("Main*");
+
+        List<String> visitedSections = new LinkedList<>();
+        ValidationListener validationListener = new DummyCompleteListener() {
+            @Override
+            public void onBeforeSection(PageValidation pageValidation, PageSection pageSection) {
+                visitedSections.add(pageSection.getName());
+            }
+        };
+        Galen.checkLayout(driver, "/specs/galen4j/sample-spec-for-section-filtering.gspec", sectionFilter, new Properties(), null, null, validationListener);
+
+        assertThat("Visited sections should be", visitedSections, is(asList("Main section", "Main other section")));
     }
 
 
