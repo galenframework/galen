@@ -24,6 +24,7 @@ import com.galenframework.components.validation.MockedPageElement;
 import com.galenframework.page.PageElement;
 import com.galenframework.page.Rect;
 import com.galenframework.rainbow4j.Rainbow4J;
+import com.galenframework.reports.model.LayoutMeta;
 import com.galenframework.specs.*;
 import com.galenframework.components.validation.MockedPage;
 import com.galenframework.specs.page.Locator;
@@ -97,8 +98,8 @@ public abstract class ValidationTestBase {
         return new Location(exact, asList(sides));
     }
 
-    public ValidationResult validationResult(List<ValidationObject> areas, List<String> messages) {
-        return new ValidationResult(NO_SPEC, areas, new ValidationError(messages));
+    public ValidationResult validationResult(List<ValidationObject> areas, List<String> messages, List<LayoutMeta> meta) {
+        return new ValidationResult(NO_SPEC, areas, new ValidationError(messages), meta);
     }
 
     public List<ValidationObject> areas(ValidationObject...errorAreas) {

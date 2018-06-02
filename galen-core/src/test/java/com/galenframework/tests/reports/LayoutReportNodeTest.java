@@ -29,6 +29,7 @@ import org.testng.annotations.Test;
 import java.util.LinkedList;
 import java.util.List;
 
+import static java.util.Collections.emptyList;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 
@@ -60,11 +61,11 @@ public class LayoutReportNodeTest {
         List<ValidationResult> list = new LinkedList<>();
         report.setValidationErrorResults(list);
 
-        list.add(new ValidationResult(new SpecAbsent(), EMPTY_OBJECTS, new ValidationError().withOnlyWarn(true)));
-        list.add(new ValidationResult(new SpecAbsent(), EMPTY_OBJECTS, new ValidationError()));
-        list.add(new ValidationResult(new SpecAbsent(), EMPTY_OBJECTS, new ValidationError()));
-        list.add(new ValidationResult(new SpecAbsent(), EMPTY_OBJECTS, new ValidationError().withOnlyWarn(true)));
-        list.add(new ValidationResult(new SpecAbsent(), EMPTY_OBJECTS, new ValidationError()));
+        list.add(new ValidationResult(new SpecAbsent(), EMPTY_OBJECTS, new ValidationError().withOnlyWarn(true), emptyList()));
+        list.add(new ValidationResult(new SpecAbsent(), EMPTY_OBJECTS, new ValidationError(), emptyList()));
+        list.add(new ValidationResult(new SpecAbsent(), EMPTY_OBJECTS, new ValidationError(), emptyList()));
+        list.add(new ValidationResult(new SpecAbsent(), EMPTY_OBJECTS, new ValidationError().withOnlyWarn(true), emptyList()));
+        list.add(new ValidationResult(new SpecAbsent(), EMPTY_OBJECTS, new ValidationError(), emptyList()));
 
 
 

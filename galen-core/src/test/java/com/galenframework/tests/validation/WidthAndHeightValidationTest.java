@@ -23,10 +23,12 @@ import com.galenframework.specs.SpecHeight;
 import com.galenframework.specs.SpecWidth;
 import org.testng.annotations.DataProvider;
 
+import java.util.Collections;
 import java.util.HashMap;
 
 import static com.galenframework.specs.Range.between;
 import static com.galenframework.specs.Range.exact;
+import static java.util.Collections.emptyList;
 
 public class WidthAndHeightValidationTest extends ValidationTestBase {
     @DataProvider
@@ -97,47 +99,47 @@ public class WidthAndHeightValidationTest extends ValidationTestBase {
         return new Object[][]{
             // Width
 
-            {validationResult(NO_AREA, messages("Cannot find locator for \"object\" in page spec")),
+            {validationResult(NO_AREA, messages("Cannot find locator for \"object\" in page spec"), emptyList()),
                 specWidth(exact(10)), page(new HashMap<String, PageElement>())
             },
 
-            {validationResult(NO_AREA, messages("\"object\" is absent on page")),
+            {validationResult(NO_AREA, messages("\"object\" is absent on page"), emptyList()),
                 specWidth(exact(10)), page(new HashMap<String, PageElement>(){{
                     put("object", absentElement(310, 250, 100, 50));
             }})},
 
-            {validationResult(NO_AREA, messages("\"object\" is not visible on page")),
+            {validationResult(NO_AREA, messages("\"object\" is not visible on page"), emptyList()),
                 specWidth(exact(10)), page(new HashMap<String, PageElement>(){{
                     put("object", invisibleElement(310, 250, 100, 50));
             }})},
 
-            {validationResult(singleArea(new Rect(100, 100, 100, 50), "object"), messages("\"object\" width is 100px instead of 10px")),
+            {validationResult(singleArea(new Rect(100, 100, 100, 50), "object"), messages("\"object\" width is 100px instead of 10px"), emptyList()),
                 specWidth(exact(10)), page(new HashMap<String, PageElement>(){{
                     put("object", element(100, 100, 100, 50));
             }})},
 
-            {validationResult(singleArea(new Rect(100, 100, 100, 50), "object"), messages("\"object\" width is 100px but it should be greater than 110px")),
+            {validationResult(singleArea(new Rect(100, 100, 100, 50), "object"), messages("\"object\" width is 100px but it should be greater than 110px"), emptyList()),
                 specWidth(Range.greaterThan(110)), page(new HashMap<String, PageElement>(){{
                     put("object", element(100, 100, 100, 50));
             }})},
 
-            {validationResult(singleArea(new Rect(100, 100, 100, 50), "object"), messages("\"object\" width is 100px but it should be less than 90px")),
+            {validationResult(singleArea(new Rect(100, 100, 100, 50), "object"), messages("\"object\" width is 100px but it should be less than 90px"), emptyList()),
                 specWidth(Range.lessThan(90)), page(new HashMap<String, PageElement>(){{
                     put("object", element(100, 100, 100, 50));
             }})},
 
-            {validationResult(singleArea(new Rect(100, 100, 100, 50), "object"), messages("\"object\" width is 100px which is not in range of 10 to 40px")),
+            {validationResult(singleArea(new Rect(100, 100, 100, 50), "object"), messages("\"object\" width is 100px which is not in range of 10 to 40px"), emptyList()),
                 specWidth(between(10, 40)), page(new HashMap<String, PageElement>(){{
                     put("object", element(100, 100, 100, 50));
             }})},
 
-            {validationResult(singleArea(new Rect(100, 100, 100, 50), "object"), messages("\"object\" width is 50% [100px] instead of 10% [20px]")),
+            {validationResult(singleArea(new Rect(100, 100, 100, 50), "object"), messages("\"object\" width is 50% [100px] instead of 10% [20px]"), emptyList()),
                 specWidth(exact(10).withPercentOf("container/width")), page(new HashMap<String, PageElement>(){{
                     put("object", element(100, 100, 100, 50));
                     put("container", element(100, 100, 200, 50));
             }})},
 
-            {validationResult(singleArea(new Rect(100, 100, 100, 50), "object"), messages("\"object\" width is 50% [100px] which is not in range of 10 to 20% [20 to 40px]")),
+            {validationResult(singleArea(new Rect(100, 100, 100, 50), "object"), messages("\"object\" width is 50% [100px] which is not in range of 10 to 20% [20 to 40px]"), emptyList()),
                 specWidth(between(10, 20).withPercentOf("container/width")), page(new HashMap<String, PageElement>(){{
                     put("object", element(100, 100, 100, 50));
                     put("container", element(100, 100, 200, 50));
@@ -146,37 +148,37 @@ public class WidthAndHeightValidationTest extends ValidationTestBase {
 
             // Height
 
-            {validationResult(NO_AREA, messages("Cannot find locator for \"object\" in page spec")),
+            {validationResult(NO_AREA, messages("Cannot find locator for \"object\" in page spec"), emptyList()),
                 specHeight(exact(10)), page(new HashMap<String, PageElement>())
             },
 
-            {validationResult(NO_AREA, messages("\"object\" is absent on page")),
+            {validationResult(NO_AREA, messages("\"object\" is absent on page"), emptyList()),
                 specHeight(exact(10)), page(new HashMap<String, PageElement>(){{
                     put("object", absentElement(310, 250, 100, 50));
             }})},
 
-            {validationResult(NO_AREA, messages("\"object\" is not visible on page")),
+            {validationResult(NO_AREA, messages("\"object\" is not visible on page"), emptyList()),
                 specHeight(exact(10)), page(new HashMap<String, PageElement>(){{
                     put("object", invisibleElement(310, 250, 100, 50));
             }})},
 
-            {validationResult(singleArea(new Rect(100, 100, 100, 50), "object"), messages("\"object\" height is 50px instead of 10px")),
+            {validationResult(singleArea(new Rect(100, 100, 100, 50), "object"), messages("\"object\" height is 50px instead of 10px"), emptyList()),
                 specHeight(exact(10)), page(new HashMap<String, PageElement>(){{
                     put("object", element(100, 100, 100, 50));
             }})},
 
-            {validationResult(singleArea(new Rect(100, 100, 100, 50), "object"), messages("\"object\" height is 50px which is not in range of 10 to 40px")),
+            {validationResult(singleArea(new Rect(100, 100, 100, 50), "object"), messages("\"object\" height is 50px which is not in range of 10 to 40px"), emptyList()),
                 specHeight(between(10, 40)), page(new HashMap<String, PageElement>(){{
                     put("object", element(100, 100, 100, 50));
             }})},
 
-            {validationResult(singleArea(new Rect(100, 100, 100, 50), "object"), messages("\"object\" height is 25% [50px] instead of 10% [20px]")),
+            {validationResult(singleArea(new Rect(100, 100, 100, 50), "object"), messages("\"object\" height is 25% [50px] instead of 10% [20px]"), emptyList()),
                 specHeight(exact(10).withPercentOf("container/height")), page(new HashMap<String, PageElement>(){{
                     put("object", element(100, 100, 100, 50));
                     put("container", element(100, 100, 100, 200));
             }})},
 
-            {validationResult(singleArea(new Rect(100, 100, 100, 50), "object"), messages("\"object\" height is 25% [50px] which is not in range of 10 to 15% [20 to 30px]")),
+            {validationResult(singleArea(new Rect(100, 100, 100, 50), "object"), messages("\"object\" height is 25% [50px] which is not in range of 10 to 15% [20 to 30px]"), emptyList()),
                 specHeight(between(10, 15).withPercentOf("container/height")), page(new HashMap<String, PageElement>(){{
                     put("object", element(100, 100, 100, 50));
                     put("container", element(100, 100, 100, 200));

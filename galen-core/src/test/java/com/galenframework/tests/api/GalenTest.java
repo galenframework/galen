@@ -40,6 +40,7 @@ import java.util.List;
 import java.util.Properties;
 
 import static java.util.Arrays.asList;
+import static java.util.Collections.emptyList;
 import static org.apache.commons.io.FileUtils.readFileToString;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
@@ -60,11 +61,11 @@ public class GalenTest {
                         asList(
                                 new ValidationObject(new Rect(10, 10, 100, 50), "save-button"),
                                 new ValidationObject(new Rect(120, 10, 200, 50), "name-textfield")),
-                        new ValidationError().withMessage("\"save-button\" is 10px left instead of 50px")),
+                        new ValidationError().withMessage("\"save-button\" is 10px left instead of 50px"), emptyList()),
                 new ValidationResult(NO_SPEC,
                         asList(
                                 new ValidationObject(new Rect(10, 10, 100, 50), "save-button")),
-                        new ValidationError().withMessage("\"save-button\" text is \"Save\" but should be \"Store\""))));
+                        new ValidationError().withMessage("\"save-button\" text is \"Save\" but should be \"Store\""), emptyList())));
     }
 
     @Test
@@ -232,11 +233,11 @@ public class GalenTest {
                 new ValidationResult(NO_SPEC,
                         asList(
                                 new ValidationObject(new Rect(10, 10, 100, 50), "save-button")),
-                        new ValidationError().withMessage("\"save-button\" width is 100px instead of 140px")),
+                        new ValidationError().withMessage("\"save-button\" width is 100px instead of 140px"), emptyList()),
                 new ValidationResult(NO_SPEC,
                         asList(
                                 new ValidationObject(new Rect(10, 10, 100, 50), "save-button")),
-                        new ValidationError().withMessage("\"save-button\" width is 200% [100px] instead of 100% [50px]"))));
+                        new ValidationError().withMessage("\"save-button\" width is 200% [100px] instead of 100% [50px]"), emptyList())));
     }
 
     private void assertJSONContent(String pathForRealContent, String pathForExpectedContent) throws IOException {

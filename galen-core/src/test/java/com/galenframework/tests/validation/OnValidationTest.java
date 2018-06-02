@@ -30,6 +30,7 @@ import org.testng.annotations.DataProvider;
 import java.util.HashMap;
 
 import static java.util.Arrays.asList;
+import static java.util.Collections.emptyList;
 
 public class OnValidationTest extends ValidationTestBase {
     @DataProvider
@@ -72,39 +73,39 @@ public class OnValidationTest extends ValidationTestBase {
     @Override
     public Object[][] provideBadSamples() {
         return new Object[][]{
-            {validationResult(NO_AREA, messages("\"object\" is not visible on page")),
+            {validationResult(NO_AREA, messages("\"object\" is not visible on page"), emptyList()),
                 specOn(TOP, LEFT, "container", location(exact(10), LEFT, BOTTOM)), page(new HashMap<String, PageElement>(){{
                     put("object", invisibleElement(10, 40, 50, 50));
                     put("container", element(100, 100, 100, 100));
             }})},
 
-            {validationResult(NO_AREA, messages("\"object\" is absent on page")),
+            {validationResult(NO_AREA, messages("\"object\" is absent on page"), emptyList()),
                 specOn(TOP, LEFT, "container", location(exact(10), LEFT, BOTTOM)), page(new HashMap<String, PageElement>(){{
                     put("object", absentElement(10, 40, 50, 50));
                     put("container", element(100, 100, 100, 100));
             }})},
 
-            {validationResult(NO_AREA, messages("\"container\" is not visible on page")),
+            {validationResult(NO_AREA, messages("\"container\" is not visible on page"), emptyList()),
                 specOn(TOP, LEFT, "container", location(exact(10), LEFT, BOTTOM)), page(new HashMap<String, PageElement>(){{
                     put("object", element(10, 40, 50, 50));
                     put("container", invisibleElement(100, 100, 100, 100));
             }})},
 
-            {validationResult(NO_AREA, messages("\"container\" is absent on page")),
+            {validationResult(NO_AREA, messages("\"container\" is absent on page"), emptyList()),
                 specOn(TOP, LEFT, "container", location(exact(10), LEFT, BOTTOM)), page(new HashMap<String, PageElement>(){{
                     put("object", element(10, 40, 50, 50));
                     put("container", absentElement(100, 100, 100, 100));
             }})},
 
             {validationResult(areas(new ValidationObject(new Rect(95, 110, 50, 50), "object"), new ValidationObject(new Rect(100, 100, 100, 100), "container")),
-                    messages("\"object\" is 5px left instead of 10px")),
+                    messages("\"object\" is 5px left instead of 10px"), emptyList()),
                 specOn(TOP, LEFT, "container", location(exact(10), LEFT, BOTTOM)), page(new HashMap<String, PageElement>(){{
                     put("object", element(95, 110, 50, 50));
                     put("container", element(100, 100, 100, 100));
             }})},
 
             {validationResult(areas(new ValidationObject(new Rect(105, 90, 50, 50), "object"), new ValidationObject(new Rect(100, 100, 100, 100), "container")),
-                    messages("\"object\" is 5px right which is not in range of 10 to 15px, is 10px top instead of 5px")),
+                    messages("\"object\" is 5px right which is not in range of 10 to 15px, is 10px top instead of 5px"), emptyList()),
                 specOn(TOP, LEFT, "container", location(between(10, 15), RIGHT), location(exact(5), TOP)), page(new HashMap<String, PageElement>(){{
                     put("object", element(105, 90, 50, 50));
                     put("container", element(100, 100, 100, 100));

@@ -18,6 +18,7 @@ package com.galenframework.components.report;
 import static java.util.Arrays.asList;
 import static com.galenframework.specs.Range.between;
 import static com.galenframework.specs.Range.exact;
+import static java.util.Collections.emptyList;
 
 import java.io.File;
 import java.io.IOException;
@@ -81,7 +82,7 @@ public class ReportingListenerTestUtils {
                                     asList(
                                             new ValidationObject(new Rect(10, 10, 100, 50), "objectA1"),
                                             new ValidationObject(new Rect(1, 1, 90, 100), "other-object")),
-                                    new ValidationError(asList("objectA1 is not inside other-object"))
+                                    new ValidationError(asList("objectA1 is not inside other-object")), emptyList()
                             ));
                 validationListener.onAfterSpecGroup(pageValidation, "some spec group");
 
@@ -112,7 +113,7 @@ public class ReportingListenerTestUtils {
                         new SpecWidth(exact(10)).withOriginalText("width 10px")
                                 .withPlace(new Place("specs.spec", 12)),
                         new ValidationResult(NO_SPEC, asList(new ValidationObject(new Rect(200, 300, 50, 30), "objectA2")),
-                                new ValidationError(asList("objectA2 width is 20px instead of 10px"))));
+                                new ValidationError(asList("objectA2 width is 20px instead of 10px")), emptyList()));
 
 
                 onSpecError(validationListener, pageValidation,
@@ -121,7 +122,7 @@ public class ReportingListenerTestUtils {
                                 .withPlace(new Place("specs.spec", 12))
                                 .withOnlyWarn(true),
                         new ValidationResult(NO_SPEC, asList(new ValidationObject(new Rect(200, 300, 50, 30), "objectA2")),
-                                new ValidationError(asList("objectA2 text is \"Logout\" instead of \"Login\""))));
+                                new ValidationError(asList("objectA2 text is \"Logout\" instead of \"Login\"")), emptyList()));
             }
             validationListener.onAfterObject(pageValidation, "objectA2");
             
@@ -162,7 +163,7 @@ public class ReportingListenerTestUtils {
                                         .withPlace(new Place("specs.spec", 12)),
                                 new ValidationResult(NO_SPEC,
                                         asList(new ValidationObject(new Rect(200, 300, 50, 30), "sub-objectA1")),
-                                        new ValidationError(asList("sub-objectA1 width is 20px instead of 10px"))));
+                                        new ValidationError(asList("sub-objectA1 width is 20px instead of 10px")), emptyList()));
                     }
                     validationListener.onAfterObject(pageValidation, "sub-objectA1");
 
@@ -204,7 +205,7 @@ public class ReportingListenerTestUtils {
                         new ValidationResult(NO_SPEC,
                                 asList(new ValidationObject(new Rect(10, 10, 100, 50), "objectB1")),
                                 new ValidationError(asList("objectB1 is not inside other-object", "second error message with <xml> &tags"))
-                                    .withImageComparison(createSampleImageComparison())));
+                                    .withImageComparison(createSampleImageComparison()), emptyList()));
             }
             validationListener.onAfterObject(pageValidation, "objectB1");
             

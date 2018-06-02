@@ -15,6 +15,7 @@
 ******************************************************************************/
 package com.galenframework.validation;
 
+import com.galenframework.reports.model.LayoutMeta;
 import com.galenframework.specs.Spec;
 
 import java.util.LinkedList;
@@ -28,6 +29,7 @@ public class ValidationErrorException extends Exception {
     private ImageComparison imageComparison;
     private List<ValidationObject> validationObjects;
     private List<ValidationResult> childValidationResults;
+    private List<LayoutMeta> meta;
 
 
     public ValidationErrorException() {
@@ -102,7 +104,7 @@ public class ValidationErrorException extends Exception {
         ValidationResult validationResult = new ValidationResult(
                 spec,
                 this.getValidationObjects(),
-                new ValidationError(this.getErrorMessages(), this.getImageComparison()));
+                new ValidationError(this.getErrorMessages(), this.getImageComparison()), this.getMeta());
 
         validationResult.setChildValidationResults(childValidationResults);
         return validationResult;
@@ -141,5 +143,13 @@ public class ValidationErrorException extends Exception {
 
     public List<ValidationResult> getChildValidationResults() {
         return childValidationResults;
+    }
+
+    public List<LayoutMeta> getMeta() {
+        return meta;
+    }
+
+    public void setMeta(List<LayoutMeta> meta) {
+        this.meta = meta;
     }
 }

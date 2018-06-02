@@ -16,6 +16,8 @@
 package com.galenframework.tests.validation;
 
 import static com.galenframework.specs.Range.*;
+import static java.util.Collections.emptyList;
+
 import java.util.HashMap;
 import com.galenframework.specs.*;
 import com.galenframework.page.PageElement;
@@ -92,7 +94,7 @@ public class CountValidationTest extends ValidationTestBase {
     public Object[][] provideBadSamples() {
         return new Object[][] {
             {new ValidationResult(NO_SPEC, areas(new ValidationObject(new Rect(100, 90, 100, 40), "object")),
-                new ValidationError(messages("There are 3 objects matching \"menu-item-*\" instead of 2"))),
+                new ValidationError(messages("There are 3 objects matching \"menu-item-*\" instead of 2")), emptyList()),
                 new SpecCount(SpecCount.FetchType.ANY, "menu-item-*", exact(2)), page(new HashMap<String, PageElement>() {{
                 put("object", element(100, 90, 100, 40));
                 put("menu-item-1", element(100, 90, 100, 40));
@@ -101,7 +103,7 @@ public class CountValidationTest extends ValidationTestBase {
             }})},
 
             {new ValidationResult(NO_SPEC, areas(new ValidationObject(new Rect(100, 90, 100, 40), "object")),
-                new ValidationError(messages("There are 2 visible objects matching \"menu-item-*\" instead of 3"))),
+                new ValidationError(messages("There are 2 visible objects matching \"menu-item-*\" instead of 3")), emptyList()),
                 new SpecCount(SpecCount.FetchType.VISIBLE, "menu-item-*", exact(3)), page(new HashMap<String, PageElement>() {{
                 put("object", element(100, 90, 100, 40));
                 put("menu-item-1", element(100, 90, 100, 40));
@@ -110,7 +112,7 @@ public class CountValidationTest extends ValidationTestBase {
             }})},
 
             {new ValidationResult(NO_SPEC, areas(new ValidationObject(new Rect(100, 90, 100, 40), "object")),
-                new ValidationError(messages("There are 1 absent objects matching \"menu-item-*\" instead of 3"))),
+                new ValidationError(messages("There are 1 absent objects matching \"menu-item-*\" instead of 3")), emptyList()),
                 new SpecCount(SpecCount.FetchType.ABSENT, "menu-item-*", exact(3)), page(new HashMap<String, PageElement>() {{
                 put("object", element(100, 90, 100, 40));
                 put("menu-item-1", element(100, 90, 100, 40));
