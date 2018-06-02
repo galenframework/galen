@@ -37,6 +37,7 @@ public class ValidationErrorException extends Exception {
 	}
 	
 	public ValidationErrorException(List<ValidationObject> validationObjects, List<String> errorMessages) {
+        super();
         this.validationObjects = validationObjects;
 		this.errorMessages = errorMessages;
 	}

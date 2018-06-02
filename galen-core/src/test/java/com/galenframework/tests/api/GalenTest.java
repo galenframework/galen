@@ -18,6 +18,7 @@ package com.galenframework.tests.api;
 import com.galenframework.api.GalenPageDump;
 import com.galenframework.components.DummyCompleteListener;
 import com.galenframework.page.Rect;
+import com.galenframework.reports.model.LayoutMeta;
 import com.galenframework.specs.Spec;
 import com.galenframework.speclang2.pagespec.SectionFilter;
 import com.galenframework.specs.page.PageSection;
@@ -48,6 +49,7 @@ import static org.hamcrest.Matchers.*;
 public class GalenTest {
 
     private static final Spec NO_SPEC = null;
+    public static final List<LayoutMeta> NULL_META = null;
 
     @Test
     public void checkLayout_shouldTestLayout_andReturnLayoutReport() throws IOException {
@@ -61,11 +63,11 @@ public class GalenTest {
                         asList(
                                 new ValidationObject(new Rect(10, 10, 100, 50), "save-button"),
                                 new ValidationObject(new Rect(120, 10, 200, 50), "name-textfield")),
-                        new ValidationError().withMessage("\"save-button\" is 10px left instead of 50px"), emptyList()),
+                        new ValidationError().withMessage("\"save-button\" is 10px left instead of 50px"), NULL_META),
                 new ValidationResult(NO_SPEC,
                         asList(
                                 new ValidationObject(new Rect(10, 10, 100, 50), "save-button")),
-                        new ValidationError().withMessage("\"save-button\" text is \"Save\" but should be \"Store\""), emptyList())));
+                        new ValidationError().withMessage("\"save-button\" text is \"Save\" but should be \"Store\""), NULL_META)));
     }
 
     @Test
@@ -233,11 +235,11 @@ public class GalenTest {
                 new ValidationResult(NO_SPEC,
                         asList(
                                 new ValidationObject(new Rect(10, 10, 100, 50), "save-button")),
-                        new ValidationError().withMessage("\"save-button\" width is 100px instead of 140px"), emptyList()),
+                        new ValidationError().withMessage("\"save-button\" width is 100px instead of 140px"), NULL_META),
                 new ValidationResult(NO_SPEC,
                         asList(
                                 new ValidationObject(new Rect(10, 10, 100, 50), "save-button")),
-                        new ValidationError().withMessage("\"save-button\" width is 200% [100px] instead of 100% [50px]"), emptyList())));
+                        new ValidationError().withMessage("\"save-button\" width is 200% [100px] instead of 100% [50px]"), NULL_META)));
     }
 
     private void assertJSONContent(String pathForRealContent, String pathForExpectedContent) throws IOException {
