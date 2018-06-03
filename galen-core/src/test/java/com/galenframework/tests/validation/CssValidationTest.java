@@ -24,7 +24,6 @@ import org.testng.annotations.DataProvider;
 
 import java.util.HashMap;
 
-import static java.util.Collections.emptyList;
 
 public class CssValidationTest extends ValidationTestBase {
     @DataProvider
@@ -58,48 +57,48 @@ public class CssValidationTest extends ValidationTestBase {
     public Object[][] provideBadSamples() {
         return new Object[][] {
             // Css
-            {validationResult(NO_AREA, messages("Cannot find locator for \"object\" in page spec"), emptyList()),
+            {validationResult(NO_AREA, messages("Cannot find locator for \"object\" in page spec"), NULL_META),
                 new SpecCss("font-size", SpecText.Type.IS, "some wrong text"),
                 page(new HashMap<>())
             },
 
-            {validationResult(NO_AREA, messages("\"object\" is not visible on page"), emptyList()),
+            {validationResult(NO_AREA, messages("\"object\" is not visible on page"), NULL_META),
                 new SpecCss("font-size", SpecText.Type.IS, "some wrong text"),
                 page(new HashMap<String, PageElement>(){{
                     put("object", invisibleElement(10, 10, 10, 10));
             }})},
 
-            {validationResult(NO_AREA, messages("\"object\" is absent on page"), emptyList()),
+            {validationResult(NO_AREA, messages("\"object\" is absent on page"), NULL_META),
                 new SpecCss("font-size", SpecText.Type.IS, "some wrong text"),
                 page(new HashMap<String, PageElement>(){{
                     put("object", absentElement(10, 10, 10, 10));
             }})},
 
-            {validationResult(singleArea(new Rect(10, 10, 10, 10), "object"), messages("\"object\" css property \"font-size\" is \"18px\" but should be \"19px\""), emptyList()),
+            {validationResult(singleArea(new Rect(10, 10, 10, 10), "object"), messages("\"object\" css property \"font-size\" is \"18px\" but should be \"19px\""), NULL_META),
                 new SpecCss("font-size", SpecText.Type.IS, "19px"),
                 page(new HashMap<String, PageElement>(){{
                     put("object", elementWithCss("font-size", "18px"));
             }})},
 
-            {validationResult(singleArea(new Rect(10, 10, 10, 10), "object"), messages("\"object\" css property \"font-size\" is \"18px\" but should start with \"19\""), emptyList()),
+            {validationResult(singleArea(new Rect(10, 10, 10, 10), "object"), messages("\"object\" css property \"font-size\" is \"18px\" but should start with \"19\""), NULL_META),
                 new SpecCss("font-size", SpecText.Type.STARTS, "19"),
                 page(new HashMap<String, PageElement>(){{
                     put("object", elementWithCss("font-size", "18px"));
             }})},
 
-            {validationResult(singleArea(new Rect(10, 10, 10, 10), "object"), messages("\"object\" css property \"font-size\" is \"18px\" but should end with \"em\""), emptyList()),
+            {validationResult(singleArea(new Rect(10, 10, 10, 10), "object"), messages("\"object\" css property \"font-size\" is \"18px\" but should end with \"em\""), NULL_META),
                 new SpecCss("font-size", SpecText.Type.ENDS, "em"),
                 page(new HashMap<String, PageElement>(){{
                     put("object", elementWithCss("font-size", "18px"));
             }})},
 
-            {validationResult(singleArea(new Rect(10, 10, 10, 10), "object"), messages("\"object\" css property \"font-size\" is \"18px\" but should contain \"9\""), emptyList()),
+            {validationResult(singleArea(new Rect(10, 10, 10, 10), "object"), messages("\"object\" css property \"font-size\" is \"18px\" but should contain \"9\""), NULL_META),
                 new SpecCss("font-size", SpecText.Type.CONTAINS, "9"),
                 page(new HashMap<String, PageElement>(){{
                     put("object", elementWithCss("font-size", "18px"));
             }})},
 
-            {validationResult(singleArea(new Rect(10, 10, 10, 10), "object"), messages("\"object\" css property \"font-size\" is \"18px\" but should match \"[0-9]+em\""), emptyList()),
+            {validationResult(singleArea(new Rect(10, 10, 10, 10), "object"), messages("\"object\" css property \"font-size\" is \"18px\" but should match \"[0-9]+em\""), NULL_META),
                 new SpecCss("font-size", SpecText.Type.MATCHES, "[0-9]+em"),
                 page(new HashMap<String, PageElement>(){{
                     put("object", elementWithCss("font-size", "18px"));

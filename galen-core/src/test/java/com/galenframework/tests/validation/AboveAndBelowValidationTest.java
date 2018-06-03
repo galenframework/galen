@@ -27,7 +27,6 @@ import java.util.HashMap;
 
 import static com.galenframework.specs.Range.between;
 import static com.galenframework.specs.Range.exact;
-import static java.util.Collections.emptyList;
 
 public class AboveAndBelowValidationTest extends ValidationTestBase {
     @DataProvider
@@ -65,39 +64,39 @@ public class AboveAndBelowValidationTest extends ValidationTestBase {
         return new Object[][] {
             // Above
 
-            {validationResult(NO_AREA, messages("\"object\" is not visible on page"), emptyList()),
+            {validationResult(NO_AREA, messages("\"object\" is not visible on page"), NULL_META),
                 specAbove("button", exact(20)), page(new HashMap<String, PageElement>(){{
                     put("object", invisibleElement(10, 40, 10, 10));
                     put("button", element(10, 60, 10, 10));
             }})},
 
-            {validationResult(NO_AREA, messages("\"object\" is absent on page"), emptyList()),
+            {validationResult(NO_AREA, messages("\"object\" is absent on page"), NULL_META),
                 specAbove("button", exact(20)), page(new HashMap<String, PageElement>(){{
                     put("object", absentElement(10, 40, 10, 10));
                     put("button", element(10, 60, 10, 10));
             }})},
 
-            {validationResult(NO_AREA, messages("\"button\" is not visible on page"), emptyList()),
+            {validationResult(NO_AREA, messages("\"button\" is not visible on page"), NULL_META),
                 specAbove("button", exact(20)), page(new HashMap<String, PageElement>(){{
                     put("object", element(10, 40, 10, 10));
                     put("button", invisibleElement(10, 60, 10, 10));
             }})},
 
-            {validationResult(NO_AREA, messages("\"button\" is absent on page"), emptyList()),
+            {validationResult(NO_AREA, messages("\"button\" is absent on page"), NULL_META),
                 specAbove("button", exact(20)), page(new HashMap<String, PageElement>(){{
                     put("object", element(10, 40, 10, 10));
                     put("button", absentElement(10, 60, 10, 10));
             }})},
 
             {validationResult(areas(new ValidationObject(new Rect(10, 40, 10, 10), "object"), new ValidationObject(new Rect(10, 60, 10, 10), "button")),
-                    messages("\"object\" is 10px above \"button\" instead of 20px"), emptyList()),
+                    messages("\"object\" is 10px above \"button\" instead of 20px"), NULL_META),
                 specAbove("button", exact(20)), page(new HashMap<String, PageElement>(){{
                     put("object", element(10, 40, 10, 10));
                     put("button", element(10, 60, 10, 10));
             }})},
 
             {validationResult(areas(new ValidationObject(new Rect(10, 40, 10, 10), "object"), new ValidationObject(new Rect(10, 60, 10, 10), "button")),
-                    messages("\"object\" is 10px above \"button\" which is not in range of 20 to 30px"), emptyList()),
+                    messages("\"object\" is 10px above \"button\" which is not in range of 20 to 30px"), NULL_META),
                 specAbove("button", between(20, 30)), page(new HashMap<String, PageElement>(){{
                     put("object", element(10, 40, 10, 10));
                     put("button", element(10, 60, 10, 10));
@@ -105,39 +104,39 @@ public class AboveAndBelowValidationTest extends ValidationTestBase {
 
             // Below
 
-            {validationResult(NO_AREA, messages("\"object\" is not visible on page"), emptyList()),
+            {validationResult(NO_AREA, messages("\"object\" is not visible on page"), NULL_META),
                 specBelow("button", exact(20)), page(new HashMap<String, PageElement>(){{
                     put("object", invisibleElement(10, 40, 10, 10));
                     put("button", element(10, 60, 10, 10));
             }})},
 
-            {validationResult(NO_AREA, messages("\"object\" is absent on page"), emptyList()),
+            {validationResult(NO_AREA, messages("\"object\" is absent on page"), NULL_META),
                 specBelow("button", exact(20)), page(new HashMap<String, PageElement>(){{
                     put("object", absentElement(10, 40, 10, 10));
                     put("button", element(10, 60, 10, 10));
             }})},
 
-            {validationResult(NO_AREA, messages("\"button\" is not visible on page"), emptyList()),
+            {validationResult(NO_AREA, messages("\"button\" is not visible on page"), NULL_META),
                 specBelow("button", exact(20)), page(new HashMap<String, PageElement>(){{
                     put("object", element(10, 40, 10, 10));
                     put("button", invisibleElement(10, 60, 10, 10));
             }})},
 
-            {validationResult(NO_AREA, messages("\"button\" is absent on page"), emptyList()),
+            {validationResult(NO_AREA, messages("\"button\" is absent on page"), NULL_META),
                 specBelow("button", exact(20)), page(new HashMap<String, PageElement>(){{
                     put("object", element(10, 40, 10, 10));
                     put("button", absentElement(10, 60, 10, 10));
             }})},
 
             {validationResult(areas(new ValidationObject(new Rect(10, 60, 10, 10), "object"), new ValidationObject(new Rect(10, 40, 10, 10), "button")),
-                    messages("\"object\" is 10px below \"button\" instead of 20px"), emptyList()),
+                    messages("\"object\" is 10px below \"button\" instead of 20px"), NULL_META),
                 specBelow("button", exact(20)), page(new HashMap<String, PageElement>(){{
                     put("object", element(10, 60, 10, 10));
                     put("button", element(10, 40, 10, 10));
             }})},
 
             {validationResult(areas(new ValidationObject(new Rect(10, 60, 10, 10), "object"), new ValidationObject(new Rect(10, 40, 10, 10), "button")),
-                    messages("\"object\" is 10px below \"button\" which is not in range of 20 to 30px"), emptyList()),
+                    messages("\"object\" is 10px below \"button\" which is not in range of 20 to 30px"), NULL_META),
                 specBelow("button", between(20, 30)), page(new HashMap<String, PageElement>(){{
                     put("object", element(10, 60, 10, 10));
                     put("button", element(10, 40, 10, 10));

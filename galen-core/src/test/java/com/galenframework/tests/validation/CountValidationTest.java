@@ -16,7 +16,6 @@
 package com.galenframework.tests.validation;
 
 import static com.galenframework.specs.Range.*;
-import static java.util.Collections.emptyList;
 
 import java.util.HashMap;
 import com.galenframework.specs.*;
@@ -93,8 +92,12 @@ public class CountValidationTest extends ValidationTestBase {
     @DataProvider
     public Object[][] provideBadSamples() {
         return new Object[][] {
-            {new ValidationResult(NO_SPEC, areas(new ValidationObject(new Rect(100, 90, 100, 40), "object")),
-                new ValidationError(messages("There are 3 objects matching \"menu-item-*\" instead of 2")), emptyList()),
+            {new ValidationResult(NO_SPEC, areas(
+                    new ValidationObject(new Rect(100, 90, 100, 40), "menu-item-2"),
+                    new ValidationObject(new Rect(100, 90, 100, 40), "menu-item-3"),
+                    new ValidationObject(new Rect(100, 90, 100, 40), "menu-item-1")
+            ),
+                new ValidationError(messages("There are 3 objects matching \"menu-item-*\" instead of 2")), NULL_META),
                 new SpecCount(SpecCount.FetchType.ANY, "menu-item-*", exact(2)), page(new HashMap<String, PageElement>() {{
                 put("object", element(100, 90, 100, 40));
                 put("menu-item-1", element(100, 90, 100, 40));
@@ -102,8 +105,11 @@ public class CountValidationTest extends ValidationTestBase {
                 put("menu-item-3", element(100, 90, 100, 40));
             }})},
 
-            {new ValidationResult(NO_SPEC, areas(new ValidationObject(new Rect(100, 90, 100, 40), "object")),
-                new ValidationError(messages("There are 2 visible objects matching \"menu-item-*\" instead of 3")), emptyList()),
+            {new ValidationResult(NO_SPEC, areas(
+                    new ValidationObject(new Rect(100, 90, 100, 40), "menu-item-2"),
+                    new ValidationObject(new Rect(100, 90, 100, 40), "menu-item-1")
+),
+                new ValidationError(messages("There are 2 visible objects matching \"menu-item-*\" instead of 3")), NULL_META),
                 new SpecCount(SpecCount.FetchType.VISIBLE, "menu-item-*", exact(3)), page(new HashMap<String, PageElement>() {{
                 put("object", element(100, 90, 100, 40));
                 put("menu-item-1", element(100, 90, 100, 40));
@@ -111,8 +117,8 @@ public class CountValidationTest extends ValidationTestBase {
                 put("menu-item-3", absentElement(100, 90, 100, 40));
             }})},
 
-            {new ValidationResult(NO_SPEC, areas(new ValidationObject(new Rect(100, 90, 100, 40), "object")),
-                new ValidationError(messages("There are 1 absent objects matching \"menu-item-*\" instead of 3")), emptyList()),
+            {new ValidationResult(NO_SPEC, areas(),
+                new ValidationError(messages("There are 1 absent objects matching \"menu-item-*\" instead of 3")), NULL_META),
                 new SpecCount(SpecCount.FetchType.ABSENT, "menu-item-*", exact(3)), page(new HashMap<String, PageElement>() {{
                 put("object", element(100, 90, 100, 40));
                 put("menu-item-1", element(100, 90, 100, 40));

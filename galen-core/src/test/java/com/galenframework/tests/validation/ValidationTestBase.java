@@ -44,6 +44,7 @@ import java.util.List;
 import static org.hamcrest.Matchers.*;
 
 public abstract class ValidationTestBase {
+    public static final List<LayoutMeta> NULL_META = null;
     public static final List<ValidationObject> NO_AREA = null;
     public static final Spec NO_SPEC = null;
 
@@ -69,10 +70,9 @@ public abstract class ValidationTestBase {
     public void shouldGiveError(ValidationResult expectedResult, Spec spec, MockedPage page) {
         PageSpec pageSpec = createMockedPageSpec(page);
         PageValidation validation = new PageValidation(null, page, pageSpec, null, null);
-        ValidationError error = validation.check("object", spec).getError();
 
-        assertThat(error, is(notNullValue()));
-        assertThat(error, is(expectedResult.getError()));
+        ValidationResult realResult = validation.check("object", spec);
+        assertThat(realResult, is(expectedResult));
     }
 
     @DataProvider
