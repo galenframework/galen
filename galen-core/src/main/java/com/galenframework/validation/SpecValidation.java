@@ -15,17 +15,15 @@
 ******************************************************************************/
 package com.galenframework.validation;
 
+import static com.galenframework.validation.ValidationUtils.rangeCalculatedFromPercentage;
 import static java.lang.String.format;
 
-import java.util.LinkedList;
-import java.util.List;
 
 import com.galenframework.config.GalenConfig;
 import com.galenframework.page.PageElement;
 import com.galenframework.specs.Range;
 import com.galenframework.specs.RangeValue;
 import com.galenframework.specs.Spec;
-import com.galenframework.specs.page.PageSpec;
 
 public abstract class SpecValidation<T extends Spec> {
     
@@ -55,33 +53,7 @@ public abstract class SpecValidation<T extends Spec> {
             }
         }
     }
-    
-    /**
-     * Fetches all child object, using simple regular expression
-     * @param childObjects
-     * @param pageSpec
-     * @return
-     * @throws ValidationErrorException
-     */
-    protected List<String> fetchChildObjets(List<String> childObjects, PageSpec pageSpec) throws ValidationErrorException {
-        List<String> resultObjects = new LinkedList<>();
 
-        for (String objectName : childObjects) {
-            if (objectName.contains("*")) {
-                
-                List<String> foundObjects = pageSpec.findOnlyExistingMatchingObjectNames(objectName);
-                if (foundObjects.size() == 0) {
-                    throw new ValidationErrorException("There are no objects matching: " + objectName);
-                }
-                resultObjects.addAll(foundObjects);
-            }
-            else {
-                resultObjects.add(objectName);
-            }
-        }
-        return resultObjects;
-    }
-    
     protected String getReadableRangeAndValue(Range range, double realValue, double convertedValue, PageValidation pageValidation) {
         if (range.isPercentage()) {
             int objectValue = pageValidation.getObjectValue(range.getPercentageOfValue());
@@ -97,29 +69,5 @@ public abstract class SpecValidation<T extends Spec> {
                     range.getErrorMessageSuffix());
         }
     }
-
-    protected String rangeCalculatedFromPercentage(Range range, int objectValue) {
-        if (range.getRangeType() == Range.RangeType.BETWEEN) {
-            int from = (int)((objectValue * range.getFrom().asDouble()) / 100.0);
-            int to = (int)((objectValue * range.getTo().asDouble()) / 100.0);
-
-            return String.format("[%d to %dpx]", from, to);
-        } else {
-            RangeValue rangeValue = takeNonNullValue(range.getFrom(), range.getTo());
-            int converted = (int)((objectValue * rangeValue.asDouble()) / 100.0);
-            return "[" + converted + "px]";
-        }
-    }
-
-    private static RangeValue takeNonNullValue(RangeValue from, RangeValue to) {
-        if (from != null) {
-            return from;
-        } else if (to != null) {
-            return to;
-        } else {
-            throw new NullPointerException("Both range values are null");
-        }
-    }
-
 
 }

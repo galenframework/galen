@@ -18,33 +18,60 @@ package com.galenframework.validation.specs;
 import com.galenframework.page.PageElement;
 import com.galenframework.page.Point;
 import com.galenframework.page.Rect;
+import com.galenframework.specs.Location;
 import com.galenframework.specs.Side;
+import com.galenframework.specs.Spec;
 import com.galenframework.specs.SpecInside;
-import com.galenframework.validation.ValidationObject;
-import com.galenframework.validation.PageValidation;
-import com.galenframework.validation.ValidationErrorException;
-import com.galenframework.validation.ValidationResult;
+import com.galenframework.validation.*;
 
+import java.util.LinkedList;
 import java.util.List;
 
+import static com.galenframework.validation.ValidationUtils.createMessage;
+import static java.lang.String.format;
 import static java.util.Arrays.asList;
 
-public class SpecValidationInside extends SpecValidationGeneral<SpecInside> {
+public class SpecValidationInside extends SpecValidation<SpecInside> implements ValidationUtils.OffsetProvider {
 
 
     @Override
     public ValidationResult check(PageValidation pageValidation, String objectName, SpecInside spec) throws ValidationErrorException {
-        super.check(pageValidation, objectName, spec);
-
-
         PageElement mainObject = pageValidation.findPageElement(objectName);
+        checkAvailability(mainObject, objectName);
+
         PageElement secondObject = pageValidation.findPageElement(spec.getObject());
+        checkAvailability(secondObject, spec.getObject());
+
 
         Rect mainArea = mainObject.getArea();
         Rect secondArea = secondObject.getArea();
 
         List<ValidationObject> objects = asList(new ValidationObject(mainArea, objectName),new ValidationObject(secondArea, spec.getObject()));
 
+        verifyAllSides(pageValidation, objectName, mainArea, secondArea, spec, objects);
+        checkIfCompletelyInside(objectName, spec, mainArea, secondArea, objects);
+
+        return new ValidationResult(spec, objects);
+    }
+
+    private void verifyAllSides(PageValidation pageValidation, String objectName, Rect mainArea, Rect secondArea, SpecInside spec, List<ValidationObject> validationObjects) throws ValidationErrorException {
+        List<String> messages = new LinkedList<>();
+        for (Location location : spec.getLocations()) {
+            String message = ValidationUtils.verifyLocation(mainArea, secondArea, location, pageValidation, spec, this);
+            if (message != null) {
+                messages.add(message);
+            }
+        }
+
+        if (messages.size() > 0) {
+            throw new ValidationErrorException()
+                    .withMessage(createMessage(messages, objectName))
+                    .withValidationObjects(validationObjects);
+        }
+    }
+
+
+    private void checkIfCompletelyInside(String objectName, SpecInside spec, Rect mainArea, Rect secondArea, List<ValidationObject> objects) throws ValidationErrorException {
         if (!spec.getPartly()) {
             Point[] points = mainArea.getPoints();
 
@@ -58,15 +85,13 @@ public class SpecValidationInside extends SpecValidationGeneral<SpecInside> {
             if (maxOffset > 2) {
                 throw new ValidationErrorException()
                         .withValidationObjects(objects)
-                        .withMessage(String.format("\"%s\" is not completely inside. The offset is %dpx.", objectName, maxOffset));
+                        .withMessage(format("\"%s\" is not completely inside. The offset is %dpx.", objectName, maxOffset));
             }
         }
-
-        return new ValidationResult(spec, objects);
     }
 
     @Override
-    protected int getOffsetForSide(Rect mainArea, Rect parentArea, Side side, SpecInside spec) {
+    public int getOffsetForSide(Rect mainArea, Rect parentArea, Side side, Spec spec) {
         if (side == Side.LEFT) {
             return mainArea.getLeft() - parentArea.getLeft();
         }

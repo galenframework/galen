@@ -17,12 +17,13 @@ package com.galenframework.validation.specs;
 
 import com.galenframework.page.Rect;
 import com.galenframework.specs.Side;
+import com.galenframework.specs.Spec;
 import com.galenframework.specs.SpecNear;
 
 public class SpecValidationNear extends SpecValidationGeneral<SpecNear> {
 
     @Override
-    protected int getOffsetForSide(Rect mainArea, Rect secondArea, Side side, SpecNear spec) {
+    public int getOffsetForSide(Rect mainArea, Rect secondArea, Side side, Spec spec) {
         if (side == Side.LEFT) {
             return secondArea.getLeft() - (mainArea.getLeft() + mainArea.getWidth());
         }
