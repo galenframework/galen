@@ -15,26 +15,18 @@
 ******************************************************************************/
 package com.galenframework.validation.specs;
 
-import com.galenframework.page.PageElement;
 import com.galenframework.page.Point;
 import com.galenframework.page.Rect;
-import com.galenframework.reports.model.LayoutMeta;
 import com.galenframework.specs.*;
 import com.galenframework.validation.*;
 
-import java.util.LinkedList;
 import java.util.List;
 
-import static com.galenframework.validation.ValidationUtils.joinErrorMessagesForObject;
-import static com.galenframework.validation.ValidationUtils.joinMessages;
-import static com.galenframework.validation.ValidationUtils.rangeCalculatedFromPercentage;
 import static java.lang.String.format;
-import static java.util.Arrays.asList;
 
-public class SpecValidationInside extends SpecValidation<SpecInside> {
+public class SpecValidationInside extends SpecValidationComplex<SpecInside> {
 
-
-    @Override
+    /*@Override
     public ValidationResult check(PageValidation pageValidation, String objectName, SpecInside spec) throws ValidationErrorException {
         PageElement mainObject = pageValidation.findPageElement(objectName);
         checkAvailability(mainObject, objectName);
@@ -48,49 +40,27 @@ public class SpecValidationInside extends SpecValidation<SpecInside> {
         List<ValidationObject> objects = asList(new ValidationObject(mainArea, objectName),new ValidationObject(secondArea, spec.getObject()));
 
         checkIfCompletelyInside(objectName, spec, mainArea, secondArea, objects);
-        List<LayoutMeta> layoutMeta = verifyAllSides(pageValidation, objectName, mainArea, secondArea, spec, objects);
+        List<LayoutMeta> layoutMeta = validateAllSides(pageValidation, objectName, mainArea, secondArea, spec, objects, (range, side) ->
+            MetaBasedValidation.forObjectsWithRange(objectName, spec.getObject(), range)
+                .withBothEdges(side)
+                .withInvertedCalculation(side == Side.RIGHT || side == Side.BOTTOM)
+                .validate(mainArea, secondArea, pageValidation, side)
+        );
 
         return new ValidationResult(spec, objects).withMeta(layoutMeta);
+    }*/
+
+    @Override
+    protected SimpleValidationResult validateSide(String objectName, SpecInside spec, Range range, Side side, Rect mainArea, Rect secondArea, PageValidation pageValidation) {
+        return MetaBasedValidation.forObjectsWithRange(objectName, spec.getObject(), range)
+                .withBothEdges(side)
+                .withInvertedCalculation(side == Side.RIGHT || side == Side.BOTTOM)
+                .validate(mainArea, secondArea, pageValidation, side);
     }
 
-    private List<LayoutMeta> verifyAllSides(PageValidation pageValidation, String objectName, Rect mainArea, Rect secondArea, SpecInside spec, List<ValidationObject> validationObjects) throws ValidationErrorException {
-        List<LayoutMeta> meta = new LinkedList<>();
-
-        List<String> errorMessages = new LinkedList<>();
-        for (Location location : spec.getLocations()) {
-            Range range = location.getRange();
-
-            List<String> perLocationErrors = new LinkedList<>();
-
-            for (Side side : location.getSides()) {
-                SimpleValidationResult svr = MetaBasedValidation.forObjectsWithRange(objectName, spec.getObject(), range)
-                        .withBothEdges(side)
-                        .withInvertedCalculation(side == Side.RIGHT || side == Side.BOTTOM)
-                        .validate(mainArea, secondArea, pageValidation, side);
-                meta.add(svr.getMeta());
-
-                if (svr.isError()) {
-                    perLocationErrors.add(svr.getError());
-                }
-            }
-
-            if (!perLocationErrors.isEmpty()) {
-                String calculatedFromPercentage = "";
-                if (range.isPercentage()) {
-                    calculatedFromPercentage = " " + rangeCalculatedFromPercentage(range, pageValidation.getObjectValue(range.getPercentageOfValue()));
-                }
-                errorMessages.add(format("%s %s%s", joinMessages(perLocationErrors, " and "), range.getErrorMessageSuffix(), calculatedFromPercentage));
-            }
-
-        }
-
-        if (errorMessages.size() > 0) {
-            throw new ValidationErrorException()
-                    .withMessage(joinErrorMessagesForObject(errorMessages, objectName))
-                    .withValidationObjects(validationObjects)
-                    .withMeta(meta);
-        }
-        return meta;
+    @Override
+    protected void doCustomValidations(String objectName, Rect mainArea, Rect secondArea, SpecInside spec, List<ValidationObject> objects) throws ValidationErrorException {
+        checkIfCompletelyInside(objectName, spec, mainArea, secondArea, objects);
     }
 
     private void checkIfCompletelyInside(String objectName, SpecInside spec, Rect mainArea, Rect secondArea, List<ValidationObject> objects) throws ValidationErrorException {
