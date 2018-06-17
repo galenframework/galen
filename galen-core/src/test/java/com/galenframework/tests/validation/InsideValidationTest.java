@@ -198,14 +198,16 @@ public class InsideValidationTest extends ValidationTestBase {
                 }})},
 
             {validationResult(areas(new ValidationObject(new Rect(30, 5, 10, 50), "object"), new ValidationObject(new Rect(0, 0, 50, 120), "container")),
-                    messages("\"object\" is 60% [30px] left instead of 20% [10px]"), NULL_META),
+                    messages("\"object\" is 60% [30px] left instead of 20% [10px]"),
+                asList(LayoutMeta.distance("object", LEFT, "container", LEFT, "20%", "60% [30px]"))),
                 specInside("container", location(exact(20).withPercentOf("container/width"), LEFT)), page(new HashMap<String, PageElement>(){{
                     put("object", element(30, 5, 10, 50));
                     put("container", element(0, 0, 50, 120));
                 }})},
 
             {validationResult(areas(new ValidationObject(new Rect(30, 5, 10, 50), "object"), new ValidationObject(new Rect(0, 0, 50, 120), "container")),
-                    messages("\"object\" is 60% [30px] left which is not in range of 20 to 40% [10 to 20px]"), NULL_META),
+                    messages("\"object\" is 60% [30px] left which is not in range of 20 to 40% [10 to 20px]"),
+                asList(LayoutMeta.distance("object", LEFT, "container", LEFT, "20 to 40%", "60% [30px]"))),
                 specInside("container", location(between(20, 40).withPercentOf("container/width"), LEFT)), page(new HashMap<String, PageElement>(){{
                     put("object", element(30, 5, 10, 50));
                     put("container", element(0, 0, 50, 120));

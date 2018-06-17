@@ -27,6 +27,7 @@ import java.util.List;
 
 import static com.galenframework.validation.ValidationUtils.joinErrorMessagesForObject;
 import static com.galenframework.validation.ValidationUtils.joinMessages;
+import static com.galenframework.validation.ValidationUtils.rangeCalculatedFromPercentage;
 import static java.lang.String.format;
 import static java.util.Arrays.asList;
 
@@ -74,7 +75,11 @@ public class SpecValidationInside extends SpecValidation<SpecInside> {
             }
 
             if (!perLocationErrors.isEmpty()) {
-                errorMessages.add(format("%s %s", joinMessages(perLocationErrors, " and "), range.getErrorMessageSuffix()));
+                String calculatedFromPercentage = "";
+                if (range.isPercentage()) {
+                    calculatedFromPercentage = " " + rangeCalculatedFromPercentage(range, pageValidation.getObjectValue(range.getPercentageOfValue()));
+                }
+                errorMessages.add(format("%s %s%s", joinMessages(perLocationErrors, " and "), range.getErrorMessageSuffix(), calculatedFromPercentage));
             }
 
         }
