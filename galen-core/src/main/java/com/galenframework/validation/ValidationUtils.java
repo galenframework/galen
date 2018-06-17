@@ -1,6 +1,7 @@
 package com.galenframework.validation;
 
 import com.galenframework.page.Rect;
+import com.galenframework.reports.model.LayoutMeta;
 import com.galenframework.specs.*;
 
 import java.util.LinkedList;
@@ -14,7 +15,9 @@ public class ValidationUtils {
         int getOffsetForSide(Rect mainArea, Rect secondArea, Side side, Spec spec);
     }
 
-    public static String verifyLocation(Rect mainArea, Rect secondArea, Location location, PageValidation pageValidation, Spec spec, OffsetProvider offsetProvider) {
+    public static String verifyLocation(Rect mainArea, Rect secondArea,
+                                                        Location location, PageValidation pageValidation, Spec spec,
+                                                        OffsetProvider offsetProvider) {
         List<String> messages = new LinkedList<>();
 
         Range range = location.getRange();
@@ -54,7 +57,9 @@ public class ValidationUtils {
             }
             return buffer.toString();
         }
-        else return null;
+        else {
+            return null;
+        }
     }
 
     public static String rangeCalculatedFromPercentage(Range range, int objectValue) {
@@ -80,16 +85,23 @@ public class ValidationUtils {
         }
     }
 
-    public static String createMessage(List<String> messages, String objectName) {
+    public static String joinErrorMessagesForObject(List<String> messages, String objectName) {
         StringBuffer buffer = new StringBuffer();
 
-        buffer.append(format("\"%s\" ", objectName));
+        buffer.append(format("\"%s\" is ", objectName));
+        buffer.append(joinMessages(messages, " and "));
+        return buffer.toString();
+    }
+
+
+    public static String joinMessages(List<String> messages, String separator) {
+        StringBuffer buffer = new StringBuffer();
+
         boolean comma = false;
         for (String message : messages) {
             if (comma) {
-                buffer.append(", ");
+                buffer.append(separator);
             }
-            buffer.append("is ");
             buffer.append(message);
             comma = true;
         }

@@ -139,4 +139,9 @@ public class ValidationResult {
     public void setMeta(List<LayoutMeta> meta) {
         this.meta = meta;
     }
+
+    public ValidationResult withMeta(List<LayoutMeta> layoutMeta) {
+        this.meta = layoutMeta;
+        return this;
+    }
 }

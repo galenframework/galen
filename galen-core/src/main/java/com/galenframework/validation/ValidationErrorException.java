@@ -153,4 +153,9 @@ public class ValidationErrorException extends Exception {
     public void setMeta(List<LayoutMeta> meta) {
         this.meta = meta;
     }
+
+    public ValidationErrorException withMeta(List<LayoutMeta> meta) {
+        setMeta(meta);
+        return this;
+    }
 }

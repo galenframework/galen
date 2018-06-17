@@ -104,7 +104,7 @@ public class OnValidationTest extends ValidationTestBase {
             }})},
 
             {validationResult(areas(new ValidationObject(new Rect(105, 90, 50, 50), "object"), new ValidationObject(new Rect(100, 100, 100, 100), "container")),
-                    messages("\"object\" is 5px right which is not in range of 10 to 15px, is 10px top instead of 5px"), NULL_META),
+                    messages("\"object\" is 5px right which is not in range of 10 to 15px and 10px top instead of 5px"), NULL_META),
                 specOn(TOP, LEFT, "container", location(between(10, 15), RIGHT), location(exact(5), TOP)), page(new HashMap<String, PageElement>(){{
                     put("object", element(105, 90, 50, 50));
                     put("container", element(100, 100, 100, 100));

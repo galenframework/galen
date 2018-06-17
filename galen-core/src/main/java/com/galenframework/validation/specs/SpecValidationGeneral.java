@@ -15,7 +15,7 @@
 ******************************************************************************/
 package com.galenframework.validation.specs;
 
-import static com.galenframework.validation.ValidationUtils.createMessage;
+import static com.galenframework.validation.ValidationUtils.joinErrorMessagesForObject;
 import static java.lang.String.format;
 
 import java.util.LinkedList;
@@ -61,7 +61,7 @@ public abstract class SpecValidationGeneral<T extends SpecComplex> extends SpecV
 
         if (messages.size() > 0) {
         	throw new ValidationErrorException()
-                .withMessage(createMessage(messages, objectName))
+                .withMessage(joinErrorMessagesForObject(messages, objectName))
                 .withValidationObjects(validationObjects);
         }
 

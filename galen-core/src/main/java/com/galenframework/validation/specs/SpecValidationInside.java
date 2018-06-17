@@ -18,20 +18,19 @@ package com.galenframework.validation.specs;
 import com.galenframework.page.PageElement;
 import com.galenframework.page.Point;
 import com.galenframework.page.Rect;
-import com.galenframework.specs.Location;
-import com.galenframework.specs.Side;
-import com.galenframework.specs.Spec;
-import com.galenframework.specs.SpecInside;
+import com.galenframework.reports.model.LayoutMeta;
+import com.galenframework.specs.*;
 import com.galenframework.validation.*;
 
 import java.util.LinkedList;
 import java.util.List;
 
-import static com.galenframework.validation.ValidationUtils.createMessage;
+import static com.galenframework.validation.ValidationUtils.joinErrorMessagesForObject;
+import static com.galenframework.validation.ValidationUtils.joinMessages;
 import static java.lang.String.format;
 import static java.util.Arrays.asList;
 
-public class SpecValidationInside extends SpecValidation<SpecInside> implements ValidationUtils.OffsetProvider {
+public class SpecValidationInside extends SpecValidation<SpecInside> {
 
 
     @Override
@@ -42,34 +41,52 @@ public class SpecValidationInside extends SpecValidation<SpecInside> implements 
         PageElement secondObject = pageValidation.findPageElement(spec.getObject());
         checkAvailability(secondObject, spec.getObject());
 
-
         Rect mainArea = mainObject.getArea();
         Rect secondArea = secondObject.getArea();
 
         List<ValidationObject> objects = asList(new ValidationObject(mainArea, objectName),new ValidationObject(secondArea, spec.getObject()));
 
-        verifyAllSides(pageValidation, objectName, mainArea, secondArea, spec, objects);
         checkIfCompletelyInside(objectName, spec, mainArea, secondArea, objects);
+        List<LayoutMeta> layoutMeta = verifyAllSides(pageValidation, objectName, mainArea, secondArea, spec, objects);
 
-        return new ValidationResult(spec, objects);
+        return new ValidationResult(spec, objects).withMeta(layoutMeta);
     }
 
-    private void verifyAllSides(PageValidation pageValidation, String objectName, Rect mainArea, Rect secondArea, SpecInside spec, List<ValidationObject> validationObjects) throws ValidationErrorException {
-        List<String> messages = new LinkedList<>();
+    private List<LayoutMeta> verifyAllSides(PageValidation pageValidation, String objectName, Rect mainArea, Rect secondArea, SpecInside spec, List<ValidationObject> validationObjects) throws ValidationErrorException {
+        List<LayoutMeta> meta = new LinkedList<>();
+
+        List<String> errorMessages = new LinkedList<>();
         for (Location location : spec.getLocations()) {
-            String message = ValidationUtils.verifyLocation(mainArea, secondArea, location, pageValidation, spec, this);
-            if (message != null) {
-                messages.add(message);
+            Range range = location.getRange();
+
+            List<String> perLocationErrors = new LinkedList<>();
+
+            for (Side side : location.getSides()) {
+                SimpleValidationResult svr = MetaBasedValidation.forObjectsWithRange(objectName, spec.getObject(), range)
+                        .withBothEdges(side)
+                        .withInvertedCalculation(side == Side.RIGHT || side == Side.BOTTOM)
+                        .validate(mainArea, secondArea, pageValidation, side);
+                meta.add(svr.getMeta());
+
+                if (svr.isError()) {
+                    perLocationErrors.add(svr.getError());
+                }
             }
+
+            if (!perLocationErrors.isEmpty()) {
+                errorMessages.add(format("%s %s", joinMessages(perLocationErrors, " and "), range.getErrorMessageSuffix()));
+            }
+
         }
 
-        if (messages.size() > 0) {
+        if (errorMessages.size() > 0) {
             throw new ValidationErrorException()
-                    .withMessage(createMessage(messages, objectName))
-                    .withValidationObjects(validationObjects);
+                    .withMessage(joinErrorMessagesForObject(errorMessages, objectName))
+                    .withValidationObjects(validationObjects)
+                    .withMeta(meta);
         }
+        return meta;
     }
-
 
     private void checkIfCompletelyInside(String objectName, SpecInside spec, Rect mainArea, Rect secondArea, List<ValidationObject> objects) throws ValidationErrorException {
         if (!spec.getPartly()) {
@@ -87,25 +104,6 @@ public class SpecValidationInside extends SpecValidation<SpecInside> implements 
                         .withValidationObjects(objects)
                         .withMessage(format("\"%s\" is not completely inside. The offset is %dpx.", objectName, maxOffset));
             }
-        }
-    }
-
-    @Override
-    public int getOffsetForSide(Rect mainArea, Rect parentArea, Side side, Spec spec) {
-        if (side == Side.LEFT) {
-            return mainArea.getLeft() - parentArea.getLeft();
-        }
-        else if (side == Side.TOP) {
-            return mainArea.getTop() - parentArea.getTop();
-        }
-        else if (side == Side.RIGHT) {
-            return parentArea.getLeft() + parentArea.getWidth() - (mainArea.getLeft() + mainArea.getWidth());
-        }
-        else if (side == Side.BOTTOM) {
-            return parentArea.getTop() + parentArea.getHeight() - (mainArea.getTop() + mainArea.getHeight());
-        }
-        else {
-            return 0;
         }
     }
 

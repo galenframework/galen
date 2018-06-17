@@ -1,25 +1,17 @@
 package com.galenframework.reports.model;
 
 
+import com.galenframework.specs.Side;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 public class LayoutMeta {
 
-    private String type;
     private ObjectEdge from;
     private ObjectEdge to;
     private String expectedDistance;
     private String realDistance;
-
-    public String getType() {
-        return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
-    }
 
     public ObjectEdge getFrom() {
         return from;
@@ -54,15 +46,33 @@ public class LayoutMeta {
     }
 
 
+    public LayoutMeta() {
+    }
+
+    public LayoutMeta(ObjectEdge from, ObjectEdge to, String expectedDistance, String realDistance) {
+        this.from = from;
+        this.to = to;
+        this.expectedDistance = expectedDistance;
+        this.realDistance = realDistance;
+    }
+
     public static class ObjectEdge {
         private String object;
-        private String edge;
+        private Side edge;
 
-        public String getEdge() {
+        public ObjectEdge() {
+        }
+
+        public ObjectEdge(String object, Side edge) {
+            this.object = object;
+            this.edge = edge;
+        }
+
+        public Side getEdge() {
             return edge;
         }
 
-        public void setEdge(String edge) {
+        public void setEdge(Side edge) {
             this.edge = edge;
         }
 
@@ -105,10 +115,14 @@ public class LayoutMeta {
         }
     }
 
+
+    public static LayoutMeta distance(String firstObject, Side firstEdge, String secondObject, Side secondEdge, String expectedDistance, String realDistance) {
+        return new LayoutMeta(new ObjectEdge(firstObject, firstEdge), new ObjectEdge(secondObject, secondEdge), expectedDistance, realDistance);
+    }
+
     @Override
     public String toString() {
         return new ToStringBuilder(this)
-                .append("type", type)
                 .append("from", from)
                 .append("to", to)
                 .append("expectedDistance", expectedDistance)
@@ -125,7 +139,6 @@ public class LayoutMeta {
         LayoutMeta that = (LayoutMeta) o;
 
         return new EqualsBuilder()
-                .append(type, that.type)
                 .append(from, that.from)
                 .append(to, that.to)
                 .append(expectedDistance, that.expectedDistance)
@@ -136,7 +149,6 @@ public class LayoutMeta {
     @Override
     public int hashCode() {
         return new HashCodeBuilder(17, 37)
-                .append(type)
                 .append(from)
                 .append(to)
                 .append(expectedDistance)

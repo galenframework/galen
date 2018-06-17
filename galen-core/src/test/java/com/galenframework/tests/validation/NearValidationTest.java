@@ -95,7 +95,7 @@ public class NearValidationTest extends ValidationTestBase {
             }})},
 
             {validationResult(areas(new ValidationObject(new Rect(310, 250, 100, 50), "object"), new ValidationObject(new Rect(200, 200, 100, 50), "button")),
-                    messages("\"object\" is 10px right instead of 30px, is 0px bottom which is not in range of 10 to 20px"), NULL_META),
+                    messages("\"object\" is 10px right instead of 30px and 0px bottom which is not in range of 10 to 20px"), NULL_META),
                 specNear("button", location(exact(30), RIGHT), location(between(10, 20), BOTTOM)), page(new HashMap<String, PageElement>(){{
                     put("object", element(310, 250, 100, 50));
                     put("button", element(200, 200, 100, 50));
