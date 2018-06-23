@@ -60,5 +60,19 @@ public enum Side {
     public static List<Side> sides(Side...sides) {
         return Arrays.asList(sides);
     }
-    
+
+    public Side opposite() {
+        switch (this) {
+            case LEFT:
+                return RIGHT;
+            case RIGHT:
+                return LEFT;
+            case TOP:
+                return BOTTOM;
+            case BOTTOM:
+                return TOP;
+            default:
+                throw new IllegalStateException("Don't know opposite side for: " + this.toString());
+        }
+    }
 }

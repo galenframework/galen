@@ -26,30 +26,6 @@ import static java.lang.String.format;
 
 public class SpecValidationInside extends SpecValidationComplex<SpecInside> {
 
-    /*@Override
-    public ValidationResult check(PageValidation pageValidation, String objectName, SpecInside spec) throws ValidationErrorException {
-        PageElement mainObject = pageValidation.findPageElement(objectName);
-        checkAvailability(mainObject, objectName);
-
-        PageElement secondObject = pageValidation.findPageElement(spec.getObject());
-        checkAvailability(secondObject, spec.getObject());
-
-        Rect mainArea = mainObject.getArea();
-        Rect secondArea = secondObject.getArea();
-
-        List<ValidationObject> objects = asList(new ValidationObject(mainArea, objectName),new ValidationObject(secondArea, spec.getObject()));
-
-        checkIfCompletelyInside(objectName, spec, mainArea, secondArea, objects);
-        List<LayoutMeta> layoutMeta = validateAllSides(pageValidation, objectName, mainArea, secondArea, spec, objects, (range, side) ->
-            MetaBasedValidation.forObjectsWithRange(objectName, spec.getObject(), range)
-                .withBothEdges(side)
-                .withInvertedCalculation(side == Side.RIGHT || side == Side.BOTTOM)
-                .validate(mainArea, secondArea, pageValidation, side)
-        );
-
-        return new ValidationResult(spec, objects).withMeta(layoutMeta);
-    }*/
-
     @Override
     protected SimpleValidationResult validateSide(String objectName, SpecInside spec, Range range, Side side, Rect mainArea, Rect secondArea, PageValidation pageValidation) {
         return MetaBasedValidation.forObjectsWithRange(objectName, spec.getObject(), range)

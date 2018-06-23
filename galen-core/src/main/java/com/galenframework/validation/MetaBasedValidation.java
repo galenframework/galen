@@ -76,4 +76,14 @@ public class MetaBasedValidation {
         this.isInverted = isInverted;
         return this;
     }
+
+    public MetaBasedValidation withFirstEdge(Side firstEdge) {
+        this.firstEdge = firstEdge;
+        return this;
+    }
+
+    public MetaBasedValidation withSecondEdge(Side secondEdge) {
+        this.secondEdge = secondEdge;
+        return this;
+    }
 }
