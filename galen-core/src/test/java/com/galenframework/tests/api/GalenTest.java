@@ -238,11 +238,13 @@ public class GalenTest {
                 new ValidationResult(NO_SPEC,
                         asList(
                                 new ValidationObject(new Rect(10, 10, 100, 50), "save-button")),
-                        new ValidationError().withMessage("\"save-button\" width is 100px instead of 140px"), NULL_META),
+                        new ValidationError().withMessage("\"save-button\" width is 100px instead of 140px"),
+                        asList(LayoutMeta.distance("save-button", LEFT, "save-button", RIGHT, "140px", "100px"))),
                 new ValidationResult(NO_SPEC,
                         asList(
                                 new ValidationObject(new Rect(10, 10, 100, 50), "save-button")),
-                        new ValidationError().withMessage("\"save-button\" width is 200% [100px] instead of 100% [50px]"), NULL_META)));
+                        new ValidationError().withMessage("\"save-button\" width is 200% [100px] instead of 100% [50px]"),
+                        asList(LayoutMeta.distance("save-button", LEFT, "save-button", RIGHT, "100% [50px]", "200% [100px]")))));
     }
 
     private void assertJSONContent(String pathForRealContent, String pathForExpectedContent) throws IOException {

@@ -17,16 +17,15 @@ package com.galenframework.tests.validation;
 
 import com.galenframework.page.PageElement;
 import com.galenframework.page.Rect;
-import com.galenframework.specs.Range;
-import com.galenframework.specs.RangeValue;
-import com.galenframework.specs.SpecHeight;
-import com.galenframework.specs.SpecWidth;
+import com.galenframework.reports.model.LayoutMeta;
+import com.galenframework.specs.*;
 import org.testng.annotations.DataProvider;
 
 import java.util.HashMap;
 
 import static com.galenframework.specs.Range.between;
 import static com.galenframework.specs.Range.exact;
+import static java.util.Arrays.asList;
 
 public class WidthAndHeightValidationTest extends ValidationTestBase {
     @DataProvider
@@ -111,33 +110,39 @@ public class WidthAndHeightValidationTest extends ValidationTestBase {
                     put("object", invisibleElement(310, 250, 100, 50));
             }})},
 
-            {validationResult(singleArea(new Rect(100, 100, 100, 50), "object"), messages("\"object\" width is 100px instead of 10px"), NULL_META),
+            {validationResult(singleArea(new Rect(100, 100, 100, 50), "object"), messages("\"object\" width is 100px instead of 10px"),
+                    asList(LayoutMeta.distance("object", Side.LEFT, "object", Side.RIGHT, "10px", "100px"))),
                 specWidth(exact(10)), page(new HashMap<String, PageElement>(){{
                     put("object", element(100, 100, 100, 50));
             }})},
 
-            {validationResult(singleArea(new Rect(100, 100, 100, 50), "object"), messages("\"object\" width is 100px but it should be greater than 110px"), NULL_META),
+            {validationResult(singleArea(new Rect(100, 100, 100, 50), "object"), messages("\"object\" width is 100px but it should be greater than 110px"),
+                    asList(LayoutMeta.distance("object", Side.LEFT, "object", Side.RIGHT, "> 110px", "100px"))),
                 specWidth(Range.greaterThan(110)), page(new HashMap<String, PageElement>(){{
                     put("object", element(100, 100, 100, 50));
             }})},
 
-            {validationResult(singleArea(new Rect(100, 100, 100, 50), "object"), messages("\"object\" width is 100px but it should be less than 90px"), NULL_META),
+            {validationResult(singleArea(new Rect(100, 100, 100, 50), "object"), messages("\"object\" width is 100px but it should be less than 90px"),
+                    asList(LayoutMeta.distance("object", Side.LEFT, "object", Side.RIGHT, "< 90px", "100px"))),
                 specWidth(Range.lessThan(90)), page(new HashMap<String, PageElement>(){{
                     put("object", element(100, 100, 100, 50));
             }})},
 
-            {validationResult(singleArea(new Rect(100, 100, 100, 50), "object"), messages("\"object\" width is 100px which is not in range of 10 to 40px"), NULL_META),
+            {validationResult(singleArea(new Rect(100, 100, 100, 50), "object"), messages("\"object\" width is 100px which is not in range of 10 to 40px"),
+                    asList(LayoutMeta.distance("object", Side.LEFT, "object", Side.RIGHT, "10 to 40px", "100px"))),
                 specWidth(between(10, 40)), page(new HashMap<String, PageElement>(){{
                     put("object", element(100, 100, 100, 50));
             }})},
 
-            {validationResult(singleArea(new Rect(100, 100, 100, 50), "object"), messages("\"object\" width is 50% [100px] instead of 10% [20px]"), NULL_META),
+            {validationResult(singleArea(new Rect(100, 100, 100, 50), "object"), messages("\"object\" width is 50% [100px] instead of 10% [20px]"),
+                    asList(LayoutMeta.distance("object", Side.LEFT, "object", Side.RIGHT, "10% [20px]", "50% [100px]"))),
                 specWidth(exact(10).withPercentOf("container/width")), page(new HashMap<String, PageElement>(){{
                     put("object", element(100, 100, 100, 50));
                     put("container", element(100, 100, 200, 50));
             }})},
 
-            {validationResult(singleArea(new Rect(100, 100, 100, 50), "object"), messages("\"object\" width is 50% [100px] which is not in range of 10 to 20% [20 to 40px]"), NULL_META),
+            {validationResult(singleArea(new Rect(100, 100, 100, 50), "object"), messages("\"object\" width is 50% [100px] which is not in range of 10 to 20% [20 to 40px]"),
+                    asList(LayoutMeta.distance("object", Side.LEFT, "object", Side.RIGHT, "10 to 20% [20 to 40px]", "50% [100px]"))),
                 specWidth(between(10, 20).withPercentOf("container/width")), page(new HashMap<String, PageElement>(){{
                     put("object", element(100, 100, 100, 50));
                     put("container", element(100, 100, 200, 50));
@@ -160,23 +165,27 @@ public class WidthAndHeightValidationTest extends ValidationTestBase {
                     put("object", invisibleElement(310, 250, 100, 50));
             }})},
 
-            {validationResult(singleArea(new Rect(100, 100, 100, 50), "object"), messages("\"object\" height is 50px instead of 10px"), NULL_META),
+            {validationResult(singleArea(new Rect(100, 100, 100, 50), "object"), messages("\"object\" height is 50px instead of 10px"),
+                    asList(LayoutMeta.distance("object", Side.TOP, "object", Side.BOTTOM, "10px", "50px"))),
                 specHeight(exact(10)), page(new HashMap<String, PageElement>(){{
                     put("object", element(100, 100, 100, 50));
             }})},
 
-            {validationResult(singleArea(new Rect(100, 100, 100, 50), "object"), messages("\"object\" height is 50px which is not in range of 10 to 40px"), NULL_META),
+            {validationResult(singleArea(new Rect(100, 100, 100, 50), "object"), messages("\"object\" height is 50px which is not in range of 10 to 40px"),
+                    asList(LayoutMeta.distance("object", Side.TOP, "object", Side.BOTTOM, "10 to 40px", "50px"))),
                 specHeight(between(10, 40)), page(new HashMap<String, PageElement>(){{
                     put("object", element(100, 100, 100, 50));
             }})},
 
-            {validationResult(singleArea(new Rect(100, 100, 100, 50), "object"), messages("\"object\" height is 25% [50px] instead of 10% [20px]"), NULL_META),
+            {validationResult(singleArea(new Rect(100, 100, 100, 50), "object"), messages("\"object\" height is 25% [50px] instead of 10% [20px]"),
+                    asList(LayoutMeta.distance("object", Side.TOP, "object", Side.BOTTOM, "10% [20px]", "25% [50px]"))),
                 specHeight(exact(10).withPercentOf("container/height")), page(new HashMap<String, PageElement>(){{
                     put("object", element(100, 100, 100, 50));
                     put("container", element(100, 100, 100, 200));
             }})},
 
-            {validationResult(singleArea(new Rect(100, 100, 100, 50), "object"), messages("\"object\" height is 25% [50px] which is not in range of 10 to 15% [20 to 30px]"), NULL_META),
+            {validationResult(singleArea(new Rect(100, 100, 100, 50), "object"), messages("\"object\" height is 25% [50px] which is not in range of 10 to 15% [20 to 30px]"),
+                    asList(LayoutMeta.distance("object", Side.TOP, "object", Side.BOTTOM, "10 to 15% [20 to 30px]", "25% [50px]"))),
                 specHeight(between(10, 15).withPercentOf("container/height")), page(new HashMap<String, PageElement>(){{
                     put("object", element(100, 100, 100, 50));
                     put("container", element(100, 100, 100, 200));
