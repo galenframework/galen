@@ -31,7 +31,7 @@ public class SpecValidationInside extends SpecValidationComplex<SpecInside> {
         return MetaBasedValidation.forObjectsWithRange(objectName, spec.getObject(), range)
                 .withBothEdges(side)
                 .withInvertedCalculation(side == Side.RIGHT || side == Side.BOTTOM)
-                .validate(mainArea, secondArea, pageValidation, side);
+                .validate(mainArea, secondArea, pageValidation, side.toString());
     }
 
     @Override

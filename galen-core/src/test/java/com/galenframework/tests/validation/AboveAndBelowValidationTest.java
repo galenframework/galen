@@ -17,7 +17,9 @@ package com.galenframework.tests.validation;
 
 import com.galenframework.page.PageElement;
 import com.galenframework.page.Rect;
+import com.galenframework.reports.model.LayoutMeta;
 import com.galenframework.specs.Range;
+import com.galenframework.specs.Side;
 import com.galenframework.specs.SpecAbove;
 import com.galenframework.specs.SpecBelow;
 import com.galenframework.validation.ValidationObject;
@@ -27,6 +29,7 @@ import java.util.HashMap;
 
 import static com.galenframework.specs.Range.between;
 import static com.galenframework.specs.Range.exact;
+import static java.util.Arrays.asList;
 
 public class AboveAndBelowValidationTest extends ValidationTestBase {
     @DataProvider
@@ -89,14 +92,16 @@ public class AboveAndBelowValidationTest extends ValidationTestBase {
             }})},
 
             {validationResult(areas(new ValidationObject(new Rect(10, 40, 10, 10), "object"), new ValidationObject(new Rect(10, 60, 10, 10), "button")),
-                    messages("\"object\" is 10px above \"button\" instead of 20px"), NULL_META),
+                    messages("\"object\" is 10px above \"button\" instead of 20px"),
+                    asList(LayoutMeta.distance("object", Side.BOTTOM, "button", Side.TOP, "20px", "10px"))),
                 specAbove("button", exact(20)), page(new HashMap<String, PageElement>(){{
                     put("object", element(10, 40, 10, 10));
                     put("button", element(10, 60, 10, 10));
             }})},
 
             {validationResult(areas(new ValidationObject(new Rect(10, 40, 10, 10), "object"), new ValidationObject(new Rect(10, 60, 10, 10), "button")),
-                    messages("\"object\" is 10px above \"button\" which is not in range of 20 to 30px"), NULL_META),
+                    messages("\"object\" is 10px above \"button\" which is not in range of 20 to 30px"),
+                    asList(LayoutMeta.distance("object", Side.BOTTOM, "button", Side.TOP, "20 to 30px", "10px"))),
                 specAbove("button", between(20, 30)), page(new HashMap<String, PageElement>(){{
                     put("object", element(10, 40, 10, 10));
                     put("button", element(10, 60, 10, 10));
@@ -129,14 +134,16 @@ public class AboveAndBelowValidationTest extends ValidationTestBase {
             }})},
 
             {validationResult(areas(new ValidationObject(new Rect(10, 60, 10, 10), "object"), new ValidationObject(new Rect(10, 40, 10, 10), "button")),
-                    messages("\"object\" is 10px below \"button\" instead of 20px"), NULL_META),
+                    messages("\"object\" is 10px below \"button\" instead of 20px"),
+                    asList(LayoutMeta.distance("object", Side.TOP, "button", Side.BOTTOM, "20px", "10px"))),
                 specBelow("button", exact(20)), page(new HashMap<String, PageElement>(){{
                     put("object", element(10, 60, 10, 10));
                     put("button", element(10, 40, 10, 10));
             }})},
 
             {validationResult(areas(new ValidationObject(new Rect(10, 60, 10, 10), "object"), new ValidationObject(new Rect(10, 40, 10, 10), "button")),
-                    messages("\"object\" is 10px below \"button\" which is not in range of 20 to 30px"), NULL_META),
+                    messages("\"object\" is 10px below \"button\" which is not in range of 20 to 30px"),
+                    asList(LayoutMeta.distance("object", Side.TOP, "button", Side.BOTTOM, "20 to 30px", "10px"))),
                 specBelow("button", between(20, 30)), page(new HashMap<String, PageElement>(){{
                     put("object", element(10, 60, 10, 10));
                     put("button", element(10, 40, 10, 10));

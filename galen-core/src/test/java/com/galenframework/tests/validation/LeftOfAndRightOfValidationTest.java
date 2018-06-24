@@ -17,7 +17,9 @@ package com.galenframework.tests.validation;
 
 import com.galenframework.page.PageElement;
 import com.galenframework.page.Rect;
+import com.galenframework.reports.model.LayoutMeta;
 import com.galenframework.specs.Range;
+import com.galenframework.specs.Side;
 import com.galenframework.specs.SpecLeftOf;
 import com.galenframework.specs.SpecRightOf;
 import com.galenframework.validation.ValidationObject;
@@ -27,6 +29,7 @@ import java.util.HashMap;
 
 import static com.galenframework.specs.Range.between;
 import static com.galenframework.specs.Range.exact;
+import static java.util.Arrays.asList;
 
 public class LeftOfAndRightOfValidationTest extends ValidationTestBase {
     @DataProvider
@@ -90,14 +93,16 @@ public class LeftOfAndRightOfValidationTest extends ValidationTestBase {
             }})},
 
             {validationResult(areas(new ValidationObject(new Rect(10, 10, 10, 10), "object"), new ValidationObject(new Rect(60, 10, 10, 10), "button")),
-                    messages("\"object\" is 40px left of \"button\" instead of 20px"), NULL_META),
+                    messages("\"object\" is 40px left of \"button\" instead of 20px"),
+                    asList(LayoutMeta.distance("object", Side.RIGHT, "button", Side.LEFT, "20px", "40px"))),
                 specLeftOf("button", exact(20)), page(new HashMap<String, PageElement>(){{
                     put("object", element(10, 10, 10, 10));
                     put("button", element(60, 10, 10, 10));
             }})},
 
             {validationResult(areas(new ValidationObject(new Rect(10, 10, 10, 10), "object"), new ValidationObject(new Rect(60, 10, 10, 10), "button")),
-                    messages("\"object\" is 40px left of \"button\" which is not in range of 20 to 30px"), NULL_META),
+                    messages("\"object\" is 40px left of \"button\" which is not in range of 20 to 30px"),
+                    asList(LayoutMeta.distance("object", Side.RIGHT, "button", Side.LEFT, "20 to 30px", "40px"))),
                 specLeftOf("button", between(20, 30)), page(new HashMap<String, PageElement>(){{
                     put("object", element(10, 10, 10, 10));
                     put("button", element(60, 10, 10, 10));
@@ -130,14 +135,16 @@ public class LeftOfAndRightOfValidationTest extends ValidationTestBase {
             }})},
 
             {validationResult(areas(new ValidationObject(new Rect(60, 10, 10, 10), "object"), new ValidationObject(new Rect(10, 10, 10, 10), "button")),
-                    messages("\"object\" is 40px right of \"button\" instead of 20px"), NULL_META),
+                    messages("\"object\" is 40px right of \"button\" instead of 20px"),
+                    asList(LayoutMeta.distance("object", Side.LEFT, "button", Side.RIGHT, "20px", "40px"))),
                 specRightOf("button", exact(20)), page(new HashMap<String, PageElement>(){{
                     put("object", element(60, 10, 10, 10));
                     put("button", element(10, 10, 10, 10));
             }})},
 
             {validationResult(areas(new ValidationObject(new Rect(60, 10, 10, 10), "object"), new ValidationObject(new Rect(10, 10, 10, 10), "button")),
-                    messages("\"object\" is 40px right of \"button\" which is not in range of 20 to 30px"), NULL_META),
+                    messages("\"object\" is 40px right of \"button\" which is not in range of 20 to 30px"),
+                    asList(LayoutMeta.distance("object", Side.LEFT, "button", Side.RIGHT, "20 to 30px", "40px"))),
                 specRightOf("button", between(20, 30)), page(new HashMap<String, PageElement>(){{
                     put("object", element(60, 10, 10, 10));
                     put("button", element(10, 10, 10, 10));

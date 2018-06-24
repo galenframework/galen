@@ -32,6 +32,6 @@ public class SpecValidationNear extends SpecValidationComplex<SpecNear> {
                 .withFirstEdge(side.opposite())
                 .withSecondEdge(side)
                 .withInvertedCalculation(side == Side.LEFT || side == Side.TOP)
-                .validate(mainArea, secondArea, pageValidation, side);
+                .validate(mainArea, secondArea, pageValidation, side.toString());
     }
 }

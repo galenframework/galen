@@ -38,7 +38,7 @@ public class MetaBasedValidation {
     }
 
 
-    public SimpleValidationResult validate(Rect firstArea, Rect secondArea, PageValidation pageValidation, Side originalSpecSide) {
+    public SimpleValidationResult validate(Rect firstArea, Rect secondArea, PageValidation pageValidation, String direction) {
         int offset = getOffset(firstArea, secondArea);
         double calculatedOffset = pageValidation.convertValue(expectedRange, offset);
 
@@ -50,12 +50,12 @@ public class MetaBasedValidation {
 
                 String actualDistance = format("%s%% [%dpx]", new RangeValue(calculatedOffset, precision).toString(), offset);
                 return SimpleValidationResult.error(
-                    format("%s %s", actualDistance, originalSpecSide),
+                    format("%s %s", actualDistance, direction),
                     LayoutMeta.distance(firstObject, firstEdge, secondObject, secondEdge, expectedRange.prettyString("%"), actualDistance)
                 );
             } else {
                 return SimpleValidationResult.error(
-                    format("%dpx %s", offset, originalSpecSide),
+                    format("%dpx %s", offset, direction),
                     LayoutMeta.distance(firstObject, firstEdge, secondObject, secondEdge, expectedRange.prettyString(), offset + "px")
                 );
             }
