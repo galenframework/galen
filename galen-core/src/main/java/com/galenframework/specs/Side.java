@@ -18,10 +18,13 @@ package com.galenframework.specs;
 import java.util.Arrays;
 import java.util.List;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.galenframework.parser.SyntaxException;
+import com.galenframework.reports.json.ToStringSerializer;
 
 import static java.lang.String.format;
 
+@JsonSerialize(using = ToStringSerializer.class)
 public enum Side {
     
     LEFT, RIGHT, TOP, BOTTOM;
