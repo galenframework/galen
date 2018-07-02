@@ -61,7 +61,8 @@ public class ValidationFactory {
         validations.put(SpecImage.class, new SpecValidationImage());
         validations.put(SpecCss.class, new SpecValidationCss());
         validations.put(SpecCount.class, new SpecValidationCount());
-    }
+        validations.put(SpecOcr.class, new SpecValidationOcr());
+           }
 
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public static SpecValidation<? extends Spec> getValidation(Spec spec, PageValidation pageValidation) {
