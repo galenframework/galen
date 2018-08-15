@@ -18,6 +18,7 @@ package com.galenframework.tests.api;
 import com.galenframework.api.GalenPageDump;
 import com.galenframework.components.DummyCompleteListener;
 import com.galenframework.page.Rect;
+import com.galenframework.reports.model.LayoutMeta;
 import com.galenframework.specs.Spec;
 import com.galenframework.speclang2.pagespec.SectionFilter;
 import com.galenframework.specs.page.PageSection;
@@ -39,7 +40,10 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Properties;
 
+import static com.galenframework.specs.Side.LEFT;
+import static com.galenframework.specs.Side.RIGHT;
 import static java.util.Arrays.asList;
+import static java.util.Collections.emptyList;
 import static org.apache.commons.io.FileUtils.readFileToString;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
@@ -47,6 +51,7 @@ import static org.hamcrest.Matchers.*;
 public class GalenTest {
 
     private static final Spec NO_SPEC = null;
+    public static final List<LayoutMeta> NULL_META = null;
 
     @Test
     public void checkLayout_shouldTestLayout_andReturnLayoutReport() throws IOException {
@@ -60,11 +65,12 @@ public class GalenTest {
                         asList(
                                 new ValidationObject(new Rect(10, 10, 100, 50), "save-button"),
                                 new ValidationObject(new Rect(120, 10, 200, 50), "name-textfield")),
-                        new ValidationError().withMessage("\"save-button\" is 10px left instead of 50px")),
+                        new ValidationError().withMessage("\"save-button\" is 10px left instead of 50px"),
+                        asList(LayoutMeta.distance("save-button", RIGHT, "name-textfield", LEFT, "50px", "10px"))),
                 new ValidationResult(NO_SPEC,
                         asList(
                                 new ValidationObject(new Rect(10, 10, 100, 50), "save-button")),
-                        new ValidationError().withMessage("\"save-button\" text is \"Save\" but should be \"Store\""))));
+                        new ValidationError().withMessage("\"save-button\" text is \"Save\" but should be \"Store\""), NULL_META)));
     }
 
     @Test
@@ -113,9 +119,9 @@ public class GalenTest {
         assertFileExists(pageDumpPath + "/objects/menu-item-3.png");
         assertFileExists(pageDumpPath + "/objects/big-container.png");
 
-        assertFileExists(pageDumpPath + "/jquery-1.11.2.min.js");
-        assertFileExists(pageDumpPath + "/galen-pagedump.js");
-        assertFileExists(pageDumpPath + "/galen-pagedump.css");
+        assertFileExists(pageDumpPath + "/vue.js");
+        assertFileExists(pageDumpPath + "/galen-report.js");
+        assertFileExists(pageDumpPath + "/galen-report.css");
     }
 
 
@@ -145,9 +151,9 @@ public class GalenTest {
 
         assertFileExists(pageDumpPath + "/page.json");
         assertFileExists(pageDumpPath + "/page.html");
-        assertFileExists(pageDumpPath + "/jquery-1.11.2.min.js");
-        assertFileExists(pageDumpPath + "/galen-pagedump.js");
-        assertFileExists(pageDumpPath + "/galen-pagedump.css");
+        assertFileExists(pageDumpPath + "/vue.js");
+        assertFileExists(pageDumpPath + "/galen-report.js");
+        assertFileExists(pageDumpPath + "/galen-report.css");
     }
 
     @Test
@@ -211,9 +217,9 @@ public class GalenTest {
         assertFileDoesNotExist(pageDumpPath + "/objects/menu-item-3.png");
         assertFileDoesNotExist(pageDumpPath + "/objects/big-container.png");
 
-        assertFileExists(pageDumpPath + "/jquery-1.11.2.min.js");
-        assertFileExists(pageDumpPath + "/galen-pagedump.js");
-        assertFileExists(pageDumpPath + "/galen-pagedump.css");
+        assertFileExists(pageDumpPath + "/vue.js");
+        assertFileExists(pageDumpPath + "/galen-report.js");
+        assertFileExists(pageDumpPath + "/galen-report.css");
 
     }
 
@@ -232,11 +238,13 @@ public class GalenTest {
                 new ValidationResult(NO_SPEC,
                         asList(
                                 new ValidationObject(new Rect(10, 10, 100, 50), "save-button")),
-                        new ValidationError().withMessage("\"save-button\" width is 100px instead of 140px")),
+                        new ValidationError().withMessage("\"save-button\" width is 100px instead of 140px"),
+                        asList(LayoutMeta.distance("save-button", LEFT, "save-button", RIGHT, "140px", "100px"))),
                 new ValidationResult(NO_SPEC,
                         asList(
                                 new ValidationObject(new Rect(10, 10, 100, 50), "save-button")),
-                        new ValidationError().withMessage("\"save-button\" width is 200% [100px] instead of 100% [50px]"))));
+                        new ValidationError().withMessage("\"save-button\" width is 200% [100px] instead of 100% [50px]"),
+                        asList(LayoutMeta.distance("save-button", LEFT, "save-button", RIGHT, "100% [50px]", "200% [100px]")))));
     }
 
     private void assertJSONContent(String pathForRealContent, String pathForExpectedContent) throws IOException {

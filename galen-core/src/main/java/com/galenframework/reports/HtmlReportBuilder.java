@@ -28,12 +28,9 @@ import static com.galenframework.utils.GalenUtils.makeSureFolderExists;
 public class HtmlReportBuilder {
     private static final String[] resources = new String[]{
             "galen-report.js",
-            "handlebars-v2.0.0.js",
             "icon-sprites.png",
-            "jquery-1.11.2.min.js",
-            "report.css",
-            "tablesorter.css",
-            "tablesorter.js"
+            "galen-report.css",
+            "vue.js"
     };
 
 

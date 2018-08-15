@@ -184,6 +184,8 @@ public class LayoutReportListener implements ValidationListener {
         currentReport().putObjects(result.getValidationObjects());
         spec.setHighlight(convertToObjectNames(result.getValidationObjects()));
 
+        spec.setMeta(result.getMeta());
+
         if (result.getError() != null) {
             spec.setErrors(result.getError().getMessages());
             if (result.getError().isOnlyWarn()) {

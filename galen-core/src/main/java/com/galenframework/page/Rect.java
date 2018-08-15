@@ -21,6 +21,7 @@ import static java.lang.Math.min;
 import static java.lang.String.format;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.galenframework.specs.Side;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
@@ -224,6 +225,20 @@ public class Rect {
 
     public Rect distort(int offsetLeft, int offsetTop, int offsetWidth, int offsetHeight) {
         return new Rect(left + offsetLeft, top + offsetTop, width + offsetWidth, height + offsetHeight);
+    }
+
+    public int getEdgePosition(Side edge) {
+        if (edge == Side.LEFT) {
+            return getLeft();
+        } else if (edge == Side.RIGHT) {
+            return getRight();
+        } else if (edge == Side.TOP) {
+            return getTop();
+        } else if (edge == Side.BOTTOM) {
+            return getBottom();
+        } else {
+            throw new IllegalArgumentException("Unknown edge: " + edge);
+        }
     }
 }
 

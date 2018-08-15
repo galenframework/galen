@@ -15,36 +15,31 @@
 ******************************************************************************/
 package com.galenframework.validation.specs;
 
-import com.galenframework.page.PageElement;
 import com.galenframework.page.Point;
 import com.galenframework.page.Rect;
-import com.galenframework.specs.Side;
-import com.galenframework.specs.SpecInside;
-import com.galenframework.validation.ValidationObject;
-import com.galenframework.validation.PageValidation;
-import com.galenframework.validation.ValidationErrorException;
-import com.galenframework.validation.ValidationResult;
+import com.galenframework.specs.*;
+import com.galenframework.validation.*;
 
 import java.util.List;
 
-import static java.util.Arrays.asList;
+import static java.lang.String.format;
 
-public class SpecValidationInside extends SpecValidationGeneral<SpecInside> {
-
+public class SpecValidationInside extends SpecValidationComplex<SpecInside> {
 
     @Override
-    public ValidationResult check(PageValidation pageValidation, String objectName, SpecInside spec) throws ValidationErrorException {
-        super.check(pageValidation, objectName, spec);
+    protected SimpleValidationResult validateSide(String objectName, SpecInside spec, Range range, Side side, Rect mainArea, Rect secondArea, PageValidation pageValidation) {
+        return MetaBasedValidation.forObjectsWithRange(objectName, spec.getObject(), range)
+                .withBothEdges(side)
+                .withInvertedCalculation(side == Side.RIGHT || side == Side.BOTTOM)
+                .validate(mainArea, secondArea, pageValidation, side.toString());
+    }
 
+    @Override
+    protected void doCustomValidations(String objectName, Rect mainArea, Rect secondArea, SpecInside spec, List<ValidationObject> objects) throws ValidationErrorException {
+        checkIfCompletelyInside(objectName, spec, mainArea, secondArea, objects);
+    }
 
-        PageElement mainObject = pageValidation.findPageElement(objectName);
-        PageElement secondObject = pageValidation.findPageElement(spec.getObject());
-
-        Rect mainArea = mainObject.getArea();
-        Rect secondArea = secondObject.getArea();
-
-        List<ValidationObject> objects = asList(new ValidationObject(mainArea, objectName),new ValidationObject(secondArea, spec.getObject()));
-
+    private void checkIfCompletelyInside(String objectName, SpecInside spec, Rect mainArea, Rect secondArea, List<ValidationObject> objects) throws ValidationErrorException {
         if (!spec.getPartly()) {
             Point[] points = mainArea.getPoints();
 
@@ -58,29 +53,8 @@ public class SpecValidationInside extends SpecValidationGeneral<SpecInside> {
             if (maxOffset > 2) {
                 throw new ValidationErrorException()
                         .withValidationObjects(objects)
-                        .withMessage(String.format("\"%s\" is not completely inside. The offset is %dpx.", objectName, maxOffset));
+                        .withMessage(format("\"%s\" is not completely inside. The offset is %dpx.", objectName, maxOffset));
             }
-        }
-
-        return new ValidationResult(spec, objects);
-    }
-
-    @Override
-    protected int getOffsetForSide(Rect mainArea, Rect parentArea, Side side, SpecInside spec) {
-        if (side == Side.LEFT) {
-            return mainArea.getLeft() - parentArea.getLeft();
-        }
-        else if (side == Side.TOP) {
-            return mainArea.getTop() - parentArea.getTop();
-        }
-        else if (side == Side.RIGHT) {
-            return parentArea.getLeft() + parentArea.getWidth() - (mainArea.getLeft() + mainArea.getWidth());
-        }
-        else if (side == Side.BOTTOM) {
-            return parentArea.getTop() + parentArea.getHeight() - (mainArea.getTop() + mainArea.getHeight());
-        }
-        else {
-            return 0;
         }
     }
 

@@ -23,6 +23,7 @@ import org.testng.annotations.DataProvider;
 
 import java.util.HashMap;
 
+
 public class CenteredValidationTest extends ValidationTestBase {
     @DataProvider
     @Override
@@ -106,74 +107,74 @@ public class CenteredValidationTest extends ValidationTestBase {
         return new Object[][]{
             // Centered
 
-            {validationResult(NO_AREA, messages("\"object\" is not visible on page")),
+            {validationResult(NO_AREA, messages("\"object\" is not visible on page"), NULL_META),
                 specCenteredInside("container", SpecCentered.Alignment.ALL), page(new HashMap<String, PageElement>(){{
                     put("object", invisibleElement(10, 40, 10, 10));
                     put("container", element(10, 60, 10, 10));
             }})},
 
-            {validationResult(NO_AREA, messages("\"object\" is absent on page")),
+            {validationResult(NO_AREA, messages("\"object\" is absent on page"), NULL_META),
                 specCenteredInside("container", SpecCentered.Alignment.ALL), page(new HashMap<String, PageElement>(){{
                     put("object", absentElement(10, 40, 10, 10));
                     put("container", element(10, 60, 10, 10));
             }})},
 
-            {validationResult(NO_AREA, messages("\"container\" is absent on page")),
+            {validationResult(NO_AREA, messages("\"container\" is absent on page"), NULL_META),
                 specCenteredInside("container", SpecCentered.Alignment.ALL), page(new HashMap<String, PageElement>(){{
                     put("object", element(10, 40, 10, 10));
                     put("container", absentElement(10, 60, 10, 10));
             }})},
 
-            {validationResult(NO_AREA, messages("\"container\" is not visible on page")),
+            {validationResult(NO_AREA, messages("\"container\" is not visible on page"), NULL_META),
                 specCenteredInside("container", SpecCentered.Alignment.ALL), page(new HashMap<String, PageElement>(){{
                     put("object", element(10, 40, 10, 10));
                     put("container", invisibleElement(10, 60, 10, 10));
             }})},
 
             {validationResult(areas(new ValidationObject(new Rect(20, 20, 80, 60), "object"), new ValidationObject(new Rect(0, 0, 100, 100), "container")),
-                    messages("\"object\" is not centered horizontally inside \"container\". Offset is 20px")),
+                    messages("\"object\" is not centered horizontally inside \"container\". Offset is 20px"), NULL_META),
                 specCenteredInside("container", SpecCentered.Alignment.ALL), page(new HashMap<String, PageElement>(){{
                     put("object", element(20, 20, 80, 60));
                     put("container", element(0, 0, 100, 100));
             }})},
 
             {validationResult(areas(new ValidationObject(new Rect(20, 20, 75, 60), "object"), new ValidationObject(new Rect(0, 0, 100, 100), "container")),
-                    messages("\"object\" is not centered horizontally inside \"container\". Offset is 15px")),
+                    messages("\"object\" is not centered horizontally inside \"container\". Offset is 15px"), NULL_META),
                 specCenteredInside("container", SpecCentered.Alignment.HORIZONTALLY, 10), page(new HashMap<String, PageElement>(){{
                     put("object", element(20, 20, 75, 60));
                     put("container", element(0, 0, 100, 100));
             }})},
 
             {validationResult(areas(new ValidationObject(new Rect(0, 20, 120, 60), "object"), new ValidationObject(new Rect(10, 10, 100, 100), "container")),
-                    messages("\"object\" is centered but not horizontally inside \"container\"")),
+                    messages("\"object\" is centered but not horizontally inside \"container\""), NULL_META),
                 specCenteredInside("container", SpecCentered.Alignment.ALL), page(new HashMap<String, PageElement>(){{
                     put("object", element(0, 20, 120, 60));
                     put("container", element(10, 10, 100, 100));
             }})},
 
             {validationResult(areas(new ValidationObject(new Rect(20, 10, 100, 60), "object"), new ValidationObject(new Rect(10, 10, 100, 100), "container")),
-                    messages("\"object\" is not centered vertically inside \"container\". Offset is 40px")),
+                    messages("\"object\" is not centered vertically inside \"container\". Offset is 40px"), NULL_META),
                 specCenteredInside("container", SpecCentered.Alignment.VERTICALLY), page(new HashMap<String, PageElement>(){{
                     put("object", element(20, 10, 100, 60));
                     put("container", element(10, 10, 100, 100));
             }})},
 
             {validationResult(areas(new ValidationObject(new Rect(20, 10, 10, 60), "object"), new ValidationObject(new Rect(10, 10, 100, 100), "container")),
-                    messages("\"object\" is not centered horizontally inside \"container\". Offset is 70px")),
+                    messages("\"object\" is not centered horizontally inside \"container\". Offset is 70px"), NULL_META),
                 specCenteredInside("container", SpecCentered.Alignment.HORIZONTALLY), page(new HashMap<String, PageElement>(){{
                     put("object", element(20, 10, 10, 60));
                     put("container", element(10, 10, 100, 100));
             }})},
 
             {validationResult(areas(new ValidationObject(new Rect(20, 10, 10, 60), "object"), new ValidationObject(new Rect(10, 10, 100, 100), "container")),
-                    messages("\"object\" is not centered vertically on \"container\". Offset is 40px")),
+                    messages("\"object\" is not centered vertically on \"container\". Offset is 40px"), NULL_META),
                 specCenteredOn("container", SpecCentered.Alignment.VERTICALLY), page(new HashMap<String, PageElement>(){{
                     put("object", element(20, 10, 10, 60));
                     put("container", element(10, 10, 100, 100));
             }})},
 
             {validationResult(areas(new ValidationObject(new Rect(20, 10, 10, 60), "object"), new ValidationObject(new Rect(10, 10, 100, 100), "container")),
-                    messages("\"object\" is not centered horizontally on \"container\". Offset is 70px")),
+                    messages("\"object\" is not centered horizontally on \"container\". Offset is 70px"), NULL_META),
                 specCenteredOn("container", SpecCentered.Alignment.HORIZONTALLY), page(new HashMap<String, PageElement>(){{
                     put("object", element(20, 10, 10, 60));
                     put("container", element(10, 10, 100, 100));

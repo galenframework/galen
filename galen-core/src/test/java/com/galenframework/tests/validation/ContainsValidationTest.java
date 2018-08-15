@@ -102,35 +102,44 @@ public class ContainsValidationTest extends ValidationTestBase {
     @Override
     public Object[][] provideBadSamples() {
         return new Object[][]{
-            {validationResult(areas(new ValidationObject(new Rect(9, 11, 10, 10), "menu"), new ValidationObject(new Rect(10, 10, 100, 100), "object")), messages("\"menu\" is outside \"object\"")),
+            {validationResult(areas(new ValidationObject(new Rect(10, 10, 100, 100), "object"), new ValidationObject(new Rect(9, 11, 10, 10), "menu"), new ValidationObject(new Rect(60, 50, 40, 40), "button")),
+                    messages("\"menu\" is outside \"object\""), NULL_META),
                 specContains(false, "menu", "button"), page(new HashMap<String, PageElement>(){{
                     put("object", element(10, 10, 100, 100));
                     put("menu", element(9, 11, 10, 10));
                     put("button", element(60, 50, 40, 40));
             }})},
 
-            {validationResult(areas(new ValidationObject(new Rect(50, 50, 110, 10), "menu"), new ValidationObject(new Rect(10, 10, 101, 40), "button"), new ValidationObject(new Rect(10, 10, 100, 100), "object")), messages("\"menu\" is outside \"object\"", "\"button\" is outside \"object\"")),
+            {validationResult(areas( new ValidationObject(new Rect(10, 10, 100, 100), "object"), new ValidationObject(new Rect(50, 50, 110, 10), "menu"), new ValidationObject(new Rect(10, 10, 101, 40), "button")),
+                    messages("\"menu\" is outside \"object\"", "\"button\" is outside \"object\""), NULL_META),
                 specContains(false, "menu", "button"), page(new HashMap<String, PageElement>(){{
                     put("object", element(10, 10, 100, 100));
                     put("menu", element(50, 50, 110, 10));
                     put("button", element(10, 10, 101, 40));
             }})},
 
-            {validationResult(NO_AREA, messages("\"menu\" is not visible on page")),
+            {validationResult(NO_AREA, messages("\"menu\" is not visible on page"), NULL_META),
                 specContains(CONTAINS_FULLY, "menu", "button"), page(new HashMap<String, PageElement>(){{
                     put("object", element(10, 10, 100, 100));
                     put("menu", invisibleElement(11, 11, 10, 10));
                     put("button", element(60, 50, 40, 40));
             }})},
 
-            {validationResult(NO_AREA, messages("\"menu\" is absent on page")),
+            {validationResult(NO_AREA, messages("\"menu\" is absent on page"), NULL_META),
                 specContains(CONTAINS_FULLY, "menu", "button"), page(new HashMap<String, PageElement>(){{
                     put("object", element(10, 10, 100, 100));
                     put("menu", absentElement(11, 11, 10, 10));
                     put("button", element(60, 50, 40, 40));
             }})},
 
-            {validationResult(areas(new ValidationObject(new Rect(350, 10, 10, 10), "menu-item-3"), new ValidationObject(new Rect(0, 0, 200, 100), "object")), messages("\"menu-item-3\" is outside \"object\"")),
+            {validationResult(areas(
+                    new ValidationObject(new Rect(0, 0, 200, 100), "object"),
+                    new ValidationObject(new Rect(10, 10, 10, 10), "menu-item-1"),
+                    new ValidationObject(new Rect(30, 10, 10, 10), "menu-item-2"),
+                    new ValidationObject(new Rect(350, 10, 10, 10), "menu-item-3"),
+                    new ValidationObject(new Rect(70, 10, 10, 10), "button")
+                    ),
+                    messages("\"menu-item-3\" is outside \"object\""), NULL_META),
                 specContains(CONTAINS_FULLY, "menu-item-*", "button"), page(new HashMap<String, PageElement>(){{
                     put("object", element(0, 0, 200, 100));
                     put("menu-item-1", element(10, 10, 10, 10));
@@ -139,7 +148,7 @@ public class ContainsValidationTest extends ValidationTestBase {
                     put("button", element(70, 10, 10, 10));
             }})},
 
-            {validationResult(NO_AREA, messages("There are no objects matching: menu-item-*")),
+            {validationResult(NO_AREA, messages("There are no objects matching: menu-item-*"), NULL_META),
                 specContains(CONTAINS_FULLY, "menu-item-*", "button"), page(new HashMap<String, PageElement>(){{
                     put("object", element(0, 0, 200, 100));
                     put("button", element(70, 10, 10, 10));

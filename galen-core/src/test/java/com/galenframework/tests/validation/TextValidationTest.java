@@ -72,48 +72,48 @@ public class TextValidationTest extends ValidationTestBase {
     @Override
     public Object[][] provideBadSamples() {
         return new Object[][]{
-            {validationResult(NO_AREA, messages("Cannot find locator for \"object\" in page spec")),
+            {validationResult(NO_AREA, messages("Cannot find locator for \"object\" in page spec"), NULL_META),
                 specTextIs("some wrong text"),
                 page(new HashMap<>())
             },
 
-            {validationResult(NO_AREA, messages("\"object\" is not visible on page")),
+            {validationResult(NO_AREA, messages("\"object\" is not visible on page"), NULL_META),
                 specTextIs("some wrong text"),
                 page(new HashMap<String, PageElement>(){{
                     put("object", invisibleElement(10, 10, 10, 10));
             }})},
 
-            {validationResult(NO_AREA, messages("\"object\" is absent on page")),
+            {validationResult(NO_AREA, messages("\"object\" is absent on page"), NULL_META),
                 specTextIs("some wrong text"),
                 page(new HashMap<String, PageElement>(){{
                     put("object", absentElement(10, 10, 10, 10));
             }})},
 
-            {validationResult(singleArea(new Rect(10, 10, 10, 10), "object"), messages("\"object\" text is \"Some text\" but should be \"some wrong text\"")),
+            {validationResult(singleArea(new Rect(10, 10, 10, 10), "object"), messages("\"object\" text is \"Some text\" but should be \"some wrong text\""), NULL_META),
                 specTextIs("some wrong text"),
                 page(new HashMap<String, PageElement>(){{
                     put("object", element(10, 10, 10, 10).withText("Some text"));
             }})},
 
-            {validationResult(singleArea(new Rect(10, 10, 10, 10), "object"), messages("\"object\" text is \"Some text\" but should contain \"good\"")),
+            {validationResult(singleArea(new Rect(10, 10, 10, 10), "object"), messages("\"object\" text is \"Some text\" but should contain \"good\""), NULL_META),
                 specTextContains("good"),
                 page(new HashMap<String, PageElement>(){{
                     put("object", element(10, 10, 10, 10).withText("Some text"));
             }})},
 
-            {validationResult(singleArea(new Rect(10, 10, 10, 10), "object"), messages("\"object\" text is \"Some text\" but should start with \"text\"")),
+            {validationResult(singleArea(new Rect(10, 10, 10, 10), "object"), messages("\"object\" text is \"Some text\" but should start with \"text\""), NULL_META),
                 specTextStarts("text"),
                 page(new HashMap<String, PageElement>(){{
                     put("object", element(10, 10, 10, 10).withText("Some text"));
             }})},
 
-            {validationResult(singleArea(new Rect(10, 10, 10, 10), "object"), messages("\"object\" text is \"Some text\" but should end with \"Some\"")),
+            {validationResult(singleArea(new Rect(10, 10, 10, 10), "object"), messages("\"object\" text is \"Some text\" but should end with \"Some\""), NULL_META),
                 specTextEnds("Some"),
                 page(new HashMap<String, PageElement>(){{
                     put("object", element(10, 10, 10, 10).withText("Some text"));
             }})},
 
-            {validationResult(singleArea(new Rect(10, 10, 10, 10), "object"), messages("\"object\" text is \"Some text\" but should match \"Some [0-9]+ text\"")),
+            {validationResult(singleArea(new Rect(10, 10, 10, 10), "object"), messages("\"object\" text is \"Some text\" but should match \"Some [0-9]+ text\""), NULL_META),
                 specTextMatches("Some [0-9]+ text"),
                 page(new HashMap<String, PageElement>(){{
                     put("object", element(10, 10, 10, 10).withText("Some text"));

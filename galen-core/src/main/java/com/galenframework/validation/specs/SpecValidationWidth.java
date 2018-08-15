@@ -16,9 +16,17 @@
 package com.galenframework.validation.specs;
 
 import com.galenframework.page.PageElement;
+import com.galenframework.reports.model.LayoutMeta;
+import com.galenframework.specs.Range;
+import com.galenframework.specs.Side;
 import com.galenframework.specs.SpecWidth;
 
 public class SpecValidationWidth extends SpecValidationSize<SpecWidth>{
+
+    @Override
+    protected LayoutMeta createMeta(String objectName, String expected, String realValue) {
+        return LayoutMeta.distance(objectName, Side.LEFT, objectName, Side.RIGHT, expected, realValue);
+    }
 
     @Override
     protected String getUnitName() {

@@ -72,32 +72,32 @@ public class ImageValidationTest extends ValidationTestBase {
     @Override
     public Object[][] provideBadSamples() {
         return new Object[][] {
-            {validationResult(NO_AREA, messages("\"object\" is absent on page")),
+            {validationResult(NO_AREA, messages("\"object\" is absent on page"), NULL_META),
                 specImage(asList("/imgs/button-sample-incorrect.png"), 2.0, true, 0, 10), page(new HashMap<String, PageElement>(){{
                     put("object", absentElement(10, 10, 400, 300));
                 }}, testImage)},
 
-            {validationResult(NO_AREA, messages("\"object\" is not visible on page")),
+            {validationResult(NO_AREA, messages("\"object\" is not visible on page"), NULL_META),
                 specImage(asList("/imgs/button-sample-incorrect.png"), 2.0, true, 0, 10), page(new HashMap<String, PageElement>(){{
                     put("object", invisibleElement(10, 10, 400, 300));
                 }}, testImage)},
 
             {new ValidationResult(NO_SPEC, areas(new ValidationObject(new Rect(100, 90, 100, 40), "object")),
                     new ValidationError(messages("Element does not look like \"/imgs/button-sample-incorrect.png\". " +
-                        "There are 3820 mismatching pixels but max allowed is 600"))),
+                        "There are 3820 mismatching pixels but max allowed is 600")), NULL_META),
                 specImage(asList("/imgs/button-sample-incorrect.png"), 600, PIXEL_UNIT, 0, 10), page(new HashMap<String, PageElement>() {{
                     put("object", element(100, 90, 100, 40));
                 }}, imageComparisonTestScreenshot)},
 
             {new ValidationResult(NO_SPEC, areas(new ValidationObject(new Rect(100, 90, 100, 40), "object")),
                     new ValidationError(messages("Element does not look like \"/imgs/button-sample-incorrect.png\". " +
-                        "There are 95.5% mismatching pixels but max allowed is 2%"))),
+                        "There are 95.5% mismatching pixels but max allowed is 2%")), NULL_META),
                 specImage(asList("/imgs/button-sample-incorrect.png"), 2.0, PERCENTAGE_UNIT, 0, 10), page(new HashMap<String, PageElement>() {{
                     put("object", element(100, 90, 100, 40));
                 }}, imageComparisonTestScreenshot)},
 
             {new ValidationResult(NO_SPEC, areas(new ValidationObject(new Rect(100, 90, 100, 40), "object")),
-                    new ValidationError(messages("Couldn't load image: /imgs/undefined-image.png"))),
+                    new ValidationError(messages("Couldn't load image: /imgs/undefined-image.png")), NULL_META),
                 specImage(asList("/imgs/undefined-image.png"), 1.452, PERCENTAGE_UNIT, 0, 10), page(new HashMap<String, PageElement>() {{
                     put("object", element(100, 90, 100, 40));
                 }}, imageComparisonTestScreenshot)}
