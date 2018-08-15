@@ -1,275 +1,208 @@
-<html>
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
     <head>
-        <title>Galen Reports</title>
-        <meta charset="utf-8" />
-        <link rel="stylesheet" type="text/css" href="report.css"></link>
-        <script src="jquery-1.11.2.min.js"></script>
-        <script src="handlebars-v2.0.0.js"></script>
+        <meta charset="utf-8">
+        <title></title>
+        <link rel="stylesheet" href="galen-report.css"/>
+        <script src="vue.js"></script>
         <script src="galen-report.js"></script>
-        <script>
-var reportData = ##REPORT-DATA##;
-        </script>
-        <script>
-
-            $(function () {
-                var galenReport = createGalenReport();
-                galenReport.render("main", reportData);
-            });
+        <script type="text/javascript">
+            var REPORT_DATA = ##REPORT-DATA##;
         </script>
     </head>
     <body>
-        <script id="report-tpl" type="text/x-handlebars-template">
-            <ul class="report-nodes">
-            {{#each report.nodes}}
-                {{renderNode this}}
-            {{/each}}
-            </ul>
-        </script>
-        <script id="report-node-tpl" type="text/x-handlebars-template">
-            <li>
-                <span class="report-time">{{formatReportTime time}}</span>
-                <a class="expand-link node-expand-button node-status-{{status}} contains-children-{{hasChildElements nodes}} collapsed" href="#">{{status}}</a>
-                <div class="node-name node-status-{{status}}">{{name}}</div>
-                {{#if extras}}
-                    {{renderNodeExtras extras}}
-                {{/if}}
-                {{#if stacktrace}}
-                    <div class="stacktrace">{{stacktrace}}</div>
-                {{/if}}
-                {{#if attachments}}
-                    <ul class="report-node-attachments">
-                        {{#each attachments}}
-                            <li>
-                                <a class="icon-sprite-before node-attachment" href="{{this}}">{{this}}</a>
-                            </li>
-                        {{/each}}
-                    </ul>
-                {{/if}}
-                <div class="node-details expand-container">
-                    {{#if nodes}}
-                        <ul class="report-nodes">
-                            {{#each nodes}}
-                                {{renderNode this}}
-                            {{/each}}
-                        </ul>
-                    {{/if}}
-                </div>
-            </li>
-        </script>
-        <script id="report-node-text-tpl" type="text/x-handlebars-template">
-            <li>
-                <div class="node-simple-text">
-                    {{name}}
-                </div>
-            </li>
-        </script>
-        <script id="report-layout-tpl" type="text/x-handlebars-template">
-            <li>
-                <span class="report-time">{{formatReportTime time}}</span>
-                <a class="expand-link node-expand-button node-status-label node-status-info contains-children-true collapsed" href="#">LAYOUT</a>
-                <div class="node-name">{{name}}</div>
-                <div class="node-horizontal-menu" data-layout-id="{{layoutId}}"><a class="layout-heatmap-link" href="#">Heat Map</a></div>
-                <div class="node-details expand-container">
-                    {{renderSublayout this}}
-                </div>
-            </li>
-        </script>
-        <script id="report-layout-sublayout-tpl" type="text/x-handlebars-template">
-            <div class="layout-report" data-layout-id="{{layoutId}}" {{#if screenshot}}data-screenshot="{{screenshot}}"{{/if}}>
-                <ul class="layout-sections">
-                    {{#each sections}}
-                        {{renderLayoutSection this}}
-                    {{/each}}
-                </ul>
+        <div id="app">
+            <div class="top-menu">
+                <a class="link" href="report.html">Back to Test Overview</a>
+                <span class="link" v-on:click="expandAll()">Expand All</span>
+                <span class="link" v-on:click="collapseAll()">Collapse All</span>
+                <span class="link" v-on:click="expandOnlyErrors()">Expand Errors</span>
             </div>
-        </script>
-        <script id="report-layout-section-tpl" type="text/x-handlebars-template">
-            <li>
-                <a class="layout-section icon-sprite-before expand-link contains-children-true" href="#" title="{{place.filePath}}#{{place.lineNumber}}">{{name}}</a>
-                <div class="layout-details expand-container">
-                    {{#if sections}}
-                        <ul class="layout-sections">
-                        {{#each sections}}
-                            {{renderLayoutSection this}}
-                        {{/each}}
-                        </ul>
-                    {{/if}}
-                    {{#if objects}}
-                        <ul class="layout-objects">
-                            {{#each objects}}
-                                {{renderLayoutObject this}}
-                            {{/each}}
-                        </ul>
-                    {{/if}}
-                </div>
-            </li>
-        </script>
+            <report-node v-if="node.type === 'node'" v-for="node in reportData.report.nodes" v-bind:node="node"></report-node>
+        </div>
 
-        <script id="report-layout-object-tpl" type="text/x-handlebars-template">
-            <li>
-                <a class="layout-object icon-sprite-before expand-link contains-children-true" href="#">{{name}}</a>
-                <ul class="layout-checks expand-container">
-                    {{#each specs}}
-                        {{renderLayoutCheck this}}
-                    {{/each}}
-                    {{#each specGroups}}
-                    <li>
-                        <a class="layout-specgroup icon-sprite-before expand-link contains-children-true" href="#">{{name}}</a>
-                        <ul class="layout-checks expand-container">
-                            {{#each specs}}
-                                {{renderLayoutCheck this}}
-                            {{/each}}
-                        </ul>
+        <template id="tpl-report-node">
+            <div class="report-node">
+                <div class="node-line" v-bind:class="['status-' + node.status]">
+                    <span class="node-time">{{node.time | formatTime}}</span>
+                    <span class="node-label"
+                        v-on:click="toggleReportNode(node)"
+                        v-bind:class="['status-' + node.status, node.expanded ? 'expanded': 'collapsed', 'contains-children-' + node.hasChildren]"
+                        >{{node.status}}</span>
+                    <span class="node-title">{{node.name}}</span>
+                    <span class="node-extras-link"
+                        v-if="node.extras"
+                        v-on:click="showNodeExtrasPopup(node.extras)"
+                        >extras</span>
+                </div>
+                <ul class="node-attachments" v-if="node.attachments && node.attachments.length > 0">
+                    <li v-for="attachment in node.attachments">
+                        <a class="icon-sprite-before node-attachment" v-bind:href="attachment">{{attachment}}</a>
                     </li>
-                    {{/each}}
                 </ul>
-            </li>
-        </script>
-        <script id="report-layout-check-tpl" type="text/x-handlebars-template">
-            <li>
-            <a class="layout-check icon-sprite-before layout-check-status-{{status}}" href="#"
-                data-highlight-objects="{{commaSeparated highlight}}"
-                title="{{place.filePath}}#{{place.lineNumber}}"
-                >{{name}}</a>
-
-                {{#if errors}}
-                    <div class="layout-check-error-message">
-                        {{#if imageComparison}}
-                        <a class="image-comparison-link"
-                            data-actual-image="{{imageComparison.actualImage}}"
-                            data-expected-image="{{imageComparison.expectedImage}}"
-                            data-map-image="{{imageComparison.comparisonMapImage}}"
-                            href="#">Show image comparison</a>
-                        {{/if}}
-                        <div class="layout-check-error-message-text">
-                            <ul>
-                            {{#each errors}}
-                                <li>{{this}}</li>
-                            {{/each}}
-                        </ul>
+                <div class="child-nodes" v-if="node.type === 'node'" v-bind:class="{'child-nodes-expanded': node.expanded}">
+                    <div v-for="childNode in node.nodes">
+                        <report-node v-if="childNode.type === 'node'" v-bind:node="childNode"></report-node>
+                        <div class="node-text" v-if="childNode.type === 'text'">
+                            {{childNode.name}}
+                        </div>
+                        <layout-report v-if="childNode.type === 'layout'" v-bind:layout="childNode"></layout-report>
                     </div>
                 </div>
-                {{/if}}
-
-                {{#if subLayout}}
-                {{renderSublayout subLayout}}
-                {{/if}}
-            </li>
-        </script>
-        <script id="screenshot-popup-tpl" type="text/x-handlebars-template">
-            <div class="screenshot-canvas">
-                {{#if screenshot}}
-                <img src="{{screenshot}}"/>
-                {{else}}
-                <div class="empty-screenshot" style="width: {{width}}; height: {{height}};"></div>
-                {{/if}}
-                {{#each objects}}
-                <div class="canvas-rect" style="left: {{area.left}}px; top: {{area.top}}px; width: {{area.width}}px; height: {{area.height}}px; {{#if drawBorder}}border-color: {{color}};{{else}}border:none;{{/if}}{{#if fillBackground}}background: {{color}};{{else}}background:none;{{/if}}">
-                    <div class="canvas-rect-wrapper">
-                        <div class="canvas-rect-hint" style="background: {{color}};">{{name}}</div>
+                <div class="extras-popup popup-wrapper" v-if="extrasPopup.show">
+                    <div class="popup-shadow" v-on:click="extrasPopup.show = false"> </div>
+                    <div class="popup-container" style="top: 30px;">
+                        <div class="popup-body">
+                            <table class="extras-table">
+                                <tbody>
+                                    <tr v-for="extrasItem in extrasPopup.extras">
+                                        <td>{{extrasItem.name}}</td>
+                                        <td>
+                                            <div v-if="extrasItem.value.type === 'link'">
+                                                <a class="link" v-bind:href="extrasItem.value.value">{{extrasItem.value.value}}</a>
+                                            </div>
+                                            <div v-else v-if="extrasItem.value.type === 'file'">
+                                                <a class="link" v-bind:href="extrasItem.value.value">{{extrasItem.value.value}}</a>
+                                            </div>
+                                            <div v-else v-if="extrasItem.value.type === 'text'">
+                                                {{extrasItem.value.value}}
+                                            </div>
+                                            <div v-else v-if="extrasItem.value.type === 'image'">
+                                                <a v-bind:href="extrasItem.value.value"><img v-bind:src="extrasItem.value.value"/></a>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
-                {{/each}}
             </div>
-        </script>
-        <script id="image-comparison-tpl" type="text/x-handlebars-template">
-            <div class="image-comparison image-comparison-layout-{{layout}}">
-                <div class="actual-image">
-                    <h5>Actual</h5>
-                    <img src="{{actual}}"/>
+        </template>
+
+        <template id="tpl-layout-report">
+            <div class="layout-report">
+                <div class="node-line" v-bind:class="['status-' + layout.status]">
+                    <span class="node-time">{{layout.time | formatTime}}</span>
+                    <span class="node-label"
+                        v-on:click="toggleReportNode(layout)"
+                        v-bind:class="['status-' + layout.status, layout.expanded ? 'expanded': 'collapsed', 'contains-children-' + layout.hasChildren]"
+                        >LAYOUT</span>
+                    <span class="node-title">{{layout.name}}</span>
+                </div>
+                <div class="node-horizontal-menu">
+                    <span class="link" v-on:click="showFailureMap()">Failure Map</span> |
+                    <span class="link" v-on:click="showHeatMap()">Heat Map</span>
                 </div>
 
-                <div class="expected-image">
-                    <h5>Expected</h5>
-                    <img src="{{expected}}"/>
+                <div class="child-nodes" v-bind:class="{'child-nodes-expanded': layout.expanded}">
+                    <layout-section v-for="section in layout.sections" v-bind:section="section" v-bind:bus="bus"></layout-section>
                 </div>
 
-                <div class="comparison-map">
-                    <h5>Comparison map</h5>
-                    <img src="{{map}}"/>
-                </div>
+                <screenshot-popup v-if="screenshotPopup.shown"
+                    v-bind:screenshot="screenshotPopup.screenshotFile"
+                    v-bind:highlight="screenshotPopup.highlightAreas"
+                    v-bind:guides="screenshotPopup.metaGuides"
+                    v-bind:spec="screenshotPopup.spec"
+                    @close="screenshotPopup.shown = false"
+                    ></screenshot-popup>
             </div>
-        </script>
-        <script id="node-extras-tpl" type="text/x-handlebars-template">
-            <div class="node-extras">
-                <a class="node-extras" href="#">extras</a>
-                <div class="node-extras-content">
-                    <table class="node-extras-table">
-                        <tbody>
-                        {{#each this}}
-                        <tr>
-                            <td><label>{{@key}}</label></td>
-                            {{#ifCond type 'text'}}
-                            <td>{{value}}</td>
-                            {{/ifCond}}
-                            {{#ifCond type 'link'}}
-                            <td><a href="{{value}}">{{value}}</a></td>
-                            {{/ifCond}}
-                            {{#ifCond type 'image'}}
-                            <td><a href="{{value}}"><img src="{{value}}"/></a></td>
-                            {{/ifCond}}
-                        </tr>
-                        {{/each}}
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </script>
-        <script id="report-mutation-tpl" type="text/x-handlebars-template">
-            <li>
-                <span class="report-time">{{formatReportTime time}}</span>
-                <a class="expand-link node-expand-button node-status-label node-status-{{status}} contains-children-true collapsed" href="#">MUTATION</a>
-                <div class="node-name">{{name}}</div>
-                <div class="node-details expand-container">
-                    <div class="node-details-text">
-                        Passed mutations: <span class="label-status-passed">{{mutationReport.totalPassed}}</span>
-                        <br/>
-                        Failed mutations: <span class="label-status-error">{{mutationReport.totalFailed}}</span>
-                    </div>
+        </template>
 
-                    <ul class="report-nodes">
-                        {{#each mutationReport._items}}
-                        <li>
-                            <a class="expand-link node-expand-button node-status-label node-status-{{status}} contains-children-true collapsed" href="#">{{status}}</a>
-                            <div class="node-name node-status-{{status}}">{{name}}: {{item.failed}} failed</div>
-                            <div class="node-details expand-container">
-                                <ul class="mutation-list">
-                                    {{#each item.failedMutations}}
-                                    <li class="mutation-status-failed">{{this}}</li>
-                                    {{/each}}
+        <template id="tpl-layout-section">
+            <div class="layout-section" v-bind:class="{'has-failure': section.hasFailure}">
+                <div class="title icon-sprite-before" v-on:click="toggleReportNode(section)">{{section.name}}</div>
+                <div class="child-nodes" v-bind:class="{'child-nodes-expanded': section.expanded}">
+                    <layout-section v-for="subSection in section.sections" v-bind:section="subSection" v-bind:bus="bus"></layout-section>
+                    <object-node v-for="object in section.objects" v-bind:object="object" v-bind:bus="bus"></object-node>
+                </div>
+            </div>
+        </template>
+
+        <template id="tpl-object-node">
+            <div class="layout-object" v-bind:class="{'has-failure': object.hasFailure}">
+                <div class="title icon-sprite-before" v-on:click="toggleReportNode(object)">{{object.name}}:</div>
+                <div class="child-nodes" v-bind:class="{'child-nodes-expanded': object.expanded}">
+                    <layout-spec v-for="spec in object.specs" v-bind:spec="spec" v-bind:bus="bus"></layout-spec>
+                </div>
+            </div>
+        </template>
+
+        <template id="tpl-layout-spec">
+            <div class="layout-spec" v-bind:class="[isFailed ? 'has-failure': '', 'status-' + spec.status]">
+                <div class="title icon-sprite-before" v-on:click="showSpec">{{spec.name}}</div>
+                <ul class="error-messages" v-if="isFailed">
+                    <li class="error-message" v-for="error in spec.errors">{{error}}</li>
+                </ul>
+            </div>
+        </template>
+
+        <template id="tpl-screenshot-popup">
+            <div>
+                <div class="popup-shadow" v-on:click="$emit('close')"> </div>
+                <div class="popup-container" v-bind:style="{top: position.top + 'px', left: position.left + 'px', width: position.width + 'px', height: position.height + 'px'}">
+                    <div class="popup-body">
+                        <div class="image-cropper" v-bind:style="{width: crop.width + 'px', height: crop.height + 'px'}">
+                            <img v-bind:src="screenshot" v-bind:style="{'margin-left': crop.offsetLeft +'px', 'margin-top': crop.offsetTop + 'px'}"/>
+                        </div>
+                        <svg v-bind:width="crop.width + 'px'" v-bind:height="crop.height + 'px'">
+                            <g v-for="object in highlight.objects">
+                                <rect
+                                    v-bind:x="object.area.x + crop.offsetLeft"
+                                    v-bind:y="object.area.y + crop.offsetTop"
+                                    v-bind:width="object.area.width"
+                                    v-bind:height="object.area.height"
+                                    style="opacity: 0.8"
+                                    v-bind:style="{fill: object.fill?object.color:'none', 'stroke-width': object.border?3:0, stroke: object.border?object.color:'none'}"/>
+                                <g v-if="object.caption">
+                                    <rect
+                                        v-bind:x="object.area.x + crop.offsetLeft"
+                                        v-bind:y="object.area.y + crop.offsetTop - 20"
+                                        v-bind:width="object.name.length * 15 + 10"
+                                        v-bind:height="20"
+                                        style="opacity: 0.8; stroke-width: 0; stroke: none;"
+                                        v-bind:style="{fill: object.color}"/>
+                                    <text
+                                        v-bind:x="object.area.x + crop.offsetLeft + 5"
+                                        v-bind:y="object.area.y + crop.offsetTop - 5"
+                                        fill="#ffffff"
+                                        font-weight="bold"
+                                        font-family="helvetica"
+                                        font-size="15px"
+                                        >{{object.name}}</text>
+                                </g>
+                            </g>
+
+                            <g v-for="guideElements in guides">
+                                <g v-for="guide in guideElements">
+                                    <line class="meta-line-guide" v-if="guide.type === 'line'"
+                                        v-bind:x1="guide.x1 + crop.offsetLeft"
+                                        v-bind:y1="guide.y1 + crop.offsetTop"
+                                        v-bind:x2="guide.x2 + crop.offsetLeft"
+                                        v-bind:y2="guide.y2 + crop.offsetTop"/>
+
+                                    <g v-if="guide.type === 'text'">
+                                        <text class="meta-text"
+                                            v-bind:x="guide.x + crop.offsetLeft"
+                                            v-bind:y="guide.y + crop.offsetTop"
+                                            v-bind:transform="guide.vertical ? 'rotate(-90,' + (guide.x + crop.offsetLeft) + ', ' + (guide.y + crop.offsetTop) +')': 'rotate(0)'"
+                                            >{{guide.text}}</text>
+                                    </g>
+                                </g>
+                            </g>
+                        </svg>
+                        <div class="popup-side-panel">
+                            <div v-if="spec">
+                                <span class="spec-name">{{spec.name}}</span>
+                                <ul v-if="spec.errors" class="spec-errors">
+                                    <li v-for="error in spec.errors">{{error}}</li>
                                 </ul>
                             </div>
-                        </li>
-                        {{/each}}
-                    </ul>
+                        </div>
+                    </div>
                 </div>
-            </li>
-        </script>
-
-
-        <div id="menu">
-            <ul>
-                <li><a href="report.html">Back to Test Overview</a></li>
-                <li><a class="menu-op-expand-all" href="#">Expand All</a></li>
-                <li><a class="menu-op-collapse-all" href="#">Collapse All</a></li>
-                <li><a class="menu-op-expand-errors" href="#">Expand Errors</a></li>
-            </ul>
-        </div>
-        <h2>##REPORT-TEST-NAME##</h2>
-        <div id="main"></div>
-        <div id="screen-shadow"></div>
-        <div id="popup" class="popup">
-            <div class="popup-wrapper">
-                <a class="popup-close-link" href="#">close</a>
-                <div class="popup-content"></div>
             </div>
-        </div>
-        <div id="notification" class="notification">
-            <div class="notification-wrapper">
-                <a class="notification-close-link" href="#">close</a>
-                <div class="notification-summary"></div>
-                <div class="notification-message"></div>
-            </div>
-        </div>
+        </template>
+        <script>renderTestReport(REPORT_DATA);</script>
     </body>
 </html>

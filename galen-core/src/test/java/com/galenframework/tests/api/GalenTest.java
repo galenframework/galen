@@ -119,9 +119,9 @@ public class GalenTest {
         assertFileExists(pageDumpPath + "/objects/menu-item-3.png");
         assertFileExists(pageDumpPath + "/objects/big-container.png");
 
-        assertFileExists(pageDumpPath + "/jquery-1.11.2.min.js");
-        assertFileExists(pageDumpPath + "/galen-pagedump.js");
-        assertFileExists(pageDumpPath + "/galen-pagedump.css");
+        assertFileExists(pageDumpPath + "/vue.js");
+        assertFileExists(pageDumpPath + "/galen-report.js");
+        assertFileExists(pageDumpPath + "/galen-report.css");
     }
 
 
@@ -151,9 +151,9 @@ public class GalenTest {
 
         assertFileExists(pageDumpPath + "/page.json");
         assertFileExists(pageDumpPath + "/page.html");
-        assertFileExists(pageDumpPath + "/jquery-1.11.2.min.js");
-        assertFileExists(pageDumpPath + "/galen-pagedump.js");
-        assertFileExists(pageDumpPath + "/galen-pagedump.css");
+        assertFileExists(pageDumpPath + "/vue.js");
+        assertFileExists(pageDumpPath + "/galen-report.js");
+        assertFileExists(pageDumpPath + "/galen-report.css");
     }
 
     @Test
@@ -217,9 +217,9 @@ public class GalenTest {
         assertFileDoesNotExist(pageDumpPath + "/objects/menu-item-3.png");
         assertFileDoesNotExist(pageDumpPath + "/objects/big-container.png");
 
-        assertFileExists(pageDumpPath + "/jquery-1.11.2.min.js");
-        assertFileExists(pageDumpPath + "/galen-pagedump.js");
-        assertFileExists(pageDumpPath + "/galen-pagedump.css");
+        assertFileExists(pageDumpPath + "/vue.js");
+        assertFileExists(pageDumpPath + "/galen-report.js");
+        assertFileExists(pageDumpPath + "/galen-report.css");
 
     }
 

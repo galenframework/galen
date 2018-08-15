@@ -254,13 +254,10 @@ public class ReportingTest {
                 "layout-4-objectB1-map.png",
                 "report.html",
                 "report.json",
-                "handlebars-v2.0.0.js",
                 "galen-report.js",
-                "report.css",
+                "galen-report.css",
                 "icon-sprites.png",
-                "jquery-1.11.2.min.js",
-                "tablesorter.js",
-                "tablesorter.css"
+                "vue.js"
         ));
     }
 
