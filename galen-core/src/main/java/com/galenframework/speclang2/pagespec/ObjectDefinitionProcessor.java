@@ -29,7 +29,7 @@ import java.util.*;
 
 import static java.lang.String.format;
 
-public class ObjectDefinitionProcessor {
+public class ObjectDefinitionProcessor implements StructNodeProcessor {
     public static final String GROUPED = "@grouped";
     private final PageSpecHandler pageSpecHandler;
     private static final String CORRECTIONS_SYMBOL = "@";

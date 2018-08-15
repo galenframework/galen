@@ -24,6 +24,7 @@ import com.galenframework.components.validation.MockedPageElement;
 import com.galenframework.page.PageElement;
 import com.galenframework.page.Rect;
 import com.galenframework.rainbow4j.Rainbow4J;
+import com.galenframework.reports.model.LayoutMeta;
 import com.galenframework.specs.*;
 import com.galenframework.components.validation.MockedPage;
 import com.galenframework.specs.page.Locator;
@@ -43,6 +44,7 @@ import java.util.List;
 import static org.hamcrest.Matchers.*;
 
 public abstract class ValidationTestBase {
+    public static final List<LayoutMeta> NULL_META = null;
     public static final List<ValidationObject> NO_AREA = null;
     public static final Spec NO_SPEC = null;
 
@@ -68,10 +70,9 @@ public abstract class ValidationTestBase {
     public void shouldGiveError(ValidationResult expectedResult, Spec spec, MockedPage page) {
         PageSpec pageSpec = createMockedPageSpec(page);
         PageValidation validation = new PageValidation(null, page, pageSpec, null, null);
-        ValidationError error = validation.check("object", spec).getError();
 
-        assertThat(error, is(notNullValue()));
-        assertThat(error, is(expectedResult.getError()));
+        ValidationResult realResult = validation.check("object", spec);
+        assertThat(realResult, is(expectedResult));
     }
 
     @DataProvider
@@ -97,8 +98,8 @@ public abstract class ValidationTestBase {
         return new Location(exact, asList(sides));
     }
 
-    public ValidationResult validationResult(List<ValidationObject> areas, List<String> messages) {
-        return new ValidationResult(NO_SPEC, areas, new ValidationError(messages));
+    public ValidationResult validationResult(List<ValidationObject> areas, List<String> messages, List<LayoutMeta> meta) {
+        return new ValidationResult(NO_SPEC, areas, new ValidationError(messages), meta);
     }
 
     public List<ValidationObject> areas(ValidationObject...errorAreas) {

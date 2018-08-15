@@ -33,6 +33,7 @@ public class MacroProcessor {
     public static final String GROUPS_KEYWORD = "@groups";
     public static final String ON_KEYWORD = "@on";
     public static final String IMPORT_KEYWORD = "@import";
+    public static final String LIB_KEYWORD = "@lib";
     public static final String SCRIPT_KEYWORD = "@script";
     public static final String RULE_KEYWORD = "@rule";
     public static final String RULE_BODY = "@ruleBody";
@@ -52,6 +53,7 @@ public class MacroProcessor {
             GROUPS_KEYWORD,
             ON_KEYWORD,
             IMPORT_KEYWORD,
+            LIB_KEYWORD,
             SCRIPT_KEYWORD,
             RULE_KEYWORD,
             RULE_BODY,
@@ -59,8 +61,11 @@ public class MacroProcessor {
     );
     private List<StructNode> currentRuleBody;
 
+    private final Map<String, StructNodeProcessor> structNodeProcessorMap;
+
     public MacroProcessor(PageSpecHandler pageSpecHandler) {
         this.pageSpecHandler = pageSpecHandler;
+        structNodeProcessorMap = createStructNodeProcessMap(pageSpecHandler);
     }
 
     public List<StructNode> process(List<StructNode> nodes) throws IOException {
@@ -177,34 +182,32 @@ public class MacroProcessor {
         }
     }
 
+
+    private Map<String, StructNodeProcessor> createStructNodeProcessMap(PageSpecHandler pageSpecHandler) {
+        return new HashMap<String, StructNodeProcessor>() {{
+            put(SET_KEYWORD, new SetVariableProcessor(pageSpecHandler));
+            put(OBJECTS_KEYWORD, new ObjectDefinitionProcessor(pageSpecHandler));
+            put(GROUPS_KEYWORD, new GroupsDefinitionProcessor(pageSpecHandler));
+            put(ON_KEYWORD, new OnFilterProcessor(pageSpecHandler));
+            put(IMPORT_KEYWORD, new ImportProcessor(pageSpecHandler));
+            put(LIB_KEYWORD, new LibProcessor(pageSpecHandler));
+            put(SCRIPT_KEYWORD, new ScriptProcessor(pageSpecHandler));
+            put(RULE_KEYWORD, new RuleProcessor(pageSpecHandler));
+        }};
+    }
+
     private List<StructNode> processMacroStatement(final StructNode statementNode) throws IOException {
         StringCharReader reader = new StringCharReader(statementNode.getName());
         String firstWord = reader.readWord();
-        if (FOR_LOOP_KEYWORD.equals(firstWord)
+        if (structNodeProcessorMap.containsKey(firstWord)) {
+            return process(structNodeProcessorMap.get(firstWord).process(reader, statementNode));
+        } else if (FOR_LOOP_KEYWORD.equals(firstWord)
                 || FOR_EACH_LOOP_KEYWORD.equals(firstWord)) {
             ForLoop forLoop = ForLoop.read(FOR_LOOP_KEYWORD.equals(firstWord), pageSpecHandler, reader, statementNode);
-
-            return forLoop.apply(new LoopVisitor() {
-                @Override
-                public List<StructNode> visitLoop(Map<String, Object> variables) throws IOException {
-                    pageSpecHandler.setGlobalVariables(variables, statementNode);
-                    return process(statementNode.getChildNodes());
-                }
+            return forLoop.apply(variables -> {
+                pageSpecHandler.setGlobalVariables(variables, statementNode);
+                return process(statementNode.getChildNodes());
             });
-        } else if (SET_KEYWORD.equals(firstWord)) {
-            return new SetVariableProcessor(pageSpecHandler).process(reader, statementNode);
-        } else if (OBJECTS_KEYWORD.equals(firstWord)) {
-            return new ObjectDefinitionProcessor(pageSpecHandler).process(reader, statementNode);
-        } else if (GROUPS_KEYWORD.equals(firstWord)) {
-            return new GroupsDefinitionProcessor(pageSpecHandler).process(reader, statementNode);
-        } else if (ON_KEYWORD.equals(firstWord)) {
-            return process(new OnFilterProcessor(pageSpecHandler).process(reader, statementNode));
-        } else if (IMPORT_KEYWORD.equals(firstWord)) {
-            return new ImportProcessor(pageSpecHandler).process(reader, statementNode);
-        } else if (SCRIPT_KEYWORD.equals(firstWord)) {
-            return new ScriptProcessor(pageSpecHandler).process(reader, statementNode);
-        } else if (RULE_KEYWORD.equals(firstWord)) {
-            return new RuleProcessor(pageSpecHandler).process(reader, statementNode);
         } else if (ELSEIF_KEYWORD.equals(firstWord)) {
             throw new SyntaxException(statementNode, "elseif statement without if block");
         } else if (ELSE_KEYWORD.equals(firstWord)) {

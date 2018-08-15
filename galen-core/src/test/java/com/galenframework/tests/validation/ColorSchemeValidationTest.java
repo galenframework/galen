@@ -54,34 +54,34 @@ public class ColorSchemeValidationTest extends ValidationTestBase {
     @Override
     public Object[][] provideBadSamples() {
         return new Object[][] {
-            {validationResult(NO_AREA, messages("\"object\" is not visible on page")),
+            {validationResult(NO_AREA, messages("\"object\" is not visible on page"), NULL_META),
                 specColorScheme(new ColorRange("black", new SimpleColorClassifier("black", Color.black), between(30, 33))), page(new HashMap<String, PageElement>(){{
                     put("object", invisibleElement(10, 10, 400, 300));
                 }}, testImage)},
-            {validationResult(NO_AREA, messages("\"object\" is absent on page")),
+            {validationResult(NO_AREA, messages("\"object\" is absent on page"), NULL_META),
                 specColorScheme(new ColorRange("black", new SimpleColorClassifier("black", Color.black), between(30, 33))), page(new HashMap<String, PageElement>(){{
                     put("object", absentElement(10, 10, 400, 300));
                 }}, testImage)},
             {validationResult(areas(new ValidationObject(new Rect(10, 10, 400, 300), "object")),
-                    messages("color black on \"object\" is 36% which is not in range of 10 to 20%")),
+                    messages("color black on \"object\" is 36% which is not in range of 10 to 20%"), NULL_META),
                 specColorScheme(new ColorRange("black", new SimpleColorClassifier("black", Color.black), between(10, 20))), page(new HashMap<String, PageElement>(){{
                     put("object", element(10, 10, 400, 300));
                 }}, testImage)},
 
             {validationResult(areas(new ValidationObject(new Rect(10, 10, 400, 300), "object")),
-                    messages("color white on \"object\" is 48% instead of 30%")),
+                    messages("color white on \"object\" is 48% instead of 30%"), NULL_META),
                 specColorScheme(new ColorRange("white", new SimpleColorClassifier("white", Color.white), exact(30))), page(new HashMap<String, PageElement>(){{
                     put("object", element(10, 10, 400, 300));
                 }}, testImage)},
 
             {validationResult(areas(new ValidationObject(new Rect(10, 10, 500, 300), "object")),
-                    messages("color #3A70D0 on \"object\" is 12% instead of 30%")),
+                    messages("color #3A70D0 on \"object\" is 12% instead of 30%"), NULL_META),
                 specColorScheme(new ColorRange("#3A70D0", new SimpleColorClassifier("#3A70D0", Color.decode("#3A70D0")), exact(30))), page(new HashMap<String, PageElement>(){{
                     put("object", element(10, 10, 500, 300));
                 }}, testImage)},
 
             {validationResult(areas(new ValidationObject(new Rect(10, 10, 500, 300), "object")),
-                    messages("color #3A70D0 on \"object\" is 12.87% instead of 12.84%")),
+                    messages("color #3A70D0 on \"object\" is 12.87% instead of 12.84%"), NULL_META),
                 specColorScheme(new ColorRange("#3A70D0", new SimpleColorClassifier("#3A70D0", Color.decode("#3A70D0")), exact(new RangeValue(1284, 2)))), page(new HashMap<String, PageElement>(){{
                     put("object", element(10, 10, 500, 300));
                 }}, testImage)}

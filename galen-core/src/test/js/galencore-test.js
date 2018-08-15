@@ -9,8 +9,8 @@ TestSession = {
         return {
             getReport: function() {
                 return {
-                    sectionStart: AssertEvents.registerFunction("TestSession.current().getReport().sectionStart", 1),
-                    sectionEnd: AssertEvents.registerFunction("TestSession.current().getReport().sectionEnd", 0)
+                    sectionStart: AssertEvents.registerFunction("TestSession.current().getReport().sectionStart"),
+                    sectionEnd: AssertEvents.registerFunction("TestSession.current().getReport().sectionEnd")
                 };
             }
         }

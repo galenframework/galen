@@ -70,7 +70,7 @@ public class SpecValidationContains extends SpecValidation<SpecContains> {
         }
         
         if (errorMessages.size() > 0 ) { 
-            throw new ValidationErrorException(objects, errorMessages).withValidationObject(new ValidationObject(objectArea, objectName));
+            throw new ValidationErrorException(objects, errorMessages);
         }
 
         return new ValidationResult(spec, objects);

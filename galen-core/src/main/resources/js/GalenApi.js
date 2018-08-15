@@ -91,7 +91,8 @@
             screenshotFile = null,
             properties = null,
             jsVariables = [],
-            jsPageObjects = null;
+            jsPageObjects = null,
+            sectionNameFilter = null;
 
         if (arguments.length === 1) {
             settings = driver;
@@ -101,6 +102,7 @@
             includedTags = settings.tags;
             excludedTags = settings.excludedTags;
             screenshotFile = settings.screenshot;
+            sectionNameFilter = settings.sectionFilter;
             properties = settings.properties;
 
             if (settings.vars !== undefined) {
@@ -125,6 +127,10 @@
             screenshotFile = null;
         }
 
+        if (sectionNameFilter === undefined) {
+            sectionNameFilter = null;
+        }
+
 
         if (!Array.isArray(includedTags) && includedTags !== null) {
             includedTags = [includedTags];
@@ -132,7 +138,7 @@
         if (!Array.isArray(excludedTags) && excludedTags !== null) {
             excludedTags = [excludedTags];
         }
-        return GalenJsApi.checkLayout(driver, pageSpecFile, includedTags, excludedTags, properties, screenshotFile, jsVariables, jsPageObjects);
+        return GalenJsApi.checkLayout(driver, pageSpecFile, includedTags, excludedTags, sectionNameFilter, properties, screenshotFile, jsVariables, jsPageObjects);
     }
 
     function checkPageSpecLayout(driver, pageSpec, includedTags, excludedTags) {

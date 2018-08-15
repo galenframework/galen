@@ -113,9 +113,9 @@ public class GalenPageDump {
             pageDump.setPageName(pageName);
             exportAsJson(pageDump, new File(reportFolder.getAbsoluteFile() + File.separator + "page.json"));
             exportAsHtml(pageDump, pageName, new File(reportFolder.getAbsoluteFile() + File.separator + "page.html"));
-            copyResource("/html-report/jquery-1.11.2.min.js", new File(reportFolder.getAbsolutePath() + File.separator + "jquery-1.11.2.min.js"));
-            copyResource("/pagedump/galen-pagedump.js", new File(reportFolder.getAbsolutePath() + File.separator + "galen-pagedump.js"));
-            copyResource("/pagedump/galen-pagedump.css", new File(reportFolder.getAbsolutePath() + File.separator + "galen-pagedump.css"));
+            copyResource("/html-report/vue.js", new File(reportFolder.getAbsolutePath() + File.separator + "vue.js"));
+            copyResource("/html-report/galen-report.js", new File(reportFolder.getAbsolutePath() + File.separator + "galen-report.js"));
+            copyResource("/html-report/galen-report.css", new File(reportFolder.getAbsolutePath() + File.separator + "galen-report.css"));
         }
 
         exportAllScreenshots(pageDump, browser, reportFolder);
@@ -151,7 +151,7 @@ public class GalenPageDump {
         ObjectMapper objectMapper = new ObjectMapper();
         String jsonText = objectMapper.writeValueAsString(pageDump);
 
-        String template = IOUtils.toString(getClass().getResourceAsStream("/pagedump/page.html"));
+        String template = IOUtils.toString(getClass().getResourceAsStream("/html-report/page-dump.tpl.html"));
 
         String htmlText = template.replace("${title}", title);
         htmlText = htmlText.replace("${json}", jsonText);
@@ -208,6 +208,7 @@ public class GalenPageDump {
                 }
             }
         }
+        screenshotOriginalFile.deleteOnExit();
     }
 
     private static void copyResource(String resourceName, File destFile) throws IOException {

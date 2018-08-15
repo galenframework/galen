@@ -15,7 +15,7 @@
 ******************************************************************************/
 package com.galenframework.validation.specs;
 
-import static java.lang.String.copyValueOf;
+import static com.galenframework.validation.ValidationUtils.joinErrorMessagesForObject;
 import static java.lang.String.format;
 
 import java.util.LinkedList;
@@ -32,7 +32,7 @@ import com.galenframework.page.PageElement;
  *
  * @param <T>
  */
-public abstract class SpecValidationGeneral<T extends SpecComplex> extends SpecValidation<T> {
+public abstract class SpecValidationGeneral<T extends SpecComplex> extends SpecValidation<T> implements ValidationUtils.OffsetProvider {
 
     @Override
     public ValidationResult check(PageValidation pageValidation, String objectName, T spec) throws ValidationErrorException {
@@ -48,7 +48,7 @@ public abstract class SpecValidationGeneral<T extends SpecComplex> extends SpecV
         List<String> messages = new LinkedList<>();
 
         for (Location location : spec.getLocations()) {
-            String message = verifyLocation(mainArea, secondArea, location, pageValidation, spec);
+            String message = ValidationUtils.verifyLocation(mainArea, secondArea, location, pageValidation, spec, this);
             if (message != null) {
                 messages.add(message);
             }
@@ -61,73 +61,11 @@ public abstract class SpecValidationGeneral<T extends SpecComplex> extends SpecV
 
         if (messages.size() > 0) {
         	throw new ValidationErrorException()
-                .withMessage(createMessage(messages, objectName))
+                .withMessage(joinErrorMessagesForObject(messages, objectName))
                 .withValidationObjects(validationObjects);
         }
 
         return new ValidationResult(spec, validationObjects);
     }
 
-    private String createMessage(List<String> messages, String objectName) {
-        StringBuffer buffer = new StringBuffer();
-        
-        buffer.append(format("\"%s\" ", objectName));
-        boolean comma = false;
-        for (String message : messages) {
-            if (comma) {
-                buffer.append(", ");
-            }
-            buffer.append("is ");
-            buffer.append(message);
-            comma = true;
-        }
-        return buffer.toString();
-    }
-
-    protected String verifyLocation(Rect mainArea, Rect secondArea, Location location, PageValidation pageValidation, T spec) {
-        List<String> messages = new LinkedList<>();
-
-
-        Range range = location.getRange();
-
-        for (Side side : location.getSides()) {
-            int offset = getOffsetForSide(mainArea, secondArea, side, spec);
-            double calculatedOffset = pageValidation.convertValue(range, offset);
-
-            if (!range.holds(calculatedOffset)) {
-                if (range.isPercentage()) {
-                    int precision = range.findPrecision();
-
-                    messages.add(String.format("%s%% [%dpx] %s", new RangeValue(calculatedOffset, precision).toString(), offset, side));
-                } else {
-                    messages.add(format("%dpx %s", offset, side));
-                }
-            }
-        }
-        
-        if (messages.size() > 0) {
-            StringBuffer buffer = new StringBuffer();
-            boolean comma = false;
-            for (String message : messages) {
-                if (comma) {
-                    buffer.append(" and ");
-                }
-                buffer.append(message);
-                comma = true;
-            }
-            
-            buffer.append(' ');
-            buffer.append(range.getErrorMessageSuffix());
-            if (range.isPercentage()) {
-                int objectValue = pageValidation.getObjectValue(range.getPercentageOfValue());
-                buffer.append(' ');
-                buffer.append(rangeCalculatedFromPercentage(range, objectValue));
-            }
-            return buffer.toString();
-        }
-        else return null;
-    }
-
-    protected abstract int getOffsetForSide(Rect mainArea, Rect secondArea, Side side, T spec);
-    
 }

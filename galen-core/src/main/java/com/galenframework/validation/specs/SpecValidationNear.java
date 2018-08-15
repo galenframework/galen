@@ -16,28 +16,22 @@
 package com.galenframework.validation.specs;
 
 import com.galenframework.page.Rect;
+import com.galenframework.specs.Range;
 import com.galenframework.specs.Side;
+import com.galenframework.specs.Spec;
 import com.galenframework.specs.SpecNear;
+import com.galenframework.validation.MetaBasedValidation;
+import com.galenframework.validation.PageValidation;
+import com.galenframework.validation.SimpleValidationResult;
 
-public class SpecValidationNear extends SpecValidationGeneral<SpecNear> {
+public class SpecValidationNear extends SpecValidationComplex<SpecNear> {
 
     @Override
-    protected int getOffsetForSide(Rect mainArea, Rect secondArea, Side side, SpecNear spec) {
-        if (side == Side.LEFT) {
-            return secondArea.getLeft() - (mainArea.getLeft() + mainArea.getWidth());
-        }
-        else if (side == Side.TOP) {
-            return secondArea.getTop() - (mainArea.getTop() + mainArea.getHeight());
-        }
-        else if (side == Side.RIGHT) {
-            return mainArea.getLeft() - (secondArea.getLeft() + secondArea.getWidth());
-        }
-        else if (side == Side.BOTTOM) {
-            return mainArea.getTop() - (secondArea.getTop() + secondArea.getHeight());
-        }
-        else {
-            return 0;
-        }
+    protected SimpleValidationResult validateSide(String objectName, SpecNear spec, Range range, Side side, Rect mainArea, Rect secondArea, PageValidation pageValidation) {
+        return  MetaBasedValidation.forObjectsWithRange(objectName, spec.getObject(), range)
+                .withFirstEdge(side.opposite())
+                .withSecondEdge(side)
+                .withInvertedCalculation(side == Side.LEFT || side == Side.TOP)
+                .validate(mainArea, secondArea, pageValidation, side.toString());
     }
-
 }

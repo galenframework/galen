@@ -15,43 +15,43 @@
 ******************************************************************************/
 package com.galenframework.validation;
 
-import java.awt.image.BufferedImage;
+import java.io.File;
 
 public class ImageComparison {
-    private BufferedImage sampleFilteredImage;
-    private BufferedImage originalFilteredImage;
-    private BufferedImage comparisonMap;
+    private File sampleFilteredImage;
+    private File originalFilteredImage;
+    private File comparisonMap;
 
 
-    public ImageComparison(BufferedImage originalFilteredImage,
-                           BufferedImage sampleFilteredImage, BufferedImage comparisonMap) {
+    public ImageComparison(File originalFilteredImage,
+                           File sampleFilteredImage, File comparisonMap) {
         this.originalFilteredImage = originalFilteredImage;
         this.sampleFilteredImage = sampleFilteredImage;
         this.comparisonMap = comparisonMap;
 
     }
 
-    public BufferedImage getComparisonMap() {
+    public File getComparisonMap() {
         return comparisonMap;
     }
 
-    public void setComparisonMap(BufferedImage comparisonMap) {
+    public void setComparisonMap(File comparisonMap) {
         this.comparisonMap = comparisonMap;
     }
 
-    public BufferedImage getOriginalFilteredImage() {
+    public File getOriginalFilteredImage() {
         return originalFilteredImage;
     }
 
-    public void setOriginalFilteredImage(BufferedImage originalFilteredImage) {
+    public void setOriginalFilteredImage(File originalFilteredImage) {
         this.originalFilteredImage = originalFilteredImage;
     }
 
-    public BufferedImage getSampleFilteredImage() {
+    public File getSampleFilteredImage() {
         return sampleFilteredImage;
     }
 
-    public void setSampleFilteredImage(BufferedImage sampleFilteredImage) {
+    public void setSampleFilteredImage(File sampleFilteredImage) {
         this.sampleFilteredImage = sampleFilteredImage;
     }
 }

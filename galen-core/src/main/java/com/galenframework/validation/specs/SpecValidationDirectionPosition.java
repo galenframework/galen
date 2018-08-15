@@ -16,26 +16,31 @@
 package com.galenframework.validation.specs;
 
 import com.galenframework.page.Rect;
-import com.galenframework.parser.SyntaxException;
+import com.galenframework.specs.Side;
 import com.galenframework.validation.*;
 import com.galenframework.page.PageElement;
 import com.galenframework.specs.SpecDirectionPosition;
 
 import java.util.List;
 
+import static com.galenframework.specs.Side.*;
 import static java.util.Arrays.asList;
 
 public class SpecValidationDirectionPosition extends SpecValidation<SpecDirectionPosition> {
-	
-	public enum Direction {
-		ABOVE("above"),
-        BELOW("below"),
-        LEFT_OF("left of"),
-        RIGHT_OF("right of");
-        private final String reportingName;
 
-        Direction(String reportingName) {
+	public enum Direction {
+		ABOVE("above", BOTTOM, TOP),
+        BELOW("below", TOP, BOTTOM),
+        LEFT_OF("left of", RIGHT, LEFT),
+        RIGHT_OF("right of", LEFT, RIGHT);
+        private final String reportingName;
+        private final Side firstEdge;
+        private final Side secondEdge;
+
+        Direction(String reportingName, Side firstEdge, Side secondEdge) {
             this.reportingName = reportingName;
+            this.firstEdge = firstEdge;
+            this.secondEdge = secondEdge;
         }
 
         public String toString() {
@@ -49,61 +54,40 @@ public class SpecValidationDirectionPosition extends SpecValidation<SpecDirectio
 		this.direction = direction;
 	}
 
-	@Override
-	public ValidationResult check(PageValidation pageValidation, String objectName, SpecDirectionPosition spec) throws ValidationErrorException {
-		
-		PageElement mainObject = pageValidation.findPageElement(objectName);
-        
+    @Override
+    public ValidationResult check(PageValidation pageValidation, String objectName, SpecDirectionPosition spec) throws ValidationErrorException {
+
+        PageElement mainObject = pageValidation.findPageElement(objectName);
+
         checkAvailability(mainObject, objectName);
-        
+
         PageElement secondObject = pageValidation.findPageElement(spec.getObject());
         checkAvailability(secondObject, spec.getObject());
-        
+
         Rect mainArea = mainObject.getArea();
         Rect secondArea = secondObject.getArea();
-        int offset = getOffset(mainArea, secondArea);
-        
+
 
         List<ValidationObject> objects = asList(
                 new ValidationObject(mainArea, objectName),
                 new ValidationObject(secondArea, spec.getObject()));
 
+        SimpleValidationResult svr = MetaBasedValidation.forObjectsWithRange(objectName, spec.getObject(), spec.getRange())
+                .withFirstEdge(this.direction.firstEdge)
+                .withSecondEdge(this.direction.secondEdge)
+                .withInvertedCalculation(this.direction == Direction.LEFT_OF || this.direction == Direction.ABOVE)
+                .validate(mainArea, secondArea, pageValidation, this.direction.toString());
 
-        double convertedOffset = pageValidation.convertValue(spec.getRange(), offset);
-
-        if (!spec.getRange().holds(convertedOffset)) {
-        	throw new ValidationErrorException().withMessage(
-                    String.format("\"%s\" is %dpx %s \"%s\" %s",
+        if (svr.isError()) {
+            throw new ValidationErrorException().withMessage(
+                    String.format("\"%s\" is %s \"%s\" %s",
                             objectName,
-                            offset,
-                            direction.toString(),
+                            svr.getError(),
                             spec.getObject(),
                             spec.getRange().getErrorMessageSuffix()))
-        		.withValidationObjects(objects);
+                    .withValidationObjects(objects).withMeta(asList(svr.getMeta()));
         }
 
-        return new ValidationResult(spec, objects);
-	}
-
-
-
-
-    private int getOffset(Rect mainArea, Rect secondArea) {
-		if (direction == Direction.ABOVE) {
-			return secondArea.getTop() - mainArea.getTop() - mainArea.getHeight();
-		}
-        else if (direction == Direction.BELOW) {
-			return mainArea.getTop() - secondArea.getTop() - secondArea.getHeight();
-		}
-        else if (direction == Direction.LEFT_OF) {
-            return secondArea.getLeft() - mainArea.getLeft() - mainArea.getWidth();
-        }
-        else if (direction == Direction.RIGHT_OF) {
-            return mainArea.getLeft() - secondArea.getLeft() - secondArea.getWidth();
-        }
-        else {
-            throw new SyntaxException("Unknown direction: " + direction.name());
-        }
-	}
-
+        return new ValidationResult(spec, objects).withMeta(asList(svr.getMeta()));
+    }
 }

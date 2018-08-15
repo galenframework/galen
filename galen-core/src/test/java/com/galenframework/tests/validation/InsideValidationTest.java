@@ -21,9 +21,11 @@ import static com.galenframework.specs.Side.LEFT;
 import static com.galenframework.specs.Side.RIGHT;
 import static com.galenframework.specs.Side.BOTTOM;
 import static com.galenframework.specs.Side.TOP;
+
 import java.util.HashMap;
 import java.util.List;
 import com.galenframework.page.Rect;
+import com.galenframework.reports.model.LayoutMeta;
 import com.galenframework.specs.*;
 import com.galenframework.page.PageElement;
 import com.galenframework.validation.ValidationObject;
@@ -90,118 +92,146 @@ public class InsideValidationTest extends ValidationTestBase {
     public Object[][] provideBadSamples() {
         return new Object[][]{
             {validationResult(areas(new ValidationObject(new Rect(10, 10, 500, 50), "object"), new ValidationObject(new Rect(0, 0, 130, 120), "container")),
-                    messages("\"object\" is not completely inside. The offset is 380px.")),
+                    messages("\"object\" is not completely inside. The offset is 380px."), NULL_META),
                 specInside("container"), page(new HashMap<String, PageElement>(){{
                     put("object", element(10, 10, 500, 50));
                     put("container", element(0, 0, 130, 120));
-                }})},
+                }})
+            },
 
             {validationResult(areas(new ValidationObject(new Rect(10, 10, 500, 50), "object"), new ValidationObject(new Rect(0, 0, 130, 120), "container")),
-                    messages("\"object\" is not completely inside. The offset is 380px.")),
+                    messages("\"object\" is not completely inside. The offset is 380px."), NULL_META),
                 specInside("container", location(exact(10), LEFT)), page(new HashMap<String, PageElement>(){{
                     put("object", element(10, 10, 500, 50));
                     put("container", element(0, 0, 130, 120));
-                }})},
+                }})
+            },
 
             {validationResult(areas(new ValidationObject(new Rect(10, 10, 500, 50), "object"), new ValidationObject(new Rect(0, 0, 130, 120), "container")),
-                    messages("\"object\" is not completely inside. The offset is 380px.")),
+                    messages("\"object\" is not completely inside. The offset is 380px."), NULL_META),
                 specInside("container", location(exact(10), LEFT)), page(new HashMap<String, PageElement>(){{
                     put("object", element(10, 10, 500, 50));
                     put("container", element(0, 0, 130, 120));
-                }})},
+                }})
+            },
 
             {validationResult(areas(new ValidationObject(new Rect(190, 110, 500, 500), "object"), new ValidationObject(new Rect(10, 10, 100, 100), "container")),
-                    messages("\"object\" is 180px left instead of 10px")),
+                    messages("\"object\" is 180px left instead of 10px"),
+                    asList(LayoutMeta.distance("object", LEFT, "container", LEFT, "10px", "180px"))),
                 specInsidePartly("container", location(exact(10), LEFT)), page(new HashMap<String, PageElement>(){{
                     put("object", element(190, 110, 500, 500));
                     put("container", element(10, 10, 100, 100));
-                }})},
+                }})
+            },
 
             {validationResult(areas(new ValidationObject(new Rect(30, 10, 50, 50), "object"), new ValidationObject(new Rect(0, 0, 130, 120), "container")),
-                    messages("\"object\" is 30px left instead of 10px")),
+                    messages("\"object\" is 30px left instead of 10px"),
+                    asList(LayoutMeta.distance("object", LEFT, "container", LEFT, "10px", "30px"))),
                 specInside("container", location(exact(10), LEFT)), page(new HashMap<String, PageElement>(){{
                     put("object", element(30, 10, 50, 50));
                     put("container", element(0, 0, 130, 120));
-                }})},
+                }})
+            },
 
             {validationResult(areas(new ValidationObject(new Rect(30, 20, 50, 50), "object"), new ValidationObject(new Rect(0, 0, 130, 120), "container")),
-                    messages("\"object\" is 30px left and 20px top instead of 10px")),
+                    messages("\"object\" is 30px left and 20px top instead of 10px"),
+                    asList( LayoutMeta.distance("object", LEFT, "container", LEFT, "10px", "30px"),
+                            LayoutMeta.distance("object", TOP, "container", TOP, "10px", "20px") )
+            ),
                 specInside("container", location(exact(10), LEFT, TOP)), page(new HashMap<String, PageElement>(){{
                     put("object", element(30, 20, 50, 50));
                     put("container", element(0, 0, 130, 120));
-                }})},
+                }})
+            },
 
             {validationResult(areas(new ValidationObject(new Rect(30, 10, 50, 50), "object"), new ValidationObject(new Rect(0, 0, 130, 120), "container")),
-                    messages("\"object\" is 50px right instead of 10px")),
+                    messages("\"object\" is 50px right instead of 10px"),
+                    asList(LayoutMeta.distance("object", RIGHT, "container", RIGHT, "10px", "50px"))
+                ),
                 specInside("container", location(exact(10), RIGHT)), page(new HashMap<String, PageElement>(){{
                     put("object", element(30, 10, 50, 50));
                     put("container", element(0, 0, 130, 120));
                 }})},
 
             {validationResult(areas(new ValidationObject(new Rect(30, 20, 50, 50), "object"), new ValidationObject(new Rect(0, 0, 130, 120), "container")),
-                    messages("\"object\" is 20px top instead of 10px")),
+                    messages("\"object\" is 20px top instead of 10px"),
+                    asList(LayoutMeta.distance("object", TOP, "container", TOP, "10px", "20px"))
+                ),
                 specInside("container", location(exact(10), TOP)), page(new HashMap<String, PageElement>(){{
                     put("object", element(30, 20, 50, 50));
                     put("container", element(0, 0, 130, 120));
                 }})},
 
-            {validationResult(areas(new ValidationObject(new Rect(30, 10, 50, 50), "object"), new ValidationObject(new Rect(0, 0, 130, 120), "container")), messages("\"object\" is 60px bottom instead of 10px")),
+            {validationResult(areas(new ValidationObject(new Rect(30, 10, 50, 50), "object"), new ValidationObject(new Rect(0, 0, 130, 120), "container")),
+                    messages("\"object\" is 60px bottom instead of 10px"),
+                    asList(LayoutMeta.distance("object", BOTTOM, "container", BOTTOM, "10px", "60px"))
+                ),
                 specInside("container", location(exact(10), BOTTOM)), page(new HashMap<String, PageElement>(){{
                     put("object", element(30, 10, 50, 50));
                     put("container", element(0, 0, 130, 120));
                 }})},
 
-            {validationResult(areas(new ValidationObject(new Rect(30, 10, 50, 50), "object"), new ValidationObject(new Rect(0, 0, 130, 120), "container")), messages("\"object\" is 30px left which is not in range of 10 to 20px")),
+            {validationResult(areas(new ValidationObject(new Rect(30, 10, 50, 50), "object"), new ValidationObject(new Rect(0, 0, 130, 120), "container")),
+                    messages("\"object\" is 30px left which is not in range of 10 to 20px"),
+                    asList(LayoutMeta.distance("object", LEFT, "container", LEFT, "10 to 20px", "30px"))
+                ),
                 specInside("container", location(between(10, 20), LEFT)), page(new HashMap<String, PageElement>(){{
                     put("object", element(30, 10, 50, 50));
                     put("container", element(0, 0, 130, 120));
                 }})},
 
-            {validationResult(NO_AREA, messages("Cannot find locator for \"container\" in page spec")),
+            {validationResult(NO_AREA, messages("Cannot find locator for \"container\" in page spec"), NULL_META),
                 specInside("container", location(between(10, 20), LEFT)), page(new HashMap<String, PageElement>(){{
                     put("object", element(30, 10, 50, 50));
                 }})},
 
             {validationResult(areas(new ValidationObject(new Rect(30, 5, 50, 50), "object"), new ValidationObject(new Rect(0, 0, 130, 120), "container")),
-                    messages("\"object\" is 30px left instead of 10px, is 5px top instead of 20px")),
+                    messages("\"object\" is 30px left instead of 10px and 5px top instead of 20px"),
+                    asList(
+                            LayoutMeta.distance("object", LEFT, "container", LEFT, "10px", "30px"),
+                            LayoutMeta.distance("object", TOP, "container", TOP, "20px", "5px")
+                    )
+                ),
                 specInside("container", location(exact(10), LEFT), location(exact(20), TOP)), page(new HashMap<String, PageElement>(){{
                     put("object", element(30, 5, 50, 50));
                     put("container", element(0, 0, 130, 120));
                 }})},
 
             {validationResult(areas(new ValidationObject(new Rect(30, 5, 10, 50), "object"), new ValidationObject(new Rect(0, 0, 50, 120), "container")),
-                    messages("\"object\" is 60% [30px] left instead of 20% [10px]")),
+                    messages("\"object\" is 60% [30px] left instead of 20% [10px]"),
+                asList(LayoutMeta.distance("object", LEFT, "container", LEFT, "20%", "60% [30px]"))),
                 specInside("container", location(exact(20).withPercentOf("container/width"), LEFT)), page(new HashMap<String, PageElement>(){{
                     put("object", element(30, 5, 10, 50));
                     put("container", element(0, 0, 50, 120));
                 }})},
 
             {validationResult(areas(new ValidationObject(new Rect(30, 5, 10, 50), "object"), new ValidationObject(new Rect(0, 0, 50, 120), "container")),
-                    messages("\"object\" is 60% [30px] left which is not in range of 20 to 40% [10 to 20px]")),
+                    messages("\"object\" is 60% [30px] left which is not in range of 20 to 40% [10 to 20px]"),
+                asList(LayoutMeta.distance("object", LEFT, "container", LEFT, "20 to 40%", "60% [30px]"))),
                 specInside("container", location(between(20, 40).withPercentOf("container/width"), LEFT)), page(new HashMap<String, PageElement>(){{
                     put("object", element(30, 5, 10, 50));
                     put("container", element(0, 0, 50, 120));
                 }})},
 
-            {validationResult(NO_AREA, messages("\"object\" is absent on page")),
+            {validationResult(NO_AREA, messages("\"object\" is absent on page"), NULL_META),
                 specInside("container", location(exact(10), LEFT), location(exact(20), TOP)), page(new HashMap<String, PageElement>(){{
                     put("object", absentElement(30, 5, 50, 50));
                     put("container", element(0, 0, 130, 120));
                 }})},
 
-            {validationResult(NO_AREA, messages("\"object\" is not visible on page")),
+            {validationResult(NO_AREA, messages("\"object\" is not visible on page"), NULL_META),
                 specInside("container", location(exact(10), LEFT), location(exact(20), TOP)), page(new HashMap<String, PageElement>(){{
                     put("object", invisibleElement(30, 5, 50, 50));
                     put("container", element(0, 0, 130, 120));
                 }})},
 
-            {validationResult(NO_AREA, messages("\"container\" is absent on page")),
+            {validationResult(NO_AREA, messages("\"container\" is absent on page"), NULL_META),
                 specInside("container", location(exact(10), LEFT), location(exact(20), TOP)), page(new HashMap<String, PageElement>(){{
                     put("object", element(30, 5, 50, 50));
                     put("container", absentElement(0, 0, 130, 120));
                 }})},
 
-            {validationResult(NO_AREA, messages("\"container\" is not visible on page")),
+            {validationResult(NO_AREA, messages("\"container\" is not visible on page"), NULL_META),
                 specInside("container", location(exact(10), LEFT), location(exact(20), TOP)), page(new HashMap<String, PageElement>(){{
                     put("object", element(30, 5, 50, 50));
                     put("container", invisibleElement(0, 0, 130, 120));

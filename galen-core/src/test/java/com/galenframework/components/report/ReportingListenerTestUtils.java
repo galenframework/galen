@@ -19,8 +19,10 @@ import static java.util.Arrays.asList;
 import static com.galenframework.specs.Range.between;
 import static com.galenframework.specs.Range.exact;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import com.galenframework.components.MockedPageValidation;
@@ -28,6 +30,7 @@ import com.galenframework.components.validation.MockedPageElement;
 import com.galenframework.page.Rect;
 import com.galenframework.reports.GalenTestInfo;
 import com.galenframework.reports.TestReport;
+import com.galenframework.reports.model.LayoutMeta;
 import com.galenframework.runner.SuiteListener;
 import com.galenframework.runner.TestListener;
 import com.galenframework.specs.*;
@@ -37,10 +40,10 @@ import com.galenframework.suite.actions.GalenPageActionCheck;
 import com.galenframework.tests.GalenBasicTest;
 import com.galenframework.validation.*;
 import com.galenframework.page.PageElement;
-import com.galenframework.rainbow4j.Rainbow4J;
 
 public class ReportingListenerTestUtils {
 
+    private static final List<LayoutMeta> NULL_META = null;
     private static final com.galenframework.specs.Spec NO_SPEC = null;
     private static String comparisonMapImagePath = ReportingListenerTestUtils.class.getResource("/imgs/page-sample-correct.png").getFile();
 
@@ -80,7 +83,7 @@ public class ReportingListenerTestUtils {
                                     asList(
                                             new ValidationObject(new Rect(10, 10, 100, 50), "objectA1"),
                                             new ValidationObject(new Rect(1, 1, 90, 100), "other-object")),
-                                    new ValidationError(asList("objectA1 is not inside other-object"))
+                                    new ValidationError(asList("objectA1 is not inside other-object")), NULL_META
                             ));
                 validationListener.onAfterSpecGroup(pageValidation, "some spec group");
 
@@ -111,7 +114,7 @@ public class ReportingListenerTestUtils {
                         new SpecWidth(exact(10)).withOriginalText("width 10px")
                                 .withPlace(new Place("specs.spec", 12)),
                         new ValidationResult(NO_SPEC, asList(new ValidationObject(new Rect(200, 300, 50, 30), "objectA2")),
-                                new ValidationError(asList("objectA2 width is 20px instead of 10px"))));
+                                new ValidationError(asList("objectA2 width is 20px instead of 10px")), NULL_META));
 
 
                 onSpecError(validationListener, pageValidation,
@@ -120,7 +123,7 @@ public class ReportingListenerTestUtils {
                                 .withPlace(new Place("specs.spec", 12))
                                 .withOnlyWarn(true),
                         new ValidationResult(NO_SPEC, asList(new ValidationObject(new Rect(200, 300, 50, 30), "objectA2")),
-                                new ValidationError(asList("objectA2 text is \"Logout\" instead of \"Login\""))));
+                                new ValidationError(asList("objectA2 text is \"Logout\" instead of \"Login\"")), NULL_META));
             }
             validationListener.onAfterObject(pageValidation, "objectA2");
             
@@ -161,7 +164,7 @@ public class ReportingListenerTestUtils {
                                         .withPlace(new Place("specs.spec", 12)),
                                 new ValidationResult(NO_SPEC,
                                         asList(new ValidationObject(new Rect(200, 300, 50, 30), "sub-objectA1")),
-                                        new ValidationError(asList("sub-objectA1 width is 20px instead of 10px"))));
+                                        new ValidationError(asList("sub-objectA1 width is 20px instead of 10px")), NULL_META));
                     }
                     validationListener.onAfterObject(pageValidation, "sub-objectA1");
 
@@ -203,11 +206,7 @@ public class ReportingListenerTestUtils {
                         new ValidationResult(NO_SPEC,
                                 asList(new ValidationObject(new Rect(10, 10, 100, 50), "objectB1")),
                                 new ValidationError(asList("objectB1 is not inside other-object", "second error message with <xml> &tags"))
-                                    .withImageComparison(
-                                            new ImageComparison(
-                                                Rainbow4J.loadImage(comparisonMapImagePath),
-                                                Rainbow4J.loadImage(comparisonMapImagePath),
-                                                Rainbow4J.loadImage(comparisonMapImagePath)))));
+                                    .withImageComparison(createSampleImageComparison()), NULL_META));
             }
             validationListener.onAfterObject(pageValidation, "objectB1");
             
@@ -239,6 +238,11 @@ public class ReportingListenerTestUtils {
             tellAfterSuite(suiteListener);
         }
         
+    }
+
+    private static ImageComparison createSampleImageComparison() throws IOException {
+        File file = new File(comparisonMapImagePath);
+        return new ImageComparison(file, file, file);
     }
 
     private static void onSpecError(ValidationListener validationListener, MockedPageValidation pageValidation, String objectName, Spec spec, ValidationResult result) {

@@ -4,8 +4,8 @@ var _ = require("./../../main/resources/js/GalenApi.js"),
 
 
 GalenJsApi = {
-    checkLayout: AssertEvents.registerFunction("GalenJsApi.checkLayout", 6),
-    resizeDriver: AssertEvents.registerFunction("GalenJsApi.resizeDriver", 2)
+    checkLayout: AssertEvents.registerFunction("GalenJsApi.checkLayout"),
+    resizeDriver: AssertEvents.registerFunction("GalenJsApi.resizeDriver")
 };
 
 describe("GalenJsApi", function () {
@@ -15,7 +15,7 @@ describe("GalenJsApi", function () {
                 _.checkLayout("driver", "page.spec", ["mobile", "desktop"], ["nomobile"]);
             }).shouldBe([{
                 name: "GalenJsApi.checkLayout",
-                args: ["driver", "page.spec", ["mobile", "desktop"], ["nomobile"], null, null]
+                args: ["driver", "page.spec", ["mobile", "desktop"], ["nomobile"], null, null, null, [], null]
             }]);
         });
 
@@ -24,7 +24,7 @@ describe("GalenJsApi", function () {
                 _.checkLayout("driver", "page.spec", "mobile", "nomobile");
             }).shouldBe([{
                 name: "GalenJsApi.checkLayout",
-                args: ["driver", "page.spec", ["mobile"], ["nomobile"], null, null]
+                args: ["driver", "page.spec", ["mobile"], ["nomobile"], null, null, null, [], null]
             }]);
         });
 
@@ -35,12 +35,13 @@ describe("GalenJsApi", function () {
                     spec: "page.spec",
                     tags: ["mobile"],
                     excludedTags: ["nomobile"],
+                    sectionFilter: "some section",
                     screenshot: "screenshotFile.png"
                 });
 
             }).shouldBe([{
                 name: "GalenJsApi.checkLayout",
-                args: ["driver1", "page.spec", ["mobile"], ["nomobile"], null, "screenshotFile.png"]
+                args: ["driver1", "page.spec", ["mobile"], ["nomobile"], "some section", null, "screenshotFile.png", [], null]
             }]);
 
         });

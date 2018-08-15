@@ -17,32 +17,34 @@ package com.galenframework.validation.specs;
 
 import com.galenframework.page.Rect;
 import com.galenframework.specs.Side;
+import com.galenframework.specs.Spec;
 import com.galenframework.specs.SpecOn;
 
 public class SpecValidationOn extends SpecValidationGeneral<SpecOn> {
 
     @Override
-    protected int getOffsetForSide(Rect mainArea, Rect secondArea, Side side, SpecOn spec) {
+    public int getOffsetForSide(Rect mainArea, Rect secondArea, Side side, Spec spec) {
+        SpecOn specOn = (SpecOn) spec;
         if (side == Side.LEFT) {
-            if (spec.getSideVertical() == Side.LEFT) {
+            if (specOn.getSideVertical() == Side.LEFT) {
                 return secondArea.getLeft() - mainArea.getLeft();
             }
             else return secondArea.getLeft() + secondArea.getWidth() - mainArea.getLeft();
         }
         else if (side == Side.TOP) {
-            if (spec.getSideHorizontal() == Side.TOP) {
+            if (specOn.getSideHorizontal() == Side.TOP) {
                 return secondArea.getTop() - mainArea.getTop();
             }
             else return secondArea.getTop() + secondArea.getHeight() - mainArea.getTop();
         }
         else if (side == Side.RIGHT) {
-            if (spec.getSideVertical() == Side.LEFT) {
+            if (specOn.getSideVertical() == Side.LEFT) {
                 return mainArea.getLeft() - secondArea.getLeft();
             }
             else return mainArea.getLeft() - secondArea.getLeft() - secondArea.getWidth();
         }
         else if (side == Side.BOTTOM) {
-            if (spec.getSideHorizontal() == Side.TOP) {
+            if (specOn.getSideHorizontal() == Side.TOP) {
                 return mainArea.getTop() - secondArea.getTop();
             }
             else return mainArea.getTop() - secondArea.getTop() - secondArea.getHeight();

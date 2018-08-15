@@ -212,6 +212,38 @@ public class ArgumentParserTest {
         ));
     }
 
+    @Test
+    public void should_parse_generate_action() {
+        GalenActionGenerate action = (GalenActionGenerate) GalenAction.create("generate",
+            new String []{
+                "path/to/some/page-dump.json",
+                "--export", "destination.gspec"
+            },
+            System.out, System.err, NO_LISTENER
+        );
+        assertThat(action.getGenerateArguments(), is(new GalenActionGenerateArguments()
+            .setPath("path/to/some/page-dump.json")
+            .setExport("destination.gspec")
+        ));
+    }
+
+    @Test
+    public void should_parse_generate_action_with_galenextras_disabled() {
+        GalenActionGenerate action = (GalenActionGenerate) GalenAction.create("generate",
+            new String []{
+                "path/to/some/page-dump.json",
+                "--export", "destination.gspec",
+                "--no-galen-extras"
+            },
+            System.out, System.err, NO_LISTENER
+        );
+        assertThat(action.getGenerateArguments(), is(new GalenActionGenerateArguments()
+            .setPath("path/to/some/page-dump.json")
+            .setExport("destination.gspec")
+            .setUseGalenExtras(false)
+        ));
+    }
+
     @Test(dataProvider = "goodSamples_checkAction")
     public void shouldParse_checkActionArguments(SimpleArguments args, GalenActionCheckArguments expectedArguments) {
         String actionName = args.args[0];
@@ -269,6 +301,14 @@ public class ArgumentParserTest {
                                 .setUrl("http://mindengine.net")
                                 .setPaths(asList("some1.spec", "some2.spec"))
                                 .setConfig("/some/config")
+                },
+
+                {args("check", "some1.spec", "--url", "http://mindengine.net", "--config", "/some/config", "--section", "Main*"),
+                    new GalenActionCheckArguments()
+                        .setUrl("http://mindengine.net")
+                        .setPaths(asList("some1.spec"))
+                        .setSectionNameFilter("Main*")
+                        .setConfig("/some/config")
                 },
         };
     }

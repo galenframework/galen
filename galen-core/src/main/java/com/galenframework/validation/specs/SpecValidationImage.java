@@ -17,6 +17,8 @@ package com.galenframework.validation.specs;
 
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 import java.io.InputStream;
 import java.text.DecimalFormat;
 import java.util.Iterator;
@@ -124,15 +126,29 @@ public class SpecValidationImage extends SpecValidation<SpecImage> {
         List<ValidationObject> objects = asList(new ValidationObject(pageElement.getArea(), objectName));
 
         if (minCheck.difference > 0) {
-            throw new ValidationErrorException(minCheck.errorMessage)
-                    .withValidationObjects(objects)
-                    .withImageComparison(new ImageComparison(
-                            minCheck.result.getOriginalFilteredImage(),
-                            minCheck.result.getSampleFilteredImage(),
-                            minCheck.result.getComparisonMap()));
+            ValidationErrorException exception = new ValidationErrorException(minCheck.errorMessage)
+                    .withValidationObjects(objects);
+
+            try {
+                exception.setImageComparison(new ImageComparison(
+                    saveToTempFile("original-image", minCheck.result.getOriginalFilteredImage()),
+                    saveToTempFile("sample-image", minCheck.result.getSampleFilteredImage()),
+                    saveToTempFile("comparison-map", minCheck.result.getComparisonMap())
+                ));
+            } catch (IOException e) {
+                LOG.error("Couldn't save image to temporary location", e);
+            }
+            throw exception;
         }
 
         return new ValidationResult(spec, objects);
+    }
+
+    private File saveToTempFile(String prefix, BufferedImage image) throws IOException {
+        File file = File.createTempFile(prefix, ".png");
+        Rainbow4J.saveImage(image, file);
+        file.deleteOnExit();
+        return file;
     }
 
     private List<Rectangle> convertIgnoreObjectsToRegions(PageValidation pageValidation, SpecImage spec) {

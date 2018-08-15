@@ -17,9 +17,8 @@ package com.galenframework.tests.validation;
 
 import com.galenframework.page.PageElement;
 import com.galenframework.page.Rect;
-import com.galenframework.specs.Alignment;
+import com.galenframework.reports.model.LayoutMeta;
 import com.galenframework.specs.Location;
-import com.galenframework.specs.Side;
 import com.galenframework.specs.SpecNear;
 import com.galenframework.validation.ValidationObject;
 import org.testng.annotations.DataProvider;
@@ -76,77 +75,91 @@ public class NearValidationTest extends ValidationTestBase {
         return new Object[][]{
             // Near
             {validationResult(areas(new ValidationObject(new Rect(90, 5, 100, 50), "object"), new ValidationObject(new Rect(200, 200, 100, 50), "button")),
-                    messages("\"object\" is 10px left instead of 30px")),
+                    messages("\"object\" is 10px left instead of 30px"),
+                    asList(LayoutMeta.distance("object", RIGHT, "button", LEFT, "30px", "10px"))),
                 specNear("button", location(exact(30), LEFT)), page(new HashMap<String, PageElement>(){{
                     put("object", element(90, 5, 100, 50));
                     put("button", element(200, 200, 100, 50));
             }})},
 
+            {validationResult(areas(new ValidationObject(new Rect(90, 60, 100, 50), "object"), new ValidationObject(new Rect(200, 0, 100, 50), "button")),
+                    messages("\"object\" is 10px bottom instead of 30px"),
+                    asList(LayoutMeta.distance("object", TOP, "button", BOTTOM, "30px", "10px"))),
+                    specNear("button", location(exact(30), BOTTOM)), page(new HashMap<String, PageElement>(){{
+                put("object", element(90, 60, 100, 50));
+                put("button", element(200, 0, 100, 50));
+            }})},
+
             {validationResult(areas(new ValidationObject(new Rect(90, 5, 100, 50), "object"), new ValidationObject(new Rect(200, 200, 100, 50), "button")),
-                    messages("\"object\" is 10px left which is not in range of 20 to 30px")),
+                    messages("\"object\" is 10px left which is not in range of 20 to 30px"),
+                    asList(LayoutMeta.distance("object", RIGHT, "button", LEFT, "20 to 30px", "10px"))),
                 specNear("button", location(between(20, 30), LEFT)), page(new HashMap<String, PageElement>(){{
                     put("object", element(90, 5, 100, 50));
                     put("button", element(200, 200, 100, 50));
             }})},
 
             {validationResult(areas(new ValidationObject(new Rect(90, 130, 100, 50), "object"), new ValidationObject(new Rect(200, 200, 100, 50), "button")),
-                    messages("\"object\" is 10px left and 20px top instead of 30px")),
+                    messages("\"object\" is 10px left and 20px top instead of 30px"),
+                    asList(LayoutMeta.distance("object", RIGHT, "button", LEFT, "30px", "10px"), LayoutMeta.distance("object", BOTTOM, "button", TOP, "30px", "20px"))),
                 specNear("button", location(exact(30), LEFT, TOP)), page(new HashMap<String, PageElement>(){{
                     put("object", element(90, 130, 100, 50));
                     put("button", element(200, 200, 100, 50));
             }})},
 
             {validationResult(areas(new ValidationObject(new Rect(310, 250, 100, 50), "object"), new ValidationObject(new Rect(200, 200, 100, 50), "button")),
-                    messages("\"object\" is 10px right instead of 30px, is 0px bottom which is not in range of 10 to 20px")),
+                    messages("\"object\" is 10px right instead of 30px and 0px bottom which is not in range of 10 to 20px"),
+                    asList(LayoutMeta.distance("object", LEFT, "button", RIGHT, "30px", "10px"), LayoutMeta.distance("object", TOP, "button", BOTTOM, "10 to 20px", "0px"))),
                 specNear("button", location(exact(30), RIGHT), location(between(10, 20), BOTTOM)), page(new HashMap<String, PageElement>(){{
                     put("object", element(310, 250, 100, 50));
                     put("button", element(200, 200, 100, 50));
             }})},
 
             {validationResult(areas(new ValidationObject(new Rect(90, 130, 100, 50), "object"), new ValidationObject(new Rect(200, 200, 50, 50), "button")),
-                    messages("\"object\" is 20% [10px] left instead of 40% [20px]")),
+                    messages("\"object\" is 20% [10px] left instead of 40% [20px]"),
+                    asList(LayoutMeta.distance("object", RIGHT, "button", LEFT, "40%", "20% [10px]"))),
                 specNear("button", location(exact(40).withPercentOf("button/width"), LEFT)), page(new HashMap<String, PageElement>(){{
                     put("object", element(90, 130, 100, 50));
                     put("button", element(200, 200, 50, 50));
             }})},
 
             {validationResult(areas(new ValidationObject(new Rect(90, 130, 100, 50), "object"), new ValidationObject(new Rect(200, 200, 50, 50), "button")),
-                    messages("\"object\" is 20% [10px] left which is not in range of 40 to 50% [20 to 25px]")),
+                    messages("\"object\" is 20% [10px] left which is not in range of 40 to 50% [20 to 25px]"),
+                    asList(LayoutMeta.distance("object", RIGHT, "button", LEFT, "40 to 50%", "20% [10px]"))),
                 specNear("button", location(between(40, 50).withPercentOf("button/area/width"), LEFT)), page(new HashMap<String, PageElement>(){{
                     put("object", element(90, 130, 100, 50));
                     put("button", element(200, 200, 50, 50));
             }})},
 
-            {validationResult(NO_AREA, messages("\"object\" is absent on page")),
+            {validationResult(NO_AREA, messages("\"object\" is absent on page"), NULL_META),
                 specNear("button", location(exact(30), RIGHT), location(between(10, 20), BOTTOM)), page(new HashMap<String, PageElement>(){{
                     put("object", absentElement(310, 250, 100, 50));
                     put("button", element(200, 200, 100, 50));
             }})},
 
-            {validationResult(NO_AREA, messages("\"object\" is not visible on page")),
+            {validationResult(NO_AREA, messages("\"object\" is not visible on page"), NULL_META),
                 specNear("button", location(exact(30), RIGHT), location(between(10, 20), BOTTOM)), page(new HashMap<String, PageElement>(){{
                     put("object", invisibleElement(310, 250, 100, 50));
                     put("button", element(200, 200, 100, 50));
             }})},
 
-            {validationResult(NO_AREA, messages("\"button\" is absent on page")),
+            {validationResult(NO_AREA, messages("\"button\" is absent on page"), NULL_META),
                 specNear("button", location(exact(30), RIGHT), location(between(10, 20), BOTTOM)), page(new HashMap<String, PageElement>(){{
                     put("object", element(310, 250, 100, 50));
                     put("button", absentElement(200, 200, 100, 50));
             }})},
 
-            {validationResult(NO_AREA, messages("\"button\" is not visible on page")),
+            {validationResult(NO_AREA, messages("\"button\" is not visible on page"), NULL_META),
                 specNear("button", location(exact(30), RIGHT), location(between(10, 20), BOTTOM)), page(new HashMap<String, PageElement>(){{
                     put("object", element(310, 250, 100, 50));
                     put("button", invisibleElement(200, 200, 100, 50));
             }})},
 
-            {validationResult(NO_AREA, messages("Cannot find locator for \"button\" in page spec")),
+            {validationResult(NO_AREA, messages("Cannot find locator for \"button\" in page spec"), NULL_META),
                 specNear("button", location(exact(30), RIGHT), location(between(10, 20), BOTTOM)), page(new HashMap<String, PageElement>(){{
                     put("object", element(310, 250, 100, 50));
             }})},
 
-            {validationResult(NO_AREA, messages("Cannot find locator for \"object\" in page spec")),
+            {validationResult(NO_AREA, messages("Cannot find locator for \"object\" in page spec"), NULL_META),
                 specNear("button", location(exact(30), RIGHT), location(between(10, 20), BOTTOM)), page(new HashMap<String, PageElement>(){{
                     put("button", absentElement(200, 200, 100, 50));
             }})}

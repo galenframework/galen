@@ -15,6 +15,7 @@
 ******************************************************************************/
 package com.galenframework.validation;
 
+import com.galenframework.reports.model.LayoutMeta;
 import com.galenframework.specs.Spec;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
@@ -32,6 +33,7 @@ public class ValidationResult {
     private List<ValidationObject> validationObjects = new LinkedList<>();
     private ValidationError error;
     private List<ValidationResult> childValidationResults;
+    private List<LayoutMeta> meta;
 
     public ValidationResult(Spec spec, List<ValidationObject> validationObjects) {
         this.spec = spec;
@@ -42,10 +44,11 @@ public class ValidationResult {
         this.spec = spec;
     }
 
-    public ValidationResult(Spec spec, List<ValidationObject> validationObjects, ValidationError validationError) {
+    public ValidationResult(Spec spec, List<ValidationObject> validationObjects, ValidationError validationError, List<LayoutMeta> meta) {
         this.spec = spec;
         this.validationObjects = validationObjects;
         this.error = validationError;
+        this.meta = meta;
     }
 
     public List<ValidationObject> getValidationObjects() {
@@ -70,6 +73,7 @@ public class ValidationResult {
                 .append(validationObjects)
                 .append(error)
                 .append(childValidationResults)
+                .append(meta)
                 .toHashCode();
     }
 
@@ -88,6 +92,7 @@ public class ValidationResult {
                 .append(this.error, rhs.error)
                 .append(this.validationObjects, rhs.validationObjects)
                 .append(this.childValidationResults, rhs.childValidationResults)
+                .append(this.meta, rhs.meta)
                 .isEquals();
 
     }
@@ -98,6 +103,7 @@ public class ValidationResult {
                 .append("objects", validationObjects)
                 .append("error", error)
                 .append("childValidationResults", childValidationResults)
+                .append("meta", meta)
                 .toString();
     }
 
@@ -124,5 +130,18 @@ public class ValidationResult {
 
     public Spec getSpec() {
         return spec;
+    }
+
+    public List<LayoutMeta> getMeta() {
+        return meta;
+    }
+
+    public void setMeta(List<LayoutMeta> meta) {
+        this.meta = meta;
+    }
+
+    public ValidationResult withMeta(List<LayoutMeta> layoutMeta) {
+        this.meta = layoutMeta;
+        return this;
     }
 }

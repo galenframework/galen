@@ -1,561 +1,228 @@
-jQuery.fn.centerHorizontally = function () {
-    this.css("position","absolute");
-    this.css("top", Math.max(0, $(window).scrollTop() + 80) + "px");
-    this.css("left", Math.max(0, (($(window).width() - $(this).outerWidth()) / 2) + 
-                                                $(window).scrollLeft()) + "px");
-    return this;
-}
-
-
-var _GalenReport = {};
-
-function setHtml(id, html) {
-    document.getElementById(id).innerHTML = html;
-}
-
-function haveSimilarElements(array1, array2) {
-    return $(array1).filter(array2).length > 0;
-}
-
-function createTemplate(templateId) {
-    var source = document.getElementById(templateId).innerHTML;
-    return Handlebars.compile(source);
-}
-
-function safeHtml(html) {
-    return new Handlebars.SafeString(html);
-}
-
-function hasChildElements(items) {
-    return items !== null && items !== undefined && Array.isArray(items) && items.length > 0;
-}
-
-
-function onExpandNodeClick() {
-    var expandLink = this;
-
-    var container = $(this).siblings(".expand-container");
-    container.slideToggle({
-        duration: "fast",
-        complete: function () {
-            if ($(this).is(":visible")) {
-                $(expandLink).removeClass("collapsed").addClass("expanded");
-            } else {
-                $(expandLink).removeClass("expanded").addClass("collapsed");
-            }
+Array.prototype.pushAll = function (arr) {
+    if (arr && arr.length > 0) {
+        for (var i = 0; i < arr.length; i++) {
+            this.push(arr[i]);
         }
-    });
-
-    return false;
-}
-
-function ColorPatternPicker() {
-    this.colors = [
-        "#B55CFF", "#FF5C98", "#5C9AFF", "#5CE9FF", "#5CFFA3", "#98FF5C", "#FFE95C", "#FFA05C"
-    ];
-}
-ColorPatternPicker.prototype.index = -1;
-ColorPatternPicker.prototype.pickColor = function () {
-    this.index += 1;
-
-    if (this.index >= this.colors.length) {
-        this.index = 0;
     }
-
-    return this.colors[this.index];
+};
+var ColorPicker = {
+    palette: [
+        "#B55CFF", "#FF5C98", "#5C9AFF", "#5CE9FF", "#5CFFA3", "#98FF5C", "#FFE95C", "#FFA05C"
+    ],
+    pickColor: function(index) {
+        return this.palette[index % this.palette.length];
+    }
 };
 
-function collectObjectsToHighlight(objects, filterFunction) {
-    var collected = [],
-        colorPicker = new ColorPatternPicker();
-
-    for (var objectName in objects) {
-        if (objects.hasOwnProperty(objectName)) {
-
-            if (filterFunction(objectName, objects[objectName])) {
-                var area = objects[objectName].area;
-
-                collected.push({
-                    name: objectName,
-                    area: {
-                        left: area[0] - 3,
-                        top: area[1] - 3,
-                        width: area[2],
-                        height: area[3]
-                    },
-                    color: colorPicker.pickColor(),
-                    drawBorder: true,
-                    fillBackground: false
-                });
-            }
-        }
-    }
-
-    return sortByArea(collected);
-}
-
-function sortByArea(objects) {
-    return objects.sort(function (a, b) {
-        return b.area.width*b.area.height - a.area.width*a.area.height;
-    });
-}
-
-function findScreenSize(objects) {
-    var maxWidth = 0;
-    var maxHeight = 0;
-    for (var objectName in objects) {
-        if (objectName === "screen") {
-            return {
-                width: objects[objectName].area[2],
-                height: objects[objectName].area[3]
-            };
+var MetaUtils = {
+    isEdgeVertical: function(edgeName) {
+        edgeName = edgeName.toLowerCase();
+        return (edgeName === 'left' || edgeName === 'right');
+    },
+    isEdgeHorizontal: function(edgeName) {
+        edgeName = edgeName.toLowerCase();
+        return (edgeName === 'top' || edgeName === 'bottom');
+    },
+    fetchEdge: function(area, edgeName) {
+        edgeName = edgeName.toLowerCase();
+        if (edgeName === 'left') {
+            return {x1: area[0], y1: area[1], x2: area[0], y2: area[1] + area[3]};
+        } else if (edgeName === 'right') {
+            return {x1: area[0] + area[2], y1: area[1], x2: area[0] + area[2], y2: area[1] + area[3]};
+        } else if (edgeName === 'top') {
+            return {x1: area[0], y1: area[1], x2: area[0] + area[2], y2: area[1]};
+        } else if (edgeName === 'bottom') {
+            return {x1: area[0], y1: area[1] + area[3], x2: area[0] + area[2], y2: area[1] + area[3]};
         } else {
-            if (maxWidth < objects[objectName].area[2]) {
-                maxWidth = objects[objectName].area[2];
-            }
-            if (maxHeight < objects[objectName].area[3]) {
-                maxHeight = objects[objectName].area[3];
-            }
+            console.log('Unknown edge: ' + edgeName);
+            return null;
         }
-    }
+    },
+    horizontalArrowGuide: function (x, y, direction) {
+        var arrowLength = 10;
+        var arrowWidth = 3;
+        return [{
+            type: 'line',
+            x1: x, y1: y,
+            x2: x + arrowLength * direction, y2: y + arrowWidth
+        },{
+            type: 'line',
+            x1: x, y1: y,
+            x2: x + arrowLength * direction, y2: y - arrowWidth
+        }];
+    },
+    verticalArrowGuide: function (x, y, direction) {
+        var arrowLength = 10;
+        var arrowWidth = 3;
+        return [{
+            type: 'line',
+            x1: x, y1: y,
+            x2: x + arrowWidth, y2: y + arrowLength * direction
+        },{
+            type: 'line',
+            x1: x, y1: y,
+            x2: x - arrowWidth, y2: y + arrowLength * direction
+        }];
+    },
+    createVerticalDistanceGuides: function (edgeA, edgeB, expectedText, realText) {
+        var distance = Math.abs(edgeA.x1 - edgeB.x1);
 
-    return {
-        width: maxWidth,
-        height: maxHeight
-    };
-}
-
-function findClosestScreenshotData($element) {
-    var $closest = $element.closest("[data-screenshot]");
-    if ($closest.length > 0) {
-        return $closest.attr("data-screenshot");
-    } else {
-        return null;
-    }
-}
-
-function onLayoutCheckClick() {
-    $this = $(this);
-    var objectNames = $this.attr("data-highlight-objects").split(",");
-
-    var checkText = $this.text();
-    var errorText = $this.next(".layout-check-error-message").find(".layout-check-error-message-text").text();
-
-    var layoutId = $this.closest(".layout-report").attr("data-layout-id");
-    var screenshot = findClosestScreenshotData($this);
-
-    if (layoutId !== "" && layoutId >= 0) {
-        var layout = _GalenReport.layouts[layoutId];
-
-        if (layout !== null) {
-            var objects = collectObjectsToHighlight(layout.objects, function (objectName, object) {
-                return objectNames.indexOf(objectName) > -1;
-            });
-
-            if (screenshot === null || screenshot === undefined) {
-                screenshot = _GalenReport.layouts[0].screenshot;
-            }
-
-            showShadow();
-            showPopup("Loading ...");
-
-            loadImage(screenshot, function () {
-                _GalenReport.showNotification(checkText, errorText);
-                _GalenReport.showScreenshotWithObjects(screenshot, this.width, this.height, objects);
-            }, function () {
-                var screenSize = findScreenSize(layout.objects);
-                _GalenReport.showNotification(checkText, errorText);
-                _GalenReport.showScreenshotWithObjects(null, screenSize.width, screenSize.height, objects);
-            });
-
+        var midTop = 0;
+        if (edgeA.y1 >= edgeB.y1 && edgeA.y2 <= edgeB.y2) { // edgeA is inside edgeB
+            midTop = Math.abs(edgeA.y1 + edgeA.y2) / 2;
+        } else if (edgeB.y1 >= edgeA.y1 && edgeB.y2 <= edgeA.y2) { // edgeB is inside edgeA
+            midTop = Math.abs(edgeB.y1 + edgeB.y2) / 2;
         } else {
-            _GalenReport.showErrorNotification("Couldn't find layout data");
+            var midTop1 = Math.round((edgeA.y1 + edgeB.y2) / 2.0);
+            var midTop2 = Math.round((edgeA.y2 + edgeB.y1) / 2.0);
+            if (Math.abs(midTop1 - edgeA.y1) > Math.abs(midTop2 - edgeA.y2)) {
+                midTop = midTop2;
+            } else {
+                midTop = midTop1;
+            }
         }
-    } else {
-        _GalenReport.showErrorNotification("Couldn't find layout data");
-    }
 
-    return false;
-}
-
-function loadImage(imagePath, callback, errorCallback) {
-    var img = new Image();
-    img.onload = function () {
-        callback(this, this.width, this.height);
-    };
-    img.onerror = function() {
-        errorCallback(this);
-    };
-    img.src = imagePath;
-}
-
-function onImageComparisonClick() {
-    var $this = $(this);
-    var actualImagePath = $this.attr("data-actual-image");
-    var expectedImagePath = $this.attr("data-expected-image");
-    var mapImagePath = $this.attr("data-map-image");
-
-    showShadow();
-    showPopup("Loading ...");
-
-    var windowWidth = $(window).width();
-
-    loadImage(actualImagePath, function (actualImage, actualImageWidth, actualImageHeight) {
-        loadImage(expectedImagePath, function (expectedImage, expectedImageWidth, expectedImageHeight) {
-            loadImage(mapImagePath, function (mapImage, mapImageWidth, mapImageHeight) {
-                var layout = "vertical";
-                if (windowWidth - actualImageWidth - expectedImageWidth > 100) {
-                    layout = "horizontal";
-                }
-
-                showPopup(_GalenReport.tpl.imageComparison({
-                    actual: actualImagePath,
-                    expected: expectedImagePath,
-                    map: mapImagePath,
-                    layout: layout
-                }));
+        var guides = [];
+        if (distance > 30) {
+            guides.push({
+                type: 'line',
+                x1: edgeA.x1, y1: midTop,
+                x2: edgeB.x1, y2: midTop
             });
-        });
-    });
-
-    return false;
-}
-
-function visitEachSpec(sections, callback) {
-    if (sections !== null && sections !== undefined) {
-        for (var i = 0; i < sections.length; i++) {
-            if (sections[i].sections != undefined && sections[i].sections != null) {
-                visitEachSpec(sections[i].sections, callback);
-            }
-
-            for (var j = 0; j < sections[i].objects.length; j++) {
-                for (var k = 0; k < sections[i].objects[j].specs.length; k++) {
-                    callback(sections[i].objects[j].specs[k]);
-                }
-            }
-        }
-    }
-}
-
-function rgb2hex(r,g,b){
-    return "#" +
-        ("0" + r.toString(16)).slice(-2) +
-        ("0" + g.toString(16)).slice(-2) +
-        ("0" + b.toString(16)).slice(-2);
-}
-
-
-function pickHeatColor(value) {
-    var max = 6;
-    var _t = Math.min(value/max, 1.0);
-
-    if (_t < 0.5) {
-        var t = _t*2;
-        var red = Math.min(Math.floor(255.0 * t), 255);
-        return rgb2hex(red, 255, 0);
-    } else {
-        var t = (_t - 0.5) * 2;
-        var green = Math.min(Math.floor(255.0 * (1.0 - t)), 255);
-        return rgb2hex(255, green, 0);
-    }
-
-}
-
-function collectObjectsForHeatmap(layout) {
-    var objectsHeatMap = {
-    };
-
-    var collected = [];
-
-    visitEachSpec(layout.sections, function (spec) {
-        for (var i = 0; i < spec.highlight.length; i++) {
-            var name = spec.highlight[i];
-            if (name != "screen" && name != "self" && name != "viewport" && name != "parent") {
-                if (objectsHeatMap[name] !== undefined) {
-                    objectsHeatMap[name] += 1;
-                } else {
-                    objectsHeatMap[name] = 1;
-                }
-            }
-            if (spec.hasOwnProperty("subLayout")) {
-                var collectedFromSubLayout = collectObjectsForHeatmap(spec.subLayout);
-                for (var k = 0; k < collectedFromSubLayout.length; k++) {
-                    collected.push(collectedFromSubLayout[k]);
-                }
-            }
-        }
-    });
-
-    for (objectName in objectsHeatMap) {
-        if (objectsHeatMap.hasOwnProperty(objectName)) {
-            var count = objectsHeatMap[objectName];
-
-            if (layout.objects.hasOwnProperty(objectName)) {
-                
-                var area = layout.objects[objectName].area;
-
-                collected.push({
-                    name: objectName,
-                    area: {
-                        left: area[0],
-                        top: area[1],
-                        width: area[2],
-                        height: area[3]
-                    },
-                    color: pickHeatColor(count),
-                    drawBorder: false,
-                    fillBackground: true
-                });
-            }
-        }
-    }
-
-    return sortByArea(collected);
-}
-
-function onLayoutHeatmapClick() {
-    $this = $(this);
-    var layoutId = $this.closest(".node-horizontal-menu").attr("data-layout-id");
-
-    if (layoutId !== "" && layoutId >= 0) {
-        var layout = _GalenReport.layouts[layoutId];
-
-        if (layout !== null) {
-            var objects = collectObjectsForHeatmap(layout);
-            var screenshot = layout.screenshot;
-
-            if (screenshot === null || screenshot === undefined) {
-                screenshot = _GalenReport.layouts[0].screenshot;
-            }
-
-            showShadow();
-            showPopup("Loading ...");
-
-            loadImage(screenshot, function () {
-                _GalenReport.showScreenshotWithObjects(screenshot, this.width, this.height, objects);
-            }, function () {
-                var screenSize = findScreenSize(layout.objects);
-                _GalenReport.showNotification("Couldn't load screenshot: " + screenshot, "");
-                _GalenReport.showScreenshotWithObjects(null, screenSize.width, screenSize.height, objects);
+            guides.push({
+                type: 'text',
+                text: realText,
+                x: Math.round((edgeA.x1 + edgeB.x1) / 2 - (realText.length * 7) / 2),
+                y: midTop - 5,
+                vertical: false
             });
-
+            guides.pushAll(this.horizontalArrowGuide(edgeA.x1, midTop, 1));
+            guides.pushAll(this.horizontalArrowGuide(edgeB.x1, midTop, -1));
         } else {
-            _GalenReport.showErrorNotification("Couldn't find layout data");
+            guides.push({
+                type: 'line',
+                x1: edgeA.x1 - 30, y1: midTop,
+                x2: edgeB.x1 + 30, y2: midTop
+            });
+            guides.push({
+                type: 'text',
+                text: realText,
+                x: edgeB.x1 + 4,
+                y: midTop - 5,
+                vertical: false
+            });
+            guides.pushAll(this.horizontalArrowGuide(edgeA.x1, midTop, -1));
+            guides.pushAll(this.horizontalArrowGuide(edgeB.x1, midTop, 1));
         }
-    } else {
-        _GalenReport.showErrorNotification("Couldn't find layout data");
-    }
-
-    return false;
-}
-
-
-function onNodeExtrasClick() {
-    var html = $(this).next(".node-extras-content").html();
-    showPopup(html);
-    return false;
-}
-
-function onNotificationCloseClick() {
-    $(this).closest(".notification").fadeOut("fast");
-    return false;
-}
-
-function hideNotification() {
-    $(".notification").fadeOut();
-}
-
-
-function showShadow() {
-    $("#screen-shadow").fadeIn();
-}
-function hideShadow() {
-    $("#screen-shadow").fadeOut();
-}
-function showPopup(html) {
-    showShadow();
-    $("#popup .popup-content").html(html);
-    $("#popup").centerHorizontally().fadeIn('fast');
-}
-
-function hidePopup() {
-    hideShadow();
-    $("#popup").fadeOut();
-}
-
-function onPopupCloseClick() {
-    hideShadow();
-    $(this).closest(".popup").fadeOut();
-    return false;
-}
-
-function expandAllNodes() {
-    $(".expand-container").show();
-    $("a.expand-link.contains-children-true").removeClass("collapsed").removeClass("expanded").addClass("expanded");
-}
-
-function expandErrorNodes() {
-    collapseAllNodes();
-
-    $(".node-status-error, .layout-check-status-error").parents(".expand-container").show();
-}
-function collapseAllNodes() {
-    $(".expand-container").hide();
-    $("a.expand-link.contains-children-true").removeClass("expanded").removeClass("collapsed").addClass("collapsed");
-}
-
-
-function createGalenReport() {
-
-    _GalenReport = {
-        layouts: [],
-
-        registerLayout: function (layout) {
-            var id = this.layouts.push({
-                objects: layout.objects,
-                screenshot: layout.screenshot,
-                sections: layout.sections
-            }) - 1;
-            return id;
-        },
-
-        tpl: {
-           main: createTemplate("report-tpl"),
-           reportNode: createTemplate("report-node-tpl"),
-           reportNodeText: createTemplate("report-node-text-tpl"),
-           layout: createTemplate("report-layout-tpl"),
-           layoutSection: createTemplate("report-layout-section-tpl"),
-           layoutObject: createTemplate("report-layout-object-tpl"),
-           layoutCheck: createTemplate("report-layout-check-tpl"),
-           sublayout: createTemplate("report-layout-sublayout-tpl"),
-           screenshotPopup: createTemplate("screenshot-popup-tpl"),
-           imageComparison: createTemplate("image-comparison-tpl"),
-           nodeExtras: createTemplate("node-extras-tpl")
-        },
-
-        render: function (id, reportData) {
-            setHtml(id, this.tpl.main(reportData));
-            
-            $("a.expand-link.contains-children-true").click(onExpandNodeClick);
-            $("a.layout-check").click(onLayoutCheckClick);
-            $("a.image-comparison-link").click(onImageComparisonClick);
-            $("a.layout-heatmap-link").click(onLayoutHeatmapClick);
-            $("a.node-extras").click(onNodeExtrasClick);
-
-            expandErrorNodes();
-        },
-
-        showNotification: function (summary, message) {
-            $("#notification .notification-summary").text(summary);
-            $("#notification .notification-message").text(message);
-            $("#notification").fadeIn("fast");
-        },
-
-        showErrorNotification: function (summary, message) {
-            this.showNotification(summary, message);
-        },
-
-        showScreenshotWithObjects: function (screenshotPath, width, height, objects) {
-            showPopup(_GalenReport.tpl.screenshotPopup({
-                screenshot: screenshotPath,
-                objects: objects,
-                width: width,
-                height: height
-            })); 
-        }
-    };
-
-
-    $(document).keydown(function(e) {
-        if (e.keyCode == 27) {
-            hidePopup();
-            hideNotification();
-        }
-    });
-
-    $(".notification-close-link").click(onNotificationCloseClick);
-    $(".popup-close-link").click(onPopupCloseClick);
-    $("#screen-shadow").click(function () {
-        hidePopup();
-        hideNotification();
-    });
-
-    $(".menu-op-expand-all").click(expandAllNodes);
-    $(".menu-op-collapse-all").click(collapseAllNodes);
-    $(".menu-op-expand-errors").click(expandErrorNodes);
-
-    return _GalenReport;
-}
-
-Handlebars.registerHelper("renderNode", function (node) {
-    if (node !== null && node !== undefined) {
-        if (node.type === "node")  {
-            return safeHtml(_GalenReport.tpl.reportNode(node));
-        } else if (node.type === "text") {
-            return safeHtml(_GalenReport.tpl.reportNodeText(node));
-        } else if (node.type === "layout") {
-            if (node.layoutId === undefined || node.layoutId === null) {
-                node.layoutId = _GalenReport.registerLayout(node);
+        return guides;
+    },
+    createHorizontalDistanceGuides: function (edgeA, edgeB, expectedText, realText) {
+        var distance = Math.abs(edgeA.y1 - edgeB.y1);
+        var midLeft = 0;
+        if (edgeA.x1 >= edgeB.x1 && edgeA.x2 <= edgeB.x2) { // edgeA is inside edgeB
+            midLeft = Math.abs(edgeA.x1 + edgeA.x2) / 2;
+        } else if (edgeB.x1 >= edgeA.x1 && edgeB.x2 <= edgeA.x2) { // edgeB is inside edgeA
+            midLeft = Math.abs(edgeB.x1 + edgeB.x2) / 2;
+        } else {
+            var midLeft1 = Math.round((edgeA.x1 + edgeB.x2) / 2.0);
+            var midLeft2 = Math.round((edgeA.x2 + edgeB.x1) / 2.0);
+            if (Math.abs(midLeft1 - edgeA.x1) > Math.abs(midLeft2 - edgeA.x2)) {
+                midLeft = midLeft2;
+            } else {
+                midLeft = midLeft1;
             }
-            return safeHtml(_GalenReport.tpl.layout(node));
         }
-    }
-    return "";
-});
 
-Handlebars.registerHelper("renderNodeExtras", function (extras) {
-    if (extras !== null && extras !== undefined) {
-        return safeHtml(_GalenReport.tpl.nodeExtras(extras));
-    }
-    return "";
-});
-
-Handlebars.registerHelper('ifCond', function(v1, v2, options) {
-    if(v1 === v2) {
-        return options.fn(this);
-    }
-    return options.inverse(this);
-});
-
-
-Handlebars.registerHelper("renderLayoutSection", function (section) {
-    if (section !== null && section !== undefined) {
-        return safeHtml(_GalenReport.tpl.layoutSection(section));
-    }
-});
-
-Handlebars.registerHelper("renderLayoutObject", function (object) {
-    if (object !== null && object !== undefined) {
-        return safeHtml(_GalenReport.tpl.layoutObject(object));
-    }
-});
-
-Handlebars.registerHelper("renderLayoutCheck", function (check) {
-    if (check !== null && check !== undefined) {
-        return safeHtml(_GalenReport.tpl.layoutCheck(check));
-    }
-});
-
-Handlebars.registerHelper("renderSublayout", function (sublayout) {
-    if (sublayout !== null && sublayout !== undefined) {
-        if (sublayout.layoutId === undefined || sublayout.layoutId === null) {
-            sublayout.layoutId = _GalenReport.registerLayout(sublayout);
+        var guides = [];
+        if (distance > 30) {
+            guides.push({
+                type: 'line',
+                x1: midLeft, y1: edgeA.y1,
+                x2: midLeft, y2: edgeB.y1
+            });
+            guides.push({
+                type: 'text',
+                text: realText,
+                x: midLeft - 8,
+                y: Math.round((edgeA.y1 + edgeB.y1) / 2 + (realText.length * 7) / 2),
+                vertical: true
+            });
+            guides.pushAll(this.verticalArrowGuide(midLeft, edgeA.y1, 1));
+            guides.pushAll(this.verticalArrowGuide(midLeft, edgeB.y1, -1));
+        } else {
+            guides.push({
+                type: 'line',
+                x1: midLeft, y1: edgeA.y1 - 30,
+                x2: midLeft, y2: edgeB.y1 + 30
+            });
+            guides.push({
+                type: 'text',
+                text: realText,
+                x: midLeft - 8,
+                y: edgeB.y1 - 4,
+                vertical: true
+            });
+            guides.pushAll(this.verticalArrowGuide(midLeft, edgeA.y1, -1));
+            guides.pushAll(this.verticalArrowGuide(midLeft, edgeB.y1, 1));
         }
-        
-        return safeHtml(_GalenReport.tpl.sublayout(sublayout));
+        return guides;
     }
-});
+};
 
-Handlebars.registerHelper("hasChildElements", function (items1, items2) {
-    if (hasChildElements(items1) || hasChildElements(items2)) {
-        return "true"
+var _ = {
+    map: function (arr, func) {
+        var newArray = [];
+        for (var i = 0; i < arr.length; i++) {
+            newArray.push(func(arr[i], i));
+        }
+        return newArray;
+    },
+
+    mapNonNull: function (arr, func) {
+        var newArray = [];
+        for (var i = 0; i < arr.length; i++) {
+            var item = func(arr[i], i);
+            if (item !== null && item !== undefined) {
+                newArray.push(item);
+            }
+        }
+        return newArray;
+    },
+
+    forEachInObject: function (obj, func) {
+        if (obj) {
+            for (var key in obj) {
+                if (obj.hasOwnProperty(key)) {
+                    func(obj[key], key);
+                }
+            }
+        }
+    },
+
+    forEach: function (arr, callback) {
+        if (arr && arr.length > 0) {
+            for (var i = 0; i < arr.length; i++) {
+                callback(arr[i], i);
+            }
+        }
+    },
+
+    contains: function (arr, value) {
+        if (arr && arr.length > 0) {
+            for (var i = 0; i < arr.length; i++) {
+                if (arr[i] === value) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
-    return "false";
-});
+};
 
-Handlebars.registerHelper("formatReportTime", function (time) {
-    if (time !== null && time !== undefined) {
-    var date = new Date(time);
+
+function formatTime(timeInMillis) {
+    if (timeInMillis !== null && timeInMillis !== undefined) {
+    var date = new Date(timeInMillis);
         var hh = date.getHours();
         var mm = date.getMinutes();
         var ss = date.getSeconds();
@@ -565,324 +232,737 @@ Handlebars.registerHelper("formatReportTime", function (time) {
         return hh + ":" + mm + ":" + ss;
     }
     return "";
-});
-
-Handlebars.registerHelper("formatGroupsPretty", function (groups) {
-    if (groups !== null && groups !== undefined) {
-        var text = "";
-
-        for (var i = 0; i < groups.length; i++) {
-            if (i > 0) {
-                text += ", ";
-            }
-            text = text + '<a href="#tests|grouped|' + groups[i] + '">' + groups[i] + '</a>';
-        }
-        return safeHtml(text);
+}
+function convertToPlusMinus(expanded) {
+    if (expanded) {
+        return '-';
+    } else {
+        return '+';
     }
-    return "";
-});
-
-Handlebars.registerHelper("formatDurationHumanReadable", function (durationInMillis) {
-    var durationInSeconds = Math.floor(durationInMillis / 1000);
-    if (durationInSeconds > 0) {
-        var hours = Math.floor(durationInSeconds / 3600);
-        var minutes = Math.floor((durationInSeconds - hours * 3600) / 60);
-        var seconds = Math.floor(durationInSeconds - hours * 3600 - minutes * 60);
-
-        var text = "";
-        if (hours > 0) {
-            text += hours + "h";
-        }
-
-        if (minutes > 0 || hours > 0) {
-            if (hours > 0) {
-                text += " ";
-            }
-            text += minutes;
-            text += "m";
-        }
-
-        if (seconds > 0) {
-            if (hours > 0 || minutes > 0) {
-                text += " ";
-            }
-            text += seconds;
-            text += "s";
-        }
-
-        return text;
-    }
-
-    else return "0";
-});
-
-function toStringWithLeadingZero(number) {
-    if (number < 10) {
-        return "0" + number;
-    }
-    return number;
 }
 
-Handlebars.registerHelper("formatDateTime", function (time) {
-    if (time !== null && time !== undefined) {
-    var d = new Date(time);
-        var date = toStringWithLeadingZero(d.getDate());
-        var month = toStringWithLeadingZero(d.getMonth() + 1);
-        var year = d.getFullYear();
+function toggleReportNode(node) {
+    node.expanded = !node.expanded;
+}
 
-        var hh = toStringWithLeadingZero(d.getHours());
-        var mm = toStringWithLeadingZero(d.getMinutes());
-        var ss = toStringWithLeadingZero(d.getSeconds());
-        return date + "-" + month + "-" + year + " " + hh + ":" + mm + ":" + ss;
-    }
-    return "";
-});
 
-Handlebars.registerHelper("renderProgressBar", function (statistic) {
-    var total = statistic.passed + statistic.errors + statistic.warnings;
-    var passedPercent = Math.round(statistic.passed * 100 / total);
-    var failedPercent = Math.round(statistic.errors * 100 / total);
-    var warningPercent = Math.round(statistic.warnings * 100 / total);
+Vue.component('screenshot-popup', {
+    props: ['screenshot', 'highlight', 'guides', 'spec'],
+    template: '#tpl-screenshot-popup',
+    data: function () {
+        var clientWidth = Math.max(document.documentElement.clientWidth, window.innerWidth || 0);
+        var clientHeight = Math.max(document.documentElement.clientHeight, window.innerHeight || 0);
 
-    return new Handlebars.SafeString("<table class='progress'><tr><td class='passed' style='width:" + passedPercent + "%;'></td><td style='width:" + failedPercent + "%;' class='failed'></td><td                 style='width:" + warningPercent + "%;' class='warning'></td></tr></table>");
-});
-
-Handlebars.registerHelper("renderGroupsProgressBar", function (group) {
-    var total = group.tests;
-    var passedPercent = Math.round(group.passed * 100 / total);
-    var failedPercent = Math.round(group.failed * 100 / total);
-
-    return new Handlebars.SafeString("<table class='progress'><tr><td class='passed' style='width:" + passedPercent + "%;'></td><td style='width:" + failedPercent + "%;' class='failed'></td></tr></table>");
-});
-
-Handlebars.registerHelper("commaSeparated", function (items) {
-    if (items !== null && items !== undefined && items.length > 0) {
-        var text = "";
-        for (var i = 0; i < items.length; i++) {
-            if (i > 0) {
-                text += ",";
+        return {
+            position: {
+                top: 5,
+                left: 50,
+                width: clientWidth - 100,
+                height: clientHeight - 10
+            },
+            plot: {
+                width: 100,
+                height: 100
+            },
+            crop: {
+                width: Math.max(400, this.highlight.boundaryBox.width) + 60,
+                height: Math.max(400, this.highlight.boundaryBox.height) + 60,
+                offsetLeft: 30 - this.highlight.boundaryBox.min.x,
+                offsetTop: 30 - this.highlight.boundaryBox.min.y,
             }
-            text += items[i];
-        }
-        return text;
+        };
     }
-
-    return "";
 });
 
+Vue.component('layout-section', {
+    props: ['section', 'bus'],
+    template: '#tpl-layout-section',
+    methods: {
+        toggleReportNode: toggleReportNode
+    }
+});
 
+Vue.component('object-node', {
+    props: ['object', 'bus'],
+    template: '#tpl-object-node',
+    methods: {
+        toggleReportNode: toggleReportNode
+    }
+});
 
-function createGalenTestOverview() {
-    $.extend($.tablesorter.themes.jui, {
-        table: 'ui-widget ui-widget-content ui-corner-all', 
-        header: 'ui-widget-header ui-corner-all ui-state-default',
-        icons: 'ui-icon', 
-        sortNone: 'ui-icon-carat-2-n-s',
-        sortAsc: 'ui-icon-carat-1-n',
-        sortDesc: 'ui-icon-carat-1-s',
-        active: 'ui-state-active',
-        hover: 'ui-state-hover', 
-        filterRow: '',
-        even: 'ui-widget-content',
-        odd: 'ui-state-default'
-    });
+Vue.component('layout-spec', {
+    props: ['spec', 'bus'],
+    template: '#tpl-layout-spec',
+    data: function () {
+        return {
+            isFailed: this.spec.errors && this.spec.errors.length > 0
+        };
+    },
+    methods: {
+        showSpec: function() {
+            this.bus.$emit('spec-clicked', this.spec);
+        }
+    }
+})
 
-    return  {
-        testsTableId: null,
-        groupsTableId: null,
-        tpl: {
-            tests: createTemplate("tests-table-tpl"),
-            groups: createTemplate("groups-table-tpl")
-        },
+Vue.component('layout-report', {
+    props: ['layout'],
+    template: '#tpl-layout-report',
 
+    data: function () {
+        return {
+            bus: new Vue(),
+            screenshotPopup: {
+                shown: false,
+                spec: null,
+                screenshotFile: null
+            }
+        };
+    },
+    created: function() {
+        this.bus.$on('spec-clicked', this.specClicked)
+    },
+    methods: {
+        toggleReportNode: toggleReportNode,
+        collectHighlightAreas: function (objectNames) {
+            var self = this;
+            var boundaryBox = {
+                min: {x: 1000000, y: 1000000},
+                max: {x: 0, y: 0}
+            };
+            var objects = _.mapNonNull(objectNames, function (objectName, index) {
+                if (self.layout.objects.hasOwnProperty(objectName)) {
+                    var area = self.layout.objects[objectName].area;
+                    if (area) {
+                        var item = {
+                            name: objectName,
+                            area: {x: area[0], y: area[1], width: area[2], height: area[3]},
+                            color: ColorPicker.pickColor(index),
+                            border: true,
+                            fill: false,
+                            caption: true
+                        };
 
-        handleHash: function (hash) {
-            var hashParameters = hash.split("|");
-            var view = hashParameters[0];
-
-            $(".tabs .tab-selected").each(function () {
-                $(this).removeClass("tab-selected");
+                        boundaryBox.min.x = Math.min(boundaryBox.min.x, item.area.x);
+                        boundaryBox.min.y = Math.min(boundaryBox.min.y, item.area.y);
+                        boundaryBox.max.x = Math.max(boundaryBox.max.x, item.area.x + item.area.width);
+                        boundaryBox.max.y = Math.max(boundaryBox.max.y, item.area.y + item.area.height);
+                        return item;
+                    }
+                }
+                return null;
             });
 
-            if (view === "groups") {
-                $("#" + this.testsTableId).hide();
-                $("#" + this.groupsTableId).show();
-                $(".tabs .tab-groups").addClass("tab-selected");
-
-                this.handleGroupsHash(hash);
-            } else {
-                $("#" + this.groupsTableId).hide();
-                $("#" + this.testsTableId).show();
-
-                $(".tabs .tab-tests").addClass("tab-selected");
-                this.handleTestsHash(hash);
+            boundaryBox.width = boundaryBox.max.x - boundaryBox.min.x;
+            boundaryBox.height = boundaryBox.max.y - boundaryBox.min.y;
+            return {
+                objects: objects,
+                boundaryBox: boundaryBox
+            };
+        },
+        findObjectArea: function(objectName) {
+            if (this.layout.objects.hasOwnProperty(objectName)) {
+                return this.layout.objects[objectName].area;
             }
+            return null;
         },
-
-
-        handleGroupsHash: function (hash) {
+        collectMetaGuides: function(meta) {
+            var self = this;
+            return _.mapNonNull(meta, function (metaEntry) {
+                var fromArea = self.findObjectArea(metaEntry.from.object);
+                var toArea = self.findObjectArea(metaEntry.to.object);
+                if (fromArea && toArea) {
+                    var fromEdge = MetaUtils.fetchEdge(fromArea, metaEntry.from.edge);
+                    var toEdge = MetaUtils.fetchEdge(toArea, metaEntry.to.edge);
+                    if (MetaUtils.isEdgeVertical(metaEntry.from.edge) && MetaUtils.isEdgeVertical(metaEntry.to.edge)) {
+                        return MetaUtils.createVerticalDistanceGuides(fromEdge, toEdge, metaEntry.expectedDistance, metaEntry.realDistance);
+                    } else if (MetaUtils.isEdgeHorizontal(metaEntry.from.edge) && MetaUtils.isEdgeHorizontal(metaEntry.to.edge)) {
+                        return MetaUtils.createHorizontalDistanceGuides(fromEdge, toEdge, metaEntry.expectedDistance, metaEntry.realDistance);
+                    }
+                }
+                return null;
+            });
         },
-        handleTestsHash: function (hash) {
-            var arguments = hash.split("|");
-            if (arguments.length > 1 && arguments[1] === "grouped") {
-                var selectedGroups = arguments[2].split(",");
-                if (selectedGroups.length > 0) {
-                    $(".tests.tablesorter > tbody > tr").each(function () {
-                        var $this = $(this);
-                        var groupsAttr = $this.attr("data-groups");
-                        var groups = groupsAttr.split(",");
-                        if(haveSimilarElements(groups, selectedGroups)) {
-                            $this.show();
-                        } else {
-                            $this.hide();
+        specClicked: function(spec) {
+            this.screenshotPopup.metaGuides = [];
+            if (spec.highlight && spec.highlight.length > 0) {
+                this.screenshotPopup.highlightAreas = this.collectHighlightAreas(spec.highlight);
+            }
+            if (spec.meta && spec.meta.length > 0) {
+                this.screenshotPopup.metaGuides = this.collectMetaGuides(spec.meta);
+            }
+            this.screenshotPopup.spec = spec;
+            this.screenshotPopup.shown = true;
+            this.screenshotPopup.screenshotFile = this.layout.screenshot;
+        },
+        showHeatMap: function() {
+            this.screenshotPopup.spec = null;
+            this.screenshotPopup.metaGuides = [];
+            this.screenshotPopup.highlightAreas = this.collectObjectsForHeatmap(this.layout);
+            this.screenshotPopup.screenshotFile = this.layout.screenshot;
+            this.screenshotPopup.shown = true;
+        },
+        showFailureMap: function() {
+            this.screenshotPopup.spec = null;
+            this.screenshotPopup.metaGuides = [];
+            this.screenshotPopup.highlightAreas = this.collectObjectsForFailureMap(this.layout);
+            this.screenshotPopup.screenshotFile = this.layout.screenshot;
+            this.screenshotPopup.shown = true;
+        },
+        visitEachSpec: function(sections, callback) {
+            if (sections !== null && sections !== undefined) {
+                for (var i = 0; i < sections.length; i++) {
+                    if (sections[i].sections != undefined && sections[i].sections != null) {
+                        this.visitEachSpec(sections[i].sections, callback);
+                    }
+
+                    for (var j = 0; j < sections[i].objects.length; j++) {
+                        for (var k = 0; k < sections[i].objects[j].specs.length; k++) {
+                            callback(sections[i].objects[j].specs[k]);
                         }
-                    });
-
-                    return;
+                    }
                 }
             }
-            $(".tests.tablesorter tbody tr").each(function () {
-                $(this).show();
+        },
+        sortByArea: function(objects) {
+            return objects.sort(function (a, b) {
+                return b.area.width*b.area.height - a.area.width*a.area.height;
+            });
+        },
+        rgb2hex: function(colorArray) {
+            return "#" +
+                ("0" + colorArray[0].toString(16)).slice(-2) +
+                ("0" + colorArray[1].toString(16)).slice(-2) +
+                ("0" + colorArray[2].toString(16)).slice(-2);
+        },
+        interpolateArray: function(t, arr1, arr2) {
+            var result = [];
+            for (var i = 0; i < arr1.length && i < arr2.length; i++) {
+                result.push((1.0 - t) * arr1[i]  + t * arr2[i]);
+            }
+            return result;
+        },
+        pickHeatColor: function(value) {
+            var max = 6;
+            var _t = Math.min(value/max, 1.0);
+            var lowColor = [0, 215, 252];
+            var midColor = [252, 206, 0];
+            var highColor = [255, 0, 0];
+
+
+            if (_t < 0.5) {
+                return this.rgb2hex(this.interpolateArray(_t*2, lowColor, midColor));
+            } else {
+                return this.rgb2hex(this.interpolateArray((_t - 0.5)*2, midColor, highColor));
+            }
+        },
+        collectObjectsForHeatmap: function (layout) {
+            var self = this;
+            return this.collectObjectsStatistics(layout, function (object) {
+                object.color = self.pickHeatColor(object.specCount);
+            });
+        },
+        collectObjectsForFailureMap: function (layout) {
+            var self = this;
+            return this.collectObjectsStatistics(layout, function (object) {
+                object.color = '#69ee58';
+                if (object.errorCount == 1) {
+                    object.color = '#ffa100';
+                } else  if (object.errorCount >= 2) {
+                    object.color = '#ff3600';
+                }
+                //object.color = self.pickHeatColor(object.specCount);
             });
         },
 
-        renderGroupsTable: function (id, testData) {
-            this.groupsTableId = id;
-            var tests = testData.tests;
-            var groups = {};
+        collectObjectsStatistics: function (layout, objectModifierCallback) {
+            var objects = this._collectObjectsStatistics(layout);
+            var boundaryBox = {
+                min: {x: 1000000, y: 1000000},
+                max: {x: 0, y: 0}
+            };
+            var self = this;
+            _.forEach(objects, function (object) {
+                boundaryBox.min.x = Math.min(boundaryBox.min.x, object.area.x);
+                boundaryBox.min.y = Math.min(boundaryBox.min.y, object.area.y);
+                boundaryBox.max.x = Math.max(boundaryBox.max.x, object.area.x + object.area.width);
+                boundaryBox.max.y = Math.max(boundaryBox.max.y, object.area.y + object.area.height);
+                objectModifierCallback(object);
+            });
 
-            for (var i = 0; i < tests.length; i++) {
-                var test = tests[i];
-                var testGroups = tests[i].groups;
-
-                if (testGroups !== null && testGroups !== undefined && Array.isArray(testGroups)) {
-                    for (var j = 0; j < testGroups.length; j++) {
-                        var groupName = testGroups[j];
-                        if (groupName in groups) {
-                            groups[groupName].tests += 1;
-                            groups[groupName].failed += test.failed ? 1 : 0;
-                            groups[groupName].passed += test.failed ? 0 : 1;
-                        }
-                        else {
-                            groups[groupName] = {
-                                name: groupName,
-                                tests: 1,
-                                failed: test.failed ? 1 : 0,
-                                passed: test.failed ? 0 : 1
+            boundaryBox.width = boundaryBox.max.x - boundaryBox.min.x;
+            boundaryBox.height = boundaryBox.max.y - boundaryBox.min.y;
+            return {
+                boundaryBox,
+                objects: this.sortByArea(objects)
+            };
+        },
+        _collectObjectsStatistics: function (layout) {
+            var objectsMap = {};
+            var collectedObjects = [];
+            var self = this;
+            this.visitEachSpec(layout.sections, function (spec) {
+                for (var i = 0; i < spec.highlight.length; i++) {
+                    var name = spec.highlight[i];
+                    if (name !== 'screen' && name !== 'self' && name !== 'viewport' && name !== 'parent') {
+                        if (!objectsMap.hasOwnProperty(name)) {
+                            var area = layout.objects[name].area;
+                            objectsMap[name] = {
+                                name: name,
+                                area: {
+                                    x: area[0],
+                                    y: area[1],
+                                    width: area[2],
+                                    height: area[3]
+                                },
+                                color: '#ffffff',
+                                drawBorder: false,
+                                fill: true,
+                                fillBackground: true,
+                                specCount: 0,
+                                errorCount: 0
                             };
                         }
+                        objectsMap[name].specCount += 1;
+                        if (spec.errors && spec.errors.length > 0) {
+                            objectsMap[name].errorCount += 1;
+                        }
+                    }
+                    if (spec.hasOwnProperty('subLayout')) {
+                        var collectedFromSubLayout = self._collectObjectsStatistics(spec.subLayout);
+                        for (var k = 0; k < collectedFromSubLayout.length; k++) {
+                            collectedObjects.push(collectedFromSubLayout[k]);
+                        }
                     }
                 }
-            }
-
-            var groupsArray = [];
-
-            for (name in groups) {
-                if (groups.hasOwnProperty(name)) {
-                    groupsArray.push(groups[name]);
-                }
-            }
-
-            setHtml(id, this.tpl.groups(groupsArray));
-            this.createTableSorter("#" + id + " table");
-        },
-
-        renderTestsTable: function (id, data) {
-            this.testsTableId = id;
-            setHtml(id, this.tpl.tests(data));
-
-            this.createTableSorter('#' + id + " table");
-        },
-
-        initialSorting: function () {
-            return [
-                [2, 1],
-                [0, 0],
-                [1, 0]
-            ];
-        },
-
-        createTableSorter: function (selector) {
-            $(selector).tablesorter({
-                theme: 'default',
-                widthFixed: false,
-                showProcessing: false,
-                headerTemplate: '{content}',
-                onRenderTemplate: null, 
-                onRenderHeader: function (index) {
-                    $(this).find('div.tablesorter-header-inner').addClass('roundedCorners');
-                },
-                cancelSelection: true,
-                dateFormat: "mmddyyyy",
-                sortMultiSortKey: "shiftKey",
-                sortResetKey: 'ctrlKey',
-                usNumberFormat: true,
-                delayInit: false,
-                serverSideSorting: false,
-                ignoreCase: true,
-                sortForce: null,
-                sortList: this.initialSorting(),
-                sortAppend: null,
-                sortInitialOrder: "asc",
-                sortLocaleCompare: false,
-                sortReset: false,
-                sortRestart: false,
-                emptyTo: "bottom",
-                stringTo: "max",
-                textExtraction: {
-                    0: function (node) {
-                        return $(node).text();
-                    },
-                    1: function (node) {
-                        return $(node).text();
-                    }
-                },
-                textSorter: null,
-                initWidgets: true,
-                widgets: ['zebra', 'columns'],
-                widgetOptions: {
-                    zebra: [
-                        "ui-widget-content even",
-                        "ui-state-default odd"],
-                    uitheme: 'jui',
-                    columns: [
-                        "primary",
-                        "secondary",
-                        "tertiary"],
-                    columns_tfoot: true,
-                    columns_thead: true,
-                    filter_childRows: false,
-                    filter_columnFilters: true,
-                    filter_cssFilter: "tablesorter-filter",
-                    filter_functions: null,
-                    filter_hideFilters: false,
-                    filter_ignoreCase: true,
-                    filter_reset: null,
-                    filter_searchDelay: 300,
-                    filter_serversideFiltering: false,
-                    filter_startsWith: false,
-                    filter_useParsedData: false,
-                    resizable: true,
-                    saveSort: true,
-                    stickyHeaders: "tablesorter-stickyHeader"
-                },
-                initialized: function (table) {},
-                tableClass: 'tablesorter',
-                cssAsc: "tablesorter-headerSortUp",
-                cssDesc: "tablesorter-headerSortDown",
-                cssHeader: "tablesorter-header",
-                cssHeaderRow: "tablesorter-headerRow",
-                cssIcon: "tablesorter-icon",
-                cssChildRow: "tablesorter-childRow",
-                cssInfoBlock: "tablesorter-infoOnly",
-                cssProcessing: "tablesorter-processing",
-                selectorHeaders: '> thead th, > thead td',
-                selectorSort: "th, td",
-                selectorRemove: "tr.remove-me",
-                debug: false
-
             });
-
+            for (var objectName in objectsMap) {
+                if (objectsMap.hasOwnProperty(objectName)) {
+                    collectedObjects.push(objectsMap[objectName])
+                }
+            }
+            return collectedObjects;
         }
-    };
+    },
+    filters: {
+        convertToPlusMinus: convertToPlusMinus,
+        formatTime: formatTime
+    }
+});
+
+Vue.component('report-node', {
+    props: ['node'],
+    template: '#tpl-report-node',
+    data: function () {
+        return {
+            extrasPopup: {
+                show: false,
+                extras: []
+            }
+        };
+    },
+    methods: {
+        toggleReportNode: toggleReportNode,
+        showNodeExtrasPopup: function(extras) {
+            this.extrasPopup.extras = [];
+            for (var key in extras) {
+                if (extras.hasOwnProperty(key)) {
+                    this.extrasPopup.extras.push({
+                        name: key,
+                        value: extras[key]
+                    });
+                }
+            }
+            this.extrasPopup.extras.sort(function (a, b) {
+                return a.name > b.name;
+            });
+            this.extrasPopup.show = true;
+        }
+    },
+    filters: {
+        convertToPlusMinus: convertToPlusMinus,
+        formatTime: formatTime
+    }
+});
+
+
+
+function enrichObjectAndReturnHasFailure(object) {
+    object.expanded = false;
+    object.hasFailure = false;
+
+    _.forEach(object.specs, function (spec) {
+        if (spec.errors && spec.errors.length > 0) {
+            object.hasFailure = true;
+        }
+    });
+    return object.hasFailure;
+}
+
+function enrichSectionAndReturnHasFailure(section) {
+    section.expanded = false;
+    section.hasFailure = false;
+    var thatSection = section;
+    _.forEach(section.sections, function (section) {
+        if (enrichSectionAndReturnHasFailure(section)) {
+            thatSection.hasFailure = true;
+        }
+    });
+    _.forEach(section.objects, function (object) {
+        if (enrichObjectAndReturnHasFailure(object)) {
+            thatSection.hasFailure = true;
+        }
+    });
+    return section.hasFailure;
+}
+
+function enrichReportNodeAndReturnHasFailure(node) {
+    node.expanded = false;
+    node.hasFailure = false;
+    node.hasChildren = false;
+    if ((node.nodes && node.nodes.length > 0) || (node.sections && node.sections.length > 0)) {
+        node.hasChildren = true;
+    }
+    if (node.type === 'node') {
+        _.forEach(node.nodes, function (subNode) {
+            if (enrichReportNodeAndReturnHasFailure(subNode)) {
+                node.hasFailure = true;
+            }
+        });
+    } else if (node.type === 'layout') {
+        _.forEach(node.sections, function (section) {
+            if (enrichSectionAndReturnHasFailure(section)) {
+                node.hasFailure = true;
+            }
+        });
+    }
+
+    return node.hasFailure;
+}
+
+function enrichReportData (reportData) {
+    _.forEach(reportData.report.nodes, enrichReportNodeAndReturnHasFailure);
+    return reportData;
+}
+
+function expandOnlyErrorsInSection (section) {
+    section.expanded = section.hasFailure;
+    _.forEach(section.sections, expandOnlyErrorsInSection);
+    _.forEach(section.objects, function (object) {
+        object.expanded = object.hasFailure;
+    });
+}
+
+function expandOnlyErrorsInNode (node) {
+    node.expanded = node.hasFailure;
+    _.forEach(node.nodes, function(childNode) {
+        if (childNode.type === 'layout') {
+            childNode.expanded = childNode.hasFailure;
+            _.forEach(childNode.sections, function (section) {
+                expandOnlyErrorsInSection(section);
+            });
+        } else {
+            expandOnlyErrorsInNode(childNode);
+        }
+    });
+}
+
+function visitEachSection(section, callback) {
+    callback(section, 'section');
+    _.forEach(section.sections, function (subSection) {
+        visitEachSection(subSection, callback);
+    });
+    _.forEach(section.objects, function (object) {
+        callback(object, 'object');
+    });
+}
+
+function visitEachNode(node, callback) {
+    callback(node, 'node');
+    _.forEach(node.nodes, function(childNode) {
+        if (childNode.type === 'layout') {
+            _.forEach(childNode.sections, function (section) {
+                visitEachSection(section, callback);
+            });
+        } else {
+            visitEachNode(childNode, callback);
+        }
+    });
+}
+
+function renderTestReport(reportData) {
+    var app = new Vue({
+        el: '#app',
+        mounted: function () {
+            this.expandOnlyErrors();
+        },
+        data: {
+            reportData: enrichReportData(reportData)
+        },
+        methods: {
+            expandOnlyErrors: function() {
+                _.forEach(this.reportData.report.nodes, expandOnlyErrorsInNode);
+            },
+            expandAll: function () {
+                visitEachNode(this.reportData.report, function (node) {
+                    node.expanded = true;
+                });
+            },
+            collapseAll: function () {
+                visitEachNode(this.reportData.report, function (node) {
+                    node.expanded = false;
+                });
+            }
+        }
+    });
+}
+
+function collectTestGroups(tests) {
+    var groups = {};
+    _.forEach(tests, function (test) {
+        _.forEach(test.groups, function (group) {
+            if (!groups.hasOwnProperty(group)) {
+                groups[group] = '';
+            }
+        });
+    });
+
+    var result = [];
+    for (var group in groups) {
+        if (groups.hasOwnProperty(group)) {
+            result.push(group);
+        }
+    }
+    result.sort();
+    return result;
+}
+
+function renderTestOverviewReport(reportData) {
+    var app = new Vue({
+        el: '#app',
+        data: {
+            tableColumns: [{
+                name: 'Test', field: 'name',
+            },{
+                name: 'Passed', field: 'passed'
+            },{
+                name: 'Failed', field: 'failed'
+            },{
+                name: 'Warning', field: 'warning'
+            },{
+                name: 'Total', field: 'total'
+            },{
+                name: 'Started', field: 'started'
+            },{
+                name: 'Duration', field: 'duration'
+            }],
+            sorting: {
+                columnField: '',
+                order: 1
+            },
+            selectedGroup: null,
+            groups: _.map(collectTestGroups(reportData.tests), function (group) {
+                return {name: group, selected: false};
+            }),
+            tests: _.map(reportData.tests, function (test) {
+                return {
+                    testId: test.testId,
+                    show: true,
+                    groups: test.groups,
+                    name: {value: test.name, index: test.name},
+                    passed: {value: test.statistic.passed, index: test.statistic.passed},
+                    failed: {value: test.statistic.errors, index: test.statistic.errors},
+                    warning: {value: test.statistic.warnings, index: test.statistic.warnings},
+                    total: {value: test.statistic.total, index: test.statistic.total},
+                    started: {value: formatTime(test.startedAt), index: test.startedAt},
+                    duration: {value: Math.round((test.endedAt - test.startedAt)/100)/10 + "s", index: test.endedAt - test.startedAt},
+                    progress: {
+                        passed: test.statistic.passed * 100 / Math.max(1, test.statistic.total),
+                        failed: test.statistic.errors * 100 / Math.max(1, test.statistic.total),
+                        warning: test.statistic.warnings * 100 / Math.max(1, test.statistic.total)
+                    }
+                };
+            })
+        },
+        methods: {
+            sortTable: function (column) {
+                var self = this;
+                if (this.sorting.columnField === column.field) {
+                    this.sorting.order = -this.sorting.order;
+                } else {
+                    this.sorting.columnField = column.field;
+                    this.sorting.order = 1;
+                }
+                this.tests.sort(function (a, b) {
+                    var valueA = a[column.field].index;
+                    var valueB = b[column.field].index;
+                    var diff = valueA > valueB ? 1: -1;
+                    return diff * self.sorting.order;
+                });
+            },
+            toggleAllGroups: function () {
+                this.selectedGroup = null;
+                _.forEach(this.tests, function (test) {
+                    test.show = true;
+                });
+            },
+            toggleGroup: function (group) {
+                this.selectedGroup = group;
+                _.forEach(this.tests, function (test) {
+                    test.show = _.contains(test.groups, group);
+                });
+            }
+        }
+    });
+}
+
+function renderPageDump(pageData) {
+    var objects = [];
+    var objectNames = [];
+    var maxX2 = 0, maxY2 = 0;
+    var index = 0;
+    var objectsMap = {};
+    _.forEachInObject(pageData.items, function (object, objectName) {
+        index += 1;
+        objectNames.push(objectName);
+        var obj = {
+            name: objectName,
+            caption: false,
+            selected: false,
+            hasImage: object.hasImage,
+            area: {
+                x: object.area[0],
+                y: object.area[1],
+                x2: object.area[0] + object.area[2],
+                y2: object.area[1] + object.area[3],
+                width: object.area[2],
+                height: object.area[3]
+            },
+            color: '#ff9100'
+        };
+        objects.push(obj);
+        objectsMap[objectName] = obj;
+
+        maxX2 = Math.max(maxX2, obj.area.x2);
+        maxY2 = Math.max(maxY2, obj.area.y2);
+    });
+
+    objects.sort(function (a, b) {
+        return b.area.width * b.area.height - a.area.width * a.area.height;
+    });
+
+    objectNames.sort();
+
+    var app = new Vue({
+        el: '#app',
+        data: {
+            title: pageData.title,
+            pageName: pageData.pageName,
+            objectNames: objectNames,
+            objects: objects,
+            objectsMap: objectsMap,
+            offsetLeft: 60,
+            offsetTop: 60,
+            canvasWidth: maxX2 + 120,
+            canvasHeight: maxY2 + 120,
+            selection: [],
+            searchFilter: '',
+            guides: []
+        },
+        methods: {
+            onObjectClick: function (object) {
+                if (this.guides.length > 0) {
+                    this.guides = [];
+                }
+
+                if (object.selected) {
+                    if (this.selection[0].name === object.name) {
+                        this.selection.splice(0, 1);
+                    } else {
+                        this.selection.splice(1, 1);
+                    }
+
+                    object.selected = false;
+                } else {
+                    object.selected = true;
+                    if (this.selection.length === 0) {
+                        this.selection.push(object);
+                    } else if (this.selection.length === 1) {
+                        this.selection.push(object);
+                        this.guides = this.generateGuides(this.selection[0], this.selection[1]);
+                    } else {
+                        this.selection[0].selected = false;
+                        this.selection[1].selected = false;
+                        this.selection = [object];
+                    }
+                }
+            },
+            onObjectMouseOver: function (object) {
+                object.caption = true;
+            },
+            onObjectMouseOut: function (object) {
+                object.caption = false;
+            },
+            isInside: function (parentObject, childObject) {
+                return childObject.area.x >= parentObject.area.x
+                    && childObject.area.x2 <= parentObject.area.x2
+                    && childObject.area.y >= parentObject.area.y
+                    && childObject.area.y2 <= parentObject.area.y2
+            },
+            isFromLeft: function (object1, object2) {
+                return object2.area.x >= object1.area.x2;
+            },
+            isFromAbove: function (object1, object2) {
+                return object2.area.y >= object1.area.y2;
+            },
+            generateGuides: function (object1, object2) {
+                if (this.isInside(object1, object2)) {
+                    return this.generateInsideGuides(object1, object2);
+                } else if (this.isInside(object2, object1)) {
+                    return this.generateInsideGuides(object2, object1);
+                } else if (this.isFromLeft(object1, object2)) {
+                    return [
+                        MetaUtils.createVerticalDistanceGuides(this.rightEdge(object1), this.leftEdge(object2), '', object2.area.x - object1.area.x2 + 'px')
+                    ]
+                } else if (this.isFromLeft(object2, object1)) {
+                    return [
+                        MetaUtils.createVerticalDistanceGuides(this.rightEdge(object2), this.leftEdge(object1), '', object1.area.x - object2.area.x2 + 'px')
+                    ]
+                } else if (this.isFromAbove(object1, object2)) {
+                    return [
+                        MetaUtils.createHorizontalDistanceGuides(this.bottomEdge(object1), this.topEdge(object2), '', object2.area.y - object1.area.y2 + 'px')
+                    ]
+                } else if (this.isFromAbove(object2, object1)) {
+                    return [
+                        MetaUtils.createHorizontalDistanceGuides(this.bottomEdge(object2), this.topEdge(object1), '', object1.area.y - object2.area.y2 + 'px')
+                    ]
+                } else {
+                    return [];
+                }
+            },
+            generateInsideGuides: function (parentObject, childObject) {
+                return [
+                    MetaUtils.createVerticalDistanceGuides(this.leftEdge(parentObject), this.leftEdge(childObject), '', childObject.area.x - parentObject.area.x + 'px'),
+                    MetaUtils.createVerticalDistanceGuides(this.rightEdge(childObject), this.rightEdge(parentObject), '', parentObject.area.x2 - childObject.area.x2 + 'px'),
+                    MetaUtils.createHorizontalDistanceGuides(this.topEdge(parentObject), this.topEdge(childObject), '', childObject.area.y - parentObject.area.y + 'px'),
+                    MetaUtils.createHorizontalDistanceGuides(this.bottomEdge(childObject), this.bottomEdge(parentObject), '', parentObject.area.y2 - childObject.area.y2 + 'px')
+                ]
+            },
+            leftEdge: function (object) {
+                return {x1: object.area.x, y1: object.area.y, x2: object.area.x, y2: object.area.y2};
+            },
+            rightEdge: function (object) {
+                return {x1: object.area.x2, y1: object.area.y, x2: object.area.x2, y2: object.area.y2};
+            },
+            topEdge: function (object) {
+                return {x1: object.area.x, y1: object.area.y, x2: object.area.x2, y2: object.area.y};
+            },
+            bottomEdge: function (object) {
+                return {x1: object.area.x, y1: object.area.y2, x2: object.area.x2, y2: object.area.y2};
+            },
+            canvasMouseOver: function (event) {
+                var svg = document.getElementById('canvas');
+            }
+        }
+    });
 }

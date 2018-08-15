@@ -15,9 +15,13 @@
 ******************************************************************************/
 package com.galenframework.validation.specs;
 
+import static com.galenframework.validation.ValidationUtils.rangeCalculatedFromPercentage;
 import static java.lang.String.format;
 import static java.util.Arrays.asList;
 
+import com.galenframework.reports.model.LayoutMeta;
+import com.galenframework.specs.Range;
+import com.galenframework.specs.RangeValue;
 import com.galenframework.specs.SpecRange;
 import com.galenframework.validation.*;
 import com.galenframework.page.PageElement;
@@ -38,17 +42,47 @@ public abstract class SpecValidationSize<T extends SpecRange> extends SpecValida
 
         List<ValidationObject> validationObjects = asList(new ValidationObject(mainObject.getArea(), objectName));
 
+        List<LayoutMeta> meta = asList(createMeta(objectName, formatExpectedValue(spec.getRange(), pageValidation), formatRealValue(realValue, convertedValue, spec.getRange())));
+
         if (!spec.getRange().holds(convertedValue)) {
-                throw new ValidationErrorException()
-                    .withValidationObjects(validationObjects)
-                    .withMessage(format("\"%s\" %s is %s",
-                            objectName,
-                            getUnitName(),
-                            getReadableRangeAndValue(spec.getRange(), realValue, convertedValue, pageValidation)));
+            throw new ValidationErrorException()
+                .withValidationObjects(validationObjects)
+                .withMessage(format("\"%s\" %s is %s",
+                        objectName,
+                        getUnitName(),
+                        getReadableRangeAndValue(spec.getRange(), realValue, convertedValue, pageValidation)))
+                .withMeta(meta);
         }
 
-        return new ValidationResult(spec, validationObjects);
+        return new ValidationResult(spec, validationObjects)
+                .withMeta(meta);
     }
+
+    private String formatRealValue(double realValue, double convertedValue, Range range) {
+        if (range.isPercentage()) {
+            return format("%s%% [%dpx]",
+                    new RangeValue(convertedValue, range.findPrecision()).toString(),
+                    (int)realValue);
+        } else {
+            return format("%spx",
+                    new RangeValue(realValue, range.findPrecision()).toString());
+        }
+    }
+
+    private String formatExpectedValue(Range range, PageValidation pageValidation) {
+        if (range.isPercentage()) {
+            int objectValue = pageValidation.getObjectValue(range.getPercentageOfValue());
+            return format("%s %s",
+                range.prettyString("%"),
+                rangeCalculatedFromPercentage(range, objectValue)
+            );
+        } else {
+            return range.prettyString();
+        }
+
+    }
+
+    protected abstract LayoutMeta createMeta(String objectName, String expectedValue, String realValue);
 
     protected abstract String getUnitName();
 

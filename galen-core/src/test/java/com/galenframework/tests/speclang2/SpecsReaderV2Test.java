@@ -1128,6 +1128,16 @@ public class SpecsReaderV2Test {
         assertThat(spec.getErrorRate().getType(), is(SpecImage.ErrorRateType.PIXELS));
     }
 
+    @Test public void shouldReadSpec_image_filter_edges() throws IOException {
+        SpecImage spec = (SpecImage) readSpec("image file img.png, filter edges 34");
+        assertThat(spec.getImagePaths(), contains("img.png"));
+        assertThat(spec.getOriginalFilters().size(), is(1));
+        assertThat(spec.getOriginalFilters().get(0), is(instanceOf(EdgesFilter.class)));
+
+        EdgesFilter filter = (EdgesFilter) spec.getOriginalFilters().get(0);
+        assertThat(filter.getTolerance(), is(34));
+    }
+
     @Test
     public void shouldReadSpec_component() throws IOException {
         SpecComponent spec = (SpecComponent)readSpec("component some.spec");
