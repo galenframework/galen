@@ -4,8 +4,14 @@ All changes to Galen Framework project will be documented in this file
 ## [2.4.0][Unreleased]
 ### Added
 - 'edges' filter in image spec
+- Specs meta in json and html reports
+- Failure map popup in html report
+- Spec generator
 - 'mutate' action for galen specs mutation testing
 - Embedded galen-extras lib
+
+### Changed
+- Reimplemented all html reports
 
 
 
