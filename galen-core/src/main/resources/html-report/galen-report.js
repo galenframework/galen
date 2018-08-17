@@ -274,6 +274,68 @@ Vue.component('screenshot-popup', {
     }
 });
 
+Vue.component('mutation-report', {
+    props: ['report'],
+    template: '#tpl-mutation-report',
+    data: function () {
+        var mutations = [];
+        _.forEachInObject(this.report.mutationReport.objectMutationStatistics, function (objectStats, objectName) {
+            mutations.push({
+                name: objectName,
+                passed: objectStats.passed,
+                failed: objectStats.failed,
+                failedRatio: Math.round(objectStats.failed * 1000.0 / Math.max(1, objectStats.passed + objectStats.failed)) / 10,
+                failedMutations: objectStats.failedMutations
+            });
+        });
+        return {
+            tableColumns: [{
+                name: 'Object', field: 'name',
+            },{
+                name: 'Passed', field: 'passed'
+            },{
+                name: 'Failed', field: 'failed'
+            },{
+                name: 'Ratio', field: 'failedRatio'
+            }],
+            sorting: {
+                columnField: '',
+                order: 1
+            },
+            showFailedMutationsFor: '',
+            mutations: mutations
+        };
+    },
+    methods: {
+        toggleReportNode: toggleReportNode,
+        sortTable: function (column) {
+            var self = this;
+            if (this.sorting.columnField === column.field) {
+                this.sorting.order = -this.sorting.order;
+            } else {
+                this.sorting.columnField = column.field;
+                this.sorting.order = 1;
+            }
+            this.mutations.sort(function (a, b) {
+                var valueA = a[column.field];
+                var valueB = b[column.field];
+                var diff = valueA > valueB ? 1: -1;
+                return diff * self.sorting.order;
+            });
+        },
+        toggleMutationFor: function (objectName) {
+            if (this.showFailedMutationsFor === objectName) {
+                this.showFailedMutationsFor = '';
+            } else {
+                this.showFailedMutationsFor = objectName;
+            }
+        }
+    },
+    filters: {
+        formatTime: formatTime
+    }
+});
+
 Vue.component('layout-section', {
     props: ['section', 'bus'],
     template: '#tpl-layout-section',
@@ -635,6 +697,10 @@ function enrichReportNodeAndReturnHasFailure(node) {
                 node.hasFailure = true;
             }
         });
+    } else if (node.type === 'mutation') {
+        if (node.status === 'error') {
+            node.hasFailure = true;
+        }
     }
 
     return node.hasFailure;
@@ -681,6 +747,7 @@ function visitEachNode(node, callback) {
     callback(node, 'node');
     _.forEach(node.nodes, function(childNode) {
         if (childNode.type === 'layout') {
+            callback(childNode);
             _.forEach(childNode.sections, function (section) {
                 visitEachSection(section, callback);
             });

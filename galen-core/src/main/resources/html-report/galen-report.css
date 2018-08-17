@@ -5,6 +5,11 @@ body, h1, h2, h3, h4, a {
     margin: 0;
 }
 
+table th, table td {
+    text-align: left;
+    vertical-align: top;
+}
+
 body.page-dump {
     background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAJUlEQVQoU2O8+OLDfwY0oC8hwIguxjgUFKI7GsTH5m4M3w1ChQCDwCZTRWhNQwAAAABJRU5ErkJggg==);
 }
@@ -379,8 +384,9 @@ table.overview-table thead th {
 table.overview-table thead th.sorted-column {
     border-bottom: 2px solid #444;
 }
-table.overview-table thead th .link {
+table th .link {
     color: black;
+    font-size: 14px;
 }
 table.overview-table thead th .sorting-icon {
     position: absolute;
@@ -398,13 +404,13 @@ table.overview-table thead th .sorting-icon.sorting-up {
 table.overview-table thead th .sorting-icon.sorting-down {
     background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAFCAYAAAB8ZH1oAAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAB3RJTUUH4ggJCR8qwxDopQAAABl0RVh0Q29tbWVudABDcmVhdGVkIHdpdGggR0lNUFeBDhcAAAAoSURBVAjXY2RgYPjPQARghNKEFDMyInH+4zOMEU3wPw4bsYL/2EwHAD3yBgKpMe4DAAAAAElFTkSuQmCC");
 }
-table.overview-table tbody td.cell-passed {
+tbody td.cell-passed {
     color: #0fd10c;
 }
-table.overview-table tbody td.cell-failed {
+tbody td.cell-failed {
     color: #d1410c;
 }
-table.overview-table tbody td.cell-warning {
+tbody td.cell-warning {
     color: #d1bd0c;
 }
 
@@ -528,4 +534,9 @@ ul.test-groups li {
 }
 #page-dump-bottom-panel table td {
     padding-right: 30px;
+}
+
+
+table.mutation-table th {
+    min-width: 80px;
 }

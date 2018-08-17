@@ -5,7 +5,6 @@
   "dependencies": {},
   "repository": "git://github.com/galenframework/galen",
   "devDependencies": {
-    "chromedriver": "2.20.0",
     "grunt": "1.0.1",
     "grunt-contrib-concat": "1.0.1",
     "grunt-contrib-jshint": "1.0.0",
@@ -16,7 +15,6 @@
     "grunt-simple-mocha": "0.4.1",
     "load-grunt-tasks": "3.5.0",
     "mocha": "2.5.3",
-    "phantomjs-prebuilt": "2.1.7",
     "should": "9.0.2",
     "time-grunt": "1.3.0"
   },

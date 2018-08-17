@@ -2,7 +2,7 @@
 <html lang="en" dir="ltr">
     <head>
         <meta charset="utf-8">
-        <title></title>
+        <title>Galen Test Report</title>
         <link rel="stylesheet" href="galen-report.css"/>
         <script src="vue.js"></script>
         <script src="galen-report.js"></script>
@@ -47,6 +47,7 @@
                             {{childNode.name}}
                         </div>
                         <layout-report v-if="childNode.type === 'layout'" v-bind:layout="childNode"></layout-report>
+                        <mutation-report v-if="childNode.type === 'mutation'" v-bind:report="childNode"></mutation-report>
                     </div>
                 </div>
                 <div class="extras-popup popup-wrapper" v-if="extrasPopup.show">
@@ -76,6 +77,57 @@
                             </table>
                         </div>
                     </div>
+                </div>
+            </div>
+        </template>
+
+        <template id="tpl-mutation-report">
+            <div class="mutation-report">
+                <div class="node-line" v-bind:class="['status-' + report.status]">
+                    <span class="node-time">{{report.time | formatTime }}</span>
+                    <span class="node-label"
+                        v-on:click="toggleReportNode(report)"
+                        v-bind:class="['status-' + report.status, report.expanded ? 'expanded': 'collapsed', 'contains-children-true']"
+                        >MUTATION</span>
+                    <span class="node-title">{{report.name}}</span>
+                </div>
+                <div class="child-nodes" v-bind:class="{'child-nodes-expanded': report.expanded}">
+                    <table class="mutation-table">
+                        <thead>
+                            <tr>
+                                <th v-for="column in tableColumns" v-bind:class="{'sorted-column': sorting.columnField === column.field}">
+                                    <span class="link" v-on:click="sortTable(column)">{{column.name}}</span>
+                                    <span class="sorting-icon"
+                                        v-if="sorting.columnField === column.field"
+                                        v-bind:class="[sorting.order === 1 ? 'sorting-down' : 'sorting-up']"></span>
+                                </th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td> <b>Total</b> </td>
+                                <td class="cell-passed">{{report.mutationReport.totalPassed}}</td>
+                                <td class="cell-failed">{{report.mutationReport.totalFailed}}</td>
+                                <td class="cell-failed">{{report.mutationReport.failedRatio}}%</td>
+                                <td></td>
+                            </tr>
+                            <tr v-for="mutation in mutations">
+                                <td><span class="link" v-on:click="toggleMutationFor(mutation.name)">{{mutation.name}}</span></td>
+                                <td class="cell-passed">{{mutation.passed}}</td>
+                                <td class="cell-failed">{{mutation.failed}}</td>
+                                <td class="cell-failed">{{mutation.failedRatio}}%</td>
+                                <td>
+                                    <div v-if="showFailedMutationsFor === mutation.name">
+                                        All failed mutations:
+                                        <ul>
+                                            <li v-for="mutationText in mutation.failedMutations">{{mutationText}}</li>
+                                        </ul>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </template>
@@ -111,7 +163,10 @@
 
         <template id="tpl-layout-section">
             <div class="layout-section" v-bind:class="{'has-failure': section.hasFailure}">
-                <div class="title icon-sprite-before" v-on:click="toggleReportNode(section)">{{section.name}}</div>
+                <div class="title icon-sprite-before"
+                    v-on:click="toggleReportNode(section)"
+                    v-bind:title="section.place ? section.place.filePath + ':' + section.place.lineNumber : ''"
+                    >{{section.name}}</div>
                 <div class="child-nodes" v-bind:class="{'child-nodes-expanded': section.expanded}">
                     <layout-section v-for="subSection in section.sections" v-bind:section="subSection" v-bind:bus="bus"></layout-section>
                     <object-node v-for="object in section.objects" v-bind:object="object" v-bind:bus="bus"></object-node>
@@ -121,7 +176,9 @@
 
         <template id="tpl-object-node">
             <div class="layout-object" v-bind:class="{'has-failure': object.hasFailure}">
-                <div class="title icon-sprite-before" v-on:click="toggleReportNode(object)">{{object.name}}:</div>
+                <div class="title icon-sprite-before"
+                    v-on:click="toggleReportNode(object)"
+                    >{{object.name}}:</div>
                 <div class="child-nodes" v-bind:class="{'child-nodes-expanded': object.expanded}">
                     <layout-spec v-for="spec in object.specs" v-bind:spec="spec" v-bind:bus="bus"></layout-spec>
                 </div>
@@ -130,13 +187,15 @@
 
         <template id="tpl-layout-spec">
             <div class="layout-spec" v-bind:class="[isFailed ? 'has-failure': '', 'status-' + spec.status]">
-                <div class="title icon-sprite-before" v-on:click="showSpec">{{spec.name}}</div>
+                <div class="title icon-sprite-before"
+                    v-on:click="showSpec"
+                    v-bind:title="spec.place ? spec.place.filePath + ':' + spec.place.lineNumber : ''"
+                    >{{spec.name}}</div>
                 <ul class="error-messages" v-if="isFailed">
                     <li class="error-message" v-for="error in spec.errors">{{error}}</li>
                 </ul>
             </div>
         </template>
-
         <template id="tpl-screenshot-popup">
             <div>
                 <div class="popup-shadow" v-on:click="$emit('close')"> </div>
