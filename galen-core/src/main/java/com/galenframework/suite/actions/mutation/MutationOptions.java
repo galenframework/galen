@@ -15,6 +15,10 @@
 ******************************************************************************/
 package com.galenframework.suite.actions.mutation;
 
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.lang3.builder.ToStringBuilder;
+
 public class MutationOptions {
     private int positionOffset = 5;
 
@@ -22,7 +26,36 @@ public class MutationOptions {
         return positionOffset;
     }
 
-    public void setPositionOffset(int positionOffset) {
+    public MutationOptions setPositionOffset(int positionOffset) {
         this.positionOffset = positionOffset;
+        return this;
+    }
+
+
+    @Override
+    public String toString() {
+        return new ToStringBuilder(this)
+            .append("positionOffset", positionOffset)
+            .toString();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+
+        if (o == null || getClass() != o.getClass()) return false;
+
+        MutationOptions that = (MutationOptions) o;
+
+        return new EqualsBuilder()
+            .append(positionOffset, that.positionOffset)
+            .isEquals();
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder(17, 37)
+            .append(positionOffset)
+            .toHashCode();
     }
 }

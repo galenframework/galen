@@ -25,13 +25,10 @@ import java.util.List;
 import com.galenframework.runner.events.TestFilterEvent;
 import com.galenframework.runner.events.TestSuiteEvent;
 import com.galenframework.tests.GalenTest;
-import com.galenframework.runner.events.TestFilterEvent;
 import com.galenframework.runner.events.TestRetryEvent;
 
 import com.galenframework.javascript.GalenJsExecutor;
 import com.galenframework.runner.events.TestEvent;
-import com.galenframework.runner.events.TestSuiteEvent;
-import com.galenframework.tests.GalenTest;
 
 public class JsTestCollector {
 

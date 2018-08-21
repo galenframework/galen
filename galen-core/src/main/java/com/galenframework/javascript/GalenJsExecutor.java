@@ -24,6 +24,7 @@ import com.galenframework.api.Galen;
 import com.galenframework.api.GalenPageDump;
 import com.galenframework.runner.events.TestFilterEvent;
 import com.galenframework.runner.events.TestSuiteEvent;
+import com.galenframework.suite.actions.mutation.MutationOptions;
 import com.galenframework.tests.GalenTest;
 import com.galenframework.tests.TestSession;
 import com.galenframework.utils.GalenUtils;
@@ -59,22 +60,23 @@ public class GalenJsExecutor implements VarsParserJsProcessable {
 
     private void importAllMajorClasses() {
         importClasses(new Class[]{
-                Thread.class,
-                By.class,
-                WebElement.class,
-                WebDriver.class,
-                System.class,
-                Actions.class,
-                GalenTest.class,
-                TestSession.class,
-                GalenUtils.class,
-                GalenJsApi.class,
-                TestEvent.class,
-                TestSuiteEvent.class,
-                TestFilterEvent.class,
-                TestRetryEvent.class,
-                Galen.class,
-                GalenPageDump.class
+            Thread.class,
+            By.class,
+            WebElement.class,
+            WebDriver.class,
+            System.class,
+            Actions.class,
+            GalenTest.class,
+            TestSession.class,
+            GalenUtils.class,
+            GalenJsApi.class,
+            TestEvent.class,
+            TestSuiteEvent.class,
+            TestFilterEvent.class,
+            TestRetryEvent.class,
+            Galen.class,
+            GalenPageDump.class,
+            MutationOptions.class
         });
     }
     

@@ -45,7 +45,8 @@ public class GalenMutate {
     private static final ValidationListener NO_LISTENER = null;
     private static final Map<String, Locator> NO_OBJECTS = null;
 
-    public static MutationReport checkAllMutations(Browser browser, String specPath, List<String> includedTags, List<String> excludedTags, Properties properties, ValidationListener validationListener) throws IOException {
+    public static MutationReport checkAllMutations(Browser browser, String specPath, List<String> includedTags, List<String> excludedTags,
+                                                   MutationOptions mutationOptions, Properties properties, ValidationListener validationListener) throws IOException {
         SectionFilter sectionFilter = new SectionFilter(includedTags, excludedTags);
         PageSpec pageSpec = parseSpec(specPath, browser, sectionFilter, properties);
 
@@ -58,7 +59,7 @@ public class GalenMutate {
         if (initialLayoutReport.errors() > 0) {
             mutationReport = createCrashedMutationReport("Cannot perform mutation testing. There are errors in initial layout validation report");
         } else {
-            mutationReport = testAllMutations(mutationRecordBrowser.getRecordedElements(), browser, pageSpec, sectionFilter, screenshotFile);
+            mutationReport = testAllMutations(mutationRecordBrowser.getRecordedElements(), browser, pageSpec, sectionFilter, mutationOptions, screenshotFile);
         }
 
         mutationReport.setInitialLayoutReport(initialLayoutReport);
@@ -75,10 +76,12 @@ public class GalenMutate {
         return new PageSpecReader().read(specPath, browser.getPage(), sectionFilter, properties, NO_JS_VARIABLES, NO_OBJECTS);
     }
 
-    private static MutationReport testAllMutations(Map<String, PageElement> recordedElements, Browser browser, PageSpec pageSpec, SectionFilter sectionFilter, File screenshotFile) {
+    private static MutationReport testAllMutations(Map<String, PageElement> recordedElements, Browser browser,
+                                                   PageSpec pageSpec, SectionFilter sectionFilter, MutationOptions mutationOptions,
+                                                   File screenshotFile) {
         List<PageMutation> mutations = recordedElements.entrySet().stream()
             .filter(nonViewport())
-            .map(e-> generateMutationsFor(e.getKey())).flatMap(Collection::stream).collect(toList());
+            .map(e-> generateMutationsFor(e.getKey(), mutationOptions)).flatMap(Collection::stream).collect(toList());
 
         MutationExecBrowser mutationExecBrowser = new MutationExecBrowser(browser, recordedElements);
 
@@ -109,8 +112,8 @@ public class GalenMutate {
         return map;
     }
 
-    private static List<PageMutation> generateMutationsFor(String name) {
-        return AreaMutation.generateStandardMutations(new MutationOptions()).stream()
+    private static List<PageMutation> generateMutationsFor(String name, MutationOptions mutationOptions) {
+        return AreaMutation.generateStandardMutations(mutationOptions).stream()
             .map(areaMutation -> new PageMutation(name, singletonList(new PageElementMutation(name, areaMutation)))).collect(toList());
     }
 

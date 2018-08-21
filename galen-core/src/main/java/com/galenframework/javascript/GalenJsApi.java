@@ -16,11 +16,14 @@
 package com.galenframework.javascript;
 
 import com.galenframework.api.UnregisteredTestSession;
+import com.galenframework.api.mutation.GalenMutate;
 import com.galenframework.page.Page;
 import com.galenframework.speclang2.pagespec.PageSpecReader;
 import com.galenframework.specs.page.Locator;
 import com.galenframework.specs.page.PageSpec;
 import com.galenframework.speclang2.pagespec.SectionFilter;
+import com.galenframework.suite.actions.mutation.MutationOptions;
+import com.galenframework.suite.actions.mutation.MutationReport;
 import com.galenframework.tests.TestSession;
 import com.galenframework.utils.GalenUtils;
 import com.galenframework.api.Galen;
@@ -150,6 +153,21 @@ public class GalenJsApi {
 
         GalenUtils.attachLayoutReport(layoutReport, report, "<unknown>", includedTagsList);
         return layoutReport;
+    }
+
+    /**
+     * Used in GalenApi.js
+     * @param driver
+     * @param fileName
+     * @param includedTags
+     * @param excludedTags
+     * @return
+     * @throws IOException
+     */
+    public static MutationReport testMutation(WebDriver driver, String fileName, String[]includedTags, String[]excludedTags,
+                                           MutationOptions mutationOptions) throws IOException {
+        return GalenMutate.checkAllMutations(new SeleniumBrowser(driver), fileName,
+            toList(includedTags), toList(excludedTags), mutationOptions, new Properties(), null);
     }
 
 

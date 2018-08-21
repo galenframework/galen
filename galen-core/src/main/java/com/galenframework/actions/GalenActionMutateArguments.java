@@ -15,6 +15,7 @@
 ******************************************************************************/
 package com.galenframework.actions;
 
+import com.galenframework.suite.actions.mutation.MutationOptions;
 import com.galenframework.utils.GalenUtils;
 import org.apache.commons.cli.*;
 import org.apache.commons.lang3.builder.EqualsBuilder;
@@ -39,6 +40,7 @@ public class GalenActionMutateArguments {
     private String jsonReport;
     private String testngReport;
     private String junitReport;
+    private MutationOptions mutationOptions = new MutationOptions();
 
     public static GalenActionMutateArguments parse(String[] args) {
         args = ArgumentsUtils.processSystemProperties(args);
@@ -48,6 +50,7 @@ public class GalenActionMutateArguments {
         options.addOption("e", "exclude", true, "Tags for sections that should be excluded from test run");
         options.addOption("u", "url", true, "Initial test url");
         options.addOption("s", "size", true, "Browser window size");
+        options.addOption("o", "offset", true, "Offset for each mutation (default 5)");
         options.addOption("h", "htmlreport", true, "Path for html output report");
         options.addOption("j", "jsonreport", true, "Path for json report");
         options.addOption("g", "testngreport", true, "Path for testng xml report");
@@ -78,6 +81,7 @@ public class GalenActionMutateArguments {
         arguments.setExcludedTags(convertTags(cmd.getOptionValue("e")));
         arguments.setPaths(asList(cmd.getArgs()));
         arguments.setConfig(cmd.getOptionValue("c"));
+        arguments.getMutationOptions().setPositionOffset(Integer.parseInt(cmd.getOptionValue("o", "5")));
 
         if (arguments.getPaths().isEmpty()) {
             throw new IllegalArgumentException("Missing spec files");
@@ -90,87 +94,167 @@ public class GalenActionMutateArguments {
         return paths;
     }
 
-    public void setPaths(List<String> paths) {
+    public GalenActionMutateArguments setPaths(List<String> paths) {
         this.paths = paths;
+        return this;
     }
 
     public List<String> getIncludedTags() {
         return includedTags;
     }
 
-    public void setIncludedTags(List<String> includedTags) {
+    public GalenActionMutateArguments setIncludedTags(List<String> includedTags) {
         this.includedTags = includedTags;
+        return this;
     }
 
     public List<String> getExcludedTags() {
         return excludedTags;
     }
 
-    public void setExcludedTags(List<String> excludedTags) {
+    public GalenActionMutateArguments setExcludedTags(List<String> excludedTags) {
         this.excludedTags = excludedTags;
+        return this;
     }
 
     public String getUrl() {
         return url;
     }
 
-    public void setUrl(String url) {
+    public GalenActionMutateArguments setUrl(String url) {
         this.url = url;
+        return this;
     }
 
     public Dimension getScreenSize() {
         return screenSize;
     }
 
-    public void setScreenSize(Dimension screenSize) {
+    public GalenActionMutateArguments setScreenSize(Dimension screenSize) {
         this.screenSize = screenSize;
+        return this;
     }
 
     public String getConfig() {
         return config;
     }
 
-    public void setConfig(String config) {
+    public GalenActionMutateArguments setConfig(String config) {
         this.config = config;
+        return this;
     }
 
     public String getJavascript() {
         return javascript;
     }
 
-    public void setJavascript(String javascript) {
+    public GalenActionMutateArguments setJavascript(String javascript) {
         this.javascript = javascript;
+        return this;
     }
 
-    public void setHtmlReport(String htmlReport) {
+    public GalenActionMutateArguments setHtmlReport(String htmlReport) {
         this.htmlReport = htmlReport;
+        return this;
     }
 
     public String getHtmlReport() {
         return htmlReport;
     }
 
-    public void setJsonReport(String jsonReport) {
+    public GalenActionMutateArguments setJsonReport(String jsonReport) {
         this.jsonReport = jsonReport;
+        return this;
     }
 
     public String getJsonReport() {
         return jsonReport;
     }
 
-    public void setTestngReport(String testngReport) {
+    public GalenActionMutateArguments setTestngReport(String testngReport) {
         this.testngReport = testngReport;
+        return this;
     }
 
     public String getTestngReport() {
         return testngReport;
     }
 
-    public void setJunitReport(String junitReport) {
+    public GalenActionMutateArguments setJunitReport(String junitReport) {
         this.junitReport = junitReport;
+        return this;
     }
 
     public String getJunitReport() {
         return junitReport;
+    }
+
+    public MutationOptions getMutationOptions() {
+        return mutationOptions;
+    }
+
+    public GalenActionMutateArguments setMutationOptions(MutationOptions mutationOptions) {
+        this.mutationOptions = mutationOptions;
+        return this;
+    }
+
+    @Override
+    public String toString() {
+        return new ToStringBuilder(this)
+            .append("paths", paths)
+            .append("includedTags", includedTags)
+            .append("excludedTags", excludedTags)
+            .append("url", url)
+            .append("screenSize", screenSize)
+            .append("javascript", javascript)
+            .append("config", config)
+            .append("htmlReport", htmlReport)
+            .append("jsonReport", jsonReport)
+            .append("testngReport", testngReport)
+            .append("junitReport", junitReport)
+            .append("mutationOptions", mutationOptions)
+            .toString();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+
+        if (o == null || getClass() != o.getClass()) return false;
+
+        GalenActionMutateArguments that = (GalenActionMutateArguments) o;
+
+        return new EqualsBuilder()
+            .append(paths, that.paths)
+            .append(includedTags, that.includedTags)
+            .append(excludedTags, that.excludedTags)
+            .append(url, that.url)
+            .append(screenSize, that.screenSize)
+            .append(javascript, that.javascript)
+            .append(config, that.config)
+            .append(htmlReport, that.htmlReport)
+            .append(jsonReport, that.jsonReport)
+            .append(testngReport, that.testngReport)
+            .append(junitReport, that.junitReport)
+            .append(mutationOptions, that.mutationOptions)
+            .isEquals();
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder(17, 37)
+            .append(paths)
+            .append(includedTags)
+            .append(excludedTags)
+            .append(url)
+            .append(screenSize)
+            .append(javascript)
+            .append(config)
+            .append(htmlReport)
+            .append(jsonReport)
+            .append(testngReport)
+            .append(junitReport)
+            .append(mutationOptions)
+            .toHashCode();
     }
 }

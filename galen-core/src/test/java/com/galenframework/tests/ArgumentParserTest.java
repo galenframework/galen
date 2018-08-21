@@ -27,6 +27,7 @@ import java.util.List;
 
 import com.galenframework.actions.*;
 import com.galenframework.runner.CombinedListener;
+import com.galenframework.suite.actions.mutation.MutationOptions;
 import org.apache.commons.cli.ParseException;
 import org.apache.commons.lang3.ArrayUtils;
 import org.testng.annotations.DataProvider;
@@ -310,6 +311,7 @@ public class ArgumentParserTest {
                         .setSectionNameFilter("Main*")
                         .setConfig("/some/config")
                 },
+
         };
     }
     
@@ -411,6 +413,27 @@ public class ArgumentParserTest {
               args("test", 
                   "--htmlreport", "reports")}
 
+        };
+    }
+
+    @Test(dataProvider = "goodSamples_mutateAction")
+    public void shouldParse_mutateActionArguments(SimpleArguments args, GalenActionMutateArguments expectedArguments) {
+        String actionName = args.args[0];
+        String[] arguments = ArrayUtils.subarray(args.args, 1, args.args.length);
+        GalenActionMutate action = (GalenActionMutate) GalenAction.create(actionName, arguments, System.out, System.err, NO_LISTENER);
+        assertThat(action.getMutateArguments(), is(expectedArguments));
+    }
+
+    @DataProvider
+    public Object[][] goodSamples_mutateAction() {
+        return new Object[][]{
+            {args("mutate", "some1.spec", "--url", "http://mindengine.net", "--include", "desktop", "--offset", "3"),
+                new GalenActionMutateArguments()
+                    .setUrl("http://mindengine.net")
+                    .setPaths(asList("some1.spec"))
+                    .setIncludedTags(asList("desktop"))
+                    .setMutationOptions(new MutationOptions().setPositionOffset(3))
+            }
         };
     }
 

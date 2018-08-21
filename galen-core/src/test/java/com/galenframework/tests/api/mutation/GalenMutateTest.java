@@ -18,6 +18,7 @@ package com.galenframework.tests.api.mutation;
 import com.galenframework.api.mutation.GalenMutate;
 import com.galenframework.browser.SeleniumBrowser;
 import com.galenframework.components.mocks.driver.MockedDriver;
+import com.galenframework.suite.actions.mutation.MutationOptions;
 import com.galenframework.suite.actions.mutation.MutationReport;
 import com.galenframework.validation.ValidationListener;
 import org.openqa.selenium.WebDriver;
@@ -42,7 +43,7 @@ public class GalenMutateTest {
         driver.get("/mocks/pages/mutation-sample-page.json");
 
         MutationReport mutationReport = GalenMutate.checkAllMutations(new SeleniumBrowser(driver), "/specs/mutation.gspec",
-            emptyList(), emptyList(), new Properties(), NO_VALIDATION_LISTENER);
+            emptyList(), emptyList(), new MutationOptions(), new Properties(), NO_VALIDATION_LISTENER);
 
         assertThat("amount of passed mutations", mutationReport.getTotalPassed(), is(56));
         assertThat("amount of failed mutations", mutationReport.getTotalFailed(), is(4));
@@ -60,7 +61,7 @@ public class GalenMutateTest {
         driver.get("/mocks/pages/mutation-sample-page.json");
 
         MutationReport mutationReport = GalenMutate.checkAllMutations(new SeleniumBrowser(driver), "/specs/mutation-2.gspec",
-            emptyList(), emptyList(), new Properties(), NO_VALIDATION_LISTENER);
+            emptyList(), emptyList(), new MutationOptions(), new Properties(), NO_VALIDATION_LISTENER);
 
         assertThat("amount of passed mutations", mutationReport.getTotalPassed(), is(46));
         assertThat("amount of failed mutations", mutationReport.getTotalFailed(), is(14));
@@ -81,4 +82,33 @@ public class GalenMutateTest {
             "menu.item-2: move left edge right by 5px"
         ));
     }
+
+    @Test
+    public void should_perform_mutation_testing_with_custom_offset() throws IOException {
+        WebDriver driver = new MockedDriver();
+        driver.get("/mocks/pages/mutation-sample-page.json");
+
+        MutationReport mutationReport = GalenMutate.checkAllMutations(new SeleniumBrowser(driver), "/specs/mutation-2.gspec",
+            emptyList(), emptyList(), new MutationOptions().setPositionOffset(1), new Properties(), NO_VALIDATION_LISTENER);
+
+        assertThat("amount of passed mutations", mutationReport.getTotalPassed(), is(46));
+        assertThat("amount of failed mutations", mutationReport.getTotalFailed(), is(14));
+        assertThat("All failed mutations", mutationReport.allFailedMutations(), contains(
+            "container: increase height by 1px",
+            "container: decrease height by 1px",
+            "menu.item-3: drag left by 1px",
+            "menu.item-3: drag right by 1px",
+            "menu.item-3: increase width by 1px",
+            "menu.item-3: decrease width by 1px",
+            "menu.item-3: move left edge right by 1px",
+            "menu.item-1: increase width by 1px",
+            "menu.item-1: decrease width by 1px",
+            "menu.item-2: drag left by 1px",
+            "menu.item-2: drag right by 1px",
+            "menu.item-2: increase width by 1px",
+            "menu.item-2: decrease width by 1px",
+            "menu.item-2: move left edge right by 1px"
+        ));
+    }
+
 }

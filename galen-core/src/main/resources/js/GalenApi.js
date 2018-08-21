@@ -15,7 +15,7 @@
  * ******************************************************************************/
 
 
-/*global GalenJsApi, GalenPageDump, GalenUtils, TestSession, System, Galen, GalenCore, logged*/
+/*global GalenJsApi, GalenPageDump, GalenUtils, TestSession, System, Galen, GalenCore, MutationOptions, logged*/
 /*jslint nomen: true*/
 
 (function (exports) {
@@ -175,6 +175,43 @@
         }
         return GalenJsApi.checkPageSpecLayout(driver, pageSpec, includedTags, excludedTags, screenshotFile);
     }
+
+    function testMutation(driver, pageSpecFile, includedTags, excludedTags, positionOffset) {
+        var settings,
+            options = new MutationOptions();
+
+        if (arguments.length === 1) {
+            settings = driver;
+
+            driver = settings.driver;
+            pageSpecFile = settings.spec;
+            includedTags = settings.tags;
+            excludedTags = settings.excludedTags;
+
+
+            if (settings.options !== undefined && settings.options.hasOwnProperty('offset')) {
+                positionOffset = settings.options.offset;
+            }
+        }
+
+        if (includedTags === undefined) {
+            includedTags = null;
+        }
+        if (excludedTags === undefined) {
+            excludedTags = null;
+        }
+
+        if (!Array.isArray(includedTags) && includedTags !== null) {
+            includedTags = [includedTags];
+        }
+        if (!Array.isArray(excludedTags) && excludedTags !== null) {
+            excludedTags = [excludedTags];
+        }
+
+        options.setPositionOffset(positionOffset);
+        return GalenJsApi.testMutation(driver, pageSpecFile, includedTags, excludedTags, options);
+    }
+
 
     function takeScreenshot(driver) {
         return GalenUtils.takeScreenshot(driver);
@@ -362,6 +399,7 @@
     exports.createGridDriver = createGridDriver;
     exports.checkLayout = checkLayout;
     exports.checkPageSpecLayout = checkPageSpecLayout;
+    exports.testMutation = testMutation;
     exports.session = session;
     exports.takeScreenshot = takeScreenshot;
     exports.loadProperties = loadProperties;

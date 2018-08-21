@@ -59,8 +59,12 @@ public class GalenActionMutate extends GalenAction {
                 .withSize(mutateArguments.getScreenSize())
                 .withBrowserFactory(new SeleniumBrowserFactory())
                 .withActions(
-                    asList((GalenPageAction) new GalenPageActionMutate().withSpec(pageSpecPath).withIncludedTags(mutateArguments.getIncludedTags())
-                        .withExcludedTags(mutateArguments.getExcludedTags()).withOriginalCommand(originalCommand(arguments))))));
+                    asList((GalenPageAction) new GalenPageActionMutate()
+                        .withSpec(pageSpecPath)
+                        .withIncludedTags(mutateArguments.getIncludedTags())
+                        .withExcludedTags(mutateArguments.getExcludedTags())
+                        .withMutationOptions(mutateArguments.getMutationOptions())
+                        .withOriginalCommand(originalCommand(arguments))))));
             galenTests.add(test);
         }
 
@@ -70,6 +74,10 @@ public class GalenActionMutate extends GalenAction {
         testArguments.setJunitReport(mutateArguments.getJunitReport());
         testArguments.setTestngReport(mutateArguments.getTestngReport());
         GalenActionTest.runTests(new EventHandler(), galenTests, testArguments, listener);
+    }
+
+    public GalenActionMutateArguments getMutateArguments() {
+        return mutateArguments;
     }
 
     private void verifyArguments() {

@@ -20,6 +20,7 @@ import com.galenframework.browser.Browser;
 import com.galenframework.reports.TestReport;
 import com.galenframework.suite.GalenPageAction;
 import com.galenframework.suite.GalenPageTest;
+import com.galenframework.suite.actions.mutation.MutationOptions;
 import com.galenframework.suite.actions.mutation.MutationReport;
 import com.galenframework.utils.GalenUtils;
 import com.galenframework.validation.ValidationListener;
@@ -30,10 +31,11 @@ public class GalenPageActionMutate extends GalenPageAction {
     private String specPath;
     private List<String> includedTags;
     private List<String> excludedTags;
+    private MutationOptions mutationOptions = new MutationOptions();
 
     @Override
     public void execute(TestReport report, Browser browser, GalenPageTest pageTest, ValidationListener validationListener) throws Exception {
-        MutationReport mutationReport = GalenMutate.checkAllMutations(browser, specPath, includedTags, excludedTags, getCurrentProperties(), validationListener);
+        MutationReport mutationReport = GalenMutate.checkAllMutations(browser, specPath, includedTags, excludedTags, mutationOptions, getCurrentProperties(), validationListener);
         if (mutationReport.getInitialLayoutReport() != null) {
             GalenUtils.attachLayoutReport(mutationReport.getInitialLayoutReport(), report, specPath, includedTags);
         }
@@ -60,6 +62,11 @@ public class GalenPageActionMutate extends GalenPageAction {
 
     public GalenPageActionMutate withOriginalCommand(String originalCommand) {
         setOriginalCommand(originalCommand);
+        return this;
+    }
+
+    public GalenPageActionMutate withMutationOptions(MutationOptions mutationOptions) {
+        this.mutationOptions = mutationOptions;
         return this;
     }
 
