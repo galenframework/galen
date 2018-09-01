@@ -19,6 +19,7 @@ import static java.util.Arrays.asList;
 import static com.galenframework.specs.page.Locator.css;
 import static com.galenframework.specs.page.Locator.id;
 import static com.galenframework.specs.page.Locator.xpath;
+import static java.util.Collections.emptyList;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 
@@ -28,6 +29,7 @@ import com.galenframework.specs.page.Locator;
 import com.galenframework.suite.GalenPageAction;
 import com.galenframework.suite.actions.GalenPageActionWait.UntilType;
 
+import com.galenframework.suite.actions.mutation.MutationOptions;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
@@ -39,25 +41,25 @@ import java.util.Map;
 public class GalenPageActionReaderTest {
 
 
-    private static final List<String> EMPTY_TAGS = Collections.emptyList();
+    private static final List<String> EMPTY_TAGS = emptyList();
     private static final Map<String, Object> EMPTY_VARIABLES = Collections.emptyMap();
 
     @Test(dataProvider="provideGoodSamples") public void shouldParse_action_successfully(String actionText, GalenPageAction expectedAction) {
         GalenPageAction realAction = GalenPageActionReader.readFrom(actionText, null);
         assertThat(realAction, is(expectedAction));
     }
-    
+
     @DataProvider public Object[][] provideGoodSamples() {
         return new Object[][]{
             {"inject javascript.js", new GalenPageActionInjectJavascript("javascript.js")},
             {"inject   /usr/bin/john/scripts/javascript.js", new GalenPageActionInjectJavascript("/usr/bin/john/scripts/javascript.js")},
             {"inject   \"/usr/bin/john/scripts/javascript.js\"", new GalenPageActionInjectJavascript("/usr/bin/john/scripts/javascript.js")},
-            
+
             {"run script.js \"{name: 'john'}\"", new GalenPageActionRunJavascript("script.js").withJsonArguments("{name: 'john'}")},
             {"run script.js \"\"", new GalenPageActionRunJavascript("script.js").withJsonArguments("")},
             {"run script.js \"\\\"john\\\"", new GalenPageActionRunJavascript("script.js").withJsonArguments("\"john\"")},
             {"run script.js", new GalenPageActionRunJavascript("script.js").withJsonArguments(null)},
-            
+
             {"check page1.spec", new GalenPageActionCheck()
                     .withSpec("page1.spec")
                     .withIncludedTags(EMPTY_TAGS)
@@ -114,6 +116,14 @@ public class GalenPageActionReaderTest {
             },
             {"dump page1.spec --name \"Home page dump\" --export /export/dir/path --only-images --max-width 120 --max-height 240", new GalenPageActionDumpPage()
                 .withSpecPath("page1.spec").withPageName("Home page dump").withPageDumpPath("/export/dir/path").withMaxWidth(120).withMaxHeight(240).withOnlyImages(true)
+            },
+            {"mutate page1.gspec", new GalenPageActionMutate().withSpec("page1.gspec").withIncludedTags(emptyList()).withExcludedTags(emptyList()).withMutationOptions(new MutationOptions().setPositionOffset(5))
+            },
+            {"mutate page1.gspec --include mobile --exclude desktop --offset 13", new GalenPageActionMutate()
+                    .withSpec("page1.gspec")
+                    .withIncludedTags(asList("mobile"))
+                    .withExcludedTags(asList("desktop"))
+                    .withMutationOptions(new MutationOptions().setPositionOffset(13))
             }
         };
     }

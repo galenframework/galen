@@ -77,4 +77,31 @@ public class GalenPageActionMutate extends GalenPageAction {
     public List<String> getExcludedTags() {
         return excludedTags;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        GalenPageActionMutate that = (GalenPageActionMutate) o;
+        return Objects.equals(specPath, that.specPath) &&
+                Objects.equals(includedTags, that.includedTags) &&
+                Objects.equals(excludedTags, that.excludedTags) &&
+                Objects.equals(mutationOptions, that.mutationOptions);
+    }
+
+    @Override
+    public int hashCode() {
+
+        return Objects.hash(specPath, includedTags, excludedTags, mutationOptions);
+    }
+
+    @Override
+    public String toString() {
+        return "GalenPageActionMutate{" +
+                "specPath='" + specPath + '\'' +
+                ", includedTags=" + includedTags +
+                ", excludedTags=" + excludedTags +
+                ", mutationOptions=" + mutationOptions +
+                '}';
+    }
 }
