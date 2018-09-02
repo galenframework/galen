@@ -7,7 +7,7 @@
         <script src="vue.js"></script>
         <script src="galen-report.js"></script>
         <script type="text/javascript">
-            var REPORT_DATA = ##REPORT-DATA##;
+var REPORT_DATA = ##REPORT-DATA##;
         </script>
     </head>
     <body>
@@ -105,11 +105,11 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr>
+                            <tr class="mutation-table-total">
                                 <td> <b>Total</b> </td>
                                 <td class="cell-passed">{{report.mutationReport.totalPassed}}</td>
                                 <td class="cell-failed">{{report.mutationReport.totalFailed}}</td>
-                                <td class="cell-failed">{{report.mutationReport.failedRatio}}%</td>
+                                <td class="cell-failed">{{report.mutationReport.failedRatio | roundFailedRatio}}%</td>
                                 <td></td>
                             </tr>
                             <tr v-for="mutation in mutations">

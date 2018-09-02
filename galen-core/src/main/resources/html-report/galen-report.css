@@ -540,3 +540,6 @@ ul.test-groups li {
 table.mutation-table th {
     min-width: 80px;
 }
+table.mutation-table tr.mutation-table-total td {
+    border-bottom: 1px solid #ccc;
+}

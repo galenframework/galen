@@ -332,7 +332,10 @@ Vue.component('mutation-report', {
         }
     },
     filters: {
-        formatTime: formatTime
+        formatTime: formatTime,
+        roundFailedRatio: function (value) {
+            return Math.round(value * 100) / 100;
+        }
     }
 });
 
