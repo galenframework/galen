@@ -23,8 +23,9 @@ import java.nio.charset.Charset;
 import java.util.List;
 import java.util.regex.Pattern;
 
-import com.galenframework.ocr.OcrFacade;
+import com.galenframework.ocr.GoogleVisionOcrService;
 import com.galenframework.ocr.OcrResult;
+import com.galenframework.ocr.OcrService;
 import com.galenframework.page.PageElement;
 import com.galenframework.page.Rect;
 import com.galenframework.specs.SpecOcr;
@@ -45,7 +46,9 @@ public class SpecValidationOcr extends SpecValidation<SpecOcr> {
         Rect area = mainObject.getArea();
         String domText = mainObject.getText();
         BufferedImage img = pageValidation.getBrowser().getPage().getScreenshotImage();
-        OcrResult ocrResult = OcrFacade.getInstance().getOcrService().findOcrText(img, area);
+
+        OcrService ocrService = new GoogleVisionOcrService();
+        OcrResult ocrResult = ocrService.findOcrText(img, area);
         if (ocrResult.getText() == null) {
             ocrResult.setText("");
         }
