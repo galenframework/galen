@@ -92,6 +92,7 @@ public class SpecReader {
             put("image", new SpecImageProcessor());
             put("component", new SpecComponentProcessor());
             put("count", new SpecCountProcessor());
+            put("ocr", new SpecOcrProcessor());
         }};
     }
 
