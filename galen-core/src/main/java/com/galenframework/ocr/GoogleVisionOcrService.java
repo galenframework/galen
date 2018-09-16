@@ -11,6 +11,7 @@ import java.util.List;
 
 import javax.imageio.ImageIO;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.galenframework.config.GalenConfig;
 import com.galenframework.config.GalenProperty;
 import com.galenframework.ocr.google.ModelUtils;
@@ -48,7 +49,7 @@ public class GoogleVisionOcrService implements OcrService {
 	}
 
 	public static GoogleModel getGoogleModel(BufferedImage img) throws Exception {
-		String key = GalenConfig.getConfig().readProperty(GalenProperty.GALEN_GOOGLE_VISION_KEY);
+		String key = GalenConfig.getConfig().readProperty(GalenProperty.GALEN_OCR_GOOGLE_VISION_KEY);
 		if (key == null) {
 			throw new RuntimeException(
 					"To use the OCR you need to configure your .galen.config file with your API key:\ngoogle.vision.key=<YOUR KEY>\nhttps://cloud.google.com/vision/docs/auth");
@@ -69,7 +70,9 @@ public class GoogleVisionOcrService implements OcrService {
 		features.add(feature);
 
 		String result = RestUtils.executePost(BASE_URL + key, new Gson().toJson(grequest));
-		return new Gson().fromJson(result, GoogleModel.class);
+
+		ObjectMapper objectMapper = new ObjectMapper();
+		return objectMapper.readValue(result, GoogleModel.class);
 	}
 
 	public static String imgToBase64String(final RenderedImage img, final String formatName) {

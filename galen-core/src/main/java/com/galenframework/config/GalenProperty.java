@@ -57,7 +57,7 @@ public enum GalenProperty {
     GALEN_BROWSER_PAGELEMENT_AREAFINDER_CUSTOM_SCRIPT("galen.browser.pageElement.areaFinder.custom.script", null),
 
     FILE_CREATE_TIMEOUT("galen.file.wait.timeout", "30"),
-	GALEN_GOOGLE_VISION_KEY("google.vision.key", null);
+	GALEN_OCR_GOOGLE_VISION_KEY("galen.ocr.google.vision.key", null);
 
 
     protected final String propertyName;
