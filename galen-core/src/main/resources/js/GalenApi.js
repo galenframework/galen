@@ -207,7 +207,9 @@
         if (!Array.isArray(excludedTags) && excludedTags !== null) {
             excludedTags = [excludedTags];
         }
-
+        if (positionOffset === undefined || positionOffset === null) {
+            positionOffset = 5;
+        }
         options.setPositionOffset(positionOffset);
         return GalenJsApi.testMutation(driver, pageSpecFile, includedTags, excludedTags, options);
     }

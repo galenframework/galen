@@ -18,7 +18,14 @@ var REPORT_DATA = ##REPORT-DATA##;
                 <span class="link" v-on:click="collapseAll()">Collapse All</span>
                 <span class="link" v-on:click="expandOnlyErrors()">Expand Errors</span>
             </div>
-            <report-node v-if="node.type === 'node'" v-for="node in reportData.report.nodes" v-bind:node="node"></report-node>
+            <div v-for="node in reportData.report.nodes">
+                <report-node v-if="node.type === 'node'" v-bind:node="node"></report-node>
+                <div class="node-text" v-if="node.type === 'text'">
+                    {{node.name}}
+                </div>
+                <layout-report v-if="node.type === 'layout'" v-bind:layout="node"></layout-report>
+                <mutation-report v-if="node.type === 'mutation'" v-bind:report="node"></mutation-report>
+            </div>
         </div>
 
         <template id="tpl-report-node">

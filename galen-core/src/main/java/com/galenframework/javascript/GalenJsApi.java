@@ -166,8 +166,26 @@ public class GalenJsApi {
      */
     public static MutationReport testMutation(WebDriver driver, String fileName, String[]includedTags, String[]excludedTags,
                                            MutationOptions mutationOptions) throws IOException {
-        return GalenMutate.checkAllMutations(new SeleniumBrowser(driver), fileName,
-            toList(includedTags), toList(excludedTags), mutationOptions, new Properties(), null);
+        TestSession session = TestSession.current();
+        if (session == null) {
+            throw new UnregisteredTestSession("Cannot test mutation as there was no TestSession created");
+        }
+
+        if (fileName == null) {
+            throw new IOException("Spec file name is not defined");
+        }
+
+        List<String> includedTagsList = toList(includedTags);
+
+        TestReport report = session.getReport();
+        MutationReport mutationReport = GalenMutate.checkAllMutations(new SeleniumBrowser(driver), fileName,
+            includedTagsList, toList(excludedTags), mutationOptions, new Properties(), session.getListener());
+
+        if (mutationReport.getInitialLayoutReport() != null) {
+            GalenUtils.attachLayoutReport(mutationReport.getInitialLayoutReport(), report, fileName, includedTagsList);
+        }
+        GalenUtils.attachMutationReport(mutationReport, report, fileName, includedTagsList);
+        return mutationReport;
     }
 
 
