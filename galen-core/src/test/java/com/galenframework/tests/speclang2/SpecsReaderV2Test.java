@@ -1227,6 +1227,13 @@ public class SpecsReaderV2Test {
         assertThat(spec.getOriginalText(), is("count any menu-item-* is > 8"));
     }
 
+    @Test
+    public void should_read_spec_ocr() {
+        SpecOcr spec = (SpecOcr)readSpec("ocr text is \"hello world\"");
+        assertThat(spec.getText(), is("hello world"));
+        assertThat(spec.getType(), is(SpecOcr.Type.IS));
+    }
+
     @Test(expectedExceptions = SyntaxException.class,
             expectedExceptionsMessageRegExp = "Couldn't process: whatever non parsed arguments"
     )

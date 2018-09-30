@@ -23,7 +23,6 @@ import com.galenframework.parser.StringCharReader;
 import com.galenframework.parser.SyntaxException;
 import com.galenframework.specs.Spec;
 import com.galenframework.specs.SpecOcr;
-import com.galenframework.specs.SpecOcr.Type;
 
 public class SpecOcrProcessor implements SpecProcessor {
 
@@ -36,7 +35,6 @@ public class SpecOcrProcessor implements SpecProcessor {
         List<String>  textOperations = new LinkedList<>();
 
         SpecOcr.Type textCheckType = null;
-        boolean isDom = false;
         while(textCheckType == null && reader.hasMoreNormalSymbols()) {
             String word = reader.readWord();
             if (word.isEmpty()) {
@@ -45,17 +43,11 @@ public class SpecOcrProcessor implements SpecProcessor {
 
             if (SpecOcr.Type.isValid(word)) {
                 textCheckType = SpecOcr.Type.fromString(word);
-                if(textCheckType == Type.DOMIS || textCheckType == Type.DOM_STARTS) {
-                	isDom = true;
-                }
             } else {
                 textOperations.add(word);
             }
         }
-        String expectedText = "";
-        if(!isDom) {
-        	expectedText = Expectations.doubleQuotedText().read(reader);
-    	}
+        String expectedText =  Expectations.doubleQuotedText().read(reader);
 
         if (reader.hasMoreNormalSymbols()) {
             throw new SyntaxException("Too many arguments for spec: " + reader.getTheRest().trim());

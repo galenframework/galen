@@ -84,10 +84,6 @@ public class SpecValidationOcr extends SpecValidation<SpecOcr> {
         }
         else if (spec.getType() == SpecOcr.Type.MATCHES) {
             checkMatches(objectName, area, realText, spec.getText(), checkEntity);
-        }else if (spec.getType() == SpecOcr.Type.DOMIS) {
-        	checkIs(objectName, area, realText, documentText, checkEntity);
-        }else if (spec.getType() == SpecOcr.Type.DOM_STARTS) {
-        	checkStarts(objectName, area, realText, documentText, checkEntity);
         }
     }
 

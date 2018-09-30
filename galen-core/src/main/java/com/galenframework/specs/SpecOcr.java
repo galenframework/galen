@@ -37,10 +37,10 @@ public class SpecOcr extends Spec {
     }
 
     public enum Type {
-        IS("is"), CONTAINS("contains"), STARTS("starts"), ENDS("ends"), MATCHES("matches"), DOMIS("dom"), DOM_STARTS("dom_starts");
+        IS("is"), CONTAINS("contains"), STARTS("starts"), ENDS("ends"), MATCHES("matches");
 
         private final String operationName;
-        private Type(String operationName) {
+        Type(String operationName) {
             this.operationName = operationName;
         }
 
