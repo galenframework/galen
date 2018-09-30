@@ -67,4 +67,9 @@ public enum GalenProperty {
         this.propertyName = propertyName;
         this.defaultValue = defaultValue;
     }
+
+    @Override
+    public String toString() {
+        return this.propertyName;
+    }
 }

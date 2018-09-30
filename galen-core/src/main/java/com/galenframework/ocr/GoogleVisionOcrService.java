@@ -51,8 +51,7 @@ public class GoogleVisionOcrService implements OcrService {
 	public static GoogleModel getGoogleModel(BufferedImage img) throws Exception {
 		String key = GalenConfig.getConfig().readProperty(GalenProperty.GALEN_OCR_GOOGLE_VISION_KEY);
 		if (key == null) {
-			throw new RuntimeException(
-					"To use the OCR you need to configure your .galen.config file with your API key:\ngoogle.vision.key=<YOUR KEY>\nhttps://cloud.google.com/vision/docs/auth");
+			throw new RuntimeException("Missing property " + GalenProperty.GALEN_OCR_GOOGLE_VISION_KEY + ". See https://cloud.google.com/vision/docs/auth for more info");
 		}
 		GoogleRequest grequest = new GoogleRequest();
 		List<Request> requests = new ArrayList<>();

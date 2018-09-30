@@ -42,6 +42,7 @@ public class GalenPageActionCheck extends GalenPageAction {
     private List<String> excludedTags;
     private Map<String, Object> jsVariables;
     private String sectionNameFilter;
+    private String pageDumpPath;
 
 
     @Override
@@ -94,6 +95,7 @@ public class GalenPageActionCheck extends GalenPageAction {
             .append(excludedTags)
             .append(jsVariables)
             .append(sectionNameFilter)
+            .append(pageDumpPath)
             .toHashCode();
     }
     
@@ -114,6 +116,7 @@ public class GalenPageActionCheck extends GalenPageAction {
             .append(excludedTags, rhs.excludedTags)
             .append(sectionNameFilter, rhs.sectionNameFilter)
             .append(jsVariables, rhs.jsVariables)
+            .append(pageDumpPath, rhs.pageDumpPath)
             .isEquals();
     }
     
@@ -125,6 +128,7 @@ public class GalenPageActionCheck extends GalenPageAction {
             .append("excludedTags", excludedTags)
             .append("sectionNameFilter", sectionNameFilter)
             .append("jsVariables", jsVariables)
+            .append("pageDumpPath", pageDumpPath)
             .toString();
     }
 
@@ -157,5 +161,13 @@ public class GalenPageActionCheck extends GalenPageAction {
 
     public String getSectionNameFilter() {
         return sectionNameFilter;
+    }
+
+    public String getPageDumpPath() {
+        return pageDumpPath;
+    }
+
+    public void setPageDumpPath(String pageDumpPath) {
+        this.pageDumpPath = pageDumpPath;
     }
 }
