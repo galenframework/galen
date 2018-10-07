@@ -41,7 +41,7 @@ public class GoogleVisionOcrService implements OcrService {
 			try {
 				model = getGoogleModel(img);
 			} catch (Exception e) {
-				throw new ValidationErrorException("Google vision API error", e);
+				throw new ValidationErrorException("Google vision API error: " + e.getMessage(), e);
 			}
 			lastImage = img;
 		}
