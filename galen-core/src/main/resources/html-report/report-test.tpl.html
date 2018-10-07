@@ -48,6 +48,7 @@ var REPORT_DATA = ##REPORT-DATA##;
                     </li>
                 </ul>
                 <div class="child-nodes" v-if="node.type === 'node'" v-bind:class="{'child-nodes-expanded': node.expanded}">
+                    <div class="stacktrace" v-if="node.stacktrace">{{node.stacktrace}}</div>
                     <div v-for="childNode in node.nodes">
                         <report-node v-if="childNode.type === 'node'" v-bind:node="childNode"></report-node>
                         <div class="node-text" v-if="childNode.type === 'text'">

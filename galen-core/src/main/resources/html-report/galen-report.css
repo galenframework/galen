@@ -543,3 +543,8 @@ table.mutation-table th {
 table.mutation-table tr.mutation-table-total td {
     border-bottom: 1px solid #ccc;
 }
+
+.stacktrace {
+    white-space: pre;
+    overflow-x: auto;
+}

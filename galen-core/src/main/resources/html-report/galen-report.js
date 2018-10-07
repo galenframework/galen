@@ -683,7 +683,7 @@ function enrichSectionAndReturnHasFailure(section) {
 
 function enrichReportNodeAndReturnHasFailure(node) {
     node.expanded = false;
-    node.hasFailure = false;
+    node.hasFailure = node.status === 'error';
     node.hasChildren = false;
     if ((node.nodes && node.nodes.length > 0) || (node.sections && node.sections.length > 0)) {
         node.hasChildren = true;
