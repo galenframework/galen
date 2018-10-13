@@ -724,16 +724,16 @@ function expandOnlyErrorsInSection (section) {
 
 function expandOnlyErrorsInNode (node) {
     node.expanded = node.hasFailure;
-    _.forEach(node.nodes, function(childNode) {
-        if (childNode.type === 'layout') {
-            childNode.expanded = childNode.hasFailure;
-            _.forEach(childNode.sections, function (section) {
-                expandOnlyErrorsInSection(section);
-            });
-        } else {
+
+    if (node.type === 'layout') {
+        _.forEach(node.sections, function (section) {
+            expandOnlyErrorsInSection(section);
+        });
+    } else {
+        _.forEach(node.nodes, function(childNode) {
             expandOnlyErrorsInNode(childNode);
-        }
-    });
+        });
+    }
 }
 
 function visitEachSection(section, callback) {
