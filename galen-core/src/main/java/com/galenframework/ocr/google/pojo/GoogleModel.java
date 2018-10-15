@@ -1,22 +1,22 @@
 
 package com.galenframework.ocr.google.pojo;
 
-import java.util.List;
-import com.google.gson.annotations.Expose;
-import com.google.gson.annotations.SerializedName;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
+import java.util.List;
+
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class GoogleModel {
 
-    @SerializedName("responses")
-    @Expose
-    private List<Response> responses = null;
+    public List<Response> responses;
 
-    public List<Response> getResponses() {
-        return responses;
+    @JsonIgnoreProperties(ignoreUnknown = true)
+    public static class Response {
+        public FullTextAnnotation fullTextAnnotation;
     }
 
-    public void setResponses(List<Response> responses) {
-        this.responses = responses;
+    @JsonIgnoreProperties(ignoreUnknown = true)
+    public static class FullTextAnnotation {
+        public String text;
     }
-
 }

@@ -18,6 +18,7 @@ package com.galenframework.validation;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.galenframework.ocr.GoogleVisionOcrService;
 import com.galenframework.specs.*;
 import com.galenframework.validation.specs.*;
 
@@ -61,7 +62,7 @@ public class ValidationFactory {
         validations.put(SpecImage.class, new SpecValidationImage());
         validations.put(SpecCss.class, new SpecValidationCss());
         validations.put(SpecCount.class, new SpecValidationCount());
-        validations.put(SpecOcr.class, new SpecValidationOcr());
+        validations.put(SpecOcr.class, new SpecValidationOcr(new GoogleVisionOcrService()));
            }
 
     @SuppressWarnings({ "unchecked", "rawtypes" })

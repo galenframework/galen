@@ -23,7 +23,6 @@ import java.nio.charset.Charset;
 import java.util.List;
 import java.util.regex.Pattern;
 
-import com.galenframework.ocr.GoogleVisionOcrService;
 import com.galenframework.ocr.OcrResult;
 import com.galenframework.ocr.OcrService;
 import com.galenframework.page.PageElement;
@@ -37,6 +36,12 @@ import com.galenframework.validation.ValidationResult;
 
 public class SpecValidationOcr extends SpecValidation<SpecOcr> {
 
+    private final OcrService ocrService;
+
+    public SpecValidationOcr(OcrService ocrService) {
+        this.ocrService = ocrService;
+    }
+
     @Override
     public ValidationResult check(PageValidation pageValidation, String objectName, SpecOcr spec) throws ValidationErrorException {
         PageElement mainObject = pageValidation.findPageElement(objectName);
@@ -44,18 +49,16 @@ public class SpecValidationOcr extends SpecValidation<SpecOcr> {
         checkAvailability(mainObject, objectName);
         
         Rect area = mainObject.getArea();
-        String domText = mainObject.getText();
-        BufferedImage img = pageValidation.getBrowser().getPage().getScreenshotImage();
+        BufferedImage img = pageValidation.getPage().getScreenshotImage();
 
-        OcrService ocrService = new GoogleVisionOcrService();
         OcrResult ocrResult = ocrService.findOcrText(img, area);
         if (ocrResult.getText() == null) {
             ocrResult.setText("");
         }
-        ocrResult.setText(new String(ocrResult.getText().getBytes(Charset.forName("utf-8"))));
+        //ocrResult.setText();
 
         String realText = applyOperationsTo(ocrResult.getText(), spec.getOperations());
-        checkValue(spec, objectName, realText, "text", ocrResult.getRect(), domText);
+        checkValue(spec, objectName, realText, "text", ocrResult.getRect());
 
         return new ValidationResult(spec, asList(new ValidationObject(ocrResult.getRect(), objectName)));
     }
@@ -69,7 +72,7 @@ public class SpecValidationOcr extends SpecValidation<SpecOcr> {
         return text;
     }
 
-    protected void checkValue(SpecOcr spec, String objectName, String realText, String checkEntity, Rect area, String documentText) throws ValidationErrorException {
+    protected void checkValue(SpecOcr spec, String objectName, String realText, String checkEntity, Rect area) throws ValidationErrorException {
         if (spec.getType() == SpecOcr.Type.IS) {
             checkIs(objectName, area, realText, spec.getText(), checkEntity);
         }
@@ -89,7 +92,7 @@ public class SpecValidationOcr extends SpecValidation<SpecOcr> {
 
 
     protected void checkIs(String objectName, Rect area, String realText, String text, String checkEntity) throws ValidationErrorException {
-    	if(realText.equals(text) || realText.replaceAll("\\w+", "").equals(text.replaceAll("\\w+", ""))) {
+    	if(realText.equals(text)){
     		return;
     	}
         throw new ValidationErrorException(asList(new ValidationObject(area, objectName)), asList(format("\"%s\" %s is \"%s\" but should be \"%s\"", objectName, checkEntity, realText, text)));

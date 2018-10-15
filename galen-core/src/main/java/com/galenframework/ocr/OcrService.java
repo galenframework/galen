@@ -18,5 +18,5 @@ public interface OcrService {
 	 * @return the text and the area this text was found in
 	 * @throws ValidationErrorException
 	 */
-	public OcrResult findOcrText(BufferedImage img, Rect rec) throws ValidationErrorException;
+	 OcrResult findOcrText(BufferedImage img, Rect rec) throws ValidationErrorException;
 }

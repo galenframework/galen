@@ -7,8 +7,14 @@ import com.galenframework.page.Rect;
  *
  */
 public class OcrResult {
-	private String text = null;
-	private Rect rect = null;
+	private String text;
+	private Rect rect;
+
+	public OcrResult(String text, Rect rect) {
+	    this.text = text;
+	    this.rect = rect;
+	}
+
 	public String getText() {
 		return text;
 	}

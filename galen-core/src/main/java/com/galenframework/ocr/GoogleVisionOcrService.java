@@ -5,16 +5,17 @@ import java.awt.image.RenderedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.UncheckedIOException;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
 
 import javax.imageio.ImageIO;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.galenframework.config.GalenConfig;
 import com.galenframework.config.GalenProperty;
-import com.galenframework.ocr.google.ModelUtils;
 import com.galenframework.ocr.google.pojo.GoogleModel;
 import com.galenframework.ocr.google.pojo.request.Feature;
 import com.galenframework.ocr.google.pojo.request.GoogleRequest;
@@ -22,30 +23,47 @@ import com.galenframework.ocr.google.pojo.request.Image;
 import com.galenframework.ocr.google.pojo.request.Request;
 import com.galenframework.page.Rect;
 import com.galenframework.validation.ValidationErrorException;
-import com.google.gson.Gson;
+import org.apache.commons.io.IOUtils;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.HttpClients;
 
 /**
  * Implementation of the OcrService.
  * Cache the model, so if the same image is used, will send a single OCR request to the service.
- * @author guy arieli
+ * @author guy arieli, Ivan Shubin
  *
  */
 public class GoogleVisionOcrService implements OcrService {
 	private final static String BASE_URL = "https://vision.googleapis.com/v1/images:annotate?key=";
-	private GoogleModel model = null;
-	private BufferedImage lastImage = null;
+	final static HttpClient httpClient = HttpClients.createDefault();
+	final static ObjectMapper objectMapper = new ObjectMapper();
 
 	@Override
-	public OcrResult findOcrText(BufferedImage img, Rect rec) throws ValidationErrorException {
-		if (!(img == lastImage)) { // check if the current model is valid.
-			try {
-				model = getGoogleModel(img);
-			} catch (Exception e) {
-				throw new ValidationErrorException("Google vision API error: " + e.getMessage(), e);
-			}
-			lastImage = img;
-		}
-		return ModelUtils.findTextInArea(model, rec);
+	public OcrResult findOcrText(BufferedImage image, Rect rect) throws ValidationErrorException {
+        if (rect.getRight() > image.getWidth() && rect.getBottom() > rect.getHeight()) {
+            throw new ValidationErrorException("Could not extract element image. Looks like it is located outside of screenshot area");
+        }
+
+        try {
+            BufferedImage croppedImage = image.getSubimage(rect.getLeft(), rect.getTop(), rect.getWidth(), rect.getHeight());
+            GoogleModel model = getGoogleModel(croppedImage);
+
+            if (model.responses != null && !model.responses.isEmpty()) {
+                String resultedText = model.responses.get(0).fullTextAnnotation.text;
+                if (resultedText == null) {
+                    resultedText = "";
+                }
+                return new OcrResult(new String(resultedText.getBytes(Charset.forName("utf-8"))), rect);
+            } else {
+                throw new NullPointerException("Got empty result");
+            }
+
+        } catch (Exception e) {
+            throw new ValidationErrorException("Google vision API error: " + e.getMessage(), e);
+        }
 	}
 
 	public static GoogleModel getGoogleModel(BufferedImage img) throws Exception {
@@ -68,13 +86,42 @@ public class GoogleVisionOcrService implements OcrService {
 		request.setFeatures(features);
 		features.add(feature);
 
-		String result = RestUtils.executePost(BASE_URL + key, new Gson().toJson(grequest));
+        return postOcrImage(key, grequest);
 
-		ObjectMapper objectMapper = new ObjectMapper();
-		return objectMapper.readValue(result, GoogleModel.class);
 	}
 
-	public static String imgToBase64String(final RenderedImage img, final String formatName) {
+    private static GoogleModel postOcrImage(String key, GoogleRequest grequest) throws IOException {
+	    String url = BASE_URL + key;
+        HttpResponse response = post(url, grequest);
+        int status = response.getStatusLine().getStatusCode();
+        String responseText = IOUtils.toString(response.getEntity().getContent());
+
+        if (status < 400) {
+            System.out.println("\n" + responseText);
+            return objectMapper.readValue(responseText, GoogleModel.class);
+        } else {
+            String message;
+            try {
+                JsonNode tree = objectMapper.readTree(responseText);
+                message = tree.get("error").get("message").asText();
+            } catch (Exception ex) {
+               message = responseText;
+            }
+
+            throw new IOException("Response " + status + ". " + message);
+        }
+    }
+
+    private static HttpResponse post(String url, Object requestObject) throws IOException {
+        String json = objectMapper.writeValueAsString(requestObject);
+        HttpPost httpPost = new HttpPost(url);
+        httpPost.setEntity(new StringEntity(json));
+        httpPost.setHeader("Accept", "application/json");
+        httpPost.setHeader("Content-type", "application/json");
+        return httpClient.execute(httpPost);
+    }
+
+    public static String imgToBase64String(final RenderedImage img, final String formatName) {
 		final ByteArrayOutputStream os = new ByteArrayOutputStream();
 
 		try {
