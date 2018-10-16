@@ -91,7 +91,7 @@ public class ImageValidationTest extends ValidationTestBase {
 
             {new ValidationResult(NO_SPEC, areas(new ValidationObject(new Rect(100, 90, 100, 40), "object")),
                     new ValidationError(messages("Element does not look like \"/imgs/button-sample-incorrect.png\". " +
-                        "There are 95.5% mismatching pixels but max allowed is 2%"))),
+                        "There are 95,5% mismatching pixels but max allowed is 2%"))),
                 specImage(asList("/imgs/button-sample-incorrect.png"), 2.0, PERCENTAGE_UNIT, 0, 10), page(new HashMap<String, PageElement>() {{
                     put("object", element(100, 90, 100, 40));
                 }}, imageComparisonTestScreenshot)},
