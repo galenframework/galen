@@ -3,7 +3,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.galenframework</groupId>
   <artifactId>galen-parent</artifactId>
-  <version>2.3.7-SGH</version>
+  <version>2.3.8-SNAPSHOT</version>
   <name>Galen Framework Parent</name>
   <packaging>pom</packaging>
   <description>A library for layout testing of websites</description>
@@ -37,7 +37,7 @@
     <rhino.version>1.7.7.2</rhino.version>
     <slf4j.version>1.7.10</slf4j.version>
     <commons-lang3.version>3.0.1</commons-lang3.version>
-    <jackson.version>2.9.3</jackson.version>
+    <jackson.version>2.9.5</jackson.version>
     <freemarker.version>2.3.19</freemarker.version>
     <!-- testing libs -->
     <testng.version>6.7</testng.version>
