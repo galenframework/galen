@@ -55,9 +55,8 @@ public class SpecValidationOcr extends SpecValidation<SpecOcr> {
         if (ocrResult.getText() == null) {
             ocrResult.setText("");
         }
-        //ocrResult.setText();
 
-        String realText = applyOperationsTo(ocrResult.getText(), spec.getOperations());
+        String realText = applyOperationsTo(ocrResult.getText().trim(), spec.getOperations());
         checkValue(spec, objectName, realText, "text", ocrResult.getRect());
 
         return new ValidationResult(spec, asList(new ValidationObject(ocrResult.getRect(), objectName)));

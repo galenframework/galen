@@ -40,7 +40,7 @@ public class OcrValidationTest {
     @Test
     public void should_fail_check_when_text_is_different() throws Exception {
         when(ocrService.findOcrText(any(), any())).thenReturn(
-                new OcrResult("Real text", new Rect(0,0, 100, 50))
+                new OcrResult("  Real text  \n  ", new Rect(0,0, 100, 50))
         );
 
         SpecOcr spec = new SpecOcr(SpecOcr.Type.IS, "Expected text");

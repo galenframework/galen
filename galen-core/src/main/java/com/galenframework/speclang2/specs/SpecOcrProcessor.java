@@ -34,6 +34,8 @@ public class SpecOcrProcessor implements SpecProcessor {
 
         List<String>  textOperations = new LinkedList<>();
 
+        verifyValidationEntity(reader);
+
         SpecOcr.Type textCheckType = null;
         while(textCheckType == null && reader.hasMoreNormalSymbols()) {
             String word = reader.readWord();
@@ -54,5 +56,12 @@ public class SpecOcrProcessor implements SpecProcessor {
         }
 
         return new SpecOcr(textCheckType, expectedText, textOperations);
+    }
+
+    private void verifyValidationEntity(StringCharReader reader) {
+        String validationEntity = reader.readWord();
+        if (!"text".equals(validationEntity)) {
+            throw new SyntaxException(String.format("Unknown entity: %s, expected to see \"text\"", validationEntity));
+        }
     }
 }

@@ -22,11 +22,14 @@ import static com.galenframework.specs.Side.LEFT;
 import static com.galenframework.specs.Side.RIGHT;
 import static com.galenframework.specs.Side.TOP;
 import static java.util.Arrays.asList;
+import static java.util.Collections.emptyList;
+import static java.util.Collections.singletonList;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 
 import java.awt.*;
 import java.io.IOException;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -1232,6 +1235,23 @@ public class SpecsReaderV2Test {
         SpecOcr spec = (SpecOcr)readSpec("ocr text is \"hello world\"");
         assertThat(spec.getText(), is("hello world"));
         assertThat(spec.getType(), is(SpecOcr.Type.IS));
+        assertThat(spec.getOperations(), is(emptyList()));
+    }
+
+    @Test
+    public void should_read_spec_ocr_lowercase() {
+        SpecOcr spec = (SpecOcr)readSpec("ocr text lowercase is \"hello world\"");
+        assertThat(spec.getText(), is("hello world"));
+        assertThat(spec.getType(), is(SpecOcr.Type.IS));
+        assertThat(spec.getOperations(), is(singletonList("lowercase")));
+    }
+
+    @Test
+    public void should_read_spec_ocr_lowercase_singleline() {
+        SpecOcr spec = (SpecOcr)readSpec("ocr text lowercase singleline is \"hello world\"");
+        assertThat(spec.getText(), is("hello world"));
+        assertThat(spec.getType(), is(SpecOcr.Type.IS));
+        assertThat(spec.getOperations(), is(asList("lowercase", "singleline")));
     }
 
     @Test(expectedExceptions = SyntaxException.class,
