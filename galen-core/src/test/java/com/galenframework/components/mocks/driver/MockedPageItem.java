@@ -74,7 +74,7 @@ public class MockedPageItem {
 
     public boolean matches(By by) {
         if (by instanceof By.ByCssSelector) {
-            String selector = (String)takeFieldValueViaReflection(by, "selector");
+            String selector = (String)takeFieldValueViaReflection(by, "cssSelector");
             if("css".equals(getLocatorType()) && selector.equals(getLocatorValue()) ) {
                 return true;
             }
