@@ -90,7 +90,7 @@ Contributing
 ------------
 If you want to contribute to this project just look for current open issues. Please let know in the comments of the issue that you are going to pick it up because somebody could already work on it. In the end just send the pull request. By the way the feature that you are going to work on should not just solve your particular problem. It should be extendable and configurable. The github issues is the best place to debate on the feature and discuss how it should be implemented.
 
-All the work on the next version is performed in corresponding release branch (e.g. release-2.3). The master branch reflects the current live version. Most of the pull requests are accepted on release branch and not on master.
+All the work on the next version is performed in corresponding release branch (e.g. release-2.5). The master branch reflects the current live version. Most of the pull requests are accepted on release branch and not on master.
 
 If you would like to make a change to the Galen Framework website (http://galenframework.com) you can do it here https://github.com/galenframework/galenframework.com
 
