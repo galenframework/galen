@@ -1,14 +1,17 @@
 # Change log
 All changes to Galen Framework project will be documented in this file
 
-## [2.4.0][Unreleased]
+## [2.4.0][2018-11-03]
 ### Added
 - 'edges' filter in image spec
 - Specs meta in json and html reports
 - Failure map popup in html report
+- Validations highlight in HTML report
 - Spec generator
 - 'mutate' action for galen specs mutation testing
 - Embedded galen-extras lib
+- Section filtering
+- Google Vision integration for test recognition
 
 ### Changed
 - Reimplemented all html reports
