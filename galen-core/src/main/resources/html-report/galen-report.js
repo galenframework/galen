@@ -726,6 +726,13 @@ function expandOnlyErrorsInSection (section) {
     _.forEach(section.sections, expandOnlyErrorsInSection);
     _.forEach(section.objects, function (object) {
         object.expanded = object.hasFailure;
+        if (object.specs) {
+            _.forEach(object.specs, function (spec) {
+                if (spec.subLayout && spec.subLayout.sections) {
+                    _.forEach(spec.subLayout.sections, expandOnlyErrorsInSection);
+                }
+            });
+        }
     });
 }
 
@@ -741,6 +748,7 @@ function expandOnlyErrorsInNode (node) {
             expandOnlyErrorsInNode(childNode);
         });
     }
+
 }
 
 function visitEachSection(section, callback) {
