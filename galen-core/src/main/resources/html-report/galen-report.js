@@ -340,7 +340,7 @@ Vue.component('mutation-report', {
 });
 
 Vue.component('layout-section', {
-    props: ['section', 'bus'],
+    props: ['layout', 'section', 'bus'],
     template: '#tpl-layout-section',
     methods: {
         toggleReportNode: toggleReportNode
@@ -348,7 +348,7 @@ Vue.component('layout-section', {
 });
 
 Vue.component('object-node', {
-    props: ['object', 'bus'],
+    props: ['layout', 'object', 'bus'],
     template: '#tpl-object-node',
     methods: {
         toggleReportNode: toggleReportNode
@@ -356,7 +356,7 @@ Vue.component('object-node', {
 });
 
 Vue.component('layout-spec', {
-    props: ['spec', 'bus'],
+    props: ['layout', 'spec', 'bus'],
     template: '#tpl-layout-spec',
     data: function () {
         return {
@@ -365,7 +365,7 @@ Vue.component('layout-spec', {
     },
     methods: {
         showSpec: function() {
-            this.bus.$emit('spec-clicked', this.spec);
+            this.bus.$emit('spec-clicked', this.spec, this.layout);
         }
     }
 })
@@ -389,15 +389,15 @@ Vue.component('layout-report', {
     },
     methods: {
         toggleReportNode: toggleReportNode,
-        collectHighlightAreas: function (objectNames) {
+        collectHighlightAreas: function (objectNames, layout) {
             var self = this;
             var boundaryBox = {
                 min: {x: 1000000, y: 1000000},
                 max: {x: 0, y: 0}
             };
             var objects = _.mapNonNull(objectNames, function (objectName, index) {
-                if (self.layout.objects.hasOwnProperty(objectName)) {
-                    var area = self.layout.objects[objectName].area;
+                if (layout.objects.hasOwnProperty(objectName)) {
+                    var area = layout.objects[objectName].area;
                     if (area) {
                         var item = {
                             name: objectName,
@@ -425,17 +425,17 @@ Vue.component('layout-report', {
                 boundaryBox: boundaryBox
             };
         },
-        findObjectArea: function(objectName) {
-            if (this.layout.objects.hasOwnProperty(objectName)) {
-                return this.layout.objects[objectName].area;
+        findObjectArea: function(objectName, layout) {
+            if (layout.objects.hasOwnProperty(objectName)) {
+                return layout.objects[objectName].area;
             }
             return null;
         },
-        collectMetaGuides: function(meta) {
+        collectMetaGuides: function(meta, layout) {
             var self = this;
             return _.mapNonNull(meta, function (metaEntry) {
-                var fromArea = self.findObjectArea(metaEntry.from.object);
-                var toArea = self.findObjectArea(metaEntry.to.object);
+                var fromArea = self.findObjectArea(metaEntry.from.object, layout);
+                var toArea = self.findObjectArea(metaEntry.to.object, layout);
                 if (fromArea && toArea) {
                     var fromEdge = MetaUtils.fetchEdge(fromArea, metaEntry.from.edge);
                     var toEdge = MetaUtils.fetchEdge(toArea, metaEntry.to.edge);
@@ -448,13 +448,13 @@ Vue.component('layout-report', {
                 return null;
             });
         },
-        specClicked: function(spec) {
+        specClicked: function(spec, layout) {
             this.screenshotPopup.metaGuides = [];
             if (spec.highlight && spec.highlight.length > 0) {
-                this.screenshotPopup.highlightAreas = this.collectHighlightAreas(spec.highlight);
+                this.screenshotPopup.highlightAreas = this.collectHighlightAreas(spec.highlight, layout);
             }
             if (spec.meta && spec.meta.length > 0) {
-                this.screenshotPopup.metaGuides = this.collectMetaGuides(spec.meta);
+                this.screenshotPopup.metaGuides = this.collectMetaGuides(spec.meta, layout);
             }
             this.screenshotPopup.spec = spec;
             this.screenshotPopup.shown = true;
@@ -659,6 +659,13 @@ function enrichObjectAndReturnHasFailure(object) {
     _.forEach(object.specs, function (spec) {
         if (spec.errors && spec.errors.length > 0) {
             object.hasFailure = true;
+        }
+        if (spec.subLayout && spec.subLayout.sections) {
+            _.forEach(spec.subLayout.sections, function (subSection) {
+                if (enrichSectionAndReturnHasFailure(subSection)) {
+                    object.hasFailure = true;
+                }
+            });
         }
     });
     return object.hasFailure;
