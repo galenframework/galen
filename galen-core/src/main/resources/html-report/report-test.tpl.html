@@ -189,6 +189,24 @@ var REPORT_DATA = ##REPORT-DATA##;
                     >{{object.name}}:</div>
                 <div class="child-nodes" v-bind:class="{'child-nodes-expanded': object.expanded}">
                     <layout-spec v-for="spec in object.specs" v-bind:spec="spec" v-bind:bus="bus" v-bind:layout="layout"></layout-spec>
+
+                    <layout-spec-group v-if="object.specGroups"
+                        v-for="specGroup in object.specGroups"
+                        v-bind:specgroup="specGroup"
+                        v-bind:bus="bus"
+                        v-bind:layout="layout"
+                        ></layout-spec-group>
+                </div>
+            </div>
+        </template>
+
+        <template id="tpl-spec-group">
+            <div class="layout-section" v-bind:class="{'has-failure': specgroup.hasFailure}">
+                <div class="title icon-sprite-before"
+                    v-on:click="toggleReportNode(specgroup)"
+                    >{{specgroup.name}}:</div>
+                <div class="child-nodes" v-bind:class="{'child-nodes-expanded': specgroup.expanded}">
+                    <layout-spec v-for="spec in specgroup.specs" v-bind:spec="spec" v-bind:bus="bus" v-bind:layout="layout"></layout-spec>
                 </div>
             </div>
         </template>
@@ -207,6 +225,8 @@ var REPORT_DATA = ##REPORT-DATA##;
                 </div>
             </div>
         </template>
+
+
         <template id="tpl-screenshot-popup">
             <div>
                 <div class="popup-shadow" v-on:click="$emit('close')"> </div>

@@ -368,7 +368,15 @@ Vue.component('layout-spec', {
             this.bus.$emit('spec-clicked', this.spec, this.layout);
         }
     }
-})
+});
+
+Vue.component('layout-spec-group', {
+    props: ['layout', 'specgroup', 'bus'],
+    template: '#tpl-spec-group',
+    methods: {
+        toggleReportNode: toggleReportNode
+    }
+});
 
 Vue.component('layout-report', {
     props: ['layout'],
@@ -656,18 +664,31 @@ function enrichObjectAndReturnHasFailure(object) {
     object.expanded = false;
     object.hasFailure = false;
 
-    _.forEach(object.specs, function (spec) {
-        if (spec.errors && spec.errors.length > 0) {
-            object.hasFailure = true;
-        }
-        if (spec.subLayout && spec.subLayout.sections) {
-            _.forEach(spec.subLayout.sections, function (subSection) {
-                if (enrichSectionAndReturnHasFailure(subSection)) {
-                    object.hasFailure = true;
-                }
-            });
-        }
-    });
+    var enrichSpec = function(parent) {
+        return function (spec) {
+            if (spec.errors && spec.errors.length > 0) {
+                parent.hasFailure = true;
+            }
+            if (spec.subLayout && spec.subLayout.sections) {
+                _.forEach(spec.subLayout.sections, function (subSection) {
+                    if (enrichSectionAndReturnHasFailure(subSection)) {
+                        parent.hasFailure = true;
+                    }
+                });
+            }
+        };
+    };
+
+    _.forEach(object.specs, enrichSpec(object));
+    if (object.specGroups) {
+        _.forEach(object.specGroups, function (specGroup) {
+            specGroup.expanded = false;
+            _.forEach(specGroup.specs, enrichSpec(specGroup));
+            if (specGroup.hasFailure) {
+                object.hasFailure = true;
+            }
+        });
+    }
     return object.hasFailure;
 }
 
@@ -733,6 +754,14 @@ function expandOnlyErrorsInSection (section) {
                 }
             });
         }
+        _.forEach(object.specGroups, function (specGroup) {
+            specGroup.expanded = specGroup.hasFailure;
+            _.forEach(specGroup.specs, function (spec) {
+                if (spec.subLayout && spec.subLayout.sections) {
+                    _.forEach(spec.subLayout.sections, expandOnlyErrorsInSection);
+                }
+            });
+        });
     });
 }
 
@@ -758,6 +787,17 @@ function visitEachSection(section, callback) {
     });
     _.forEach(section.objects, function (object) {
         callback(object, 'object');
+
+        _.forEach(object.specs, function (spec) {
+            if (spec.subLayout) {
+                _.forEach(spec.subLayout.sections, function (subSection) {
+                    visitEachSection(subSection, callback);
+                });
+            }
+        });
+        _.forEach(object.specGroups, function (specGroup) {
+            callback(specGroup);
+        });
     });
 }
 
