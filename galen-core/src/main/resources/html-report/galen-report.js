@@ -245,10 +245,45 @@ function toggleReportNode(node) {
     node.expanded = !node.expanded;
 }
 
+Vue.component('image-comparison-popup', {
+    props: ['imagedata'],
+    template: '#tpl-image-comparison-popup',
+    mounted() {
+        document.addEventListener('keydown', this.onKeyPress);
+    },
+    beforeDestroy() {
+        document.removeEventListener('keydown', this.onKeyPress);
+    },
+    data: function () {
+        var clientWidth = Math.max(document.documentElement.clientWidth, window.innerWidth || 0);
+        var clientHeight = Math.max(document.documentElement.clientHeight, window.innerHeight || 0);
+        return {
+            position: {
+                top: 5,
+                left: 50,
+                width: clientWidth - 100,
+                height: clientHeight - 10
+            }
+        };
+    },
+    methods: {
+        onKeyPress: function (event) {
+            if (event.key === 'Escape') {
+                this.$emit('close');
+            }
+        }
+    }
+});
 
 Vue.component('screenshot-popup', {
     props: ['screenshot', 'highlight', 'guides', 'spec'],
     template: '#tpl-screenshot-popup',
+    mounted() {
+        document.addEventListener('keydown', this.onKeyPress);
+    },
+    beforeDestroy() {
+        document.removeEventListener('keydown', this.onKeyPress);
+    },
     data: function () {
         var clientWidth = Math.max(document.documentElement.clientWidth, window.innerWidth || 0);
         var clientHeight = Math.max(document.documentElement.clientHeight, window.innerHeight || 0);
@@ -271,6 +306,13 @@ Vue.component('screenshot-popup', {
                 offsetTop: 30 - this.highlight.boundaryBox.min.y,
             }
         };
+    },
+    methods: {
+        onKeyPress: function (event) {
+            if (event.key === 'Escape') {
+                this.$emit('close');
+            }
+        }
     }
 });
 
@@ -360,7 +402,8 @@ Vue.component('layout-spec', {
     template: '#tpl-layout-spec',
     data: function () {
         return {
-            isFailed: this.spec.errors && this.spec.errors.length > 0
+            isFailed: this.spec.errors && this.spec.errors.length > 0,
+            imageComparisonShown: false
         };
     },
     methods: {
