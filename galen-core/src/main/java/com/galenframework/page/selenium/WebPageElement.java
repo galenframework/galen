@@ -24,6 +24,7 @@ import com.galenframework.specs.page.Locator;
 
 import org.openqa.selenium.*;
 
+import java.util.Locale;
 
 public class WebPageElement extends PageElement {
 
@@ -55,7 +56,7 @@ public class WebPageElement extends PageElement {
 
     private AreaFinder getAreaFinder() {
         String areaFinderName = GalenConfig.getConfig().getStringProperty(GalenProperty.GALEN_BROWSER_PAGELEMENT_AREAFINDER);
-        return AreaFinder.valueOf(areaFinderName.toUpperCase());
+        return AreaFinder.valueOf(areaFinderName.toUpperCase(Locale.ENGLISH));
     }
 
     private Rect correctedRect(Rect rect, CorrectionsRect corrections) {

@@ -33,6 +33,8 @@ import org.openqa.selenium.ie.InternetExplorerDriver;
 import org.openqa.selenium.phantomjs.PhantomJSDriver;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.safari.SafariDriver;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Collections;
 
@@ -44,6 +46,7 @@ import java.util.Collections;
  */
 public class SeleniumBrowserFactory implements BrowserFactory {
 
+    private final static Logger LOG = LoggerFactory.getLogger(SeleniumBrowserFactory.class);
     public static final String FIREFOX = "firefox";
     public static final String CHROME = "chrome";
     public static final String IE = "ie";
@@ -81,6 +84,10 @@ public class SeleniumBrowserFactory implements BrowserFactory {
         String platform = GalenConfig.getConfig().readProperty(GalenProperty.GALEN_BROWSERFACTORY_SELENIUM_GRID_PLATFORM);
         if (platform != null && !platform.trim().isEmpty()) {
             gridFactory.setPlatform(Platform.valueOf(platform.toUpperCase()));
+        }
+        Boolean enableVnc = GalenConfig.getConfig().getBooleanProperty(GalenProperty.GALEN_BROWSERFACTORY_SELENIUM_GRID_ENABLEVNC);
+        if (enableVnc != false) {
+            gridFactory.setEnableVnc(enableVnc);
         }
         
         return gridFactory.openBrowser();

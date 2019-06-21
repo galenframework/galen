@@ -54,7 +54,7 @@ var REPORT_DATA = ##REPORT-DATA##;
                         <div class="node-text" v-if="childNode.type === 'text'">
                             {{childNode.name}}
                         </div>
-                        <layout-report v-if="childNode.type === 'layout'" v-bind:layout="childNode"></layout-report>
+                        <layout-report v-if="childNode.type === 'layout'" v-bind:layout="childNode" v-bind:isSubLayout="false"></layout-report>
                         <mutation-report v-if="childNode.type === 'mutation'" v-bind:report="childNode"></mutation-report>
                     </div>
                 </div>
@@ -156,7 +156,7 @@ var REPORT_DATA = ##REPORT-DATA##;
                 </div>
 
                 <div class="child-nodes" v-bind:class="{'child-nodes-expanded': layout.expanded}">
-                    <layout-section v-for="section in layout.sections" v-bind:section="section" v-bind:bus="bus"></layout-section>
+                    <layout-section v-for="section in layout.sections" v-bind:section="section" v-bind:bus="bus" v-bind:layout="layout" @spec-clicked="specClicked"></layout-section>
                 </div>
 
                 <screenshot-popup v-if="screenshotPopup.shown"
@@ -176,8 +176,8 @@ var REPORT_DATA = ##REPORT-DATA##;
                     v-bind:title="section.place ? section.place.filePath + ':' + section.place.lineNumber : ''"
                     >{{section.name}}</div>
                 <div class="child-nodes" v-bind:class="{'child-nodes-expanded': section.expanded}">
-                    <layout-section v-for="subSection in section.sections" v-bind:section="subSection" v-bind:bus="bus"></layout-section>
-                    <object-node v-for="object in section.objects" v-bind:object="object" v-bind:bus="bus"></object-node>
+                    <layout-section v-for="subSection in section.sections" v-bind:section="subSection" v-bind:bus="bus" v-bind:layout="layout"></layout-section>
+                    <object-node v-for="object in section.objects" v-bind:object="object" v-bind:bus="bus" v-bind:layout="layout"></object-node>
                 </div>
             </div>
         </template>
@@ -188,7 +188,25 @@ var REPORT_DATA = ##REPORT-DATA##;
                     v-on:click="toggleReportNode(object)"
                     >{{object.name}}:</div>
                 <div class="child-nodes" v-bind:class="{'child-nodes-expanded': object.expanded}">
-                    <layout-spec v-for="spec in object.specs" v-bind:spec="spec" v-bind:bus="bus"></layout-spec>
+                    <layout-spec v-for="spec in object.specs" v-bind:spec="spec" v-bind:bus="bus" v-bind:layout="layout"></layout-spec>
+
+                    <layout-spec-group v-if="object.specGroups"
+                        v-for="specGroup in object.specGroups"
+                        v-bind:specgroup="specGroup"
+                        v-bind:bus="bus"
+                        v-bind:layout="layout"
+                        ></layout-spec-group>
+                </div>
+            </div>
+        </template>
+
+        <template id="tpl-spec-group">
+            <div class="layout-section" v-bind:class="{'has-failure': specgroup.hasFailure}">
+                <div class="title icon-sprite-before"
+                    v-on:click="toggleReportNode(specgroup)"
+                    >{{specgroup.name}}:</div>
+                <div class="child-nodes" v-bind:class="{'child-nodes-expanded': specgroup.expanded}">
+                    <layout-spec v-for="spec in specgroup.specs" v-bind:spec="spec" v-bind:bus="bus" v-bind:layout="layout"></layout-spec>
                 </div>
             </div>
         </template>
@@ -200,10 +218,42 @@ var REPORT_DATA = ##REPORT-DATA##;
                     v-bind:title="spec.place ? spec.place.filePath + ':' + spec.place.lineNumber : ''"
                     >{{spec.name}}</div>
                 <ul class="error-messages" v-if="isFailed">
+                    <li class="error-message" v-if="spec.imageComparison">
+                        <span class="link" v-on:click="imageComparisonShown = true">Show image comparison</span>
+                    </li>
                     <li class="error-message" v-for="error in spec.errors">{{error}}</li>
                 </ul>
+                <div v-if="spec.subLayout" class="sublayout">
+                    <layout-section v-if="spec.subLayout.sections" v-for="section in spec.subLayout.sections" v-bind:section="section" v-bind:bus="bus" v-bind:layout="spec.subLayout"></layout-section>
+                </div>
+                <image-comparison-popup v-if="imageComparisonShown" v-on:close="imageComparisonShown = false" v-bind:imagedata="spec.imageComparison"/>
             </div>
         </template>
+
+
+        <template id="tpl-image-comparison-popup">
+            <div class="image-comparison-popup">
+                <div class="popup-shadow" v-on:click="$emit('close')"> </div>
+                <div class="popup-container" v-bind:style="{top: position.top + 'px', left: position.left + 'px', width: position.width + 'px', height: position.height + 'px'}">
+                    <div class="popup-body">
+                        <div class="image-layout">
+                            <h5>Actual Image</h5>
+                            <img v-bind:src="imagedata.actualImage"/>
+                        </div>
+                        <div class="image-layout">
+                            <h5>Expected Image</h5>
+                            <img v-bind:src="imagedata.expectedImage"/>
+                        </div>
+                        <div class="image-layout">
+                            <h5>Comparison Map</h5>
+                            <img v-bind:src="imagedata.comparisonMapImage"/>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </template>
+
+
         <template id="tpl-screenshot-popup">
             <div>
                 <div class="popup-shadow" v-on:click="$emit('close')"> </div>

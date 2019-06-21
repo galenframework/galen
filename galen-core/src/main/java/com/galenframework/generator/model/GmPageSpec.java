@@ -38,12 +38,7 @@ public class GmPageSpec {
         Map<PageItemNode, GmPageSection> pinPageSections = new HashMap<>();
 
 
-        //TODO fix this for the cases when there are more than one root notes. Could be done by making sure that we always have single root element upfront. if not -> make a boundary box
-        PageItemNode screenPin = result.getObjects().get(0);
-        pinPageSections.put(screenPin, skeletonSection);
-
-
-        screenPin.getChildren().forEach(bigPin -> {
+        result.getObjects().forEach(rootObject -> rootObject.getChildren().forEach(bigPin -> {
             GmPageSection pageSection = pageSpec.createNewSection(bigPin.getPageItem().getName() + " elements");
             bigPin.visitTree(p -> {
                 if (p == bigPin) {
@@ -52,7 +47,7 @@ public class GmPageSpec {
                     pinPageSections.put(p, pageSection);
                 }
             });
-        });
+        }));
 
 
         Map<String, List<SpecStatement>> generatedRules = result.getSuggestionResults().getGeneratedRules();

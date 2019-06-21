@@ -34,6 +34,7 @@ public class SeleniumGridBrowserFactory implements BrowserFactory {
     private String browser;
     private String browserVersion;
     private Platform platform;
+    private Boolean enableVnc;
     private Map<String, String> desiredCapabilities = new HashMap<>();
 
     public SeleniumGridBrowserFactory(String gridUrl) {
@@ -67,6 +68,10 @@ public class SeleniumGridBrowserFactory implements BrowserFactory {
 
         if (browserVersion != null) {
             desiredCapabilities.setVersion(browserVersion);
+        }
+
+        if (enableVnc != null && enableVnc != false) {
+            desiredCapabilities.setCapability("enableVNC", true);
         }
 
         for (Map.Entry<String, String> dc : this.desiredCapabilities.entrySet()) {
@@ -125,6 +130,14 @@ public class SeleniumGridBrowserFactory implements BrowserFactory {
 
     public void setGridUrl(String gridUrl) {
         this.gridUrl = gridUrl;
+    }
+
+    public Boolean getEnableVnc() {
+        return enableVnc;
+    }
+
+    public void setEnableVnc(Boolean enableVnc) {
+        this.enableVnc = enableVnc;
     }
     
     @Override

@@ -247,6 +247,11 @@ svg line.meta-line-guide {
 .layout-spec ul.error-messages li {
     margin-left: 10px;
 }
+.layout-spec ul.error-messages li .link {
+    color: #B33914;
+    font-weight: bold;
+    text-decoration: underline;
+}
 .layout-spec.has-failure > .title {
     font-weight: bold;
     color: #DB4B4B;
@@ -547,4 +552,9 @@ table.mutation-table tr.mutation-table-total td {
 .stacktrace {
     white-space: pre;
     overflow-x: auto;
+}
+
+.image-comparison-popup .image-layout {
+    display: inline-block;
+    margin: 5px;
 }
