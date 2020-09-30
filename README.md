@@ -135,3 +135,4 @@ License
 ------------
 
 Galen Framework is licensed under [Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0)
+RATINGS==The best responsive design of web application and easy to use it ,effieciently to use and handle it and maing it easier to access web applications.....
