@@ -2,8 +2,8 @@
 ==============
 master: [![Build Status](https://travis-ci.org/galenframework/galen.svg?branch=master)](https://travis-ci.org/galenframework/galen)
 
-
-Galen is an open-source tool for testing layout and responsive design of web applications. It is also a powerfull functional testing framework.
+Galen is a test framework originally designed for testing layout of web applications but is also a great tool for functional testing. 
+It is an open-source tool for testing layout and responsive design of web applications. It is also a powerfull functional testing framework.
 For more information visit http://galenframework.com
 
 
