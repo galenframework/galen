@@ -1,5 +1,5 @@
-[Galen Framework](http://galenframework.com)
-==============
+[Galens Framework](http://galensframework.com
+
 master: [![Build Status](https://travis-ci.org/galenframework/galen.svg?branch=master)](https://travis-ci.org/galenframework/galen)
 
 
