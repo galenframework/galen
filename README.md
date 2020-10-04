@@ -1,4 +1,4 @@
-[Galen Framework](http://galenframework.com)
+ An Amazing [Galen Framework] (http://galenframework.com)
 ==============
 master: [![Build Status](https://travis-ci.org/galenframework/galen.svg?branch=master)](https://travis-ci.org/galenframework/galen)
 
@@ -52,7 +52,7 @@ Here is a small example of basic syntax.
 ```
 
 
-And here is a more advanced spec:
+And here is a more advanced specification:
 ```
 # example of using custom rules (functions)
 
@@ -84,7 +84,7 @@ Conditional statements:
 ```
 
 
-For more information please read [Galen Framework Documentation](http://galenframework.com/docs/all/)
+For more information please read and follow [Galen Framework Documentation](http://galenframework.com/docs/all/)
 
 Contributing
 ------------
@@ -121,7 +121,7 @@ Also you need [Maven 3.3](http://maven.apache.org/download.cgi) or greater and [
 * ```sudo npm install -g bower```
 
 
-Building 
+Building The project
 -----------
 This project is based on Maven. You can use both Intellij or Eclipse for it. It is being developed in Linux so all the assembling scripts are in bash. In order to assemble the dist with zip archives just run ```./makeDist.sh``` and it will create a dist folder with both binary and source folders and it will prepare zip archives there as well. If you want to quickly test the concept and install galen right after the assembling you can use script ```./assembleAndInstall.sh```. It uses ```makeDist.sh``` and then just invokes ```sudo ./install.sh```
 
